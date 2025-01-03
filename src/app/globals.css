@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Star ratingcomponent */
+@import '@smastrom/react-rating/style.css';
+
+/* fonts start */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* fonts end */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --product-section__filter-width: 240px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.product-add-to-cart-quantity-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.product-add-to-cart-quantity-input input {
+  border-color: #AFAFAF !important;
+  border: 2px;
+  border-style: solid;
+  padding: 4px 4px;
+  border-radius: 10px;
+  width: 56px;
+  text-align: center;
+}
+
+.product-add-to-cart-quantity-input input::-webkit-inner-spin-button,
+.product-add-to-cart-quantity-input input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  /* Removes arrows in Chrome/Safari */
+  margin: 0;
+}
+
+.product-add-to-cart-quantity-input button {
+  width: 32px;
+  height: 32px;
+  color: #918e8e;
+  text-align: center;
+  /* background:green; */
+  padding: 0px;
+  border-radius: 999px;
+}
+
+.text-pallete-green {
+  color: #089E1B
+}
+
+.text-pallete-orange {
+  color: #FF6B14;
+}
+
+.text-pallete-dark {
+  color: #2E2E2E;
+}
+
+.text-pallete-gray {
+  color: #9C9C9C;
+}
+
+.text-pallete-lightgray {
+  color: #D8D8D8;
+}
+
+.text-pallete-lightergray {
+  color: #EBEBEB;
+}
+
+.hover-text-pallete-green:hover {
+  color: #089E1B
+}
+
+.hover-text-pallete-orange:hover {
+  color: #FF6B14;
+}
+
+.hover-text-pallete-dark:hover {
+  color: #2E2E2E;
+}
+
+.hover-text-pallete-gray:hover {
+  color: #9C9C9C;
+}
+
+.hover-text-pallete-lightgray:hover {
+  color: #D8D8D8;
+}
+
+.hover-text-pallete-lightergray:hover {
+  color: #EBEBEB;
+}
+
+
+.bg-pallete-green {
+  background-color: #089E1B;
+  background: #089E1B
+}
+
+.bg-pallete-orange {
+  background-color: #FF6B14;
+  background: #FF6B14;
+}
+
+.bg-pallete-dark {
+  background-color: #2E2E2E;
+  background: #2E2E2E;
+}
+
+.bg-pallete-gray {
+  background-color: #9C9C9C;
+  background: #9C9C9C;
+}
+
+.bg-pallete-lightgray {
+  background-color: #D8D8D8;
+  background: #D8D8D8;
+}
+
+.bg-pallete-lightergray {
+  background-color: #EBEBEB;
+  background: #EBEBEB;
+}
+
+
+.product-section__filter-wrap {
+  width: var(--product-section__filter-width);
+}
+
+.product-section__products-wrap {
+  width: calc(100% - var(--product-section__filter-width));
+}
+
+.related-products-scroll-wrap::-webkit-scrollbar,
+.shop-now-scroll-wrap::-webkit-scrollbar {
+  display: none;
+  /* Hides the scrollbar for Webkit browsers */
+}
+
+/* For Firefox */
+.related-products-scroll-wrap,
+.shop-now-scroll-wrap {
+  scrollbar-width: none;
+  /* Hides scrollbar in Firefox */
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+.shop-now-card-wrap,
+.related-product-card-wrap {
+  min-width: 340px !important;
+}
+
+
+/* Enlarge the checkbox */
+input[type="checkbox"] {
+  width: 20px;
+  /* Increase size */
+  height: 20px;
+  appearance: none;
+  /* Remove default styling */
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  /* Optional: rounded corners */
+  background-color: #f0f0f0;
+  /* Default background color */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  /* Smooth transition */
+}
+
+/* Checkbox hover effect */
+input[type="checkbox"]:hover {
+  border-color: #888;
+}
+
+/* Change background when checked */
+input[type="checkbox"]:checked {
+  background-color: #FF6B14;
+  border-color: #FF6B14;
+}
+
+
+
+input[type="checkbox"]:checked::before {
+  content: '';
+  display: block;
+  font-size: 10px;
+  color: white;
+  text-align: center;
+  line-height: 15px;
+}
