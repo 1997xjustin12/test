@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 export default function useFetchProducts(initialParams = {}) {
   const [products, setProducts] = useState([]);
@@ -7,34 +7,38 @@ export default function useFetchProducts(initialParams = {}) {
   const [error, setError] = useState(null);
   const [params, setParams] = useState(initialParams); // State for query params
 
-  const fetchProducts = useCallback(async (signal, customParams = null) => {
-    setLoading(true);
-    setError(null);
-    setProducts([]);
-    const queryParams = new URLSearchParams(customParams || params).toString();
-    const url = `/api/products?${queryParams}`; // Replace with your API endpoint
+  const fetchProducts = useCallback(
+    async (signal, customParams = null) => {
+      setLoading(true);
+      setError(null);
+      setProducts([]);
+      const queryParams = new URLSearchParams(
+        customParams || params
+      ).toString();
+      const url = `/api/products?${queryParams}`; // Replace with your API endpoint
 
-    try {
-      const res = await fetch(url, {
-        signal,
-        cache: "force-cache",
-        next: { revalidate: 3600 },
-      }); // Pass the signal to fetch
-      if (!res.ok) {
-        throw new Error('Failed to fetch products');
-      }
-      const data = await res.json();
-      setProducts(data.data);
-      setPagination(data.meta.pagination);
-      setLoading(false);
-
-    } catch (err) {
-      if (err.name !== 'AbortError') {
+      try {
+        const res = await fetch(url, {
+          signal,
+          cache: "force-cache",
+          next: { revalidate: 3600 },
+        }); // Pass the signal to fetch
+        if (!res.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await res.json();
+        setProducts(data.data);
+        setPagination(data.meta.pagination);
         setLoading(false);
-        setError(err.message); // Handle only non-abort errors
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setLoading(false);
+          setError(err.message); // Handle only non-abort errors
+        }
       }
-    }
-  }, [params]);
+    },
+    [params]
+  );
 
   useEffect(() => {
     const controller = new AbortController(); // Create a controller for this fetch

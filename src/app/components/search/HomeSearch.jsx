@@ -44,14 +44,21 @@ console.log("brands", brands);
 const HomeSearch = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState("");
-  const [recentResults, setRecentResults] = useState(() => {
-    const recentLS = localStorage.getItem("recent_searches");
-    if (recentLS) {
-      return Array.isArray(JSON.parse(recentLS)) ? JSON.parse(recentLS) : [];
-    } else {
-      return [];
+  const [recentResults, setRecentResults] = useState([]);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setRecentResults((prev) => {
+        const recentLS = localStorage.getItem("recent_searches");
+        if (recentLS) {
+          return Array.isArray(JSON.parse(recentLS))
+            ? JSON.parse(recentLS)
+            : [];
+        } else {
+          return [];
+        }
+      });
     }
-  });
+  }, []);
   const [categoryResults, setCategoryResults] = useState(() => {
     return cat_json
       .filter((i) => i.searchable === true)

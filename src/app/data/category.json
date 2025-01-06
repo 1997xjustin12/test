@@ -38,6 +38,7 @@
     },
     {
         "name": "Fireplaces",
+        "banner_img" : "/images/banner/fireplace-banner.webp",
         "key_words": [
             "fireplace",
             "fireplaces"
@@ -253,6 +254,7 @@
     },
     {
         "name": "Fire Pits",
+        "banner_img" : "/images/banner/firepit-banner.webp",
         "key_words": [
             "fire pit",
             "fire pits",
@@ -402,6 +404,7 @@
     },
     {
         "name": "Patio Heaters",
+        "banner_img": "/images/banner/patio-heater-banner.webp",
         "key_words": [
             "patio heater",
             "patio heaters",
@@ -442,6 +445,7 @@
     },
     {
         "name": "Patio Furnitures",
+        "banner_img": "/images/banner/patio-furniture-banner.webp",
         "key_words": [
             "patio furniture",
             "patio furnitures",
@@ -531,6 +535,7 @@
     },
     {
         "name": "Gas Logs",
+        "banner_img": "/images/banner/gas-log-banner.webp",
         "key_words": [
             "gas log",
             "gas logs",
@@ -585,6 +590,7 @@
     },
     {
         "name": "BBQ",
+        "banner_img": "/images/banner/bbq-banner.webp",
         "key_words": [
             "bbq"
         ],

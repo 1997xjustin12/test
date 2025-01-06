@@ -178,7 +178,7 @@ export default function TuiFilterSort({
               {/* Filters */}
               <form className="mt-4 border-t border-gray-200">
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="px-2 py-3 font-medium text-gray-900">
+                {/* <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                   {subCategories.map((category) => (
                     <li key={category.name}>
                       <Link
@@ -192,7 +192,7 @@ export default function TuiFilterSort({
                       </Link>
                     </li>
                   ))}
-                </ul>
+                </ul> */}
 
                 {filters.map((section) => (
                   <Disclosure
@@ -337,7 +337,7 @@ export default function TuiFilterSort({
               <div className="relative">
                 <form className="hidden lg:block lg:sticky top-[140px]">
                   <h3 className="sr-only">Categories</h3>
-                  <ul
+                  {/* <ul
                     role="list"
                     className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                     {subCategories.map((category) => (
@@ -353,7 +353,7 @@ export default function TuiFilterSort({
                         </Link>
                       </li>
                     ))}
-                  </ul>
+                  </ul> */}
 
                   {filters.map((section) => (
                     <Disclosure

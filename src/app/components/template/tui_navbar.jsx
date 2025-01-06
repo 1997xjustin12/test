@@ -119,7 +119,7 @@ export default function TuiNavbar() {
                   <img
                     alt="Bull Fireplace"
                     src="/Logo.webp"
-                    className="h-8 w-auto"
+                    className="h-[60px] w-auto"
                   />
                 </div>
               </div>

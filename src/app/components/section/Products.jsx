@@ -6,12 +6,14 @@ import TuiFilterSort from "../template/tui_filter_sort";
 import { getCategoryIds } from "@/app/lib/helpers";
 import cat_json from "../../data/category.json";
 import bccat_json from "../../data/bc_categories_20241213.json";
+import { useMediaQuery } from "react-responsive";
 
 const ProductsSection = ({ category }) => {
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const onloadParams = {
     include: "images",
     page: 1,
-    limit: 10,
+    limit: isMobile ? 4 : 10,
     "categories:in": getCategoryIds(category, cat_json, bccat_json).join(","),
     sort: "total_sold",
     direction: "desc",
@@ -25,6 +27,16 @@ const ProductsSection = ({ category }) => {
     refetch: productsRefetch,
   } = useFetchProducts(productsParams);
 
+  useEffect(() => {
+    const limit = isMobile ? 4 : 10;
+    setProductsParams((prev) => {
+      const updateParams = {
+        ...prev,
+        limit: limit,
+      };
+      return updateParams;
+    });
+  }, [isMobile]);
   useEffect(() => {
     // console.log("products loading: ",products_loading);
   }, [products_loading]);
