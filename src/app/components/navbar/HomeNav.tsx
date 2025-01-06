@@ -1,7 +1,7 @@
 'use client'
 import HomeSearch from "../search/HomeSearch";
-import { Icon, IconifyIcon } from '@iconify/react';
-import { useState, useEffect, useRef, AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal } from "react";
+import { Icon } from '@iconify/react';
+import { useState, useEffect, useRef } from "react";
 const HomeNav = () => {
     const dropdownRef = useRef<any>(null);
     const menu = [
@@ -333,7 +333,7 @@ const HomeNav = () => {
                         <div className="font-bold text-slate-800">Promotion 4</div>
                     </div> */}
                     {
-                        menu.map((i: { featured: any; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; isActive: any; icon: { name: string | IconifyIcon; }; }, index: any) =>
+                        menu.map((i: { featured: any; label: string | number | bigint | boolean | null | undefined; isActive: any; icon: { name: string }; }, index: any) =>
                             <div onClick={() => {
                                 if (i.featured) {
                                     handleParentClick(i.label)
@@ -357,17 +357,17 @@ const HomeNav = () => {
         {
             selectedParent && <nav ref={dropdownRef} className="relative container mx-auto">
                 {
-                    menu.filter((i: { label: any; }) => i.label === selectedParent).length > 0 &&
+                    menu.filter((i: {label: string}) => i.label === selectedParent).length > 0 &&
                     <div className="px-[0px] pt-[20px] flex">
                         <div className="p-[0px] border-r">
                             <ul>
                                 {
-                                    menu.filter((i1: { label: any; }) => i1.label === selectedParent)[0]["child"].map((i1: { featured: any; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; url: string | undefined; }, index: number) =>
+                                     menu.filter((i1: { label: any; }) => i1.label === selectedParent)[0]["child"].map((i1: { featured: any, label: string, url: string }, index: number) =>
                                         <li onClick={() => {
                                             if (!i1?.featured) {
-                                                setSelectedChild(i1?.label)
+                                                setSelectedChild(i1.label)
                                             }
-                                        }} key={`sub-nav-${index}`} className={`py-[15px] ${menu.filter((i1: { label: any; }) => i1?.label === selectedParent)[0]["child"].length - 1 === index ? '' : 'border-b'} ${i1?.label === selectedChild ? 'font-bold bg-gray-100' : ''}`}>
+                                        }} key={`sub-nav-${index}`} className={`py-[15px] ${menu.filter((i1: { label: string }) => i1.label === selectedParent)[0]["child"].length - 1 === index ? '' : 'border-b'} ${i1.label === selectedChild ? 'font-bold bg-gray-100' : ''}`}>
                                             <a href={i1?.featured ? i1?.url : '#'} className={`px-[15px] text-black text-[18px] flex items-center justify-between gap-[20px] ${i1?.featured ? 'font-semibold' : ''}`}>
                                                 <div>
                                                     {i1?.label}
@@ -383,13 +383,13 @@ const HomeNav = () => {
                         </div>
                         <div className="py-[15px] px-[20px] flex gap-[40px]">
                             {
-                                menu?.filter((i: { label: any; }) => i?.label === selectedParent)?.[0]?.["child"]?.filter((i1: { label: any; }) => i1?.label === selectedChild)?.[0]?.child.map((i2: { label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; items: any[]; }, index: any) =>
+                                menu.filter((i: { label: string }) => i.label === selectedParent)[0]["child"].filter((i1: { label: string }) => i1?.label === selectedChild)[0]?.child.map((i2: any, index: number) =>
                                     <div key={`cat-item-group-${index}`}>
                                         <div className="font-bold">{i2.label}</div>
                                         <div className="py-[10px]">
                                             <ul key={`cat-item-group-ul-${index}`}>
                                                 {
-                                                    i2.items.map((i: { url: string | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }, index2: any) =>
+                                                    i2.items.map((i: any, index2: number) =>
                                                         <li key={`sub-cat-${index}-item-${index2}`} className="py-[10px]">
                                                             <a href={i.url}>{i.label}</a>
                                                         </li>

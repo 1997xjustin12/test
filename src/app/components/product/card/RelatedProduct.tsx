@@ -69,7 +69,7 @@ const RelatedProductCard = ({ product }: { product: Product }) => {
         </div>
     </div>
     <div className="flex flex-col gap-[15px] p-[20px]">
-        <div>Starting at <span className="text-pallete-green font-bold text-[20px]">${parseFloat(product_data.price).toFixed(2)}</span></div>
+        <div>Starting at <span className="text-pallete-green font-bold text-[20px]">${parseFloat(product_data.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span></div>
         <div className="flex h-[80px]  my-[15px]">
             <div className="font-bold text-[18px]">
                 {product_data.name}

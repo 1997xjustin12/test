@@ -3,7 +3,7 @@ import RelatedProductCard from "../product/card/RelatedProduct";
 import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 type Product = {
-    id: number;
+    id: string | number;
     name: string;
     description: string;
     description_html: string;
@@ -17,16 +17,16 @@ type Product = {
     category: [];
 };
 
-const RelatedProducts = ({ product }: any) => {
-    const [products, setProducts] = useState<any[]>([]);
-    const productsWrapper = useRef<any>(null);
+const RelatedProducts = ({ product }: { product: any }) => {
+    const [products, setProducts] = useState<any | null>(null);
+    const productsWrapper = useRef<any>();
     const relatedProductCard = useRef(null);
     const [prevButtonDisabled, setPrevButtonDisabled] = useState(true);
     const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
     const [scrollWidth, setScrollWidth] = useState(0);
     const [scrollIndex, setScrollIndex] = useState(0);
     const [scrollPos, setScrollPos] = useState([]);
-    const [scrollPosArray, setScrollPosArray] = useState<any>([]);
+    const [scrollPosArray, setScrollPosArray] = useState<any>(null);
     // scroll mechanism varialbles
     const cardWidth = 340;
     const gapWidth = 20;
@@ -121,7 +121,7 @@ const RelatedProducts = ({ product }: any) => {
                     }
                     return response.json();
                 })
-                .then((data) => setProducts(data.filter((i: { id: any; }) => parseInt(i.id) !== parseInt(product?.id))))
+                .then((data) => setProducts(data.filter((i: { id: string; }) => parseInt(i.id) !== parseInt(product?.id))))
                 .catch((error) => console.error('Error loading products:', error));
         }
     }, [product]);

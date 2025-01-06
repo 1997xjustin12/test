@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getFirstPathSegment } from "@/app/lib/helpers";
+import { createSlug } from "@/app/lib/helpers";
 import {
   Disclosure,
   DisclosureButton,
@@ -15,7 +15,7 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 // icon
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -33,12 +33,70 @@ function classNames(...classes) {
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+const mobile_navigation = cat_json
+  .filter((i) => i.menu.visible === true)
+  .sort((a, b) => a.menu.order - b.menu.order)
+  .map((i) => ({
+    name: i.name,
+    url: i.menu.href,
+    children: i.links.flatMap((i2) => i2),
+  }));
 
 export default function TuiNavbar() {
   const [mobileMenuDialog, setMobileMenuDialog] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(mobile_navigation);
+  const [selected, setSelected] = useState([]);
+  const [overviewUrl, setOverviewUrl] = useState(null);
+  const router = useRouter();
   const path = usePathname();
   const category_slug = cat_json.find((i) => "/" + i.menu.href === path)?.menu
     ?.href;
+
+  const redirectToHome = (e) => {
+    router.push("/");
+    setMobileMenuDialog(false);
+  };
+
+  const handleMenuLinkItemClick = (e) => {
+    e.preventDefault();
+    const url = e.target.getAttribute("href");
+    console.log(url);
+    if (url) {
+      router.push(url);
+      setMobileMenuDialog(false);
+    } else {
+      alert("no url");
+    }
+  };
+
+  const handleExpandOptionClick = (name) => {
+    setSelected((prev) => [...prev, name]);
+  };
+
+  useEffect(() => {
+    if (selected.length === 0) {
+      setActiveMenu(mobile_navigation);
+    } else if (selected.length === 1) {
+      const filtered = mobile_navigation.find((i) => i.name === selected[0]);
+      setActiveMenu(filtered.children);
+      setOverviewUrl(filtered.url);
+    } else if (selected.length === 2) {
+      const filtered = mobile_navigation
+        .find((i) => i.name === selected[0])
+        .children.find((i) => i.name === selected[1]);
+      setActiveMenu(filtered.children);
+      setOverviewUrl(filtered.url);
+    }
+    console.log("selected", selected);
+  }, [selected]);
+
+  const handleMobileBackClick = (e) => {
+    setSelected((prev) => {
+      if (prev.length > 0) {
+        return prev.slice(0, -1);
+      }
+    });
+  };
   return (
     <>
       <div className="relative">
@@ -47,21 +105,15 @@ export default function TuiNavbar() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 hover:border-gray-700 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ">
+                <DisclosureButton
+                  onClick={() => setMobileMenuDialog(true)}
+                  className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 hover:border-gray-700 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
-                  <Bars3Icon
-                    aria-hidden="true"
-                    className="block size-6 group-data-[open]:hidden"
-                  />
-                  <XMarkIcon
-                    aria-hidden="true"
-                    className="hidden size-6 group-data-[open]:block"
-                  />
+                  <Bars3Icon aria-hidden="true" className="block size-6" />
                 </DisclosureButton>
               </div>
               <div className="flex items-center justify-center flex-1 sm:flex-initial sm:items-stretch sm:justify-start">
-                {" "}
                 {/** flex-1 sm:items-stretch sm:justify-start */}
                 <div className="flex shrink-0 items-center">
                   <img
@@ -288,22 +340,90 @@ export default function TuiNavbar() {
           <div className="flex min-h-full items-end justify-center md:p-4 text-center sm:items-center sm:p-0">
             <DialogPanel
               transition
-              className="w-full h-screen relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95">
+              className="w-full h-screen relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto pb-[30px]">
               <div className="">
-                <div className="flex justify-between p-[10px]">
-                  <button>
+                <div className="bg-slate-800 flex justify-between p-[10px]">
+                  <button
+                    className="flex items-center gap-[8px] p-1 rounded bg-stone-300"
+                    onClick={() => setMobileMenuDialog(false)}>
                     <Icon
                       icon="qlementine-icons:close-16"
-                      width="16"
-                      height="16"
+                      width="32"
+                      height="32"
                     />
-                    <div>CLOSE</div>
                   </button>
-                  <Link href={`${BASE_URL}`}>HOME</Link>
+                  <Link
+                    href={`${BASE_URL}`}
+                    className="flex bg-stone-300 rounded gap-[8px] items-center p-1"
+                    onClick={() => redirectToHome()}>
+                    <Icon icon="tabler:home-up" width="24" height="24" />
+                    <div>Home</div>
+                  </Link>
                 </div>
-                <div>move up button label and link</div>
-                <div>Navigation section</div>
-                <div>other contents</div>
+                {selected && selected.length > 0 && (
+                  <div className="p-[10px] bg-stone-300 flex justify-between">
+                    <div
+                      className="flex items-center"
+                      onClick={handleMobileBackClick}>
+                      <Icon icon="famicons:arrow-back" width="20" height="20" />
+                      <div>
+                        {selected.length === 1
+                          ? "Menu"
+                          : selected[selected.length - 2]}
+                      </div>
+                    </div>
+                    <div>
+                      {overviewUrl && (
+                        <Link
+                          href={overviewUrl}
+                          onClick={handleMenuLinkItemClick}>
+                          {selected[selected.length - 1]}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <div className="">
+                  {activeMenu.map((i, index) => (
+                    <div
+                      key={`menu-${createSlug(i.name)}`}
+                      className="border-b p-[10px]">
+                      {i.children && i.children.length > 0 ? (
+                        <div
+                          onClick={() => handleExpandOptionClick(i.name)}
+                          className=" flex justify-between items-center">
+                          <div>{i.name}</div>
+                          <div className="">
+                            <Icon
+                              icon="ic:round-navigate-next"
+                              width="24"
+                              height="24"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <Link
+                          href={`${BASE_URL}/${i?.url}`}
+                          onClick={handleMenuLinkItemClick}
+                          className=" flex justify-between items-center">
+                          <div>{i.name}</div>
+                          <div className="">
+                            <Icon
+                              icon="ion:open-outline"
+                              width="24"
+                              height="24"
+                            />
+                          </div>
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex h-[120px] items-center justify-center">
+                  <div className="text-stone-500 font-semibold">
+                    OTHER CONTENTS
+                  </div>
+                </div>
               </div>
             </DialogPanel>
           </div>

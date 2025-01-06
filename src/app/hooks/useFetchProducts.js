@@ -15,7 +15,11 @@ export default function useFetchProducts(initialParams = {}) {
     const url = `/api/products?${queryParams}`; // Replace with your API endpoint
 
     try {
-      const res = await fetch(url, { signal }); // Pass the signal to fetch
+      const res = await fetch(url, {
+        signal,
+        cache: "force-cache",
+        next: { revalidate: 3600 },
+      }); // Pass the signal to fetch
       if (!res.ok) {
         throw new Error('Failed to fetch products');
       }

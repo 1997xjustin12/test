@@ -55,7 +55,7 @@ const ProductCard = ({ product }) => {
           <div className="text-xs">
             STARTING AT{" "}
             <span className="text-pallete-orange font-bold text-lg">
-              ${parseFloat(product.price).toFixed(2)}
+              ${parseFloat(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </span>
           </div>
           <div className="my-[7px] text-sm h-[100px]">
