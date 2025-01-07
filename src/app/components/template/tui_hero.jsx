@@ -164,7 +164,7 @@ export default function Hero({ data }) {
             alt={`Banner`}
             className="object-cover"
             layout="fill"
-            priority={false}
+            // priority={false}
           />
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
             <div className="text-center flex justify-center">
