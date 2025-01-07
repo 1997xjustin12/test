@@ -26,7 +26,6 @@ export default async function GenericCategoryPage({ params }) {
   const page_data = getPageData(slug, flatCategories);
   console.log("page_data", page_data);
   if (page_data === undefined) {
-    console.log("YESYESSHOW");
     notFound();
   }
   return (

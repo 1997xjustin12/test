@@ -23,6 +23,7 @@ const ProductsSection = ({ category }) => {
     products,
     loading: products_loading,
     pagination,
+    noResult,
     error: products_error,
     refetch: productsRefetch,
   } = useFetchProducts(productsParams);
@@ -94,6 +95,7 @@ const ProductsSection = ({ category }) => {
             category={category}
             products={products}
             loading={products_loading}
+            noResult={noResult}
             pagination={pagination}
             onSortChange={handleSortChange}
             onPageChange={handlePageChange}

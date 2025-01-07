@@ -103,6 +103,7 @@ export default function TuiFilterSort({
   products,
   pagination,
   loading,
+  noResult,
   onSortChange,
   onPageChange,
 }) {
@@ -432,7 +433,7 @@ export default function TuiFilterSort({
                   </div>
                 ) : (
                   <>
-                    {displayProducts.length === 0 ? (
+                    {noResult ? (
                       <div className="flex justify-center">
                         <div className="text-stone-500 text-3xl py-10 font-bold">
                           Nothing to display

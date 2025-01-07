@@ -1,39 +1,39 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 export default function useFetchProduct(initialParams = {}) {
-  const {id} = initialParams;
+  const { id } = initialParams;
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [params, setParams] = useState(initialParams); // State for query params
 
-
-
-  const fetchProduct = useCallback(async (signal, customParams = null) => {
-    setLoading(true);
-    setError(null);
-    setProduct({});
-    const queryParams = new URLSearchParams(customParams || params);
-    queryParams.delete("id");
-    const url = `/api/product/${id}/?${queryParams.toString()}`; // Replace with your API endpoint
-    console.log(url);
-    try {
-      const res = await fetch(url, { signal }); // Pass the signal to fetch
-      if (!res.ok) {
-        throw new Error('Failed to fetch product');
-      }
-      const data = await res.json();
-      setProduct(data.data);
-      setPagination(data.meta);
-      setLoading(false);
-
-    } catch (err) {
-      if (err.name !== 'AbortError') {
+  const fetchProduct = useCallback(
+    async (signal, customParams = null) => {
+      setLoading(true);
+      setError(null);
+      setProduct({});
+      const queryParams = new URLSearchParams(customParams || params);
+      queryParams.delete("id");
+      const url = `/api/product/${id}/?${queryParams.toString()}`; // Replace with your API endpoint
+      console.log(url);
+      try {
+        const res = await fetch(url, { signal }); // Pass the signal to fetch
+        if (!res.ok) {
+          throw new Error("Failed to fetch product");
+        }
+        const data = await res.json();
+        setProduct(data.data);
+        setPagination(data.meta);
         setLoading(false);
-        setError(err.message); // Handle only non-abort errors
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setLoading(false);
+          setError(err.message); // Handle only non-abort errors
+        }
       }
-    }
-  }, [params]);
+    },
+    [params]
+  );
 
   useEffect(() => {
     const controller = new AbortController(); // Create a controller for this fetch
@@ -51,6 +51,5 @@ export default function useFetchProduct(initialParams = {}) {
     };
   }, [fetchProduct]);
 
-
-  return { product, loading, error};
+  return { product, loading, error };
 }
