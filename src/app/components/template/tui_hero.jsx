@@ -168,7 +168,8 @@ export default function Hero({ data }) {
           />
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
             <div className="text-center flex justify-center">
-              <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]">
+              {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}
+              <div className="px-[20px] py-[7px]">
                 <div className="text-balance text-md font-semibold tracking-tight text-white md:text-2xl">
                   {data?.name === "All Products"
                     ? "Elevate Your Outdoors – Fireplaces, Fire Pits & More! Shop Now!"

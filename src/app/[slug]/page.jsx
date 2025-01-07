@@ -3,6 +3,7 @@ import ProductsSection from "../components/section/Products";
 import { getPageData } from "../lib/helpers";
 import cat_json from "../data/category.json";
 import { notFound } from "next/navigation";
+import MobileLoader from "../components/molecule/MobileLoader";
 
 const main_categories = cat_json
   .filter((i) => i.menu.visible)
@@ -30,6 +31,7 @@ export default async function GenericCategoryPage({ params }) {
   }
   return (
     <div>
+      <MobileLoader />
       <TuiHero data={page_data} />
       <ProductsSection
         category={main_cat_array.includes(slug) ? slug : "all-products"}
