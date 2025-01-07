@@ -1,27 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import LoaderIcon from "../atom/LoaderIcon";
+import Image from "next/image";
 export default function Hero({ data }) {
   if (data.children && data.children.length > 0) {
     return (
       <div>
         <div className="container mx-auto flex flex-col md:flex-row">
           <div className="w-full  md:w-[calc(100%-370px)]">
-            <div
-              className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 "
-              style={{
-                background: `linear-gradient(to right, rgba(41, 37, 36, 1), rgba(41, 37, 36, 0) 20%, rgba(41, 37, 36, 0) 80%, rgba(41, 37, 36, 0)), url('${
-                  data?.banner_img ??
-                  "/images/banner/fireplace-home-banner.webp"
-                }')`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-              }}>
-              <div className="mx-auto max-w-4xl  py-[50px] sm:py-48 lg:py-56 ">
+            <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
+              <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
                 <div className="text-center flex justify-center">
                   <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
                     <div className="text-balance text-xl font-semibold tracking-tight text-white sm:text-4xl">
@@ -30,6 +19,17 @@ export default function Hero({ data }) {
                   </div>
                 </div>
               </div>
+
+              <Image
+                src={
+                  data?.banner_img ??
+                  "/images/banner/fireplace-home-banner.webp"
+                }
+                alt={`Banner`}
+                className="object-cover"
+                layout="fill"
+                priority={false}
+              />
             </div>
             <div className="flex-col flex md:flex-row">
               <div className="w-full md:w-[calc(100%-250px)] p-[20px]">
@@ -92,7 +92,7 @@ export default function Hero({ data }) {
               </div>
             </div>
           </div>
-          <div className="w-full md:w-[370px] p-[25px]">
+          <div className="w-full md:w-[370px] p-[25px] overflow-hidden">
             <div>
               <div className="text-stone-500 flex items-center gap-[4px]">
                 <Icon icon="mdi:cart" width="24" height="24" />{" "}
@@ -101,7 +101,7 @@ export default function Hero({ data }) {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-[15px] mt-[20px]">
+              <div className="flex flex-col gap-[15px] mt-[20px]  md:h-[729px] md:overflow-y-auto md:pb-[20px] md:pt-[8px] md:pr-[10px]">
                 {data.children &&
                   data.children.length > 0 &&
                   data.children.map((i, index) => (
@@ -119,17 +119,18 @@ export default function Hero({ data }) {
                       <div className="w-[calc(100%-40px)]">
                         <Link href={i.url ?? "#"}>
                           <div className="flex items-center shadow-md rounded overflow-hidden gap-[10px] w-full group">
-                            <div className="w-[80px] h-[80px] flex justify-center items-center">
-                              <img
+                            <div className="w-[80px] h-[80px] flex justify-center items-center relative">
+                              <Image
                                 src="/images/banner/firepit-banner.webp"
-                                alt=""
+                                alt={`sub-category-${i.url}`}
                                 className="w-[80px] h-[80px] object-cover"
+                                layout="fill"
+                                objectFit="cover"
                               />
                             </div>
                             <div
                               className={`text-sm uppercase text-stone-600 font-bold w-[calc(100%-95px)] group-hover:text-orange-500`}>
                               {i.name}
-                              Load
                             </div>
                             <div className="text-stone-600 group-hover:text-orange-500">
                               <Icon
@@ -151,25 +152,27 @@ export default function Hero({ data }) {
     );
   } else {
     return (
-      <div
-        className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 "
-        style={{
-          background: `linear-gradient(to right, rgba(41, 37, 36, 1), rgba(41, 37, 36, 0) 20%, rgba(41, 37, 36, 0) 80%, rgba(41, 37, 36, 0)), url('${
-            data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
-          }')`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-        }}>
-        <div className="mx-auto max-w-4xl  py-[50px] sm:py-48 lg:py-56 ">
-          <div className="text-center flex justify-center">
-            {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
-              <div className="text-balance text-xl font-semibold tracking-tight text-white sm:text-4xl">
-                {data?.name ?? "Design for Modern Living"}
+      // , url('${
+      //   data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
+      // }')
+      <div className="w-full">
+        <div className="container mx-auto w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
+          <Image
+            src={
+              data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
+            }
+            alt={`Banner`}
+            className="object-cover"
+            layout="fill"
+            priority={false}
+          />
+          <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
+            <div className="text-center flex justify-center">
+              <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
+                <div className="text-balance text-xl font-semibold tracking-tight text-white sm:text-4xl">
+                  {data?.name ?? "Design for Modern Living"}
+                </div>
               </div>
-            </div> */}
-            <div>
-              <LoaderIcon />
             </div>
           </div>
         </div>

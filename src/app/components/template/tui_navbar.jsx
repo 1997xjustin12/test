@@ -1,22 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createSlug } from "@/app/lib/helpers";
+import PageLoader from "../atom/PageLoader";
 import {
   Disclosure,
   DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
   Dialog,
   DialogPanel,
   DialogBackdrop,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-
+import {
+  usePathname,
+  //  useSearchParams,
+  useRouter,
+} from "next/navigation";
 // icon
 import { Icon } from "@iconify/react/dist/iconify.js";
 // components
@@ -27,10 +26,6 @@ import cat_json from "../../data/category.json";
 const navigation = cat_json
   .filter((i) => i.menu.visible === true)
   .sort((a, b) => a.menu.order - b.menu.order);
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const mobile_navigation = cat_json
@@ -49,21 +44,32 @@ export default function TuiNavbar() {
   const [overviewUrl, setOverviewUrl] = useState(null);
   const router = useRouter();
   const path = usePathname();
+  // const searchParams = useSearchParams();
   const category_slug = cat_json.find((i) => "/" + i.menu.href === path)?.menu
     ?.href;
+  // const [prevPath, setPrevPath] = useState(`${path}?${searchParams}`);
+  // useEffect(() => {
+  //   const url = `${path}?${searchParams}`;
+  //   setPrevPath((prev) => {
+  //     if (prev !== url) {
+  //       console.log("trigger loading and close menu and modal");
+  //       setMobileMenuDialog((prev) => false);
+  //     }
+  //     return url;
+  //   });
+  // }, [path, searchParams]);
 
   const redirectToHome = (e) => {
     router.push("/");
-    setMobileMenuDialog(false);
+    // setMobileMenuDialog(false);
   };
 
   const handleMenuLinkItemClick = (e) => {
     e.preventDefault();
-    const url = e.target.getAttribute("href");
+    const url = e.target.closest("a").getAttribute("href");
     console.log(url);
     if (url) {
       router.push(url);
-      setMobileMenuDialog(false);
     } else {
       alert("no url");
     }
@@ -128,9 +134,12 @@ export default function TuiNavbar() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <ul className="flex space-x-4">
-                  <li>
+                  <li className="relative">
+                    <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
+                      Soon
+                    </div>
                     <a
-                      href="#home"
+                      href="#"
                       className="text-gray-700 hover:text-blue-500 relative">
                       <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                         <div className="text-[10px]">26</div>
@@ -138,9 +147,12 @@ export default function TuiNavbar() {
                       <Icon icon="bx:cart" width="24" height="24" />
                     </a>
                   </li>
-                  <li>
+                  <li className="relative">
+                    <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
+                      Soon
+                    </div>
                     <a
-                      href="#about"
+                      href="#"
                       className="text-gray-700 hover:text-blue-500 relative">
                       <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                         <div className="text-[10px]">739</div>
@@ -149,57 +161,6 @@ export default function TuiNavbar() {
                     </a>
                   </li>
                 </ul>
-                {/* <button
-              type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
-            </button>
-
-            <Menu as="div" className="relative ml-3">
-              <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
-                </MenuButton>
-              </div>
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-              >
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Your Profile
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Sign out
-                  </a>
-                </MenuItem>
-              </MenuItems>
-            </Menu> */}
               </div>
             </div>
           </div>
@@ -209,7 +170,7 @@ export default function TuiNavbar() {
                 {navigation.map((i, index) => (
                   <div
                     key={`parent-nav-${index}`}
-                    className={`group py-[5px] px-[15px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b ${
+                    className={`group py-[5px] px-[15px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b hover:bg-orange-400 hover:text-white ${
                       i.menu.href === category_slug
                         ? "text-white bg-pallete-orange"
                         : "text-pallete-dark"
@@ -225,7 +186,7 @@ export default function TuiNavbar() {
                       {i.name}
                     </Link>
                     {i.links && i.links.length > 0 && (
-                      <div className="bg-white absolute w-full left-0 top-[100%] z-[999] invisible group-hover:visible">
+                      <div className="bg-white absolute w-full left-0 top-[100%] z-[100] invisible group-hover:visible">
                         <div className="container mx-auto py-5">
                           <div className="flex justify-between">
                             <div className="w-full flex gap-[70px]">
@@ -333,14 +294,14 @@ export default function TuiNavbar() {
         className="relative z-10">
         <DialogBackdrop
           transition
-          className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+          className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in md:hidden"
         />
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center md:p-4 text-center sm:items-center sm:p-0">
             <DialogPanel
               transition
-              className="w-full h-screen relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto pb-[30px]">
+              className=" md:hidden w-full h-screen relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto pb-[30px]">
               <div className="">
                 <div className="bg-slate-800 flex justify-between p-[10px]">
                   <button

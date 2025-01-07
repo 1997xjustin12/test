@@ -2,7 +2,6 @@
 import ProductMetaTabs from "@/app/components/product/meta/Tabs";
 import MediaGallery from "@/app/components/widget/MediaGallery";
 import ProductToCart from "@/app/components/widget/ProductToCart";
-import RelatedProducts from "@/app/components/widget/RelatedProducts";
 import { useState, useEffect } from "react";
 
 const ProductSection = ({ product, loading }) => {

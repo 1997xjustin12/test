@@ -4,8 +4,11 @@ import { Rating } from "@smastrom/react-rating";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { formatPrice } from "@/app/lib/helpers";
+import { useRouter } from "next/navigation";
+import LoaderIcon from "../atom/LoaderIcon";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ product }) => {
+  const router = useRouter();
   const [thumbnail, setThumbnail] = useState(null);
   useEffect(() => {
     if (product) {
@@ -20,19 +23,37 @@ const ProductCard = ({ product }) => {
     }
   }, [product]);
   const handleHeartButtonClick = () => {};
-
+  const handleProductItemClick = (e) => {
+    e.preventDefault();
+    const url = e.target.closest("a").getAttribute("href");
+    console.log(url);
+    if (url) {
+      // router.push(url);
+      // setIsLoading(true);
+    } else {
+      alert("no url");
+    }
+  };
   return (
     <Link
       href={`${BASE_URL}/product/${product.custom_url.url}`}
+      // onClick={handleProductItemClick}
       className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group">
       <div className="">
-        <div className="w-full flex items-center justify-center h-[230px] overflow-hidden bg-white relative">
-          <img src={thumbnail} alt="" className="object-contain h-full" />
-          {/* <div className="absolute top-[10px] right-[10px]">
-            <button className={`flex justify-center items-center w-[36px] h-[36px] rounded-full ${product.like? 'bg-pallete-orange':'bg-stone-400'}`} onClick={handleHeartButtonClick}>
-                <Icon icon="teenyicons:heart-outline" className="text-white text-[20px]" />
-            </button>
-        </div> */}
+        <div
+          className={`w-full flex items-center justify-center h-[230px] overflow-hidden relative ${
+            product.isSelected ? "bg-stone-600" : "bg-white"
+          }`}>
+          <img
+            src={thumbnail}
+            alt=""
+            className={`object-contain h-full ${
+              product.isSelected ? "opacity-40" : "opacity-100"
+            }`}
+          />
+          <div className={`absolute ${product.isSelected ? "" : "hidden"}`}>
+            <LoaderIcon dark={false} />
+          </div>
           {product.sales_tag === "ON SALE" && (
             <div className="absolute bottom-[60px] left-0 rounded-r-full bg-pallete-orange text-white text-[12px] font-bold py-[7px] px-[15px]">
               ONSALE
@@ -73,11 +94,9 @@ const ProductCard = ({ product }) => {
           {/* bg-yellow-300 */}
           <div className={`flex flex-col`}>
             <div className={`flex items-center gap-[5px]`}>
-              <div>
-                <Rating
-                  value={product.reviews_rating_sum}
-                  style={{ maxWidth: 80 }}></Rating>
-              </div>
+              <Rating
+                value={product.reviews_rating_sum}
+                style={{ maxWidth: 80 }}></Rating>
               <div className={`text-[0.75rem]`}>
                 ({product.reviews_count}){/* (id:{product.id}) */}
               </div>

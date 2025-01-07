@@ -13,11 +13,11 @@ export default function Product({ params }) {
 
   useEffect(() => {
     if (error) {
-      return <notFound />;
+      notFound();
     }
 
     if (!loading && products.length === 0) {
-      return <notFound />;
+      notFound();
     } else {
       setProduct(products[0]);
     }

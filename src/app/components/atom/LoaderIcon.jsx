@@ -1,10 +1,10 @@
-export default function LoaderIcon() {
+export default function LoaderIcon({ width, height, dark }) {
   return (
     <div className="flex items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="120"
-        height="120"
+        width={width ?? "120"}
+        height={height ?? "120"}
         viewBox="0 0 24 24">
         <defs>
           {/* <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -18,10 +18,14 @@ export default function LoaderIcon() {
             </stop>
           </linearGradient> */}
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#222222">
+            <stop offset="0%" stopColor={dark ? "#222222" : "white"}>
               <animate
                 attributeName="stop-color"
-                values="#222222;#333333;#555555;#555555;#333333;#222222;"
+                values={
+                  dark
+                    ? "#222222;#333333;#555555;#555555;#333333;#222222;"
+                    : "white;light-gray;white-smoke;white-smoke;light-gray;white;"
+                }
                 dur="2s"
                 repeatCount="indefinite"
               />

@@ -40,3 +40,7 @@ export function formatPrice(price) {
     maximumFractionDigits: 2,
   }).format(price);
 }
+
+export function getPageData(pathname, categories) {
+  return categories.find(({ url }) => url === pathname);
+}

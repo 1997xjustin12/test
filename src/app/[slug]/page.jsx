@@ -1,7 +1,8 @@
 import TuiHero from "../components/template/tui_hero";
 import ProductsSection from "../components/section/Products";
-
+import { getPageData } from "../lib/helpers";
 import cat_json from "../data/category.json";
+import { notFound } from "next/navigation";
 
 const main_categories = cat_json
   .filter((i) => i.menu.visible)
@@ -22,16 +23,12 @@ const flatCategories = [
 
 export default async function GenericCategoryPage({ params }) {
   const slug = (await params)?.slug;
-  const page_data = flatCategories.find(({ url }) => url === slug);
-
-  console.log("slug", slug);
+  const page_data = getPageData(slug, flatCategories);
   console.log("page_data", page_data);
-  // const category = "fire-pits";
-  // const hero_props = {
-  //   banner_img: "/images/banner/firepit-banner.webp",
-  //   text: "Shop All Fire Pits",
-  // };
-
+  if (page_data === undefined) {
+    console.log("YESYESSHOW");
+    notFound();
+  }
   return (
     <div>
       <TuiHero data={page_data} />

@@ -128,9 +128,12 @@ export default function TuiFilterSort({
   useEffect(() => {
     if (products && products.length > 0) {
       if (pagination.current_page !== 1) {
-        setDisplayProducts((prev) => [...prev, ...products]);
+        setDisplayProducts((prev) => [
+          ...prev,
+          ...products.map((i) => ({ ...i, isSelected: false })),
+        ]);
       } else {
-        setDisplayProducts(products);
+        setDisplayProducts(products.map((i) => ({ ...i, isSelected: false })));
       }
     }
   }, [products]);
@@ -146,6 +149,13 @@ export default function TuiFilterSort({
 
   const handleShowMorePagination = (page) => {
     onPageChange(page);
+  };
+
+  const handleProductItemClick = (id) => {
+    // alert(`Product ID (${id}) is Clicked`);
+    setDisplayProducts((prev) => {
+      return prev.map((i) => ({ ...i, isSelected: i.id === id }));
+    });
   };
   return (
     <div className="bg-white">
@@ -267,7 +277,7 @@ export default function TuiFilterSort({
         </Dialog>
 
         <main className="px-2 sm:px-4 relative bg-white">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24  sticky top-[-31px] bg-white z-[5]">
+          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-6  sticky top-[40px] bg-white z-[5]">
             <h1 className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
               {`${activeCategoryName(category)}`}{" "}
               <span className="font-normal text-sm md:text-2xl">{`${
@@ -335,25 +345,8 @@ export default function TuiFilterSort({
             <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:gap-y-10 lg:grid-cols-4">
               {/* Filters */}
               <div className="relative">
-                <form className="hidden lg:block lg:sticky top-[140px]">
+                <form className="hidden lg:block lg:sticky top-[130px]">
                   <h3 className="sr-only">Categories</h3>
-                  {/* <ul
-                    role="list"
-                    className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                    {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <Link
-                          href={`${BASE_URL}/${category.menu.href}`}
-                          className={`${
-                            activeCategory(category.menu.href)
-                              ? "text-pallete-orange"
-                              : ""
-                          }`}>
-                          {category.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul> */}
 
                   {filters.map((section) => (
                     <Disclosure
@@ -448,7 +441,9 @@ export default function TuiFilterSort({
                     ) : (
                       <div className="grid sm:gap-3 lg:grid-cols-3 lg:gap-6 grid-cols-2 gap-2">
                         {displayProducts.map((v, i) => (
-                          <div key={`product-display-${i}`}>
+                          <div
+                            key={`product-display-${v.id}`}
+                            onClick={() => handleProductItemClick(v.id)}>
                             <ProductCard product={v} />
                           </div>
                         ))}

@@ -12,15 +12,6 @@ import cat_json from "../../data/category.json";
 import useFetchProducts from "@/app/hooks/useFetchProducts";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-if (typeof window === "undefined") {
-  global.localStorage = {
-    getItem: () => null,
-    setItem: () => {},
-    removeItem: () => {},
-    clear: () => {},
-  };
-}
-
 // create an array of all category, sub_categories and links
 const main_categories = cat_json
   .filter((i) => i.searchable === true)
