@@ -24,8 +24,8 @@ import {
 } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
-import cat_json from "../../data/category.json";
-import bccat_json from "../../data/bc_categories_20241213.json";
+import { getPageData } from "@/app/lib/helpers";
+import { flatCategories } from "@/app/lib/category-helpers";
 
 const sortOptions = [
   {
@@ -51,11 +51,6 @@ const sortOptions = [
 ];
 
 const loaderArray = [1, 2, 3, 4, 5, 6, 7, 8];
-const subCategories = cat_json
-  .filter((i) => i.menu.visible)
-  .map((i) => ({ ...i, active: false }))
-  .sort((a, b) => a.menu.order - b.menu.order);
-
 const filters = [
   {
     id: "color",
@@ -97,6 +92,7 @@ const filters = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function TuiFilterSort({
   category,
@@ -107,7 +103,6 @@ export default function TuiFilterSort({
   onSortChange,
   onPageChange,
 }) {
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
   const [sort, setSort] = useState(sortOptions);
   const [displayProducts, setDisplayProducts] = useState([]);
   const activeCategory = (path) => {
@@ -121,7 +116,7 @@ export default function TuiFilterSort({
     if (category === "all-products") {
       return "All Products";
     } else {
-      return subCategories.find((i) => i.menu.href === category)?.name;
+      return getPageData(category, flatCategories)?.name;
     }
   };
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -189,22 +184,6 @@ export default function TuiFilterSort({
               {/* Filters */}
               <form className="mt-4 border-t border-gray-200">
                 <h3 className="sr-only">Categories</h3>
-                {/* <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                  {subCategories.map((category) => (
-                    <li key={category.name}>
-                      <Link
-                        href={`${BASE_URL}/${category.menu.href}`}
-                        className={`block px-2 py-3 ${
-                          activeCategory(category.menu.href)
-                            ? "text-pallete-orange"
-                            : ""
-                        }`}>
-                        {category.name} {activeCategory(category.menu.href)}
-                      </Link>
-                    </li>
-                  ))}
-                </ul> */}
-
                 {filters.map((section) => (
                   <Disclosure
                     key={section.id}

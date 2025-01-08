@@ -16,13 +16,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const main_categories = cat_json
   .filter((i) => i.searchable === true)
   .map((i) => ({ ...i, name: i.name, url: i.menu.href }));
-console.log("mainCat", main_categories);
+// console.log("mainCat", main_categories);
 const sub_categories = main_categories
   .reduce((acc, cur) => [...acc, ...cur.links], [])
   .reduce((acc, cur) => [...acc, ...cur], []);
-console.log("subCat", sub_categories);
+// console.log("subCat", sub_categories);
 const children_categories = sub_categories.flatMap((i) => i.children);
-console.log("childCat", children_categories);
+// console.log("childCat", children_categories);
 const brands = sub_categories
   .filter((i) => i.name.toLowerCase().includes("brand"))
   .flatMap((i) => i.children)
@@ -31,7 +31,7 @@ const brands = sub_categories
     if (a.name > b.name) return 1;
     return 0;
   });
-console.log("brands", brands);
+// console.log("brands", brands);
 const HomeSearch = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const [search, setSearch] = useState("");

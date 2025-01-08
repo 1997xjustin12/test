@@ -7,14 +7,16 @@ import { getCategoryIds } from "@/app/lib/helpers";
 import cat_json from "../../data/category.json";
 import bccat_json from "../../data/bc_categories_20241213.json";
 import { useMediaQuery } from "react-responsive";
-
+import { flatCategories } from "@/app/lib/category-helpers";
 const ProductsSection = ({ category }) => {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const onloadParams = {
     include: "images",
     page: 1,
     limit: isMobile ? 4 : 10,
-    "categories:in": getCategoryIds(category, cat_json, bccat_json).join(","),
+    "categories:in": getCategoryIds(category, flatCategories, bccat_json).join(
+      ","
+    ),
     sort: "total_sold",
     direction: "desc",
   };

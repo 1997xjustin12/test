@@ -156,8 +156,8 @@ export default function Hero({ data }) {
       //   data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
       // }')
       <div className="w-full">
-        <div className="container mx-auto w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
-          <Image
+        <div className="container mx-auto w-full relative isolate  bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
+          {/* <Image
             src={
               data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
             }
@@ -165,6 +165,13 @@ export default function Hero({ data }) {
             className="object-cover"
             layout="fill"
             // priority={false}
+          /> */}
+          <img
+            src={
+              data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
+            }
+            alt="Banner"
+            className="object-cover  w-full"
           />
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
             <div className="text-center flex justify-center">

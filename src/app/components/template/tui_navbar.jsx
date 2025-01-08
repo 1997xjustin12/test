@@ -21,7 +21,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 // components
 import HomeSearch from "../search/HomeSearch";
 // data
-import cat_json from "../../data/category.json";
+import { solana_categories as cat_json } from "@/app/lib/category-helpers";
 
 const navigation = cat_json
   .filter((i) => i.menu.visible === true)

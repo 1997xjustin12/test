@@ -1,0 +1,827 @@
+[
+  {
+    "name": "All Products",
+    "key_words": [
+      "fireplace",
+      "fireplaces",
+      "fire pit",
+      "fire pits",
+      "fire-pit",
+      "fire-pits",
+      "patio heater",
+      "patio heaters",
+      "patio-heater",
+      "patio-heaters",
+      "patio furniture",
+      "patio furnitures",
+      "patio-furniture",
+      "patio-furnitures",
+      "furniture",
+      "furnitures",
+      "gas log",
+      "gas logs",
+      "gas-log",
+      "gas-logs",
+      "bbq"
+    ],
+    "menu": {
+      "href": "",
+      "visible": true,
+      "order": 1
+    },
+    "filter": {
+      "visible": true,
+      "order": 1
+    },
+    "links": [],
+    "searchable": false
+  },
+  {
+    "name": "Fireplaces",
+    "banner_img": "/images/banner/fireplace-banner.webp",
+    "key_words": ["fireplace", "fireplaces"],
+    "menu": {
+      "href": "fireplaces",
+      "visible": true,
+      "order": 1
+    },
+    "filter": {
+      "visible": true,
+      "order": 1
+    },
+    "links": [
+      [
+        {
+          "name": "Quick Ship Fireplaces",
+          "url": "quick-ship-fireplaces",
+          "key_words": ["/quick-ship-fireplaces/"],
+          "children": []
+        }
+      ],
+      [
+        {
+          "name": "Outdoor Fireplaces",
+          "url": "outdoor-fireplaces",
+          "key_words": [
+            "outdoor-fireplaces",
+            "fire-place-burners",
+            "natural-gas-outdoor-fireplaces",
+            "outdoor-fireplaces-accessories"
+          ],
+          "children": [
+            {
+              "name": "Fire Place Burners",
+              "url": "fire-place-burners",
+              "key_words": ["fire-place-burners"],
+              "children": []
+            },
+            {
+              "name": "Natural Gas Outdoor Fireplaces",
+              "url": "natural-gas-outdoor-fireplaces",
+              "key_words": ["natural-gas-outdoor-fireplaces"],
+              "children": []
+            },
+            {
+              "name": "Outdoor Fireplace Accessories",
+              "url": "outdoor-fireplaces-accessories",
+              "key_words": ["outdoor-fireplaces-accessories"],
+              "children": []
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "Cedar Creek Fireplaces",
+          "url": "cedar-creek-fireplaces",
+          "key_words": ["cedar-creek-fireplaces"],
+          "children": [
+            {
+              "name": "Cedar Creek (Fireplaces Only)",
+              "url": "cedar-creek-fireplaces-only",
+              "key_words": ["cedar-creek-fireplaces-fireplaces-only"],
+              "children": []
+            },
+            {
+              "name": "Cedar Creek Fireplaces Accessories",
+              "url": "cedar-creek-fireplaces-accessories",
+              "key_words": ["cedar-creek-fireplaces-accessories"],
+              "children": []
+            }
+          ]
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "Fire Pits",
+    "banner_img": "/images/banner/firepit-banner.webp",
+    "key_words": ["fire pit", "fire pits", "fire-pit", "fire-pits"],
+    "menu": {
+      "href": "fire-pits",
+      "visible": true,
+      "order": 2
+    },
+    "filter": {
+      "visible": true,
+      "order": 2
+    },
+    "links": [
+      [
+        {
+          "name": "Quick Ship Fire Pits",
+          "key_words": ["quick-ship-fire-pits"],
+          "url": "quick-ship-fire-pits",
+          "children": []
+        },
+        {
+          "name": "Smokeless Fire Pits",
+          "key_words": ["smokeless-fire-pit"],
+          "url": "smokeless-fire-pits",
+          "children": []
+        },
+        {
+          "name": "Gas Fire Pits",
+          "key_words": ["gas-fire-pits"],
+          "url": "gas-fire-pits",
+          "children": []
+        }
+      ],
+      [
+        {
+          "name": "Fire Pit Accessories",
+          "url": "fire-pit-accessories",
+          "key_words": [
+            "fire-pit-accessories",
+            "fire-glasses",
+            "fire-pit-burners",
+            "fire-pit-logs",
+            "fire-pit-rings"
+          ],
+          "children": [
+            {
+              "name": "Fire Glasses",
+              "url": "fire-pit-fire-glasses",
+              "key_words": ["fire-glasses"],
+              "children": []
+            },
+            {
+              "name": "Fire Pit Burners",
+              "url": "fire-pit-burners",
+              "key_words": ["fire-pit-burners"],
+              "children": []
+            },
+            {
+              "name": "Fire Pit Logs",
+              "url": "fire-pit-logs",
+              "key_words": ["fire-pit-logs"],
+              "children": []
+            },
+            {
+              "name": "Fire Pit Rings",
+              "url": "fire-pit-rings",
+              "key_words": ["fire-pit-rings"],
+              "children": []
+            },
+            {
+              "name": "Outdoor Pan Burner Kits",
+              "url": "outdoor-pan-burner-kits",
+              "key_words": ["outdoor-pan-burner-kits"],
+              "children": []
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "Peterson Gas Logs",
+          "url": "peterson-gas-logs",
+          "key_words": ["peterson-gas-logs"],
+          "children": [
+            {
+              "name": "PGL Fire Pit Burners",
+              "url": "pgl-fire-pit-burners",
+              "key_words": ["pgl-fire-pit-burners"],
+              "children": []
+            },
+            {
+              "name": "PGL Fire Pit Glasses",
+              "url": "pgl-fire-pit-glasses",
+              "key_words": ["pgl-fire-pit-glasses"],
+              "children": []
+            },
+            {
+              "name": "PGL Fire Pit Logs",
+              "url": "pgl-fire-pit-logs",
+              "key_words": ["pgl-fire-pit-logs"],
+              "children": []
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "AFG Fire Pit Rings",
+          "url": "afg-fire-pit-rings",
+          "key_words": ["afg-fire-pit-rings"],
+          "children": []
+        },
+        {
+          "name": "Coulee Colorado Fire Pits",
+          "url": "coulee-colorado-fire-pits",
+          "key_words": ["coulee-colorado-fire-pits"],
+          "children": []
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "Patio Heaters",
+    "banner_img": "/images/banner/patio-heater-banner.webp",
+    "key_words": [
+      "patio heater",
+      "patio heaters",
+      "patio-heater",
+      "patio-heaters"
+    ],
+    "menu": {
+      "href": "patio-heaters",
+      "visible": true,
+      "order": 6
+    },
+    "filter": {
+      "visible": true,
+      "order": 6
+    },
+    "links": [
+      [
+        { "name": "Quick Ship Patio Heaters", "children": [] },
+        { "name": "Gas Patio Heaters", "children": [] },
+        { "name": "Electric Patio Heaters", "children": [] },
+        { "name": "Commercial Patio Heaters", "children": [] },
+        { "name": "Infrared Patio Heaters", "children": [] },
+        { "name": "Wall & Ceiling Mount Heaters", "children": [] },
+        { "name": "Free Standing Patio Heaters", "children": [] }
+      ],
+      [
+        { "name": "Patio Heater Accessories", "children": [] },
+        {
+          "name": "Patio Heater Brands",
+          "children": [
+            { "name": "Bromic" },
+            { "name": "Infratech" },
+            { "name": "Solaira" },
+            { "name": "Detroit Radiant" },
+            { "name": "Sunpak" }
+          ]
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "Patio Furnitures",
+    "banner_img": "/images/banner/patio-furniture-banner.webp",
+    "key_words": [
+      "patio furniture",
+      "patio furnitures",
+      "patio-furniture",
+      "patio-furnitures",
+      "furniture",
+      "furnitures"
+    ],
+    "menu": {
+      "href": "patio-furnitures",
+      "visible": true,
+      "order": 3
+    },
+    "filter": {
+      "visible": true,
+      "order": 3
+    },
+    "links": [
+      [
+        {
+          "name": "Outdoor Furniture",
+          "url": "outdoor-furniture",
+          "key_words": ["outdoor-furniture"],
+          "children": []
+        },
+        {
+          "name": "Outdoor Tables",
+          "url": "outdoor-tables",
+          "key_words": ["outdoor-tables"],
+          "children": []
+        },
+        {
+          "name": "Furniture Carts",
+          "url": "furniture-fire-pits",
+          "key_words": ["/furniture/carts/"],
+          "children": []
+        },
+        {
+          "name": "Furniture Fire Pits",
+          "url": "furniture-fire-pits",
+          "key_words": ["/furniture/fire-pits/"],
+          "children": []
+        }
+      ],
+      [
+        {
+          "name": "Outdoor Furniture Accessories",
+          "url": "outdoor-furniture-accessories",
+          "key_words": ["outdoor-furniture-accessories"],
+          "children": []
+        },
+        {
+          "name": "Carts & Islands",
+          "url": "carts-and-islands",
+          "key_words": ["carts-islands"],
+          "children": [
+            {
+              "name": "Carts",
+              "url": "carts-and-islands-carts",
+              "key_words": ["carts-islands/carts"],
+              "children": []
+            }
+          ]
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "Gas Logs",
+    "banner_img": "/images/banner/gas-log-banner.webp",
+    "key_words": ["gas log", "gas logs", "gas-log", "gas-logs"],
+    "menu": {
+      "href": "gas-logs",
+      "visible": true,
+      "order": 5
+    },
+    "filter": {
+      "visible": true,
+      "order": 5
+    },
+    "links": [
+      [
+        { "name": "Qucik Ship Gas Logs", "children": [] },
+        { "name": "Vented Gas Log Sets", "children": [] },
+        { "name": "Ventless Gas Log Sets", "children": [] },
+        { "name": "Outdoor Gas Log Sets", "children": [] },
+        { "name": "Fireballs, Shapes & Stones", "children": [] },
+        { "name": "Replacement Gas Logs", "children": [] },
+        { "name": "See-Through Gas Logs", "children": [] }
+      ],
+      [
+        { "name": "Electric Log Sets", "children": [] },
+        {
+          "name": "Gas Log Accessories",
+          "children": [
+            { "name": "Indoor Gas Fireplace Burners" },
+            { "name": "Fire Glass and Lava Rock" },
+            { "name": "Gas Log Valves, Keys, and Covers" },
+            { "name": "Gas Log Safety Pilot Kits" }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "Gas Log Brands",
+          "children": [
+            { "name": "Grand Canyon" },
+            { "name": "Real Fyre" },
+            { "name": "Superior" },
+            { "name": "Empire" },
+            { "name": "Northern Flame" },
+            { "name": "Rasmussen" },
+            { "name": "Wilderness Collection" },
+            { "name": "Hargrove" },
+            { "name": "Napoleon" },
+            { "name": "Monessen" }
+          ]
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "BBQ",
+    "banner_img": "/images/banner/bbq-banner.webp",
+    "key_words": ["bbq"],
+    "menu": {
+      "href": "bbq",
+      "visible": true,
+      "order": 4
+    },
+    "filter": {
+      "visible": true,
+      "order": 4
+    },
+    "links": [
+      [
+        {
+          "name": "BBQ Quick Ship",
+          "url": "quick-ship-bbq",
+          "key_words": ["quick-ship-bbq"],
+          "children": []
+        },
+        {
+          "name": "BBQ Grilling Tools and Accessories",
+          "url": "bbq-grilling-tools-and-accessories",
+          "key_words": ["bbq-grilling-tools-and-accessories"],
+          "children": []
+        },
+        {
+          "name": "BBQ Grills and Smokers",
+          "url": "bbq-grills-and-smokers",
+          "key_words": ["bbq-grills-and-smokers"],
+          "children": []
+        },
+        {
+          "name": "BBQ Islands and Kits",
+          "url": "bbq-islands-kits",
+          "key_words": ["bbq-islands-kits"],
+          "children": []
+        },
+        {
+          "name": "BBQ Islands and Kits",
+          "url": "bbq-islands-and-kits",
+          "key_words": ["bbq-islands-kits"],
+          "children": []
+        }
+      ],
+      [
+        {
+          "name": "Charcoal/Pellets & Starters",
+          "url": "charcoal-pellets-and-starters",
+          "key_words": ["charcoal-pellets-starters"],
+          "children": [
+            {
+              "name": "Charcoal Starters",
+              "url": "charcoal-starters",
+              "key_words": ["charcoal-starters"],
+              "children": []
+            },
+            {
+              "name": "Lump Charcoal",
+              "url": "lump-charcoal",
+              "key_words": ["lump-charcoal"],
+              "children": []
+            },
+            {
+              "name": "Wood Chips & Chunks",
+              "url": "wood-chips-and-chunks",
+              "key_words": ["wood-chips-chunks"],
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Covers",
+          "url": "bbq-grilling-tools-and-accessories-covers",
+          "key_words": ["/bbq-grilling-tools-and-accessories/covers/"],
+          "children": [
+            {
+              "name": "Built In Grill Cover",
+              "url": "bbq-grilling-tools-and-accessories-built-in-grill-covers",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/covers/built-in-grill-cover/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Built In Pizza Cover",
+              "url": "bbq-grilling-tools-and-accessories-built-in-pizza-cover",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/covers/built-in-pizza-cover/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Freestanding Grill Cover",
+              "url": "bbq-grilling-tools-and-accessories-freestanding-grill-cover",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/covers/freestanding-grill-cover/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Griddle Cover",
+              "url": "bbq-grilling-tools-and-accessories-griddle-cover",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/covers/griddle-cover/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Side Burner Cover",
+              "url": "bbq-grilling-tools-and-accessories-side-burner-cover",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/covers/side-burner-cover/"
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Food Prep & Serving",
+          "url": "food-preparation-and-serving",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/food-prep-serving/"
+          ],
+          "children": [
+            {
+              "name": "BBQ Aprons and Grilling Gloves",
+              "url": "bbq-aprons-and-grilling-gloves",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/food-prep-serving/bbq-aprons-and-grilling-gloves/"
+              ],
+              "children": []
+            },
+            {
+              "name": "BBQ Cutting Boards & Chopping Blocks",
+              "url": "bbq-cutting-boards-chopping-blocks",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/food-prep-serving/bbq-cutting-boards-chopping-blocks/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Sauces & Seasonings",
+              "url": "food-prep-serving-sauces-and-seasonings",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/food-prep-serving/sauces-seasonings/"
+              ],
+              "children": []
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "Grill Attachments",
+          "url": "grill-attachments",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/grill-attachments/"
+          ],
+          "children": [
+            {
+              "name": "Grill Drip Pans",
+              "url": "grill-drip-pans",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/grill-drip-pans/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Grill Lights",
+              "url": "grill-lights",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/grill-lights/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Grill Mats and Pads",
+              "url": "grill-mats-and-pads",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/grill-mats-and-pads/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Insulated Jackets",
+              "url": "grill-insulated-jackets",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/insulated-jackets/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Smoker Boxes",
+              "url": "grill-smoker-boxes",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/smoker-boxes/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Smoker Boxes",
+              "url": "grill-smoker-boxes",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-attachments/smoker-boxes/"
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Grill Carts & Tables",
+          "url": "grill-carts-and-tables",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/grill-carts-tables/"
+          ],
+          "children": []
+        }
+      ],
+      [
+        {
+          "name": "Grill Cleaning Tools & Supplies",
+          "url": "grill-cleaning-tools-and-supplies",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/"
+          ],
+          "children": [
+            {
+              "name": "Ash Tools",
+              "url": "grill-ash-tools",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/ash-tools/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Grill Cleaning Brushes",
+              "url": "grill-cleaning-brushes",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/grill-cleaning-brushes/"
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Grill Cleaning Tools & Supplies",
+          "url": "grill-cleaning-tools-and-supplies",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/"
+          ],
+          "children": [
+            {
+              "name": "Ash Tools",
+              "url": "grill-ash-tools",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/ash-tools/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Grill Cleaning Brushes",
+              "url": "grill-cleaning-brushes",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-cleaning-tools-supplies/grill-cleaning-brushes/"
+              ],
+              "children": []
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "Grill Replacement Parts",
+          "url": "grill-replacement-parts",
+          "key_words": [
+            "/bbq-grilling-tools-and-accessories/grill-replacement-parts/"
+          ],
+          "children": [
+            {
+              "name": "Control Knobs",
+              "url": "grill-parts-control-knobs",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/control-knobs/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Conversion Kits",
+              "url": "grill-parts-conversion-kits",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/conversion-kits/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Cooking Grids",
+              "url": "grill-parts-cooking-grids",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/cooking-grids/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Flame Tamers",
+              "url": "grill-parts-flame-tamers",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/flame-tamers/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Gas Hoses and Regulators",
+              "url": "grill-parts-gas-hoses-and-regulators",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/gas-hoses-and-regulators/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Gas Valves",
+              "url": "grill-parts-gas-valves",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/gas-valves/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Grill Side Shelves and Tables",
+              "url": "grill-parts-grill-side-shelves-and-tables",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/grill-side-shelves-and-tables/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Heat Plates",
+              "url": "grill-parts-heat-plates",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/heat-plates/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Replacement Grill Burners",
+              "url": "grill-parts-replacement-grill-burners",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/replacement-grill-burners/"
+              ],
+              "children": []
+            },
+            {
+              "name": "Replacement Igniters",
+              "url": "grill-parts-replacement-igniters",
+              "key_words": [
+                "/bbq-grilling-tools-and-accessories/grill-replacement-parts/replacement-igniters/"
+              ],
+              "children": []
+            }
+          ]
+        }
+      ]
+    ],
+    "searchable": true
+  },
+  {
+    "name": "Brands",
+    "key_words": ["brand", "brands"],
+    "menu": {
+      "href": "brands",
+      "visible": true,
+      "order": 8
+    },
+    "filter": {
+      "visible": true,
+      "order": 0
+    },
+    "links": [],
+    "searchable": true
+  },
+  {
+    "name": "New Arrivals",
+    "key_words": [
+      "new",
+      "new-arrivals",
+      "new-arrival",
+      "new arrivals",
+      "new arrival"
+    ],
+    "menu": {
+      "href": "new-arrivals",
+      "visible": true,
+      "order": 9
+    },
+    "filter": {
+      "visible": true,
+      "order": 0
+    },
+    "links": [],
+    "searchable": true
+  },
+  {
+    "name": "On sale",
+    "key_words": ["onsale", "on-sale", "on_sale", "on sale"],
+    "menu": {
+      "href": "on-sale",
+      "visible": true,
+      "order": 10
+    },
+    "filter": {
+      "visible": true,
+      "order": 0
+    },
+    "links": [],
+    "searchable": true
+  }
+]

@@ -57,11 +57,13 @@
                 {
                     "name": "Quick Ship Fireplaces",
                     "url":"quick-ship-fireplaces",
+                    "key_words": ["/quick-ship-fireplaces/"],
                     "children": []
                 },
                 {
                     "name": "Gas Fireplaces",
                     "url": "gas-fireplaces",
+                    "key_words": ["/quick-ship-fireplaces/"],
                     "children": [
                         {
                             "name": "Direct Vent Fireplaces",

@@ -15,18 +15,29 @@ export function getFirstPathSegment(pathname) {
 }
 
 export function getCategoryIds(category_slug, categories, bc_categories) {
+  // console.log("slug", category_slug);
+  // console.log("flat", categories);
   const category_keywords = categories.find(
-    (i) => createSlug(i.name, "-") === category_slug
+    (i) => i.url === (category_slug === "all-products" ? "" : category_slug)
   )?.key_words;
-  const ids =
-    category_keywords.length > 0
-      ? bc_categories
-          .filter((i) =>
-            category_keywords.some((keyword) => i?.url?.path.includes(keyword))
-          )
-          .map((i) => i.category_id)
-      : [];
-  return ids;
+  if (Array.isArray(category_keywords)) {
+    const ids =
+      category_keywords.length > 0
+        ? bc_categories
+            .filter((i) =>
+              category_keywords.some((keyword) =>
+                i?.url?.path.includes(keyword)
+              )
+            )
+            .map((i) => i.category_id)
+        : [];
+    return ids;
+  } else {
+    console.log(
+      "lib/helpers.js fn(getCategoryIds):ERROR -> Make sure that key_words property and value are provided in app/data/category.json"
+    );
+    return [];
+  }
 }
 
 export function getCategoryNameById(id, bc_categories) {
@@ -42,5 +53,7 @@ export function formatPrice(price) {
 }
 
 export function getPageData(pathname, categories) {
+  // console.log("lib/helper.js fn(getPageData):params->pathname", pathname);
+  // console.log("lib/helper.js fn(getPageData):params->categories", categories);
   return categories.find(({ url }) => url === pathname);
 }
