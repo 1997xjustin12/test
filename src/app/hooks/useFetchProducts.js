@@ -7,6 +7,7 @@ export default function useFetchProducts(initialParams = {}) {
   const [error, setError] = useState(null);
   const [params, setParams] = useState(initialParams); // State for query params
   const [noResult, setNoResult] = useState(false);
+  const [filters, setFilters] = useState({});
   const fetchProducts = useCallback(
     async (signal, customParams = null) => {
       setLoading(true);
@@ -29,6 +30,7 @@ export default function useFetchProducts(initialParams = {}) {
         const data = await res.json();
         setProducts(data.data);
         setPagination(data.meta.pagination);
+        setFilters(data.meta.filters);
         setLoading(false);
         setNoResult(data.data.length === 0);
       } catch (err) {
@@ -62,5 +64,14 @@ export default function useFetchProducts(initialParams = {}) {
     setParams(newParams); // Update query params
   };
 
-  return { products, loading, pagination, noResult, error, refetch, setParams };
+  return {
+    products,
+    loading,
+    pagination,
+    filters,
+    noResult,
+    error,
+    refetch,
+    setParams,
+  };
 }

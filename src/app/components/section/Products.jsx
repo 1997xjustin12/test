@@ -25,6 +25,7 @@ const ProductsSection = ({ category }) => {
     products,
     loading: products_loading,
     pagination,
+    filters,
     noResult,
     error: products_error,
     refetch: productsRefetch,
@@ -43,25 +44,6 @@ const ProductsSection = ({ category }) => {
   useEffect(() => {
     // console.log("products loading: ",products_loading);
   }, [products_loading]);
-
-  const handleFilterChange = (val) => {
-    // console.log("fchange",val);
-    const uniqueCatIds = [...new Set(val.flatMap((item) => item.cat_ids))];
-    // console.log("uniqueCatIds",uniqueCatIds);
-    setProductsParams((prev) => {
-      let newParams = {
-        ...prev,
-        page: 1, // reset to page 1 everytime the filter has changes
-      };
-
-      if (val.length > 0) {
-        newParams["categories:in"] = uniqueCatIds.join(",");
-      } else {
-        delete newParams["categories:in"];
-      }
-      return newParams;
-    });
-  };
 
   useEffect(() => {
     console.log("triggerProductFetching");
@@ -89,6 +71,35 @@ const ProductsSection = ({ category }) => {
       return updateParams;
     });
   };
+
+  const handleFilterChange = (e) => {
+    const filtersArray = transformObjectToArray(e);
+    const selectedFiltersArray = filtersArray.filter((i) => i.is_checked);
+    const filterObjParams = {};
+
+    selectedFiltersArray.forEach((v, i) => {
+      const tmp = v.prop.split(":");
+      if (tmp.length > 1) {
+        if (tmp[0] === "price") {
+          const range = tmp[1].split("-");
+          filterObjParams["price:min"] = range[0];
+          filterObjParams["price:max"] = range[1];
+        }
+      } else {
+        // if root filter checkbox
+      }
+    });
+    setProductsParams((prev) => ({ ...prev, ...filterObjParams }));
+  };
+
+  const transformObjectToArray = (obj) => {
+    return Object.values(obj).flatMap((item) => {
+      if (item.options) {
+        return item.options;
+      }
+      return item;
+    });
+  };
   return (
     <div className="w-full">
       <div className="container mx-auto">
@@ -97,10 +108,12 @@ const ProductsSection = ({ category }) => {
             category={category}
             products={products}
             loading={products_loading}
+            filters={filters}
             noResult={noResult}
             pagination={pagination}
             onSortChange={handleSortChange}
             onPageChange={handlePageChange}
+            onFilterChange={handleFilterChange}
           />
         )}
       </div>

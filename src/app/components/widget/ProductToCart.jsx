@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { PhoneIcon } from "@heroicons/react/24/outline";
+import OnsaleTag from "@/app/components/atom/SingleProductOnsaleTag";
 
 const ProductToCart = ({ product, loading }) => {
   const [quantity, setQuantity] = useState(1);
@@ -143,7 +144,7 @@ const ProductToCart = ({ product, loading }) => {
       <div className="flex flex-col gap-[15px] w-full">
         <div className="flex gap-[10px] flex-wrap">
           {product &&
-            product.categories.map((v, i) => (
+            product?.categories.map((v, i) => (
               <div
                 key={`category-tag-${i}`}
                 className="text-[12px] py-[2px] px-[10px] md:text-[16px] md:py-[5px] md:px-[25px] bg-stone-300 text-stone-600 font-semibold rounded-full">
@@ -152,11 +153,7 @@ const ProductToCart = ({ product, loading }) => {
             ))}
         </div>
         <div className="">
-          {productData?.sales_tag === "ON SALE" && (
-            <div className="py-[10px] px-[20px] text-white bg-pallete-orange inline rounded-r-full text-[1.5em] font-semibold">
-              ON SALE
-            </div>
-          )}
+          {product && <OnsaleTag categories={product?.categories} />}
         </div>
         <div className="">
           <div className="font-bold text-[24px] md:text-4xl">

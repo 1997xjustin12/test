@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createSlug } from "@/app/lib/helpers";
-import PageLoader from "../atom/PageLoader";
+import { createSlug, findParentByUrl } from "@/app/lib/helpers";
 import {
   Disclosure,
   DisclosureButton,
@@ -11,13 +10,10 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import {
-  usePathname,
-  //  useSearchParams,
-  useRouter,
-} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 // icon
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { HeartIcon, CartIcon } from "@/app/components/icons/lib";
 // components
 import HomeSearch from "../search/HomeSearch";
 // data
@@ -44,24 +40,17 @@ export default function TuiNavbar() {
   const [overviewUrl, setOverviewUrl] = useState(null);
   const router = useRouter();
   const path = usePathname();
-  // const searchParams = useSearchParams();
+
   const category_slug = cat_json.find((i) => "/" + i.menu.href === path)?.menu
     ?.href;
-  // const [prevPath, setPrevPath] = useState(`${path}?${searchParams}`);
-  // useEffect(() => {
-  //   const url = `${path}?${searchParams}`;
-  //   setPrevPath((prev) => {
-  //     if (prev !== url) {
-  //       console.log("trigger loading and close menu and modal");
-  //       setMobileMenuDialog((prev) => false);
-  //     }
-  //     return url;
-  //   });
-  // }, [path, searchParams]);
+
+  const ParentSlug =
+    category_slug ?? findParentByUrl(cat_json, path.replace(/\//g, ""))?.url;
+  console.log("ParentSlug", ParentSlug);
 
   const redirectToHome = (e) => {
     router.push("/");
-    // setMobileMenuDialog(false);
+    setMobileMenuDialog(false);
   };
 
   const handleMenuLinkItemClick = (e) => {
@@ -70,6 +59,7 @@ export default function TuiNavbar() {
     console.log(url);
     if (url) {
       router.push(url);
+      setMobileMenuDialog(false);
     } else {
       alert("no url");
     }
@@ -144,7 +134,7 @@ export default function TuiNavbar() {
                       <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                         <div className="text-[10px]">26</div>
                       </div>
-                      <Icon icon="bx:cart" width="24" height="24" />
+                      <CartIcon color="black" width="24" height="24" />
                     </a>
                   </li>
                   <li className="relative">
@@ -157,7 +147,7 @@ export default function TuiNavbar() {
                       <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                         <div className="text-[10px]">739</div>
                       </div>
-                      <Icon icon="bx:heart" width="24" height="24" />
+                      <HeartIcon color="black" width="24" height="24" />
                     </a>
                   </li>
                 </ul>
@@ -171,7 +161,7 @@ export default function TuiNavbar() {
                   <div
                     key={`parent-nav-${index}`}
                     className={`group py-[5px] px-[15px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b hover:bg-orange-400 hover:text-white ${
-                      i.menu.href === category_slug
+                      i.menu.href === ParentSlug
                         ? "text-white bg-pallete-orange"
                         : "text-pallete-dark"
                     }`}>
@@ -179,7 +169,7 @@ export default function TuiNavbar() {
                     <Link
                       href={`${BASE_URL}/${i.menu.href}`}
                       className={`${
-                        i.menu.href === category_slug
+                        i.menu.href === ParentSlug
                           ? "font-semibold"
                           : "font-normal"
                       }`}>

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { formatPrice } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
+import OnsaleTag from "@/app/components/atom/ProductCardOnsaleTag";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ product }) => {
   const router = useRouter();
@@ -48,17 +49,13 @@ const ProductCard = ({ product }) => {
             src={thumbnail}
             alt=""
             className={`object-contain h-full ${
-              product.isSelected ? "opacity-40" : "opacity-100"
+              product?.isSelected ? "opacity-40" : "opacity-100"
             }`}
           />
-          <div className={`absolute ${product.isSelected ? "" : "hidden"}`}>
+          <div className={`absolute ${product?.isSelected ? "" : "hidden"}`}>
             <LoaderIcon dark={false} />
           </div>
-          {product.sales_tag === "ON SALE" && (
-            <div className="absolute bottom-[60px] left-0 rounded-r-full bg-pallete-orange text-white text-[12px] font-bold py-[7px] px-[15px]">
-              ONSALE
-            </div>
-          )}
+          <OnsaleTag categories={product?.categories} />
           <div className="absolute bottom-0 left-0 bg-pallete-orange text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible">
             <div className="flex justify-center">
               <div className="font-semibold text-[0.775rem] inline-block text-center">

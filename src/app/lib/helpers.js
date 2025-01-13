@@ -1,3 +1,16 @@
+export const onsale_category_ids = [294, 360, 361, 362, 363, 364, 365];
+export const filter_price_range = [
+  { label: "Request A Quote", min: 0, max: 0 },
+  { label: "$1 - $50", min: 1, max: 50 },
+  { label: "$50 - $100", min: 50, max: 100 },
+  { label: "$100 - $250", min: 100, max: 250 },
+  { label: "$250 - $500", min: 250, max: 500 },
+  { label: "$1000 - $2500", min: 1000, max: 2500 },
+  { label: "$2500 - $5000", min: 2500, max: 5000 },
+  { label: "$5000 and up", min: 5000, max: 100000 },
+  { label: "$100000 and up", min: 100000, max: 200000 },
+];
+
 export function createSlug(string, separator = "-") {
   return string
     .toString() // Ensure the input is a string
@@ -56,4 +69,46 @@ export function getPageData(pathname, categories) {
   // console.log("lib/helper.js fn(getPageData):params->pathname", pathname);
   // console.log("lib/helper.js fn(getPageData):params->categories", categories);
   return categories.find(({ url }) => url === pathname);
+}
+
+export function findParentByUrl(categories, url) {
+  console.log("categories", categories);
+  console.log("url", url);
+  // Helper function to recursively search children up to the 3rd level
+  function search(children, parent, level = 1) {
+    if (level > 3) return null; // Stop searching beyond the 3rd level
+
+    for (const child of children) {
+      if (child.url === url) {
+        return parent; // Return the parent if a match is found
+      }
+      if (child.children && child.children.length > 0) {
+        const result = search(child.children, child, level + 1);
+        if (result) {
+          return result; // If a match is found deeper, return it
+        }
+      }
+    }
+
+    return null; // No match found
+  }
+
+  // Start searching from the top-level categories
+  for (const category of categories) {
+    const result = search(category.children || [], category, 1);
+    if (result) {
+      const result2 = categories.find(({ url }) => url === result.url);
+      if (result2) {
+        return result2;
+      } else {
+        return findParentByUrl(categories, result?.url);
+      }
+    }
+  }
+
+  return null; // Return null if no match is found
+}
+
+export function isProductOnSale(categories) {
+  return categories.filter((i) => onsale_category_ids.includes(i)).length > 0;
 }

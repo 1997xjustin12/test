@@ -1,13 +1,8 @@
 "use client";
-import { Icon } from "@iconify/react";
+import { SearchIcon } from "../icons/lib";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import cat_json from "../../data/category.json";
 import useFetchProducts from "@/app/hooks/useFetchProducts";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
@@ -186,7 +181,8 @@ const HomeSearch = () => {
       <button
         className="rounded-tr-full rounded-br-full bg-pallete-orange text-white font-normal text-sm px-[20px] py-[10px]"
         onClick={() => setOpenSearch(true)}>
-        <Icon icon="iconamoon:search-bold" className="text-lg" />
+        {/* <Icon icon="iconamoon:search-bold" className="text-lg" /> */}
+        <SearchIcon color="white" />
       </button>
 
       <Dialog
@@ -205,12 +201,15 @@ const HomeSearch = () => {
               className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95">
               <div className="">
                 <div className="flex items-center p-2">
-                  <Icon
+                  {/* <Icon
                     icon="pajamas:search"
                     width="25"
                     height="25"
                     className="text-stone-500 mr-2"
-                  />
+                  /> */}
+                  <div className="mr-[10px]">
+                    <SearchIcon color="gray" />
+                  </div>
                   <input
                     value={search}
                     onChange={handleSearch}

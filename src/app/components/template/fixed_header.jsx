@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import HomeSearch from "../search/HomeSearch";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { HeartIcon, CartIcon } from "../icons/lib";
+import Image from "next/image";
 export default function FixedHeader() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -25,10 +26,15 @@ export default function FixedHeader() {
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       }`}>
       <div className="container mx-auto h-[50px] flex items-center justify-around">
-        <div>
-          <h1 className="text-white text-xl font-bold">Solana Fireplace</h1>
+        <div className="w-[40px] h-[40px]  relative">
+          <Image
+            src="/logo-s1.webp"
+            alt="solana-icon"
+            objectFit="contain"
+            layout="fill"
+          />
         </div>
-        <div className="w-[500px]">
+        <div className="w-[180px] sm:w-[auto] md:w-[500px]">
           <HomeSearch />
         </div>
         <div>
@@ -38,12 +44,11 @@ export default function FixedHeader() {
                 <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                   <div className="text-[10px]">26</div>
                 </div>
-                <Icon
-                  icon="bx:cart"
-                  width="24"
-                  height="24"
-                  className="text-white"
-                />
+                <CartIcon width="24" height="24" color="white" />
+
+                <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
+                  Soon
+                </div>
               </a>
             </li>
             <li>
@@ -51,12 +56,11 @@ export default function FixedHeader() {
                 <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
                   <div className="text-[10px]">739</div>
                 </div>
-                <Icon
-                  icon="bx:heart"
-                  width="24"
-                  height="24"
-                  className="text-white"
-                />
+                <HeartIcon width="24" height="24" color="white" />
+
+                <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
+                  Soon
+                </div>
               </a>
             </li>
           </ul>

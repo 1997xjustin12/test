@@ -171,7 +171,7 @@ export default function Hero({ data }) {
               data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
             }
             alt="Banner"
-            className="object-cover  w-full"
+            className="object-cover  w-full h-full"
           />
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
             <div className="text-center flex justify-center">
