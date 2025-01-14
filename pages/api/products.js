@@ -1,7 +1,9 @@
 import {
   onsale_category_ids,
   filter_price_range,
+  formatPrice,
 } from "../../src/app/lib/helpers";
+import { brands } from "../../src/app/lib/category-helpers";
 
 export default async function handler(req, res) {
   const params = new URLSearchParams(req.query);
@@ -43,12 +45,15 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      // cache: "force-cache",
+      // next: { revalidate: 3600 },
     });
 
     const for_data = await fitlter_onsale_response.json();
     // data["onsale"] = for_data.meta.pagination.total;
     const onsale_count = for_data.meta.pagination.total + "(WRONG COUNT)";
-    const counts = await Promise.all(
+    // PRICE COUNT REQUESTS -- START
+    const price_counts = await Promise.all(
       filter_price_range.map(async ({ min, max }) => {
         const price_range_url = new URL(API_URL);
         // delete original request price range params
@@ -65,6 +70,8 @@ export default async function handler(req, res) {
             "X-Auth-Token": API_TOKEN,
             "Content-Type": "application/json",
             Accept: "application/json",
+            cache: "force-cache",
+            next: { revalidate: 3600 },
           },
         });
 
@@ -79,8 +86,8 @@ export default async function handler(req, res) {
             label: `${
               max === 0
                 ? `Request a Qoute (${product_count})`
-                : `$${min} - ${
-                    max >= 100000 ? "UP" : `$${max}`
+                : `$${formatPrice(min)} - ${
+                    max >= 100000 ? "UP" : `$${formatPrice(max)}`
                   } (${product_count})`
             }`,
             prop: range_props,
@@ -90,6 +97,43 @@ export default async function handler(req, res) {
         }
       })
     );
+    // PRICE COUNT REQUESTS -- END
+
+    // BRAND COUNT REQUESTS -- START
+    // const brand_counts = await Promise.all(
+    //   brands.map(async ({ id: brand_id, name: brand_name }) => {
+    //     const brands_url = new URL(API_URL);
+    //     // delete query brand id
+    //     brands_url.searchParams.delete("brand_id");
+    //     // set price query brand_id
+    //     brands_url.searchParams.set("brand_id", brand_id);
+    //     const brands_response = await fetch(brands_url, {
+    //       method: "GET",
+    //       headers: {
+    //         "X-Auth-Token": API_TOKEN,
+    //         "Content-Type": "application/json",
+    //         Accept: "application/json",
+    //       },
+    //       cache: "force-cache",
+    //       next: { revalidate: 3600 },
+    //     });
+    //     console.log("brands:response", brands_response);
+    //     const data = await brands_response.json();
+    //     const { total } = data.meta.pagination;
+    //     if (total > 0) {
+    //       const product_count = total || 0;
+    //       const props = `brand:${brand_id}`;
+    //       const params_props = `brand:${params.get("brand_id")}`;
+    //       return {
+    //         label: `${brand_name} (${product_count})`,
+    //         prop: props,
+    //         count: product_count,
+    //         is_checked: props === params_props,
+    //       };
+    //     }
+    //   })
+    // );
+    // BRAND COUNT REQUESTS -- END
     data["meta"]["filters"] = {
       onsale: {
         label: "On Sale",
@@ -109,32 +153,8 @@ export default async function handler(req, res) {
         count: 0,
         is_checked: false,
         multi: true,
-        options: [
-          {
-            label: "[BrandName1]([ProductCount])",
-            prop: "brand:[BrandName1]",
-            count: 0,
-            is_checked: false,
-          },
-          {
-            label: "[BrandName2]([ProductCount])",
-            prop: "brand:[BrandName2]",
-            count: 0,
-            is_checked: false,
-          },
-          {
-            label: "[BrandName3]([ProductCount])",
-            prop: "brand:[BrandName3]",
-            count: 0,
-            is_checked: false,
-          },
-          {
-            label: "[BrandName4]([ProductCount])",
-            prop: "brand:[BrandName4]",
-            count: 0,
-            is_checked: false,
-          },
-        ],
+        options: [],
+        // options: brand_counts.filter((i) => i != null),
       },
       price: {
         label: "Price",
@@ -142,7 +162,7 @@ export default async function handler(req, res) {
         count: 0,
         is_checked: false,
         multi: false,
-        options: counts.filter((i) => i != null),
+        options: price_counts.filter((i) => i != null),
       },
       fuel_type: {
         label: "Fuel Type",
@@ -216,6 +236,7 @@ export default async function handler(req, res) {
         options: [],
       },
     };
+    data["meta"]["brands"] = brands;
     res.status(200).json(data);
   } catch (error) {
     console.error("Error fetching products:", error);

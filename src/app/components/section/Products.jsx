@@ -4,22 +4,66 @@ import { useState, useEffect } from "react";
 import useFetchProducts from "../../hooks/useFetchProducts";
 import TuiFilterSort from "../template/tui_filter_sort";
 import { getCategoryIds } from "@/app/lib/helpers";
-import cat_json from "../../data/category.json";
 import bccat_json from "../../data/bc_categories_20241213.json";
 import { useMediaQuery } from "react-responsive";
 import { flatCategories } from "@/app/lib/category-helpers";
+import { useSearchParams } from "next/navigation";
+import { filter_price_range } from "@/app/lib/helpers";
 const ProductsSection = ({ category }) => {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
-  const onloadParams = {
-    include: "images",
-    page: 1,
-    limit: isMobile ? 4 : 10,
-    "categories:in": getCategoryIds(category, flatCategories, bccat_json).join(
-      ","
-    ),
-    sort: "total_sold",
-    direction: "desc",
-  };
+  const searchParams = useSearchParams();
+  const [onloadParams, setOnloadParams] = useState(() => {
+    const params = {
+      include: "images",
+      page: 1,
+      limit: isMobile ? 4 : 10,
+      "categories:in": getCategoryIds(
+        category,
+        flatCategories,
+        bccat_json
+      ).join(","),
+      sort: "total_sold",
+      direction: "desc",
+    };
+    // handle params for price range
+    const priceParams = searchParams.get("price");
+    if (priceParams && priceParams.split("-").length === 2) {
+      // check if price range values are valid
+      const tmp = priceParams.split("-");
+      if (
+        filter_price_range.filter(
+          (i) => i.min === parseInt(tmp[0]) && i.max === parseInt(tmp[1])
+        ).length > 0
+      ) {
+        params["price:min"] = tmp[0];
+        params["price:max"] = tmp[1];
+      }
+    }
+
+    return params;
+  });
+
+  // useEffect(() => {
+  //   const priceParams = searchParams.get("price");
+  //   if (priceParams && priceParams.split("-").length === 2) {
+  //     // check if price range values are valid
+  //     const tmp = priceParams.split("-");
+  //     if (
+  //       filter_price_range.filter(
+  //         (i) => i.min === parseInt(tmp[0]) && i.max === parseInt(tmp[1])
+  //       ).length > 0
+  //     ) {
+  //       console.log("ADD PRICE PARAMS TO FILTER");
+  //       setOnloadParams((prev) => {
+  //         prev["price:min"] = tmp[0];
+  //         prev["price:max"] = tmp[1];
+  //       });
+  //     }
+  //   }
+  // }, []);
+  // handle search Params
+  // handle price params
+
   const [productsParams, setProductsParams] = useState(onloadParams);
   const {
     products,
@@ -76,20 +120,35 @@ const ProductsSection = ({ category }) => {
     const filtersArray = transformObjectToArray(e);
     const selectedFiltersArray = filtersArray.filter((i) => i.is_checked);
     const filterObjParams = {};
-
-    selectedFiltersArray.forEach((v, i) => {
-      const tmp = v.prop.split(":");
-      if (tmp.length > 1) {
-        if (tmp[0] === "price") {
-          const range = tmp[1].split("-");
-          filterObjParams["price:min"] = range[0];
-          filterObjParams["price:max"] = range[1];
+    if (selectedFiltersArray.length > 0) {
+      selectedFiltersArray.forEach((v, i) => {
+        const tmp = v.prop.split(":");
+        if (tmp.length > 1) {
+          if (tmp[0] === "price") {
+            const range = tmp[1].split("-");
+            filterObjParams["price:min"] = range[0];
+            filterObjParams["price:max"] = range[1];
+          }
+          if (tmp[0] === "brand") {
+            filterObjParams["brand_id"] = tmp[1];
+          }
+        } else {
+          // if root filter checkbox
         }
-      } else {
-        // if root filter checkbox
-      }
-    });
-    setProductsParams((prev) => ({ ...prev, ...filterObjParams }));
+      });
+      setProductsParams((prev) => ({ ...prev, ...filterObjParams }));
+    } else {
+      // remove all filters
+      // remove price  filter
+      console.log("REMOVE PRICE MIN AND MAX");
+      setProductsParams((prev) => {
+        const tmp = prev;
+        delete tmp["price:min"];
+        delete tmp["price:max"];
+        console.log("TMP", tmp);
+        return { ...tmp };
+      });
+    }
   };
 
   const transformObjectToArray = (obj) => {

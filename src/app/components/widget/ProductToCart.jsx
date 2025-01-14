@@ -17,6 +17,23 @@ import OnsaleTag from "@/app/components/atom/SingleProductOnsaleTag";
 const ProductToCart = ({ product, loading }) => {
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
+  const [filteredCategoryIds, setFilteredCategoryIds] = useState([]);
+
+  useEffect(() => {
+    if (product?.categories.length > 0) {
+      let filterCat = [];
+      product.categories.forEach((v, i) => {
+        const cat_name = getCategoryNameById(v, bccat_json);
+        if (
+          cat_name !== undefined &&
+          !cat_name.toLowerCase().includes("shop all")
+        ) {
+          filterCat.push(v);
+        }
+      });
+      setFilteredCategoryIds(filterCat);
+    }
+  }, [product]);
 
   const handleQuantityChange = (e) => {
     const { value } = e.target;
@@ -142,12 +159,12 @@ const ProductToCart = ({ product, loading }) => {
         </div>
       </Dialog>
       <div className="flex flex-col gap-[15px] w-full">
-        <div className="flex gap-[10px] flex-wrap">
+        <div className="flex gap-[5px] flex-wrap">
           {product &&
-            product?.categories.map((v, i) => (
+            filteredCategoryIds.map((v, i) => (
               <div
                 key={`category-tag-${i}`}
-                className="text-[12px] py-[2px] px-[10px] md:text-[16px] md:py-[5px] md:px-[25px] bg-stone-300 text-stone-600 font-semibold rounded-full">
+                className="text-[12px] py-[4px] px-[8px] bg-stone-300 text-stone-600 font-semibold rounded-full">
                 {getCategoryNameById(v, bccat_json)}
               </div>
             ))}
@@ -156,7 +173,7 @@ const ProductToCart = ({ product, loading }) => {
           {product && <OnsaleTag categories={product?.categories} />}
         </div>
         <div className="">
-          <div className="font-bold text-[24px] md:text-4xl">
+          <div className="font-bold text-[24px] md:text-3xl">
             {productData?.name}
           </div>
           <div className="font-light text-stone-400 text-[12px] md:[16px]">

@@ -35,11 +35,19 @@ export default function FilterDrawer({
     });
     onFilterItemChange(e);
   };
+
   return (
-    <Disclosure as="div" className="">
+    <Disclosure as="div" className="px-[15px]">
       <h3 className="-my-3 flow-root">
         <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-          <span className="font-medium text-gray-900">{data?.label}</span>
+          <span className="font-medium text-gray-900">
+            {data?.label}{" "}
+            {["fuel type"].includes(data?.label.toLowerCase()) ? (
+              <span className="text-[10px] uppercase">Soon</span>
+            ) : (
+              <></>
+            )}
+          </span>
           <span className="ml-6 flex items-center">
             <PlusIcon
               aria-hidden="true"

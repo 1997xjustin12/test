@@ -1,9 +1,14 @@
 // import cat_json from "../data/category.json";
 // import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
-import cat_json from "../data/categoryv3.json"; // bigcommerce categories in menu
+// import cat_json from "../data/categoryv3.json"; // bigcommerce categories in menu
+// import cat_json from "../data/categoryv4.json"; // bigcommerce categories in menu v2
+import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
+// --------------------------------------------------------------------------------
 // import bccat_json from "../data/bc_categories_20241213.json";
 import bccat_json from "../data/bc_categories_20250108.json";
-
+// --------------------------------------------------------------------------------
+import bcbrands_json from "@/app/data/brands_20250113.json";
+export const brands = bcbrands_json;
 export const solana_categories = cat_json.map((i) => ({
   ...i,
   children: i.links.flatMap((i2) => i2),
@@ -33,11 +38,11 @@ export const flatCategories = [
 //------------------------------------------------------------------------------
 // UNCOMMENT CODE BELOW TO EVEALUATE BC CATEGORIES TO MENU - START
 
-console.log("filterBCCatByKeyword('/sale')", filterBCCatByKeyword("/sale"));
+// console.log("filterBCCatByKeyword('/sale')", filterBCCatByKeyword("/sale"));
 console.log(
-  "filterBCCatByKeyword('/sale') filtered",
+  "filterBCCatByKeyword('/brands') filtered",
   buildHierarchy(
-    filterBCCatByKeyword("/sale")
+    filterBCCatByKeyword("/brands")
       .sort((a, b) => a.url.path.localeCompare(b.url.path))
       .filter((i) => !i?.url?.path.includes("/shop-all"))
       // .sort((a, b) => a.name.localeCompare(b.name))
@@ -46,7 +51,8 @@ console.log(
         parent_id: i.parent_id,
         id: i.category_id,
         name: i.name,
-        url: i.url.path.split("/").filter(Boolean).pop(),
+        url: i.url.path.split("/").join("-"),
+        // url: i.url.path,
         key_words: [i.url.path],
         children: [],
       }))
@@ -67,7 +73,7 @@ function filterBCCatByKeyword(keyword) {
 // UNCOMMENT CODE BELOW TO EVEALUATE BC CATEGORIES TO MENU - START
 //------------------------------------------------------------------------------
 // UNCOMMENT CODE BELOW TO CONSOLE LOG BC CATEGORIES HIERARCHY -- START
-// createAutoMenuFromBCCategories();
+createAutoMenuFromBCCategories();
 
 function buildHierarchy(categories) {
   const categoryMap = new Map();
@@ -102,20 +108,20 @@ function createAutoMenuFromBCCategories() {
     .filter((i) => !i?.url?.path.includes("shop-all"))
     .map((i) => ({
       ...i,
-      url: i?.url?.path.split("/").filter(Boolean).pop(),
+      url: i?.url?.path.split("/").filter(Boolean).join("-"),
       path: i?.url?.path,
       menu: {
-        href: i?.url?.path.split("/").filter(Boolean).pop(),
+        href: i?.url?.path.split("/").filter(Boolean).join("-"),
         visible: true,
       },
       key_words: [i?.url?.path],
     }));
-  // console.log(
-  //   "bc_categories hierarchy",
-  //   buildHierarchy(formatCategories)
-  //     .map((i) => ({ ...i, links: i.children }))
-  //     .map((i) => ({ ...i, links: groupInPairs(i.links) }))
-  // );
+  console.log(
+    "bc_categories hierarchy",
+    buildHierarchy(formatCategories)
+      .map((i) => ({ ...i, links: i.children }))
+      .map((i) => ({ ...i, links: groupInPairs(i.links) }))
+  );
 }
 // UNCOMMENT CODE BELOW TO CONSOLE LOG BC CATEGORIES HIERARCHY -- END
 //------------------------------------------------------------------------------

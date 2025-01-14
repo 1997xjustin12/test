@@ -1,5 +1,47 @@
 [
   {
+    "category_id": 31,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Outdoor Grill Covers",
+    "description": "",
+    "views": 0,
+    "sort_order": 41,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/outdoor-grill-covers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 32,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Uncategorized",
+    "description": "",
+    "views": 0,
+    "sort_order": 52,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/uncategorized/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
     "category_id": 33,
     "parent_id": 0,
     "tree_id": 1,
@@ -14,7 +56,808 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/outdoor-grills/", "is_customized": false },
+    "url": {
+      "path": "/outdoor-grills/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 34,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Home & Garden",
+    "description": "",
+    "views": 0,
+    "sort_order": 31,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/home-garden/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 35,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Outdoor Grill Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 40,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/outdoor-grill-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 36,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Fireplace & Wood Stove Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 22,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/fireplace-wood-stove-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 37,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Outdoor Fireplaces",
+    "description": "",
+    "views": 0,
+    "sort_order": 38,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/outdoor-fireplaces/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 38,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Kitchen Appliances",
+    "description": "",
+    "views": 0,
+    "sort_order": 36,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/kitchen-appliances/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 39,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Home Doors",
+    "description": "",
+    "views": 0,
+    "sort_order": 32,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/home-doors/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 40,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Ice Makers",
+    "description": "",
+    "views": 0,
+    "sort_order": 35,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/ice-makers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 41,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Drawer Slides",
+    "description": "",
+    "views": 0,
+    "sort_order": 20,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/drawer-slides/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 42,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Doors",
+    "description": "",
+    "views": 0,
+    "sort_order": 19,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/doors/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 43,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Bathtub Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 0,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/bathtub-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 44,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Refrigerators",
+    "description": "",
+    "views": 0,
+    "sort_order": 48,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/refrigerators/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 45,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Roaster Ovens & Rotisseries",
+    "description": "",
+    "views": 0,
+    "sort_order": 49,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/roaster-ovens-rotisseries/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 46,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Household Storage Drawers",
+    "description": "",
+    "views": 0,
+    "sort_order": 33,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/household-storage-drawers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 47,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Cabinet Doors",
+    "description": "",
+    "views": 0,
+    "sort_order": 12,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/cabinet-doors/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 48,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Sinks",
+    "description": "",
+    "views": 0,
+    "sort_order": 50,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/sinks/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 49,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Wine Fridges",
+    "description": "",
+    "views": 0,
+    "sort_order": 56,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/wine-fridges/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 50,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Grill Burners",
+    "description": "",
+    "views": 0,
+    "sort_order": 28,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/grill-burners/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 51,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Carts",
+    "description": "",
+    "views": 0,
+    "sort_order": 14,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/carts/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 52,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Vents",
+    "description": "",
+    "views": 0,
+    "sort_order": 53,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/vents/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 53,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Ovens",
+    "description": "",
+    "views": 0,
+    "sort_order": 44,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/ovens/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 54,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Range Hoods",
+    "description": "",
+    "views": 0,
+    "sort_order": 46,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/range-hoods/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 55,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Cooktops",
+    "description": "",
+    "views": 0,
+    "sort_order": 18,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/cooktops/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 56,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Microwave Ovens",
+    "description": "",
+    "views": 0,
+    "sort_order": 37,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/microwave-ovens/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 57,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Ranges",
+    "description": "",
+    "views": 0,
+    "sort_order": 47,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/ranges/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 58,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Freezers",
+    "description": "",
+    "views": 0,
+    "sort_order": 25,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/freezers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 59,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Business & Productivity Software",
+    "description": "",
+    "views": 0,
+    "sort_order": 11,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/business-productivity-software/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 60,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Ice Maker Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 34,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/ice-maker-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 61,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Water Cooler Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 55,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/water-cooler-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 62,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Vending Machines",
+    "description": "",
+    "views": 0,
+    "sort_order": 54,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/vending-machines/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 63,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Beverage Warmers",
+    "description": "",
+    "views": 0,
+    "sort_order": 9,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/beverage-warmers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 64,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Concession Food Containers",
+    "description": "",
+    "views": 0,
+    "sort_order": 17,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/concession-food-containers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 65,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Beverage Chillers",
+    "description": "",
+    "views": 0,
+    "sort_order": 8,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/beverage-chillers/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 66,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Outdoor Furniture Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 39,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/outdoor-furniture-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 67,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Oven & Grill Cleaners",
+    "description": "",
+    "views": 0,
+    "sort_order": 43,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/oven-grill-cleaners/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 68,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Gas Griddles",
+    "description": "",
+    "views": 0,
+    "sort_order": 27,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/gas-griddles/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 69,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Fire Pits",
+    "description": "",
+    "views": 0,
+    "sort_order": 21,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/fire-pits/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 70,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Fireplaces",
+    "description": "",
+    "views": 0,
+    "sort_order": 23,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/fireplaces/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 71,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Patio Heater Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 45,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "category.html",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/patio-heater-accessories/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -32,7 +875,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/home-garden/kitchen-dining/", "is_customized": false },
+    "url": {
+      "path": "/home-garden/kitchen-dining/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -414,6 +1260,69 @@
     "image_url": ""
   },
   {
+    "category_id": 94,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Hardware",
+    "description": "",
+    "views": 0,
+    "sort_order": 29,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/hardware/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 95,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Hardware Accessories",
+    "description": "",
+    "views": 0,
+    "sort_order": 30,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/hardware-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 96,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Cabinet Hardware",
+    "description": "",
+    "views": 0,
+    "sort_order": 13,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/cabinet-hardware/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
     "category_id": 97,
     "parent_id": 94,
     "tree_id": 1,
@@ -449,7 +1358,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/cabinet-hardware/", "is_customized": false },
+    "url": {
+      "path": "/hardware/cabinet-hardware/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -467,7 +1379,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/cabinet-doors/", "is_customized": false },
+    "url": {
+      "path": "/hardware/cabinet-doors/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -548,7 +1463,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/plumbing/", "is_customized": false },
+    "url": {
+      "path": "/hardware/plumbing/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -566,7 +1484,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/plumbing-fixtures/", "is_customized": false },
+    "url": {
+      "path": "/hardware/plumbing-fixtures/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -584,7 +1505,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/sinks/", "is_customized": false },
+    "url": {
+      "path": "/hardware/sinks/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -623,7 +1547,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/plumbing/sinks/", "is_customized": false },
+    "url": {
+      "path": "/hardware/plumbing/sinks/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -774,6 +1701,48 @@
     "image_url": ""
   },
   {
+    "category_id": 115,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Furniture",
+    "description": "",
+    "views": 0,
+    "sort_order": 26,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/furniture/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 116,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Carts & Islands",
+    "description": "",
+    "views": 0,
+    "sort_order": 15,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/carts-islands/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
     "category_id": 117,
     "parent_id": 115,
     "tree_id": 1,
@@ -788,7 +1757,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/furniture/carts-islands/", "is_customized": false },
+    "url": {
+      "path": "/furniture/carts-islands/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -806,7 +1778,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/furniture/carts/", "is_customized": false },
+    "url": {
+      "path": "/furniture/carts/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1083,6 +2058,48 @@
     "image_url": ""
   },
   {
+    "category_id": 132,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Software",
+    "description": "",
+    "views": 0,
+    "sort_order": 51,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/software/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 133,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Computer Software",
+    "description": "",
+    "views": 0,
+    "sort_order": 16,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/computer-software/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
     "category_id": 134,
     "parent_id": 79,
     "tree_id": 1,
@@ -1120,6 +2137,48 @@
     "default_product_sort": "use_store_settings",
     "url": {
       "path": "/home-garden/kitchen-dining/kitchen-appliance-accessories/water-cooler-accessories/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 136,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Business & Industrial",
+    "description": "",
+    "views": 0,
+    "sort_order": 10,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/business-industrial/",
+      "is_customized": false
+    },
+    "image_url": ""
+  },
+  {
+    "category_id": 137,
+    "parent_id": 0,
+    "tree_id": 1,
+    "name": "Food Service",
+    "description": "",
+    "views": 0,
+    "sort_order": 24,
+    "page_title": "",
+    "search_keywords": "",
+    "meta_keywords": [],
+    "meta_description": "",
+    "layout_file": "",
+    "is_visible": false,
+    "default_product_sort": "use_store_settings",
+    "url": {
+      "path": "/food-service/",
       "is_customized": false
     },
     "image_url": ""
@@ -1349,7 +2408,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/home-garden/fireplaces/", "is_customized": false },
+    "url": {
+      "path": "/home-garden/fireplaces/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1535,7 +2597,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/furniture/outdoor-tables/", "is_customized": false },
+    "url": {
+      "path": "/furniture/outdoor-tables/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1553,7 +2618,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/furniture/fire-pits/", "is_customized": false },
+    "url": {
+      "path": "/furniture/fire-pits/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1634,7 +2702,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/doors/", "is_customized": false },
+    "url": {
+      "path": "/hardware/doors/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1652,7 +2723,10 @@
     "layout_file": "",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/hardware/home-doors/", "is_customized": false },
+    "url": {
+      "path": "/hardware/home-doors/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1733,7 +2807,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/bbq-grills-and-smokers/", "is_customized": false },
+    "url": {
+      "path": "/bbq-grills-and-smokers/",
+      "is_customized": false
+    },
     "image_url": ""
   },
   {
@@ -1793,7 +2870,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-gas-grills", "is_customized": true },
+    "url": {
+      "path": "/built-in-gas-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1811,7 +2891,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/freestanding-gas-grills", "is_customized": true },
+    "url": {
+      "path": "/freestanding-gas-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1829,7 +2912,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/portable-gas-grills", "is_customized": true },
+    "url": {
+      "path": "/portable-gas-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1847,7 +2933,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/post-mount-gas-grills", "is_customized": true },
+    "url": {
+      "path": "/post-mount-gas-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1865,7 +2954,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/gas-griddles", "is_customized": true },
+    "url": {
+      "path": "/gas-griddles",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1883,7 +2975,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/shop-all-gas-griddles", "is_customized": true },
+    "url": {
+      "path": "/shop-all-gas-griddles",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1901,7 +2996,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-gas-griddles", "is_customized": true },
+    "url": {
+      "path": "/built-in-gas-griddles",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1919,7 +3017,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/freestanding-gas-griddles", "is_customized": true },
+    "url": {
+      "path": "/freestanding-gas-griddles",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1937,7 +3038,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/kamado-grills", "is_customized": true },
+    "url": {
+      "path": "/kamado-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1955,7 +3059,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/shop-all-kamado-grills", "is_customized": true },
+    "url": {
+      "path": "/shop-all-kamado-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1973,7 +3080,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/freestanding-kamado-grills", "is_customized": true },
+    "url": {
+      "path": "/freestanding-kamado-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -1991,7 +3101,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-kamado-grills", "is_customized": true },
+    "url": {
+      "path": "/built-in-kamado-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2009,7 +3122,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/electric-grills", "is_customized": true },
+    "url": {
+      "path": "/electric-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2027,7 +3143,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/pellet-grills", "is_customized": true },
+    "url": {
+      "path": "/pellet-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2045,7 +3164,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/shop-all-pellet-grills", "is_customized": true },
+    "url": {
+      "path": "/shop-all-pellet-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2063,7 +3185,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/freestanding-pellet-grills", "is_customized": true },
+    "url": {
+      "path": "/freestanding-pellet-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2081,7 +3206,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-pellet-grills", "is_customized": true },
+    "url": {
+      "path": "/built-in-pellet-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2099,7 +3227,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/electric-griddles", "is_customized": true },
+    "url": {
+      "path": "/electric-griddles",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2117,7 +3248,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/charcoal-grills", "is_customized": true },
+    "url": {
+      "path": "/charcoal-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2135,7 +3269,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/shop-all-charcoal-grills", "is_customized": true },
+    "url": {
+      "path": "/shop-all-charcoal-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2153,7 +3290,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-charcoal-grills", "is_customized": true },
+    "url": {
+      "path": "/built-in-charcoal-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2192,7 +3332,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/commercial-grade-grills", "is_customized": true },
+    "url": {
+      "path": "/commercial-grade-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2210,7 +3353,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/built-in-grills", "is_customized": true },
+    "url": {
+      "path": "/built-in-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2228,7 +3374,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/Shop-all-built-In-grills", "is_customized": true },
+    "url": {
+      "path": "/Shop-all-built-In-grills",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -2263,7 +3412,10 @@
     "layout_file": "category.html",
     "is_visible": true,
     "default_product_sort": "use_store_settings",
-    "url": { "path": "/outdoor-kitchen/", "is_customized": true },
+    "url": {
+      "path": "/outdoor-kitchen/",
+      "is_customized": true
+    },
     "image_url": ""
   },
   {
@@ -4093,6 +5245,7 @@
     },
     "image_url": ""
   },
+
   {
     "category_id": 285,
     "parent_id": 258,
