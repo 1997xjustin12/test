@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { formatPrice } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
-import OnsaleTag from "@/app/components/atom/ProductCardOnsaleTag";
+import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ product }) => {
   const router = useRouter();
