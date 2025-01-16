@@ -200,7 +200,7 @@ export default function Footer() {
             <div className="mr-[20px]">We Accept: </div>
             <div className="flex items-center gap-[20px]">
               {payments.map((i, idx) => (
-                <div>
+                <div key={Math.round(Math.random() * 999999) + idx}>
                   <img src={i.img} alt={i.alt} />
                 </div>
               ))}

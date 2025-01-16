@@ -25,7 +25,7 @@ export default {
   plugins: [
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/aspect-ratio'),
-    function ({ addUtilities }) {
+    function ({ addUtilities }: { addUtilities: (item: object) => void; }) {
       addUtilities({
         '.text-shadow-sm': {
           textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
