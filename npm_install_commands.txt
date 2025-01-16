@@ -7,3 +7,5 @@ npm install --save-dev @iconify/react --legacy-peer-deps
 React Responsive
 npm install react-responsive --legacy-peer-deps
 
+Tailwind Aspect Ratio
+npm install @tailwindcss/aspect-ratio --legacy-peer-deps

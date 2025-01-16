@@ -1,8 +1,8 @@
 // import cat_json from "../data/category.json";
-// import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
+import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
 // import cat_json from "../data/categoryv3.json"; // bigcommerce categories in menu
 // import cat_json from "../data/categoryv4.json"; // bigcommerce categories in menu v2
-import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
+// import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
 // --------------------------------------------------------------------------------
 // import bccat_json from "../data/bc_categories_20241213.json";
 import bccat_json from "../data/bc_categories_20250108.json";

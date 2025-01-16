@@ -168,7 +168,8 @@ export default function Hero({ data }) {
           /> */}
           <img
             src={
-              data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
+              // data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
+              data?.banner_img ?? "/images/banner/solana-home-hero.webp"
             }
             alt="Banner"
             className="object-cover  w-full h-full"
@@ -177,9 +178,9 @@ export default function Hero({ data }) {
             <div className="text-center flex justify-center">
               {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}
               <div className="px-[20px] py-[7px]">
-                <div className="text-balance text-md font-semibold tracking-tight text-white md:text-2xl">
+                <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
                   {data?.name === "All Products"
-                    ? "Elevate Your Outdoors – Fireplaces, Fire Pits & More! Shop Now!"
+                    ? "Design for Modern Living"
                     : data?.name}
                 </div>
               </div>

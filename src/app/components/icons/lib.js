@@ -2,6 +2,10 @@ import BXCartIcon from "./BXCartIcon";
 import BXHeartIcon from "./BXHeartIcon";
 import MSLDeliveryTruckSpeedIcon from "./MSLDeliveryTruckSpeedIcon";
 import IconMoonSearchIcon from "./IconMoonSearchIcon";
+import FacebookCircleIcon from "./FacebookCirleIcon";
+import InstagramCircleIcon from "./InstagramCirleIcon";
+import YoutubeCircleIcon from "./YoutubeCirleIcon";
+import PinterestCircleIcon from "./PinterestCirleIcon";
 
 export const CartIcon = ({ color, width, height }) => {
   return <BXCartIcon color={color} width={width} height={height} />;
@@ -19,4 +23,20 @@ export const DeliveryTruckSpeedIcon = ({ color, width, height }) => {
 
 export const SearchIcon = ({ color, width, height }) => {
   return <IconMoonSearchIcon color={color} width={width} height={height} />;
+};
+
+export const FacebookIcon = ({ color, width, height }) => {
+  return <FacebookCircleIcon color={color} width={width} height={height} />;
+};
+
+export const InstagramIcon = ({ color, width, height }) => {
+  return <InstagramCircleIcon color={color} width={width} height={height} />;
+};
+
+export const YoutubeIcon = ({ color, width, height }) => {
+  return <YoutubeCircleIcon color={color} width={width} height={height} />;
+};
+
+export const PinterestIcon = ({ color, width, height }) => {
+  return <PinterestCircleIcon color={color} width={width} height={height} />;
 };

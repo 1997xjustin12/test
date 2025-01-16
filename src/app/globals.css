@@ -210,3 +210,13 @@ input[type="checkbox"]:checked::before {
   text-align: center;
   line-height: 15px;
 }
+
+
+
+
+@font-face {
+  font-family: 'Bell MT';
+  src: url('/fonts/bell-mt-italic.ttf') format('truetype');
+  font-weight: normal; /* You can also specify bold if the file is bold */
+  font-style: normal; /* Specify italic if applicable */
+}
