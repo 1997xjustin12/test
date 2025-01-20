@@ -8,7 +8,6 @@ const ProductSection = ({ product, loading }) => {
   const [mediaItems, setMediaItems] = useState([]);
 
   useEffect(() => {
-    console.log("ProdSec", product);
     if (product) {
       if (Object.keys(product).length > 0) {
         setMediaItems(product.images);

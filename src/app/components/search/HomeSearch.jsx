@@ -134,10 +134,10 @@ const HomeSearch = () => {
           ...children_categories,
         ].map((i) => ({ name: i.name, url: i.url ?? "#" }));
         // console.log("mainCat", main_categories);
-        console.log(
-          "subCat",
-          sub_categories.filter((i) => i.name.toLowerCase().includes("brand"))
-        );
+        // console.log(
+        //   "subCat",
+        //   sub_categories.filter((i) => i.name.toLowerCase().includes("brand"))
+        // );
         return all_categories
           .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
           .sort((a, b) => {
@@ -160,7 +160,7 @@ const HomeSearch = () => {
     // store search value inside a local storage array
     // e.preventDefault();
     const recentLS = localStorage.getItem("recent_searches");
-    console.log("recentLS", recentLS ? "YES" : "NO");
+    // console.log("recentLS", recentLS ? "YES" : "NO");
     if (recentLS) {
       const recentArray = JSON.parse(recentLS);
       if (Array.isArray(recentArray)) {

@@ -18,9 +18,9 @@ export default function FilterDrawer({
   }, [data]);
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;
-    console.log("triggered from drawer");
+    // console.log("triggered from drawer");
     setOptions((prev) => {
-      console.log(`${value}: ${checked}`);
+      // console.log(`${value}: ${checked}`);
       if (!multiSelect) {
         return prev.map((i) => ({
           ...i,

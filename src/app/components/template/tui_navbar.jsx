@@ -46,7 +46,7 @@ export default function TuiNavbar() {
 
   const ParentSlug =
     category_slug ?? findParentByUrl(cat_json, path.replace(/\//g, ""))?.url;
-  console.log("ParentSlug", ParentSlug);
+  // console.log("ParentSlug", ParentSlug);
 
   const redirectToHome = (e) => {
     router.push("/");
@@ -56,7 +56,7 @@ export default function TuiNavbar() {
   const handleMenuLinkItemClick = (e) => {
     e.preventDefault();
     const url = e.target.closest("a").getAttribute("href");
-    console.log(url);
+    // console.log(url);
     if (url) {
       router.push(url);
       setMobileMenuDialog(false);
@@ -83,7 +83,7 @@ export default function TuiNavbar() {
       setActiveMenu(filtered.children);
       setOverviewUrl(filtered.url);
     }
-    console.log("selected", selected);
+    // console.log("selected", selected);
   }, [selected]);
 
   const handleMobileBackClick = (e) => {

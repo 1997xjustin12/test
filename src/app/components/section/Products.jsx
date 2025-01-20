@@ -136,12 +136,12 @@ const ProductsSection = ({ category }) => {
     } else {
       // remove all filters
       // remove price  filter
-      console.log("REMOVE PRICE MIN AND MAX");
+      // console.log("REMOVE PRICE MIN AND MAX");
       setProductsParams((prev) => {
         const tmp = prev;
         delete tmp["price:min"];
         delete tmp["price:max"];
-        console.log("TMP", tmp);
+        // console.log("TMP", tmp);
         return { ...tmp };
       });
     }

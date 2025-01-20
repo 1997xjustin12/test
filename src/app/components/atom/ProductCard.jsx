@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
   const handleProductItemClick = (e) => {
     e.preventDefault();
     const url = e.target.closest("a").getAttribute("href");
-    console.log(url);
+    // console.log(url);
     if (url) {
       // router.push(url);
       // setIsLoading(true);

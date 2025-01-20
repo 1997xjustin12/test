@@ -15,7 +15,7 @@ export default function useFetchProduct(initialParams = {}) {
       const queryParams = new URLSearchParams(customParams || params);
       queryParams.delete("id");
       const url = `/api/product/${id}/?${queryParams.toString()}`; // Replace with your API endpoint
-      console.log(url);
+      // console.log(url);
       try {
         const res = await fetch(url, { signal }); // Pass the signal to fetch
         if (!res.ok) {
