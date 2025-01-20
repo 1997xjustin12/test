@@ -85,14 +85,10 @@ const ProductsSection = ({ category }) => {
       return updateParams;
     });
   }, [isMobile]);
-  useEffect(() => {
-    // console.log("products loading: ",products_loading);
-  }, [products_loading]);
 
   useEffect(() => {
-    console.log("triggerProductFetching");
     productsRefetch(productsParams);
-  }, [productsParams]);
+  }, [productsParams, productsRefetch]);
 
   const handleSortChange = (option) => {
     setProductsParams((prev) => {

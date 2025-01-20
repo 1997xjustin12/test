@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-
+import plugin from 'tailwindcss/plugin';
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -25,7 +25,7 @@ export default {
   plugins: [
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/aspect-ratio'),
-    function ({ addUtilities }: { addUtilities: (item: object) => void; }) {
+    plugin(function ({ addUtilities }: { addUtilities: (utilities: Record<string, any>) => void }) {
       addUtilities({
         '.text-shadow-sm': {
           textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
@@ -40,5 +40,6 @@ export default {
           textShadow: 'none',
         },
       });
-    },],
+    }),
+    ],
 } satisfies Config;

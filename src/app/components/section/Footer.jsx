@@ -155,17 +155,17 @@ export default function Footer() {
     <div className="bg-black text-white">
       <div className="container mx-auto pt-[60px] pb-[30px]">
         <div className="flex flex-col gap-[50px]">
-          <div className="flex gap-[20px]">
+          <div className="flex flex-col md:flex-row gap-[20px] p-[20px] md:p-[0px]">
             {footer.map((i, idx) => (
               <div key={`footer-section-${idx}`} className="w-full">
-                <div className="text-lg font-light">{i.name}</div>
+                <div className="text-sm md:text-lg font-semibold">{i.name}</div>
                 {i.name !== "Follow us" ? (
                   <div className="mt-[20px] flex flex-col gap-[8px]">
                     {i.child.map((i1, idx1) => (
                       <div
                         key={`footer-section-${idx}-item-${idx1}`}
                         className="font-light">
-                        <div className=" cursor-pointer w-[auto] inline-block">
+                        <div className="text-xs md:text-base cursor-pointer w-[auto] inline-block">
                           {i1.name}
                         </div>
                       </div>
@@ -196,12 +196,16 @@ export default function Footer() {
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-center">
-            <div className="mr-[20px]">We Accept: </div>
-            <div className="flex items-center gap-[20px]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-[20px]">
+            <div className="md:mr-[20px]">We Accept: </div>
+            <div className="flex items-center gap-[20px] p-[20px] md:p-[0px] flex-wrap justify-center">
               {payments.map((i, idx) => (
-                <div key={Math.round(Math.random() * 999999) + idx}>
-                  <img src={i.img} alt={i.alt} />
+                <div key={`payment-img-${idx}`}>
+                  <img
+                    src={i.img}
+                    alt={i.alt}
+                    className="h-[30px] md:h-[auto]"
+                  />
                 </div>
               ))}
             </div>

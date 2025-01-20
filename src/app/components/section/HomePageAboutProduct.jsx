@@ -2,12 +2,19 @@ export default function HomePageAboutProduct() {
   return (
     <div className="w-full mt-5">
       <div className="container mx-auto bg-[#F6F6F6]">
-        <div className="w-full flex">
-          <div className="w-[60%] p-[40px] flex flex-col gap-[30px]">
-            <div className="text-3xl font-semibold font-bell">
+        <div className="w-full flex flex-col md:flex-row">
+          <div className="w-full md:w-[60%] p-[40px] flex flex-col gap-[30px]">
+            <div className="text-xl md:text-3xl font-semibold font-bell">
               About Blaze Grill Products
             </div>
-            <div>
+            <div className="w-full flex items-center justify-center md:hidden">
+              <img
+                src="/images/home/about-blaze.webp"
+                alt=""
+                className="w-full"
+              />
+            </div>
+            <div className="text-sm md:text-base">
               <p className="text-left">
                 Blaze Outdoor Products brings quality, affordable outdoor
                 cooking to your backyard. With over 45 years of experience, we
@@ -26,18 +33,18 @@ export default function HomePageAboutProduct() {
                 luxury, quality, and affordability right in your backyard.
               </p>
             </div>
-            <div>
-              <button className="bg-red-600 text-white px-[20px] rounded-md">
+            <div className="flex justify-center md:justify-start">
+              <button className="bg-red-600 text-white py-[7px] px-[25px] rounded-md">
                 Call Now <span>888-667-4986</span>
               </button>
             </div>
           </div>
-          <div className="w-[40%] p-[40px]">
+          <div className="hidden md:block w-full md:w-[40%] p-[40px]">
             <div className="w-full flex items-center justify-center">
               <img
                 src="/images/home/about-blaze.webp"
                 alt=""
-                className="h-[300px]"
+                className="w-full"
               />
             </div>
           </div>

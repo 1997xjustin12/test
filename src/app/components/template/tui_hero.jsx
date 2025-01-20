@@ -3,33 +3,55 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import Image from "next/image";
+import { useBreakpointValue } from "@/app/hooks/useBreakPointValue";
+
 export default function Hero({ data }) {
+  const breakpoints = [
+    {
+      minWidth: 0,
+      value: data?.banner_img ?? "/images/banner/solana-home-hero-mobile.webp",
+    },
+    {
+      minWidth: 640,
+      value: data?.banner_img ?? "/images/banner/solana-home-hero.webp",
+    },
+  ];
+  const useBanner = useBreakpointValue(breakpoints);
+
   if (data.children && data.children.length > 0) {
     return (
       <div>
         <div className="container mx-auto flex flex-col md:flex-row">
           <div className="w-full  md:w-[calc(100%-370px)]">
             <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
-              <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-                <div className="text-center flex justify-center">
-                  <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
-                    <div className="text-balance text-xl font-semibold tracking-tight text-white sm:text-4xl">
-                      {data?.name ?? "Design for Modern Living"}
+              {useBanner && (
+                // for lazy loading
+                // <Image
+                //   src={useBanner}
+                //   alt={`Banner`}
+                //   className="object-cover"
+                //   layout="fill"
+                //   priority={true}
+                // />
+                // -----------------
+                // for CSR
+                <>
+                  <img
+                    src={useBanner}
+                    alt="Banner"
+                    className="object-cover  w-full h-full"
+                  />
+                  <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
+                    <div className="text-center flex justify-center">
+                      <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
+                        <div className="text-balance text-xl font-semibold tracking-tight text-white sm:text-4xl">
+                          {data?.name ?? "Design for Modern Living"}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <Image
-                src={
-                  data?.banner_img ??
-                  "/images/banner/fireplace-home-banner.webp"
-                }
-                alt={`Banner`}
-                className="object-cover"
-                layout="fill"
-                priority={false}
-              />
+                </>
+              )}
             </div>
             <div className="flex-col flex md:flex-row">
               <div className="w-full md:w-[calc(100%-250px)] p-[20px]">
@@ -152,40 +174,40 @@ export default function Hero({ data }) {
     );
   } else {
     return (
-      // , url('${
-      //   data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
-      // }')
       <div className="w-full">
         <div className="container mx-auto w-full relative isolate  bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
-          {/* <Image
-            src={
-              data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
-            }
-            alt={`Banner`}
-            className="object-cover"
-            layout="fill"
-            // priority={false}
-          /> */}
-          <img
-            src={
-              // data?.banner_img ?? "/images/banner/fireplace-home-banner.webp"
-              data?.banner_img ?? "/images/banner/solana-home-hero.webp"
-            }
-            alt="Banner"
-            className="object-cover  w-full h-full"
-          />
-          <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-            <div className="text-center flex justify-center">
-              {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}
-              <div className="px-[20px] py-[7px]">
-                <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
-                  {data?.name === "All Products"
-                    ? "Design for Modern Living"
-                    : data?.name}
+          {useBanner && (
+            // for lazy loading
+            // <Image
+            //   src={useBanner}
+            //   alt={`Banner`}
+            //   className="object-cover"
+            //   layout="fill"
+            //   priority={true}
+            // />
+            // -----------------
+            // for CSR
+            <>
+              <img
+                src={useBanner}
+                alt="Banner"
+                className="object-cover  w-full h-full"
+              />
+
+              <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
+                <div className="text-center flex justify-center">
+                  {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}
+                  <div className="px-[20px] py-[7px]">
+                    <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
+                      {data?.name === "All Products"
+                        ? "Design for Modern Living"
+                        : data?.name}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     );

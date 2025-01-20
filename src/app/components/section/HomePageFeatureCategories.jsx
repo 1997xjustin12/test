@@ -1,3 +1,5 @@
+"use client";
+import Carousel from "@/app/components/atom/Carousel";
 const items = [
   { label: "Fireplace", img: "/images/home/categories/fireplace.webp" },
   { label: "Fire Pits", img: "/images/home/categories/firepits.webp" },
@@ -10,11 +12,20 @@ const items = [
   { label: "Gas Logs", img: "/images/home/categories/gas_logs.webp" },
   { label: "Clearance", img: "/images/home/categories/clearance.webp" },
 ];
+
+const items_per_break_point = [
+  { minWidth: 0, value: 1 },
+  { minWidth: 640, value: 2 },
+  { minWidth: 768, value: 4 },
+  { minWidth: 1024, value: 6 },
+  { minWidth: 1280, value: 7 },
+];
+
 export default function HomePageFeatureCategories() {
   return (
     <div className="w-full mt-5">
       <div className="container mx-auto overflow-hidden">
-        <div className="flex overflow-x-auto pb-5 gap-5 overflow-y-hidden justify-center">
+        <Carousel breakpoints={items_per_break_point}>
           {items.map((v, idx) => (
             <div
               key={`feature-category-item-${idx}`}
@@ -30,7 +41,7 @@ export default function HomePageFeatureCategories() {
               </div>
             </div>
           ))}
-        </div>
+        </Carousel>
       </div>
     </div>
   );

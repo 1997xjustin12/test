@@ -68,19 +68,31 @@ const HomeSearch = () => {
     // }
   }, [products]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   refetchProducts((prev) => {
+  //     if (search === "") {
+  //       return { is_featured: true, include: "images" };
+  //     } else {
+  //       return { keyword: search, include: "images" };
+  //     }
+  //   });
+  //   getSearchResults(search);
+  // }, [search]);
+
+  const onSearchUpdate = (search_string) => {
     refetchProducts((prev) => {
-      if (search === "") {
+      if (search_string === "") {
         return { is_featured: true, include: "images" };
       } else {
-        return { keyword: search, include: "images" };
+        return { keyword: search_string, include: "images" };
       }
     });
-    getSearchResults(search);
-  }, [search]);
+    getSearchResults(search_string);
+  };
 
   const handleSearch = (e) => {
     const { value } = e.target;
+    onSearchUpdate(value);
     setSearch(value);
   };
 
@@ -164,6 +176,7 @@ const HomeSearch = () => {
     } else {
       localStorage.setItem("recent_searches", JSON.stringify([search]));
     }
+    onSearchUpdate("");
     setSearch("");
     setOpenSearch(false);
   };
@@ -283,15 +296,20 @@ const HomeSearch = () => {
                             href={`${BASE_URL}/product/${i.custom_url.url}`}>
                             <div className="flex items-center group hover:bg-stone-200 px-2 py-[5px]">
                               <div className="w-[75px] h-[75px] overflow-hidden bg-white mr-[10px] flex items-center rounded">
-                                <img
-                                  src={
-                                    i.images.find(
-                                      ({ is_thumbnail }) => is_thumbnail
-                                    )?.url_thumbnail
-                                  }
-                                  alt={`product:${i.name}`}
-                                  className="object-fit w-full"
-                                />
+                                {i?.images &&
+                                  i.images.find(
+                                    ({ is_thumbnail }) => is_thumbnail
+                                  )?.url_thumbnail && (
+                                    <img
+                                      src={
+                                        i.images.find(
+                                          ({ is_thumbnail }) => is_thumbnail
+                                        )?.url_thumbnail
+                                      }
+                                      alt={`product:${i.name}`}
+                                      className="object-fit w-full"
+                                    />
+                                  )}
                               </div>
                               <div className="w-full">
                                 <div className="text-[14px] group-hover:text-orange-600">

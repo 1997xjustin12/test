@@ -51,38 +51,51 @@ const partsandaccessories2 = [
 export default function HomePagePartsAndAccessories() {
   return (
     <div className="w-full mt-10">
-      <div className="container mx-auto">
-        <div className="text-4xl font-semibold underline italic font-bell">
+      <div className="container mx-auto p-[10px] md:p-[0px]">
+        <div className="text-xl md:text-4xl font-semibold underline italic font-bell">
           Fireplace Parts & Accessories
         </div>
         <div className="flex flex-col gap-[10px] mt-5">
-          <div className=" w-full flex gap-5">
+          <div className=" w-full flex flex-wrap md:flex-nowrap md:flex-row gap-5 justify-center">
             {partsandaccessories1.map((i, idx) => (
               <div
                 key={`fireplace-stoves-2-${idx}`}
-                className="border p-4 w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
-                <div className="aspect-1 bg-stone-100">
-                  <img src={i.img} alt={i.name} />
+                className="md:w-1/6 border p-4 w-[120px] flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
+                <div className="aspect-1 bg-stone-100 flex">
+                  <img
+                    src={i.img}
+                    alt={i.name}
+                    className="object-contain w-full"
+                  />
                 </div>
                 <div className="h-[49px]">
-                  <div className="font-bold text-lg">{i.name}</div>
+                  <div className="font-bold text-base md:text-lg">{i.name}</div>
                 </div>
               </div>
             ))}
           </div>
-          <div className=" w-full flex gap-5">
+          <div className="hidden w-full md:flex flex-wrap md:flex-nowrap md:flex-row gap-5 justify-center">
             {partsandaccessories2.map((i, idx) => (
               <div
                 key={`fireplace-stoves-2-${idx}`}
-                className="border p-4 w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
-                <div className="aspect-1 bg-stone-100">
-                  <img src={i.img} alt={i.name} />
+                className="md:min-w-1/6 border p-4  flex flex-col hover:shadow-lg transition-all duration-300">
+                <div className="aspect-1 bg-stone-100 flex w-full">
+                  <img
+                    src={i.img}
+                    alt={i.name}
+                    className="object-contain w-full"
+                  />
                 </div>
                 <div className="h-[49px]">
-                  <div className="font-bold text-lg">{i.name}</div>
+                  <div className="font-bold text-base md:text-lg">{i.name}</div>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-[20px] flex items-center justify-center md:hidden">
+            <button className="text-sm md:tex-base text-white bg-red-600 px-[25px] py-[7px] rounded-lg cursor-pointer font-bold">
+              Shop All Parts and Accessories
+            </button>
           </div>
         </div>
       </div>

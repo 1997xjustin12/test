@@ -28,16 +28,16 @@ const blogs = [
 export default function HomePageGuidesAndInspiration() {
   return (
     <div className="w-full mt-10">
-      <div className="container mx-auto">
-        <div className="text-4xl underline italic font-semibold font-bell">
+      <div className="container mx-auto p-[10px] md:p-[0px]">
+        <div className="text-xl md:text-4xl underline italic font-semibold font-bell">
           Fireplaces How-To Guides & Inspiration
         </div>
-        <div className="flex gap-[20px] mt-5">
+        <div className="flex flex-col lg:flex-row gap-[20px] mt-5">
           {blogs.map((i, idx) => (
             <div key={`blog-${idx}`} className="w-full group hover:shadow">
               <div className="relative bg-green-400">
                 <div
-                  className={`z-[10] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}>
+                  className={`text-sm md:text-base z-[1] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}>
                   {i.tag}
                 </div>
                 <div className="aspect-w-3 aspect-h-2 bg-stone-800">
@@ -49,11 +49,13 @@ export default function HomePageGuidesAndInspiration() {
                 </div>
               </div>
               <div className="py-[15px] flex flex-col gap-[20px] group-hover:px-[15px] transition-all duration-500">
-                <div className="group-hover:underline text-2xl  font-bell transition-all duration-300">
+                <div className="group-hover:underline text-lg md:text-2xl  font-bold md:font-normal font-bell transition-all duration-300">
                   {i.title}
                 </div>
-                <div>{i.content}</div>
-                <div className="underline font-bold text-right">LEARN MORE</div>
+                <div className="text-sm md:text-base">{i.content}</div>
+                <div className="text-sm md:text-base underline font-bold text-right">
+                  LEARN MORE
+                </div>
               </div>
             </div>
           ))}

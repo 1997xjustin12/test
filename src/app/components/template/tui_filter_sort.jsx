@@ -141,7 +141,7 @@ export default function TuiFilterSort({
         setDisplayProducts(products.map((i) => ({ ...i, isSelected: false })));
       }
     }
-  }, [products]);
+  }, [products, pagination]);
 
   const handleSort = (option) => {
     onSortChange(option);

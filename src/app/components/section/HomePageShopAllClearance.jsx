@@ -1,8 +1,8 @@
 export default function HomePageShopAllClearance() {
   return (
     <div className="w-full mt-5">
-      <div className="container mx-auto">
-        <div className="w-full flex gap-[20px]">
+      <div className="container mx-auto p-[10px] md:p-[0px]">
+        <div className="w-full flex flex-col md:flex-row gap-[20px]">
           <div className="w-full flex flex-col gap-[10px]">
             <div className="w-full aspect-2">
               <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-lg">
@@ -16,7 +16,7 @@ export default function HomePageShopAllClearance() {
                 />
               </div>
             </div>
-            <div className="text-center text-3xl font-semibold font-bell">
+            <div className="text-center text-xl md:text-3xl font-semibold font-bell">
               Elevate Your Space with a Modern Fireplace
             </div>
             <div className="text-center  font-bell">
@@ -45,7 +45,7 @@ export default function HomePageShopAllClearance() {
                 />
               </div>
             </div>
-            <div className="text-center text-3xl font-semibold font-bell">
+            <div className="text-center text-xl md:text-3xl font-semibold font-bell">
               Upgrade Your Backyard with Outdoor Kitchen Deals
             </div>
             <div className="text-center  font-bell">
