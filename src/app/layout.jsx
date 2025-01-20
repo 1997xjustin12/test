@@ -21,7 +21,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  console.log("font bask", bell.className);
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>

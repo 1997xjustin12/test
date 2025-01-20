@@ -44,9 +44,9 @@ export function getCategoryIds(category_slug, categories, bc_categories) {
         : [];
     return ids;
   } else {
-    console.log(
-      "lib/helpers.js fn(getCategoryIds):ERROR -> Make sure that key_words property and value are provided in app/data/category.json"
-    );
+    // console.log(
+    //   "lib/helpers.js fn(getCategoryIds):ERROR -> Make sure that key_words property and value are provided in app/data/category.json"
+    // );
     return [];
   }
 }
@@ -70,8 +70,8 @@ export function getPageData(pathname, categories) {
 }
 
 export function findParentByUrl(categories, url) {
-  console.log("categories", categories);
-  console.log("url", url);
+  // console.log("categories", categories);
+  // console.log("url", url);
   // Helper function to recursively search children up to the 3rd level
   function search(children, parent, level = 1) {
     if (level > 3) return null; // Stop searching beyond the 3rd level

@@ -25,22 +25,25 @@ export default function Hero({ data }) {
           <div className="w-full  md:w-[calc(100%-370px)]">
             <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
               {useBanner && (
-                // for lazy loading
-                // <Image
-                //   src={useBanner}
-                //   alt={`Banner`}
-                //   className="object-cover"
-                //   layout="fill"
-                //   priority={true}
-                // />
-                // -----------------
-                // for CSR
                 <>
-                  <img
-                    src={useBanner}
-                    alt="Banner"
-                    className="object-cover  w-full h-full"
-                  />
+                  {
+                    // for lazy loading
+                    <Image
+                      src={useBanner}
+                      alt={`Banner`}
+                      className="object-cover"
+                      layout="fill"
+                      priority={true}
+                    />
+                    // -----------------
+                  }
+                  {
+                    //   <img
+                    //   src={useBanner}
+                    //   alt="Banner"
+                    //   className="object-cover  w-full h-full"
+                    // />
+                  }
                   <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
                     <div className="text-center flex justify-center">
                       <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 ">
@@ -177,23 +180,25 @@ export default function Hero({ data }) {
       <div className="w-full">
         <div className="container mx-auto w-full relative isolate  bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[510px]">
           {useBanner && (
-            // for lazy loading
-            // <Image
-            //   src={useBanner}
-            //   alt={`Banner`}
-            //   className="object-cover"
-            //   layout="fill"
-            //   priority={true}
-            // />
-            // -----------------
-            // for CSR
             <>
-              <img
-                src={useBanner}
-                alt="Banner"
-                className="object-cover  w-full h-full"
-              />
-
+              {
+                // for lazy loading
+                <Image
+                  src={useBanner}
+                  alt={`Banner`}
+                  className="object-cover"
+                  layout="fill"
+                  priority={true}
+                />
+                // -----------------
+              }
+              {
+                //   <img
+                //   src={useBanner}
+                //   alt="Banner"
+                //   className="object-cover  w-full h-full"
+                // />
+              }
               <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
                 <div className="text-center flex justify-center">
                   {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}

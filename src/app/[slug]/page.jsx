@@ -8,7 +8,6 @@ import MobileLoader from "../components/molecule/MobileLoader";
 export default async function GenericCategoryPage({ params }) {
   const slug = (await params)?.slug;
   const page_data = getPageData(slug, flatCategories);
-  console.log("page_data", page_data);
   if (page_data === undefined) {
     notFound();
   }

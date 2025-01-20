@@ -39,26 +39,26 @@ export const flatCategories = [
 // UNCOMMENT CODE BELOW TO EVEALUATE BC CATEGORIES TO MENU - START
 
 // console.log("filterBCCatByKeyword('/sale')", filterBCCatByKeyword("/sale"));
-console.log(
-  "filterBCCatByKeyword('/brands') filtered",
-  buildHierarchy(
-    filterBCCatByKeyword("/brands")
-      .sort((a, b) => a.url.path.localeCompare(b.url.path))
-      .filter((i) => !i?.url?.path.includes("/shop-all"))
-      // .sort((a, b) => a.name.localeCompare(b.name))
-      .map((i) => ({
-        category_id: i.category_id,
-        parent_id: i.parent_id,
-        id: i.category_id,
-        name: i.name,
-        url: i.url.path.split("/").join("-"),
-        // url: i.url.path,
-        key_words: [i.url.path],
-        children: [],
-      }))
-  )
-  // .map((i) => i.key_words[0])
-);
+// console.log(
+//   "filterBCCatByKeyword('/brands') filtered",
+//   buildHierarchy(
+//     filterBCCatByKeyword("/brands")
+//       .sort((a, b) => a.url.path.localeCompare(b.url.path))
+//       .filter((i) => !i?.url?.path.includes("/shop-all"))
+//       // .sort((a, b) => a.name.localeCompare(b.name))
+//       .map((i) => ({
+//         category_id: i.category_id,
+//         parent_id: i.parent_id,
+//         id: i.category_id,
+//         name: i.name,
+//         url: i.url.path.split("/").join("-"),
+//         // url: i.url.path,
+//         key_words: [i.url.path],
+//         children: [],
+//       }))
+//   )
+//   // .map((i) => i.key_words[0])
+// );
 
 function filterBCCatById(id) {
   return bc_categories.find(({ category_id }) => category_id === id);
@@ -116,12 +116,12 @@ function createAutoMenuFromBCCategories() {
       },
       key_words: [i?.url?.path],
     }));
-  console.log(
-    "bc_categories hierarchy",
-    buildHierarchy(formatCategories)
-      .map((i) => ({ ...i, links: i.children }))
-      .map((i) => ({ ...i, links: groupInPairs(i.links) }))
-  );
+  // console.log(
+  //   "bc_categories hierarchy",
+  //   buildHierarchy(formatCategories)
+  //     .map((i) => ({ ...i, links: i.children }))
+  //     .map((i) => ({ ...i, links: groupInPairs(i.links) }))
+  // );
 }
 // UNCOMMENT CODE BELOW TO CONSOLE LOG BC CATEGORIES HIERARCHY -- END
 //------------------------------------------------------------------------------

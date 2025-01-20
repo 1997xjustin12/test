@@ -14,9 +14,7 @@ export default function FilterDropdownSelect({
   }, [data]);
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;
-    console.log("triggered from dropdown");
     setOptions((prev) => {
-      console.log(`${value}: ${checked}`);
       if (!multiSelect) {
         return prev.map((i) => ({
           ...i,

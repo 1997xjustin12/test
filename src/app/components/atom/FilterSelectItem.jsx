@@ -18,7 +18,6 @@ export default function FilterSelectItem({ data, labelStyle, onChange }) {
   const handleChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      console.log("value", value);
       const [key, val] = value.split(":");
       updateUrlParams({ [key]: val });
     }
