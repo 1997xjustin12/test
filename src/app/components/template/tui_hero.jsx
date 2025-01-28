@@ -33,7 +33,7 @@ export default function Hero({ data }) {
                       alt={`Banner`}
                       className="object-cover"
                       layout="fill"
-                      loading="eager" 
+                      priority
                     />
                     // -----------------
                   }
@@ -188,7 +188,7 @@ export default function Hero({ data }) {
                   alt={`Banner`}
                   className="object-cover"
                   layout="fill"
-                  loading="eager" 
+                  priority
                 />
                 // -----------------
               }
