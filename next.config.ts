@@ -16,25 +16,25 @@
 
 
 module.exports = {
-  compress: true, // ✅ Enable gzip/Brotli compression
+  compress: true, 
   images: {
-    formats: ['image/webp'], // ✅ Serve images in WebP for better performance
+    formats: ['image/webp'],
   },
   experimental: {
-    optimizeCss: true, // ✅ Reduce CSS render-blocking
+    optimizeCss: true,
   },
   async headers() {
     return [
       {
-        source: '/(.*)', // ✅ Match all routes
+        source: '/(.*)', 
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // ✅ Cache static assets
+            value: 'public, max-age=31536000, immutable', 
           },
           {
             key: 'Content-Encoding',
-            value: 'br', // ✅ Ensure Brotli compression is applied
+            value: 'br',
           },
         ],
       },
