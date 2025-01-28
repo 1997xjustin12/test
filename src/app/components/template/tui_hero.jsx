@@ -13,7 +13,8 @@ export default function Hero({ data }) {
     },
     {
       minWidth: 640,
-      value: data?.banner_img ?? "/images/banner/solana-home-hero.webp",
+      value: data?.banner_img ?? "https://onsite-cdn.sfo3.cdn.digitaloceanspaces.com/solana/solana-home-hero.webp",
+      //value: data?.banner_img ?? "/images/banner/solana-home-hero.webp",
     },
   ];
   const useBanner = useBreakpointValue(breakpoints);
