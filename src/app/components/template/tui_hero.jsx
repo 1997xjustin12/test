@@ -35,6 +35,8 @@ export default function Hero({ data }) {
                       className="object-cover"
                       layout="fill"
                       loading="eager"
+                      priority
+                      unoptimized
                     />
                     // -----------------
                   }
@@ -190,7 +192,8 @@ export default function Hero({ data }) {
                   className="object-cover"
                   layout="fill"
                   loading="eager"
-              
+                  priority
+                  unoptimized
                 />
                 // -----------------
               }
