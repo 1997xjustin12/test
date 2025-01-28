@@ -66,6 +66,7 @@ export default function HomePagePartsAndAccessories() {
                     src={i.img}
                     alt={i.name}
                     className="object-contain w-full"
+                    loading="lazy"
                   />
                 </div>
                 <div className="h-[49px]">
@@ -84,6 +85,7 @@ export default function HomePagePartsAndAccessories() {
                     src={i.img}
                     alt={i.name}
                     className="object-contain w-full"
+                    loading="lazy"
                   />
                 </div>
                 <div className="h-[49px]">
