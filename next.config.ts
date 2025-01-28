@@ -20,9 +20,6 @@ module.exports = {
   images: {
     formats: ['image/webp'],
   },
-  experimental: {
-    optimizeCss: true,
-  },
   async headers() {
     return [
       {
