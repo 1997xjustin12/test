@@ -10,18 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug Inputs
+        run: |
+          echo "HOST: ${{ secrets.VPS_HOST }}"
+          echo "USERNAME: ${{ secrets.VPS_USER }}"
+          echo "PASSWORD: ${ secrets.VPS_PASSWORD:+set }"
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Create SSH Directory
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          touch ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
-      - name: Add Host to Known Hosts
-        run: ssh-keyscan -H 164.92.65.4 >> ~/.ssh/known_hosts
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
@@ -31,6 +26,12 @@ jobs:
 
       - name: Archive Build
         run: tar -czf solana.tar.gz .next package.json public
+
+      - name: Add Host to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H 164.92.65.4 >> ~/.ssh/known_hosts
 
       - name: Copy Build to VPS
         uses: appleboy/scp-action@v0.1.3
