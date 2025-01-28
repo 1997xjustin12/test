@@ -86,7 +86,7 @@ export default function HomePageShopOpenBox() {
                     {"SALE"}
                   </div>
                   <div className="aspect-1 flex justify-center">
-                    <img src={i.img} alt={i.name} />
+                    <img src={i.img} alt={i.name} loading="lazy"/>
                   </div>
                 </div>
                 <div className="flex items-center justify-center py-[10px]">
