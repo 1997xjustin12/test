@@ -23,6 +23,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+         <link
+          rel="preload"
+          as="image"
+          href="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fsolana-home-hero-mobile.webp&w=750&q=75"
+        />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <FreeShippingBanner />
         <div className="hidden md:block bg-pallete-orange py-[8px] px-[30px] text-white">
