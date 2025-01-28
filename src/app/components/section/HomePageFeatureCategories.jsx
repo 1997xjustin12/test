@@ -33,7 +33,7 @@ export default function HomePageFeatureCategories() {
               <div
                 className={`w-full h-[150px] flex items-center justify-center group-hover:border group-hover:bg-stone-100 rounded-md overflow-hidden transition-all duration-500`}>
                 {/* <div>image Here</div> */}
-                <img src={v.img} alt="" className="object-contain h-[150px]" />
+                <img src={v.img} alt="" className="object-contain h-[150px]" loading="lazy"/>
               </div>
               <div
                 className={`flex items-center justify-center w-full h-[60px] overflow-hidden`}>
