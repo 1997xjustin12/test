@@ -190,6 +190,7 @@ export default function Hero({ data }) {
                   className="object-cover"
                   layout="fill"
                   loading="eager"
+                  unoptimized={true}
                 />
                 // -----------------
               }
