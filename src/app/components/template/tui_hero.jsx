@@ -185,7 +185,7 @@ export default function Hero({ data }) {
               {
                 // for lazy loading
                 <Image
-                  src={useBanner}
+                  src="https://onsite-cdn.sfo3.cdn.digitaloceanspaces.com/solana/solana-home-hero.webp"
                   alt={`Banner`}
                   className="object-cover"
                   layout="fill"
