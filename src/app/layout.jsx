@@ -29,6 +29,11 @@ export default function RootLayout({ children }) {
           as="image"
           href="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fsolana-home-hero-mobile.webp&w=750&q=75"
         />
+         <link
+          rel="preload"
+          as="image"
+          href="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fsolana-home-hero.webp&w=1920&q=75"
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
         <FreeShippingBanner />
