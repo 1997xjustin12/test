@@ -122,7 +122,7 @@ export default function HomePageShopCategory() {
                       key={`fireplace-stoves-1-${idx}`}
                       className="border p-4 w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
                       <div className="aspect-1 bg-stone-100 border">
-                        <img src={i.img} alt={i.name} className="object-fill" />
+                        <img src={i.img} alt={i.name} className="object-fill" loading="lazy" />
                       </div>
                       <div className="h-[49px]">
                         <div className="font-bold">{i.name}</div>
@@ -136,7 +136,7 @@ export default function HomePageShopCategory() {
                       key={`fireplace-stoves-2-${idx}`}
                       className="border p-4 w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
                       <div className="aspect-1 bg-stone-100 border">
-                        <img src={i.img} alt={i.name} className="object-fill" />
+                        <img src={i.img} alt={i.name} className="object-fill" loading="lazy" />
                       </div>
                       <div className="h-[49px]">
                         <div className="font-bold">{i.name}</div>
@@ -161,7 +161,7 @@ export default function HomePageShopCategory() {
                   key={`fireplace-stoves-1-${idx}`}
                   className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
                   <div className="aspect-1 bg-stone-100 border">
-                    <img src={i.img} alt={i.name} className="object-fill" />
+                    <img src={i.img} alt={i.name} className="object-fill" loading="lazy" />
                   </div>
                   <div className="h-[49px]">
                     <div className="font-bold">{i.name}</div>
@@ -175,7 +175,7 @@ export default function HomePageShopCategory() {
                   key={`fireplace-stoves-2-${idx}`}
                   className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
                   <div className="aspect-1 bg-stone-100 border">
-                    <img src={i.img} alt={i.name} className="object-fill" />
+                    <img src={i.img} alt={i.name} className="object-fill"  loading="lazy"/>
                   </div>
                   <div className="h-[49px]">
                     <div className="font-bold">{i.name}</div>
