@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const blogs = [
   {
     title: "Fireplace Ideas",
@@ -28,7 +30,7 @@ const blogs = [
 export default function HomePageGuidesAndInspiration() {
   return (
     <div className="w-full mt-10">
-      <div className="container mx-auto p-[10px] md:p-[0px]">
+      <div className="container mx-auto px-[10px] lg:px-[20px]">
         <div className="text-xl md:text-4xl underline italic font-semibold font-bell">
           Fireplaces How-To Guides & Inspiration
         </div>
@@ -41,11 +43,23 @@ export default function HomePageGuidesAndInspiration() {
                   {i.tag}
                 </div>
                 <div className="aspect-w-3 aspect-h-2 bg-stone-800">
-                  <img
-                    src={i.img}
-                    alt={i.title}
-                    className={`object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500`}
-                  />
+                  {
+                    // <img
+                    //   src={i.img}
+                    //   alt={i.title}
+                    //   className={`object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500`}
+                    // />
+                    <Image
+                      src={i.img}
+                      alt={`${i.title}-image`}
+                      className="object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500"
+                      // fill
+                      width={1000}
+                      height={0}
+                      // loading="eager"
+                      // priority={false}
+                    />
+                  }
                 </div>
               </div>
               <div className="py-[15px] flex flex-col gap-[20px] group-hover:px-[15px] transition-all duration-500">

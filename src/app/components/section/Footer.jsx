@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -155,9 +156,11 @@ export default function Footer() {
     <div className="bg-black text-white">
       <div className="container mx-auto pt-[60px] pb-[30px]">
         <div className="flex flex-col gap-[50px]">
-          <div className="flex flex-col md:flex-row gap-[20px] p-[20px] md:p-[0px]">
+          <div className="flex flex-col md:flex-row gap-[20px] p-[20px] md:p-[0px] md:flex-wrap lg:flex-nowrap">
             {footer.map((i, idx) => (
-              <div key={`footer-section-${idx}`} className="w-full">
+              <div
+                key={`footer-section-${idx}`}
+                className="w-full md:w-[calc(50%-10px)] lg:w-full">
                 <div className="text-sm md:text-lg font-semibold">{i.name}</div>
                 {i.name !== "Follow us" ? (
                   <div className="mt-[20px] flex flex-col gap-[8px]">
@@ -200,12 +203,23 @@ export default function Footer() {
             <div className="md:mr-[20px]">We Accept: </div>
             <div className="flex items-center gap-[20px] p-[20px] md:p-[0px] flex-wrap justify-center">
               {payments.map((i, idx) => (
-                <div key={`payment-img-${idx}`}>
-                  <img
-                    src={i.img}
-                    alt={i.alt}
-                    className="h-[30px] md:h-[auto]"
-                  />
+                <div
+                  key={`payment-img-${idx}`}
+                  className="w-[60px] md:w-[90px] md:h-[auto] relative aspect-2">
+                  {
+                    //   <img
+                    //   src={i.img}
+                    //   alt={i.alt}
+                    //   className="h-[30px] md:h-[auto]"
+                    // />
+                    <Image
+                      src={i.img}
+                      alt={i.alt}
+                      width={300}
+                      height={0}
+                      priority={false}
+                    />
+                  }
                 </div>
               ))}
             </div>

@@ -16,23 +16,12 @@ export default function FilterSelectItem({ data, labelStyle, onChange }) {
     setItem(data);
   }, [data]);
   const handleChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      const [key, val] = value.split(":");
-      updateUrlParams({ [key]: val });
-    }
     onChange(e);
   };
 
-  const updateUrlParams = (params = {}) => {
-    const urlParams = Object.fromEntries(searchParams.entries());
-    const updatedQuery = new URLSearchParams({ ...urlParams, ...params });
-    const updatedUrl = `${BASE_URL}${pathname}?${updatedQuery.toString()}`;
-    router.replace(updatedUrl, undefined, { shallow: true });
-  };
   return (
     item && (
-      <div className="flex items-center  px-[20px]">
+      <div className="flex items-center  px-[10px]">
         <div className="flex h-5 w-5 shrink-0 items-center mr-5">
           <div className="group grid size-4 grid-cols-1  relative">
             <input
@@ -74,7 +63,9 @@ export default function FilterSelectItem({ data, labelStyle, onChange }) {
           <label
             htmlFor={item.prop}
             className={labelStyle ?? "text-sm text-gray-600"}>
-            {item.label}{" "}
+            {item.label}
+            {` ${item.count ? `(${item.count})` : ""}`}
+            {` `}
             {["on sale", "quick ship"].includes(item.label.toLowerCase()) ? (
               <span className="text-[10px]">Soon</span>
             ) : (

@@ -1,7 +1,4 @@
-import ProductsSection from "./components/section/Products";
-import TuiNavbar from "./components/template/tui_navbar";
 import MobileLoader from "./components/molecule/MobileLoader";
-
 // home page section import in order
 import TuiHero from "./components/template/tui_hero";
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";

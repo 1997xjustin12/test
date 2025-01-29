@@ -1,3 +1,6 @@
+import brands_json from "@/app/data/filters/brands.json";
+import products_json from "@/app/data/filters/products.json";
+
 export const onsale_category_ids = [294, 360, 361, 362, 363, 364, 365];
 export const filter_price_range = [
   { label: "Request A Quote", min: 0, max: 0 },
@@ -5,7 +8,7 @@ export const filter_price_range = [
   { label: "$100 - $499", min: 100, max: 499 },
   { label: "$500 - $999", min: 500, max: 999 },
   { label: "$1000 - $2499", min: 1000, max: 2499 },
-  { label: "$2499 - $4999", min: 2499, max: 4999 },
+  { label: "$2500 - $4999", min: 2500, max: 4999 },
   { label: "$5000 and UP", min: 5000, max: 100000 },
 ];
 
@@ -21,13 +24,11 @@ export function createSlug(string, separator = "-") {
 }
 
 export function getFirstPathSegment(pathname) {
-  // Remove leading slash, split by "/", and return the first segment
+  // Remove leading slash , split by "/", and return the first segment
   return pathname.replace(/^\/+/, "").split("/")[0] || "";
 }
 
 export function getCategoryIds(category_slug, categories, bc_categories) {
-  // console.log("slug", category_slug);
-  // console.log("flat", categories);
   const category_keywords = categories.find(
     (i) => i.url === (category_slug === "all-products" ? "" : category_slug)
   )?.key_words;
@@ -49,6 +50,145 @@ export function getCategoryIds(category_slug, categories, bc_categories) {
     // );
     return [];
   }
+}
+
+function hasEqualValue(array1, array2) {
+  return array1.some((value) => array2.includes(value));
+}
+
+export function getCategoryFilters(active_filters = {}) {
+  const active_categories = active_filters?.["categories:in"]
+    ? active_filters["categories:in"]
+        .split(",")
+        .map((value) => parseInt(value, 10))
+    : [];
+
+  let productsList = products_json.filter((i) =>
+    hasEqualValue(i.categories, active_categories)
+  );
+
+  const active_is_free_shipping = active_filters?.["is_free_shipping"];
+
+  const active_brands = active_filters?.["brand_id:in"]
+    ? active_filters?.["brand_id:in"]
+        .split(",")
+        .map((value) => parseInt(value, 10))
+    : null;
+
+  const active_price_range =
+    active_filters?.["price:min"] && active_filters?.["price:min"]
+      ? `price:${active_filters["price:min"]}-${active_filters["price:max"]}`
+      : null;
+
+  const brandsList = brands_json;
+  // console.log("brands.length", brandsList.length);
+  // Step 1: Extract all unique brand IDs from productsList
+  const availableBrandIds = [
+    ...new Set(productsList.map((product) => product.brand_id)),
+  ];
+
+  if (active_brands !== null) {
+    productsList = productsList.filter((i) =>
+      active_brands.includes(i.brand_id)
+    );
+  }
+
+  if (active_price_range !== null) {
+    productsList = productsList.filter((i) => {
+      const tmp = active_price_range.split(":");
+      const price = tmp[1].split("-");
+      return i.price >= price[0] && i.price <= price[1];
+    });
+  }
+  // test if no active filter return all info
+  const filters = {
+    onsale: {
+      label: "On Sale",
+      prop: "onsale",
+      count: 0,
+      is_checked: false,
+      options: [],
+    },
+    free_shipping: {
+      label: "Free Shipping",
+      prop: "free_shipping",
+      count: 0,
+      is_checked: active_is_free_shipping ? true : false,
+      options: [],
+    },
+    brand: {
+      label: "Brands",
+      prop: "brand",
+      count: 0,
+      is_checked: false,
+      multi: true,
+      options: brandsList
+        .filter((brand) => availableBrandIds.includes(brand.id))
+        .map((i) => ({
+          ...i,
+          label: i.name,
+          prop: `brand:${i.id}`,
+          count: productsList.filter((i2) => i2.brand_id === i.id).length,
+          is_checked: active_brands ? active_brands.includes(i.id) : false,
+        }))
+        .sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        }),
+    },
+    price: {
+      label: "Price",
+      prop: "price",
+      count: 0,
+      is_checked: false,
+      multi: false,
+      options: [
+        {
+          label: "$1.00 - $99.00",
+          prop: "price:1-99",
+          count: productsList.filter((i) => i.price > 0 && i.price < 100)
+            .length,
+          is_checked: active_price_range === "price:1-99",
+        },
+        {
+          label: "$100.00 - $499.00",
+          prop: "price:100-499",
+          count: productsList.filter((i) => i.price > 99 && i.price < 500)
+            .length,
+          is_checked: active_price_range === "price:100-499",
+        },
+        {
+          label: "$500.00 - $999.00",
+          prop: "price:500-999",
+          count: productsList.filter((i) => i.price > 499 && i.price < 1000)
+            .length,
+          is_checked: active_price_range === "price:500-999",
+        },
+        {
+          label: "$1,000.00 - $2,499.00",
+          prop: "price:1000-2499",
+          count: productsList.filter((i) => i.price > 999 && i.price < 2500)
+            .length,
+          is_checked: active_price_range === "price:1000-2499",
+        },
+        {
+          label: "$2,500.00 - $4,999.00",
+          prop: "price:2500-4999",
+          count: productsList.filter((i) => i.price > 2499 && i.price < 5000)
+            .length,
+          is_checked: active_price_range === "price:2500-4999",
+        },
+        {
+          label: "$5,000.00 and UP",
+          prop: "price:5000-100000",
+          count: productsList.filter((i) => i.price > 4999 && i.price < 200000)
+            .length,
+          is_checked: active_price_range === "price:5000-100000",
+        },
+      ],
+    },
+  };
+
+  return filters;
 }
 
 export function getCategoryNameById(id, bc_categories) {

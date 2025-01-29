@@ -193,6 +193,7 @@ const HomeSearch = () => {
       />
       <button
         className="rounded-tr-full rounded-br-full bg-pallete-orange text-white font-normal text-sm px-[20px] py-[10px]"
+        aria-label="search-button"
         onClick={() => setOpenSearch(true)}>
         {/* <Icon icon="iconamoon:search-bold" className="text-lg" /> */}
         <SearchIcon color="white" />

@@ -10,10 +10,11 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 // icon
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { HeartIcon, CartIcon } from "@/app/components/icons/lib";
+import { HeartIcon, CartIcon, MingcuteHome7 } from "@/app/components/icons/lib";
 // components
 import HomeSearch from "../search/HomeSearch";
 // data
@@ -46,7 +47,6 @@ export default function TuiNavbar() {
 
   const ParentSlug =
     category_slug ?? findParentByUrl(cat_json, path.replace(/\//g, ""))?.url;
-  // console.log("ParentSlug", ParentSlug);
 
   const redirectToHome = (e) => {
     router.push("/");
@@ -95,9 +95,9 @@ export default function TuiNavbar() {
   };
   return (
     <>
-      <div className="relative">
-        <Disclosure as="nav" className="bg-white z-[9999]">
-          <div className="mx-auto container px-2 sm:px-6 lg:px-8">
+      <div className="relative ">
+        <Disclosure as="nav" className="bg-white z-[9999] ">
+          <div className="mx-auto container px-2 pt-[10px]">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
@@ -111,12 +111,22 @@ export default function TuiNavbar() {
               </div>
               <div className="flex items-center justify-center flex-1 sm:flex-initial sm:items-stretch sm:justify-start">
                 {/** flex-1 sm:items-stretch sm:justify-start */}
-                <div className="flex shrink-0 items-center">
-                  <img
-                    alt="Bull Fireplace"
-                    src="/Logo.webp"
-                    className="h-[60px] w-auto"
-                  />
+                <div className="flex items-center relative w-[88px] aspect-2">
+                  <div className="absolute top-0 left-[5px] w-[100px] xl:w-[200px]">
+                    {
+                      <Link href={BASE_URL}>
+                        <Image
+                          alt="Bull Fireplace"
+                          src="/Logo.webp"
+                          className="w-full h-full object-cover"
+                          width={500}
+                          height={500}
+                          // loading="eager"
+                          // priority={false}
+                        />
+                      </Link>
+                    }
+                  </div>
                 </div>
               </div>
               <div className="hidden sm:block sm:w-[300px] md:w-[500px]">
@@ -160,30 +170,40 @@ export default function TuiNavbar() {
                 {navigation.map((i, index) => (
                   <div
                     key={`parent-nav-${index}`}
-                    className={`group py-[5px] px-[15px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b hover:bg-orange-400 hover:text-white ${
+                    className={`group py-[5px] px-[10px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b hover:bg-orange-500 hover:text-white ${
                       i.menu.href === ParentSlug
-                        ? "text-white bg-pallete-orange"
+                        ? "text-white bg-orange-400"
                         : "text-pallete-dark"
                     }`}>
                     {/* <div className="text-white"><Icon icon={i.icon.name} /></div> */}
                     <Link
                       href={`${BASE_URL}/${i.menu.href}`}
-                      className={`${
+                      className={`flex items-center gap-[8px] ${
                         i.menu.href === ParentSlug
                           ? "font-semibold"
                           : "font-normal"
                       }`}>
-                      {i.name}
+                      {i.name.toLowerCase() === "home" && <MingcuteHome7 />}
+                      {i.name.toLowerCase() !== "home" && (
+                        <div
+                          className={`text-xs ${
+                            i.menu.href === ParentSlug
+                              ? "font-semibold"
+                              : "font-normal"
+                          }`}>
+                          {i.name}
+                        </div>
+                      )}
                     </Link>
                     {i.links && i.links.length > 0 && (
                       <div className="bg-white absolute w-full left-0 top-[100%] z-[100] invisible group-hover:visible">
-                        <div className="container mx-auto py-5">
+                        <div className="container mx-auto py-5 px-[20px]">
                           <div className="flex justify-between">
                             <div className="w-full flex gap-[70px]">
                               {i.links.map((i1, index1) => (
                                 <div
                                   key={`${i.menu.href}-col-${index1}`}
-                                  className="flex flex-col gap-[20px]">
+                                  className="flex flex-col gap-[20px] text-xs">
                                   {i1.map((i2, index2) => (
                                     <div
                                       key={`${i.menu.href}-col-${index1}-content-${index2}`}>
@@ -198,21 +218,39 @@ export default function TuiNavbar() {
                                         </div>
                                       </Link>
                                       <div className="flex flex-col gap-[5px]">
-                                        {i2.children &&
-                                          i2.children.length > 0 &&
-                                          i2.children.map((i3, index3) => (
-                                            <Link
-                                              href={`${
-                                                i3?.url
-                                                  ? BASE_URL + "/" + i3.url
-                                                  : "#"
-                                              }`}
-                                              key={`${i.menu.href}-col-${index}-content-${index2}-child-${index3}`}>
-                                              <div className="text-black hover-text-pallete-orange cursor-pointer">
-                                                {i3.name}
-                                              </div>
-                                            </Link>
-                                          ))}
+                                        {i.name.toLowerCase() == "brands"
+                                          ? i2.children &&
+                                            i2.children.length > 0 &&
+                                            i2.children
+                                              .slice(0, 3)
+                                              .map((i3, index3) => (
+                                                <Link
+                                                  href={`${
+                                                    i3?.url
+                                                      ? BASE_URL + "/" + i3.url
+                                                      : "#"
+                                                  }`}
+                                                  key={`${i.menu.href}-col-${index}-content-${index2}-child-${index3}`}>
+                                                  <div className="text-black hover-text-pallete-orange cursor-pointer">
+                                                    {i3.name}
+                                                  </div>
+                                                </Link>
+                                              ))
+                                          : i2.children &&
+                                            i2.children.length > 0 &&
+                                            i2.children.map((i3, index3) => (
+                                              <Link
+                                                href={`${
+                                                  i3?.url
+                                                    ? BASE_URL + "/" + i3.url
+                                                    : "#"
+                                                }`}
+                                                key={`${i.menu.href}-col-${index}-content-${index2}-child-${index3}`}>
+                                                <div className="text-black hover-text-pallete-orange cursor-pointer">
+                                                  {i3.name}
+                                                </div>
+                                              </Link>
+                                            ))}
                                         <Link
                                           href={`${
                                             i2?.url
@@ -222,8 +260,8 @@ export default function TuiNavbar() {
                                           <div className="text-black hover-text-pallete-orange cursor-pointer flex gap-[10px] items-center">
                                             <Icon
                                               icon="teenyicons:arrow-solid"
-                                              width="16"
-                                              height="16"
+                                              width="12"
+                                              height="12"
                                             />
                                             <div>Shop All</div>
                                           </div>
@@ -234,7 +272,6 @@ export default function TuiNavbar() {
                                 </div>
                               ))}
                             </div>
-                            <div className="">extras</div>
                           </div>
                         </div>
                       </div>
@@ -242,39 +279,8 @@ export default function TuiNavbar() {
                   </div>
                 ))}
               </div>
-              {/* <div className="sm:flex sm:justify-center sm:w-full xl:w-auto sm:mt-4 xl:mt-0">
-              <div className="cursor-pointer font-semibold  flex">
-                <div>
-                  <Link href="/auth/signin">SignIn</Link>
-                </div>
-                <div className="border-l pl-[10px] ml-[10px] border-stone-900">
-                  <Link href="/auth/signup">SignUp</Link>
-                </div>
-              </div>
-            </div> */}
             </div>
           </div>
-          {/* <DisclosurePanel className="sm:hidden">
-          <div className="space-y-1 px-2 pb-3 pt-2">
-            {navigation.map((item) => (
-              <DisclosureButton
-                key={item.name}
-                as="a"
-                href={`${BASE_URL}/${item.menu.href}`}
-                aria-current={
-                  item.menu.href === category_slug ? "page" : undefined
-                }
-                className={classNames(
-                  item.menu.href === category_slug
-                    ? "bg-pallete-orange text-white"
-                    : "text-gray-800 hover:bg-gray-600 hover:text-white",
-                  "block rounded-md px-3 py-2 text-base font-medium"
-                )}>
-                {item.name}
-              </DisclosureButton>
-            ))}
-          </div>
-        </DisclosurePanel> */}
         </Disclosure>
       </div>
 

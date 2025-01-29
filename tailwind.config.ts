@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import plugin from 'tailwindcss/plugin';
+const { fontFamily } = require('tailwindcss/defaultTheme');
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      container: {
+        // padding: '15px', // Add padding
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -17,9 +21,10 @@ export default {
         DEFAULT: '2px 2px 4px rgba(0, 0, 0, 0.4)',
         lg: '3px 3px 6px rgba(0, 0, 0, 0.3)',
       },
-      fontFamily:{
-        bell: ["Bell MT", "serif"]
-      }
+      // fontFamily:{
+      //   sans: ['var(--font-montserrat)', "serif"],
+      //   bell: ["Bell MT", "serif"]
+      // }
     },
   },
   plugins: [

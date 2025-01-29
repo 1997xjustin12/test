@@ -33,6 +33,7 @@ export default function FilterDrawer({
         }));
       }
     });
+    // console.log("checkDrawerValue", e);
     onFilterItemChange(e);
   };
 

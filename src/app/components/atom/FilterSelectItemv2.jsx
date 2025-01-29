@@ -1,10 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const [item, setItem] = useState({
     prop: "",
     label: "",
@@ -16,24 +12,15 @@ export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
   }, [data]);
   const handleChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      // console.log("value", value);
-      const [key, val] = value.split(":");
-      updateUrlParams({ [key]: val });
-    }
+    // console.log(`${value}: checked(${checked})`);
+    setItem((prev) => ({ ...prev, is_checked: checked }));
     onChange(e);
   };
 
-  const updateUrlParams = (params = {}) => {
-    const urlParams = Object.fromEntries(searchParams.entries());
-    const updatedQuery = new URLSearchParams({ ...urlParams, ...params });
-    const updatedUrl = `${BASE_URL}${pathname}?${updatedQuery.toString()}`;
-    router.replace(updatedUrl, undefined, { shallow: true });
-  };
   return (
     item && (
-      <div className="flex items-center gap-[5px] px-[7px] py-[3px] border-[2px] border-stone-200 cursor-pointer rounded-md hover:border-orange-200 transition-colors duration-300">
-        <div className="flex">
+      <div className="flex items-center gap-[5px] pl-[2px] pr-[7px] h-[28px] border-[0.5px] border-stone-400 cursor-pointer rounded-md transition-colors duration-300">
+        <div className="group grid size-5 grid-cols-1 relative">
           <input
             checked={item.is_checked}
             value={item.prop}
@@ -42,7 +29,10 @@ export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
             name={item.prop}
             type="checkbox"
           />
-          <div className="absolute  top-[3px] left-[3px]">
+          <div
+            className={`absolute top-[3px] left-[3px] ${
+              item.is_checked ? "visible" : "invisible"
+            }`}>
             <svg
               fill="none"
               viewBox="0 0 14 14"
@@ -67,8 +57,9 @@ export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
         <div>
           <label
             htmlFor={item.prop}
-            className={labelStyle ?? "text-sm text-gray-600"}>
-            {item.label}{" "}
+            className={`${labelStyle ?? "font-medium text-sm text-gray-600"}`}>
+            {item.label}
+            {item.count > 0 && `(${item.count})`}
             {["on sale", "quick ship"].includes(item.label.toLowerCase()) ? (
               <span className="text-[10px]">Soon</span>
             ) : (

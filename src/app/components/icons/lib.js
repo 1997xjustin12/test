@@ -10,6 +10,14 @@ import PinterestCircleIcon from "./PinterestCircleIcon";
 import FluentChevronRightIcon from "./FluentChevronRightIcon";
 import FluentChevronLeftIcon from "./FluentChevronLeftIcon";
 
+import ICRoundPhoneIcon from "./ICRoundPhoneIcon";
+import MingcuteDownLineIcon from "./MingcuteDownLineIcon";
+import MingcuteUpLineIcon from "./MingcuteUpLineIcon";
+import MingcuteHome7Icon from "./MingCuteHome7Icon";
+
+import MDIPropaneTankIcon from "./MDIPropaneTankIcon";
+import MDIBaselineGasMeterIcon from "./MDIBaselineGasMeterIcon";
+
 export const CartIcon = ({ color, width, height }) => {
   return <BXCartIcon color={color} width={width} height={height} />;
 };
@@ -43,9 +51,37 @@ export const YoutubeIcon = ({ color, width, height }) => {
 export const PinterestIcon = ({ color, width, height }) => {
   return <PinterestCircleIcon color={color} width={width} height={height} />;
 };
+
 export const FluentChevronLeft = ({ color, width, height }) => {
   return <FluentChevronLeftIcon color={color} width={width} height={height} />;
 };
+
 export const FluentChevronRight = ({ color, width, height }) => {
   return <FluentChevronRightIcon color={color} width={width} height={height} />;
+};
+
+export const ICRoundPhone = ({ color, width, height }) => {
+  return <ICRoundPhoneIcon color={color} width={width} height={height} />;
+};
+
+export const MingcuteDownLine = ({ color, width, height }) => {
+  return <MingcuteDownLineIcon color={color} width={width} height={height} />;
+};
+
+export const MingcuteUpLine = ({ color, width, height }) => {
+  return <MingcuteUpLineIcon color={color} width={width} height={height} />;
+};
+
+export const MingcuteHome7 = ({ color, width, height }) => {
+  return <MingcuteHome7Icon color={color} width={width} height={height} />;
+};
+
+export const MDIPropaneTank = ({ color, width, height }) => {
+  return <MDIPropaneTankIcon color={color} width={width} height={height} />;
+};
+
+export const MDIBaselineGasMeter = ({ color, width, height }) => {
+  return (
+    <MDIBaselineGasMeterIcon color={color} width={width} height={height} />
+  );
 };

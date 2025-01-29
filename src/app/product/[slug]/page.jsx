@@ -23,9 +23,5 @@ export default function Product({ params }) {
     }
   }, [loading, products, error]);
 
-  return (
-    <div>
-      <ProductSection product={product} loading={loading} />
-    </div>
-  );
+  return product && <ProductSection product={product} loading={loading} />;
 }

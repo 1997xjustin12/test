@@ -1,0 +1,6 @@
+file:brands.json
+localhost:3000/api/brands
+
+file:products.json
+(query all pages and stack products on products.json)
+http://localhost:3000/api/products?include_fields=id,categories,brand_id,price&limit=250&page=1

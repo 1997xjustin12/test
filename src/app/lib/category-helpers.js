@@ -1,8 +1,8 @@
 // import cat_json from "../data/category.json";
-import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
+// import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
 // import cat_json from "../data/categoryv3.json"; // bigcommerce categories in menu
 // import cat_json from "../data/categoryv4.json"; // bigcommerce categories in menu v2
-// import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
+import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
 // --------------------------------------------------------------------------------
 // import bccat_json from "../data/bc_categories_20241213.json";
 import bccat_json from "../data/bc_categories_20250108.json";
@@ -39,26 +39,26 @@ export const flatCategories = [
 // UNCOMMENT CODE BELOW TO EVEALUATE BC CATEGORIES TO MENU - START
 
 // console.log("filterBCCatByKeyword('/sale')", filterBCCatByKeyword("/sale"));
-// console.log(
-//   "filterBCCatByKeyword('/brands') filtered",
-//   buildHierarchy(
-//     filterBCCatByKeyword("/brands")
-//       .sort((a, b) => a.url.path.localeCompare(b.url.path))
-//       .filter((i) => !i?.url?.path.includes("/shop-all"))
-//       // .sort((a, b) => a.name.localeCompare(b.name))
-//       .map((i) => ({
-//         category_id: i.category_id,
-//         parent_id: i.parent_id,
-//         id: i.category_id,
-//         name: i.name,
-//         url: i.url.path.split("/").join("-"),
-//         // url: i.url.path,
-//         key_words: [i.url.path],
-//         children: [],
-//       }))
-//   )
-//   // .map((i) => i.key_words[0])
-// );
+console.log(
+  "filterBCCatByKeyword('/brands') filtered",
+  buildHierarchy(
+    filterBCCatByKeyword("/brands")
+      .sort((a, b) => a.url.path.localeCompare(b.url.path))
+      .filter((i) => !i?.url?.path.includes("/shop-all"))
+      // .sort((a, b) => a.name.localeCompare(b.name))
+      .map((i) => ({
+        category_id: i.category_id,
+        parent_id: i.parent_id,
+        id: i.category_id,
+        name: i.name,
+        url: i.url.path.split("/").join("-"),
+        // url: i.url.path,
+        key_words: [i.url.path],
+        children: [],
+      }))
+  )
+  // .map((i) => i.key_words[0])
+);
 
 function filterBCCatById(id) {
   return bc_categories.find(({ category_id }) => category_id === id);
@@ -116,12 +116,13 @@ function createAutoMenuFromBCCategories() {
       },
       key_words: [i?.url?.path],
     }));
-  // console.log(
-  //   "bc_categories hierarchy",
-  //   buildHierarchy(formatCategories)
-  //     .map((i) => ({ ...i, links: i.children }))
-  //     .map((i) => ({ ...i, links: groupInPairs(i.links) }))
-  // );
+  console.log(
+    "bc_categories hierarchy",
+    buildHierarchy(formatCategories)
+      .map((i) => ({ ...i, links: i.children }))
+      // .map((i) => ({ ...i, links: groupInPairs(i.links) }))
+      .map((i) => ({ ...i, links: groupInChunks(i.links, 2) }))
+  );
 }
 // UNCOMMENT CODE BELOW TO CONSOLE LOG BC CATEGORIES HIERARCHY -- END
 //------------------------------------------------------------------------------
@@ -135,6 +136,16 @@ function groupInPairs(array) {
       pair.push(array[i + 1]);
     }
     result.push(pair);
+  }
+  return result;
+}
+
+function groupInChunks(array, groupSize) {
+  const result = [];
+  for (let i = 0; i < array.length; i += groupSize) {
+    // Slice the array from i to i + groupSize
+    const chunk = array.slice(i, i + groupSize);
+    result.push(chunk);
   }
   return result;
 }

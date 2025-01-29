@@ -56,7 +56,7 @@ export default function Carousel({
     merged["slidesToShow"] = breakpoint_value;
   }
   return (
-    <div className="w-full py-[50px] px-[10px]">
+    <div className="w-full pt-[5px] px-[10px] pb-[25px]">
       <Slider {...merged} className="px-[50px]">
         {children}
       </Slider>

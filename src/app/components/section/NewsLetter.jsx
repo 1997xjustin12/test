@@ -11,9 +11,9 @@ export default function NewsLetter() {
             <input
               type="text"
               placeholder="Enter Email Address"
-              className=" text-sm md:text-base p-[15px] rounded-none outline-none focus:border-orange-300 focus:ring-orange-300 bg-[#f1f1f1] ring:2 border-stone-900 border md:w-[500px]"
+              className=" text-sm md:text-base p-[15px] rounded-none outline-none focus:border-orange-300 focus:ring-orange-300 bg-[#f1f1f1] ring:2 border-orange-500 border md:w-[500px]"
             />
-            <button className="py-[15px] px-[30px] text-white bg-stone-900 border border-stone-900 text-sm md:text-base">
+            <button className="py-[15px] px-[30px] text-white bg-orange-500 border border-orange-500 text-sm md:text-base">
               Join
             </button>
           </div>
