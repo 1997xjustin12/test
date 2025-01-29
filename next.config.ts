@@ -16,14 +16,22 @@
 
 
 module.exports = {
+  compress: true, 
+  images: {
+    formats: ['image/webp'],
+  },
   async headers() {
     return [
       {
-        source: '/(.*)', // Match all routes
+        source: '/(.*)', 
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // Cache static assets
+            value: 'public, max-age=31536000, immutable', 
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'br',
           },
         ],
       },

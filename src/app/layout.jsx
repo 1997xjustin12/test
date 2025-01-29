@@ -30,6 +30,23 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+         <link
+          rel="preload"
+          as="image"
+          href="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fsolana-home-hero-mobile.webp&w=750&q=75"
+        />
+         <link
+          rel="preload"
+          as="image"
+          href="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fsolana-home-hero.webp&w=1920&q=75"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="https://onsite-cdn.sfo3.cdn.digitaloceanspaces.com/solana/solana-home-hero.webp"
+        />
+      </head>
       <body className={`${MontserratFont.className} antialiased`}>
         <FreeShippingBanner />
         <div className="hidden lg:block bg-pallete-orange py-[8px] px-[30px] text-white">
