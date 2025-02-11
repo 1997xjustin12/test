@@ -30,12 +30,12 @@ export default function ProductOption({ option }) {
           ({ option_label }) => option_label === option.option_label
         )?.icon
       );
-      console.log(
-        "subLabel",
-        subLabels.find(
-          ({ option_label }) => option_label === option.option_label
-        )?.value
-      );
+      // console.log(
+      //   "subLabel",
+      //   subLabels.find(
+      //     ({ option_label }) => option_label === option.option_label
+      //   )?.value
+      // );
     }
   }, [option]);
   return (

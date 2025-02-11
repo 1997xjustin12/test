@@ -7,9 +7,11 @@ import { formatPrice } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
 import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
+import { ICRoundPhone } from "../icons/lib";
+import { useQuickView } from "@/app/context/quickview";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ product }) => {
-  const router = useRouter();
+  const { viewItem } = useQuickView();
   const [thumbnail, setThumbnail] = useState(null);
   useEffect(() => {
     if (product) {
@@ -35,8 +37,23 @@ const ProductCard = ({ product }) => {
       alert("no url");
     }
   };
+
+  const handleQuickViewClick = (e,item) => {
+    e.stopPropagation();
+    e.preventDefault();
+    viewItem(item);
+  }
+
+  const triggerCall = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = "tel:(888)%205759720";
+  }
+
+
   return (
     <Link
+      prefetch={false}
       href={`${BASE_URL}/product/${product.custom_url.url}`}
       // onClick={handleProductItemClick}
       className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group">
@@ -56,17 +73,15 @@ const ProductCard = ({ product }) => {
             <LoaderIcon dark={false} />
           </div>
           <OnsaleTag categories={product?.categories} />
-          <div className="absolute bottom-0 left-0 bg-pallete-orange text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible">
+          <div onClick={(e)=>handleQuickViewClick(e,product)} className="absolute bottom-0 left-0 bg-pallete-orange text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible">
             <div className="flex justify-center">
-              <div className="font-semibold text-[0.775rem] inline-block text-center">
+              <div  className="font-semibold text-[0.775rem] inline-block text-center">
                 <Icon
                   icon="mi:shopping-cart-add"
                   className="text-lg font-thin inline-block mr-[5px]"
                 />
-                {/* <div className="inline-block"> */}
                 {/* CUSTOMIZE TO PURCHASE */}
-                SHOP NOW
-                {/* </div> */}
+                QUICK VIEW
               </div>
             </div>
           </div>
@@ -106,7 +121,7 @@ const ProductCard = ({ product }) => {
           </div>
           {/* bg-green-300  */}
           <div className="flex  h-[48px] items-center">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
+            <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
               {
                 // product.is_free_shipping && (
                 <div className="flex items-center font-bold gap-[3px]">
@@ -151,6 +166,10 @@ const ProductCard = ({ product }) => {
               </div>
               {/* )} */}
             </div>
+          </div>
+          
+          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+            Found It Cheaper? <div onClick={triggerCall} className="hover:underline flex items-center gap-[3px] cursor-pointer"><ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div></div>
           </div>
         </div>
       </div>

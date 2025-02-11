@@ -215,9 +215,10 @@ export default function Footer() {
                     <Image
                       src={i.img}
                       alt={i.alt}
-                      width={300}
-                      height={0}
+                      width={50}
+                      height={50}
                       priority={false}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
                     />
                   }
                 </div>

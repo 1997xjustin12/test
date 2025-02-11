@@ -1,9 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
-// import Carousel from "@/app/components/atom/Carousel";
-const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
-  ssr: false,
-});
+import Carousel from "@/app/components/atom/Carousel";
+// const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
+//   ssr: false,
+// });
 import { Rating } from "@smastrom/react-rating";
 import Image from "next/image";
 const reviews = [
@@ -64,7 +64,7 @@ export default function HomePageReviews() {
               Write a review
             </div>
           </div>
-          <div className="w-full lg:w-[70%] flex-col lg:flex-row flex gap-[10px]">
+          <div className="w-full lg:w-[70%] flex-col lg:flex-row flex gap-[10px] min-h-[227px]">
             <Carousel breakpoints={carousel_breakpoints}>
               {reviews.map((i, idx) => (
                 <div key={`review-${idx}`} className="bg-white w-full p-[20px]">

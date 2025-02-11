@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+
 export default function HomePageShopAllClearance() {
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
   const contents = [
     {
       image: {
@@ -32,46 +33,37 @@ export default function HomePageShopAllClearance() {
     },
   ];
   return (
-    <div className="w-full mt-5">
-      <div className="container mx-auto px-[10px] lg:px-[20px]">
-        <div className="w-full flex flex-col md:flex-row gap-[50px]">
-          {contents.map((item, index) => (
-            <div
-              key={`shop-all-content-${index}`}
-              className="w-full flex flex-col gap-[10px]">
-              <div className="w-full aspect-2">
-                <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-[25px] relative">
-                  {
-                    <Image
-                      src={item.image.src}
-                      alt={item.image.alt}
-                      className="w-full h-full object-cover"
-                      width={640}
-                      height={0}
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-
-                      // loading="eager"
-                      // priority={false}
-                    />
-                  }
-                </div>
-              </div>
-              <div className="text-center text-xl md:text-3xl font-semibold font-bell">
-                {item.title}
-              </div>
-              <div className="text-center font-bell px-[10px] md:text-lg">
-                {item.content}
-              </div>
-              <div className="text-center">
-                <Link href={item.button.url}>
-                  <button className="border px-[20px] py-[8px] rounded-xl font-bell bg-orange-400 text-white shadow-md text-lg curor-pointer hover:bg-orange-500">
-                    {item.button.label}
-                  </button>
-                </Link>
-              </div>
+    <div className="container mx-auto px-[10px] lg:px-[20px] mt-5">
+      {/* font-bell */}
+      <div className="w-full flex flex-col md:flex-row gap-[50px]">
+        {contents.map((item, index) => (
+          <div
+            key={`shop-all-content-${index}`}
+            className="w-full flex flex-col gap-[10px] min-h-[420px]">
+            <div className="w-full aspect-2 min-h-[200px] flex items-center justify-center overflow-hidden rounded-[25px] relative">
+              <Image
+                src={item.image.src}
+                alt={item.image.alt}
+                className="w-full h-full min-h-[200px] object-cover"
+                fill
+                sizes="100vw"
+              />
             </div>
-          ))}
-        </div>
+            <div className="text-center text-xl md:text-3xl font-semibold">
+              {item.title}
+            </div>
+            <div className="text-center px-[10px] md:text-lg">
+              {item.content}
+            </div>
+            <div className="text-center">
+              <Link href={item.button.url} prefetch={false}>
+                <button className="font-medium border px-[20px] py-[8px] rounded-xl bg-orange-600 text-white shadow-md text-lg curor-pointer hover:bg-orange-500">
+                  {item.button.label}
+                </button>
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

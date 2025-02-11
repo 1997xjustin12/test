@@ -1,9 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
-// import Carousel from "@/app/components/atom/Carousel";
-const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
-  ssr: false,
-});
+import Carousel from "@/app/components/atom/Carousel";
+// const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
+//   ssr: false,
+// });
+import SectionHeader from "../atom/SectionHeader";
 import { Rating } from "@smastrom/react-rating";
 import ItemPrice from "@/app/components/atom/openBoxItemPrice";
 import Image from "next/image";
@@ -71,23 +72,22 @@ export default function HomePageShopOpenBox() {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
-        <div className="text-xl md:text-4xl underline italic font-semibold font-bell">
-          Shop Open Box Blaze Products
-        </div>
-        <div className="flex flex-col md:flex-row gap-[10px] mt-5">
+        <SectionHeader text="Shop Open Box Blaze Products" />
+        <div className="text-xl md:text-4xl underline italic font-semibold font-bell"></div>
+        <div className="flex flex-col md:flex-row gap-[10px] mt-5 min-h-[511px]">
           <Carousel breakpoints={carousel_breakpoints}>
             {products.map((i, idx) => (
               <div
                 key={`open-box-product-${idx}`}
                 className="aspect-1 border w-full bg-[#f8f8f8]">
                 <div className="relative">
-                  <div className="text-white bg-orange-500 absolute left-0 rounded-sm px-[15px] py-[5px] z-[1]">
+                  <div className="text-white bg-orange-600 absolute left-0 rounded-sm px-[15px] py-[5px] z-[1] font-medium">
                     {"Open Box"}
                   </div>
                   <div
                     className={`${
                       i.sale_price < i.original_price ? "visible" : "invisible"
-                    } text-white bg-orange-500 absolute left-[10px] bottom-[3px] rounded-sm px-[15px] py-[5px] z-[1]`}>
+                    } text-white bg-orange-600 absolute left-[10px] bottom-[3px] rounded-sm px-[15px] py-[5px] z-[1] font-medium`}>
                     {"SALE"}
                   </div>
                   <div className="relative aspect-1 flex justify-center">
@@ -106,7 +106,7 @@ export default function HomePageShopOpenBox() {
                   </div>
                 </div>
                 <div className="flex items-center justify-center py-[10px]">
-                  <div className="rounded-full border-[2px] border-orange-300 px-[15px] py-[3px] text-orange-600 font-bold cursor-pointer">
+                  <div className="rounded-full border-[2px] border-orange-500 px-[15px] py-[3px] text-orange-700 font-bold cursor-pointer">
                     Quickview
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export default function HomePageShopOpenBox() {
                     <div className="line-clamp-2 font-bold">{i.name}</div>
                   </div>
                   <div
-                    className={`text-orange-600 text-sm font-bold ${
+                    className={`text-orange-700 text-sm font-bold ${
                       i.free_shipping ? "visible" : "invisible"
                     }`}>
                     Free Shipping
@@ -146,7 +146,7 @@ export default function HomePageShopOpenBox() {
           </Carousel>
         </div>
         <div className="mt-5 text-center">
-          <button className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-orange-400 hover:bg-orange-500 text-white font-medium cursor-pointer">
+          <button className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-orange-600 hover:bg-orange-500 text-white font-bold cursor-pointer">
             Shop All Open Box Blaze Products
           </button>
         </div>

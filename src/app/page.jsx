@@ -11,6 +11,8 @@ import ShopOpenBoxSection from "@/app/components/section/HomePageShopOpenBox";
 import PartsAndAccessoriesSection from "@/app/components/section/HomePagePartsAndAccessories";
 import FrequentlyAskedSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
+
+// import HomePageWrapper from "@/app/components/template/HomaPage";
 export default async function HomePage({ params }) {
   const page_data = {
     name: "All Products",
@@ -18,7 +20,8 @@ export default async function HomePage({ params }) {
     banner_img: null,
   };
   return (
-    <div>
+    // <HomePageWrapper data={page_data} />
+    <>
       <MobileLoader />
       <TuiHero data={page_data} />
       <FeatureCategoriesSection />
@@ -31,6 +34,6 @@ export default async function HomePage({ params }) {
       <PartsAndAccessoriesSection />
       <FrequentlyAskedSection />
       <NewsLetterSection />
-    </div>
+    </>
   );
 }

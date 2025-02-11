@@ -7,7 +7,7 @@ export default function FilterChipsWrapper({ filters, onChipClose }) {
 
   useEffect(() => {
     if (filters) {
-      console.log("ChipsWrap", filters);
+      // console.log("ChipsWrap", filters);
       const combinedOptions = Object.values(filters).flatMap(
         (filter) => filter.options
       );

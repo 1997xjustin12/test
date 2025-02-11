@@ -8,15 +8,16 @@ import {
   DialogPanel,
   DialogBackdrop,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 // icon
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { HeartIcon, CartIcon, MingcuteHome7 } from "@/app/components/icons/lib";
+import { HeartIcon, MingcuteHome7 } from "@/app/components/icons/lib";
 // components
 import HomeSearch from "../search/HomeSearch";
+import CartButton from "@/app/components/atom/CartButton";
 // data
 import { solana_categories as cat_json } from "@/app/lib/category-helpers";
 
@@ -99,7 +100,7 @@ export default function TuiNavbar() {
         <Disclosure as="nav" className="bg-white z-[9999] ">
           <div className="mx-auto container px-2 pt-[10px]">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+              <div className="flex items-center sm:hidden">
                 {/* Mobile menu button*/}
                 <DisclosureButton
                   onClick={() => setMobileMenuDialog(true)}
@@ -112,7 +113,7 @@ export default function TuiNavbar() {
               <div className="flex items-center justify-center flex-1 sm:flex-initial sm:items-stretch sm:justify-start">
                 {/** flex-1 sm:items-stretch sm:justify-start */}
                 <div className="flex items-center relative w-[88px] aspect-2">
-                  <div className="absolute top-0 left-[5px] w-[100px] xl:w-[200px]">
+                  <div className="absolute top-0 left-0 md:left-[5px] w-[100px] xl:w-[200px]">
                     {
                       <Link href={BASE_URL}>
                         <Image
@@ -130,24 +131,14 @@ export default function TuiNavbar() {
                 </div>
               </div>
               <div className="hidden sm:block sm:w-[300px] md:w-[500px]">
-                <HomeSearch />
+                <HomeSearch controlled_height={false} main={true}/>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <ul className="flex space-x-4">
                   <li className="relative">
-                    <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
-                      Soon
-                    </div>
-                    <a
-                      href="#"
-                      className="text-gray-700 hover:text-blue-500 relative">
-                      <div className="absolute bg-pallete-orange w-[20px] h-[20px] overflow-hidden rounded-full text-pallete-dark bottom-[60%] left-[60%] flex justify-center items-center">
-                        <div className="text-[10px]">26</div>
-                      </div>
-                      <CartIcon color="black" width="24" height="24" />
-                    </a>
+                    <CartButton className="text-gray-700 hover:text-orange-500"/>
                   </li>
-                  <li className="relative">
+                  {/* <li className="relative">
                     <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">
                       Soon
                     </div>
@@ -159,7 +150,7 @@ export default function TuiNavbar() {
                       </div>
                       <HeartIcon color="black" width="24" height="24" />
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -178,6 +169,7 @@ export default function TuiNavbar() {
                     {/* <div className="text-white"><Icon icon={i.icon.name} /></div> */}
                     <Link
                       href={`${BASE_URL}/${i.menu.href}`}
+                      prefetch={false}
                       className={`flex items-center gap-[8px] ${
                         i.menu.href === ParentSlug
                           ? "font-semibold"
@@ -196,7 +188,7 @@ export default function TuiNavbar() {
                       )}
                     </Link>
                     {i.links && i.links.length > 0 && (
-                      <div className="bg-white absolute w-full left-0 top-[100%] z-[100] invisible group-hover:visible">
+                      <div className="bg-white absolute w-full left-0 top-[100%] z-[100] invisible group-hover:visible shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
                         <div className="container mx-auto py-5 px-[20px]">
                           <div className="flex justify-between">
                             <div className="w-full flex gap-[70px]">
@@ -208,6 +200,7 @@ export default function TuiNavbar() {
                                     <div
                                       key={`${i.menu.href}-col-${index1}-content-${index2}`}>
                                       <Link
+                                        prefetch={false}
                                         href={`${
                                           i2?.url
                                             ? BASE_URL + "/" + i2.url
@@ -225,6 +218,7 @@ export default function TuiNavbar() {
                                               .slice(0, 3)
                                               .map((i3, index3) => (
                                                 <Link
+                                                  prefetch={false}
                                                   href={`${
                                                     i3?.url
                                                       ? BASE_URL + "/" + i3.url
@@ -240,6 +234,7 @@ export default function TuiNavbar() {
                                             i2.children.length > 0 &&
                                             i2.children.map((i3, index3) => (
                                               <Link
+                                                prefetch={false}
                                                 href={`${
                                                   i3?.url
                                                     ? BASE_URL + "/" + i3.url
@@ -252,6 +247,7 @@ export default function TuiNavbar() {
                                               </Link>
                                             ))}
                                         <Link
+                                          prefetch={false}
                                           href={`${
                                             i2?.url
                                               ? BASE_URL + "/" + i2.url
@@ -310,6 +306,7 @@ export default function TuiNavbar() {
                     />
                   </button>
                   <Link
+                    prefetch={false}
                     href={`${BASE_URL}`}
                     className="flex bg-stone-300 rounded gap-[8px] items-center p-1"
                     onClick={() => redirectToHome()}>
@@ -332,6 +329,7 @@ export default function TuiNavbar() {
                     <div>
                       {overviewUrl && (
                         <Link
+                          prefetch={false}
                           href={overviewUrl}
                           onClick={handleMenuLinkItemClick}>
                           {selected[selected.length - 1]}
@@ -360,6 +358,7 @@ export default function TuiNavbar() {
                         </div>
                       ) : (
                         <Link
+                          prefetch={false}
                           href={`${BASE_URL}/${i?.url}`}
                           onClick={handleMenuLinkItemClick}
                           className=" flex justify-between items-center">

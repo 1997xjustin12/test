@@ -21,6 +21,7 @@ import {
 } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
+import QuickView from "@/app/components/atom/ProductQuickView"
 import { getPageData } from "@/app/lib/helpers";
 import { flatCategories } from "@/app/lib/category-helpers";
 
@@ -76,6 +77,7 @@ export default function TuiFilterSort({
   onFilterChange,
 }) {
   const searchParams = useSearchParams();
+  const [quickview, setQuickview] = useState(null);
   const [sort, setSort] = useState(sortOptions);
   const [displayProducts, setDisplayProducts] = useState([]);
   const [filters, setFilters] = useState({});
@@ -130,7 +132,7 @@ export default function TuiFilterSort({
 
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;
-    console.log(`${value}: ${checked} (checked)`);
+    // console.log(`${value}: ${checked} (checked)`);
     const tmp = value.split(":");
     let filterValue = null;
     if (tmp.length > 1) {

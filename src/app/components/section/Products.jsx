@@ -98,7 +98,7 @@ const ProductsSection = ({ category }) => {
   };
 
   const handleFilterChange = (e) => {
-    console.log("handleFilterChange", e);
+    // console.log("handleFilterChange", e);
     setProductsParams((prev) => {
       // insert root filter on filterArray
       const filtersArray = [
@@ -106,7 +106,7 @@ const ProductsSection = ({ category }) => {
         e.free_shipping,
         ...transformObjectToArray(e),
       ];
-      console.log("onFilterChanges", filtersArray);
+      // console.log("onFilterChanges", filtersArray);
       const filterObjParams = prev;
       // -----------------------------------------------------------------
       // free shipping filtering

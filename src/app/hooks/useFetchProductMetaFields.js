@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
 export default function useFetchProductMetaFields(initialParams = {}) {
-  const { id } = initialParams;
   const [productMetaFields, setProductMetaFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
@@ -13,32 +12,35 @@ export default function useFetchProductMetaFields(initialParams = {}) {
       setLoading(true);
       setError(null);
       setProductMetaFields([]);
-      const queryParams = new URLSearchParams(
-        customParams || params
-      ).toString();
-      const url = `/api/product/metafields/${id}/?${queryParams}`; // Replace with your API endpoint
+      if (params && params?.id) {
+        const { id } = params;
+        const queryParams = new URLSearchParams(
+          customParams || params
+        ).toString();
+        const url = `/api/product/metafields/${id}/?${queryParams}`; // Replace with your API endpoint
 
-      try {
-        const res = await fetch(url, {
-          signal,
-          cache: "force-cache",
-          next: { revalidate: 3600 },
-        }); // Pass the signal to fetch
-        if (!res.ok) {
-          throw new Error("Failed to fetch product metafields");
-        }
-        const data = await res.json();
-        setProductMetaFields(
-          data.data.map((i) => ({ ...i, value: JSON.parse(i.value) }))
-        );
-        setPagination(data.meta.pagination);
-        setFilters(data.meta.filters);
-        setLoading(false);
-        setNoResult(data.data.length === 0);
-      } catch (err) {
-        if (err.name !== "AbortError") {
+        try {
+          const res = await fetch(url, {
+            signal,
+            cache: "force-cache",
+            next: { revalidate: 3600 },
+          }); // Pass the signal to fetch
+          if (!res.ok) {
+            throw new Error("Failed to fetch product metafields");
+          }
+          const data = await res.json();
+          setProductMetaFields(
+            data.data.map((i) => ({ ...i, value: JSON.parse(i.value) }))
+          );
+          setPagination(data.meta.pagination);
+          setFilters(data.meta.filters);
           setLoading(false);
-          setError(err.message); // Handle only non-abort errors
+          setNoResult(data.data.length === 0);
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            setLoading(false);
+            setError(err.message); // Handle only non-abort errors
+          }
         }
       }
     },

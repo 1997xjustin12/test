@@ -1,9 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
-// import Carousel from "@/app/components/atom/Carousel";
-const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
-  ssr: false,
-});
+import Carousel from "@/app/components/atom/Carousel";
+// const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
+//   ssr: false,
+// });
 import Image from "next/image";
 import Link from "next/link";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
@@ -55,35 +55,31 @@ const items_per_break_point = [
 
 export default function HomePageFeatureCategories() {
   return (
-    <div className="w-full mt-1">
-      <div className="container mx-auto overflow-hidden">
-        <Carousel breakpoints={items_per_break_point}>
-          {items.map((v, idx) => (
+    <div className="container mx-auto overflow-hidden min-h-[220px]">
+      <Carousel breakpoints={items_per_break_point}>
+        {items.map((v, idx) => (
+          <Link
+            href={v.url}
+            key={`feature-category-item-${idx}`}
+            className={`min-w-[140px] w-[140px] flex flex-col gap-[8px] group relative`}>
             <div
-              key={`feature-category-item-${idx}`}
-              className={`min-w-[140px] w-[140px] flex flex-col gap-[8px] group relative`}>
-              <Link href={v.url}>
-                <div
-                  className={`relative w-full h-[130px] flex items-center justify-center group-hover:border group-hover:bg-stone-100 rounded-md overflow-hidden transition-all duration-500`}>
-                  {
-                    <Image
-                      src={v.img}
-                      alt={`${v.label}-image`}
-                      className="w-full h-full object-contain"
-                      width={500}
-                      height={500}
-                    />
-                  }
-                </div>
-                <div
-                  className={`flex items-center justify-center w-full h-[60px] overflow-hidden`}>
-                  <div className="break-words text-center">{v.label}</div>
-                </div>
-              </Link>
+              className={`relative w-full h-[130px] flex items-center justify-center group-hover:border group-hover:bg-stone-100 rounded-md overflow-hidden transition-all duration-500`}>
+              <Image
+                src={v.img}
+                alt={`${v.label} Image`}
+                className="w-full h-full object-contain"
+                width={500}
+                height={500}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              />
             </div>
-          ))}
-        </Carousel>
-      </div>
+            <div
+              className={`flex items-center justify-center w-full h-[60px] overflow-hidden`}>
+              <div className="break-words text-center">{v.label}</div>
+            </div>
+          </Link>
+        ))}
+      </Carousel>
     </div>
   );
 }

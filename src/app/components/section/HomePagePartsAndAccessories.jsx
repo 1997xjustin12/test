@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SectionHeader from "../atom/SectionHeader";
 
 const partsandaccessories = [
   { name: "Firewood", img: "/images/home/parts_and_accessories/firewood.webp" },
@@ -49,64 +50,11 @@ const partsandaccessories = [
   },
 ];
 
-const partsandaccessories1 = [
-  { name: "Firewood", img: "/images/home/parts_and_accessories/firewood.webp" },
-  {
-    name: "Fireplace Mantels",
-    img: "/images/home/parts_and_accessories/fireplace-mantels.webp",
-  },
-  {
-    name: "Fireplace Tools",
-    img: "/images/home/parts_and_accessories/fireplace-tools.webp",
-  },
-  {
-    name: "Fireplace Doors",
-    img: "/images/home/parts_and_accessories/fireplace-doors.webp",
-  },
-  {
-    name: "Fireplace Grates",
-    img: "/images/home/parts_and_accessories/fireplace-grates.webp",
-  },
-  {
-    name: "Fireplace Screens",
-    img: "/images/home/parts_and_accessories/fireplace-screens.webp",
-  },
-];
-
-const partsandaccessories2 = [
-  {
-    name: "Fireplace Logs",
-    img: "/images/home/parts_and_accessories/fireplace-logs.webp",
-  },
-  {
-    name: "Firewood Racks",
-    img: "/images/home/parts_and_accessories/firewood-racks.webp",
-  },
-  {
-    name: "Fireplace Starters",
-    img: "/images/home/parts_and_accessories/fireplace-starters.webp",
-  },
-  {
-    name: "Chimney Pipes",
-    img: "/images/home/parts_and_accessories/chimney-pipes.webp",
-  },
-  {
-    name: "Shop All Parts",
-    img: "/images/home/parts_and_accessories/shop-all-parts.webp",
-  },
-  {
-    name: "Shop All Accessories",
-    img: "/images/home/parts_and_accessories/shop-all-accessories.webp",
-  },
-];
-
 export default function HomePagePartsAndAccessories() {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
-        <div className="text-xl md:text-4xl font-semibold underline italic font-bell">
-          Fireplace Parts & Accessories
-        </div>
+        <SectionHeader text="Fireplace Parts & Accessories" />
         {/* update */}
         <div className="flex md:hidden flex-col gap-[10px] mt-5">
           <div className=" w-full flex flex-wrap md:flex-row gap-[10px] justify-center">
@@ -120,8 +68,10 @@ export default function HomePagePartsAndAccessories() {
                       src={i.img}
                       alt={i.name}
                       className="w-full h-full object-cover"
-                      width={100}
-                      height={100}
+                      width={50}
+                      height={50}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+
                       // loading="eager"
                       // priority={false}
                     />
@@ -148,8 +98,10 @@ export default function HomePagePartsAndAccessories() {
                       src={i.img}
                       alt={i.name}
                       className="w-full h-full object-cover"
-                      width={100}
-                      height={100}
+                      width={50}
+                      height={50}
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+
                       // loading="eager"
                       // priority={false}
                     />
@@ -165,7 +117,7 @@ export default function HomePagePartsAndAccessories() {
           </div>
         </div>
         <div className="mt-[20px] flex items-center justify-center md:hidden">
-          <button className="text-sm md:text-base font-medium bg-orange-400 hover:bg-orange-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
+          <button className="font-bold text-sm md:text-base bg-orange-600 hover:bg-orange-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
             Shop All Parts and Accessories
           </button>
         </div>

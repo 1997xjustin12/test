@@ -1,21 +1,45 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 
-const loader_thumbnails = [1, 2, 3, 4];
 const MediaGallery = ({ mediaItems, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0); // Track active media item
   const [activeItem, setActiveItem] = useState(null); // Track active media item
-  const zoomRef = useRef(null); // Ref for zoom functionality
+  const containerRef = useRef(null);
+  const contentRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [mobileGalleryOverflow, setMobileGalleryOverflow] = useState(false);
+  useEffect(() => {
+    console.log("updateWidths");
+    const updateWidths = () => {
+      const screenWidth = window.innerWidth;
+      setIsSmallScreen(screenWidth < 641); // Track if screen is below 640px
 
-  const handleMouseMove = (e) => {
-    if (zoomRef.current) {
-      const { left, top, width, height } =
-        zoomRef.current.getBoundingClientRect();
-      const x = ((e.clientX - left) / width) * 100;
-      const y = ((e.clientY - top) / height) * 100;
-      zoomRef.current.style.backgroundPosition = `${x}% ${y}%`;
-    }
-  };
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+      if (contentRef.current) {
+        setContentWidth(contentRef.current.offsetWidth);
+      }
+
+      setMobileGalleryOverflow(containerRef.current.offsetWidth < contentRef.current.offsetWidth);
+    };
+
+    updateWidths(); // Initial check
+
+    window.addEventListener("resize", updateWidths);
+    return () => window.removeEventListener("resize", updateWidths);
+  }, []);
+
+  useEffect(() => {
+    console.log("isSmallScreen", isSmallScreen);
+    console.log("mobileGalleryOverflow", mobileGalleryOverflow);
+    console.log("containerWidth", containerWidth);
+    console.log("contentWidth", contentWidth);
+    
+  }, [isSmallScreen, mobileGalleryOverflow, containerWidth, contentWidth]);
 
   useEffect(() => {
     // console.log(mediaItems);
@@ -26,52 +50,58 @@ const MediaGallery = ({ mediaItems, loading }) => {
   }, [mediaItems, activeIndex]);
 
   return (
-    <div className="w-full px-4 mb-8">
-      {loading && (
-        <>
-          <div className="flex aspect-w-16 h-[350px] md:aspect-w-4 md:aspect-h-3 overflow-hidden rounded-lg shadow-md mb-4 justify-center items-center bg-stone-200"></div>
-          <div className="flex gap-4 py-4 justify-center overflow-x-auto">
-            {loader_thumbnails.map((item, index) => (
-              <div
-                key={`img-gallery-loader-${index}`}
-                className={`size-16 sm:size-20 object-cover rounded-md cursor-pointer bg-stone-200 transition duration-300`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-      {!loading && (
-        <>
-          <div className="flex aspect-w-16 h-[350px] md:aspect-w-4 md:aspect-h-3 overflow-hidden rounded-lg shadow-md mb-4 justify-center items-center">
-            <img
-              src={activeItem?.url_standard}
-              alt="Product"
-              className="object-contain"
-              id="mainImage"
-            />
-          </div>
-          <div
-            className="flex gap-4 py-4 justify-center overflow-x-auto [&::-webkit-scrollbar]:h-[10px]
+    <div className="w-full px-[5px] mb-0 sm:mb-8 sm:sticky sm:top-[60px] aspect-w-5 aspect-h-4 sm:aspect-h-2 lg:aspect-h-4">
+      <div className="flex flex-col sm:flex-row gap-[10px]">
+        <div
+          ref={containerRef}
+          className={`w-full order-2 sm:order-1 sm:w-[110px] h-[90px] min-h-[90px] sm:h-full flex flex-row
+            sm:justify-start sm:flex-col  overflow-x-auto overflow-y-hidden sm:overflow-x-hidden
+            sm:overflow-y-auto [&::-webkit-scrollbar]:h-[10px]
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+  ${isSmallScreen && mobileGalleryOverflow ? "justify-start":"justify-center"}
+  `}
+        >
+          <div
+          ref={contentRef}
+          className="flex flex-row sm:flex-col gap-[10px]">
             {mediaItems &&
               mediaItems.length > 0 &&
               mediaItems.map((item, index) => (
-                <img
-                  key={`img-gallery-${index}`}
-                  src={item.url_thumbnail}
-                  alt={`Thumbnail ${index}`}
-                  className={`size-16 sm:size-20 object-cover rounded-md cursor-pointer hover:opacity-100 transition duration-300 ${
-                    index === activeIndex ? "opacity-100" : "opacity-60"
+                <div
+                  key={`image-gallery-item-${index}`}
+                  className={`relative flex items-center w-[72px] min-w-[72px] min-h-[72px] h-[72px] bg-white rounded-sm shadow ${
+                    index === activeIndex
+                      ? "border-orange-600 border-[3px]"
+                      : "border"
                   }`}
-                  onClick={() => setActiveIndex(index)}
-                />
+                >
+                  <Image
+                    src={item.url_thumbnail}
+                    alt={`Thumbnail ${index}`}
+                    className={`cursor-pointer hover:opacity-100 transition duration-300`}
+                    objectFit="contain"
+                    fill
+                    onClick={() => setActiveIndex(index)}
+                  />
+                </div>
               ))}
           </div>
-        </>
-      )}
+        </div>
+        <div className="order-1 sm:order-2w-full h-full sm:w-[calc(100%-110px)] bg-white relative overflow-hidden border shadow">
+          {activeItem && (
+            <Image
+              src={activeItem?.url_standard}
+              alt="Product"
+              className="w-full"
+              objectFit="contain"
+              fill
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

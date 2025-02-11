@@ -19,8 +19,6 @@ export default function Hero({ data }) {
                 alt={`Banner`}
                 className="w-full h-full object-cover"
                 fill
-                // width={1000}
-                // height={1000}
                 loading="eager"
                 priority={true}
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
@@ -41,8 +39,8 @@ export default function Hero({ data }) {
               </div>
             </div>
           </div>
-          <div className="flex-col flex md:flex-row">
-            <div className="w-full md:w-[calc(100%-250px)] p-[20px]">
+          <div className="flex-col flex lg:flex-row">
+            <div className="w-full lg:w-[calc(100%-250px)] p-[20px]">
               <div className="flex flex-col gap-[20px]">
                 <div className="border-orange-500 border-l-4 text-2xl pl-3 font-bold text-stone-600">
                   {data?.name}
@@ -64,41 +62,33 @@ export default function Hero({ data }) {
                       Further Questions? ASK AN EXPERT!
                     </div>
                     <Link
-                      href={`tel:(888)%20977-9085`}
-                      className="flex md:ml-[8px] text-orange-500 font-bold">
+                      href={`tel:(888)%20575-9720`}
+                      className="flex md:ml-[8px] text-orange-500 font-bold"
+                    >
                       <Icon
                         icon="ic:baseline-phone"
                         className=" mr-[3px]"
                         width="15"
                         height="15"
                       />
-                      (888) 977-9085
+                      (888) 575-9720
                     </Link>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full md:w-[250px] p-[30px] bg-[rgb(151,151,151)] flex flex-col gap-[20px]">
-              <div>
-                <div className="text-white text-3xl font-bold">LEARNING</div>
-                <div className="text-white text-3xl">CENTER</div>
-              </div>
-              <div className="text-xs text-white">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur debitis reiciendis quibusdam eos error quaerat natus
-                incidunt modi laudantium! Incidunt.
-              </div>
-              <div className="text-white text-[0.780rem] font-bold flex items-center group cursor-pointer">
-                <div className="text-white group-hover:text-orange-400">
-                  START LEARNING NOW
-                </div>
-                <Icon
-                  icon="icon-park-twotone:right-c"
-                  className="text-white ml-[10px] group-hover:text-orange-400"
-                  width="20"
-                  height="20"
+            <div className="w-full p-[30px] bg-stone-100 flex flex-col gap-[20px] relative lg:w-[250px] h-[360px]">
+              <Link href={`tel:(888)%20575-9720`} prefetch={false}>
+                <Image
+                  src="/images/banner/sub-banner-image.webp"
+                  alt={`Sub Banner Image`}
+                  className="object-contain"
+                  layout="fill"
+                  objectFit="contain"
+                  objectPosition="center"
+                  sizes="100vw"
                 />
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -117,7 +107,8 @@ export default function Hero({ data }) {
                 data.children.map((i, index) => (
                   <div
                     key={`sub-category-${i.name.toLowerCase()}-${index}`}
-                    className="flex">
+                    className="flex"
+                  >
                     <div className="w-[40px] flex justify-center items-center">
                       <Icon
                         icon="material-symbols:info-outline"
@@ -143,7 +134,8 @@ export default function Hero({ data }) {
                             />
                           </div>
                           <div
-                            className={`text-sm uppercase text-stone-600 font-bold w-[calc(100%-95px)] group-hover:text-orange-500`}>
+                            className={`text-sm uppercase text-stone-600 font-bold w-[calc(100%-95px)] group-hover:text-orange-500`}
+                          >
                             {i.name}
                           </div>
                           <div className="text-stone-600 group-hover:text-orange-500">
@@ -167,23 +159,8 @@ export default function Hero({ data }) {
     return (
       <div className="container mx-auto w-full relative isolate  bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)]">
         <RenderBanner img={useBanner} />
-        {
-          // for lazy loading
-          // <Image
-          //   src={useBanner}
-          //   alt={`Banner`}
-          //   className="w-full h-full object-cover"
-          //   width={980}
-          //   height={0}
-          //   loading="eager"
-          //   priority={true}
-          //   sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-          // />
-          // -----------------
-        }
         <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
           <div className="text-center flex justify-center">
-            {/* <div className="px-[20px] py-[7px] border-white bg-[rgba(0,0,0,.8)] border-4 max-w-[calc(100%-30px)]"> */}
             <div className="px-[20px] py-[7px]">
               {data?.name === "All Products" ? (
                 <div>

@@ -1,5 +1,6 @@
 [
   {
+    "searchable": false,
     "name": "Home",
     "url": "",
     "banner": {
@@ -19,6 +20,7 @@
     "links": []
   },
   {
+    "searchable": true,
     "banner_img": "/images/banner/fireplace-banner.webp",
     "banner": {
       "img": {
@@ -54,6 +56,7 @@
     "links": []
   },
   {
+    "searchable": true,
     "banner_img": "/images/banner/firepit-banner.webp",
     "banner": {
       "img": {
@@ -89,6 +92,7 @@
     "links": []
   },
   {
+    "searchable": true,
     "banner_img": "/images/banner/bbq-banner.webp",
     "banner": {
       "img": {
@@ -1616,6 +1620,7 @@
     ]
   },
   {
+    "searchable": true,
     "name": "Gas Logs",
     "banner_img": "/images/banner/gas-log-banner.webp",
     "banner": {
@@ -1665,10 +1670,10 @@
         }
       ]
     ],
-    "searchable": true,
     "url": "gas-logs"
   },
   {
+    "searchable": true,
     "banner_img": "/images/banner/patio-heater-banner.webp",
     "banner": {
       "img": {
@@ -1868,6 +1873,7 @@
     ]
   },
   {
+    "searchable": true,
     "banner_img": "/images/banner/outdoor-kitchen-banner.webp",
     "banner": {
       "img": {
@@ -13763,6 +13769,7 @@
     "url": "new-arrivals"
   },
   {
+    "searchable": true,
     "category_id": 294,
     "banner": {
       "img": {
