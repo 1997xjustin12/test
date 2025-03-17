@@ -1,7 +1,7 @@
 const DEFAULT_URL = "https://bbq-blog.onsitestorage.com";
 export async function generateMetadata({ params }) {
     const { slug } = params;
-    const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;
+    const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.digitaloceanspaces.com/uploads/blog-default.png`;
 
     // Fetch the current blog post
     const res = await fetch(`${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}`, {
