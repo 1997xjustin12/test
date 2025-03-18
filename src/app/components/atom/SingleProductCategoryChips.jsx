@@ -8,9 +8,9 @@ export default function SingleProductCategoryChips({ categories = [] }) {
         categories.length > 0 &&
         categories.map((v, i) => (
           <div
-            key={`category-tag-${i}`}
-            className="text-[9px] py-[4px] px-[8px] bg-orange-200 text-orange-700 font-semibold rounded-full">
-            {getCategoryNameById(v, bccat_json)}
+            key={`category-tag-${v.id}`}
+            className="text-[9px] py-[4px] px-[8px] bg-theme-200 text-theme-700 font-semibold rounded-full">
+            {v.name}
           </div>
         ))}
     </div>

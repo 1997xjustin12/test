@@ -46,18 +46,18 @@ const fireplacesStoves = [
     name: "Gas Fireplaces",
     img: "/images/home/fireplaces_and_stoves/gas-fireplaces.webp",
   },
-  {
-    name: "Fireplace TV Stands",
-    img: "/images/home/fireplaces_and_stoves/fireplace-tv-stand.webp",
-  },
-  {
-    name: "Wall-Mounted Fireplaces",
-    img: "/images/home/fireplaces_and_stoves/wall-mounted-fireplace.webp",
-  },
-  {
-    name: "Smart Fireplaces",
-    img: "/images/home/fireplaces_and_stoves/smart-fireplace.webp",
-  },
+  // {
+  //   name: "Fireplace TV Stands",
+  //   img: "/images/home/fireplaces_and_stoves/fireplace-tv-stand.webp",
+  // },
+  // {
+  //   name: "Wall-Mounted Fireplaces",
+  //   img: "/images/home/fireplaces_and_stoves/wall-mounted-fireplace.webp",
+  // },
+  // {
+  //   name: "Smart Fireplaces",
+  //   img: "/images/home/fireplaces_and_stoves/smart-fireplace.webp",
+  // },
   {
     name: "Freestanding Fireplaces",
     img: "/images/home/fireplaces_and_stoves/freestanding-fireplace.webp",
@@ -70,10 +70,10 @@ const fireplacesStoves = [
     name: "Electric Stove Heaters",
     img: "/images/home/fireplaces_and_stoves/electric-stove-heaters.webp",
   },
-  {
-    name: "Wood-Burning Stoves",
-    img: "/images/home/fireplaces_and_stoves/wood-burning-stove.webp",
-  },
+  // {
+  //   name: "Wood-Burning Stoves",
+  //   img: "/images/home/fireplaces_and_stoves/wood-burning-stove.webp",
+  // },
   {
     name: "Freestanding Stoves",
     img: "/images/home/fireplaces_and_stoves/freestanding-stoves.webp",
@@ -82,10 +82,10 @@ const fireplacesStoves = [
     name: "Freestanding Gas Stoves",
     img: "/images/home/fireplaces_and_stoves/freestanding-gas-stoves.webp",
   },
-  {
-    name: "Pellet Stoves",
-    img: "/images/home/fireplaces_and_stoves/pellet-stoves.webp",
-  },
+  // {
+  //   name: "Pellet Stoves",
+  //   img: "/images/home/fireplaces_and_stoves/pellet-stoves.webp",
+  // },
 ];
 
 export default function HomePageShopCategory() {
@@ -117,7 +117,7 @@ export default function HomePageShopCategory() {
                   {fireplacesStoves.map((i, idx) => (
                     <div
                       key={`fireplace-stoves-1-${idx}`}
-                      className="border p-4 w-full lg:w-[calc(25%-4px)] xl:w-[calc(16.6%-4px)] flex flex-col gap-[10px] hover:shadow-lg transition-all duration-300">
+                      className="border p-4 w-full lg:w-[calc(25%-4px)] xl:w-[calc(25%-4px)] flex flex-col gap-[10px] hover:shadow-lg transition-all duration-300">
                       <div className="relative aspect-1 bg-stone-100 border">
                         {
                           <Image
@@ -185,7 +185,7 @@ export default function HomePageShopCategory() {
             </div>
             <div className="flex justify-center">
               <a href="">
-                <button className="text-sm md:text-base font-bold bg-orange-600 hover:bg-orange-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
+                <button className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
                   Shop Fireplaces & Stoves
                 </button>
               </a>

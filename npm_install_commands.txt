@@ -22,3 +22,6 @@ npm i crypto-js --legacy-peer-deps
 
 LOCALFORAGE
 npm install localforage --legacy-peer-deps
+
+HTML PARSER
+npm install react-html-parser

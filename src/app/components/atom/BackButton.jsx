@@ -14,7 +14,7 @@ const BackButton = ({ label = "Back", className = "" }) => {
   return (
     <button
       onClick={handleBack}
-      className={`pr-[10px] text-white bg-orange-400 hover:bg-orange-500  rounded-full flex items-center gap-[5px] ${className}`}>
+      className={`pr-[10px] text-white bg-theme-400 hover:bg-theme-500  rounded-full flex items-center gap-[5px] ${className}`}>
       <FluentChevronLeft width={20} height={20} />
       <div>{label}</div>
     </button>

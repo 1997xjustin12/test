@@ -1,6 +1,12 @@
 import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 
+
+
+export function getSum(array, prop) {
+  return array.reduce((sum, item) => sum + item?.[prop], 0);
+}
+
 export const onsale_category_ids = [294, 360, 361, 362, 363, 364, 365];
 export const filter_price_range = [
   { label: "Request A Quote", min: 0, max: 0 },
@@ -107,6 +113,7 @@ export function getCategoryFilters(active_filters = {}) {
       prop: "onsale",
       count: 0,
       is_checked: false,
+      multi: false,
       options: [],
     },
     free_shipping: {
@@ -114,6 +121,7 @@ export function getCategoryFilters(active_filters = {}) {
       prop: "free_shipping",
       count: 0,
       is_checked: active_is_free_shipping ? true : false,
+      multi: false,
       options: [],
     },
     brand: {
@@ -249,4 +257,18 @@ export function findParentByUrl(categories, url) {
 
 export function isProductOnSale(categories) {
   return categories.filter((i) => onsale_category_ids.includes(i)).length > 0;
+}
+
+
+export const generateId = () => {
+  return Math.random().toString(36).substring(2, 11);
+};
+
+export const stripHtmlTags = (html) => {
+  if (typeof document !== "undefined") {
+      let tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+      return tempDiv.innerText || tempDiv.textContent;
+  }
+  return html.replace(/<[^>]+>/g, ''); // Fallback for SSR
 }

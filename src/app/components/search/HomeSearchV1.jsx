@@ -186,13 +186,13 @@ const HomeSearch = () => {
       <input
         type="search"
         placeholder="Search..."
-        className="w-full text-sm font-normal px-[20px] py-[10px] border border-orange-400 rounded-tl-full rounded-bl-full"
+        className="w-full text-sm font-normal px-[20px] py-[10px] border border-theme-400 rounded-tl-full rounded-bl-full"
         onClick={() => setOpenSearch(true)}
         value={search}
         onChange={handleSearch}
       />
       <button
-        className="rounded-tr-full rounded-br-full bg-pallete-orange text-white font-normal text-sm px-[20px] py-[10px]"
+        className="rounded-tr-full rounded-br-full bg-theme-500 text-white font-normal text-sm px-[20px] py-[10px]"
         aria-label="search-button"
         onClick={() => setOpenSearch(true)}>
         {/* <Icon icon="iconamoon:search-bold" className="text-lg" /> */}
@@ -249,7 +249,7 @@ const HomeSearch = () => {
                             key={`recent-search-${index}`}
                             className="group hover:bg-stone-200 px-2 py-[5px]"
                             onClick={() => setSearch(i)}>
-                            <div className="text-[14px] group-hover:text-orange-600">
+                            <div className="text-[14px] group-hover:text-theme-600">
                               {i}
                             </div>
                           </div>
@@ -270,7 +270,7 @@ const HomeSearch = () => {
                             onClick={handleOptionClick}
                             onContextMenu={handleOptionClick}>
                             <div className="group hover:bg-stone-200 px-2 py-[5px]">
-                              <div className="text-[14px] group-hover:text-orange-600">
+                              <div className="text-[14px] group-hover:text-theme-600">
                                 {i.name}
                               </div>
                               <div className="text-[10px] text-gray-500 font-normal">
@@ -313,7 +313,7 @@ const HomeSearch = () => {
                                   )}
                               </div>
                               <div className="w-full">
-                                <div className="text-[14px] group-hover:text-orange-600">
+                                <div className="text-[14px] group-hover:text-theme-600">
                                   {i.name}
                                 </div>
                                 <div className="text-[10px] text-gray-500 font-normal">
@@ -338,7 +338,7 @@ const HomeSearch = () => {
                             key={`popular-search-${index}`}
                             className="group hover:bg-stone-200 px-2 py-[5px]"
                             onClick={() => setSearch(i)}>
-                            <div className="text-[14px] group-hover:text-orange-600">
+                            <div className="text-[14px] group-hover:text-theme-600">
                               {i}
                             </div>
                           </div>
@@ -360,7 +360,7 @@ const HomeSearch = () => {
                             key={`brand-result-${index}`}
                             href={`#`}>
                             <div className="w-full group hover:bg-stone-200 px-2 py-[5px]">
-                              <div className="text-[14px] group-hover:text-orange-600">
+                              <div className="text-[14px] group-hover:text-theme-600">
                                 {i.name}
                               </div>
                               <div className="text-[10px] text-gray-500 font-normal">

@@ -1,69 +1,79 @@
-"use client";
-
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import Image from "next/image";
-import RenderBanner from "@/app/components/atom/RenderBanner";
+// import RenderBanner from "@/app/components/atom/RenderBanner";
+
+const default_contact = "(888) 575-9720";
 
 export default function Hero({ data }) {
+  console.log("data", data);
   const useBanner =
-    data?.banner?.img?.src ?? "/images/banner/solana-home-hero.webp";
-  if (data && data.children && data.children.length > 0) {
-    return (
-      <div className="container mx-auto flex flex-col md:flex-row">
-        <div className="w-full  md:w-[calc(100%-370px)]">
-          <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px]  md:h-[calc(100vh-450px)]">
-            {
-              <Image
-                src={useBanner}
-                alt={`Banner`}
-                className="w-full h-full object-cover"
-                fill
-                loading="eager"
-                priority={true}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-              />
-            }
-            <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-              <div className="text-center flex justify-center">
-                <div className="px-[20px] py-[7px]">
-                  <div>
-                    <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
-                      {data?.banner?.title}
-                    </div>
-                    <div className="text-xs md:text-base text-balance mt-1 tracking-wide text-white text-shadow-lg">
-                      {data?.banner?.tag_line}
-                    </div>
+    !data?.banner?.img?.src || data?.banner?.img?.src === ""
+      ? "/images/banner/solana-home-hero.webp"
+      : data?.banner?.img?.src;
+
+  const contact =
+    !data?.banner?.contact || data?.banner?.contact === ""
+      ? default_contact
+      : data?.banner?.contact;
+
+  return (
+    <div
+      className={`container mx-auto flex flex-col md:flex-row ${
+        data ? "fade-in" : "opacity-0"
+      }`}
+    >
+      <div className={`w-full ${data?.children && data?.children.length > 0 ? 'md:w-[calc(100%-370px)]':'md:w-full'}`}>
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px]  md:h-[calc(100vh-450px)]">
+          {
+            <Image
+              src={useBanner}
+              alt={data?.banner?.img?.alt ?? "Banner"}
+              className="w-full h-full object-cover"
+              fill
+              loading="eager"
+              priority={true}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
+          }
+          {/* <RenderBanner img={useBanner} /> */}
+          <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
+            <div className="text-center flex justify-center">
+              <div className="px-[20px] py-[7px]">
+                <div>
+                  <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
+                    {data?.banner?.title}
+                  </div>
+                  <div className="text-xs md:text-base text-balance mt-1 tracking-wide text-white text-shadow-lg">
+                    {data?.banner?.tag_line}
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        {data?.name !== "Home" && (
           <div className="flex-col flex lg:flex-row">
             <div className="w-full lg:w-[calc(100%-250px)] p-[20px]">
               <div className="flex flex-col gap-[20px]">
-                <div className="border-orange-500 border-l-4 text-2xl pl-3 font-bold text-stone-600">
+                <div className="border-theme-500 border-l-4 text-2xl pl-3 font-bold text-stone-600">
                   {data?.name}
                 </div>
                 <div className="text-sm text-stone-600 font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolorum exercitationem, eaque reiciendis ad expedita repellat
-                  nobis, harum, commodi facere explicabo velit deserunt
-                  molestias? Iure aut eum officiis aspernatur veritatis
-                  voluptates.
+                  {data?.banner?.description}
                 </div>
                 <div className="flex flex-col gap-[10px]">
-                  <div className="uppercase text-xs text-orange-500">
-                    Link &gt;
-                  </div>
+                  {/* <div className="uppercase text-xs text-theme-500">
+                      Link &gt;
+                    </div> */}
                   <hr />
                   <div className="text-xs flex flex-col md:flex-row">
                     <div className="font-bold text-stone-500">
                       Further Questions? ASK AN EXPERT!
                     </div>
                     <Link
-                      href={`tel:(888)%20575-9720`}
-                      className="flex md:ml-[8px] text-orange-500 font-bold"
+                      href={`tel:${contact}`}
+                      className="flex md:ml-[8px] text-theme-500 font-bold"
                     >
                       <Icon
                         icon="ic:baseline-phone"
@@ -71,14 +81,14 @@ export default function Hero({ data }) {
                         width="15"
                         height="15"
                       />
-                      (888) 575-9720
+                      {contact}
                     </Link>
                   </div>
                 </div>
               </div>
             </div>
             <div className="w-full p-[30px] bg-stone-100 flex flex-col gap-[20px] relative lg:w-[250px] h-[360px]">
-              <Link href={`tel:(888)%20575-9720`} prefetch={false}>
+              <Link href={`tel:${contact}`} prefetch={false}>
                 <Image
                   src="/images/banner/sub-banner-image.webp"
                   alt={`Sub Banner Image`}
@@ -91,7 +101,9 @@ export default function Hero({ data }) {
               </Link>
             </div>
           </div>
-        </div>
+        )}
+      </div>
+      {data?.children && data?.children.length > 0 && (
         <div className="w-full md:w-[370px] p-[25px] overflow-hidden">
           <div>
             <div className="text-stone-500 flex items-center gap-[4px]">
@@ -134,11 +146,11 @@ export default function Hero({ data }) {
                             />
                           </div>
                           <div
-                            className={`text-sm uppercase text-stone-600 font-bold w-[calc(100%-95px)] group-hover:text-orange-500`}
+                            className={`text-sm uppercase text-stone-600 font-bold w-[calc(100%-95px)] group-hover:text-theme-500`}
                           >
                             {i.name}
                           </div>
-                          <div className="text-stone-600 group-hover:text-orange-500">
+                          <div className="text-stone-600 group-hover:text-theme-500">
                             <Icon
                               icon="icon-park:right"
                               width="30"
@@ -153,39 +165,8 @@ export default function Hero({ data }) {
             </div>
           </div>
         </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="container mx-auto w-full relative isolate  bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)]">
-        <RenderBanner img={useBanner} />
-        <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-          <div className="text-center flex justify-center">
-            <div className="px-[20px] py-[7px]">
-              {data?.name === "All Products" ? (
-                <div>
-                  <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
-                    Modern Fireplaces and Outdoor Living
-                  </div>
-                  <div className="text-xs md:text-base text-balance mt-1 tracking-wide text-white text-shadow-lg">
-                    Transform Your Spaces with Elegant Designs Built for Comfort
-                    and Durability
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
-                    {data?.banner?.title}
-                  </div>
-                  <div className="text-xs md:text-base text-balance mt-1 tracking-wide text-white text-shadow-lg">
-                    {data?.banner?.tag_line}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
+// }

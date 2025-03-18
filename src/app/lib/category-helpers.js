@@ -1,22 +1,24 @@
-// import cat_json from "../data/category.json";
-// import cat_json from "../data/categoryv2.json"; // solana cherry picked in menu
-// import cat_json from "../data/categoryv3.json"; // bigcommerce categories in menu
-// import cat_json from "../data/categoryv4.json"; // bigcommerce categories in menu v2
 import cat_json from "../data/categoryv5.json"; // solana cherry picked in menu v2
 // --------------------------------------------------------------------------------
-// import bccat_json from "../data/bc_categories_20241213.json";
 import bccat_json from "../data/bc_categories_20250108.json";
 // --------------------------------------------------------------------------------
 import bcbrands_json from "@/app/data/brands_20250113.json";
 export const brands = bcbrands_json;
+
 export const solana_categories = cat_json.map((i) => ({
   ...i,
   children: i.links.flatMap((i2) => i2),
 }));
+
+export const solana_brands = cat_json.map((i) => ({
+  ...i,
+  children: i.links.flatMap((i2) => i2),
+})).find(i=> i.name==="Brands").children;
+
 export const bc_categories = bccat_json;
 
 export const main_categories = cat_json
-  .filter((i) => i.menu.visible)
+  // .filter((i) => i.menu.visible)
   .map((i) => ({
     ...i,
     url: i.menu.href,

@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
+import { useFilter } from "@/app/context/filter"
+
+export default function FilterSelectItemV2({ data, labelStyle, multiSelect, onChange }) {
+  const {filterOrder, addFilter, removeFilter} = useFilter();
   const [item, setItem] = useState({
     prop: "",
     label: "",
@@ -12,7 +15,13 @@ export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
   }, [data]);
   const handleChange = (e) => {
     const { value, checked } = e.target;
-    // console.log(`${value}: checked(${checked})`);
+    // const filter_group = item.prop.split(":")[0];
+    const filter_group = item.prop;
+    if(checked){
+      addFilter(filter_group, !multiSelect);
+    }else{
+      removeFilter(filter_group);
+    }
     setItem((prev) => ({ ...prev, is_checked: checked }));
     onChange(e);
   };
@@ -28,6 +37,7 @@ export default function FilterSelectItemV2({ data, labelStyle, onChange }) {
             id={item.prop}
             name={item.prop}
             type="checkbox"
+            className="market"
           />
           <div
             className={`absolute top-[3px] left-[3px] ${

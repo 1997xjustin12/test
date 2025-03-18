@@ -3,16 +3,18 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import { useState, useEffect } from "react";
 import { bc_categories as bccat_json } from "../../lib/category-helpers";
-import { formatPrice, getCategoryNameById } from "@/app/lib/helpers";
+import { createSlug, formatPrice, getCategoryNameById } from "@/app/lib/helpers";
 import OnsaleTag from "@/app/components/atom/SingleProductOnsaleTag";
 import Link from "next/link";
 import { useCart } from "@/app/context/cart";
-import { ICRoundPhone, AkarIconsShippingV1 } from "../icons/lib";
+import { ICRoundPhone, AkarIconsShippingV1, Eos3DotsLoading } from "../icons/lib";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const ProductToCart = ({ product, loading }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [open, setOpen] = useState(false);
+  const [ATCLoading, setATCLoading] = useState(false);
   const [filteredCategoryIds, setFilteredCategoryIds] = useState([]);
 
   useEffect(() => {
@@ -72,10 +74,18 @@ const ProductToCart = ({ product, loading }) => {
   const createItemsArray = (item, quantity) => {
     return new Array(quantity).fill(item);
   };
-  const handleAddToCart = (item) => {
+
+  const handleAddToCart = async(item) => {
+    setATCLoading(true);
     const items = createItemsArray(item, quantity);
-    addToCart(items, true);
+    const response = await addToCart(items);
+    setATCLoading(false);
   };
+
+  const createBrandUrl = (brandName) => {
+    const slug_name = createSlug(brandName);
+    return `${BASE_URL}/brands-${slug_name}`;
+  }
 
   
   return (
@@ -85,8 +95,8 @@ const ProductToCart = ({ product, loading }) => {
       </div>
       <div className="">
         <div className="font-bold text-sm md:text-lg">{productData?.name}</div>
-        <div className="text-stone-400 text-xs md:text-sm">
-          {productData?.sku}
+        <div className="text-stone-400 text-xs md:text-sm uppercase">
+          <Link prefetch={false} href={createBrandUrl(productData?.brand?.name)}>{productData?.brand?.name + " "}</Link>&#9679; SKU: {productData?.sku}
         </div>
       </div>
       <div className="flex items-center">
@@ -101,9 +111,26 @@ const ProductToCart = ({ product, loading }) => {
         Ships Within 1 to 2 Business Days
       </div>
       <div className="flex items-center gap-[20px]">
-        <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
-          ${formatPrice(productData?.price)}
+        {
+          productData.price > productData.sale_price ? 
+          <div className="flex flex-col gap-[10px]">
+            <div className="flex gap-[10px]">
+              <div className="text-2xl md:text-3xl font-semibold text-stone-400 line-through">
+                ${formatPrice(productData?.price)}
+              </div>
+              <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
+                ${formatPrice(productData?.sale_price)}
+              </div>
+            </div>
+            <div>
+              <div  className="font-semibold border-green-500 text-green-500 w-auto py-1 px-2 inline-block border-2">Save ${formatPrice(productData.price - productData.sale_price)}</div>
+            </div>
+          </div>
+          :
+          <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
+          ${formatPrice(productData?.sale_price)}
         </div>
+        }
         <div className="font-bold">QTY</div>
         <div className="flex items-center">
           <button
@@ -168,14 +195,18 @@ const ProductToCart = ({ product, loading }) => {
       </div>
       <div className="font-bold text-white">
         <button
-          className="flex items-cencer gap-[5px] bg-pallete-green rounded-full py-[5px] px-[20px]"
+          className={`bg-pallete-green rounded-full py-[5px] px-[20px] ${ATCLoading ? "pointer-events-none relative":"pointer-events-auto"}`}
           onClick={() => handleAddToCart(productData)}
+          disabled={ATCLoading}
         >
-          <div>
-            <Icon icon="ph:shopping-cart-simple-bold" className="text-[22px]" />
-          </div>
-          <div className="font-bold uppercase text-sm md:text-base">
-            add to cart
+          {ATCLoading && <div className="absolute inset-0 flex items-center justify-center"><Eos3DotsLoading width={48} height={48}/></div>}
+          <div className={`flex items-center gap-[5px] ${ATCLoading ? "opacity-0":"opacity-100"}`}>
+            <div>
+              <Icon icon="ph:shopping-cart-simple-bold" className="text-[22px]" />
+            </div>
+            <div className="font-bold uppercase text-sm md:text-base">
+              add to cart
+            </div>
           </div>
         </button>
       </div>

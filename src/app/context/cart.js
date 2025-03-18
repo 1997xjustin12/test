@@ -16,6 +16,8 @@ export const CartProvider = ({ children }) => {
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
 
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
   useEffect(() => {
     // Dynamically import the cartStorage module only on the client-side
     if (typeof window !== "undefined") {
@@ -43,34 +45,26 @@ export const CartProvider = ({ children }) => {
   }, [cartStorage]);
 
   
-  const fakeLoadingDelay = () => {
-    setTimeout(() => {
-      setAddToCartLoading(false); // Hide loader after 2 seconds
-    }, 2000);
-  };
 
   // Function to add to cart and update cart count
   // item param must be an array
-  const addToCart = async (items, triggerAddedToCartModal) => {
-    setAddToCartLoading(true);
+  const addToCart = async (items) => {
+      setAddToCartLoading(true);
     // getCart everytime we add or remove items
     try{
       const savedItems = await cartStorage.getCart();
+      await sleep(2000);
       setCartItems((prev) => {
         const updatedItems = [...savedItems, ...items];
         cartStorage.saveCart(updatedItems);
         setCartItemsCount(updatedItems.length);
         return [...updatedItems];
       });
-      // triggerAddedToCart
-      if(triggerAddedToCartModal){
-        setAddedToCart(items);
-      }
-      fakeLoadingDelay();
+      setAddToCartLoading(false);
+      setAddedToCart(items);
+      return {code: 200, status: "success", message:"Successfully added items to cart."}
     }catch(error){
-      // triggerErrorNotAddedToCart
-      fakeLoadingDelay();
- 
+      return {code: 500, status: "error", message:"Error added items to cart."}
     }
   };
 
@@ -103,7 +97,6 @@ export const CartProvider = ({ children }) => {
   const handleCloseAddedToCart = () =>{
     setAddedToCart(null);
   }
-
 
 
   return (

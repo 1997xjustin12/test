@@ -1,39 +1,50 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, getSum } from "@/app/lib/helpers";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+// import CallWrapper from "@/app/components/atom/CallWrapper";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+
 function CartOrderSummary() {
+  const router = useRouter();
   const { cartItems } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
   const [savings, setSavings] = useState(0);
   const [deliveryOption, setDeliveryOption] = useState(0);
   const [tax, setTax] = useState(0);
-  const [cartTotal, setCartTotal] = useState(0);
 
-  useEffect(() => {
-    if (cartItems.length === 0) {
-      setOriginalPrice(0);
-    } else {
-      setCartTotal((prev) => {
-        const _originalPrice = getSum(cartItems, "price");
-        const _salePrice = getSum(cartItems, "sale_price");
-        const _savings = _originalPrice - _salePrice;
-        const _deliveryOption = 0;
-        const _tax = 0;
-        setOriginalPrice(_originalPrice);
-        setSalePrice(_salePrice);
-        setSavings(_savings);
-        setDeliveryOption(_deliveryOption);
-        setTax(_tax);
-        return _salePrice + deliveryOption + _tax;
-      });
+  const cartTotal = useMemo(()=>{
+    if(cartItems.length > 0){
+      const _originalPrice = getSum(cartItems, "price");
+      const _salePrice = getSum(cartItems, "sale_price");
+      const _savings = _originalPrice - _salePrice;
+      const _deliveryOption = 0;
+      const _tax = 0;
+      setOriginalPrice(_originalPrice);
+      setSalePrice(_salePrice);
+      setSavings(_savings);
+      setDeliveryOption(_deliveryOption);
+      setTax(_tax);
+      return _salePrice + _deliveryOption + _tax;
+    }else{
+      return 0;
     }
-  }, [cartItems]);
+  },[cartItems])
 
-  function getSum(array, prop) {
-    return array.reduce((sum, item) => sum + item?.[prop], 0);
+  const handleCheckout = (e) => {
+    e.preventDefault();
+    if(cartTotal===0){
+      alert("You don't have items to your cart yet.");
+    }else{
+      router.push(`${BASE_URL}/checkout`)
+    }
   }
+
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -89,21 +100,30 @@ function CartOrderSummary() {
             </dd>
           </dl>
         </div>
-
-        <a
-          href="#"
-          className="flex bg-orange-600  hover:bg-orange-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        {/* <CallWrapper>
+          <button
+            className="flex bg-theme-600  hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          >
+            Proceed to Checkout
+          </button>
+        </CallWrapper> */}
+        <Link
+          href={`${BASE_URL}/checkout`}
+          prefetch={false}
+          onClick={handleCheckout}
+          className="flex bg-theme-600  hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
         >
           Proceed to Checkout
-        </a>
+        </Link>
 
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
             {" "}
             or{" "}
           </span>
-          <a
-            href="#"
+          <Link
+            href={`${BASE_URL}/fireplaces`}
+            prefetch={false}
             title=""
             className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
           >
@@ -123,7 +143,7 @@ function CartOrderSummary() {
                 d="M19 12H5m14 0-4 4m4-4-4-4"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
       {/* Voucher or giftcard seciton */}

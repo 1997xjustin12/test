@@ -7,6 +7,8 @@ import { formatPrice } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
 import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
+import BrandDisplay from "@/app/components/atom/ProductCardBrandDisplay";
+import PriceDisplay from "@/app/components/atom/ProductCardPriceDisplay";
 import { ICRoundPhone } from "../icons/lib";
 import { useQuickView } from "@/app/context/quickview";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
@@ -38,30 +40,31 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleQuickViewClick = (e,item) => {
+  const handleQuickViewClick = (e, item) => {
     e.stopPropagation();
     e.preventDefault();
     viewItem(item);
-  }
+  };
 
   const triggerCall = (e) => {
     e.preventDefault();
     e.stopPropagation();
     window.location.href = "tel:(888)%205759720";
-  }
-
+  };
 
   return (
     <Link
       prefetch={false}
       href={`${BASE_URL}/product/${product.custom_url.url}`}
       // onClick={handleProductItemClick}
-      className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group">
+      className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group"
+    >
       <div className="">
         <div
           className={`w-full flex items-center justify-center h-[230px] overflow-hidden relative ${
             product.isSelected ? "bg-stone-600" : "bg-white"
-          }`}>
+          }`}
+        >
           <img
             src={thumbnail}
             alt=""
@@ -73,9 +76,12 @@ const ProductCard = ({ product }) => {
             <LoaderIcon dark={false} />
           </div>
           <OnsaleTag categories={product?.categories} />
-          <div onClick={(e)=>handleQuickViewClick(e,product)} className="absolute bottom-0 left-0 bg-pallete-orange text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible">
+          <div
+            onClick={(e) => handleQuickViewClick(e, product)}
+            className="absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible"
+          >
             <div className="flex justify-center">
-              <div  className="font-semibold text-[0.775rem] inline-block text-center">
+              <div className="font-semibold text-[0.775rem] inline-block text-center">
                 <Icon
                   icon="mi:shopping-cart-add"
                   className="text-lg font-thin inline-block mr-[5px]"
@@ -87,89 +93,82 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         <div className="flex flex-col px-[15px] pt-[5px] border-t">
-          {/* bg-red-500 */}
-          <div className="text-xs h-[44px] ">
-            STARTING AT{" "}
-            <span className="text-pallete-orange font-bold text-lg">
-              ${formatPrice(parseFloat(product.price).toFixed(2))}
-            </span>
+          <div className="text-sm line-clamp-2 font-semibold text-stone-700" title={product.name}>
+            {product.name}
           </div>
-          {/* bg-blue-300 */}
-          <div className="text-sm h-[80px] ">
-            <div className="line-clamp-4 font-semibold text-stone-700">
-              {product.name}
-            </div>
-            {/* <div className="text-stone-400 italic font-semilight">
-              by Brand Name
-            </div> */}
-          </div>
-          {/* bg-yellow-300 */}
-          <div className={`flex flex-col`}>
-            <div className={`flex items-center gap-[5px]`}>
-              <Rating
-                readOnly
-                value={product.reviews_rating_sum}
-                fractions={2}
-                style={{ maxWidth: 80 }}></Rating>
-              <div className={`text-[0.75rem]`}>
-                ({product.reviews_count}){/* (id:{product.id}) */}
-              </div>
-            </div>
-            <div className="text-pallete-gray text-[0.65rem] md:text-sm h-[25px]">
-              {product.sku}
+          <div className={`flex items-center gap-[5px]`}>
+            <Rating
+              readOnly
+              value={product.reviews_rating_sum}
+              fractions={2}
+              style={{ maxWidth: 100 }}
+            ></Rating>
+            <div className={`text-[0.75rem]`}>
+              ({product.reviews_count}){/* (id:{product.id}) */}
             </div>
           </div>
-          {/* bg-green-300  */}
+          <div className="mt-3">
+            <BrandDisplay product={product}/>
+          </div>
+          <div className="mt-3">
+            <PriceDisplay product={product}/>
+          </div>
           <div className="flex  h-[48px] items-center">
             <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
               {
                 // product.is_free_shipping && (
-                <div className="flex items-center font-bold gap-[3px]">
-                  <div>
-                    <Icon
-                      icon="lucide:circle-check-big"
-                      className={`${
-                        product.is_free_shipping
-                          ? "text-pallete-green"
-                          : "text-pallete-gray"
-                      }`}
-                    />
-                  </div>
-                  <div
-                    className={`text-[0.875rem] relative ${
-                      product.is_free_shipping
-                        ? "text-black"
-                        : "text-pallete-gray line-through"
-                    }`}>
-                    <span
-                      className={`${
-                        product.is_free_shipping
-                          ? "text-pallete-green"
-                          : "text-pallete-gray"
-                      }`}>
-                      FREE
-                    </span>{" "}
-                    Shipping
-                  </div>
-                </div>
+                // <div className="flex text-[0.7rem] sm:text-base items-center font-bold gap-[3px]">
+                //   <div>
+                //     <Icon
+                //       icon="lucide:circle-check-big"
+                //       className={`${
+                //         product.is_free_shipping
+                //           ? "text-pallete-green"
+                //           : "text-pallete-gray"
+                //       }`}
+                //     />
+                //   </div>
+                //   <div
+                //     className={`text-[0.7rem] sm:text-[0.875rem] relative ${
+                //       product.is_free_shipping
+                //         ? "text-black"
+                //         : "text-pallete-gray line-through"
+                //     }`}>
+                //     <span
+                //       className={`${
+                //         product.is_free_shipping
+                //           ? "text-pallete-green"
+                //           : "text-pallete-gray"
+                //       }`}>
+                //       FREE
+                //     </span>{" "}
+                //     Shipping
+                //   </div>
+                // </div>
                 // )
               }
               {/* {product?.custom_fields?.quick_ship && ( */}
-              <div className="flex items-center font-bold gap-[3px]">
+              {/* <div className="flex text-[0.7rem] sm:text-base items-center font-bold gap-[3px]">
                 <div>
                   <Icon
                     icon="lucide:circle-check-big"
                     className="text-pallete-green"
                   />
                 </div>
-                <div className="text-[0.875rem]">Quick Ship Available</div>
-              </div>
+                <div className="text-[0.7rem] sm:text-[0.875rem]">Quick Ship Available</div>
+              </div> */}
               {/* )} */}
             </div>
           </div>
-          
+
           <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
-            Found It Cheaper? <div onClick={triggerCall} className="hover:underline flex items-center gap-[3px] cursor-pointer"><ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div></div>
+            Found It Cheaper?{" "}
+            <div
+              onClick={triggerCall}
+              className="hover:underline flex items-center gap-[3px] cursor-pointer"
+            >
+              <ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div>
+            </div>
           </div>
         </div>
       </div>

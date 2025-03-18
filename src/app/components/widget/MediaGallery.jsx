@@ -74,7 +74,7 @@ const MediaGallery = ({ mediaItems, loading }) => {
                   key={`image-gallery-item-${index}`}
                   className={`relative flex items-center w-[72px] min-w-[72px] min-h-[72px] h-[72px] bg-white rounded-sm shadow ${
                     index === activeIndex
-                      ? "border-orange-600 border-[3px]"
+                      ? "border-theme-600 border-[3px]"
                       : "border"
                   }`}
                 >

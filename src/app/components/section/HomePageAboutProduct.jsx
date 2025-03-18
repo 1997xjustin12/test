@@ -74,7 +74,7 @@ export default function HomePageAboutProduct() {
           </div>
           <div className="flex justify-center md:justify-start">
             <a href="tel:(888)%20977-9085">
-              <button className="font-bold bg-orange-600 hover:bg-orange-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md flex items-center gap-[5px] md:gap-[10px]">
+              <button className="font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md flex items-center gap-[5px] md:gap-[10px]">
                 <ICRoundPhone />
                 <div className="text-sm md:text-base">
                   Call Now 888-667-4986

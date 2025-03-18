@@ -4,6 +4,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Eos3DotsLoading } from "../icons/lib";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const cartPageUrl = `${BASE_URL}/cart`;
 function AddedToCartDialog({ data, onClose }) { 
@@ -35,7 +36,6 @@ function AddedToCartDialog({ data, onClose }) {
       const thumbnail =
       addedToCartItems?.images?.find(({ is_thumbnail }) => is_thumbnail)?.url_standard ??
         null;
-      console.log("thumbnail", thumbnail);
       setImage(thumbnail);
       setToggle(true);
     } else {
@@ -43,15 +43,14 @@ function AddedToCartDialog({ data, onClose }) {
     }
   }, [addedToCartItems]);
 
-  useEffect(() => {
-    if (!toggle) {
-      onClose();
-    }
-  }, [toggle]);
-
+  const handleClose = () => {
+    setToggle(false);
+    onClose();
+  }
 
   const handleGoToCartClick = (e) => {
     e.preventDefault();
+    handleClose();
     router.push(cartPageUrl);
   };
 
@@ -101,10 +100,15 @@ function AddedToCartDialog({ data, onClose }) {
                     />
                   )}
                 </div>
-                <div className="w-[calc(100%-100px)] text-stone-700 flex flex-col gap-[10px]">
+                <div className={`w-[calc(100%-100px)] text-stone-700 flex gap-[10px] ${data ? "flex-col":"justify-center items-center h-[100px]"}`}>
+                  {
+                    data ? <>
                   <div className="font-bold text-sm lg:text-xl">{addedToCartItems?.name}</div>
                   <div className="font-medium text-sm">{`$${addedToCartItems?.price}x${addedToCartItems?.count}`}</div>
-                  <div className="font-extrabold text-orange-600 text-lg lg:text-2xl text-right">{`$${addedToCartItems?.count * addedToCartItems?.price}`}</div>
+                  <div className="font-extrabold text-theme-600 text-lg lg:text-2xl text-right">{`$${addedToCartItems?.count * addedToCartItems?.price}`}</div>
+                  </>:
+                  <Eos3DotsLoading />
+                  }
                 </div>
               </div>
               <div className="flex items-center justify-center h-[100px]">
@@ -116,7 +120,7 @@ function AddedToCartDialog({ data, onClose }) {
               {/* action buttons */}
               <div className="flex justify-between items-center p-[10px] border-t ">
                 <button
-                  onClick={() => setToggle(false)}
+                  onClick={handleClose}
                   className="border border-stone-300 rounded-md py-1 px-2 hover:bg-stone-50 text-sm font-medium"
                 >
                   Continue Shopping
@@ -124,7 +128,7 @@ function AddedToCartDialog({ data, onClose }) {
                 <Link
                   onClick={handleGoToCartClick}
                   href={cartPageUrl}
-                  className="border border-stone-300 rounded-md py-1 px-2 text-white bg-orange-600 hover:bg-orange-500 text-sm font-medium"
+                  className="border border-stone-300 rounded-md py-1 px-2 text-white bg-theme-600 hover:bg-theme-500 text-sm font-medium"
                 >
                   Go to Cart
                 </Link>

@@ -57,7 +57,7 @@ export default function HomePageShopAllClearance() {
             </div>
             <div className="text-center">
               <Link href={item.button.url} prefetch={false}>
-                <button className="font-medium border px-[20px] py-[8px] rounded-xl bg-orange-600 text-white shadow-md text-lg curor-pointer hover:bg-orange-500">
+                <button className="font-medium border px-[20px] py-[8px] rounded-xl bg-theme-600 text-white shadow-md text-lg curor-pointer hover:bg-theme-500">
                   {item.button.label}
                 </button>
               </Link>

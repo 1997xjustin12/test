@@ -67,7 +67,7 @@ const Carousel = ({ slides, autoSlideInterval = 3000 }) => {
             onClick={() => goToSlide(index)}
             className={`rounded-full transition-width duration-500 ease-in-out ${
               index === currentIndex
-                ? "bg-pallete-orange w-6 h-1 md:w-8 md:h-2 "
+                ? "bg-theme-500 w-6 h-1 md:w-8 md:h-2 "
                 : "bg-pallete-lightgray w-1 h-1 md:w-2 md:h-2 "
             }`}
           />

@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import SearchSection from "@/app/components/atom/searchResultSection";
 import { useSearch } from "@/app/context/search";
 
-
 const HomeSearch = ({ main, controlled_height }) => {
   const {
     searchQuery,
@@ -12,8 +11,9 @@ const HomeSearch = ({ main, controlled_height }) => {
     searchResults,
     loading,
     mainIsActive,
-    setMainIsActive } =
-    useSearch();
+    setMainIsActive,
+    redirectToSearchPage,
+  } = useSearch();
   const searchRef = useRef(null);
   const [openSearch, setOpenSearch] = useState(false);
   const handleSearch = (e) => {
@@ -41,20 +41,53 @@ const HomeSearch = ({ main, controlled_height }) => {
     setMainIsActive(mainActive);
   }, [openSearch]);
 
+  const handleRedirectToSearchPage = () => {
+    setOpenSearch(false);
+    redirectToSearchPage();
+  };
+
+  const handleSearchEnterKey = (e) => {
+    if (e.key === "Enter" && searchQuery !== "") {
+      handleRedirectToSearchPage();
+    }
+  };
+
+  const handleSearchButtonClick = () => {
+    if (searchQuery !== "") {
+      handleRedirectToSearchPage();
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = 200; // Change this value as needed
+      if ((window.scrollY < scrollHeight)) {
+        if(!main) setOpenSearch(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleOptionSelect = () => {
+    setOpenSearch(false);
+  }
   return (
     <div className="flex w-full relative z-10" ref={searchRef}>
       <input
         type="search"
         placeholder="Search..."
-        className="w-full text-sm font-normal px-[20px] py-[10px] border border-orange-400 rounded-tl-full rounded-bl-full"
+        className="w-full text-sm font-normal px-[20px] py-[10px] border border-theme-400 rounded-tl-full rounded-bl-full"
         onClick={() => setOpenSearch(true)}
+        onKeyDown={handleSearchEnterKey}
         value={searchQuery}
         onChange={handleSearch}
       />
       <button
-        className="rounded-tr-full rounded-br-full bg-pallete-orange text-white font-normal text-sm px-[20px] py-[10px]"
+        className="rounded-tr-full rounded-br-full bg-theme-500 text-white font-normal text-sm px-[20px] py-[10px]"
         aria-label="search-button"
-        // onClick={() => setOpenSearch(true)}
+        onClick={handleSearchButtonClick}
       >
         <SearchIcon color="white" />
       </button>
@@ -77,7 +110,7 @@ const HomeSearch = ({ main, controlled_height }) => {
               }`}
             >
               {searchResults.map((i) => (
-                <SearchSection key={`search-section-${i.prop}`} section={i} />
+                <SearchSection key={`search-section-${i.prop}`} section={i} onOptionSelect={handleOptionSelect} />
               ))}
             </div>
           </div>

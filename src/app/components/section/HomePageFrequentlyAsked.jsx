@@ -64,7 +64,7 @@ export default function HomePageFrequentlyAsked() {
               key={`frequent-question-${i.id}-${idx}`}
               className="text-xs md:text-base">
               <div
-                className="bg-orange-600 hover:bg-orange-500  text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
+                className="bg-theme-600 hover:bg-theme-500  text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
                 onClick={() => toggleAnswer(i.id)}>
                 <div className="w-[calc(100%-70px)]  self-center">{`${
                   idx + 1
@@ -74,7 +74,7 @@ export default function HomePageFrequentlyAsked() {
                 </div>
               </div>
               <div
-                className={`border border-orange-400 text-stone-700 py-[10px] px-[20px] ${
+                className={`border border-theme-400 text-stone-700 py-[10px] px-[20px] ${
                   i.is_open ? "block" : "hidden"
                 }`}>
                 {`${i.answer}`}

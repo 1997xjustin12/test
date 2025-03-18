@@ -1,7 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
+const BreadCrumbs = dynamic(() => import("@/app/components/atom/BreadCrumbs"), {
+  ssr: false,
+});
 import { useState, useEffect } from "react";
-// import Link from "next/link";
 import {
   Dialog,
   DialogBackdrop,
@@ -15,13 +18,9 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
   FunnelIcon,
-  // MinusIcon,
-  // PlusIcon,
-  // Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
-import QuickView from "@/app/components/atom/ProductQuickView"
 import { getPageData } from "@/app/lib/helpers";
 import { flatCategories } from "@/app/lib/category-helpers";
 
@@ -34,6 +33,7 @@ import FilterDropdownSelect from "@/app/components/atom/FilterDropdownSelect";
 import { useSearchParams } from "next/navigation";
 
 import FilterChipsWrapper from "@/app/components/section/FilterChipsWrapper";
+
 
 const sortOptions = [
   {
@@ -77,7 +77,6 @@ export default function TuiFilterSort({
   onFilterChange,
 }) {
   const searchParams = useSearchParams();
-  const [quickview, setQuickview] = useState(null);
   const [sort, setSort] = useState(sortOptions);
   const [displayProducts, setDisplayProducts] = useState([]);
   const [filters, setFilters] = useState({});
@@ -91,6 +90,8 @@ export default function TuiFilterSort({
   const activeCategoryName = (category) => {
     if (category === "all-products") {
       return "All Products";
+    }else if(category === "search"){
+      return "Search";
     } else {
       return getPageData(category, flatCategories)?.name;
     }
@@ -124,7 +125,6 @@ export default function TuiFilterSort({
   };
 
   const handleProductItemClick = (id) => {
-    // alert(`Product ID (${id}) is Clicked`);
     setDisplayProducts((prev) => {
       return prev.map((i) => ({ ...i, isSelected: i.id === id }));
     });
@@ -132,7 +132,6 @@ export default function TuiFilterSort({
 
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;
-    // console.log(`${value}: ${checked} (checked)`);
     const tmp = value.split(":");
     let filterValue = null;
     if (tmp.length > 1) {
@@ -238,11 +237,30 @@ export default function TuiFilterSort({
                     />
                   </div>
                 )} */}
+                {/* {filters?.free_shipping && (
+                  <div className="border-t py-5">
+                    <FilterSelectItem
+                      multiSelect={filters.free_shipping.multi}
+                      data={filters.free_shipping}
+                      labelStyle="font-semibold uppercase text-stone-600"
+                      onChange={handleFilterChange}
+                    />
+                  </div>
+                )}
+                {filters?.brand && (
+                  <div className="border-t py-5">
+                    <FilterDrawer
+                      data={filters.brand}
+                      multiSelect={filters.brand.multi}
+                      onFilterItemChange={handleFilterChange}
+                    />
+                  </div>
+                )} */}
                 {filters?.price && (
                   <div className="border-t py-5">
                     <FilterDrawer
                       data={filters.price}
-                      multiSelect={false}
+                      multiSelect={filters.price.multi}
                       onFilterItemChange={handleFilterChange}
                     />
                   </div>
@@ -263,17 +281,22 @@ export default function TuiFilterSort({
         <main className="px-2 sm:px-4 relative bg-white">
           <div className="border-b border-gray-200 pb-2 pt-6 sticky top-[40px] bg-white z-[5]">
             <div className="flex items-baseline justify-between ">
-              <h1 className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
-                {`${activeCategoryName(category)}`}{" "}
-                <span className="font-normal text-sm md:text-2xl">{`${
-                  pagination &&
-                  pagination.total !== 0 &&
-                  pagination.total !== undefined
-                    ? `(${pagination?.total})`
-                    : ""
-                }`}</span>
-              </h1>
-
+              <div>
+                <h1 className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
+                  {`${activeCategoryName(category)}`}{" "}
+                  {
+                    category !== "search" && 
+                    <span className="font-normal text-sm md:text-2xl">{`${
+                      pagination &&
+                      pagination.total !== 0 &&
+                      pagination.total !== undefined
+                        ? `(${pagination?.total})`
+                        : ""
+                    }`}</span>
+                  }
+                </h1>
+                <BreadCrumbs category={category}/>
+              </div>
               <div className="flex items-center">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
@@ -336,23 +359,25 @@ export default function TuiFilterSort({
                     onChange={handleFilterChange}
                   />
                 )}
-                {filters?.free_shipping && (
+                 */}
+                {/* {filters?.free_shipping && (
                   <FilterSelectItemV2
                     data={filters.free_shipping}
+                    multiSelect={filters.free_shipping.multi}
                     onChange={handleFilterChange}
                   />
                 )}
                 {filters?.brand && (
                   <FilterDropdownSelect
                     data={filters.brand}
-                    multiSelect={false}
+                    multiSelect={filters.brand.multi}
                     onFilterItemChange={handleFilterChange}
                   />
                 )} */}
                 {filters?.price && (
                   <FilterDropdownSelect
                     data={filters.price}
-                    multiSelect={false}
+                    multiSelect={filters.price.multi}
                     onFilterItemChange={handleFilterChange}
                   />
                 )}
@@ -424,7 +449,7 @@ export default function TuiFilterSort({
                       onClick={() =>
                         handleShowMorePagination(pagination.current_page + 1)
                       }
-                      className={`order-1 bg-pallete-orange text-white px-[25px] py-[7px] rounded-md`}>
+                      className={`order-1 bg-theme-500 text-white px-[25px] py-[7px] rounded-md`}>
                       Show More
                     </button>
                   </div>

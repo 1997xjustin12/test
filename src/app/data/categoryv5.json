@@ -1622,6 +1622,7 @@
   {
     "searchable": true,
     "name": "Gas Logs",
+    "category_id": 580,
     "banner_img": "/images/banner/gas-log-banner.webp",
     "banner": {
       "img": {
@@ -1644,31 +1645,210 @@
     "links": [
       [
         {
+          "category_id": 402,
+          "parent_id": 295,
+          "tree_id": 1,
           "name": "Peterson Gas Logs",
-          "url": "peterson-gas-logs",
+          "description": "",
+          "views": 0,
+          "sort_order": 30,
+          "page_title": "",
+          "search_keywords": "",
+          "meta_keywords": [],
+          "meta_description": "",
+          "layout_file": "category.html",
+          "is_visible": true,
+          "default_product_sort": "use_store_settings",
+          "url": "brands-peterson-gas-logs",
+          "image_url": "",
+          "path": "/brands/peterson-gas-logs/",
+          "menu": {
+            "href": "brands-peterson-gas-logs",
+            "visible": true
+          },
           "key_words": ["/brands/peterson-gas-logs/"],
           "children": [
             {
+              "category_id": 577,
+              "parent_id": 402,
+              "tree_id": 1,
+              "name": "PGL Fire Pit Logs",
+              "description": "",
+              "views": 0,
+              "sort_order": 0,
+              "page_title": "",
+              "search_keywords": "",
+              "meta_keywords": [],
+              "meta_description": "",
+              "layout_file": "category.html",
+              "is_visible": true,
+              "default_product_sort": "use_store_settings",
+              "url": "brands-peterson-gas-logs-pgl-fire-pit-logs",
+              "image_url": "",
+              "path": "/brands/peterson-gas-logs/pgl-fire-pit-logs/",
+              "menu": {
+                "href": "brands-peterson-gas-logs-pgl-fire-pit-logs",
+                "visible": true
+              },
+              "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-logs/"],
+              "children": []
+            },
+            {
+              "category_id": 578,
+              "parent_id": 402,
+              "tree_id": 1,
               "name": "PGL Fire Pit Burners",
-              "url": "pgl-fire-pit-burners",
+              "description": "",
+              "views": 0,
+              "sort_order": 1,
+              "page_title": "",
+              "search_keywords": "",
+              "meta_keywords": [],
+              "meta_description": "",
+              "layout_file": "category.html",
+              "is_visible": true,
+              "default_product_sort": "use_store_settings",
+              "url": "brands-peterson-gas-logs-pgl-fire-pit-burners",
+              "image_url": "",
+              "path": "/brands/peterson-gas-logs/pgl-fire-pit-burners/",
+              "menu": {
+                "href": "brands-peterson-gas-logs-pgl-fire-pit-burners",
+                "visible": true
+              },
               "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-burners/"],
               "children": []
             },
             {
+              "category_id": 579,
+              "parent_id": 402,
+              "tree_id": 1,
               "name": "PGL Fire Pit Glasses",
-              "url": "pgl-fire-pit-glasses",
+              "description": "",
+              "views": 0,
+              "sort_order": 2,
+              "page_title": "",
+              "search_keywords": "",
+              "meta_keywords": [],
+              "meta_description": "",
+              "layout_file": "category.html",
+              "is_visible": true,
+              "default_product_sort": "use_store_settings",
+              "url": "brands-peterson-gas-logs-pgl-fire-pit-glasses",
+              "image_url": "",
+              "path": "/brands/peterson-gas-logs/pgl-fire-pit-glasses/",
+              "menu": {
+                "href": "brands-peterson-gas-logs-pgl-fire-pit-glasses",
+                "visible": true
+              },
               "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-glasses/"],
-              "children": []
-            },
-            {
-              "name": "PGL Fire Pit Logs",
-              "url": "pgl-fire-pit-logs",
-              "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-logs/"],
               "children": []
             }
           ]
         }
       ]
+    ],
+    "children": [
+      {
+        "category_id": 402,
+        "parent_id": 295,
+        "tree_id": 1,
+        "name": "Peterson Gas Logs",
+        "description": "",
+        "views": 0,
+        "sort_order": 30,
+        "page_title": "",
+        "search_keywords": "",
+        "meta_keywords": [],
+        "meta_description": "",
+        "layout_file": "category.html",
+        "is_visible": true,
+        "default_product_sort": "use_store_settings",
+        "url": "brands-peterson-gas-logs",
+        "image_url": "",
+        "path": "/brands/peterson-gas-logs/",
+        "menu": {
+          "href": "brands-peterson-gas-logs",
+          "visible": true
+        },
+        "key_words": ["/brands/peterson-gas-logs/"],
+        "children": [
+          {
+            "category_id": 577,
+            "parent_id": 402,
+            "tree_id": 1,
+            "name": "PGL Fire Pit Logs",
+            "description": "",
+            "views": 0,
+            "sort_order": 0,
+            "page_title": "",
+            "search_keywords": "",
+            "meta_keywords": [],
+            "meta_description": "",
+            "layout_file": "category.html",
+            "is_visible": true,
+            "default_product_sort": "use_store_settings",
+            "url": "brands-peterson-gas-logs-pgl-fire-pit-logs",
+            "image_url": "",
+            "path": "/brands/peterson-gas-logs/pgl-fire-pit-logs/",
+            "menu": {
+              "href": "brands-peterson-gas-logs-pgl-fire-pit-logs",
+              "visible": true
+            },
+            "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-logs/"],
+            "children": []
+          },
+          {
+            "category_id": 578,
+            "parent_id": 402,
+            "tree_id": 1,
+            "name": "PGL Fire Pit Burners",
+            "description": "",
+            "views": 0,
+            "sort_order": 1,
+            "page_title": "",
+            "search_keywords": "",
+            "meta_keywords": [],
+            "meta_description": "",
+            "layout_file": "category.html",
+            "is_visible": true,
+            "default_product_sort": "use_store_settings",
+            "url": "brands-peterson-gas-logs-pgl-fire-pit-burners",
+            "image_url": "",
+            "path": "/brands/peterson-gas-logs/pgl-fire-pit-burners/",
+            "menu": {
+              "href": "brands-peterson-gas-logs-pgl-fire-pit-burners",
+              "visible": true
+            },
+            "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-burners/"],
+            "children": []
+          },
+          {
+            "category_id": 579,
+            "parent_id": 402,
+            "tree_id": 1,
+            "name": "PGL Fire Pit Glasses",
+            "description": "",
+            "views": 0,
+            "sort_order": 2,
+            "page_title": "",
+            "search_keywords": "",
+            "meta_keywords": [],
+            "meta_description": "",
+            "layout_file": "category.html",
+            "is_visible": true,
+            "default_product_sort": "use_store_settings",
+            "url": "brands-peterson-gas-logs-pgl-fire-pit-glasses",
+            "image_url": "",
+            "path": "/brands/peterson-gas-logs/pgl-fire-pit-glasses/",
+            "menu": {
+              "href": "brands-peterson-gas-logs-pgl-fire-pit-glasses",
+              "visible": true
+            },
+            "key_words": ["/brands/peterson-gas-logs/pgl-fire-pit-glasses/"],
+            "children": []
+          }
+        ]
+      }
     ],
     "url": "gas-logs"
   },
@@ -4145,6 +4325,7 @@
     ]
   },
   {
+    "searchable": true,
     "banner": {
       "img": {
         "src": "/images/banner/patio-heater-banner.webp",
@@ -13740,6 +13921,7 @@
   },
   {
     "name": "New Arrivals",
+    "category_id": 407,
     "banner": {
       "img": {
         "src": "/images/banner/patio-heater-banner.webp",
@@ -14414,5 +14596,36 @@
         }
       ]
     ]
+  },
+  {
+    "searchable": false,
+    "name": "Search",
+    "url": "search",
+    "image_url": "",
+    "path": "/search/",
+    "menu": {
+      "href": "search",
+      "visible": false
+    },
+    "key_words": [
+      "/fireplaces/",
+      "/fire-pits/",
+      "/bbq-grills-and-smokers/",
+      "gas log",
+      "gas logs",
+      "gas-log",
+      "gas-logs",
+      "/outdoor-living/patio-heaters/",
+      "/outdoor-kitchen/",
+      "/brands/",
+      "new",
+      "new-arrivals",
+      "new-arrival",
+      "new arrivals",
+      "new arrival",
+      "/sale/"
+    ],
+    "children": [],
+    "links": []
   }
 ]

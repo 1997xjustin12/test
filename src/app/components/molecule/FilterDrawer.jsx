@@ -66,6 +66,7 @@ export default function FilterDrawer({
           {options.map((option, optionIdx) => (
             <FilterSelectItem
               key={`drawer-option-${option?.prop}-${optionIdx}`}
+              multiSelect={multiSelect}
               data={option}
               onChange={handleFilterChange}
             />

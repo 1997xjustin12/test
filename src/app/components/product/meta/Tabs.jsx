@@ -31,7 +31,7 @@ const ProductMetaTabs = ({ product }) => {
             key={`meta-tab-${i}`}
             className={`py-[3px] px-[7px] md:py-[7px] md:px-[15px] text-[14px] md:text-[16px] rounded-tl-lg rounded-tr-lg ${
               tab === v.name
-                ? "bg-pallete-orange text-white font-bold"
+                ? "bg-theme-500 text-white font-bold"
                 : "bg-stone-100 text-stone-500"
             }`}>
             {v.name}

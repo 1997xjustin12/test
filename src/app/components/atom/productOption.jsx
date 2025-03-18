@@ -42,7 +42,7 @@ export default function ProductOption({ option }) {
     <button
       className={`border rounded-md shadow-sm pl-[10px] pr-[25px] py-[10px] flex items-center ${
         option?.is_checked
-          ? "border-orange-500 bg-orange-400 opacity-100 text-white"
+          ? "border-theme-500 bg-theme-400 opacity-100 text-white"
           : "text-stone-600"
       }`}>
       {icon && <div>{icon}</div>}

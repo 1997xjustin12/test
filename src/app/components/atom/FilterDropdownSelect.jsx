@@ -37,7 +37,7 @@ export default function FilterDropdownSelect({
           <>
             <MenuButton
               onClick={() => setIsOpen(open ? false : true)}
-              className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900 items-center select-none gap-[5px] px-[7px] py-[3px] border-[0.5px] rounded-md border-stone-400 hover:border-orange-200 transition-colors duration-300">
+              className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900 items-center select-none gap-[5px] px-[7px] py-[3px] border-[0.5px] rounded-md border-stone-400 hover:border-theme-200 transition-colors duration-300">
               <div>{data?.label}</div>
               <div>
                 <MingcuteDownLine width={16} height={16} />
@@ -62,6 +62,7 @@ export default function FilterDropdownSelect({
                             "block px-[0px] py-2 text-sm data-[focus]:bg-gray-100 data-[focus]:outline-none cursor-default")
                           }`}>
                           <FilterSelectItem
+                            multiSelect={multiSelect}
                             data={option}
                             onChange={handleFilterChange}
                           />

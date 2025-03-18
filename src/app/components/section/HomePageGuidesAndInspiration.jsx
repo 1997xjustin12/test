@@ -5,7 +5,7 @@ const blogs = [
     title: "Fireplace Ideas",
     img: "/images/home/blogs/fireplace-ideas.webp",
     tag: "Inspiration Guide",
-    tag_bg: "bg-orange-600",
+    tag_bg: "bg-theme-600",
     content:
       "Explore the most popular fireplace design styles and features to help you choose the perfect one for your home.",
   },

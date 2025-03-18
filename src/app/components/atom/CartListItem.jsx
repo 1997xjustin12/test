@@ -6,7 +6,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export default function CartListItem({ item, onItemCountUpdate }) {
   const { removeCartItem } = useCart();
   const [thumbnail, setThumbnail] = useState(null);
-  console.log("cartlistitem", item)
 
   useEffect(() => {
     if (item) {
