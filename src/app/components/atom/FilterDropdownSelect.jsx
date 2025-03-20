@@ -7,11 +7,14 @@ export default function FilterDropdownSelect({
   data,
   onFilterItemChange,
   multiSelect = true,
+  freeze
 }) {
   const [options, setOptions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
-    setOptions(data?.options);
+    if(!freeze){
+      setOptions(data?.options);
+    }
   }, [data]);
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;

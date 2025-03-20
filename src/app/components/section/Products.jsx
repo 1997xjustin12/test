@@ -14,18 +14,13 @@ import { useMediaQuery } from "react-responsive";
 import { useSearchParams } from "next/navigation";
 import {useFilter} from "@/app/context/filter";
 const bccat_json = bc_categories;
-
-
-
-
+const init_sort = "total_sold:desc"
 const ProductsSection = ({ category, keyword }) => {
-  const {setBaseQuery} = useFilter();
-  // console.log("keyword", keyword);
+  const {filters, initFilters} = useFilter();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const searchParams = useSearchParams();
   const [onloadParams, setOnloadParams] = useState(() => {
     const params = {
-      // include: "images",
       page: 1,
       limit: isMobile ? 4 : 10,
       "categories": getCategoryIds(
@@ -33,8 +28,7 @@ const ProductsSection = ({ category, keyword }) => {
         flatCategories,
         bccat_json
       ).join(","),
-      // sort: "total_sold",
-      // direction: "desc",
+      sort: init_sort
     };
     // handle params for price range
     const priceParams = searchParams.get("price");
@@ -53,8 +47,6 @@ const ProductsSection = ({ category, keyword }) => {
     return params;
   });
 
-  const [filters, setFilters] = useState(getCategoryFilters(onloadParams));
-
   const [productsParams, setProductsParams] = useState(onloadParams);
 
   useEffect(()=>{
@@ -69,6 +61,7 @@ const ProductsSection = ({ category, keyword }) => {
   const {
     products,
     loading: products_loading,
+    filters:es_filters,
     pagination,
     noResult,
     error: products_error,
@@ -87,16 +80,15 @@ const ProductsSection = ({ category, keyword }) => {
   }, [isMobile]);
 
   useEffect(() => {
-    setBaseQuery(productsParams)
     productsRefetch(productsParams);
   }, [productsParams, productsRefetch]);
 
   const handleSortChange = (option) => {
+    
     setProductsParams((prev) => {
       const updateParams = {
         ...prev,
-        sort: option.sort,
-        direction: option.direction,
+        sort: `${option.sort}:${option.direction}`,
         page: 1,
       };
       return updateParams;
@@ -118,7 +110,6 @@ const ProductsSection = ({ category, keyword }) => {
     setProductsParams((prev) => {
       // insert root filter on filterArray
       const filtersArray = [
-        e.onsale,
         e.free_shipping,
         ...transformObjectToArray(e),
       ];
@@ -144,20 +135,19 @@ const ProductsSection = ({ category, keyword }) => {
         const filtered = price_filters.find(({ is_checked }) => is_checked); // single select only
         const tmp = filtered.prop.split(":");
         // console.log("filtered_price", filtered);
-        const range = tmp[1].split("-");
-        filterObjParams["price:min"] = range[0];
-        filterObjParams["price:max"] = range[1];
+        const [min,max] = tmp[1].split("-");
+        filterObjParams["price"] = `${min}-${max}`;
       } else {
         // remove price from query
         // console.log("remove price from request");
-        delete filterObjParams["price:min"];
-        delete filterObjParams["price:max"];
+        delete filterObjParams["price"];
       }
       // -----------------------------------------------------------------
       // brand filtering
       const brand_filters = filtersArray.filter(({ prop }) =>
         prop.includes("brand:")
       );
+      // console.log("brand_filters", brand_filters);
       if (brand_filters.filter(({ is_checked }) => is_checked).length > 0) {
         // insert brand and value to query
         const filtered = brand_filters.filter(({ is_checked }) => is_checked); // multiselect
@@ -171,9 +161,7 @@ const ProductsSection = ({ category, keyword }) => {
       }
       // -----------------------------------------------------------------
 
-      // console.log("newParams", filterObjParams);
-      setFilters(getCategoryFilters(filterObjParams));
-      return { ...filterObjParams };
+      return { ...filterObjParams, page: 1 };
     });
   };
 
@@ -185,6 +173,14 @@ const ProductsSection = ({ category, keyword }) => {
       return item;
     });
   };
+
+
+  useEffect(()=>{
+    initFilters(es_filters, productsParams);
+  },[es_filters, productsParams]);
+
+  
+
   return (
     <div className="w-full">
       <div className="container mx-auto">

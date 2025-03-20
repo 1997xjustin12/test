@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useState} from 'react'
-import ReactHtmlParser from "react-html-parser";
+import parser from 'html-react-parser';
 
 const tabs = [
     {key: "about",name: "about solana fireplaces", content: `<p>Welcome to Solana Fireplaces! Since 2002, we have been offering a wide selection of top grill brands from our Southern California location. Our store provides thousands of products at unbeatable prices—so low that many cannot even be advertised. Our knowledgeable sales team is here to help you find the perfect items at the best value. Take advantage of our exclusive discounts and limited-quantity package deals. Contact us today for the best offers!</p>
@@ -56,7 +56,7 @@ function Tabs() {
                 {
                     i.key === tab && <div className=" lg:hidden p-3 text-xs">
                         {
-                            ReactHtmlParser(i?.content)
+                            parser(i?.content)
                         }
                     </div>
                 }
@@ -66,7 +66,7 @@ function Tabs() {
         {/* desktop content display */}
         <div className="hidden lg:block px-3 py-5 text-sm">
             {
-                ReactHtmlParser(tabs.find(({key})=> tab === key)?.content)
+                parser(tabs.find(({key})=> tab === key)?.content)
             }
         </div>
     </div>

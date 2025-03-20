@@ -1,3 +1,4 @@
+
 //  this hook is used for searching products
 export default async function handler(req, res) {
   const ESURL = "http://164.92.65.4:9200";

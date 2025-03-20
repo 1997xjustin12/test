@@ -9,7 +9,7 @@ export default function FilterSelectItem({
   multiSelect,
   onChange,
 }) {
-  const { filterOrder, addFilter, removeFilter } = useFilter();
+  const { addFilter, removeFilter } = useFilter();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,7 +25,6 @@ export default function FilterSelectItem({
   }, [data]);
   const handleChange = (e) => {
     const { checked } = e.target;
-    // const filter_group = item.prop.split(":")[0];
     const filter_group = item.prop;
     if (checked) {
       addFilter(filter_group, !multiSelect);
@@ -37,7 +36,7 @@ export default function FilterSelectItem({
 
   return (
     item && (
-      <div className="flex items-center  px-[10px]">
+      <div className="flex  px-[10px]">
         <div className="flex h-5 w-5 shrink-0 items-center mr-5">
           <div className="group grid size-4 grid-cols-1  relative">
             <input
@@ -80,7 +79,7 @@ export default function FilterSelectItem({
         <div>
           <label
             htmlFor={item.prop}
-            className={labelStyle ?? "text-sm text-gray-600"}
+            className={labelStyle ?? "text-sm text-stone-700 font-medium"}
           >
             {item.label}
             {` ${item.count ? `(${item.count})` : ""}`}

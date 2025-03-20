@@ -1,3 +1,7 @@
+import {
+  filter_price_range,
+} from "@/app/lib/helpers";
+
 //  this hook is used for searching products
 export default async function handler(req, res) {
   const ESURL = "http://164.92.65.4:9200";
@@ -76,54 +80,89 @@ export default async function handler(req, res) {
         : body.categories;
 
     const new_body = {
-      "query": {
-        "bool": {
-          "filter": [
+      query: {
+        bool: {
+          filter: [
             {
-              "nested": {
-                "path": "categories",
-                "query": {
-                  "bool": {
-                    "should": categories.map((i) => ({
+              nested: {
+                path: "categories",
+                query: {
+                  bool: {
+                    should: categories.map((i) => ({
                       match: { "categories.id": i },
                     })),
-                    "minimum_should_match": 1
-                  }
-                }
-              }
-            }
-          ]
-        }
-      },
-      "aggs": {
-        "unique_brands": {
-          "terms": {
-            "field": "brand.name.keyword",  
-            "size": 1000
-          }
+                    minimum_should_match: 1,
+                  },
+                },
+              },
+            },
+          ],
         },
-        "price_ranges": {
-          "range": {
-            "field": "price",
-            "ranges": [
-              { "key": "Under $99", "from": 1, "to": 99 },
-              { "key": "$100 - $499", "from": 100, "to": 499 },
-              { "key": "$500 - $999", "from": 500, "to": 999 },
-              { "key": "$1,000 - $,2400", "from": 1000, "to": 2499 },
-              { "key": "$2500 - $4999", "from": 2500, "to": 4999 },
-              { "key": "$5000 - $200,000", "from": 5000, "to": 200000 }
-            ]
-          }
-        }
+      },
+      aggs: {
+        free_shipping: {
+          filter: {
+            term: { is_free_shipping: true },
+          },
+        },
+        brand: {
+          composite: {
+            size: 1000,
+            sources: [
+              {
+                brand_key: {
+                  terms: { script: "return 'brand:' + doc['brand.id'].value" },
+                },
+              },
+              { brand_label: { terms: { field: "brand.name.keyword" } } },
+            ],
+          },
+        },
+        price: {
+          range: {
+            field: "sale_price",
+            ranges: 
+            filter_price_range.map(i=>({key: `price:${i.min}-${i.max}`, from: parseFloat(i.min).toFixed(2), to: (parseFloat(i.max) + 0.99) }))
+          },
+        },
       },
     };
+
+    // QUERY INSERTIONS
+    if(body?.is_free_shipping && body?.is_free_shipping===1){
+      new_body.query.bool.filter.push({ term: { is_free_shipping: true } })
+    }
+
+    if(body?.["brand_id:in"]){
+      const brands = body["brand_id:in"].split(",");
+      const brandFilter = Array.isArray(brands) ? brands : [brands];
+      console.log("brandFilter", brandFilter);
+      new_body.query.bool.filter.push({
+        terms: { "brand.id": brandFilter.map(Number) },
+      });
+    }
+
+    if(body?.["price"]){
+      // validate prices
+      const [min, max] = body.price.split("-");
+      new_body.query.bool.filter.push({
+        range: {
+          sale_price: {
+            gte: min ? parseFloat(min).toFixed(2) : 0,
+            lte: max ? parseFloat(max).toFixed(2) : 1000000
+          }
+        }
+      });
+    }
+
     // insert sort property
     if (body?.sort) {
       new_body.sort = body.sort.split(",").map((i) => {
-        const _sort = i.split(":");
-        return { [_sort[0]]: _sort[1] };
+        const [key, order] = i.split(":");
+        return { [key]: {order: order} };
       });
     }
+    
     // insert from and size property
     new_body.from = from;
     new_body.size = size;
@@ -151,6 +190,7 @@ export default async function handler(req, res) {
       // elasticsearch result restructured to bigcommerce response object
       const bc_formated_data = {
         data: data?.hits?.hits.map((i) => i._source),
+        filters: data?.aggregations,
         meta: {
           pagination: {
             total: data?.hits?.total?.value,
@@ -164,7 +204,7 @@ export default async function handler(req, res) {
         },
         requestConfig: fetchConfig,
         requestBody: req.body,
-        response: response,
+        response: data,
       };
       res.status(200).json(bc_formated_data);
     } catch (error) {

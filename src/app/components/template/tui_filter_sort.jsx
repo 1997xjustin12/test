@@ -15,10 +15,7 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  FunnelIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
 import { getPageData } from "@/app/lib/helpers";
@@ -33,7 +30,6 @@ import FilterDropdownSelect from "@/app/components/atom/FilterDropdownSelect";
 import { useSearchParams } from "next/navigation";
 
 import FilterChipsWrapper from "@/app/components/section/FilterChipsWrapper";
-
 
 const sortOptions = [
   {
@@ -82,15 +78,15 @@ export default function TuiFilterSort({
   const [filters, setFilters] = useState({});
   // HANDLE PARAMS FILTER
   useEffect(() => {
-    if (Object.keys(productFilters).length > 0) {
+    if (productFilters && Object.keys(productFilters).length > 0) {
       setFilters(productFilters);
     }
-  }, [productFilters, searchParams]);
+  }, [productFilters]);
 
   const activeCategoryName = (category) => {
     if (category === "all-products") {
       return "All Products";
-    }else if(category === "search"){
+    } else if (category === "search") {
       return "Search";
     } else {
       return getPageData(category, flatCategories)?.name;
@@ -134,6 +130,7 @@ export default function TuiFilterSort({
     const { value, checked } = e.target;
     const tmp = value.split(":");
     let filterValue = null;
+
     if (tmp.length > 1) {
       setFilters((prev) => {
         const property = tmp[0];
@@ -150,7 +147,6 @@ export default function TuiFilterSort({
             is_checked: checkValue,
           };
         });
-        // console.log("prevValue", prev);
         filterValue = prev;
         return prev;
       });
@@ -183,7 +179,8 @@ export default function TuiFilterSort({
         <Dialog
           open={mobileFiltersOpen}
           onClose={setMobileFiltersOpen}
-          className="relative z-40 lg:hidden">
+          className="relative z-40 lg:hidden"
+        >
           <DialogBackdrop
             transition
             className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
@@ -192,54 +189,26 @@ export default function TuiFilterSort({
           <div className="fixed inset-0 z-40 flex">
             <DialogPanel
               transition
-              className="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full">
+              className="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full"
+            >
               <div className="flex items-center justify-between px-4">
                 <h2 className="text-lg font-medium text-gray-900">Filters</h2>
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(false)}
-                  className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400">
+                  className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                >
                   <span className="sr-only">Close menu</span>
                   <XMarkIcon aria-hidden="true" className="size-6" />
                 </button>
               </div>
-
-              {/* Filters */}
-              <h3 className="sr-only">Categories</h3>
-
               {/* Filters */}
               <div className="relative">
                 <h3 className="sr-only">Categories</h3>
-                {/* {filters?.onsale && (
-                  <div className="border-t py-5">
+                {filters?.free_shipping && (
+                  <div className="py-5">
                     <FilterSelectItem
-                      data={filters.onsale}
-                      labelStyle="font-semibold uppercase text-stone-600"
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                )}
-                {filters?.quick_ship && (
-                  <div className="border-t py-5">
-                    <FilterSelectItem
-                      data={filters.quick_ship}
-                      labelStyle="font-semibold uppercase text-stone-600"
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                )}
-                {filters?.brand && (
-                  <div className="border-t py-5">
-                    <FilterDrawer
-                      data={filters.brand}
-                      multiSelect={true}
-                      onFilterItemChange={handleFilterChange}
-                    />
-                  </div>
-                )} */}
-                {/* {filters?.free_shipping && (
-                  <div className="border-t py-5">
-                    <FilterSelectItem
+                      freeze={filters.free_shipping.freeze}
                       multiSelect={filters.free_shipping.multi}
                       data={filters.free_shipping}
                       labelStyle="font-semibold uppercase text-stone-600"
@@ -250,29 +219,23 @@ export default function TuiFilterSort({
                 {filters?.brand && (
                   <div className="border-t py-5">
                     <FilterDrawer
+                      freeze={filters.brand.freeze}
                       data={filters.brand}
                       multiSelect={filters.brand.multi}
                       onFilterItemChange={handleFilterChange}
                     />
                   </div>
-                )} */}
+                )}
                 {filters?.price && (
                   <div className="border-t py-5">
                     <FilterDrawer
+                      freeze={filters.price.freeze}
                       data={filters.price}
                       multiSelect={filters.price.multi}
                       onFilterItemChange={handleFilterChange}
                     />
                   </div>
                 )}
-                {/* {filters?.fuel_type && (
-                  <div className="border-t py-5">
-                    <FilterDrawer
-                      data={filters.fuel_type}
-                      onFilterItemChange={handleFilterChange}
-                    />
-                  </div>
-                )} */}
               </div>
             </DialogPanel>
           </div>
@@ -284,8 +247,7 @@ export default function TuiFilterSort({
               <div>
                 <h1 className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
                   {`${activeCategoryName(category)}`}{" "}
-                  {
-                    category !== "search" && 
+                  {category !== "search" && (
                     <span className="font-normal text-sm md:text-2xl">{`${
                       pagination &&
                       pagination.total !== 0 &&
@@ -293,9 +255,9 @@ export default function TuiFilterSort({
                         ? `(${pagination?.total})`
                         : ""
                     }`}</span>
-                  }
+                  )}
                 </h1>
-                <BreadCrumbs category={category}/>
+                <BreadCrumbs category={category} />
               </div>
               <div className="flex items-center">
                 <Menu as="div" className="relative inline-block text-left">
@@ -311,7 +273,8 @@ export default function TuiFilterSort({
 
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
+                    className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
                     <div className="py-1">
                       {sort.map((option) => (
                         <MenuItem key={option.name}>
@@ -322,7 +285,8 @@ export default function TuiFilterSort({
                                 : "text-gray-500",
                               "block px-4 py-2 text-sm data-[focus]:bg-gray-100 data-[focus]:outline-none cursor-default"
                             )}
-                            onClick={() => handleSort(option)}>
+                            onClick={() => handleSort(option)}
+                          >
                             {option.name}
                           </div>
                         </MenuItem>
@@ -330,130 +294,132 @@ export default function TuiFilterSort({
                     </div>
                   </MenuItems>
                 </Menu>
-
-                {/* <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-                                <span className="sr-only">View grid</span>
-                                <Squares2X2Icon aria-hidden="true" className="size-5" />
-                            </button> */}
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(true)}
-                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden">
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                >
                   <span className="sr-only">Filters</span>
                   <FunnelIcon aria-hidden="true" className="size-5" />
                 </button>
               </div>
             </div>
-            <div className="hidden lg:flex items-center justify-between mt-3">
-              <div className="flex items-center gap-[4px]">
-                {/* FILTER HERE */}
-                {/* {filters?.onsale && (
-                  <FilterSelectItemV2
-                    data={filters.onsale}
-                    onChange={handleFilterChange}
-                  />
-                )}
-                {filters?.quick_ship && (
-                  <FilterSelectItemV2
-                    data={filters.quick_ship}
-                    onChange={handleFilterChange}
-                  />
-                )}
-                 */}
-                {/* {filters?.free_shipping && (
-                  <FilterSelectItemV2
-                    data={filters.free_shipping}
-                    multiSelect={filters.free_shipping.multi}
-                    onChange={handleFilterChange}
-                  />
-                )}
-                {filters?.brand && (
-                  <FilterDropdownSelect
-                    data={filters.brand}
-                    multiSelect={filters.brand.multi}
-                    onFilterItemChange={handleFilterChange}
-                  />
-                )} */}
-                {filters?.price && (
-                  <FilterDropdownSelect
-                    data={filters.price}
-                    multiSelect={filters.price.multi}
-                    onFilterItemChange={handleFilterChange}
-                  />
-                )}
-              </div>
-            </div>
           </div>
 
           {
-            <FilterChipsWrapper
-              filters={filters}
-              onChipClose={handleFilterChipClose}
-            />
+            // filter TODO
+            // comment out FilterChipWrapper temporarily
+            // <FilterChipsWrapper
+            //   filters={filters}
+            //   onChipClose={handleFilterChipClose}
+            // />
           }
 
-          <section aria-labelledby="products-heading" className="pb-24 sm:pt-6">
-            <h2 id="products-heading" className="sr-only">
-              Products
-            </h2>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:gap-y-10 lg:grid-cols-4">
-              {/* Product grid */}
-              <div className="lg:col-span-4 overflow-hidden p-[0px] md:p-5">
-                {loading ? (
-                  <div className="grid sm:gap-3 lg:grid-cols-4 lg:gap-5 grid-cols-2 gap-2">
-                    {loaderArray.map((v, i) => (
-                      <div key={`product-loader-${i}`}>
-                        <ProductCardLoader />
-                      </div>
-                    ))}
+          <section
+            aria-labelledby="products-heading"
+            className="pb-24 flex"
+          >
+            <div className="w-[255px] border-r hidden lg:block">
+              <div className="relative">
+                <h3 className="sr-only">Categories</h3>
+                {filters?.free_shipping && (
+                  <div className="py-5">
+                    <FilterSelectItem
+                      freeze={filters.free_shipping.freeze}
+                      multiSelect={filters.free_shipping.multi}
+                      data={filters.free_shipping}
+                      labelStyle="font-semibold uppercase text-stone-600"
+                      onChange={handleFilterChange}
+                    />
                   </div>
-                ) : (
-                  <>
-                    {noResult ? (
-                      <div className="flex justify-center">
-                        <div className="text-stone-500 text-3xl py-10 font-bold">
-                          Nothing to display
+                )}
+                {filters?.brand && (
+                  <div className="border-t py-5">
+                    <FilterDrawer
+                      freeze={filters.brand.freeze}
+                      data={filters.brand}
+                      multiSelect={filters.brand.multi}
+                      onFilterItemChange={handleFilterChange}
+                    />
+                  </div>
+                )}
+                {filters?.price && (
+                  <div className="border-t py-5">
+                    <FilterDrawer
+                      freeze={filters.price.freeze}
+                      data={filters.price}
+                      multiSelect={filters.price.multi}
+                      onFilterItemChange={handleFilterChange}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="w-full lg:w-[calc(100%-255px)]">
+              <h2 id="products-heading" className="sr-only">
+                Products
+              </h2>
+              <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:gap-y-10 lg:grid-cols-4">
+                {/* Product grid */}
+                <div className="lg:col-span-4 overflow-hidden p-[0px] md:p-1">
+                  {loading ? (
+                    <div className="grid sm:gap-3 lg:grid-cols-3 lg:gap-5 grid-cols-2 gap-2">
+                      {loaderArray.map((v, i) => (
+                        <div key={`product-loader-${i}`}>
+                          <ProductCardLoader />
                         </div>
-                      </div>
-                    ) : (
-                      <div className="grid sm:gap-3 lg:grid-cols-4 lg:gap-6 grid-cols-2 gap-2">
-                        {displayProducts.map((v, i) => (
-                          <div
-                            key={`product-display-${i}-${v.id}`}
-                            onClick={() => handleProductItemClick(v.id)}>
-                            <ProductCard product={v} />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-                {pagination && pagination.total_pages !== 0 && (
-                  <div className="w-full flex justify-between items-center mt-10 flex-col">
-                    <div className="text-center order-2">
-                      Showing{" "}
-                      {pagination.current_page === 1
-                        ? "1"
-                        : `1 to ${
-                            pagination?.current_page
-                              ? pagination?.current_page
-                              : "0"
-                          }`}{" "}
-                      of {pagination.total_pages} Pages ({pagination.total}{" "}
-                      total items)
+                      ))}
                     </div>
-                    <button
-                      disabled={
-                        pagination.current_page === pagination.total_pages
-                      }
-                      onClick={() =>
-                        handleShowMorePagination(pagination.current_page + 1)
-                      }
-                      className={`order-1 bg-theme-500 text-white px-[25px] py-[7px] rounded-md`}>
-                      Show More
-                    </button>
-                  </div>
-                )}
+                  ) : (
+                    <>
+                      {noResult ? (
+                        <div className="flex justify-center">
+                          <div className="text-stone-500 text-3xl py-10 font-bold">
+                            Nothing to display
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-2">
+                          {displayProducts.map((v, i) => (
+                            <div
+                              key={`product-display-${i}-${v.id}`}
+                              onClick={() => handleProductItemClick(v.id)}
+                            >
+                              <ProductCard product={v} />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {pagination && pagination.total_pages !== 0 && (
+                    <div className="w-full flex justify-between items-center mt-10 flex-col">
+                      <div className="text-center order-2">
+                        Showing{" "}
+                        {pagination.current_page === 1
+                          ? "1"
+                          : `1 to ${
+                              pagination?.current_page
+                                ? pagination?.current_page
+                                : "0"
+                            }`}{" "}
+                        of {pagination.total_pages} Pages ({pagination.total}{" "}
+                        total items)
+                      </div>
+                      <button
+                        disabled={
+                          pagination.current_page === pagination.total_pages
+                        }
+                        onClick={() =>
+                          handleShowMorePagination(pagination.current_page + 1)
+                        }
+                        className={`order-1 bg-theme-500 text-white px-[25px] py-[7px] rounded-md`}
+                      >
+                        Show More
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </section>

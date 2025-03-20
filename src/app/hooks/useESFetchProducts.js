@@ -8,11 +8,13 @@ export default function useESFetchProducts(initialParams = {}) {
   const [params, setParams] = useState(initialParams); // State for query params
   const [noResult, setNoResult] = useState(false);
   const [filters, setFilters] = useState({});
+
   const fetchProducts = useCallback(
     async (signal, customParams = null) => {
       setLoading(true);
       setError(null);
       setProducts([]);
+      setFilters({});
       const queryParams = new URLSearchParams(
         customParams || params
       );
@@ -36,7 +38,7 @@ export default function useESFetchProducts(initialParams = {}) {
         const data = await res.json();
         setProducts(data.data);
         setPagination(data.meta.pagination);
-        // setFilters(data.meta.filters);
+        setFilters(data.filters);
         setLoading(false);
         setNoResult(data.data.length === 0);
       } catch (err) {

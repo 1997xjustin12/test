@@ -11,16 +11,17 @@ export default function FilterDrawer({
   data,
   onFilterItemChange,
   multiSelect = true,
+  freeze
 }) {
   const [options, setOptions] = useState([]);
   useEffect(() => {
-    setOptions(data?.options);
+    if(!freeze){
+      setOptions(data?.options);
+    }
   }, [data]);
   const handleFilterChange = (e) => {
     const { value, checked } = e.target;
-    // console.log("triggered from drawer");
     setOptions((prev) => {
-      // console.log(`${value}: ${checked}`);
       if (!multiSelect) {
         return prev.map((i) => ({
           ...i,
@@ -38,7 +39,7 @@ export default function FilterDrawer({
   };
 
   return (
-    <Disclosure as="div" className="px-[15px]">
+    <Disclosure as="div" className="px-[15px]" defaultOpen={true}>
       <h3 className="-my-3 flow-root">
         <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
           <span className="font-medium text-gray-900">

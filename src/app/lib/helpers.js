@@ -9,7 +9,7 @@ export function getSum(array, prop) {
 
 export const onsale_category_ids = [294, 360, 361, 362, 363, 364, 365];
 export const filter_price_range = [
-  { label: "Request A Quote", min: 0, max: 0 },
+  // { label: "Request A Quote", min: 0, max: 0 },
   { label: "$1 - $99", min: 1, max: 99 },
   { label: "$100 - $499", min: 100, max: 499 },
   { label: "$500 - $999", min: 500, max: 999 },

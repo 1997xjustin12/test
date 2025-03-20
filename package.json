@@ -25,6 +25,7 @@
     "braintree-web-drop-in": "^1.44.1",
     "crypto-js": "^4.2.0",
     "graphql": "^16.9.0",
+    "html-react-parser": "^5.2.2",
     "localforage": "^1.10.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",

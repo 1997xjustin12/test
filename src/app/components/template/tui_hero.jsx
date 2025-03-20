@@ -6,7 +6,6 @@ import Image from "next/image";
 const default_contact = "(888) 575-9720";
 
 export default function Hero({ data }) {
-  console.log("data", data);
   const useBanner =
     !data?.banner?.img?.src || data?.banner?.img?.src === ""
       ? "/images/banner/solana-home-hero.webp"
