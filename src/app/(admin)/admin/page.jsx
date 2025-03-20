@@ -3,6 +3,7 @@ import {redis, keys} from "@/app/lib/redis";
 import FavidonUpdater from '@/app/components/admin/FaviconUpdater'
 import LogoUpdater from '@/app/components/admin/LogoUpdater'
 import MenuUpdater from "@/app/components/admin/MenuUpdater"
+import MenuUpdaterV2 from "@/app/components/admin/MenuUpdaterV2"
 import ThemeUpdater from "@/app/components/admin/ThemeUpdater"
 import FaqsUpdater from "@/app/components/admin/FaqsUpdater"
 
@@ -16,7 +17,8 @@ async function AdminIndexPage() {
       <LogoUpdater logo={logo}/>
       <ThemeUpdater />
       <FaqsUpdater />
-      <MenuUpdater />
+      {/* <MenuUpdater /> */}
+      <MenuUpdaterV2 />
     </div>
   )
 }

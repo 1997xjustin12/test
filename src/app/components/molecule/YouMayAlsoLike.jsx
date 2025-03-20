@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { solana_categories } from "@/app/lib/category-helpers";
 import useFetchProducts from "@/app/hooks/useFetchProducts";
 import ProductCard from "@/app/components/atom/ProductCard";
 import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
+import { useSolanaCategories } from "@/app/context/category";
 
 export default function YouMayAlsoLike({ displayItems }) {
+  const { solana_categories } = useSolanaCategories();
   const category_ids = solana_categories
     .map(({ category_id }) => category_id)
     .filter((i) => i !== undefined);

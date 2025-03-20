@@ -2,9 +2,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ICRoundPhone } from "../icons/lib";
-import { solana_categories } from "@/app/lib/category-helpers";
+import {useSolanaCategories} from "@/app/context/category"
 import YouMayAlsoLike from "../molecule/YouMayAlsoLike";
 function NoSearchResultFound({ query }) {
+  const {solana_categories} = useSolanaCategories();
   return (
     <div className="container mx-auto min-h-screen">
       {/* row1 */}

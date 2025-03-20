@@ -19,13 +19,9 @@ import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
 import { getPageData } from "@/app/lib/helpers";
-import { flatCategories } from "@/app/lib/category-helpers";
-
+import { useSolanaCategories } from "@/app/context/category";
 import FilterSelectItem from "@/app/components/atom/FilterSelectItem";
 import FilterDrawer from "@/app/components/molecule/FilterDrawer";
-
-import FilterSelectItemV2 from "@/app/components/atom/FilterSelectItemv2";
-import FilterDropdownSelect from "@/app/components/atom/FilterDropdownSelect";
 
 import { useSearchParams } from "next/navigation";
 
@@ -38,8 +34,7 @@ const sortOptions = [
     direction: "desc",
     current: true,
   },
-  // { name: 'Best Rating', sort: 'rating', direction:'desc', current: false },
-  { name: "Newest", sort: "id", direction: "desc", current: false }, // using id as replacement for date_created for sorting
+  { name: "Newest", sort: "id", direction: "desc", current: false },
   {
     name: "Price: Low to High",
     sort: "price",
@@ -72,7 +67,7 @@ export default function TuiFilterSort({
   onPageChange,
   onFilterChange,
 }) {
-  const searchParams = useSearchParams();
+  const {flatCategories} = useSolanaCategories();
   const [sort, setSort] = useState(sortOptions);
   const [displayProducts, setDisplayProducts] = useState([]);
   const [filters, setFilters] = useState({});
@@ -305,15 +300,6 @@ export default function TuiFilterSort({
               </div>
             </div>
           </div>
-
-          {
-            // filter TODO
-            // comment out FilterChipWrapper temporarily
-            // <FilterChipsWrapper
-            //   filters={filters}
-            //   onChipClose={handleFilterChipClose}
-            // />
-          }
 
           <section
             aria-labelledby="products-heading"

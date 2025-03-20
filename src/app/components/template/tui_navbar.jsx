@@ -20,11 +20,12 @@ import HomeSearch from "@/app/components/search/HomeSearch";
 import HomeSearchMobile from "@/app/components/search/HomeSearchMobile";
 import CartButton from "@/app/components/atom/CartButton";
 // data
-import { solana_categories as cat_json } from "@/app/lib/category-helpers";
+import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function TuiNavbar({ logo, menu }) {
+  const { solana_categories: cat_json } = useSolanaCategories();
   const [navigation, setNavigation] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
   // const [navigation, setMobileNavigation] = useState(null);
@@ -104,6 +105,7 @@ export default function TuiNavbar({ logo, menu }) {
     });
   };
   useEffect(() => {
+    console.log("tui_navbar", menu);
     const injectedMenu = addLinksProperty(menu)
       .filter((i) => i.menu.visible === true)
       .sort((a, b) => a.menu.order - b.menu.order);

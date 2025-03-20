@@ -4,6 +4,7 @@ import {
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
+  console.log(filter_price_range)
   const ESURL = "http://164.92.65.4:9200";
   const ESShard = "bigcommerce_products";
   const ESApiKey =

@@ -9,9 +9,10 @@ import React, {
 } from "react";
 // import useFetchProducts from "@/app/hooks/useFetchProducts";
 import useESFetchProducts from "@/app/hooks/useESFetchProducts";
-import { solana_categories, solana_brands, flatCategories, bc_categories } from "@/app/lib/category-helpers";
+import { solana_brands, flatCategories, bc_categories } from "@/app/lib/category-helpers";
 import { useRouter } from "next/navigation";
 import { getCategoryIds } from "@/app/lib/helpers";
+import { useSolanaCategories } from "@/app/context/category";
 // useful console that logs keywords for all main categories
 // console.log("solanaCategories", solana_categories.flatMap(i=> i.key_words))
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
@@ -23,6 +24,7 @@ export const useSearch = () => {
 };
 
 export const SearchProvider = ({ children }) => {
+  const {solana_categories} = useSolanaCategories();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [mainIsActive, setMainIsActive] = useState(false);

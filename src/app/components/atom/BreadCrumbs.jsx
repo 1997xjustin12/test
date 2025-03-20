@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
-import { solana_categories } from "@/app/lib/category-helpers";
 import Link from "next/link";
 import { FluentChevronLeft } from "@/app/components/icons/lib";
+import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 function BreadCrumbs({ category }) {
+  const {solana_categories} = useSolanaCategories();
   const [crumbs, setCrumbs] = useState([]);
   const isMainCategory = useMemo(() => {
     return solana_categories.find(({ url }) => url === category) !== undefined;

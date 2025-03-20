@@ -144,7 +144,7 @@ function ProductQuickView({ data, onClose }) {
                       <div className="">
                         <div className="text-xs font-semibold">Price</div>
                         {
-                          // data.price < data.sale_price ?
+                          data.price < data.sale_price ?
                           <div>
                             <div className="flex gap-[10px] items-center">
                               <div className="text-stone-500 line-through">
@@ -158,10 +158,10 @@ function ProductQuickView({ data, onClose }) {
                               Save ${formatPrice(data.price - data.sale_price)}
                             </div>
                           </div>
-                        //   :
-                        //   <div className="font-semibold text-base md:text-lg text-theme-600">
-                        //   {formatPrice(data.price)}
-                        // </div>
+                          :
+                          <div className="font-semibold text-base md:text-lg text-theme-600">
+                          {formatPrice(data.price)}
+                        </div>
                         }
                       </div>
                       <div className="text-sm flex items-center gap-[5px] text-stone-600">

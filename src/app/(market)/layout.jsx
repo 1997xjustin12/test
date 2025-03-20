@@ -10,6 +10,7 @@ import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
 import { SearchProvider } from "@/app/context/search";
 import { FilterProvider } from "@/app/context/filter";
+import { CategoriesProvider } from "@/app/context/category";
 import { generateMetadata } from "@/app/metadata";
 const MontserratFont = Montserrat({
   subsets: ["latin"],
@@ -59,17 +60,19 @@ export default async function MarketLayout({ children }) {
             </div>
           </div>
         </div>
-        <CartProvider>
-          <FilterProvider>
-            <SearchProvider>
-              <TuiNavBar logo={redisLogo} menu={menu} />
-              <FixedHeader />
-              <QuickViewProvider>
-                <div className="flex flex-col min-h-screen">{children}</div>
-              </QuickViewProvider>
-            </SearchProvider>
-          </FilterProvider>
-        </CartProvider>
+        <CategoriesProvider categories={menu}>
+          <CartProvider>
+            <FilterProvider>
+              <SearchProvider>
+                <TuiNavBar logo={redisLogo} menu={menu} />
+                <FixedHeader />
+                <QuickViewProvider>
+                  <div className="flex flex-col min-h-screen">{children}</div>
+                </QuickViewProvider>
+              </SearchProvider>
+            </FilterProvider>
+          </CartProvider>
+        </CategoriesProvider>
         <Footer />
       </body>
     </html>

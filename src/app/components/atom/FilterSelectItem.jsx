@@ -21,11 +21,16 @@ export default function FilterSelectItem({
     is_checked: false,
   });
   useEffect(() => {
+    console.log("itemUpdate")
     setItem(data);
   }, [data]);
   const handleChange = (e) => {
     const { checked } = e.target;
     const filter_group = item.prop;
+    console.log("checked", checked);
+    console.log("filter_group", filter_group);
+    console.log("item", item);
+    console.log();
     if (checked) {
       addFilter(filter_group, !multiSelect);
     } else {
