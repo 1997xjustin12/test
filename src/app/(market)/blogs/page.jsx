@@ -1,7 +1,7 @@
 const DEFAULT_URL = "https://bbq-blog.onsitestorage.com";
 export async function generateMetadata() {
     const CATEGORY_ID = 2;
-    const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.digitaloceanspaces.com/uploads/blog-default.png`;
+    const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/blog-default.png`;
 
     // Fetch the first post for SEO metadata
     const res = await fetch(`${DEFAULT_URL }/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}&per_page=1`, {
