@@ -1,16 +1,30 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-
+import { useSearchParams ,useRouter} from 'next/navigation';
+import { useState,useEffect } from 'react';
+import { useUserSession } from "@/app/context/session";
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const success = searchParams.get('success') === '1';
-
+  const router = useRouter();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { userSession, loadingSession } = useUserSession();
 
+
+  useEffect(() => {
+    if (userSession) {
+      router.push('/my-account'); // Redirect to login if no session
+    }
+  }, [loadingSession , userSession,router]);
+
+  if (loadingSession  || userSession) return null;
+
+  const handleRegister = () => {
+    router.push('/register');
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -19,14 +33,19 @@ export default function LoginPage() {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
+    console.log(data)
     setLoading(false);
 
-    if (data?.loginRedirect) {
-      window.location.href = data.loginRedirect;
+    if (res.ok && data?.token) {
+      // Store token if needed (localStorage/cookies)
+      // localStorage.setItem('bc_token', data.token);
+
+      // Redirect or show success message
+      window.location.href = '/my-account'; // Or wherever you want
     } else {
       setError(data?.error || 'Login failed.');
     }
@@ -58,6 +77,14 @@ export default function LoginPage() {
             required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
           <button
             type="submit"
             disabled={loading}
@@ -71,15 +98,25 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-sm text-center mt-4">
+        <div className="text-sm text-center mt-4 space-y-2">
           <a
             href="https://yourstore.com/login.php?action=reset_password"
-            className="text-blue-600 hover:underline"
+            className="text-blue-600 hover:underline block"
             target="_blank"
             rel="noopener noreferrer"
           >
             Forgot your password?
           </a>
+          <p>
+            Don’t have an account?{" "}
+            <button
+                type="button"
+                onClick={handleRegister}
+                className="text-blue-600 hover:underline"
+              >
+                Register here
+              </button>
+          </p>
         </div>
       </div>
     </div>

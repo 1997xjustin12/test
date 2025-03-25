@@ -12,6 +12,8 @@ import { SearchProvider } from "@/app/context/search";
 import { FilterProvider } from "@/app/context/filter";
 import { CategoriesProvider } from "@/app/context/category";
 import { generateMetadata } from "@/app/metadata";
+import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
+
 const MontserratFont = Montserrat({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -64,11 +66,13 @@ export default async function MarketLayout({ children }) {
           <CartProvider>
             <FilterProvider>
               <SearchProvider>
+              <SessionWrapper>
                 <TuiNavBar logo={redisLogo} menu={menu} />
                 <FixedHeader />
                 <QuickViewProvider>
                   <div className="flex flex-col min-h-screen">{children}</div>
                 </QuickViewProvider>
+                </SessionWrapper>
               </SearchProvider>
             </FilterProvider>
           </CartProvider>

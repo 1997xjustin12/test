@@ -27,7 +27,7 @@ import MSLCheckIcon from "./MSLCheckIcon";
 import Eos3DotsLoadingIcon from "./Eos3DotsLoadingIcon"
 
 import UIMCheckCircleIcon from "./UIMCheckCircleIcon"
-
+import UserAccountIcon from "./UserAccountIcon"
 
 
 
@@ -161,3 +161,8 @@ export const MDIBaselineGasMeter = ({ color, width, height }) => {
     <MDIBaselineGasMeterIcon color={color} width={width} height={height} />
   );
 };
+
+export const UserAccountIconBB = ({ color, width, height }) => {
+  return <UserAccountIcon color={color} width={width} height={height} />;
+};
+

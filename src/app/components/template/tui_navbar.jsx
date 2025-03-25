@@ -19,6 +19,7 @@ import { HeartIcon, MingcuteHome7 } from "@/app/components/icons/lib";
 import HomeSearch from "@/app/components/search/HomeSearch";
 import HomeSearchMobile from "@/app/components/search/HomeSearchMobile";
 import CartButton from "@/app/components/atom/CartButton";
+import MyAccountButton from "@/app/components/atom/MyAccountButton";
 // data
 import { useSolanaCategories } from "@/app/context/category";
 
@@ -158,6 +159,9 @@ export default function TuiNavbar({ logo, menu }) {
                   <ul className="flex space-x-4">
                     <li className="relative">
                       <CartButton className="text-gray-700 hover:text-theme-500" />
+                    </li>
+                    <li className="relative">
+                      <MyAccountButton className="text-gray-700 hover:text-theme-500" />
                     </li>
                     {/* <li className="relative">
                     <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">

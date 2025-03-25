@@ -1,8 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUserSession } from "@/app/context/session";
 
 export default function RegisterPage() {
+  const { userSession, loadingSession } = useUserSession();
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [form, setForm] = useState({
     email: '',
     first_name: '',
@@ -10,8 +16,7 @@ export default function RegisterPage() {
     password: '',
   });
 
-  const [message, setMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
