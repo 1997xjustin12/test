@@ -20,20 +20,6 @@ const MontserratFont = Montserrat({
   display: "swap",
   variable: "--font-montserrat", // Optional for Tailwind usage
 });
-// const Bell = localFont({
-//   src: "./fonts/bell-mt-italic.ttf",
-//   weight: "100 900",
-//   variable: "--font-bell",
-//   display: "swap",
-// });
-// export const metadata = {
-//   icons:{
-//     icon: '/api/favicon'
-//   },
-//   title: "Solana Fireplaces | Stylish Indoor & Outdoor Heating",
-//   description:
-//     "Transform your home with Solana Fireplaces! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!",
-// };
 
 export const metadata = await generateMetadata();
 export default async function MarketLayout({ children }) {

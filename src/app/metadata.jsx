@@ -14,6 +14,9 @@ export async function generateMetadata() {
       icons: {
         icon: faviconUrl,
       },
+      other: {
+        "google-site-verification": "h2rOGIJQRMPLIaE7T0hRzFUK313zZjb-QoztYvHW90Q",
+      },
     };
   } catch (error) {
     console.error("Failed to fetch favicon, using default:", error);
