@@ -121,16 +121,9 @@ const ProductCard = ({ product }) => {
             <BrandDisplay product={product} />
           </div>
           <div className="mt-3">
-            {price_hidden_categories.some((id) =>
-              product?.categories.some((cat) => cat.id === id)
-            ) ? (
-              // display no price
-              <div className="font-medium text-[14px] text-stone-700">
-                Contact us for pricing.
-              </div>
-            ) : (
-              <PriceDisplay product={product} />
-            )}
+            <div className="font-bold text-[12px] text-stone-700 text-center">
+            Contact Us For Best Pricing
+            </div>
           </div>
           <div className="flex  h-[48px] items-center">
             <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
@@ -180,7 +173,7 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           <FicDropDown>
-          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap flex justify-center">
               {price_hidden_categories.some((id) =>
                 product?.categories.some((cat) => cat.id === id)
               ) ? (
