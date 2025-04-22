@@ -38,6 +38,9 @@ export function getCategoryIds(category_slug, categories, bc_categories) {
   const category_keywords = categories.find(
     (i) => i.url === (category_slug === "all-products" ? "" : category_slug)
   )?.key_words;
+  // console.log("category_keywords",category_keywords)
+  // console.log("Array.isArray(category_keywords)",Array.isArray(category_keywords))
+  
   if (Array.isArray(category_keywords)) {
     const ids =
       category_keywords.length > 0

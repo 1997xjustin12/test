@@ -1,12 +1,11 @@
-import {
-  filter_price_range,
-} from "@/app/lib/helpers";
+import { filter_price_range } from "@/app/lib/helpers";
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
-  console.log(filter_price_range)
+  console.log(filter_price_range);
   const ESURL = "http://164.92.65.4:9200";
-  const ESShard = "bigcommerce_products";
+  // const ESShard = "bigcommerce_products";
+  const ESShard = "bigcommerce_products_7";
   const ESApiKey =
     "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
 
@@ -81,6 +80,7 @@ export default async function handler(req, res) {
         : body.categories;
 
     const new_body = {
+      // old query version
       query: {
         bool: {
           filter: [
@@ -100,6 +100,18 @@ export default async function handler(req, res) {
           ],
         },
       },
+      // index bigcommerce_products_5 query
+      // query: {
+      //   bool: {
+      //     filter: [
+      //       {
+      //         terms: {
+      //           "categories.id": categories,
+      //         },
+      //       },
+      //     ],
+      //   },
+      // },
       aggs: {
         free_shipping: {
           filter: {
@@ -122,19 +134,22 @@ export default async function handler(req, res) {
         price: {
           range: {
             field: "sale_price",
-            ranges: 
-            filter_price_range.map(i=>({key: `price:${i.min}-${i.max}`, from: parseFloat(i.min).toFixed(2), to: (parseFloat(i.max) + 0.99) }))
+            ranges: filter_price_range.map((i) => ({
+              key: `price:${i.min}-${i.max}`,
+              from: parseFloat(i.min).toFixed(2),
+              to: parseFloat(i.max) + 0.99,
+            })),
           },
         },
       },
     };
 
     // QUERY INSERTIONS
-    if(body?.is_free_shipping && body?.is_free_shipping===1){
-      new_body.query.bool.filter.push({ term: { is_free_shipping: true } })
+    if (body?.is_free_shipping && body?.is_free_shipping === 1) {
+      new_body.query.bool.filter.push({ term: { is_free_shipping: true } });
     }
 
-    if(body?.["brand_id:in"]){
+    if (body?.["brand_id:in"]) {
       const brands = body["brand_id:in"].split(",");
       const brandFilter = Array.isArray(brands) ? brands : [brands];
       console.log("brandFilter", brandFilter);
@@ -143,16 +158,16 @@ export default async function handler(req, res) {
       });
     }
 
-    if(body?.["price"]){
+    if (body?.["price"]) {
       // validate prices
       const [min, max] = body.price.split("-");
       new_body.query.bool.filter.push({
         range: {
           sale_price: {
             gte: min ? parseFloat(min).toFixed(2) : 0,
-            lte: max ? parseFloat(max).toFixed(2) : 1000000
-          }
-        }
+            lte: max ? parseFloat(max).toFixed(2) : 1000000,
+          },
+        },
       });
     }
 
@@ -160,10 +175,10 @@ export default async function handler(req, res) {
     if (body?.sort) {
       new_body.sort = body.sort.split(",").map((i) => {
         const [key, order] = i.split(":");
-        return { [key]: {order: order} };
+        return { [key]: { order: order } };
       });
     }
-    
+
     // insert from and size property
     new_body.from = from;
     new_body.size = size;

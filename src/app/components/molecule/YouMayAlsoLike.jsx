@@ -30,7 +30,7 @@ export default function YouMayAlsoLike({ displayItems }) {
 
   return (
     <div className="xl:mt-8">
-      <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+      {/* <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
         You May Also Like
       </h3>
       <div className={`mt-6 gap-4 sm:mt-8 flex flex-wrap`}>
@@ -63,7 +63,7 @@ export default function YouMayAlsoLike({ displayItems }) {
                 <ProductCard product={item} />
               </div>
             ))}
-      </div>
+      </div> */}
     </div>
   );
 }

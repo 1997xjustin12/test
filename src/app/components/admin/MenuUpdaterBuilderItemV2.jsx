@@ -75,6 +75,15 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
       case "page_contact":
         newLocalItem.banner.contact = value;
         break;
+      case "price_visibility":
+        newLocalItem.price_visibility = value;
+        break;
+      case "meta_title":
+        newLocalItem.meta_title = value;
+        break;
+      case "meta_description":
+        newLocalItem.meta_description = value;
+        break;
       default:
         console.warn("Unknown trigger:", trigger);
     }
@@ -226,9 +235,34 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
             </div>
           </div>
           <div>
+            <div className="uppercase text-[10px] font-bold">Meta</div>
+            <hr className="border-t border-gray-300 my-1"></hr>
+            <div>
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  Title
+                </label>
+                <textarea
+                  value={localItem?.meta_title ?? ""}
+                  onChange={(e) => handleInputChange("meta_title", e)}
+                  className="block w-full p-2 text-gray-900 border border-gray-300 bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  Description
+                </label>
+                <textarea
+                  value={localItem?.meta_description ?? ""}
+                  onChange={(e) => handleInputChange("meta_description", e)}
+                  className="block w-full p-2 text-gray-900 border border-gray-300 bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+          <div>
             <div className="uppercase text-[10px] font-bold">Content</div>
             <hr className="border-t border-gray-300 my-1"></hr>
-
             <div className="my-2 text-[10px] uppercase">Image</div>
             <div className="flex gap-[10px]">
               <div className="w-full">
@@ -243,7 +277,6 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
                   disabled
                 />
               </div>
-
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-900 dark:text-white">
                   ALT
@@ -302,6 +335,28 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
                   type="text"
                   className="block w-full p-2 text-gray-900 border border-gray-300 bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
+              </div>
+            </div>
+            <div className="my-2 text-[10px] uppercase">Other</div>
+            <div>
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  Price Visibility
+                </label>
+                <select
+                  value={localItem?.price_visibility}
+                  onChange={(e) => handleInputChange("price_visibility", e)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  {[
+                    { value: "show", label: "Show" },
+                    { value: "hide", label: "Hide" },
+                  ].map((i) => (
+                    <option key={i.value} value={i.value}>
+                      {i.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

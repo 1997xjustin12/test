@@ -12,14 +12,15 @@ import {
   AkarIconsShippingV1,
   MDITruckOutline,
   Eos3DotsLoading,
-  MaterialSymbolsClose
+  MaterialSymbolsClose,
 } from "@/app/components/icons/lib";
 import { useCart } from "@/app/context/cart";
-
+import { useSolanaCategories } from "@/app/context/category";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 function ProductQuickView({ data, onClose }) {
   const router = useRouter();
+  const { price_hidden_categories } = useSolanaCategories();
   const { addToCart, addToCartLoading } = useCart();
   const [toggle, setToggle] = useState(false);
   const [image, setImage] = useState(null);
@@ -122,7 +123,12 @@ function ProductQuickView({ data, onClose }) {
                             ? "pointer-events-none"
                             : "pointer-events-auto"
                         }`}
-                        disabled={addToCartLoading}
+                        disabled={
+                          addToCartLoading ||
+                          price_hidden_categories.some((id) =>
+                            data?.categories.some((cat) => cat.id === id)
+                          )
+                        }
                       >
                         {addToCartLoading ? (
                           <Eos3DotsLoading width={52} height={52} />
@@ -131,7 +137,10 @@ function ProductQuickView({ data, onClose }) {
                         )}
                       </button>
                     </div>
-                    <Link href={`tel:(888) 575-9720`} className="border text-xs p-2 flex flex-col items-center border-stone-600 hover:border-theme-600 hover:bg-theme-600 hover:text-white transition-a;; duration-300 cursor-pointer text-stone-600 font-semibold">
+                    <Link
+                      href={`tel:(888) 575-9720`}
+                      className="border text-xs p-2 flex flex-col items-center border-stone-600 hover:border-theme-600 hover:bg-theme-600 hover:text-white transition-a;; duration-300 cursor-pointer text-stone-600 font-semibold"
+                    >
                       <div>Exclusive Saving Just One Call Away!</div>
                       <div>Experts Standing By (888) 575-9720</div>
                     </Link>
@@ -142,43 +151,57 @@ function ProductQuickView({ data, onClose }) {
                         {data?.name}
                       </div>
                       <div className="">
-                        <div className="text-xs font-semibold">Price</div>
-                        {
-                          data.price < data.sale_price ?
-                          <div>
-                            <div className="flex gap-[10px] items-center">
-                              <div className="text-stone-500 line-through">
-                                {formatPrice(data.price)}
-                              </div>
-                              <div className="font-semibold text-base md:text-lg text-theme-600">
-                                {formatPrice(data.sale_price)}
-                              </div>
-                            </div>
-                            <div className="text-lg font-semibold text-theme-600">
-                              Save ${formatPrice(data.price - data.sale_price)}
-                            </div>
+                        {price_hidden_categories.some((id) =>
+                          data?.categories.some((cat) => cat.id === id)
+                        ) ? (
+                          <div className="font-medium text-[14px] text-stone-700">
+                            Contact us for pricing.
                           </div>
-                          :
+                        ) : data.sale_price !== 0 &&
+                          data.sale_price < data.price ? (
+                          <>
+                            <div className="text-xs font-semibold">Price</div>
+                            <div>
+                              <div className="flex gap-[10px] items-center">
+                                <div className="text-stone-500 line-through">
+                                  {formatPrice(data.price)}
+                                </div>
+                                <div className="font-semibold text-base md:text-lg text-theme-600">
+                                  {formatPrice(data.sale_price)}
+                                </div>
+                              </div>
+                              <div className="text-lg font-semibold text-theme-600">
+                                Save $
+                                {formatPrice(data.price - data.sale_price)}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
                           <div className="font-semibold text-base md:text-lg text-theme-600">
-                          {formatPrice(data.price)}
-                        </div>
-                        }
+                            ${formatPrice(data.price)}
+                          </div>
+                        )}
                       </div>
                       <div className="text-sm flex items-center gap-[5px] text-stone-600">
                         <AkarIconsShippingV1 width={24} height={24} />
                         <div className="text-sm text-black">
-                          Call for Open Box Availability <Link href={`tel:(888) 575-9720`} className="font-semibold text-theme-600 hover:text-theme-500" >(888) 575-9720</Link>
+                          Call for Open Box Availability{" "}
+                          <Link
+                            href={`tel:(888) 575-9720`}
+                            className="font-semibold text-theme-600 hover:text-theme-500"
+                          >
+                            (888) 575-9720
+                          </Link>
                         </div>
                       </div>
-                      {
-                        data.is_free_shipping && 
+                      {data.is_free_shipping && (
                         <div className="text-sm flex items-center gap-[5px] text-green-600">
                           <MDITruckOutline width={24} height={24} />
                           <div className="text-sm font-semibold">
                             Free Shipping
                           </div>
                         </div>
-                      }
+                      )}
                       <div className="">
                         <div className="text-xs font-semibold">Description</div>
                         <div className="line-clamp-3 text-sm leading-relaxed">

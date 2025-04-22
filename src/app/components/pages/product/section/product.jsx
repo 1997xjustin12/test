@@ -61,33 +61,33 @@ const ProductSection = ({ product, loading }) => {
       if (Object.keys(product).length > 0) {
         setMediaItems(product.images);
         setMetafieldParam({ id: product.id });
-        setProductOptions((prev) => {
-          if (product?.metafields && product.metafields.length > 0) {
-            const product_options = product.metafields
-              .map((i) => ({ ...i, value: JSON.parse(i.value) }))
-              .find(({ namespace }) => namespace === "product_options");
-            if (!product_options) {
-              return null;
-            }
-            console.log("product_options", product_options);
-            return product_options.value
-              .filter((i) => i.option !== "") // remove data with empty string
-              .map((i) => ({
-                ...i,
-                values: i?.values
-                  ? i.values
-                      .filter((i2) => i2.option_label !== "") // remove data with empty string
-                      .map((i2, idx2) => ({
-                        ...i2,
-                        is_checked: i2.sku.value === product?.sku,
-                      }))
-                      .sort((a, b) =>
-                        a.option_label.localeCompare(b.option_label)
-                      )
-                  : i?.handle,
-              }));
-          }
-        });
+        // setProductOptions((prev) => {
+        //   if (product?.metafields && product.metafields.length > 0) {
+        //     const product_options = product.metafields
+        //       .map((i) => ({ ...i, value: JSON.parse(i.value) }))
+        //       .find(({ namespace }) => namespace === "product_options");
+        //     if (!product_options) {
+        //       return null;
+        //     }
+        //     console.log("product_options", product_options);
+        //     return product_options.value
+        //       .filter((i) => i.option !== "") // remove data with empty string
+        //       .map((i) => ({
+        //         ...i,
+        //         values: i?.values
+        //           ? i.values
+        //               .filter((i2) => i2.option_label !== "") // remove data with empty string
+        //               .map((i2, idx2) => ({
+        //                 ...i2,
+        //                 is_checked: i2.sku.value === product?.sku,
+        //               }))
+        //               .sort((a, b) =>
+        //                 a.option_label.localeCompare(b.option_label)
+        //               )
+        //           : i?.handle,
+        //       }));
+        //   }
+        // });
       }
     }
   }, [product]);
@@ -152,7 +152,8 @@ const ProductSection = ({ product, loading }) => {
             <ProductToCart product={product} loading={loading} />
             <div className="py-[30px] flex flex-col gap-[15px]">
               {/* product options */}
-              {productOptions && productOptions.length > 0 && (
+              {/* commented code because property metafield was changed */}
+              {/* {productOptions && productOptions.length > 0 && (
                 <div className="flex flex-col gap-[15px]">
                   <div className="font-bold text-sm lg:text-lg">Options</div>
                   <div className="border">
@@ -179,7 +180,7 @@ const ProductSection = ({ product, loading }) => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
               {/* Category */}
               <div>
                 <div className="font-bold text-sm lg:text-lg mb-[15px]">

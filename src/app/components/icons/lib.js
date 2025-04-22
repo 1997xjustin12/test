@@ -19,6 +19,7 @@ import MingcuteHome7Icon from "./MingCuteHome7Icon";
 import MDIPropaneTankIcon from "./MDIPropaneTankIcon";
 import MDIBaselineGasMeterIcon from "./MDIBaselineGasMeterIcon";
 import MDITruckOutlineIcon from "./MDITruckOutlineIcon";
+import MDIEmailOutlineIcon from "./MDIEmailOutlineIcon";
 
 import AkarIconsShippingV1Icon from "./AkarIconsShippingV1Icon";
 import MaterialSymbolsCloseIcon from "./MaterialSymbolsCloseIcon";
@@ -37,6 +38,9 @@ import GIH1Icon from "./GIH1Icon"
 import MSH1Icon from "./MSH1Icon"
 
 
+export const MDIEmailOutline = ({ color, width, height }) => {
+  return <MDIEmailOutlineIcon color={color} width={width} height={height} />;
+};
 
 export const GIH1 = ({ color, width, height }) => {
   return <GIH1Icon color={color} width={width} height={height} />;

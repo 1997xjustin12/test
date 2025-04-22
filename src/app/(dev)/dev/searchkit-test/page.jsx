@@ -1,7 +1,4 @@
 "use client";
-
-import ProductCard from "@/app/components/atom/ProductCardV2";
-import FicDropDown from "@/app/components/atom/FicDropDown";
 import {
   InstantSearch,
   SearchBox,
@@ -21,12 +18,25 @@ import {
 import Client from "@searchkit/instantsearch-client";
 
 const searchClient = Client({
-  url: "/api/es/searchkit",
+  url: "/api/es/searchkit", // This is the backend API endpoint
 });
+
+const HitView = (props) => {
+  return (
+    <div>
+      <div className="hit__details">
+        <h2>
+          <Highlight attribute="name" hit={props.hit} />
+        </h2>
+        <Snippet attribute="description" hit={props.hit} />
+      </div>
+    </div>
+  );
+};
 
 const Panel = ({ header, children }) => (
   <div className="panel">
-    <h5 className="my-3">{header}</h5>
+    <h5>{header}</h5>
     {children}
   </div>
 );
@@ -52,41 +62,34 @@ const QueryRulesBanner = () => {
 };
 
 export default function Web() {
+  // Frontend filter you want to apply
+  const filters = "categories.id:34"; // Apply filter for category with ID 34
+
   return (
     <div className="">
-      <div>
-      <FicDropDown>
-        <div>Fic fo</div>
-      </FicDropDown>
-      </div>
       <InstantSearch
-        indexName="bigcommerce_products_3"
+        indexName="bigcommerce_products"
         searchClient={searchClient}
         routing
       >
-        <Configure hitsPerPage={15} filters="category_page:148"/>
+        {/* Pass filters to Configure widget */}
+        <Configure
+          hitsPerPage={15}
+          filters={filters}  // Filters passed here
+        />
         <div className="container">
-          <div className="search-panel flex">
-            <div className="search-panel__filters  pfd-filter-section">
+          <div className="search-panel">
+            <div className="search-panel__filters">
               <DynamicWidgets facets={["*"]}>
-                {/* <div className="my-5">
-                  <Panel header="Categories">
-                    <HierarchicalMenu attributes={["categories"]} />
-                  </Panel>
-                </div> */}
-                <div className="my-5">
-                  <Panel header="brand">
-                    <RefinementList attribute="brand" searchable />
-                  </Panel>
-                </div>
-                <div className="my-5">
-                  <Panel header="price">
-                    <RangeInput attribute="price" />
-                  </Panel>
-                </div>
+                <Panel header="brand">
+                  <RefinementList attribute="brand" searchable />
+                </Panel>
+                <Panel header="price">
+                  <RangeInput attribute="price" />
+                </Panel>
               </DynamicWidgets>
             </div>
-            <div className="search-panel__results pfd-product-section">
+            <div className="search-panel__results">
               <div className="searchbox">
                 <SearchBox />
               </div>
@@ -95,7 +98,7 @@ export default function Web() {
               <CurrentRefinements />
               <QueryRulesBanner />
 
-              <Hits hitComponent={ProductCard} />
+              <Hits hitComponent={HitView} />
               <Pagination />
             </div>
           </div>

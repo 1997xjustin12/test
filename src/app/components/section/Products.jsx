@@ -13,9 +13,37 @@ import { bc_categories, flatCategories } from "@/app/lib/category-helpers";
 import { useMediaQuery } from "react-responsive";
 import { useSearchParams } from "next/navigation";
 import {useFilter} from "@/app/context/filter";
+import { useSolanaCategories } from "@/app/context/category";
 const bccat_json = bc_categories;
 const init_sort = "total_sold:desc"
 const ProductsSection = ({ category, keyword }) => {
+  const {solana_categories} = useSolanaCategories();
+  const flattenCategories = (categories) => {
+    let result = [];
+  
+    const traverse = (items, parent = null) => {
+      items.forEach((item) => {
+        const { children, ...categoryData } = item;
+        result.push({ ...categoryData, parent });
+  
+        if (children && children.length > 0) {
+          traverse(children, categoryData.url); // Keep track of parent URL if needed
+        }
+      });
+    };
+  
+    traverse(categories);
+    return result;
+  };
+
+  // console.log("solana_categories", solana_categories);
+  // console.log("flattened solana_categories", flattenCategories(solana_categories));
+  // console.log("bccat_json", bccat_json)
+  // console.log("category_ids", getCategoryIds(
+  //   category,
+  //   flattenCategories(solana_categories),
+  //   bccat_json
+  // ).join(","));
   const {filters, initFilters} = useFilter();
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const searchParams = useSearchParams();
@@ -25,7 +53,7 @@ const ProductsSection = ({ category, keyword }) => {
       limit: isMobile ? 4 : 10,
       "categories": getCategoryIds(
         category,
-        flatCategories,
+        flattenCategories(solana_categories),
         bccat_json
       ).join(","),
       sort: init_sort

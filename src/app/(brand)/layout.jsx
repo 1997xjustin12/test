@@ -1,6 +1,6 @@
 import "@/app/globals.css";
-import Nav from "@/app/components/admin/NavBar";
-import SideNav from "@/app/components/admin/SideBar";
+import Nav from "@/app/components/brand/Nav";
+import Footer from "@/app/components/brand/Footer";
 
 import { Montserrat } from "next/font/google";
 const MontserratFont = Montserrat({
@@ -12,22 +12,14 @@ const MontserratFont = Montserrat({
 
 export const metadata = {
   title: "Developer Solana",
-  other: {
-    link: [
-      {
-        rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css",
-      },
-    ],
-  },
 };
 export default function AdminLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`antialiased ${MontserratFont.className} bg-slate-50`}>
-        <div className="w-full mt-20">
-          {children}
-        </div>
+      <body className={`antialiased ${MontserratFont.className} bg-zinc-50`}>
+        <Nav />
+        {children}
+        <Footer />
       </body>
     </html>
   );

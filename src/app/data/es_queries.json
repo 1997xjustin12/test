@@ -1,0 +1,257 @@
+# Welcome to the Dev Tools Console!
+#
+# You can use Console to explore the Elasticsearch API. See the Elasticsearch API reference to learn more:
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html
+#
+# Here are a few examples to get you started.
+
+
+# Create an index
+PUT /my-index
+
+
+# Add a document to my-index
+POST /my-index/_doc
+{
+    "id": "park_rocky-mountain",
+    "title": "Rocky Mountain",
+    "description": "Bisected north to south by the Continental Divide, this portion of the Rockies has ecosystems varying from over 150 riparian lakes to montane and subalpine forests to treeless alpine tundra."
+}
+
+GET /bigcommerce_products/_mapping
+
+GET /bigcommerce_products/_search
+{
+  "query": {
+    "nested": {
+      "path": "categories",
+      "query": {
+        "terms": {
+          "categories.id": [43] // IDs you want to filter by
+        }
+      },
+      "inner_hits": {}  // Optional, adds results from this nested query
+    }
+  }
+}
+
+# Perform a search in my-index
+GET /my-index/_search?q="rocky mountain"
+
+
+
+GET /bigcommerce_products/_search
+{
+  "_source": ["categories"],
+  "size": 1
+}
+POST /bigcommerce_products/_search?
+{
+  "query": {
+    "nested": {
+      "path": "categories",
+      "query": {
+        "terms": {
+          "categories.id": [43]
+        }
+      },
+      "inner_hits": {}  // Optional, adds results from this nested query
+    }
+  }
+}
+
+
+# test /bigcommerce_products/_search?q=
+POST /bigcommerce_products/_search?
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "nested": {
+            "path": "categories",
+            "query": {
+              "bool": {
+                "should": [
+                  { "match": { "categories.id":82 } }
+                ],
+                "minimum_should_match": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "free_shipping": { "filter": { "term": { "is_free_shipping": true } } },
+    "brand": {
+      "composite": {
+        "size": 1000,
+        "sources": [
+          {
+            "brand_key": {
+              "terms": { "script": "return 'brand:' + doc['brand.id'].value" }
+            }
+          },
+          { "brand_label": { "terms": { "field": "brand.name.keyword" } } }
+        ]
+      }
+    },
+    "price": {
+      "range": {
+        "field": "sale_price",
+        "ranges": [
+          { "key": "price:1-99", "from": "1.00", "to": 99.99 },
+          { "key": "price:100-499", "from": "100.00", "to": 499.99 },
+          { "key": "price:500-999", "from": "500.00", "to": 999.99 },
+          { "key": "price:1000-2499", "from": "1000.00", "to": 2499.99 },
+          { "key": "price:2500-4999", "from": "2500.00", "to": 4999.99 },
+          { "key": "price:5000-100000", "from": "5000.00", "to": 100000.99 }
+        ]
+      }
+    }
+  },
+  "sort": [{ "total_sold": { "order": "desc" } }],
+  "from": 0,
+  "size": 10
+}
+
+# fireplaces query cannot search for category_ids 70, 148, 158
+POST /bigcommerce_products/_search?
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "nested": {
+            "path": "categories",
+            "query": {
+              "bool": {
+                "should": [
+                  { "match": { "categories.id": 70 } },
+                  { "match": { "categories.id": 148 } },
+                  { "match": { "categories.id": 150 } }
+                ],
+                "minimum_should_match": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "free_shipping": { "filter": { "term": { "is_free_shipping": true } } },
+    "brand": {
+      "composite": {
+        "size": 1000,
+        "sources": [
+          {
+            "brand_key": {
+              "terms": { "script": "return 'brand:' + doc['brand.id'].value" }
+            }
+          },
+          { "brand_label": { "terms": { "field": "brand.name.keyword" } } }
+        ]
+      }
+    },
+    "price": {
+      "range": {
+        "field": "sale_price",
+        "ranges": [
+          { "key": "price:1-99", "from": "1.00", "to": 99.99 },
+          { "key": "price:100-499", "from": "100.00", "to": 499.99 },
+          { "key": "price:500-999", "from": "500.00", "to": 999.99 },
+          { "key": "price:1000-2499", "from": "1000.00", "to": 2499.99 },
+          { "key": "price:2500-4999", "from": "2500.00", "to": 4999.99 },
+          { "key": "price:5000-100000", "from": "5000.00", "to": 100000.99 }
+        ]
+      }
+    }
+  },
+  "sort": [{ "total_sold": { "order": "desc" } }],
+  "from": 0,
+  "size": 10
+}
+
+
+# same query but with the category id that have data hits *category_id 34
+POST /bigcommerce_products/_search?
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "nested": {
+            "path": "categories",
+            "query": {
+              "bool": {
+                "should": [
+                  { "match": { "categories.id": 34 } }
+                ],
+                "minimum_should_match": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "free_shipping": { "filter": { "term": { "is_free_shipping": true } } },
+    "brand": {
+      "composite": {
+        "size": 1000,
+        "sources": [
+          {
+            "brand_key": {
+              "terms": { "script": "return 'brand:' + doc['brand.id'].value" }
+            }
+          },
+          { "brand_label": { "terms": { "field": "brand.name.keyword" } } }
+        ]
+      }
+    },
+    "price": {
+      "range": {
+        "field": "sale_price",
+        "ranges": [
+          { "key": "price:1-99", "from": "1.00", "to": 99.99 },
+          { "key": "price:100-499", "from": "100.00", "to": 499.99 },
+          { "key": "price:500-999", "from": "500.00", "to": 999.99 },
+          { "key": "price:1000-2499", "from": "1000.00", "to": 2499.99 },
+          { "key": "price:2500-4999", "from": "2500.00", "to": 4999.99 },
+          { "key": "price:5000-100000", "from": "5000.00", "to": 100000.99 }
+        ]
+      }
+    }
+  },
+  "sort": [{ "total_sold": { "order": "desc" } }],
+  "from": 0,
+  "size": 10
+}
+
+# get all unique category names
+GET /bigcommerce_products/_search
+{
+  "size": 0,
+  "aggs": {
+    "categories_nested": {
+      "nested": {
+        "path": "categories"
+      },
+      "aggs": {
+        "id_name_pairs": {
+          "terms": {
+            "script": {
+              "source": "doc['categories.id'].value + ' - ' + doc['categories.name.keyword'].value",
+              "lang": "painless"
+            },
+            "size": 1000
+          }
+        }
+      }
+    }
+  }
+}

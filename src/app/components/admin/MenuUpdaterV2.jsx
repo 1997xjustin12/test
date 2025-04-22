@@ -121,6 +121,10 @@ function MenuUpdater() {
       children: [],
       path: i.url.path,
       key_words: [i.url.path],
+      price_visibility: "hide",
+      // meta
+      meta_title:"",
+      meta_description:"",
       // content
       banner: {
         img: {
@@ -405,10 +409,21 @@ function MenuUpdater() {
         return i.category_id;
     }
   };
+
+  function hidePriceVisibility(items) {
+    return items.map(item => ({
+      ...item,
+      price_visibility: 'hide',
+      children: item.children ? hidePriceVisibility(item.children) : []
+    }));
+  }
+
+  
   useEffect(() => {
     updateMenuList();
-
+    // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
     redisGet(defaultMenuKey).then((data) => {
+      // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
       setMenu(data.filter(({ name }) => name !== "Search"));
       setSearchList(flattenMenu(data.filter(({ name }) => name !== "Search")));
     });

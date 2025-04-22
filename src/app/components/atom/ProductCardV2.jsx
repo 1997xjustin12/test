@@ -10,30 +10,24 @@ import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
 import BrandDisplay from "@/app/components/atom/ProductCardBrandDisplay";
 import PriceDisplay from "@/app/components/atom/ProductCardPriceDisplay";
 import { ICRoundPhone } from "../icons/lib";
-import { useQuickView } from "@/app/context/quickview";
-import { useSolanaCategories } from "@/app/context/category";
-import FicDropDown from "@/app/components/atom/FicDropDown";
-
+// import { useQuickView } from "@/app/context/quickview";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-const ProductCard = ({ product }) => {
-  const { price_hidden_categories } = useSolanaCategories();
-  console.log("price_hidden_categories", price_hidden_categories);
-  console.log("product_categories", product?.categories);
-
-  const { viewItem } = useQuickView();
+const ProductCard = ({ hit }) => {
+//   const { viewItem } = useQuickView();
+console.log("hitCardV2 hits as hit", hit)
   const [thumbnail, setThumbnail] = useState(null);
   useEffect(() => {
-    if (product) {
+    if (hit) {
       setThumbnail((prev) => {
-        if (product.images.length > 0) {
+        if (hit.images.length > 0) {
           // setImage
-          return product.images.filter((i) => i.is_thumbnail)[0].url_thumbnail;
+          return hit.images.filter((i) => i.is_thumbnail)[0].url_thumbnail;
         } else {
           // setDefaultImage
         }
       });
     }
-  }, [product]);
+  }, [hit]);
   const handleHeartButtonClick = () => {};
   const handleProductItemClick = (e) => {
     e.preventDefault();
@@ -50,7 +44,7 @@ const ProductCard = ({ product }) => {
   const handleQuickViewClick = (e, item) => {
     e.stopPropagation();
     e.preventDefault();
-    viewItem(item);
+    // viewItem(item);
   };
 
   const triggerCall = (e) => {
@@ -62,29 +56,29 @@ const ProductCard = ({ product }) => {
   return (
     <Link
       prefetch={false}
-      href={`${BASE_URL}/product/${product.custom_url.url}`}
+      href={`${BASE_URL}/product/${hit.custom_url.url}`}
       // onClick={handleProductItemClick}
       className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group"
     >
-      <div className="">
+      <div className="w-full">
         <div
           className={`w-full flex items-center justify-center h-[230px] overflow-hidden relative ${
-            product.isSelected ? "bg-stone-600" : "bg-white"
+            hit.isSelected ? "bg-stone-600" : "bg-white"
           }`}
         >
           <img
             src={thumbnail}
             alt=""
             className={`object-contain h-full ${
-              product?.isSelected ? "opacity-40" : "opacity-100"
+              hit?.isSelected ? "opacity-40" : "opacity-100"
             }`}
           />
-          <div className={`absolute ${product?.isSelected ? "" : "hidden"}`}>
+          <div className={`absolute ${hit?.isSelected ? "" : "hidden"}`}>
             <LoaderIcon dark={false} />
           </div>
-          <OnsaleTag categories={product?.categories} />
+          <OnsaleTag categories={hit?.categories} />
           <div
-            onClick={(e) => handleQuickViewClick(e, product)}
+            onClick={(e) => handleQuickViewClick(e, hit)}
             className="absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible"
           >
             <div className="flex justify-center">
@@ -100,37 +94,25 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         <div className="flex flex-col px-[15px] pt-[5px] border-t">
-          <div
-            className="text-sm line-clamp-2 font-semibold text-stone-700"
-            title={product.name}
-          >
-            {product.name}
+          <div className="text-sm line-clamp-2 font-semibold text-stone-700" title={hit.name}>
+            {hit.name}
           </div>
           <div className={`flex items-center gap-[5px]`}>
             <Rating
               readOnly
-              value={product.reviews_rating_sum}
+              value={hit.reviews_rating_sum}
               fractions={2}
               style={{ maxWidth: 100 }}
             ></Rating>
             <div className={`text-[0.75rem]`}>
-              ({product.reviews_count}){/* (id:{product.id}) */}
+              ({hit.reviews_count}){/* (id:{hit.id}) */}
             </div>
           </div>
           <div className="mt-3">
-            <BrandDisplay product={product} />
+            <BrandDisplay product={hit}/>
           </div>
           <div className="mt-3">
-            {price_hidden_categories.some((id) =>
-              product?.categories.some((cat) => cat.id === id)
-            ) ? (
-              // display no price
-              <div className="font-medium text-[14px] text-stone-700">
-                Contact us for pricing.
-              </div>
-            ) : (
-              <PriceDisplay product={product} />
-            )}
+            <PriceDisplay product={hit}/>
           </div>
           <div className="flex  h-[48px] items-center">
             <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
@@ -179,23 +161,16 @@ const ProductCard = ({ product }) => {
               {/* )} */}
             </div>
           </div>
-          <FicDropDown>
+
           <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
-              {price_hidden_categories.some((id) =>
-                product?.categories.some((cat) => cat.id === id)
-              ) ? (
-                <>Call for Price </>
-              ) : (
-                <>Found It Cheaper? </>
-              )}
+            Found It Cheaper?{" "}
             <div
+              onClick={triggerCall}
               className="hover:underline flex items-center gap-[3px] cursor-pointer"
             >
               <ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div>
             </div>
           </div>
-          </FicDropDown>
-
         </div>
       </div>
     </Link>

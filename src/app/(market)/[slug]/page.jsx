@@ -1,55 +1,51 @@
-"use client";
+import { notFound } from "next/navigation";
+import { keys, redis } from "@/app/lib/redis";
+import { getPageData } from "@/app/lib/helpers";
 import TuiHero from "@/app/components/template/tui_hero";
 import ProductsSection from "@/app/components/section/Products";
-import { getPageData } from "@/app/lib/helpers";
-// import { flatCategories } from "@/app/lib/category-helpers";
-import { notFound } from "next/navigation";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
-import { keys, redisGet } from "@/app/lib/redis";
-import * as React from "react";
-import { useState, useEffect } from "react";
 
 const defaultMenuKey = keys.default_menu.value;
-export default function GenericCategoryPage({ params }) {
-  const { slug } = React.use(params);
-  const [pageData, setPageData] = useState(null);
 
-  const getMenu = async () => {
-    return await redisGet(defaultMenuKey);
-  };
-
-  const flattenNav = (navItems) => {
-    let result = [];
-
-    const extractLinks = (items) => {
-      items.forEach(({ children = [], ...rest }) => {
-        result.push({ ...rest, children }); // Keep the children property
-        extractLinks(children); // Recursively process children
-      });
-    };
-
-    extractLinks(navItems);
-
-    return result;
-  };
-
-  useEffect(() => {
-    getMenu().then((data) => {
-      const flatData = flattenNav(data);
-      const _pageData =getPageData(slug, flatData);
-      setPageData(_pageData);
+const flattenNav = (navItems) => {
+  let result = [];
+  const extractLinks = (items) => {
+    items.forEach(({ children = [], ...rest }) => {
+      result.push({ ...rest, children });
+      extractLinks(children);
     });
-  }, [slug]);
+  };
+  extractLinks(navItems);
+  return result;
+};
 
-  if (pageData === undefined) {
-    {notFound()}
-  } else {
-    return (
-      <div>
-        <MobileLoader isLoading={!pageData}/>
-        <TuiHero data={pageData} />
-        <ProductsSection category={slug} />
-      </div>
-    );
-  }
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const menuData = await redis.get(defaultMenuKey);
+  const flatData = flattenNav(menuData);
+  const pageData = getPageData(slug, flatData);
+
+  if (!pageData) return {};
+
+  return {
+    title: pageData.meta_title || "Solana Fireplaces | Stylish Indoor & Outdoor Heating",
+    description: pageData.meta_description || "Transform your home with Solana Fireplaces! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!",
+  };
+}
+
+export default async function GenericCategoryPage({ params }) {
+  const { slug } = await params;
+  const menuData = await redis.get(defaultMenuKey);
+  const flatData = flattenNav(menuData);
+  const pageData = getPageData(slug, flatData);
+
+  if (!pageData) return notFound();
+
+  return (
+    <div>
+      <MobileLoader isLoading={!pageData} />
+      <TuiHero data={pageData} />
+      <ProductsSection category={slug} />
+    </div>
+  );
 }

@@ -240,7 +240,7 @@ export default function TuiFilterSort({
           <div className="border-b border-gray-200 pb-2 pt-6 sticky top-[40px] bg-white z-[5]">
             <div className="flex items-baseline justify-between ">
               <div>
-                <h1 className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
+                <div className="text-sm md:text-4xl font-bold tracking-tight text-gray-900">
                   {`${activeCategoryName(category)}`}{" "}
                   {category !== "search" && (
                     <span className="font-normal text-sm md:text-2xl">{`${
@@ -251,7 +251,7 @@ export default function TuiFilterSort({
                         : ""
                     }`}</span>
                   )}
-                </h1>
+                </div>
                 <BreadCrumbs category={category} />
               </div>
               <div className="flex items-center">
