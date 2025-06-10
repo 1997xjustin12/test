@@ -15,10 +15,18 @@ function CheckoutOrderSummary() {
   const [deliveryOption, setDeliveryOption] = useState(0);
   const [tax, setTax] = useState(0);
   
-  const cartTotal = useMemo(()=>{
-    if(cartItems.length > 0){
-      const _originalPrice = getSum(cartItems, "price");
-      const _salePrice = getSum(cartItems, "sale_price");
+  const getPriceSum = (items) => {
+    return items.reduce((sum, item) => sum + item?.variants?.[0].price, 0)
+  }
+
+  const getOriginalPriceSum = (items) => {
+    return items.reduce((sum, item) => sum + (item?.variants?.[0].compare_at_price || item?.variants?.[0].price), 0)
+  }
+
+  const cartTotal = useMemo(() => {
+    if (cartItems.length > 0) {
+      const _originalPrice = getOriginalPriceSum(cartItems);
+      const _salePrice = getPriceSum(cartItems);
       const _savings = _originalPrice - _salePrice;
       const _deliveryOption = 0;
       const _tax = 0;
@@ -28,14 +36,11 @@ function CheckoutOrderSummary() {
       setDeliveryOption(_deliveryOption);
       setTax(_tax);
       return _salePrice + _deliveryOption + _tax;
-    }else{
+    } else {
       return 0;
     }
-  },[cartItems])
+  }, [cartItems]);
 
-  function getSum(array, prop) {
-    return array.reduce((sum, item) => sum + item?.[prop], 0);
-  }
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">

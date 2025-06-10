@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice, getSum } from "@/app/lib/helpers";
+import { formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -11,17 +11,70 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 function CartOrderSummary() {
   const router = useRouter();
-  const { cartItems } = useCart();
+  const { cartItems, formattedCart } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
   const [savings, setSavings] = useState(0);
   const [deliveryOption, setDeliveryOption] = useState(0);
   const [tax, setTax] = useState(0);
 
-  const cartTotal = useMemo(()=>{
-    if(cartItems.length > 0){
-      const _originalPrice = getSum(cartItems, "price");
-      const _salePrice = getSum(cartItems, "sale_price");
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+
+    if (cartItems.length === 0) {
+      alert("You don't have items in your cart yet.");
+      return;
+    }
+
+    // const line_items = cartItems.reduce((acc, item) => {
+    //   const found = acc.find((i) => i.product_id === item.id);
+    //   if (found) {
+    //     found.quantity += 1;
+    //   } else {
+    //     acc.push({ product_id: item.id, quantity: 1 });
+    //   }
+    //   return acc;
+    // }, []);
+
+    
+    const line_items = formattedCart.map((item)=> ({product_id: item?.variant?.[0]?.sku, quantity: item?.count}));
+
+    try {
+      const response = await fetch("/api/create-cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ line_items }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data?.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        alert("Failed to create cart or get checkout URL.");
+        console.error(data);
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      alert("Something went wrong while processing checkout.");
+    }
+  };
+
+  const getPriceSum = (items) => {
+    return items.reduce((sum, item) => sum + item?.variants?.[0].price, 0)
+  }
+
+  const getOriginalPriceSum = (items) => {
+    return items.reduce((sum, item) => sum + (item?.variants?.[0].compare_at_price || item?.variants?.[0].price), 0)
+  }
+
+  const cartTotal = useMemo(() => {
+    if (cartItems.length > 0) {
+      const _originalPrice = getOriginalPriceSum(cartItems);
+      const _salePrice = getPriceSum(cartItems);
       const _savings = _originalPrice - _salePrice;
       const _deliveryOption = 0;
       const _tax = 0;
@@ -31,54 +84,10 @@ function CartOrderSummary() {
       setDeliveryOption(_deliveryOption);
       setTax(_tax);
       return _salePrice + _deliveryOption + _tax;
-    }else{
+    } else {
       return 0;
     }
-  },[cartItems])
-
-  const handleCheckout = async (e) => {
-    e.preventDefault();
-  
-    if (cartItems.length === 0) {
-      alert("You don't have items in your cart yet.");
-      return;
-    }
-  
-    const line_items = cartItems.reduce((acc, item) => {
-      const found = acc.find((i) => i.product_id === item.id);
-      if (found) {
-        found.quantity += 1;
-      } else {
-        acc.push({ product_id: item.id, quantity: 1 });
-      }
-      return acc;
-    }, []);
-  
-    try {
-      const response = await fetch('/api/create-cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ line_items }),
-      });
-  
-      const data = await response.json();
-      console.log(data);
-  
-      if (data?.checkout_url) {
-        window.location.href = data.checkout_url;
-      } else {
-        alert('Failed to create cart or get checkout URL.');
-        console.error(data);
-      }
-    } catch (error) {
-      console.error('Checkout failed:', error);
-      alert('Something went wrong while processing checkout.');
-    }
-  };
-  
-  
+  }, [cartItems]);
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
@@ -135,27 +144,13 @@ function CartOrderSummary() {
             </dd>
           </dl>
         </div>
-        {/* <CallWrapper>
-          <button
-            className="flex bg-theme-600  hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          >
-            Proceed to Checkout
-          </button>
-        </CallWrapper> */}
-        {/* <Link
-          href={`${BASE_URL}/checkout`}
-          prefetch={false}
-          onClick={handleCheckout}
-          className="flex bg-theme-600  hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        <button
+          // onClick={handleCheckout}
+          disabled={true}
+          className="flex bg-theme-600 hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
         >
           Proceed to Checkout
-        </Link> */}
-        <button
-        onClick={handleCheckout}
-        className="flex bg-theme-600 hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-      >
-        Proceed to Checkout
-      </button>
+        </button>
 
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">

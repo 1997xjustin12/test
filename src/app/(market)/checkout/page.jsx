@@ -17,12 +17,12 @@ const BraintreeForm = dynamic(() => import("@/app/components/template/BraintreeF
 function CheckoutPage() {
   const router = useRouter();
   const { cartItems } = useCart();
-  console.log("cartItems",cartItems);
+  // console.log("cartItems",cartItems);
 
   useEffect(()=>{
-    if(cartItems.length === 0){
+    // if(cartItems.length === 0){
       router.push(`${BASE_URL}/cart`);
-    }
+    // }
   },[])
 
   return (

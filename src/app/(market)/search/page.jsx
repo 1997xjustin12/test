@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import ProductsSection from "@/app/components/section/Products";
+// import ProductsSection from "@/app/components/section/Products";
+import ProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import { useState, useEffect, use } from "react";
 import { useSearch } from "@/app/context/search";
@@ -51,7 +52,8 @@ export default function SearchPage(props) {
           {/* tab display contents*/}
 
           {
-            tab === "product" && <ProductsSection category={"search"} keyword={searchQuery} />
+            // tab === "product" && <ProductsSection category={"search"} keyword={searchQuery} />
+            tab === "product" && <ProductsSection category={"search"} search={searchQuery} />
           }
           
           

@@ -1,7 +1,7 @@
 import "@/app/globals.css";
 import Nav from "@/app/components/admin/NavBar";
 import SideNav from "@/app/components/admin/SideBar";
-
+import { CompareProductsProvider } from "@/app/context/compare_product";
 import { Montserrat } from "next/font/google";
 const MontserratFont = Montserrat({
   subsets: ["latin"],
@@ -25,9 +25,9 @@ export default function AdminLayout({ children }) {
   return (
     <html lang="en">
       <body className={`antialiased ${MontserratFont.className} bg-slate-50`}>
-        <div className="w-full mt-20">
-          {children}
-        </div>
+        <CompareProductsProvider>
+          <div className="w-full mt-20">{children}</div>
+        </CompareProductsProvider>
       </body>
     </html>
   );

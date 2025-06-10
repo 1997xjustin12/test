@@ -20,13 +20,15 @@ export const filter_price_range = [
 
 export function createSlug(string, separator = "-") {
   return string
-    .toString() // Ensure the input is a string
-    .normalize("NFD") // Normalize the string (handles accents/diacritics)
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
-    .toLowerCase() // Convert to lowercase
-    .trim() // Remove leading and trailing spaces
-    .replace(/[^a-z0-9]+/g, separator) // Replace non-alphanumeric characters with the separator
-    .replace(new RegExp(`\\${separator}+`, "g"), separator); // Collapse multiple separators into one
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, "and") // 👈 Convert ampersand to 'and'
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, separator)
+    .replace(new RegExp(`\\${separator}+`, "g"), separator)
+    .replace(new RegExp(`^${separator}|${separator}$`, "g"), ""); // Trim leading/trailing separators
 }
 
 export function getFirstPathSegment(pathname) {
@@ -62,6 +64,10 @@ export function getCategoryIds(category_slug, categories, bc_categories) {
 }
 
 function hasEqualValue(array1, array2) {
+  return array1.some((value) => array2.includes(value));
+}
+
+export function hasCommonValue(array1, array2) {
   return array1.some((value) => array2.includes(value));
 }
 

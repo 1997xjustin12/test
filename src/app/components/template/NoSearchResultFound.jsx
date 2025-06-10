@@ -48,6 +48,7 @@ function NoSearchResultFound({ query }) {
             >
               <div className="relative w-[70px] h-[70px] min-w-[70px] min-h-[70px] bg-stone-100 border-stone-300 border-r">
                 {
+                  i?.banner?.img?.src && 
                   <Image
                     src={i?.banner?.img?.src}
                     alt={i?.banner?.img?.alt}

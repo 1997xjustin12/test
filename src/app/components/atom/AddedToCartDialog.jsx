@@ -34,7 +34,7 @@ function AddedToCartDialog({ data, onClose }) {
   useEffect(() => {
     if (addedToCartItems) {
       const thumbnail =
-      addedToCartItems?.images?.find(({ is_thumbnail }) => is_thumbnail)?.url_standard ??
+      addedToCartItems?.images?.find(({ position }) => position===1)?.src ??
         null;
       setImage(thumbnail);
       setToggle(true);
@@ -93,7 +93,7 @@ function AddedToCartDialog({ data, onClose }) {
                   {image && (
                     <Image
                       src={image}
-                      alt={addedToCartItems?.name}
+                      alt={addedToCartItems?.title}
                       className="w-full h-full"
                       objectFit="contain"
                       fill
@@ -103,9 +103,9 @@ function AddedToCartDialog({ data, onClose }) {
                 <div className={`w-[calc(100%-100px)] text-stone-700 flex gap-[10px] ${data ? "flex-col":"justify-center items-center h-[100px]"}`}>
                   {
                     data ? <>
-                  <div className="font-bold text-sm lg:text-xl">{addedToCartItems?.name}</div>
-                  <div className="font-medium text-sm">{`$${addedToCartItems?.price}x${addedToCartItems?.count}`}</div>
-                  <div className="font-extrabold text-theme-600 text-lg lg:text-2xl text-right">{`$${addedToCartItems?.count * addedToCartItems?.price}`}</div>
+                  <div className="font-bold text-sm lg:text-xl">{addedToCartItems?.title}</div>
+                  <div className="font-medium text-sm">{`$${addedToCartItems?.variants?.[0]?.price}x${addedToCartItems?.count}`}</div>
+                  <div className="font-extrabold text-theme-600 text-lg lg:text-2xl text-right">{`$${addedToCartItems?.count * addedToCartItems?.variants?.[0]?.price}`}</div>
                   </>:
                   <Eos3DotsLoading />
                   }

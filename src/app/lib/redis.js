@@ -8,16 +8,28 @@ export const redis = new Redis({
 
 export const keys = {
   menu_lists:{
-    description: "used to retreive list of menu keys.",
+    description: "used to retreive list of menu keys for bigcommerce.",
     value: "solana_menu_list",
   },
+  menu_list_shopify:{
+    description: "used to retreive list of menu keys for shopify structure.",
+    value: "solana_shopify_menu_list",
+  },
   default_menu:{
-    description:"default menu",
+    description:"default menu for bigcommerce product",
     value:"menu-vwmuqu8jz",
   },
+  default_shopify_menu:{
+    description:"default menu for shopify product",
+    value:"menu-7pajm2g8w",
+  },
   active_menu:{
-    description: "used to retreive the key of the active or currently used menu.",
+    description: "used to retreive the key of the active or currently used menu (bigcommerce).",
     value: "solana_active_menu",
+  },
+  active_shopify_menu:{
+    description: "used to retreive the key of the active or currently used menu (shopify).",
+    value: "solana_shopify_active_menu",
   },
   logo:{
     description: "used to retreive image_url of the logo",

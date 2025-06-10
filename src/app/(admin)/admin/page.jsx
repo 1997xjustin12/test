@@ -3,7 +3,8 @@ import {redis, keys} from "@/app/lib/redis";
 import FavidonUpdater from '@/app/components/admin/FaviconUpdater'
 import LogoUpdater from '@/app/components/admin/LogoUpdater'
 import MenuUpdater from "@/app/components/admin/MenuUpdater"
-import MenuUpdaterV2 from "@/app/components/admin/MenuUpdaterV2"
+// import MenuUpdaterV2 from "@/app/components/admin/MenuUpdaterV2"
+import MenuUpdaterV3 from "@/app/components/admin/MenuUpdaterV3"
 import ThemeUpdater from "@/app/components/admin/ThemeUpdater"
 import FaqsUpdater from "@/app/components/admin/FaqsUpdater"
 
@@ -18,7 +19,8 @@ async function AdminIndexPage() {
       <ThemeUpdater />
       <FaqsUpdater />
       {/* <MenuUpdater /> */}
-      <MenuUpdaterV2 />
+      {/* <MenuUpdaterV2 /> */}
+      <MenuUpdaterV3 />
     </div>
   )
 }

@@ -22,9 +22,6 @@ export class CustomFilter {
             }
             }
         ],
-        // filters.map((filter) => ({
-        //   term: { tag: {id:filter.value} },
-        // })),
       },
     };
   }

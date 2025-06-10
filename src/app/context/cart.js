@@ -1,6 +1,12 @@
 "use client";
-import React, { createContext, useState, useContext, useEffect } from "react";
-import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog"
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
+import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
 
 const CartContext = createContext();
 
@@ -16,7 +22,7 @@ export const CartProvider = ({ children }) => {
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
 
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
     // Dynamically import the cartStorage module only on the client-side
@@ -44,14 +50,12 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartStorage]);
 
-  
-
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
-      setAddToCartLoading(true);
+    setAddToCartLoading(true);
     // getCart everytime we add or remove items
-    try{
+    try {
       const savedItems = await cartStorage.getCart();
       await sleep(2000);
       setCartItems((prev) => {
@@ -62,9 +66,17 @@ export const CartProvider = ({ children }) => {
       });
       setAddToCartLoading(false);
       setAddedToCart(items);
-      return {code: 200, status: "success", message:"Successfully added items to cart."}
-    }catch(error){
-      return {code: 500, status: "error", message:"Error added items to cart."}
+      return {
+        code: 200,
+        status: "success",
+        message: "Successfully added items to cart.",
+      };
+    } catch (error) {
+      return {
+        code: 500,
+        status: "error",
+        message: "Error added items to cart.",
+      };
     }
   };
 
@@ -72,11 +84,45 @@ export const CartProvider = ({ children }) => {
     // getCart everytime we add or remove items
     const items = await cartStorage.getCart();
     setCartItems((prev) => {
-      const updatedItems = items.filter((i) => i.id !== item.id);
+      const updatedItems = items.filter(
+        (i) => i?.variants?.[0]?.sku !== item?.variants?.[0]?.sku
+      );
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
       return [...updatedItems];
     });
+  };
+
+  const increaseProductQuantity = async (item) => {
+    const savedItems = await cartStorage.getCart();
+    // await sleep(2000);
+    setCartItems((prev) => {
+      const updatedItems = [...savedItems, item];
+      cartStorage.saveCart(updatedItems);
+      setCartItemsCount(updatedItems.length);
+      return [...updatedItems];
+    });
+  };
+
+  const decreaseProductQuantity = async (item) => {
+    const savedItems = await cartStorage.getCart();
+    const tmpCartItems = savedItems;
+    const idToFindAndPop = item?.variants?.[0].sku;
+    if (
+      tmpCartItems.filter((i) => i?.variants?.[0].sku === idToFindAndPop)
+        .length > 1
+    ) {
+      const indexToRemove = tmpCartItems.findIndex(
+        (i2) => i2?.variants?.[0].sku === idToFindAndPop
+      );
+
+      if (indexToRemove !== -1) {
+        // Use pop() to remove the item at that index
+        tmpCartItems.splice(indexToRemove, 1); // Removes 1 element at the found index
+      }
+      // update cart only if > 1
+      updateCart(tmpCartItems);
+    }
   };
 
   const updateCart = (items) => {
@@ -94,26 +140,45 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  const handleCloseAddedToCart = () =>{
+  const handleCloseAddedToCart = () => {
     setAddedToCart(null);
-  }
+  };
 
+  const formattedCart = useMemo(() => {
+    if (cartItems.length === 0) {
+      return [];
+    }
+
+    return Object.values(
+      cartItems.reduce((acc, item) => {
+        const sku = item?.variants?.[0]?.sku;
+        if (!acc[sku]) {
+          acc[sku] = { ...item, count: 0 };
+        }
+        acc[sku].count += 1;
+        return acc;
+      }, {})
+    ).sort((a, b) => a.title.localeCompare(b.title));
+  }, [cartItems]);
 
   return (
     <CartContext.Provider
       value={{
         cartItems,
         cartItemsCount,
+        formattedCart,
         loadingCartItems,
         addToCart,
-        removeCartItem,
         clearCartItems,
+        increaseProductQuantity,
+        decreaseProductQuantity,
+        removeCartItem,
         updateCart,
-        addToCartLoading
+        addToCartLoading,
       }}
     >
       {children}
-      <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart}/>
+      <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
     </CartContext.Provider>
   );
 };

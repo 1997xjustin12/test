@@ -3,9 +3,12 @@ import { keys, redis } from "@/app/lib/redis";
 import { getPageData } from "@/app/lib/helpers";
 import TuiHero from "@/app/components/template/tui_hero";
 import ProductsSection from "@/app/components/section/Products";
+import ShopifyProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 
-const defaultMenuKey = keys.default_menu.value;
+const isShopify = true;
+
+const defaultMenuKey = keys.default_shopify_menu.value;
 
 const flattenNav = (navItems) => {
   let result = [];
@@ -45,7 +48,12 @@ export default async function GenericCategoryPage({ params }) {
     <div>
       <MobileLoader isLoading={!pageData} />
       <TuiHero data={pageData} />
+      {
+        isShopify ?
+      <ShopifyProductsSection category={slug} />
+        :
       <ProductsSection category={slug} />
+      }
     </div>
   );
 }

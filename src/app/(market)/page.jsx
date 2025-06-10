@@ -44,7 +44,6 @@ export default function HomePage({ params }) {
     getMenu().then((data) => {
       const flatData = flattenNav(data);
       const _pageData = getPageData(slug, flatData);
-      console.log("_pageData", _pageData);
       setPageData(_pageData);
     });
   }, [slug]);

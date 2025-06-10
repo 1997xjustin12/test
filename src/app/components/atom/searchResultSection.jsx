@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 import { useSearch } from "@/app/context/search";
+import { useSolanaCategories } from "@/app/context/category";
 
 function SearchResultSection({ section, onOptionSelect }) {
   const router = useRouter();
   const { setSearch } = useSearch();
+  const { getProductUrl } = useSolanaCategories();
   const [sectionData, setSectionData] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
@@ -37,14 +39,14 @@ function SearchResultSection({ section, onOptionSelect }) {
     }
   };
 
-  if (sectionData.length > 0) {
+  if (sectionData && sectionData.length > 0) {
     return (
       <div>
         <div className="bg-stone-200 font-bold text-sm py-1 px-3">
           {section.label}
         </div>
         <div>
-          {section.prop === "recent" &&
+          { sectionData && section.prop === "recent" &&
             sectionData.map((recent, index) => (
               <div
                 key={`recent-search-${index}`}
@@ -57,25 +59,25 @@ function SearchResultSection({ section, onOptionSelect }) {
               </div>
             ))}
 
-          {section.prop === "product" &&
+          { sectionData && section.prop === "product" &&
             sectionData.map((product, index) => (
-              <Link
+              <Link 
                 prefetch={false}
                 onClick={handleOptionClick}
-                key={`product-result-${product.custom_url.url}`}
-                href={`${BASE_URL}/product${product.custom_url.url}`}
+                key={`product-result-${product?.handle}`}
+                href={`${getProductUrl(product)}`}
               >
                 <div className="flex items-center group hover:bg-stone-50 px-2 py-[5px]">
                   <div className="w-[75px] h-[75px] overflow-hidden bg-white mr-[10px] flex items-center rounded relative">
-                    {product?.images &&
-                      product.images.find(
-                        ({ is_thumbnail }) => is_thumbnail
-                      ) && (
+                    {product && product?.images
+                       && product.images.find(
+                              ({ position }) => position === 1
+                            )?.src &&(
                         <Image
                           src={
                             product.images.find(
-                              ({ is_thumbnail }) => is_thumbnail
-                            )?.url_thumbnail
+                              ({ position }) => position === 1
+                            ).src
                           }
                           alt={`product:${product.name}`}
                           className="object-contain w-full"
@@ -85,7 +87,7 @@ function SearchResultSection({ section, onOptionSelect }) {
                   </div>
                   <div className="w-full">
                     <div className="text-[14px] group-hover:text-theme-600">
-                      {product.name}
+                      {product.title}
                     </div>
                     <div className="text-[10px] text-gray-500 font-normal">
                       {section.label}
@@ -94,7 +96,7 @@ function SearchResultSection({ section, onOptionSelect }) {
                 </div>
               </Link>
             ))}
-          {section.prop === "category" &&
+          { sectionData && section.prop === "category" &&
             sectionData.map((category, index) => (
               <Link
                 prefetch={false}
@@ -112,7 +114,7 @@ function SearchResultSection({ section, onOptionSelect }) {
                 </div>
               </Link>
             ))}
-          {section.prop === "brand" &&
+          { sectionData && section.prop === "brand" &&
             sectionData.map((brand, index) => (
               <Link
                 prefetch={false}

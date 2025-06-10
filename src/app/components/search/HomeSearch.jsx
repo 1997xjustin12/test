@@ -73,6 +73,7 @@ const HomeSearch = ({ main, controlled_height }) => {
   const handleOptionSelect = () => {
     setOpenSearch(false);
   }
+  
   return (
     <div className="flex w-full relative z-10" ref={searchRef}>
       <input

@@ -6,7 +6,7 @@ const ProductMetaTabs = ({ product }) => {
   const tabs = [
     {
       name: "Product Descriptions",
-      content: product?.description,
+      content: product?.description || product?.body_html,
     },
     {
       name: "Specification",

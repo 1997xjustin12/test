@@ -11,7 +11,7 @@ const MontserratFont = Montserrat({
 });
 
 export const metadata = {
-  title: "Developer Solana",
+  title: "Grandeur | Solana Custom Page Brand",
 };
 export default function AdminLayout({ children }) {
   return (

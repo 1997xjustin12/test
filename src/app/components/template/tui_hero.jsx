@@ -6,6 +6,7 @@ import Image from "next/image";
 const default_contact = "(888) 575-9720";
 
 export default function Hero({ data }) {
+  // console.log("tui_hero data", data);
   const useBanner =
     !data?.banner?.img?.src || data?.banner?.img?.src === ""
       ? "/images/banner/solana-home-hero.webp"
@@ -23,7 +24,7 @@ export default function Hero({ data }) {
       }`}
     >
       <div className={`w-full ${data?.children && data?.children.length > 0 ? 'md:w-[calc(100%-370px)]':'md:w-full'}`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px]  md:h-[calc(100vh-450px)]">
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)] md:max-h-[550px]">
           {
             <Image
               src={useBanner}

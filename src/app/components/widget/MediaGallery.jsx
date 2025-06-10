@@ -11,6 +11,7 @@ const MediaGallery = ({ mediaItems, loading }) => {
   const [contentWidth, setContentWidth] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [mobileGalleryOverflow, setMobileGalleryOverflow] = useState(false);
+  
   useEffect(() => {
     console.log("updateWidths");
     const updateWidths = () => {

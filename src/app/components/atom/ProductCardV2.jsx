@@ -14,7 +14,7 @@ import { ICRoundPhone } from "../icons/lib";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ hit }) => {
 //   const { viewItem } = useQuickView();
-console.log("hitCardV2 hits as hit", hit)
+// console.log("hitCardV2 hits as hit", hit)
   const [thumbnail, setThumbnail] = useState(null);
   useEffect(() => {
     if (hit) {

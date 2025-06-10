@@ -12,7 +12,7 @@ export const QuickViewProvider = ({ children }) => {
     setItem(null);
   }
   const viewItem = (product) => {
-    setItem(product)
+    setItem(product);
   }
   return (
     <QuickViewContext.Provider
