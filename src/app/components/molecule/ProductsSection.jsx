@@ -111,10 +111,10 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
           }`}</h1>
           <SortBy
             items={[
-              { label: "Most Popular", value: "popular" },
-              { label: "Newest", value: "newest" },
-              { label: "Price: Low to High", value: "_price_asc" },
-              { label: "Price: High to Low", value: "_price_desc" },
+              { label: "Most Popular", value: `${es_index}_popular` },
+              { label: "Newest", value: `${es_index}_newest` },
+              { label: "Price: Low to High", value: `${es_index}_price_asc` },
+              { label: "Price: High to Low", value: `${es_index}_price_desc` },
             ]}
           />
         </div>

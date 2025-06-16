@@ -58,11 +58,11 @@ const apiClient = API(
         },
       ],
       sorting: {
-        popular: {
+        _popular: {
           field: "_score",
           order: "desc",
         },
-        newest: {
+        _newest: {
           field: "created_at",
           order: "desc",
         },
@@ -75,6 +75,7 @@ const apiClient = API(
           order: "asc",
         },
       },
+      defaultSorting: "popular" // 👈 applies default sorting
     },
   }
   // { debug: true }

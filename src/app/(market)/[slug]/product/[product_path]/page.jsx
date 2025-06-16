@@ -18,7 +18,7 @@ import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 
 const BreadCrumbs = ({ slug, product_path }) => {
-  const {getNameBySlug} = useSolanaCategories();
+  const { getNameBySlug } = useSolanaCategories();
   if (!slug && !product_path) {
     return;
   }
@@ -48,22 +48,25 @@ const CategoryChips = ({ categories }) => {
     getProductCategories(categories)
   );
 
-  if (!categories) {
+  if (!categories || localCategories.length === 0) {
     return;
   }
 
   return (
-    <div className="flex gap-[5px] flex-wrap">
-      {localCategories &&
-        localCategories.length > 0 &&
-        localCategories.map((v, i) => (
-          <div
-            key={`category-tag-${createSlug(v)}`}
-            className="text-[9px] py-[4px] px-[8px] bg-theme-200 text-theme-700 font-semibold rounded-full"
-          >
-            {v}
-          </div>
-        ))}
+    <div>
+      <div className="font-bold text-sm lg:text-lg mb-[15px]">Category</div>
+      <div className="flex gap-[5px] flex-wrap">
+        {localCategories &&
+          localCategories.length > 0 &&
+          localCategories.map((v, i) => (
+            <div
+              key={`category-tag-${createSlug(v)}`}
+              className="text-[9px] py-[4px] px-[8px] bg-theme-200 text-theme-700 font-semibold rounded-full"
+            >
+              {v}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
@@ -252,14 +255,6 @@ export default function Product({ params }) {
     handle: product_path,
   });
 
-  // const {
-  //   product: fetchedProduct,
-  //   loading,
-  //   error,
-  // } = useESFetchProduct({
-  //       product_url: slug,
-  //     });
-
   useEffect(() => {
     if (error) {
       notFound();
@@ -299,14 +294,9 @@ export default function Product({ params }) {
                 <ProductToCart product={product} loading={loading} />
                 <div className="py-[30px] flex flex-col gap-[15px]">
                   <ProductOptions product={product} slug={slug} />
-                  <div>
-                    <div className="font-bold text-sm lg:text-lg mb-[15px]">
-                      Category
-                    </div>
-                    {product?.product_category && (
-                      <CategoryChips categories={product.product_category} />
-                    )}
-                  </div>
+                  {product?.product_category && (
+                    <CategoryChips categories={product.product_category} />
+                  )}
                 </div>
               </div>
             </div>

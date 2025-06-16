@@ -7,6 +7,9 @@ import { formatPrice } from "@/app/lib/helpers";
 import { ICRoundPhone } from "../icons/lib";
 import { useQuickView } from "@/app/context/quickview";
 import { useSolanaCategories } from "@/app/context/category";
+
+import CompareButton from "@/app/components/atom/ProductCardCompareButton"
+
 import FicDropDown from "@/app/components/atom/FicDropDown";
 
 const ProductCardPriceDisplay = ({ price_details }) => {
@@ -72,6 +75,9 @@ const ProductCard = ({ hit }) => {
         <div
           className={`w-full flex items-center justify-center h-[230px] overflow-hidden relative bg-white`}
         >
+          <div className="absolute top-0 right-0 p-1">
+            <CompareButton product={hit}/>
+          </div>
           {hit?.images &&
             Array.isArray(hit?.images) &&
             hit?.images?.length > 0 &&

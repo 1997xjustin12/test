@@ -6,11 +6,12 @@ import { useSearch } from "@/app/context/search";
 
 const HomeSearch = ({ main, controlled_height }) => {
   const {
+    getRecentSearch,
+    setRecentSearch,
     searchQuery,
     setSearch,
     searchResults,
     loading,
-    mainIsActive,
     setMainIsActive,
     redirectToSearchPage,
   } = useSearch();
@@ -35,6 +36,7 @@ const HomeSearch = ({ main, controlled_height }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
 
   useEffect(() => {
     const mainActive = main && openSearch;
@@ -70,7 +72,11 @@ const HomeSearch = ({ main, controlled_height }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleOptionSelect = () => {
+  const handleOptionSelect = async() => {
+    const recents = await getRecentSearch();
+    if(recents && searchQuery.length > 3){
+      setRecentSearch([...new Set([...recents, searchQuery])]);
+    }
     setOpenSearch(false);
   }
   

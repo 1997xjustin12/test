@@ -7,18 +7,9 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-// import useFetchProducts from "@/app/hooks/useFetchProducts";
-import useESFetchProducts from "@/app/hooks/useESFetchProducts";
-// import {
-//   solana_brands,
-//   flatCategories,
-//   bc_categories,
-// } from "@/app/lib/category-helpers";
-import { useRouter } from "next/navigation";
-import { getCategoryIds } from "@/app/lib/helpers";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
-// useful console that logs keywords for all main categories
-// console.log("solanaCategories", solana_categories.flatMap(i=> i.key_words))
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const exclude_brands = ["Bull Outdoor Products"];
 
@@ -28,8 +19,11 @@ export const useSearch = () => {
 };
 
 export const SearchProvider = ({ children }) => {
-  const { solana_categories, flatCategories } = useSolanaCategories();
+  const recentSearchKey = "recent_searches";
+  const { flatCategories } = useSolanaCategories();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
@@ -39,6 +33,8 @@ export const SearchProvider = ({ children }) => {
   const [productResultsCount, setProductResultsCount] = useState(0);
 
   const [searchPageProductCount, setSearchPageProductCount] = useState(0);
+
+  const [lForage, setLForage] = useState(null);
 
   const oldSearchResults = useRef([
     {
@@ -83,7 +79,6 @@ export const SearchProvider = ({ children }) => {
   const [brandResults, setBrandResults] = useState([]);
 
   // new fetch function
-
   const fetchProducts = async (query_string) => {
     try {
       const trim_query = query_string.trim();
@@ -163,13 +158,6 @@ export const SearchProvider = ({ children }) => {
     }
   };
 
-  // const {
-  //   products: productResults,
-  //   // loading,
-  //   pagination: productPagination,
-  //   refetch: refetchProducts,
-  // } = useESFetchProducts({ sort: "name.keyword:asc" });
-
   const getSectionData = (section) => {
     switch (section) {
       case "recent":
@@ -186,122 +174,138 @@ export const SearchProvider = ({ children }) => {
   const setSearch = (search_string) => {
     setSearchQuery(search_string);
     fetchProducts(search_string);
-    // const categoryIds = getCategoryIds(
-    //   "search",
-    //   flatCategories,
-    //   bc_categories
-    // ).join(",");
-    // refetchProducts((prev) => {
-    //   if (search_string === "") {
-    //     return { sort: "name.keyword:asc", categories: categoryIds };
-    //   } else {
-    //     return {
-    //       q: search_string,
-    //       sort: "name.keyword:asc",
-    //       categories: categoryIds,
-    //     };
-    //   }
-    // });
     getSearchResults(search_string);
   };
 
-  const getSearchResults = (query) => {
-    setRecentResults(() => {
-      const recentLS = localStorage.getItem("recent_searches");
-      const recent = recentLS
-        ? Array.isArray(JSON.parse(recentLS))
-          ? JSON.parse(recentLS)
-          : []
-        : [];
-      if (query === "") {
-        return recent;
-      } else {
-        return recent
-          .filter((i) => i.includes(query))
-          .sort((a, b) => {
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0;
-          });
-      }
-    });
-    setCategoryResults((prev) => {
-      if (query === "") {
-        // return base categories only
-        return flatCategories
-          .filter(({ nav_type }) => nav_type === "category")
-          .map((i) => ({
-            name: i?.name || i?.title,
-            url: i?.menu?.href || i?.url,
-          }))
-          .sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          });
-      } else {
-        return flatCategories
-          .filter(({ nav_type }) => nav_type === "category")
-          .map((i) => ({
-            name: i?.name || i?.title,
-            url: i?.menu?.href || i?.url,
-          }))
-          .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
-          .sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          });
-      }
-    });
-    setBrandResults((prev) => {
-      if (query === "") {
-        return flatCategories
-          .filter(({ nav_type }) => nav_type === "brand")
-          .map((i) => ({
-            name: i?.name || i?.title,
-            url: i?.menu?.href || i?.url,
-          }))
-          .sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          });
-      } else {
-        return flatCategories
-          .filter(({ nav_type }) => nav_type === "brand")
-          .map((i) => ({
-            name: i?.name || i?.title,
-            url: i?.menu?.href || i?.url,
-          }))
-          .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
-          .sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          });
-      }
-    });
+  const getSearchResults = async (query) => {
+    try {
+      const recentLS = await getRecentSearch();
+      const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
+
+      const results =
+        query === ""
+          ? recent
+          : recent
+              .filter((i) => i.includes(query))
+              .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+
+      setRecentResults(results);
+
+      setCategoryResults((prev) => {
+        if (query === "") {
+          // return base categories only
+          return flatCategories
+            .filter(({ nav_type }) => nav_type === "category")
+            .map((i) => ({
+              name: i?.name || i?.title,
+              url: i?.menu?.href || i?.url,
+            }))
+            .sort((a, b) => {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            });
+        } else {
+          return flatCategories
+            .filter(({ nav_type }) => nav_type === "category")
+            .map((i) => ({
+              name: i?.name || i?.title,
+              url: i?.menu?.href || i?.url,
+            }))
+            .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
+            .sort((a, b) => {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            });
+        }
+      });
+      setBrandResults((prev) => {
+        if (query === "") {
+          return flatCategories
+            .filter(({ nav_type }) => nav_type === "brand")
+            .map((i) => ({
+              name: i?.name || i?.title,
+              url: i?.menu?.href || i?.url,
+            }))
+            .sort((a, b) => {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            });
+        } else {
+          return flatCategories
+            .filter(({ nav_type }) => nav_type === "brand")
+            .map((i) => ({
+              name: i?.name || i?.title,
+              url: i?.menu?.href || i?.url,
+            }))
+            .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
+            .sort((a, b) => {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const redirectToSearchPage = () => {
     router.push(`${BASE_URL}/search?query=${searchQuery}`);
   };
 
+  const getRecentSearch = async () => {
+    try {
+      return await lForage.getItem(recentSearchKey);
+    } catch (error) {
+      console.log("[LocalForage] getRecentSearch error:", error);
+      return null;
+    }
+  };
+
+  const setRecentSearch = async (value) => {
+    try {
+      await lForage.setItem(recentSearchKey, value);
+    } catch (error) {
+      console.log("[LocalForage] setRecentSearch error:", error);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setRecentResults((prev) => {
-        const recentLS = localStorage.getItem("recent_searches");
-        if (recentLS) {
-          return Array.isArray(JSON.parse(recentLS))
-            ? JSON.parse(recentLS)
-            : [];
-        } else {
-          return [];
-        }
-      });
+      import("@/app/lib/localForage")
+        .then((module) => {
+          setLForage(module);
+          // set initial recent serach value
+          setRecentResults((prev) => {
+            const recentLS = module.getItem(recentSearchKey);
+            if (recentLS) {
+              return Array.isArray(recentLS) ? recentLS : [];
+            } else {
+              return [];
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error loading localForage module:", error);
+        });
     }
   }, []);
+
+  // set url query string on the input if location =/search
+  useEffect(() => {
+    const urlQuery = searchParams.get("query");
+    if (pathname === "/search" && urlQuery) {
+        setSearch(urlQuery);
+    }
+  }, [pathname, searchParams]);
+
+  useEffect(() => {
+    console.log("recentResults: ", recentResults);
+  }, [recentResults]);
 
   const searchResults = useMemo(() => {
     if (!loading) {
@@ -378,10 +382,13 @@ export const SearchProvider = ({ children }) => {
         searchResults,
         noResults,
         searchPageProductCount,
+        recentSearchKey,
         setSearch,
         setSearchPageProductCount,
         setMainIsActive,
         redirectToSearchPage,
+        getRecentSearch,
+        setRecentSearch,
       }}
     >
       {children}

@@ -15,9 +15,9 @@ function SearchResultSection({ section, onOptionSelect }) {
   const [sectionData, setSectionData] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
-  const handleSetSearch = (query) => {
-    setSearch(query);
-  };
+  // const handleSetSearch = (query) => {
+  //   setSearch(query);
+  // };
 
   useEffect(() => {
     // console.log("sectionComponennt:", section);
@@ -45,18 +45,21 @@ function SearchResultSection({ section, onOptionSelect }) {
         <div className="bg-stone-200 font-bold text-sm py-1 px-3">
           {section.label}
         </div>
-        <div>
+        <div className="w-full">
           { sectionData && section.prop === "recent" &&
             sectionData.map((recent, index) => (
-              <div
+              <Link
+                prefetch={false}
+                onClick={handleOptionClick}
                 key={`recent-search-${index}`}
-                className="group hover:bg-stone-50 px-2 py-[5px]"
-                onClick={() => handleSetSearch(recent)}
+                href={`${BASE_URL}/search?query=${recent}`}
               >
-                <div className="text-[14px] group-hover:text-theme-600">
-                  {recent}
+                <div className="group hover:bg-stone-50 px-2 py-[5px]">
+                  <div className="text-[14px] group-hover:text-theme-600">
+                    {recent}
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
 
           { sectionData && section.prop === "product" &&
@@ -104,7 +107,7 @@ function SearchResultSection({ section, onOptionSelect }) {
                 key={`cat-result-${category.url}`}
                 href={`${BASE_URL}/${category.url}`}
               >
-                <div className="group hover:bg-stone-200 px-2 py-[5px]">
+                <div className="group hover:bg-stone-50 px-2 py-[5px]">
                   <div className="text-[14px] group-hover:text-theme-600">
                     {category.name}
                   </div>
@@ -122,7 +125,7 @@ function SearchResultSection({ section, onOptionSelect }) {
                 key={`brand-result-${brand.url}`}
                 href={`${BASE_URL}/${brand.url}`}
               >
-                <div className="w-full group hover:bg-stone-200 px-2 py-[5px]">
+                <div className="w-full group hover:bg-stone-50 px-2 py-[5px]">
                   <div className="text-[14px] group-hover:text-theme-600">
                     {brand.name}
                   </div>

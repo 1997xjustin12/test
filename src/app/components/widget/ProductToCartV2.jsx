@@ -16,6 +16,7 @@ import {
 } from "../icons/lib";
 
 import { useSolanaCategories } from "@/app/context/category";
+import CompareButton from "@/app/components/atom/ProductToCartCompareButton"
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
@@ -39,6 +40,8 @@ const ProductToCart = ({ product, loading }) => {
   const [ATCLoading, setATCLoading] = useState(false);
   const [filteredCategoryIds, setFilteredCategoryIds] = useState([]);
 
+
+  console.log("[PRODUCT DATA]", product)
   useEffect(() => {
     // if (product?.categories.length > 0) {
     //   let filterCat = [];
@@ -241,7 +244,7 @@ const ProductToCart = ({ product, loading }) => {
               </button>
             </div>
           </div>
-          <div className="font-bold text-white">
+          <div className="font-bold text-white flex gap-[10px]">
             <button
               className={`bg-pallete-green rounded-full py-[5px] px-[20px] ${
                 ATCLoading
@@ -272,6 +275,7 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               </div>
             </button>
+            <CompareButton product={productData} />
           </div>
         </>
       }

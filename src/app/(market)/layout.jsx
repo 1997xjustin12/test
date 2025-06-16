@@ -10,8 +10,8 @@ import Footer from "@/app/components/section/Footer";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
 import { SearchProvider } from "@/app/context/search";
-import { FilterProvider } from "@/app/context/filter";
 import { CategoriesProvider } from "@/app/context/category";
+import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
 
@@ -53,7 +53,7 @@ export default async function MarketLayout({ children }) {
         </div>
         <CategoriesProvider categories={menu}>
           <CartProvider>
-            <FilterProvider>
+            <CompareProductsProvider>
               <SearchProvider>
               <SessionWrapper>
                 <TuiNavBar logo={redisLogo} menu={menu} />
@@ -63,7 +63,7 @@ export default async function MarketLayout({ children }) {
                 </QuickViewProvider>
                 </SessionWrapper>
               </SearchProvider>
-            </FilterProvider>
+            </CompareProductsProvider>
           </CartProvider>
         </CategoriesProvider>
         <Footer />
