@@ -122,7 +122,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                         View Item
                       </Link>
 
-                      <button
+                      {/* <button
                         onClick={() => handleAddToCart(data)}
                         className={`w-full bg-theme-600 hover:bg-theme-500 text-white p-2 font-semibold text-sm h-[38px] flex justify-center items-center ${
                           addToCartLoading
@@ -139,7 +139,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                         ) : (
                           "Add to cart"
                         )}
-                      </button>
+                      </button> */}
                     </div>
                     <Link
                       href={`tel:(888) 575-9720`}
