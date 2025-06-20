@@ -2,6 +2,9 @@ import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 
 
+export function areAllKeysEmpty(obj, keys) {
+  return keys.every(key => !obj[key] || obj[key] === "");
+}
 
 export function getSum(array, prop) {
   return array.reduce((sum, item) => sum + item?.[prop], 0);

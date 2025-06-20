@@ -16,6 +16,7 @@ import { createSlug, formatPrice } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
+import CompareProductsTable from "@/app/components/molecule/CompareProductsTable"
 
 const BreadCrumbs = ({ slug, product_path }) => {
   const { getNameBySlug } = useSolanaCategories();
@@ -306,6 +307,14 @@ export default function Product({ params }) {
               <ProductMetaTabs product={product} />
             </div>
           </div>
+          {
+            product && product?.sp_similar_products && product?.handle && 
+          <div className="p-4">
+            <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
+              <CompareProductsTable similar_products={product.sp_similar_products} product={product}/>
+            </div>
+          </div>
+          }
           <FaqSection />
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
