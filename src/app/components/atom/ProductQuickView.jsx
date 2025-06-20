@@ -200,14 +200,14 @@ function ProductQuickView({ data, product_link, onClose }) {
                             <div className="text-xs font-semibold">Price</div>
                             <div>
                               <div className="flex gap-[10px] items-center">
-                                <div className="text-stone-500 line-through">
-                                  {formatPrice(data?.variants?.[0]?.compare_at_price)}
-                                </div>
                                 <div className="font-semibold text-base md:text-lg text-theme-600">
-                                  {formatPrice(data?.variants?.[0]?.price)}
+                                  {"$"+formatPrice(data?.variants?.[0]?.price)}
                                 </div>
+                                <small className="text-stone-500 line-through">
+                                  {"$"+formatPrice(data?.variants?.[0]?.compare_at_price)}
+                                </small>
                               </div>
-                              <div className="text-lg font-semibold text-theme-600">
+                              <div className="text-theme-600 font-medium">
                                 Save $
                                 {formatPrice(data?.variants?.[0]?.compare_at_price - data?.variants?.[0]?.price)}
                               </div>
