@@ -160,7 +160,7 @@ const ProductToCart = ({ product, loading }) => {
           <div className="flex items-center gap-[20px]">
             {productData?.variants?.[0]?.price > 0 &&
             productData?.variants?.[0]?.compare_at_price > productData?.variants?.[0]?.price ? (
-              <div className="flex flex-col gap-[10px]">
+              <div className="flex flex-col gap-[0px]">
                 <div className="flex gap-[10px]">
                   <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
                     ${formatPrice(productData?.variants?.[0]?.price)}
@@ -169,11 +169,9 @@ const ProductToCart = ({ product, loading }) => {
                     ${formatPrice(productData?.variants?.[0]?.compare_at_price)}
                   </small>
                 </div>
-                <div>
-                  <div className="font-semibold border-green-500 text-green-500 w-auto py-1 px-2 inline-block border-2">
-                    Save $
-                    {formatPrice(productData?.variants?.[0]?.compare_at_price - productData?.variants?.[0]?.price)}
-                  </div>
+                <div className="text-black">
+                  Save $
+                  {formatPrice(productData?.variants?.[0]?.compare_at_price - productData?.variants?.[0]?.price)}
                 </div>
               </div>
             ) : (
