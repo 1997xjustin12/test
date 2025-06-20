@@ -162,12 +162,12 @@ const ProductToCart = ({ product, loading }) => {
             productData?.variants?.[0]?.compare_at_price > productData?.variants?.[0]?.price ? (
               <div className="flex flex-col gap-[10px]">
                 <div className="flex gap-[10px]">
-                  <div className="text-2xl md:text-3xl font-semibold text-stone-400 line-through">
-                    ${formatPrice(productData?.variants?.[0]?.compare_at_price)}
-                  </div>
                   <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
                     ${formatPrice(productData?.variants?.[0]?.price)}
                   </div>
+                  <small className="text-sm md:text-base font-semibold text-stone-400 line-through">
+                    ${formatPrice(productData?.variants?.[0]?.compare_at_price)}
+                  </small>
                 </div>
                 <div>
                   <div className="font-semibold border-green-500 text-green-500 w-auto py-1 px-2 inline-block border-2">
@@ -181,7 +181,7 @@ const ProductToCart = ({ product, loading }) => {
                 ${formatPrice(productData?.variants?.[0]?.price)}
               </div>
             )}
-            <div className="font-bold">QTY</div>
+            {/* <div className="font-bold">QTY</div>
             <div className="flex items-center">
               <button
                 onClick={() => handleQuantityButtons("dec")}
@@ -241,10 +241,10 @@ const ProductToCart = ({ product, loading }) => {
                   />
                 </svg>
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="font-bold text-white flex gap-[10px]">
-            <button
+            {/* <button
               className={`bg-pallete-green rounded-full py-[5px] px-[20px] ${
                 ATCLoading
                   ? "pointer-events-none relative"
@@ -274,10 +274,21 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               </div>
             </button>
+             */}
+            <FicDropDown>
+            <div className="bg-pallete-green text-white rounded-full py-[5px] px-[50px] flex flex-col items-center justify-center">
+              <div className="text-2xl">Call to Order</div>
+              <div
+                className="hover:underline flex gap-[3px]"
+              >
+                <ICRoundPhone width={20} height={20} /> (888) 575-9720
+              </div>
+            </div>
+            </FicDropDown>
           </div>
         </>
       }
-      <FicDropDown>
+      {/* <FicDropDown>
       <div className="text-blue-500 text-sm my-[5px] flex items-center gap-[7px]">
         {
           !isPriceVisible(productData?.product_category, productData?.brand)  ?
@@ -291,7 +302,7 @@ const ProductToCart = ({ product, loading }) => {
           <ICRoundPhone width={20} height={20} /> (888) 575-9720
         </div>
       </div>
-      </FicDropDown>
+      </FicDropDown> */}
       <div className="flex  flex-col md:flex-row md:items-center gap-[10px] md:gap-[25px]">
         <div className="flex items-center font-bold gap-[8px]">
           <div>
