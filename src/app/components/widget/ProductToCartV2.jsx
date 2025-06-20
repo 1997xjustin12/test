@@ -16,7 +16,6 @@ import {
 } from "../icons/lib";
 
 import { useSolanaCategories } from "@/app/context/category";
-import CompareButton from "@/app/components/atom/ProductToCartCompareButton"
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
@@ -275,7 +274,6 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               </div>
             </button>
-            <CompareButton product={productData} />
           </div>
         </>
       }
