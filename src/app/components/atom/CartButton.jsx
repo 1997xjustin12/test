@@ -6,6 +6,9 @@ import { useCart } from '@/app/context/cart';
 
 export default function CartButton({className}) {
   const { cartItemsCount } = useCart();
+
+  return null; // temporary hide cart button
+
   return (
     <Link
       href={`${BASE_URL}/cart`}

@@ -27,6 +27,8 @@ export default function MyAccountButton({ className }) {
 
   if (loading) return null;
 
+  return null; // temporary hide my-account button
+
   return (
     <div className={`relative inline-block ${className}`}>
       <button
