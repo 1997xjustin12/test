@@ -25,6 +25,7 @@ function CompareProductsTable({ similar_products, product }) {
 
 
       const tmp_obj = tmp.map(item=>{
+        if (!item || typeof item !== 'object') return {}; // skip this item
         const item_keys = Object.keys(item);
         const include_keys = item_keys.filter(item=> item.includes("seo_meta"));
         return include_keys.reduce(
