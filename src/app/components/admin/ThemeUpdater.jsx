@@ -127,7 +127,7 @@ function ThemeUpdater() {
       <div className="p-3">
         <div className="font-bold text-lg flex gap-[10px] items-center">
           <div
-            className={`rounded-full h-[15px] w-[15px] aspect-1 bg-${activeColor}-500 transition-all duration-700 ease-in-out`}
+            className={`rounded-full h-[15px] w-[25px] aspect-1 bg-${activeColor}-500 transition-all duration-700 ease-in-out`}
           ></div>
           <div>Theme</div>
         </div>
@@ -136,22 +136,22 @@ function ThemeUpdater() {
           {colors_obj.map((i) => (
             <button key={i.name} onClick={() => handleColorChange(i.name)}>
               <div
-                className={`h-[50px] w-[50px] aspect-1 border-4 transition-all duration-500 ease-in-out ${
+                className={`h-[130px] w-[130px] aspect-1 border-4 transition-all duration-500 ease-in-out ${
                   i.bg500
                 } relative ${selected === i.name ? i.b900 : i.b500}`}
               >
                 <div
                   className={`text-white ${
                     i.bg900
-                  } flex items-center justify-center w-[18px] h-[18px] absolute top-[-4px] right-[-4px] transition-all duration-500 ease-in-out ${
+                  } flex items-center justify-center w-[30px] h-[30px] absolute top-[-4px] right-[-4px] transition-all duration-500 ease-in-out ${
                     selected === i.name ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  <MSLCheck width={15} height={15} />
+                  <MSLCheck width={25} height={25} />
                 </div>
               </div>
               <div
-                className={`text-[8px] uppercase font-semibold text-center ${i.text500}`}
+                className={`text-base uppercase font-semibold text-center ${i.text500}`}
               >
                 {i.name}
                 </div>
