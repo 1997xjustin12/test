@@ -9,7 +9,18 @@ import MenuItem from "@/app/components/admin/MenuUpdaterBuilderItemV3";
 import MenuCreate from "@/app/components/admin/MenuUpdaterCreateV2";
 import { generateId, createSlug } from "@/app/lib/helpers";
 import { keys, redisGet, redisSet } from "@/app/lib/redis";
+import dynamic from 'next/dynamic';
 
+// Import SortableTree and other components only on the client
+const SortableTree = dynamic(
+  () => import('dnd-kit-sortable-tree').then((mod) => mod.SortableTree),
+  { ssr: false }
+);
+
+const SimpleTreeItemWrapper = dynamic(
+  () => import('dnd-kit-sortable-tree').then((mod) => mod.SimpleTreeItemWrapper),
+  { ssr: false }
+);
 
 const menuListKey = keys.menu_list_shopify.value;
 const activeMenuKey = keys.active_shopify_menu.value;
@@ -71,6 +82,27 @@ function MenuUpdaterV3() {
   const [alertType, setAlertType] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
 
+  function recalibrateOrder(treeArray) {
+      function updateNodeOrder(nodes, depth = 0) {
+          nodes.forEach((node, index) => {
+              node.order = index;
+              node.depth = depth;
+              if (Array.isArray(node.children)) {
+                  updateNodeOrder(node.children, depth + 1);
+              }
+          });
+      }
+
+      updateNodeOrder(treeArray);
+      return treeArray;
+  }
+
+
+  const handleSortableTreeChange = (new_value) => {
+    const reorderedMenu = recalibrateOrder(new_value);
+    setMenu(reorderedMenu);
+  }
+
   const showAlertMessage = (type, message) => {
     setAlertType(type);
     setAlertMessage(message);
@@ -117,8 +149,10 @@ function MenuUpdaterV3() {
           `You set "${custom_page}", But it is already taken please choose another.`
         );
       } else {
+        const generated_id = generateId();
         const custom_menu_item = {
-          menu_id: generateId(),
+          id: generated_id,
+          menu_id: generated_id,
           parent_id: "",
           key: custom_page,
           name: custom_page,
@@ -187,8 +221,10 @@ function MenuUpdaterV3() {
   const handleAddMenuItem = () => {
     const selected = originMenu.filter((i) => i.selected);
     // need to format object from here
+    const generated_id = generateId();
     const mapped = selected.map((i) => ({
-      menu_id: generateId(),
+      id: generated_id,
+      menu_id: generated_id,
       parent_id: "",
       key: i.key,
       name: i.key,
@@ -389,13 +425,7 @@ function MenuUpdaterV3() {
         );
         const newOrder = updateOrder(siblings, item.menu_id, order);
         // console.log("newOrderSiblings", newOrder);
-        setMenu((prev) =>
-          updateChildren(
-            prev,
-            item.parent_id,
-            newOrder
-          )
-        );
+        setMenu((prev) => updateChildren(prev, item.parent_id, newOrder));
       } else {
         setMenu((prev) => updateOrder(prev, item.menu_id, order));
       }
@@ -509,20 +539,37 @@ function MenuUpdaterV3() {
     }));
   }
 
+  // insert id in the menu tree
+  function mapTreeWithId(items) {
+    return items.map((item) => {
+      const mappedItem = {
+        ...item,
+        id: item.menu_id, // 👈 Add id property
+      };
+
+      if (item.children && item.children.length > 0) {
+        mappedItem.children = mapTreeWithId(item.children); // Recursively map children
+      }
+
+      return mappedItem;
+    });
+  }
   useEffect(() => {
     updateMenuList();
     // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
     redisGet(defaultMenuKey).then((data) => {
       // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
-      setMenu([
+
+      const nav_data = mapTreeWithId([
         HomeNavItem,
         ...data.filter(({ name }) => !["Home", "Search"].includes(name)),
       ]);
+
+      console.log("[TEST] nav_data", nav_data);
+
+      setMenu(nav_data);
       setSearchList(
-        flattenMenu([
-          HomeNavItem,
-          ...data.filter(({ name }) => !["Home", "Search"].includes(name)),
-        ])
+        flattenMenu(nav_data)
       );
     });
     Promise.all([
@@ -671,8 +718,22 @@ function MenuUpdaterV3() {
                         />
                         <div className="w-[calc(100%-30px)]">
                           <div className=" text-xs">
-                            <div className="font-medium line-clamp-1" title={item.key}>{highlightText(item.key, originMenuSearch)}{" "}</div>
-                            <div className={`${item.nav_type === "category" && "text-orange-700"} ${item.nav_type === "brand" && "text-blue-700"}` }>{item.nav_type}</div>
+                            <div
+                              className="font-medium line-clamp-1"
+                              title={item.key}
+                            >
+                              {highlightText(item.key, originMenuSearch)}{" "}
+                            </div>
+                            <div
+                              className={`${
+                                item.nav_type === "category" &&
+                                "text-orange-700"
+                              } ${
+                                item.nav_type === "brand" && "text-blue-700"
+                              }`}
+                            >
+                              {item.nav_type}
+                            </div>
                             <div>({item.doc_count})</div>
                           </div>
                         </div>
@@ -705,7 +766,7 @@ function MenuUpdaterV3() {
                 />
               </div>
 
-              <div className="p-1">
+              {/* <div className="p-1">
                 <div>
                   {scrollToSearch === ""
                     ? menu
@@ -765,6 +826,43 @@ function MenuUpdaterV3() {
                           />
                         </div>
                       ))}
+                </div>
+              </div> */}
+
+              {/* test dnd sortable tree */}
+
+              <div className="p-1">
+                <div>
+                  {scrollToSearch === "" ? (
+                    <SortableTree
+                      items={menu.map(item=> ({...item, id:item?.menu_id}))}
+                      onItemsChanged={handleSortableTreeChange}
+                      TreeItemComponent={React.forwardRef((props, ref) => (
+                        <SimpleTreeItemWrapper {...props} ref={ref}>
+                          {
+                            // console.log("[TEST] props",props)
+                            <MenuItem
+                              item={props?.item}
+                              itemList={menu}
+                              onChange={handleMenuItemChanges}
+                              search={scrollToSearch}
+                            />
+                          }
+                        </SimpleTreeItemWrapper>
+                      ))}
+                    />
+                  ) : (
+                    searchListObj.map((item, index) => (
+                      <div key={`menu-item-${item.menu_id}`}>
+                        <MenuItem
+                          item={item}
+                          itemList={searchList}
+                          onChange={handleMenuItemChanges}
+                          search={scrollToSearch}
+                        />
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

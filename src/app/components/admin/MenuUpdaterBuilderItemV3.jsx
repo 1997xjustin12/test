@@ -11,6 +11,12 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
   const [order, setOrder] = useState(0);
   const [orderOptions, setOrderOptions] = useState([]);
 
+  const handleToggleItemForm = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setExpanded(prev=> !prev);
+  } 
+
   const handleRemoveItem = () => {
     if (
       confirm(
@@ -148,15 +154,15 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
   };
 
   return (
-    <div id={`scroll-to-menu-${item?.menu_id}`} className="scroll-to-section">
-      <div className="w-full text-left p-2 border-l border-b flex items-center justify-between">
+    <div id={`scroll-to-menu-${item?.menu_id}`} className="scroll-to-section w-full">
+      <div className="w-full text-left p-2 flex items-center justify-between">
         <div>
           <div className="font-semibold text-xs">
             {highlightText(item.name, search)}
           </div>
           <div className="text-[10px]">{item?.url?.path}</div>
         </div>
-        <button onClick={() => setExpanded((prev) => !prev)}>
+        <button onClick={(e) => handleToggleItemForm(e)}>
           {expanded ? <MingcuteUpLine /> : <MingcuteDownLine />}
         </button>
       </div>
