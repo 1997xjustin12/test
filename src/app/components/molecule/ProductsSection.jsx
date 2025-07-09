@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, use } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
 import SPProductCard from "@/app/components/atom/ProductCard";
-
 import {
   InstantSearch,
   Hits,
@@ -19,6 +18,8 @@ import {
   SearchBox,
 } from "react-instantsearch";
 import Client from "@searchkit/instantsearch-client";
+import Link from "next/link";
+import Image from "next/image";
 
 // const es_index = "bigcommerce_products_3";
 const es_index = "solana_products";
@@ -62,6 +63,8 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const { setSearchPageProductCount } = useSearch();
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
+
+  console.log("[TEST] page_details", page_details);
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -170,6 +173,21 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                 </div>
               </DynamicWidgets>
             )}
+
+            
+            <div className="relative lg:w-[240px] h-[360px]">
+              <Link href={`tel:(888) 888-8888`} prefetch={false} className="">
+                <Image
+                  src="/images/banner/sub-banner-image.webp"
+                  alt={`Sub Banner Image`}
+                  className="object-contain"
+                  layout="fill"
+                  objectFit="contain"
+                  objectPosition="center"
+                  sizes="100vw"
+                />
+              </Link>
+            </div>
           </div>
           <div className="search-panel__results pfd-product-section">
             <CurrentRefinements />

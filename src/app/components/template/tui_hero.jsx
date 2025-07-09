@@ -19,11 +19,12 @@ export default function Hero({ data }) {
 
   return (
     <div
-      className={`container mx-auto flex flex-col md:flex-row ${
+      className={`mx-auto flex flex-col md:flex-row ${
         data ? "fade-in" : "opacity-0"
       }`}
     >
-      <div className={`w-full ${data?.children && data?.children.length > 0 ? 'md:w-[calc(100%-370px)]':'md:w-full'}`}>
+      {/* <div className={`w-full ${data?.children && data?.children.length > 0 ? 'md:w-[calc(100%-370px)]':'md:w-full'}`}> */}
+      <div className={`w-full md:w-full`}>
         <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)] md:max-h-[550px]">
           {
             <Image
@@ -38,34 +39,32 @@ export default function Hero({ data }) {
           }
           {/* <RenderBanner img={useBanner} /> */}
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-            <div className="text-center flex justify-center">
+            <div className="container text-center flex justify-center">
               <div className="px-[20px] py-[7px]">
-                <div>
-                  <h1 className="text-balance text-md font-extrabold tracking-wide text-white md:text-5xl text-shadow-lg">
-                    {data?.banner?.title}
-                  </h1>
-                  <h2 className="text-xs md:text-base text-balance mt-1 tracking-wide text-white text-shadow-lg">
-                    {data?.banner?.tag_line}
-                  </h2>
+                <div className="flex flex-col items-center justify-center">
+                  <div className="w-[90%]">
+                    <h1 className="text-balance text-md tracking-wide text-white md:text-4xl drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] italic">
+                      {data?.banner?.title}
+                    </h1>
+                  </div>
+                  <div className="w-[75%]">
+                    <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-justify">
+                      {data?.banner?.tag_line}
+                    </h2>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {data?.name !== "Home" && (
+        {/* {data?.name !== "Home" && (
           <div className="flex-col flex lg:flex-row">
             <div className="w-full lg:w-[calc(100%-250px)] p-[20px]">
               <div className="flex flex-col gap-[20px]">
-                {/* <div className="border-theme-500 border-l-4 text-2xl pl-3 font-bold text-stone-600">
-                  {data?.name}
-                </div> */}
                 <div className="text-sm text-stone-600 font-light lg:text-lg">
                   {data?.banner?.description}
                 </div>
                 <div className="flex flex-col gap-[10px]">
-                  {/* <div className="uppercase text-xs text-theme-500">
-                      Link &gt;
-                    </div> */}
                   <hr />
                   <div className="text-xs flex flex-col md:flex-row  lg:text-lg">
                     <div className="font-bold text-stone-500">
@@ -99,9 +98,9 @@ export default function Hero({ data }) {
               </Link>
             </div>
           </div>
-        )}
+        )} */}
       </div>
-      {data?.children && data?.children.length > 0 && (
+      {/* {data?.children && data?.children.length > 0 && (
         <div className="w-full md:w-[370px] p-[25px] overflow-hidden">
           <div>
             <div className="text-stone-500 flex items-center gap-[4px]">
@@ -136,11 +135,8 @@ export default function Hero({ data }) {
                               alt={`sub-category-${i.url}`}
                               className="w-[80px] h-[80px] object-cover"
                               layout="fill"
-                              objectFit="cover" // Ensures the image covers the parent while maintaining aspect ratio
+                              objectFit="cover" 
                               objectPosition="center"
-                              // priority={true}
-                              // width={1000}
-                              // height={0}
                             />
                           </div>
                           <div
@@ -163,7 +159,7 @@ export default function Hero({ data }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

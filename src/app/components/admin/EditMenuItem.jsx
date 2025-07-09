@@ -42,17 +42,34 @@ const HeroContent = ({ hero, onChange }) => {
         <label className="inline-flex items-center space-x-2 cursor-pointer">
           <input
             type="checkbox"
+            name="notice-visible"
+            id="notice-visible"
+            checked={hero?.notice_visible || false}
+            onChange={onChange}
             className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
           />
-          <span className="text-gray-700">Call For Best Pricing</span>
+          <span className="text-gray-700">Enable Hero Notice</span>
         </label>
       </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="notice-html">Hero Notice HTML</label>
+        <textarea
+          name="notice-html"
+          id="notice-html"
+          value={hero?.notice_html || ""}
+          onChange={onChange}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        ></textarea>
+      </div>
+
+      <div className="border-t border-gray-300 my-4"></div>
+
       <div className="flex flex-col gap-1">
         <label htmlFor="main-text">Main Text</label>
         <textarea
           name="main-text"
           id="main-text"
-          value={hero?.main_text || ""}
+          value={hero?.title || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         ></textarea>
@@ -62,7 +79,7 @@ const HeroContent = ({ hero, onChange }) => {
         <textarea
           name="sub-text"
           id="sub-text"
-          value={hero?.sub_text || ""}
+          value={hero?.tag_line || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         ></textarea>
@@ -136,11 +153,11 @@ const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
           )}
         </div>
         <div className="flex gap-[10px] items-center">
-          <button onClick={handleFAQDelete}>delete</button>|{" "}
+          <button onClick={handleFAQDelete} className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">delete</button>|{" "}
           {isEditing ? (
-            <button onClick={handleFAQUpdate}>update</button>
+            <button onClick={handleFAQUpdate}  className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">update</button>
           ) : (
-            <button onClick={() => setIsEditing((prev) => true)}>edit</button>
+            <button onClick={() => setIsEditing((prev) => true)}  className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">edit</button>
           )}
         </div>
       </div>
@@ -271,10 +288,11 @@ function EditMenuItem({ menu_id }) {
   const [isSaving, setIsSaving] = useState(false);
   const [menuItem, setMenuItem] = useState(null);
   const [tabs, setTabs] = useState([
-    { id: "meta", label: "Page Meta", isActive: false },
+    { id: "meta", label: "SEO", isActive: false },
     { id: "hero", label: "Hero Section", isActive: true },
-    { id: "dynamic_sections", label: "Dynamic Sections", isActive: false },
-    { id: "faqs", label: "Page FAQs", isActive: false },
+    // { id: "dynamic_sections", label: "Dynamic Sections", isActive: false },
+    { id: "faqs", label: "FAQs", isActive: false },
+    { id: "setting", label: "Page Setting", isActive: false },
     // { id: "navigation", label: "Navigation", isActive: false },
   ]);
 
@@ -323,12 +341,23 @@ function EditMenuItem({ menu_id }) {
   };
 
   const handleHeroChange = (e) => {
-    const { name, value } = e.target;
-    // setMenuItem(prev => ({
-    //   ...prev,
-    //   ...(name === "meta-title" && { meta_title: value }),
-    //   ...(name === "meta-description" && { meta_description: value }),
-    // }));
+    const {name, value, checked} = e.target;
+
+    if(name === "main-text"){
+      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,title: value}}))
+    }
+
+    if(name === "sub-text"){
+      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,tag_line: value}}))
+    }
+    
+    if(name === "notice-visible"){
+      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,notice_visible: checked}}))
+    }
+    
+    if(name === "notice-html"){
+      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,notice_html: value}}))
+    }
   };
 
   const handlePriceVisibilityChange = (e) => {};
@@ -442,10 +471,7 @@ function EditMenuItem({ menu_id }) {
         )}
         {activeTab.id === "hero" && (
           <HeroContent
-            hero={{
-              main_text: menuItem?.banner?.title,
-              sub_text: menuItem?.banner?.tag_line,
-            }}
+            hero={menuItem?.banner}
             onChange={handleHeroChange}
           />
         )}

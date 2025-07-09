@@ -8,6 +8,7 @@ import MobileLoader from "@/app/components/molecule/MobileLoader";
 import Faq from "@/app/components/molecule/Faq"
 import Reviews from "@/app/components/molecule/Reviews"
 import CategoriesCarousel from "@/app/components/molecule/CategoriesCarousel"
+import HeroNotice from "@/app/components/atom/HeroNotice"
 
 const isShopify = true;
 
@@ -50,6 +51,7 @@ export default async function GenericCategoryPage({ params }) {
   return (
     <div>
       <MobileLoader isLoading={!pageData} />
+      <HeroNotice data={pageData}/>
       <TuiHero data={pageData} />
       {
         isShopify ?
@@ -59,7 +61,7 @@ export default async function GenericCategoryPage({ params }) {
       }
 
       <Reviews />
-      <CategoriesCarousel />
+      <CategoriesCarousel />  
       {
         pageData?.faqs &&
         pageData?.faqs?.visible &&

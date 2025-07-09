@@ -103,31 +103,56 @@ const DnDToggleButton = ({ enabled, onToggle }) => {
   );
 };
 
-const handleEditItemClick = (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-  // console.log("[TEST] triggered edit", event?.target?.href)
-  const href = event?.target?.href;
-  if (href) {
-    window.open(href, "_blank", "noopener,noreferrer");
-  }
-};
+const TreeItemWithEditLink = React.forwardRef(
+  ({ item, onDelete, ...props }, ref) => {
+    const handleEditItemClick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      // console.log("[TEST] triggered edit", event?.target?.href)
+      const href = event?.target?.href;
+      if (href) {
+        window.open(href, "_blank", "noopener,noreferrer");
+      }
+    };
 
-const TreeItemWithEditLink = React.forwardRef((props, ref) => (
-  <SimpleTreeItemWrapper {...props} ref={ref}>
-    <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
-      <div>{props?.item?.name}</div>
-      <Link
-        prefetch={false}
-        href={`${BASE_URL}/admin/menu-builder/edit/${props?.item?.menu_id}`}
-        className="text-blue-600"
-        onClick={handleEditItemClick}
-      >
-        Edit
-      </Link>
-    </div>
-  </SimpleTreeItemWrapper>
-));
+    const handleDeleteItemClick = (e, menu_id) => {
+      // const confirm = window.confirm("Data stored in this item will also get deleted. Do you want to continue?");
+      // if(confirm){
+      // }
+      e.preventDefault();
+      e.stopPropagation();
+      if (onDelete) {
+        onDelete(menu_id); // call parent handler with the item to delete
+      }
+    };
+
+    return (
+      <SimpleTreeItemWrapper {...props} ref={ref}>
+        <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
+          <div>{item?.name}</div>
+          <div className="flex gap-[40px]">
+            {item?.name !== "Home" && (
+              <button
+                className="text-red-900"
+                onClick={(e) => handleDeleteItemClick(e, item?.menu_id)}
+              >
+                Delete
+              </button>
+            )}
+            <Link
+              prefetch={false}
+              href={`${BASE_URL}/admin/menu-builder/edit/${item?.menu_id}`}
+              className="text-blue-600"
+              onClick={handleEditItemClick}
+            >
+              Edit
+            </Link>
+          </div>
+        </div>
+      </SimpleTreeItemWrapper>
+    );
+  }
+);
 
 TreeItemWithEditLink.displayName = "TreeItemWithEditLink";
 
@@ -319,10 +344,10 @@ function MenuUpdaterV3() {
       searchable: true,
       nav_visibility: true,
       nav_type: i.nav_type,
-      faqs:{
-        visible:false,
-        data:[],
-      }
+      faqs: {
+        visible: false,
+        data: [],
+      },
     })); // inject properties
     setMenu((prev) => {
       const newValue = [...prev, ...mapped];
@@ -530,6 +555,10 @@ function MenuUpdaterV3() {
       }
     });
   };
+
+  const handleDeleteItem = (data) => {
+    console.log("[TEST] handleDeleteItem", data)
+  }
 
   const handleSelectMenuChange = (e) => {
     const { value } = e.target;
@@ -833,11 +862,11 @@ function MenuUpdaterV3() {
                 </div>
               </div>
 
-              <div className="px-5 py-1  flex justify-end">
+              {/* <div className="px-5 py-1  flex justify-end">
                 <DnDToggleButton enabled={dndToggle} onToggle={setDndToggle} />
-              </div>
+              </div> */}
 
-              <div className="p-1">
+              {/* <div className="p-1">
                 <input
                   type="text"
                   placeholder="Search"
@@ -845,7 +874,7 @@ function MenuUpdaterV3() {
                   value={scrollToSearch}
                   onChange={(e) => handleInputChange("scrollToSearch", e)}
                 />
-              </div>
+              </div> */}
 
               {dndToggle ? (
                 <div className="p-1">
@@ -857,7 +886,12 @@ function MenuUpdaterV3() {
                           id: item?.menu_id,
                         }))}
                         onItemsChanged={handleSortableTreeChange}
-                        TreeItemComponent={TreeItemWithEditLink}
+                        TreeItemComponent={(props) => (
+                          <TreeItemWithEditLink
+                            {...props}
+                            onDelete={handleDeleteItem}
+                          />
+                        )}
                       />
                     ) : (
                       searchListObj.map((item, index) => (
