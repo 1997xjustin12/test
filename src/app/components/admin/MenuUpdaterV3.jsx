@@ -319,6 +319,10 @@ function MenuUpdaterV3() {
       searchable: true,
       nav_visibility: true,
       nav_type: i.nav_type,
+      faqs:{
+        visible:false,
+        data:[],
+      }
     })); // inject properties
     setMenu((prev) => {
       const newValue = [...prev, ...mapped];

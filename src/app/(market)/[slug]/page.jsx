@@ -5,6 +5,9 @@ import TuiHero from "@/app/components/template/tui_hero";
 import ProductsSection from "@/app/components/section/Products";
 import ShopifyProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
+import Faq from "@/app/components/molecule/Faq"
+import Reviews from "@/app/components/molecule/Reviews"
+import CategoriesCarousel from "@/app/components/molecule/CategoriesCarousel"
 
 const isShopify = true;
 
@@ -54,6 +57,18 @@ export default async function GenericCategoryPage({ params }) {
         :
       <ProductsSection category={slug} />
       }
+
+      <Reviews />
+      <CategoriesCarousel />
+      {
+        pageData?.faqs &&
+        pageData?.faqs?.visible &&
+        pageData?.faqs?.data &&
+        Array.isArray(pageData.faqs.data) &&
+        pageData.faqs.data.length > 0 &&
+        <Faq data={pageData.faqs.data}/>
+      }
+
     </div>
   );
 }

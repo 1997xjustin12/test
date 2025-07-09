@@ -87,9 +87,10 @@ const PriceVisibility = ({ visibility, onChange }) => {
   );
 };
 
-const FaqItem = ({ faq, onUpdate = ()=>{}, onDelete = ()=>{} }) => {
+const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
   const [isEditing, setIsEditing] = useState(false);
-
+  const [question, setQuestion] = useState(faq?.question || "");
+  const [answer, setAnswer] = useState(faq?.answer || "");
   const handleFAQDelete = () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
@@ -99,23 +100,37 @@ const FaqItem = ({ faq, onUpdate = ()=>{}, onDelete = ()=>{} }) => {
     }
   };
 
-  const handleFAQUpdate = () => {};
+  const handleFAQUpdate = () => {
+    onUpdate({ id: faq?.id, question: question, answer: answer });
+    setIsEditing((prev) => false);
+  };
 
-  const handleInputChange = (e) => {};
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes("question-")) {
+      setQuestion((prev) => value);
+    }
+    if (name.includes("answer-")) {
+      setAnswer((prev) => value);
+    }
+  };
 
   return (
     <div>
       <div className="border-[3px] p-2 border-indigo-600 text-white bg-indigo-600 flex justify-between gap-[50px] items-center">
         <div className="w-full">
           {isEditing ? (
-            <input
-              type="text"
-              name={`question-${faq?.id}`}
-              id={`question-${faq?.id}`}
-              value={faq?.question}
-              onChange={handleInputChange}
-              className="text-neutral-900 w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
+            <>
+              <label htmlFor="meta-title">Question</label>
+              <input
+                type="text"
+                name={`question-${faq?.id}`}
+                id={`question-${faq?.id}`}
+                value={question}
+                onChange={handleInputChange}
+                className="text-neutral-900 w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </>
           ) : (
             faq?.question
           )}
@@ -123,9 +138,7 @@ const FaqItem = ({ faq, onUpdate = ()=>{}, onDelete = ()=>{} }) => {
         <div className="flex gap-[10px] items-center">
           <button onClick={handleFAQDelete}>delete</button>|{" "}
           {isEditing ? (
-            <button onClick={() => setIsEditing((prev) => false)}>
-              update
-            </button>
+            <button onClick={handleFAQUpdate}>update</button>
           ) : (
             <button onClick={() => setIsEditing((prev) => true)}>edit</button>
           )}
@@ -133,13 +146,16 @@ const FaqItem = ({ faq, onUpdate = ()=>{}, onDelete = ()=>{} }) => {
       </div>
       <div className="p-2 border border-indigo-300 w-full">
         {isEditing ? (
-          <textarea
-            name={`answer-${faq?.id}`}
-            id={`answer-${faq?.id}`}
-            value={faq?.answer}
-            onChange={handleInputChange}
-            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          />
+          <>
+            <label htmlFor="meta-title">Answer</label>
+            <textarea
+              name={`answer-${faq?.id}`}
+              id={`answer-${faq?.id}`}
+              value={answer}
+              onChange={handleInputChange}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </>
         ) : (
           faq?.answer
         )}
@@ -148,20 +164,64 @@ const FaqItem = ({ faq, onUpdate = ()=>{}, onDelete = ()=>{} }) => {
   );
 };
 
-const Faqs = ({ menuItem, onChange }) => {
-  const [faqs, setFaqs] = useState([]);
+const Faqs = ({ faqsProps, onChange }) => {
+  const [faqs, setFaqs] = useState(faqsProps);
 
   const handleAddFaqItem = () => {
     setFaqs((prev) => {
-      return [
+      return {
         ...prev,
-        {
-          id: `${menuItem?.slug}-${generateId()}`,
-          question: "Question",
-          answer: "Answer",
-        },
-      ];
+        data: [
+          ...prev.data,
+          {
+            id: `faq-item-${generateId()}`,
+            question: "Question",
+            answer: "Answer",
+          },
+        ],
+      };
     });
+  };
+
+  const handleVisibilityChange = (e) => {
+    const {checked} = e.target;
+    let new_faq_item = null;
+    setFaqs((prev) => {
+      new_faq_item = {
+        ...prev,
+        visible: checked
+      };
+      return new_faq_item;
+    });
+    onChange(new_faq_item);
+  };
+
+  const handleFaqItemDelete = (faq_item) => {
+    let new_faq_item = null;
+    setFaqs((prev) => {
+      new_faq_item = {
+        ...prev,
+        data: prev.data.filter(faq => faq.id !== faq_item.id),
+      };
+      return new_faq_item;
+    });
+    onChange(new_faq_item);
+  };
+  const handleFaqItemUpdate = (faq_item) => {
+    let new_faq_item = null;
+    setFaqs((prev) => {
+      new_faq_item = {
+        ...prev,
+        data: prev.data.map((faq) => ({
+          ...faq,
+          question: faq.id === faq_item.id ? faq_item.question : faq.question,
+          answer: faq.id === faq_item.id ? faq_item.answer : faq.answer,
+        })),
+      };
+
+      return new_faq_item;
+    });
+    onChange(new_faq_item);
   };
 
   return (
@@ -173,6 +233,9 @@ const Faqs = ({ menuItem, onChange }) => {
         >
           <input
             type="checkbox"
+            disabled={faqs?.data?.length === 0}
+            checked={faqs?.data?.length === 0 ? false: faqs?.visible}
+            onChange={handleVisibilityChange}
             className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
           />
           <span className="text-gray-700">Visible</span>
@@ -188,9 +251,16 @@ const Faqs = ({ menuItem, onChange }) => {
         </button>
       </div>
       <div className="flex flex-col gap-1">
-        {faqs.map((faq, index) => (
-          <FaqItem key={`faq-item-${index}`} faq={faq} />
-        ))}
+        {faqs &&
+          faqs?.data &&
+          faqs.data.map((faq, index) => (
+            <FaqItem
+              key={`faq-item-${index}`}
+              faq={faq}
+              onUpdate={handleFaqItemUpdate}
+              onDelete={handleFaqItemDelete}
+            />
+          ))}
       </div>
     </div>
   );
@@ -242,6 +312,16 @@ function EditMenuItem({ menu_id }) {
     }));
   };
 
+  const handleFAQChange = (faqs) => {
+    console.log("[TEST] handleFAQChange", faqs);
+    setMenuItem(prev=> {
+      console.log("[TEST] prev", prev)
+      const faqs_updated = {...prev, faqs: faqs};
+      console.log("[TEST] faqs_updated", faqs_updated)
+      return faqs_updated;
+    })
+  };
+
   const handleHeroChange = (e) => {
     const { name, value } = e.target;
     // setMenuItem(prev => ({
@@ -270,8 +350,8 @@ function EditMenuItem({ menu_id }) {
       .then((data) => {
         // fetch the object before saving to make sure we are updating using the latest object
         const updated = updateMenuItemById(data, menuItem?.menu_id, menuItem);
-        console.log("[TEST] fetch menu data", data);
-        console.log("[TEST] fetch menu data (updated)", updated);
+        // console.log("[TEST] fetch menu data", data);
+        // console.log("[TEST] fetch menu data (updated)", updated);
         redisSet(defaultMenuKey, updated)
           .then((response) => {
             if (response.success) {
@@ -279,7 +359,7 @@ function EditMenuItem({ menu_id }) {
             } else {
               showAlertMessage("error", "Failed to update. Please try again.");
             }
-            setIsLoading(false);
+            setIsSaving(false);
           })
           .catch((error) => {
             showAlertMessage("error", "Failed to update. Please try again.");
@@ -369,7 +449,12 @@ function EditMenuItem({ menu_id }) {
             onChange={handleHeroChange}
           />
         )}
-        {activeTab.id === "faqs" && <Faqs faqs={menuItem} />}
+        {activeTab.id === "faqs" && (
+          <Faqs
+            faqsProps={menuItem?.faqs || { visible: false, data: [] }}
+            onChange={handleFAQChange}
+          />
+        )}
         {activeTab.id === "price_visibility" && (
           <PriceVisibility
             visibility={menuItem?.price_visibility === "show"}
