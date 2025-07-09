@@ -14,7 +14,11 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
   const handleToggleItemForm = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    setExpanded(prev=> !prev);
+    setExpanded(prev => {
+      const new_value = !prev;
+      // isActive(!new_value);
+      return new_value;
+    });
   } 
 
   const handleRemoveItem = () => {
@@ -155,9 +159,9 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
 
   return (
     <div id={`scroll-to-menu-${item?.menu_id}`} className="scroll-to-section w-full">
-      <div className="w-full text-left p-2 flex items-center justify-between">
+      <div className="w-full text-left p-2 flex items-center justify-between border-l border-b border-r border-neutral-300">
         <div>
-          <div className="font-semibold text-xs">
+          <div className="font-semibold text-xs p-2">
             {highlightText(item.name, search)}
           </div>
           <div className="text-[10px]">{item?.url?.path}</div>

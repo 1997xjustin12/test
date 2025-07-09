@@ -1,6 +1,8 @@
 import "@/app/globals.css";
 import Nav from "@/app/components/admin/NavBar";
 import SideNav from "@/app/components/admin/SideBar";
+import { redis, keys } from "@/app/lib/redis";
+import { CategoriesProvider } from "@/app/context/category";
 
 import { Montserrat } from "next/font/google";
 const MontserratFont = Montserrat({
@@ -11,20 +13,24 @@ const MontserratFont = Montserrat({
 });
 
 export const metadata = {
-  title: "Admin Solana",
+  title: "Page Configurator",
 };
-export default function AdminLayout({ children }) {
+export default async function AdminLayout({ children }) {
+  
+  const dafaultKey = keys.default_shopify_menu.value;
+  const mgetKeys = [dafaultKey];
+  const [menu] = await redis.mget(mgetKeys);
+
   return (
     <html lang="en">
       <body className={`antialiased ${MontserratFont.className} bg-slate-50`}>
-        <Nav />
-        <div className="flex">
-          <SideNav />
-          <div className="mt-20 ml-64 w-full">{children}</div>
-        </div>
-        {/* <div className="w-full mt-20">
-          {children}
-        </div> */}
+        <CategoriesProvider categories={menu}>
+          <Nav />
+          <div className="flex">
+            <SideNav />
+            <div className="mt-20 ml-64 w-full">{children}</div>
+          </div>
+        </CategoriesProvider>
       </body>
     </html>
   );

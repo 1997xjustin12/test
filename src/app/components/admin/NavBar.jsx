@@ -78,7 +78,7 @@ function AdminNav() {
                   </svg>
                 </div>
                 <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-                  Admin Solana
+                  Page Configurator
                 </span>
               </a>
               {/* <form className="hidden lg:block lg:pl-2">

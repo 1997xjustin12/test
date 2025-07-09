@@ -1,7 +1,7 @@
 // this menu updater is used to make menu using es shopify structure products
 
 "use client";
-import Link from "next/link";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;import Link from "next/link";
 import React, { useState, useEffect, useMemo } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
@@ -9,16 +9,18 @@ import MenuItem from "@/app/components/admin/MenuUpdaterBuilderItemV3";
 import MenuCreate from "@/app/components/admin/MenuUpdaterCreateV2";
 import { generateId, createSlug } from "@/app/lib/helpers";
 import { keys, redisGet, redisSet } from "@/app/lib/redis";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+
 
 // Import SortableTree and other components only on the client
 const SortableTree = dynamic(
-  () => import('dnd-kit-sortable-tree').then((mod) => mod.SortableTree),
+  () => import("dnd-kit-sortable-tree").then((mod) => mod.SortableTree),
   { ssr: false }
 );
 
 const SimpleTreeItemWrapper = dynamic(
-  () => import('dnd-kit-sortable-tree').then((mod) => mod.SimpleTreeItemWrapper),
+  () =>
+    import("dnd-kit-sortable-tree").then((mod) => mod.SimpleTreeItemWrapper),
   { ssr: false }
 );
 
@@ -65,6 +67,42 @@ const SearchNavItem = {
   nav_type: "custom_page",
 };
 
+const DnDToggleButton = ({ enabled, onToggle }) => {
+  const handleToggle = () => {
+    onToggle(!enabled);
+  };
+
+  return (
+    <button
+      onClick={handleToggle}
+      title="drag and drop sort toggle"
+      // className="flex items-center gap-[7px] text-base"\
+      className={`w-[115px] flex items-center justify-between rounded-full border-[2px] py-1 px-3 shadow ${
+        enabled
+          ? "bg-blue-700 text-white border-blue-700"
+          : "bg-blue-200 text-blue-700 border-blue-200"
+      }`}
+    >
+      <span className="text-xs font-bold">
+        {enabled ? "Enable" : "Disabled"}
+      </span>
+      <div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="m16 13l6.964 4.062l-2.973.85l2.125 3.681l-1.732 1l-2.125-3.68l-2.223 2.15zm-2-7h2v2h5a1 1 0 0 1 1 1v4h-2v-3H10v10h4v2H9a1 1 0 0 1-1-1v-5H6v-2h2V9a1 1 0 0 1 1-1h5zM4 14v2H2v-2zm0-4v2H2v-2zm0-4v2H2V6zm0-4v2H2V2zm4 0v2H6V2zm4 0v2h-2V2zm4 0v2h-2V2z"
+          />
+        </svg>
+      </div>
+    </button>
+  );
+};
+
 function MenuUpdaterV3() {
   const [menu, setMenu] = useState([]);
   const [originMenu, setOriginMenu] = useState([]);
@@ -82,26 +120,42 @@ function MenuUpdaterV3() {
   const [alertType, setAlertType] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
 
-  function recalibrateOrder(treeArray) {
-      function updateNodeOrder(nodes, depth = 0) {
-          nodes.forEach((node, index) => {
-              node.order = index;
-              node.depth = depth;
-              if (Array.isArray(node.children)) {
-                  updateNodeOrder(node.children, depth + 1);
-              }
-          });
-      }
+  const [sortableIsActive, setSortableIsActive] = useState(true);
+  const [dndToggle, setDndToggle] = useState(true);
 
-      updateNodeOrder(treeArray);
-      return treeArray;
+  // const handleMenuItemActive = (is_active) => {
+  //   setSortableIsActive(!is_active);
+  // }
+
+  const handleEditItemClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    // console.log("[TEST] triggered edit", event?.target?.href)
+    const href = event?.target?.href
+    if(href){
+      window.open(href, '_blank', 'noopener,noreferrer');
+    }
   }
 
+  const recalibrateOrder = (treeArray) => {
+    function updateNodeOrder(nodes, depth = 0) {
+      nodes.forEach((node, index) => {
+        node.order = index;
+        node.depth = depth;
+        if (Array.isArray(node.children)) {
+          updateNodeOrder(node.children, depth + 1);
+        }
+      });
+    }
+
+    updateNodeOrder(treeArray);
+    return treeArray;
+  };
 
   const handleSortableTreeChange = (new_value) => {
     const reorderedMenu = recalibrateOrder(new_value);
     setMenu(reorderedMenu);
-  }
+  };
 
   const showAlertMessage = (type, message) => {
     setAlertType(type);
@@ -517,8 +571,8 @@ function MenuUpdaterV3() {
   };
 
   useEffect(() => {
-    // console.log("menu", menu);
-  }, [menu]);
+    console.log("[TEST] selectedMenu", selectedMenu);
+  }, [selectedMenu]);
 
   const tmpFnSetCatId = (i) => {
     const name = i?.name;
@@ -568,9 +622,7 @@ function MenuUpdaterV3() {
       console.log("[TEST] nav_data", nav_data);
 
       setMenu(nav_data);
-      setSearchList(
-        flattenMenu(nav_data)
-      );
+      setSearchList(flattenMenu(nav_data));
     });
     Promise.all([
       fetch("/api/es/shopify/categories", {
@@ -748,12 +800,18 @@ function MenuUpdaterV3() {
             <div className="border rounded w-full">
               <div className="w-full border bg-stone-300 text-sm p-2 flex items-center justify-between">
                 <div className="font-semibold">Menu</div>
-                <button
-                  onClick={handleCreateCustomPage}
-                  className="text-blue-600 hover:text-blue-700 underline cursor-pointer text-xs"
-                >
-                  Custom Page
-                </button>
+                <div className="flex items-center">
+                  <button
+                    onClick={handleCreateCustomPage}
+                    className="text-blue-600 hover:text-blue-700 underline cursor-pointer text-xs"
+                  >
+                    Custom Page
+                  </button>
+                </div>
+              </div>
+
+              <div className="px-5 py-1  flex justify-end">
+                <DnDToggleButton enabled={dndToggle} onToggle={setDndToggle} />
               </div>
 
               <div className="p-1">
@@ -766,57 +824,27 @@ function MenuUpdaterV3() {
                 />
               </div>
 
-              {/* <div className="p-1">
-                <div>
-                  {scrollToSearch === ""
-                    ? menu
-                        .sort((a, b) => a.order - b.order)
-                        .map((item, index) => (
-                          <div key={`menu-item-${item.menu_id}`}>
-                            <MenuItem
-                              item={item}
-                              itemList={menu}
-                              onChange={handleMenuItemChanges}
-                              search={scrollToSearch}
-                            />
-                            {item.children &&
-                              item.children.length > 0 &&
-                              item.children
-                                .sort((a, b) => a.order - b.order)
-                                .map((item1, index1) => (
-                                  <div
-                                    className="ml-8"
-                                    key={`menu-item-${item1.menu_id}`}
-                                  >
-                                    <MenuItem
-                                      item={item1}
-                                      itemList={menu}
-                                      onChange={handleMenuItemChanges}
-                                      search={scrollToSearch}
-                                    />
-
-                                    {item1.children &&
-                                      item1.children.length > 0 &&
-                                      item1.children
-                                        .sort((a, b) => a.order - b.order)
-                                        .map((item2, index2) => (
-                                          <div
-                                            className="ml-8"
-                                            key={`menu-item-${item2.menu_id}`}
-                                          >
-                                            <MenuItem
-                                              item={item2}
-                                              itemList={menu}
-                                              onChange={handleMenuItemChanges}
-                                              search={scrollToSearch}
-                                            />
-                                          </div>
-                                        ))}
-                                  </div>
-                                ))}
-                          </div>
-                        ))
-                    : searchListObj.map((item, index) => (
+              {dndToggle ? (
+                <div className="p-1">
+                  <div>
+                    {scrollToSearch === "" ? (
+                      <SortableTree
+                        items={menu.map((item) => ({
+                          ...item,
+                          id: item?.menu_id,
+                        }))}
+                        onItemsChanged={handleSortableTreeChange}
+                        TreeItemComponent={React.forwardRef((props, ref) => (
+                          <SimpleTreeItemWrapper {...props} ref={ref}>
+                            <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
+                              <div>{props?.item?.name}</div>
+                              <Link prefetch={false} href={`${BASE_URL}/admin/menu-builder/edit/${props?.item?.menu_id}`} className="text-blue-600" onClick={handleEditItemClick}>Edit</Link>
+                            </div>
+                          </SimpleTreeItemWrapper>
+                        ))}
+                      />
+                    ) : (
+                      searchListObj.map((item, index) => (
                         <div key={`menu-item-${item.menu_id}`}>
                           <MenuItem
                             item={item}
@@ -825,46 +853,74 @@ function MenuUpdaterV3() {
                             search={scrollToSearch}
                           />
                         </div>
-                      ))}
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div> */}
+              ) : (
+                <div className="p-1">
+                  <div>
+                    {scrollToSearch === ""
+                      ? menu
+                          .sort((a, b) => a.order - b.order)
+                          .map((item, index) => (
+                            <div key={`menu-item-${item.menu_id}`}>
+                              <MenuItem
+                                item={item}
+                                itemList={menu}
+                                onChange={handleMenuItemChanges}
+                                search={scrollToSearch}
+                              />
+                              {item.children &&
+                                item.children.length > 0 &&
+                                item.children
+                                  .sort((a, b) => a.order - b.order)
+                                  .map((item1, index1) => (
+                                    <div
+                                      className="ml-8"
+                                      key={`menu-item-${item1.menu_id}`}
+                                    >
+                                      <MenuItem
+                                        item={item1}
+                                        itemList={menu}
+                                        onChange={handleMenuItemChanges}
+                                        search={scrollToSearch}
+                                      />
 
-              {/* test dnd sortable tree */}
-
-              <div className="p-1">
-                <div>
-                  {scrollToSearch === "" ? (
-                    <SortableTree
-                      items={menu.map(item=> ({...item, id:item?.menu_id}))}
-                      onItemsChanged={handleSortableTreeChange}
-                      TreeItemComponent={React.forwardRef((props, ref) => (
-                        <SimpleTreeItemWrapper {...props} ref={ref}>
-                          {
-                            // console.log("[TEST] props",props)
+                                      {item1.children &&
+                                        item1.children.length > 0 &&
+                                        item1.children
+                                          .sort((a, b) => a.order - b.order)
+                                          .map((item2, index2) => (
+                                            <div
+                                              className="ml-8"
+                                              key={`menu-item-${item2.menu_id}`}
+                                            >
+                                              <MenuItem
+                                                item={item2}
+                                                itemList={menu}
+                                                onChange={handleMenuItemChanges}
+                                                search={scrollToSearch}
+                                              />
+                                            </div>
+                                          ))}
+                                    </div>
+                                  ))}
+                            </div>
+                          ))
+                      : searchListObj.map((item, index) => (
+                          <div key={`menu-item-${item.menu_id}`}>
                             <MenuItem
-                              item={props?.item}
-                              itemList={menu}
+                              item={item}
+                              itemList={searchList}
                               onChange={handleMenuItemChanges}
                               search={scrollToSearch}
                             />
-                          }
-                        </SimpleTreeItemWrapper>
-                      ))}
-                    />
-                  ) : (
-                    searchListObj.map((item, index) => (
-                      <div key={`menu-item-${item.menu_id}`}>
-                        <MenuItem
-                          item={item}
-                          itemList={searchList}
-                          onChange={handleMenuItemChanges}
-                          search={scrollToSearch}
-                        />
-                      </div>
-                    ))
-                  )}
+                          </div>
+                        ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

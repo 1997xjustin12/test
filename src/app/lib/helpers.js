@@ -284,3 +284,61 @@ export const stripHtmlTags = (html) => {
   }
   return html.replace(/<[^>]+>/g, ''); // Fallback for SSR
 }
+
+/**
+ * Flattens a nested menu tree into a single-level array,
+ * removing the `children` property and preserving the rest of the item data.
+ *
+ * @param {Array} tree - The nested menu tree, where each item may have a `children` array.
+ * @returns {Array} A flat array containing all menu items from all levels of the tree.
+ *
+ * Example:
+ * const flatMenu = flattenNavTree(menuTree);
+ */
+export const flattenNavTree = (tree) => {
+  let result = [];
+
+  function traverse(nodeArray) {
+    for (const node of nodeArray) {
+      // Destructure without children
+      const { children, ...rest } = node;
+      result.push(rest);
+
+      if (children && children.length > 0) {
+        traverse(children); // Recurse on children
+      }
+    }
+  }
+
+  traverse(tree);
+  return result;
+}
+
+
+/**
+ * Recursively updates a menu item in a nested tree structure based on its `menu_id`.
+ *
+ * @param {Array} tree - The array of menu items (can include nested children).
+ * @param {number|string} menuId - The ID of the menu item to update.
+ * @param {Object} newItem - An object containing the updated properties for the target item.
+ * @returns {Array} A new tree with the updated item, preserving structure and immutability.
+ *
+ * Example:
+ * const updatedTree = updateMenuItemById(menuTree, 4, { name: "My Profile" });
+ */
+export const updateMenuItemById = (tree, menuId, newItem) => {
+  return tree.map(item => {
+    if (item.menu_id === menuId) {
+      return { ...item, ...newItem }; // Replace or merge properties
+    }
+
+    if (item.children) {
+      return {
+        ...item,
+        children: updateMenuItemById(item.children, menuId, newItem)
+      };
+    }
+
+    return item;
+  });
+}
