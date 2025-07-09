@@ -1,7 +1,8 @@
 // this menu updater is used to make menu using es shopify structure products
 
 "use client";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;import Link from "next/link";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import Link from "next/link";
 import React, { useState, useEffect, useMemo } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
@@ -10,7 +11,6 @@ import MenuCreate from "@/app/components/admin/MenuUpdaterCreateV2";
 import { generateId, createSlug } from "@/app/lib/helpers";
 import { keys, redisGet, redisSet } from "@/app/lib/redis";
 import dynamic from "next/dynamic";
-
 
 // Import SortableTree and other components only on the client
 const SortableTree = dynamic(
@@ -103,6 +103,34 @@ const DnDToggleButton = ({ enabled, onToggle }) => {
   );
 };
 
+const handleEditItemClick = (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  // console.log("[TEST] triggered edit", event?.target?.href)
+  const href = event?.target?.href;
+  if (href) {
+    window.open(href, "_blank", "noopener,noreferrer");
+  }
+};
+
+const TreeItemWithEditLink = React.forwardRef((props, ref) => (
+  <SimpleTreeItemWrapper {...props} ref={ref}>
+    <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
+      <div>{props?.item?.name}</div>
+      <Link
+        prefetch={false}
+        href={`${BASE_URL}/admin/menu-builder/edit/${props?.item?.menu_id}`}
+        className="text-blue-600"
+        onClick={handleEditItemClick}
+      >
+        Edit
+      </Link>
+    </div>
+  </SimpleTreeItemWrapper>
+));
+
+TreeItemWithEditLink.displayName = "TreeItemWithEditLink";
+
 function MenuUpdaterV3() {
   const [menu, setMenu] = useState([]);
   const [originMenu, setOriginMenu] = useState([]);
@@ -126,16 +154,6 @@ function MenuUpdaterV3() {
   // const handleMenuItemActive = (is_active) => {
   //   setSortableIsActive(!is_active);
   // }
-
-  const handleEditItemClick = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    // console.log("[TEST] triggered edit", event?.target?.href)
-    const href = event?.target?.href
-    if(href){
-      window.open(href, '_blank', 'noopener,noreferrer');
-    }
-  }
 
   const recalibrateOrder = (treeArray) => {
     function updateNodeOrder(nodes, depth = 0) {
@@ -594,7 +612,7 @@ function MenuUpdaterV3() {
   }
 
   // insert id in the menu tree
-  function mapTreeWithId(items) {
+  const mapTreeWithId = (items) => {
     return items.map((item) => {
       const mappedItem = {
         ...item,
@@ -607,7 +625,8 @@ function MenuUpdaterV3() {
 
       return mappedItem;
     });
-  }
+  };
+
   useEffect(() => {
     updateMenuList();
     // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
@@ -834,14 +853,7 @@ function MenuUpdaterV3() {
                           id: item?.menu_id,
                         }))}
                         onItemsChanged={handleSortableTreeChange}
-                        TreeItemComponent={React.forwardRef((props, ref) => (
-                          <SimpleTreeItemWrapper {...props} ref={ref}>
-                            <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
-                              <div>{props?.item?.name}</div>
-                              <Link prefetch={false} href={`${BASE_URL}/admin/menu-builder/edit/${props?.item?.menu_id}`} className="text-blue-600" onClick={handleEditItemClick}>Edit</Link>
-                            </div>
-                          </SimpleTreeItemWrapper>
-                        ))}
+                        TreeItemComponent={TreeItemWithEditLink}
                       />
                     ) : (
                       searchListObj.map((item, index) => (
