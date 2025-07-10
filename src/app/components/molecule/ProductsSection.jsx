@@ -176,7 +176,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
             
             <div className="relative lg:w-[240px] h-[360px]">
-              <Link href={`tel:(888) 888-8888`} prefetch={false} className="">
+              <Link href={`tel:${page_details?.contact_number || '(888) 575-9720'}`} prefetch={false} className="">
                 <Image
                   src="/images/banner/sub-banner-image.webp"
                   alt={`Sub Banner Image`}
@@ -195,7 +195,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
             <Hits
               hitComponent={(props) => (
-                <SPProductCard {...props}  />
+                <SPProductCard {...props}  page_details={page_details}/>
               )}
             />
             <Pagination />

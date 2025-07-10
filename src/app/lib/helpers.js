@@ -2,6 +2,9 @@ import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 
 
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+
+
 export function areAllKeysEmpty(obj, keys) {
   return keys.every(key => !obj[key] || obj[key] === "");
 }

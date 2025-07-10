@@ -108,7 +108,6 @@ const TreeItemWithEditLink = React.forwardRef(
     const handleEditItemClick = (event) => {
       event.preventDefault();
       event.stopPropagation();
-      // console.log("[TEST] triggered edit", event?.target?.href)
       const href = event?.target?.href;
       if (href) {
         window.open(href, "_blank", "noopener,noreferrer");
@@ -126,17 +125,28 @@ const TreeItemWithEditLink = React.forwardRef(
       }
     };
 
+    const handlePreviewItemClick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const href = event?.target?.href;
+      console.log("[TEST href" , event);
+      if (href) {
+        window.open(href, "_blank", "noopener,noreferrer");
+      }
+    };
+
     return (
       <SimpleTreeItemWrapper {...props} ref={ref}>
         <div className="font-semibold text-xs p-2 flex items-center justify-between w-full">
           <div>{item?.name}</div>
-          <div className="flex gap-[40px]">
+          <div className="flex gap-[40px] items-center">
             {item?.name !== "Home" && (
               <button
                 className="text-red-900"
                 onClick={(e) => handleDeleteItemClick(e, item?.menu_id)}
+                title={"Remove: Please make sure to save to apply changes."}
               >
-                Delete
+                Remove
               </button>
             )}
             <Link
@@ -144,8 +154,37 @@ const TreeItemWithEditLink = React.forwardRef(
               href={`${BASE_URL}/admin/menu-builder/edit/${item?.menu_id}`}
               className="text-blue-600"
               onClick={handleEditItemClick}
+              title={`Edit Page New Tab`}
             >
               Edit
+            </Link>
+            <Link
+              prefetch={false}
+              href={`${BASE_URL}/${item?.url}`}
+              className="text-neutral-700"
+              onClick={handlePreviewItemClick}
+              title={`Preview Page New Tab`}
+            >
+              <svg
+                className="pointer-events-none"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <g className="open-in-new-tab-outline">
+                  <g
+                    fill="currentColor"
+                    fillRule="evenodd"
+                    className="Vector"
+                    clipRule="evenodd"
+                  >
+                    <path d="M5 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5.263a1 1 0 1 1 2 0V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h5.017a1 1 0 1 1 0 2z" />
+                    <path d="M21.411 2.572a.963.963 0 0 1 0 1.36l-8.772 8.786a.96.96 0 0 1-1.358 0a.963.963 0 0 1 0-1.36l8.773-8.786a.96.96 0 0 1 1.357 0" />
+                    <path d="M21.04 2c.53 0 .96.43.96.962V8c0 .531-.47 1-1 1s-1-.469-1-1V4h-4c-.53 0-1-.469-1-1s.43-1 .96-1z" />
+                  </g>
+                </g>
+              </svg>
             </Link>
           </div>
         </div>
@@ -175,10 +214,6 @@ function MenuUpdaterV3() {
 
   const [sortableIsActive, setSortableIsActive] = useState(true);
   const [dndToggle, setDndToggle] = useState(true);
-
-  // const handleMenuItemActive = (is_active) => {
-  //   setSortableIsActive(!is_active);
-  // }
 
   const recalibrateOrder = (treeArray) => {
     function updateNodeOrder(nodes, depth = 0) {
@@ -556,9 +591,12 @@ function MenuUpdaterV3() {
     });
   };
 
-  const handleDeleteItem = (data) => {
-    console.log("[TEST] handleDeleteItem", data)
-  }
+  const handleDeleteItem = (menu_id) => {
+    setMenu((prev) => {
+      const updated = removeMenuItem(prev, menu_id);
+      return [...updated];
+    });
+  };
 
   const handleSelectMenuChange = (e) => {
     const { value } = e.target;
@@ -568,44 +606,6 @@ function MenuUpdaterV3() {
   const handleSaveMenuChanges = () => {
     setIsLoading(true);
     const merged = [...menu, SearchNavItem];
-
-    // // temporary: inject all brands under Brands menu as children
-    // const all_brands = originMenu.filter(({nav_type})=> nav_type==="brand")
-    // .sort((a, b) => a.key.localeCompare(b.key))
-    // .map((i) => ({
-    //   menu_id: generateId(),
-    //   parent_id: "e3gza49s5",
-    //   key: i.key,
-    //   name: i.key,
-    //   url: createSlug(i.key),
-    //   slug: createSlug(i.key),
-    //   origin_name: i.key,
-    //   children: [],
-    //   price_visibility: "show",
-    //   meta_title:"",
-    //   meta_description:"",
-    //   banner: {
-    //     img: {
-    //       src: null,
-    //       alt: "",
-    //     },
-    //     title: "",
-    //     tag_line: "",
-    //   },
-    //   page_contact_number: null,
-    //   searchable: true,
-    //   nav_visibility:true,
-    //   nav_type: i.nav_type
-    // }));
-    // // inject
-    // const toSave = merged.map((item)=> {
-    //   if(item.key === "Brands"){
-    //     const new_item = item;
-    //     item["children"] = all_brands;
-    //     return new_item;
-    //   }
-    //   return item;
-    // });
 
     redisSet(selectedMenu, merged)
       .then((response) => {
@@ -621,9 +621,9 @@ function MenuUpdaterV3() {
       });
   };
 
-  useEffect(() => {
-    console.log("[TEST] selectedMenu", selectedMenu);
-  }, [selectedMenu]);
+  // useEffect(() => {
+  //   console.log("[TEST] selectedMenu", selectedMenu);
+  // }, [selectedMenu]);
 
   const tmpFnSetCatId = (i) => {
     const name = i?.name;

@@ -43,7 +43,7 @@ const ProductCardPriceDisplay = ({ price_details }) => {
   }
 };
 
-const ProductCard = ({ hit }) => {
+const ProductCard = ({ hit, page_details   }) => {
   const { viewItem } = useQuickView();
   const { isPriceVisible, getProductUrl} = useSolanaCategories();
 
@@ -134,7 +134,7 @@ const ProductCard = ({ hit }) => {
               <ProductCardPriceDisplay price_details={hit?.variants?.[0]} />
             )}
           </div>
-          <FicDropDown>
+          <FicDropDown contact_number={page_details?.contact_number}>
             <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
               {!isPriceVisible(hit?.product_category, hit?.brand) ? (
                 <>Call for Price </>
@@ -143,7 +143,7 @@ const ProductCard = ({ hit }) => {
               )}
               <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
                 <ICRoundPhone width={16} height={16} />{" "}
-                <div>(888) 575-9720</div>
+                <div>{page_details?.contact_number || "(888) 575-9720"}</div>
               </div>
             </div>
           </FicDropDown>

@@ -1,10 +1,31 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import { useSolanaCategories } from "@/app/context/category";
 import { notFound } from "next/navigation";
 import Button from "@/app/components/admin/Button";
 import { keys, redisGet, redisSet } from "@/app/lib/redis";
-import { updateMenuItemById, generateId } from "@/app/lib/helpers";
+import { BASE_URL, updateMenuItemById, generateId } from "@/app/lib/helpers";
+import HeroNotice from "@/app/components/atom/HeroNotice";
+
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import Link from "next/link";
 
 const defaultMenuKey = keys.default_shopify_menu.value;
 
@@ -16,6 +37,7 @@ const PageMeta = ({ meta, onChange }) => {
         <textarea
           name="meta-title"
           id="meta-title"
+          rows="3"
           value={meta?.title || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -26,6 +48,7 @@ const PageMeta = ({ meta, onChange }) => {
         <textarea
           name="meta-description"
           id="meta-description"
+          rows="5"
           value={meta?.description || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -35,7 +58,14 @@ const PageMeta = ({ meta, onChange }) => {
   );
 };
 
-const HeroContent = ({ hero, onChange }) => {
+const HeroContent = ({ hero, images, onChange }) => {
+  const [bannerImage, setBannerImage] = useState();
+  // const [bannerImages, setBannerImages] = useState(images);
+  // console.log("[TEST] images", images);
+  useEffect(() => {
+    setBannerImage(hero?.img?.src || "/images/banner/solana-home-hero.webp");
+  }, [hero]);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
@@ -56,6 +86,7 @@ const HeroContent = ({ hero, onChange }) => {
         <textarea
           name="notice-html"
           id="notice-html"
+          rows="10"
           value={hero?.notice_html || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -79,35 +110,120 @@ const HeroContent = ({ hero, onChange }) => {
         <textarea
           name="sub-text"
           id="sub-text"
+          rows="5"
           value={hero?.tag_line || ""}
           onChange={onChange}
           className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         ></textarea>
       </div>
-    </div>
-  );
-};
-
-const PriceVisibility = ({ visibility, onChange }) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-col gap-1">
-        <label className="inline-flex items-center space-x-2 cursor-pointer">
-          <input
-            type="checkbox"
-            className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+      <div className="border-t border-gray-300 my-4"></div>
+      <div>
+        <h2>Hero Representation</h2>
+        <span className="italic text-neutral-500 text-sm">
+          <strong>Note:</strong> This is a conceptual representation and may not
+          fully reflect the final implementation.
+        </span>
+      </div>
+      <div className="w-full aspect-w-3 aspect-h-1 bg-stone-300 relative overflow-hidden">
+        <div className="absolute w-full top-0 left-0 z-10">
+          <HeroNotice data={{ banner: hero }} />
+        </div>
+        <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center w-full">
+            <div className="w-[90%]">
+              <h1 className="text-balance text-md tracking-wide text-white md:text-4xl drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] italic text-center">
+                {hero?.title}
+              </h1>
+            </div>
+            <div className="flex items-center justify-center w-full">
+              <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-center max-w-[75%] min-w-[75%]">
+                {hero?.tag_line}
+              </h2>
+            </div>
+          </div>
+        </div>
+        {bannerImage && (
+          <Image
+            src={bannerImage}
+            alt={`Selected Banner Image`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
           />
-          <span className="text-gray-700">Price Visible</span>
-        </label>
+        )}
+      </div>
+      <div className="mb-3 mt-10">
+        <h3>Select Hero Image</h3>
+        <p className="italic text-neutral-500 text-sm">
+          By default, items without a banner image will automatically use the
+          first image from the selection.
+        </p>
+        <p className="italic text-neutral-500 text-sm">
+          If the image you need is not available in the selection box, please
+          send it to the developer. Once uploaded, it will appear in the
+          selection list.
+        </p>
+      </div>
+      <div className="full">
+        <div className="flex gap-[10px] overflow-x-auto px-2 pb-3">
+          {images &&
+            images.length > 0 &&
+            images.map((image, index) => (
+              <div
+                key={`banner-image-${index}`}
+                onClick={() =>
+                  onChange({ target: { name: "banner-image", value: image } })
+                }
+                className={`cursor-pointer w-[300px] h-[120px] bg-gray-300 flex-shrink-0 relative border-4 ${
+                  bannerImage === image
+                    ? "border-indigo-500"
+                    : "border-neutral-300"
+                }`}
+              >
+                <Image
+                  src={image}
+                  alt={`Banner Image Selection ${index}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 300px"
+                />
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
 };
 
+// const PriceVisibility = ({ visibility, onChange }) => {
+//   return (
+//     <div className="flex flex-col gap-2">
+//       <div className="flex flex-col gap-1">
+//         <label className="inline-flex items-center space-x-2 cursor-pointer">
+//           <input
+//             type="checkbox"
+//             className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+//           />
+//           <span className="text-gray-700">Price Visible</span>
+//         </label>
+//       </div>
+//     </div>
+//   );
+// };
+
 const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [question, setQuestion] = useState(faq?.question || "");
   const [answer, setAnswer] = useState(faq?.answer || "");
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: faq.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const handleFAQDelete = () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
@@ -133,12 +249,25 @@ const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
   };
 
   return (
-    <div>
+    <div ref={setNodeRef} style={style} {...attributes}>
       <div className="border-[3px] p-2 border-indigo-600 text-white bg-indigo-600 flex justify-between gap-[50px] items-center">
+        <div {...listeners} onMouseDown={() => setIsEditing(false)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M6.75 18.72c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127c-.114-.01-.247-.009-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.546-.546a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369m6 13.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127c-.115-.01-.248-.009-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.547-.546a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369"
+            />
+          </svg>
+        </div>
         <div className="w-full">
           {isEditing ? (
             <>
-              <label htmlFor="meta-title">Question</label>
+              <label htmlFor={`question-${faq?.id}`}>Question</label>
               <input
                 type="text"
                 name={`question-${faq?.id}`}
@@ -153,18 +282,34 @@ const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
           )}
         </div>
         <div className="flex gap-[10px] items-center">
-          <button onClick={handleFAQDelete} className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">delete</button>|{" "}
+          <button
+            onClick={handleFAQDelete}
+            className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold"
+          >
+            delete
+          </button>
+          |{" "}
           {isEditing ? (
-            <button onClick={handleFAQUpdate}  className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">update</button>
+            <button
+              onClick={handleFAQUpdate}
+              className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold"
+            >
+              update
+            </button>
           ) : (
-            <button onClick={() => setIsEditing((prev) => true)}  className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold">edit</button>
+            <button
+              onClick={() => setIsEditing((prev) => true)}
+              className="p-1 bg-indigo-950 hover:bg-indigo-900 rounded uppercase text-[8px] font-bold"
+            >
+              edit
+            </button>
           )}
         </div>
       </div>
-      <div className="p-2 border border-indigo-300 w-full">
+      <div className="p-2 border border-indigo-300 w-full bg-white">
         {isEditing ? (
           <>
-            <label htmlFor="meta-title">Answer</label>
+            <label htmlFor={`answer-${faq?.id}`}>Answer</label>
             <textarea
               name={`answer-${faq?.id}`}
               id={`answer-${faq?.id}`}
@@ -184,6 +329,13 @@ const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
 const Faqs = ({ faqsProps, onChange }) => {
   const [faqs, setFaqs] = useState(faqsProps);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   const handleAddFaqItem = () => {
     setFaqs((prev) => {
       return {
@@ -201,45 +353,49 @@ const Faqs = ({ faqsProps, onChange }) => {
   };
 
   const handleVisibilityChange = (e) => {
-    const {checked} = e.target;
-    let new_faq_item = null;
-    setFaqs((prev) => {
-      new_faq_item = {
-        ...prev,
-        visible: checked
-      };
-      return new_faq_item;
-    });
+    const { checked } = e.target;
+    let new_faq_item = {
+      ...faqs,
+      visible: checked,
+    };
+    setFaqs(new_faq_item);
     onChange(new_faq_item);
   };
 
   const handleFaqItemDelete = (faq_item) => {
-    let new_faq_item = null;
-    setFaqs((prev) => {
-      new_faq_item = {
-        ...prev,
-        data: prev.data.filter(faq => faq.id !== faq_item.id),
-      };
-      return new_faq_item;
-    });
-    onChange(new_faq_item);
+    const updated = {
+      ...faqs,
+      data: faqs.data.filter((faq) => faq.id !== faq_item.id),
+    };
+    setFaqs(updated);
+    onChange(updated);
   };
-  const handleFaqItemUpdate = (faq_item) => {
-    let new_faq_item = null;
-    setFaqs((prev) => {
-      new_faq_item = {
-        ...prev,
-        data: prev.data.map((faq) => ({
-          ...faq,
-          question: faq.id === faq_item.id ? faq_item.question : faq.question,
-          answer: faq.id === faq_item.id ? faq_item.answer : faq.answer,
-        })),
-      };
 
-      return new_faq_item;
-    });
+  const handleFaqItemUpdate = (faq_item) => {
+    let new_faq_item = {
+      ...faqs,
+      data: faqs.data.map((faq) => ({
+        ...faq,
+        question: faq.id === faq_item.id ? faq_item.question : faq.question,
+        answer: faq.id === faq_item.id ? faq_item.answer : faq.answer,
+      })),
+    };
+
+    setFaqs(new_faq_item);
     onChange(new_faq_item);
   };
+
+  function handleDragEnd(event) {
+    const { active, over, items } = event;
+    if (active.id !== over.id) {
+      const oldIndex = faqs?.data?.findIndex((faq) => faq.id === active.id);
+      const newIndex = faqs?.data?.findIndex((faq) => faq.id === over.id);
+      const reorderedFaqsData = arrayMove(faqs?.data, oldIndex, newIndex);
+      const updatedFaqs = { ...faqs, data: reorderedFaqsData };
+      setFaqs(updatedFaqs);
+      onChange(updatedFaqs);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -251,12 +407,38 @@ const Faqs = ({ faqsProps, onChange }) => {
           <input
             type="checkbox"
             disabled={faqs?.data?.length === 0}
-            checked={faqs?.data?.length === 0 ? false: faqs?.visible}
+            checked={faqs?.data?.length === 0 ? false : faqs?.visible}
             onChange={handleVisibilityChange}
             className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
           />
           <span className="text-gray-700">Visible</span>
         </label>
+      </div>
+
+      <div className="border-t border-gray-300 my-4"></div>
+
+      <div className="flex flex-col gap-1">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={faqs?.data}
+            strategy={verticalListSortingStrategy}
+          >
+            {faqs &&
+              faqs?.data &&
+              faqs.data.map((faq) => (
+                <FaqItem
+                  key={`${faq?.id}`}
+                  faq={faq}
+                  onUpdate={handleFaqItemUpdate}
+                  onDelete={handleFaqItemDelete}
+                />
+              ))}
+          </SortableContext>
+        </DndContext>
       </div>
       <div className="mt-3">
         <button
@@ -267,33 +449,58 @@ const Faqs = ({ faqsProps, onChange }) => {
           Add FAQ item
         </button>
       </div>
+    </div>
+  );
+};
+
+const Settings = ({ menuItem, onChange }) => {
+  return (
+    <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
-        {faqs &&
-          faqs?.data &&
-          faqs.data.map((faq, index) => (
-            <FaqItem
-              key={`faq-item-${index}`}
-              faq={faq}
-              onUpdate={handleFaqItemUpdate}
-              onDelete={handleFaqItemDelete}
-            />
-          ))}
+        <label className="inline-flex items-center space-x-2 cursor-pointer">
+          <input
+            type="checkbox"
+            name="price-visibility"
+            id="price-visibility"
+            checked={menuItem?.price_visibility === "show" || false}
+            disabled={menuItem?.nav_type !== "brand"}
+            onChange={onChange}
+            className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+          />
+          <span className="text-gray-700">Price Visible</span>
+        </label>
+        <span className="text-sm italic text-neutral-600">
+          This feature is only accessible when the menu item's navigation type
+          is "brand."
+        </span>
+      </div>
+      <div className="border-t border-gray-300 my-4"></div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="contact-number">Contact Number</label>
+        <input
+          type="text"
+          name={`contact-number`}
+          id={`contact-number`}
+          value={menuItem?.contact_number || ""}
+          onChange={onChange}
+          className="max-w-[255px] text-neutral-900 w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        <span className="italic text-sm text-neutral-600">Leaving this blank will apply <strong>(888) 575-9720</strong></span>
       </div>
     </div>
   );
 };
 
-function EditMenuItem({ menu_id }) {
+function EditMenuItem({ menu_id, images }) {
   const { flatCategories } = useSolanaCategories();
   const [isSaving, setIsSaving] = useState(false);
   const [menuItem, setMenuItem] = useState(null);
   const [tabs, setTabs] = useState([
     { id: "meta", label: "SEO", isActive: false },
-    { id: "hero", label: "Hero Section", isActive: true },
-    // { id: "dynamic_sections", label: "Dynamic Sections", isActive: false },
+    { id: "hero", label: "Hero Section", isActive: false },
     { id: "faqs", label: "FAQs", isActive: false },
-    { id: "setting", label: "Page Setting", isActive: false },
-    // { id: "navigation", label: "Navigation", isActive: false },
+    { id: "settings", label: "Settings", isActive: true },
   ]);
 
   // alert message
@@ -306,12 +513,12 @@ function EditMenuItem({ menu_id }) {
     const item = flatCategories.find((item) => item?.menu_id === menu_id);
     console.log("[TEST] menuItem", item);
     // price visibility tab for brand only
-    if (item && item?.nav_type === "brand") {
-      setTabs((prev) => [
-        ...prev,
-        { id: "price_visibility", label: "Price Visibility", isActive: false },
-      ]);
-    }
+    // if (item && item?.nav_type === "brand") {
+    //   setTabs((prev) => [
+    //     ...prev,
+    //     { id: "price_visibility", label: "Price Visibility", isActive: false },
+    //   ]);
+    // }
     setMenuItem(item);
   }, []);
 
@@ -331,36 +538,66 @@ function EditMenuItem({ menu_id }) {
   };
 
   const handleFAQChange = (faqs) => {
-    console.log("[TEST] handleFAQChange", faqs);
-    setMenuItem(prev=> {
-      console.log("[TEST] prev", prev)
-      const faqs_updated = {...prev, faqs: faqs};
-      console.log("[TEST] faqs_updated", faqs_updated)
+    setMenuItem((prev) => {
+      const faqs_updated = { ...prev, faqs: faqs };
       return faqs_updated;
-    })
+    });
   };
 
   const handleHeroChange = (e) => {
-    const {name, value, checked} = e.target;
+    const { name, value, checked } = e.target;
 
-    if(name === "main-text"){
-      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,title: value}}))
+    if (name === "main-text") {
+      setMenuItem((prev) => ({
+        ...prev,
+        banner: { ...prev?.banner, title: value },
+      }));
     }
 
-    if(name === "sub-text"){
-      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,tag_line: value}}))
+    if (name === "sub-text") {
+      setMenuItem((prev) => ({
+        ...prev,
+        banner: { ...prev?.banner, tag_line: value },
+      }));
     }
-    
-    if(name === "notice-visible"){
-      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,notice_visible: checked}}))
+
+    if (name === "notice-visible") {
+      setMenuItem((prev) => ({
+        ...prev,
+        banner: { ...prev?.banner, notice_visible: checked },
+      }));
     }
-    
-    if(name === "notice-html"){
-      setMenuItem(prev => ({...prev, banner: { ...prev?.banner,notice_html: value}}))
+
+    if (name === "notice-html") {
+      setMenuItem((prev) => ({
+        ...prev,
+        banner: { ...prev?.banner, notice_html: value },
+      }));
+    }
+
+    if (name === "banner-image") {
+      setMenuItem((prev) => ({
+        ...prev,
+        banner: { ...prev?.banner, img: { src: value, alt: "Banner Image" } },
+      }));
     }
   };
 
   const handlePriceVisibilityChange = (e) => {};
+
+  const handleSettingsChange = (e) => {
+    const { name, checked, value } = e.target;
+    if (name === "contact-number") {
+      setMenuItem((prev) => ({ ...prev, contact_number: value }));
+    }
+
+    if (name === "price-visibility") {
+      setMenuItem((prev) => ({
+        ...prev,
+        price_visibility: checked ? "show" : "hide",
+      }));
+    }
+  };
 
   const showAlertMessage = (type, message) => {
     setAlertType(type);
@@ -379,8 +616,6 @@ function EditMenuItem({ menu_id }) {
       .then((data) => {
         // fetch the object before saving to make sure we are updating using the latest object
         const updated = updateMenuItemById(data, menuItem?.menu_id, menuItem);
-        // console.log("[TEST] fetch menu data", data);
-        // console.log("[TEST] fetch menu data (updated)", updated);
         redisSet(defaultMenuKey, updated)
           .then((response) => {
             if (response.success) {
@@ -403,7 +638,6 @@ function EditMenuItem({ menu_id }) {
 
   const activeTab = useMemo(() => {
     const active = tabs.find((tab) => tab.isActive);
-    // console.log("[TEST] activeTab", active);
     return active;
   }, [tabs]);
 
@@ -413,11 +647,38 @@ function EditMenuItem({ menu_id }) {
 
   return (
     <div>
-      <div>
+      <div className="flex justify-between">
         <h2>
           Edit Menu Item{" "}
           <span className="text-indigo-500">{menuItem?.name}</span>
         </h2>
+        <a
+          className="text-indigo-700 underline font-semibold flex gap-[7px]"
+          href={`${BASE_URL}/${menuItem?.url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Preview Page In New Tab"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <g className="open-in-new-tab-outline">
+              <g
+                fill="currentColor"
+                fillRule="evenodd"
+                className="Vector"
+                clipRule="evenodd"
+              >
+                <path d="M5 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5.263a1 1 0 1 1 2 0V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h5.017a1 1 0 1 1 0 2z" />
+                <path d="M21.411 2.572a.963.963 0 0 1 0 1.36l-8.772 8.786a.96.96 0 0 1-1.358 0a.963.963 0 0 1 0-1.36l8.773-8.786a.96.96 0 0 1 1.357 0" />
+                <path d="M21.04 2c.53 0 .96.43.96.962V8c0 .531-.47 1-1 1s-1-.469-1-1V4h-4c-.53 0-1-.469-1-1s.43-1 .96-1z" />
+              </g>
+            </g>
+          </svg>
+        </a>
       </div>
       <div className="pb-4 flex flex-col gap-1">
         <div className="text-xs">
@@ -441,7 +702,7 @@ function EditMenuItem({ menu_id }) {
         </div>
       </div>
       {/* tabs */}
-      <div className="pt-3 border-b-4 border-indigo-500">
+      <div className="pt-3 border-b-4 border-indigo-500 mb-5">
         <ul className="flex items-center gap-1">
           {tabs.map((tab) => (
             <li
@@ -472,6 +733,7 @@ function EditMenuItem({ menu_id }) {
         {activeTab.id === "hero" && (
           <HeroContent
             hero={menuItem?.banner}
+            images={images}
             onChange={handleHeroChange}
           />
         )}
@@ -481,11 +743,14 @@ function EditMenuItem({ menu_id }) {
             onChange={handleFAQChange}
           />
         )}
-        {activeTab.id === "price_visibility" && (
+        {/* {activeTab.id === "price_visibility" && (
           <PriceVisibility
             visibility={menuItem?.price_visibility === "show"}
             onChange={handlePriceVisibilityChange}
           />
+        )} */}
+        {activeTab.id === "settings" && (
+          <Settings menuItem={menuItem} onChange={handleSettingsChange} />
         )}
       </div>
     </div>

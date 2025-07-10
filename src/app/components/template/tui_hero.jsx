@@ -48,7 +48,7 @@ export default function Hero({ data }) {
                     </h1>
                   </div>
                   <div className="w-[75%]">
-                    <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-justify">
+                    <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-center">
                       {data?.banner?.tag_line}
                     </h2>
                   </div>

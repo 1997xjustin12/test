@@ -11,7 +11,7 @@ function isMobileDevice() {
 }
 
 
-function FicDropDown({children}) {
+function FicDropDown({children, contact_number}) {
   const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
@@ -37,7 +37,7 @@ function FicDropDown({children}) {
             </div>
             <div className="px-3 py-1">
               <div className="block rounded-lg p-1 transition hover:bg-white/30">
-                <Link href="tel:(888) 575-9720" className="flex items-center gap-5 text-dark"><ICRoundPhone />(888) 575-9720</Link>
+                <Link href={`tel:${contact_number || "(888) 575-9720"}`} className="flex items-center gap-5 text-dark"><ICRoundPhone />{contact_number || "(888) 575-9720"}</Link>
               </div>
               <div className="block rounded-lg p-1 transition hover:bg-white/30">
                 <Link href="mailto:info@OnSiteStorage.com" className="flex items-center gap-5 text-dark"><MDIEmailOutline />Email Us</Link>
