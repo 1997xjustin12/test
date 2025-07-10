@@ -25,7 +25,7 @@ export default function Faq({data}) {
   },[data])
 
   return (
-      <div className="container mx-auto px-[10px] lg:px-[20px] py-[10px]">
+      <div className="container mx-auto px-[10px] lg:px-[20px] py-[5px]">
         <h2 className="underline">Frequently Asked Questions</h2>
         <div className="flex flex-col gap-[10px] mt-5">
           {faqs.map((i, idx) => (

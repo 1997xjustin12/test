@@ -9,6 +9,7 @@ import Faq from "@/app/components/molecule/Faq"
 import Reviews from "@/app/components/molecule/Reviews"
 import CategoriesCarousel from "@/app/components/molecule/CategoriesCarousel"
 import HeroNotice from "@/app/components/atom/HeroNotice"
+import NewsLetter from "@/app/components/section/NewsLetter"
 
 const isShopify = true;
 
@@ -71,6 +72,7 @@ export default async function GenericCategoryPage({ params }) {
         <Faq data={pageData.faqs.data}/>
       }
 
+      <NewsLetter />
     </div>
   );
 }
