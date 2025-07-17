@@ -10,6 +10,10 @@ import { useSolanaCategories } from "@/app/context/category";
 
 import FicDropDown from "@/app/components/atom/FicDropDown";
 
+
+import { useRouter } from 'next/navigation';
+
+
 const ProductCardPriceDisplay = ({ price_details }) => {
   if (!price_details) {
     return;
@@ -44,6 +48,7 @@ const ProductCardPriceDisplay = ({ price_details }) => {
 };
 
 const ProductCard = ({ hit, page_details   }) => {
+  const router = useRouter();
   const { viewItem } = useQuickView();
   const { isPriceVisible, getProductUrl} = useSolanaCategories();
 
@@ -61,13 +66,22 @@ const ProductCard = ({ hit, page_details   }) => {
     const count = parseInt(value, 10);
     return isNaN(count) ? 0 : count;
   }
+  
+  const handleProductItemClick = (e) => {
+    const card = e.target.closest('.product-card-wrap');
+    if (!card) return;
+
+    const href = card.getAttribute('data-href');
+    if (href) {
+      router.push(href);
+    }
+  }
 
   return (
-    <Link
-      prefetch={false}
-      href={`${getProductUrl(hit)}`}
-      // onClick={handleProductItemClick}
-      className="flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group"
+    <div
+      data-href={`${getProductUrl(hit)}`}
+      onClick={handleProductItemClick}
+      className="product-card-wrap flex w-full h-full bg-white overflow-hidden rounded-md border duration-500  hover:shadow-xl pb-[8px] hover:border-stone-700 group"
     >
       <div className="w-full">
         <div
@@ -149,7 +163,7 @@ const ProductCard = ({ hit, page_details   }) => {
           </FicDropDown>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

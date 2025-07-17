@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 // import localFont from "next/font/local";
 import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
-import TuiNavBar from "@/app/components/template/tui_navbarV2"; // uncomment for shopify structure
+import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
 import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
 import Footer from "@/app/components/section/Footer";
 import { CartProvider } from "@/app/context/cart";
