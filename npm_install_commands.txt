@@ -1,0 +1,32 @@
+npm install --legacy-peer-deps
+
+Iconify Icons
+npm install --save-dev @iconify/react --legacy-peer-deps
+
+
+React Responsive
+npm install react-responsive --legacy-peer-deps
+
+Tailwind Aspect Ratio
+npm install @tailwindcss/aspect-ratio --legacy-peer-deps
+
+React Slick
+npm install react-slick --save --legacy-peer-deps
+npm install slick-carousel --save --legacy-peer-deps
+
+REDIS
+npm install @upstash/redis --legacy-peer-deps
+
+CRYPTO-JS
+npm i crypto-js --legacy-peer-deps
+
+LOCALFORAGE
+npm install localforage --legacy-peer-deps
+
+HTML PARSER
+npm install html-react-parser --legacy-peer-deps
+
+TIPTAP
+npm install @tiptap/react @tiptap/pm @tiptap/starter-kit --legacy-peer-deps
+npm install @tiptap/extension-text-align --legacy-peer-deps
+npm install @tiptap/extension-link --legacy-peer-deps

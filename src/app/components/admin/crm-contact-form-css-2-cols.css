@@ -1,0 +1,209 @@
+html,
+body {
+  margin: 0px;
+}
+.crmWebToEntityForm * {
+  font-family: "Poppins", "san-serif";
+}
+input[type="text"] {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px !important;
+  box-sizing: border-box;
+  /* Optional */
+  transition: border-color 0.2s ease-in-out;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+.formsubmit.zcwf_button {
+  font-family: "Poppins", "san-serif";
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: white !important;
+  background: #c60c29;
+  border-color: #c60c29;
+}
+.formsubmit.zcwf_button:hover {
+  background: #ea2342 !important;
+  border-color: #ea2342 !important;
+}
+#crmWebToEntityForm.zcwf_lblLeft {
+  width: 100%;
+  padding: 15px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+#crmWebToEntityForm.zcwf_lblLeft * {
+  box-sizing: border-box;
+}
+#crmWebToEntityForm {
+  text-align: left;
+}
+#crmWebToEntityForm * {
+  direction: ltr;
+}
+.zcwf_lblLeft .zcwf_title {
+  word-wrap: break-word;
+  padding: 0px 6px 10px;
+  font-weight: bold;
+}
+.zcwf_lblLeft.cpT_primaryBtn:hover {
+  background: linear-gradient(#02acff 0, #006be4 100%) no-repeat padding-box !important;
+  box-shadow: 0 -2px 0 0 #0159b9 inset !important;
+  border: 0 !important;
+  color: #fff !important;
+  outline: 0 !important;
+}
+.zcwf_lblLeft .zcwf_col_fld input[type="text"],
+input[type="password"],
+.zcwf_lblLeft .zcwf_col_fld textarea {
+  width: 100%;
+  border: 1px solid #c0c6cc !important;
+  resize: vertical;
+  border-radius: 2px;
+  float: left;
+}
+.zcwf_lblLeft .zcwf_col_lab {
+  width: 100%;
+  word-break: break-word;
+  padding: 0px 6px 0px;
+  margin-right: 10px;
+  margin-top: 5px;
+  float: left;
+  min-height: 1px;
+}
+.zcwf_lblLeft .zcwf_privacy {
+  padding: 6px;
+}
+.zcwf_lblLeft .wfrm_fld_dpNn {
+  display: none;
+}
+.dIB {
+  display: inline-block;
+}
+.zcwf_lblLeft .zcwf_col_fld_slt {
+  display: block;
+  width: 100%;
+  padding: 10px 40px 10px 15px; /* Extra right padding for the arrow */
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  /* Remove native styling */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Add custom dropdown icon */
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='10' viewBox='0 0 14 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23333' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+  cursor: pointer;
+}
+.zcwf_lblLeft .zcwf_help_icon {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #c0c6cc;
+  color: #c1c1c1;
+  text-align: center;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: bold;
+  border-radius: 50%;
+}
+.zcwf_lblLeft .zcwf_row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.zcwf_lblLeft .formsubmit {
+  margin-right: 5px;
+  cursor: pointer;
+  color: #313949;
+  font-size: 16px;
+}
+.zcwf_lblLeft .zcwf_privacy_txt {
+  width: 90%;
+  color: rgb(0, 0, 0);
+  font-size: 12px;
+  display: inline-block;
+  vertical-align: top;
+  color: #313949;
+  padding-top: 2px;
+  margin-left: 6px;
+}
+.zcwf_lblLeft .zcwf_button {
+  font-size: 12px;
+  color: #313949;
+  border: 1px solid #c0c6cc;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.zcwf_lblLeft .zcwf_tooltip_over {
+  position: relative;
+}
+.zcwf_lblLeft .zcwf_tooltip_ctn {
+  position: absolute;
+  background: #dedede;
+  padding: 3px 6px;
+  top: 3px;
+  border-radius: 4px;
+  word-break: break-word;
+  min-width: 100px;
+  max-width: 150px;
+  color: #313949;
+  z-index: 100;
+}
+.zcwf_lblLeft .zcwf_ckbox {
+  float: left;
+}
+.zcwf_lblLeft .zcwf_file {
+  width: 55%;
+  box-sizing: border-box;
+  float: left;
+}
+.cBoth:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+@media all and (max-width: 600px) {
+  .zcwf_lblLeft .zcwf_col_lab,
+  .zcwf_lblLeft .zcwf_col_fld {
+    width: auto;
+    float: none !important;
+  }
+}
+
+.custom-2-col-wrapper{
+    display:flex;
+    flex-wrap: wrap;
+    gap:10px;
+}
+
+.custom-2-col-wrapper .zcwf_row{
+    width:calc(50% - 5px);
+}
+
+@media (max-width: 640px) {
+    .custom-2-col-wrapper .zcwf_row{
+        width:100%;
+    }
+}

@@ -1,0 +1,706 @@
+[
+    {
+        "name": "All Products",
+        "key_words": [
+            "fireplace",
+            "fireplaces",
+            "fire pit",
+            "fire pits",
+            "fire-pit",
+            "fire-pits",
+            "patio heater",
+            "patio heaters",
+            "patio-heater",
+            "patio-heaters",
+            "patio furniture",
+            "patio furnitures",
+            "patio-furniture",
+            "patio-furnitures",
+            "furniture",
+            "furnitures",
+            "gas log",
+            "gas logs",
+            "gas-log",
+            "gas-logs",
+            "bbq"
+        ],
+        "menu": {
+            "href": "",
+            "visible": true,
+            "order": 1
+        },
+        "filter": {
+            "visible": true,
+            "order": 1
+        },
+        "links": [],
+        "searchable": false
+    },
+    {
+        "name": "Fireplaces",
+        "banner_img" : "/images/banner/fireplace-banner.webp",
+        "key_words": [
+            "fireplace",
+            "fireplaces"
+        ],
+        "menu": {
+            "href": "fireplaces",
+            "visible": true,
+            "order": 1
+        },
+        "filter": {
+            "visible": true,
+            "order": 1
+        },
+        "links": [
+            [
+                {
+                    "name": "Quick Ship Fireplaces",
+                    "url":"quick-ship-fireplaces",
+                    "key_words": ["/quick-ship-fireplaces/"],
+                    "children": []
+                },
+                {
+                    "name": "Gas Fireplaces",
+                    "url": "gas-fireplaces",
+                    "key_words": ["/quick-ship-fireplaces/"],
+                    "children": [
+                        {
+                            "name": "Direct Vent Fireplaces",
+                            "url":"direct-vent-fireplaces"
+                        },
+                        {
+                            "name": "Ventless Fireplaces",
+                            "url":"ventless-fireplaces"
+                        },
+                        {
+                            "name": "Linear Fireplaces",
+                            "url":"linear-fireplaces"
+                        },
+                        {
+                            "name": "Multi-Sided Fireplaces",
+                            "url":"multi-sided-fireplaces"
+                        }
+                    ]
+                },
+                {
+                    "name": "Wood Fireplaces",
+                            "url":"wood-fireplaces",
+                    "children": []
+                }
+            ],
+            [
+                {
+                    "name": "Electric Fireplaces",
+                            "url":"electric-fireplaces",
+                    "children": [
+                        {
+                            "name": "Electric Inserts",
+                            "url":"electric-inserts"
+                        },
+                        {
+                            "name": "Built-In Electric Fireplaces",
+                            "url":"built-in-electric-fireplaces"
+                        },
+                        {
+                            "name": "Free-Standing Electric Fireplaces",
+                            "url":"free-standing-electric-fireplaces"
+                        },
+                        {
+                            "name": "See-Trhough Electric Fireplaces",
+                            "url":"see-through-electric-fireplaces"
+                        },
+                        {
+                            "name": "Wall Mounted Electric Fireplaces",
+                            "url":"wall-mounted-electric-fireplaces"
+                        },
+                        {
+                            "name": "Outdoor Electric Fireplaces",
+                            "url":"outdoor-electric-fireplaces"
+                        },
+                        {
+                            "name": "Electric Log Set",
+                            "url":"electric-fireplace-log-sets"
+                        }
+                    ]
+                },
+                {
+                    "name": "Outdoor Fireplaces",
+                            "url":"outdoor-fireplaces",
+                    "children": [
+                        {
+                            "name": "Outdoor Gas Fireplaces",
+                            "url":"outdoor-fireplaces-gas"
+                        },
+                        {
+                            "name": "Outdoor Wood Fireplaces",
+                            "url":"outdoor-fireplaces-wood-burning"
+                        },
+                        {
+                            "name": "Outdoor Fireplace Burners",
+                            "url":"outdoor-fireplace-burners"
+                        },
+                        {
+                            "name": "Masonry Outdoor Fireplace Kits",
+                            "url":"masonry-fireplace-kits"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "name": "Fireplace Inserts",
+                    "url":"fireplace-inserts",
+                    "children": [
+                        {
+                            "name": "Wood Stove Inserts",
+                            "url":"wood-stove-inserts"
+                        },
+                        {
+                            "name": "Direct Vent Gas Firebox Inserts",
+                            "url":"direct-vent-fireplace-inserts"
+                        },
+                        {
+                            "name": "Electric Fireplace Inserts",
+                            "url":"electric-fireplace-inserts"
+                        }
+                    ]
+                },
+                {
+                    "name": "Fireplace Accessories",
+                    "url":"fireplace-accessories",
+                    "children": [
+                        {
+                            "name": "Fireplace Doors",
+                            "url":"fireplace-doors"
+                        },
+                        {
+                            "name": "Firewood Racks",
+                            "url":"firewood-racks"
+                        },
+                        {
+                            "name": "Fireplace Screens",
+                            "url":"fireplace-screens"
+                        },
+                        {
+                            "name": "Fireplace Grates",
+                            "url":"fireplace-grates"
+                        },
+                        {
+                            "name": "Fireplace Heaters & Blowers",
+                            "url":"fireplace-heaters-and-blowers"
+                        },
+                        {
+                            "name": "Fireplace Tools",
+                            "url":"fireplace-tools"
+                        },
+                        {
+                            "name": "Fireplace Mantels",
+                            "url":"fireplace-mantels"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "name": "Chimney",
+                    "url":"chimney",
+                    "children": [
+                        {
+                            "name": "Chimney & Stove Pipe",
+                            "url":"chimney-and-stove-pipe"
+                        },
+                        {
+                            "name": "Chimney Caps",
+                            "url":"chimney-caps"
+                        },
+                        {
+                            "name": "Chimney Liners",
+                            "url":"chimney-liners"
+                        },
+                        {
+                            "name": "Chimney Fans",
+                            "url":"chimney-fans"
+                        },
+                        {
+                            "name": "Chimney Cleaning & Repair",
+                            "url":"chimney-cleaning-and-repair"
+                        }
+                    ]
+                },
+                {
+                    "name": "Stove & Furnaces",
+                    "url":"wood-stoves-furnaces",
+                    "children": [
+                        {
+                            "name": "Wood Stoves",
+                            "url":"wood-stoves"
+                        },
+                        {
+                            "name": "Wood Stove Inserts",
+                            "url":"wood-stove-inserts"
+                        },
+                        {
+                            "name": "Gas Burning Stoves",
+                            "url":"gas-burning-wood-stoves"
+                        },
+                        {
+                            "name": "Wood Stove Accessories",
+                            "url":"wood-stove-accessories"
+                        }
+                    ]
+                }
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "Fire Pits",
+        "banner_img" : "/images/banner/firepit-banner.webp",
+        "key_words": [
+            "fire pit",
+            "fire pits",
+            "fire-pit",
+            "fire-pits"
+        ],
+        "menu": {
+            "href": "fire-pits",
+            "visible": true,
+            "order": 2
+        },
+        "filter": {
+            "visible": true,
+            "order": 2
+        },
+        "links": [
+            [
+                {
+                    "name": "Quick Ship Fire Pits",
+                    "children": []
+                },
+                {
+                    "name": "Gas Fire Pits",
+                    "children": [
+                        {
+                            "name": "Fire Bowls"
+                        },
+                        {
+                            "name": "Fire Pit Tables    "
+                        }
+                    ]
+                },
+                {
+                    "name": "Wood Burning Fire Pits",
+                    "children": []
+                }
+            ],
+            [
+                {
+                    "name": "Gas Fire Pit Burners",
+                    "children": [
+                        {
+                            "name": "Linear Fire Pit Burners"
+                        },
+                        {
+                            "name": "Round Fire Pit Burners"
+                        },
+                        {
+                            "name": "Square Fire Pit Burners"
+                        },
+                        {
+                            "name": "Jet Fire Pit Burners"
+                        },
+                        {
+                            "name": "Unique Fire Pit Burners"
+                        },
+                        {
+                            "name": "Brass Fire Pit Burners"
+                        },
+                        {
+                            "name": "Fire Pit Ignition Systems"
+                        }
+                    ]
+                },
+                {
+                    "name": "Fire Pit Tables",
+                    "children": []
+                },
+                {
+                    "name": "Fire Bowls",
+                    "children": []
+                }
+            ],
+            [
+                {
+                    "name": "Outdoor Fireplaces",
+                    "children": [
+                        {
+                            "name": "Outdoor Gas Fireplaces"
+                        },
+                        {
+                            "name": "Outdoor Wood Fireplaces"
+                        },
+                        {
+                            "name": "Outdoor Masonry Fireplaces"
+                        },
+                        {
+                            "name": "Indoor to Outdoor Fireplaces"
+                        },
+                        {
+                            "name": "Outdoor Linear Fireplaces"
+                        }
+                    ]
+                },
+                {
+                    "name": "Fire Pit Media",
+                    "children": [
+                        {
+                            "name": "Fire Glass"
+                        },
+                        {
+                            "name": "Outdoot Gas Logs"
+                        },
+                        {
+                            "name": "Lava Rock"
+                        }
+                    ]
+                },
+                {
+                    "name": "Gas Tiki Torches",
+                    "children": []
+                }
+            ],
+            [
+                {
+                    "name": "Fire Pit Brands",
+                    "children": [
+                        {
+                            "name": "Flame Craft"
+                        },
+                        {
+                            "name": "The Outdoor GreatRoom"
+                        },
+                        {
+                            "name": "The Outdoor Plus"
+                        },
+                        {
+                            "name": "Prism Hardscapes"
+                        },
+                        {
+                            "name": "HPC"
+                        },
+                        {
+                            "name": "Warming Trends"
+                        },
+                        {
+                            "name": "Fire Pit Art"
+                        },
+                        {
+                            "name": "Fire Garden"
+                        }
+                    ]
+                }
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "Patio Heaters",
+        "banner_img": "/images/banner/patio-heater-banner.webp",
+        "key_words": [
+            "patio heater",
+            "patio heaters",
+            "patio-heater",
+            "patio-heaters"
+        ],
+        "menu": {
+            "href": "patio-heaters",
+            "visible": true,
+            "order": 6
+        },
+        "filter": {
+            "visible": true,
+            "order": 6
+        },
+        "links": [
+            [
+                {"name": "Quick Ship Patio Heaters", "children":[]},
+                {"name": "Gas Patio Heaters", "children":[]},
+                {"name": "Electric Patio Heaters", "children":[]},
+                {"name": "Commercial Patio Heaters", "children":[]},
+                {"name": "Infrared Patio Heaters", "children":[]},
+                {"name": "Wall & Ceiling Mount Heaters", "children":[]},
+                {"name": "Free Standing Patio Heaters", "children":[]}
+            ],
+            [
+                {"name": "Patio Heater Accessories", "children":[]},
+                {"name": "Patio Heater Brands", "children":[
+                    {"name": "Bromic"},
+                    {"name": "Infratech"},
+                    {"name": "Solaira"},
+                    {"name": "Detroit Radiant"},
+                    {"name": "Sunpak"}
+                ]}
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "Patio Furnitures",
+        "banner_img": "/images/banner/patio-furniture-banner.webp",
+        "key_words": [
+            "patio furniture",
+            "patio furnitures",
+            "patio-furniture",
+            "patio-furnitures",
+            "furniture",
+            "furnitures"
+        ],
+        "menu": {
+            "href": "patio-furnitures",
+            "visible": true,
+            "order": 3
+        },
+        "filter": {
+            "visible": true,
+            "order": 3
+        },
+        "links": [
+            [
+                {
+                    "name": "Patio Furnitures Ensembles",
+                    "children": []
+                }
+            ],
+            [
+                {
+                    "name": "Patio Furnitures Types",
+                    "children": [
+                        {
+                            "name": "Patio Dining"
+                        },
+                        {
+                            "name": "Patio Seating"
+                        },
+                        {
+                            "name": "Patio Tables"
+                        },
+                        {
+                            "name": "Sectional Furnitures"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "name": "Patio Furnitures Materials",
+                    "children": [
+                        {
+                            "name": "Aluminum Patio Furniture"
+                        },
+                        {
+                            "name": "Resin Patio Furniture"
+                        },
+                        {
+                            "name": "Teak Patio Furniture"
+                        },
+                        {
+                            "name": "Wicker Patio Furniture"
+                        },
+                        {
+                            "name": "Wood Patio Furniture"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "name": "Patio Furnitures Brands",
+                    "children": [
+                        {
+                            "name": "Three Birds"
+                        },
+                        {
+                            "name": "Seaside Casual"
+                        },
+                        {
+                            "name": "Classic Home"
+                        },
+                        {
+                            "name": "The Outdoor GreatRoom"
+                        }
+                    ]
+                }
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "Gas Logs",
+        "banner_img": "/images/banner/gas-log-banner.webp",
+        "key_words": [
+            "gas log",
+            "gas logs",
+            "gas-log",
+            "gas-logs"
+        ],
+        "menu": {
+            "href": "gas-logs",
+            "visible": true,
+            "order": 5
+        },
+        "filter": {
+            "visible": true,
+            "order": 5
+        },
+        "links": [
+            [
+                {"name":"Qucik Ship Gas Logs", "children": [] },
+                {"name":"Vented Gas Log Sets", "children": []},
+                {"name":"Ventless Gas Log Sets", "children": []},
+                {"name":"Outdoor Gas Log Sets", "children": []},
+                {"name":"Fireballs, Shapes & Stones", "children": []},
+                {"name":"Replacement Gas Logs", "children": []},
+                {"name":"See-Through Gas Logs", "children": []}
+
+            ],
+            [
+                {"name":"Electric Log Sets", "children": []},
+                {"name":"Gas Log Accessories", "children": [
+                    {"name":"Indoor Gas Fireplace Burners"},
+                    {"name":"Fire Glass and Lava Rock"},
+                    {"name":"Gas Log Valves, Keys, and Covers"},
+                    {"name":"Gas Log Safety Pilot Kits"}
+                ]}
+            ],
+            [
+                {"name":"Gas Log Brands", "children": [
+                    {"name":"Grand Canyon"},
+                    {"name":"Real Fyre"},
+                    {"name":"Superior"},
+                    {"name":"Empire"},
+                    {"name":"Northern Flame"},
+                    {"name":"Rasmussen"},
+                    {"name":"Wilderness Collection"},
+                    {"name":"Hargrove"},
+                    {"name":"Napoleon"},
+                    {"name":"Monessen"}
+                ]}
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "BBQ",
+        "banner_img": "/images/banner/bbq-banner.webp",
+        "key_words": [
+            "bbq"
+        ],
+        "menu": {
+            "href": "bbq",
+            "visible": true,
+            "order": 4
+        },
+        "filter": {
+            "visible": true,
+            "order": 4
+        },
+        "links": [
+            [
+                {"name": "BBQ Quick Ship", "children":[]},
+                {"name": "BBQ Grills", "children":[
+                    {"name":"Built-In Grills"},
+                    {"name":"Cart-Mount Grills"},
+                    {"name":"Post-Mount Grills"},
+                    {"name":"Gas Grills"},
+                    {"name":"Charcoal Grills"},
+                    {"name":"Pellet Grills"},
+                    {"name":"Commercial-Grade Grills"}
+                ]}
+            ],
+            [
+                {"name": "Outdoor Kitchens & Islands", "children":[
+                    {"name": "BBQ Grill Islands"},
+                    {"name": "Built-In Grills"},
+                    {"name": "BBQ Island Doors & Drawers"},
+                    {"name": "BBQ Island Side Burners"},
+                    {"name": "Outdoor Refrigerators"},
+                    {"name": "Outdoor Beverage Centers"}
+                ]},
+                {"name":"Pizza Ovens","children":[]}
+            ],
+            [
+                {"name":"BBQ Brands", "children":[
+                    {"name": "American Made Grills"},
+                    {"name": "Summerset"},
+                    {"name": "Wildfire Outdoor Living"},
+                    {"name": "Coyote"},
+                    {"name": "Fire Magic"},
+                    {"name": "Lynx"},
+                    {"name": "American Outdoor Grill (AOG)"},
+                    {"name": "DCS"}
+                ]}
+            ]
+        ],
+        "searchable": true
+    },
+    {
+        "name": "Brands",
+        "key_words": [
+            "brand",
+            "brands"
+        ],
+        "menu": {
+            "href": "brands",
+            "visible": true,
+            "order": 8
+        },
+        "filter": {
+            "visible": true,
+            "order": 0
+        },
+        "links": [],
+        "searchable": true
+    },
+    {
+        "name": "New Arrivals",
+        "key_words": [
+            "new",
+            "new-arrivals",
+            "new-arrival",
+            "new arrivals",
+            "new arrival"
+        ],
+        "menu": {
+            "href": "new-arrivals",
+            "visible": true,
+            "order": 9
+        },
+        "filter": {
+            "visible": true,
+            "order": 0
+        },
+        "links":[],
+        "searchable": true
+    },
+    {   
+        "name": "On sale",
+        "key_words": [
+            "onsale",
+            "on-sale",
+            "on_sale",
+            "on sale"
+        ],
+        "menu": {
+            "href": "on-sale",
+            "visible": true,
+            "order": 10
+        },
+        "filter": {
+            "visible": true,
+            "order": 0
+        },
+        "links":[],
+        "searchable": true
+    }
+]
