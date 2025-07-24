@@ -146,11 +146,11 @@ export default function CheckoutForm({ onChange }) {
         quantity: item.count,
         total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
       }));
-      console.log("[TEST] handleSubmit", formattedItems);
+      // console.log("[TEST] handleSubmit", formattedItems);
       const newForm = form;
       newForm["items"] = formattedItems;
       const response = await createOrder(form);
-      console.log("[TEST] createOrder", response);
+      // console.log("[TEST] createOrder", response);
       setForm(initialForm);
       setSameAsBilling(false);
     } catch (err) {

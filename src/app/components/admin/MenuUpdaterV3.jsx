@@ -671,7 +671,7 @@ function MenuUpdaterV3() {
         ...data.filter(({ name }) => !["Home", "Search"].includes(name)),
       ]);
 
-      console.log("[TEST] nav_data", nav_data);
+      // console.log("[TEST] nav_data", nav_data);
 
       setMenu(nav_data);
       setSearchList(flattenMenu(nav_data));

@@ -14,8 +14,8 @@ const BraintreeForm = dynamic(() => import("@/app/components/template/BraintreeF
 
 function CheckoutPage() {
   const { cartItems, formattedCart } = useCart();
-  console.log("[TEST] cartItems",cartItems);
-  console.log("[TEST] formattedCart",formattedCart);
+  // console.log("[TEST] cartItems",cartItems);
+  // console.log("[TEST] formattedCart",formattedCart);
 
   // useEffect(()=>{
   //   // if(cartItems.length === 0){

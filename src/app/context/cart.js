@@ -40,15 +40,42 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     // Load the initial cart count from localforage on mount
     const loadCart = async () => {
+      if(!cartStorage) return;
       const cartItems = await cartStorage.getCart();
       setCartItems(cartItems);
       setCartItemsCount(cartItems.length);
       setLoadingCartItems(false);
     };
-    if (cartStorage) {
+
       loadCart();
-    }
   }, [cartStorage]);
+
+  // useEffect(() => {
+  //   const loadCart = async () => {
+  //     let attempts = 0;
+  //     let items = [];
+
+  //     while (attempts < 5) {
+  //       const cartItems = await cartStorage.getCart();
+
+  //       if (Array.isArray(cartItems) && cartItems.length > 0) {
+  //         items = cartItems;
+  //         break; // success
+  //       }
+
+  //       attempts++;
+  //       await new Promise((resolve) => setTimeout(resolve, 200)); // wait 200ms before retrying
+  //     }
+
+  //     setCartItems(items);
+  //     setCartItemsCount(items.length);
+  //     setLoadingCartItems(false);
+  //   };
+
+  //   if (cartStorage) {
+  //     loadCart();
+  //   }
+  // }, [cartStorage]);
 
   // Function to add to cart and update cart count
   // item param must be an array

@@ -566,7 +566,7 @@ const FeatNav = ({ menuItem, onChange }) => {
     const tmp = menuItem?.feat_nav ?? [];
     const tmp1 = tmp.map(i=> i?.menu_id);
 
-    console.log("[TEST] handleOptionClick", nav_item);
+    // console.log("[TEST] handleOptionClick", nav_item);
     if(tmp1.includes(nav_item?.menu_id)){
       onChange({target:{name:"feat-nav", value: tmp.filter(i=> i?.menu_id !== nav_item?.menu_id)}});
       return;
@@ -651,7 +651,7 @@ function EditMenuItem({ menu_id, images, feature_images }) {
   useEffect(() => {
     if (!Array.isArray(flatCategories) || !menu_id) return;
     const item = flatCategories.find((item) => item?.menu_id === menu_id);
-    console.log("[TEST] menuItem", item);
+    // console.log("[TEST] menuItem", item);
     // price visibility tab for brand only
     // if (item && item?.nav_type === "brand") {
     //   setTabs((prev) => [
@@ -748,7 +748,7 @@ function EditMenuItem({ menu_id, images, feature_images }) {
 
   const handleFeatNavChange = (e) => {
     const {name, value} = e.target;
-    console.log("[TEST] handleFeatNavChange", e);
+    // console.log("[TEST] handleFeatNavChange", e);
     if(name === "feat-nav"){
       setMenuItem(prev=> ({...prev, feat_nav: value}))
     }

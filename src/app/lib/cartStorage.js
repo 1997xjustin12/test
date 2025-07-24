@@ -21,10 +21,21 @@ export const saveCart = async (cart) => {
 // Function to get cart items
 export const getCart = async () => {
   try {
-    return (await localForage.getItem("cart")) || [];
+    await localForage.ready();
+
+    const cart = await localForage.getItem("cart");
+
+    if (!Array.isArray(cart)) {
+      console.warn("Cart data is not an array. Returning empty array.");
+      return [];
+    }
+
+    return cart;
   } catch (error) {
     console.error("Error retrieving cart items:", error);
     return [];
   }
 };
+
+
 
