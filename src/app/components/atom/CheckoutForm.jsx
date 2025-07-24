@@ -9,11 +9,13 @@ export default function CheckoutForm({ onChange }) {
     "billing_email",
     "billing_phone",
     "billing_address",
+    "billing_country",
     "shipping_first_name",
     "shipping_last_name",
     "shipping_email",
     "shipping_phone",
     "shipping_address",
+    "shipping_country",
   ];
   const initialForm = {
     status: null,
@@ -76,37 +78,19 @@ export default function CheckoutForm({ onChange }) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors({...newErrors});
+    }
+
     const newForm = {
       ...form,
       [name]: type === "checkbox" ? checked : value,
     };
-    setForm(newForm);
+    setForm({...newForm});
   };
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  // const validate = () => {
-  //   const newErrors = {};
-  //   if (!form.billing_first_name.trim())
-  //     newErrors.billing_first_name = "Required";
-  //   if (!form.billing_last_name.trim())
-  //     newErrors.billing_last_name = "Required";
-  //   if (!form.billing_email.trim() || !isValidEmail(form.billing_email))
-  //     newErrors.billing_email = "Required";
-  //   if (!form.billing_phone.trim()) newErrors.billing_phone = "Required";
-  //   if (!form.billing_address.trim()) newErrors.billing_address = "Required";
-  //   if (!form.shipping_first_name.trim() && !sameAsBilling)
-  //     newErrors.shipping_first_name = "Required";
-  //   if (!form.shipping_last_name.trim() && !sameAsBilling)
-  //     newErrors.shipping_last_name = "Required";
-  //   if ((!form.shipping_email.trim() || !isValidEmail(form.shipping_email)) && !sameAsBilling)
-  //     newErrors.shipping_email = "Required";
-  //   if (!form.shipping_phone.trim() && !sameAsBilling)
-  //     newErrors.shipping_phone = "Required";
-  //   if (!form.shipping_address.trim() && !sameAsBilling)
-  //     newErrors.shipping_address = "Required";
-  //   return newErrors;
-  // };
 
   const validate = () => {
     const newErrors = {};
@@ -122,18 +106,24 @@ export default function CheckoutForm({ onChange }) {
     }
     if (!form.billing_phone.trim()) newErrors.billing_phone = "Required";
     if (!form.billing_address.trim()) newErrors.billing_address = "Required";
+    if (!form.billing_country.trim()) newErrors.billing_country = "Required";
 
-    if (!form.shipping_first_name.trim())
-      newErrors.shipping_first_name = "Required";
-    if (!form.shipping_last_name.trim())
-      newErrors.shipping_last_name = "Required";
-    if (!form.shipping_phone.trim()) newErrors.shipping_phone = "Required";
-    if (!form.shipping_address.trim()) newErrors.shipping_address = "Required";
+    if (!sameAsBilling) {
+      if (!form.shipping_first_name.trim())
+        newErrors.shipping_first_name = "Required";
+      if (!form.shipping_last_name.trim())
+        newErrors.shipping_last_name = "Required";
+      if (!form.shipping_phone.trim()) newErrors.shipping_phone = "Required";
+      if (!form.shipping_address.trim())
+        newErrors.shipping_address = "Required";
+      if (!form.shipping_country.trim())
+        newErrors.shipping_country = "Required";
 
-    if (!form.shipping_email.trim()) {
-      newErrors.shipping_email = "Required";
-    } else if (!isValidEmail(form.shipping_email)) {
-      newErrors.shipping_email = "Invalid email";
+      if (!form.shipping_email.trim()) {
+        newErrors.shipping_email = "Required";
+      } else if (!isValidEmail(form.shipping_email)) {
+        newErrors.shipping_email = "Invalid email";
+      }
     }
 
     return newErrors;
@@ -216,18 +206,22 @@ export default function CheckoutForm({ onChange }) {
 
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+      setErrors({...newErrors});
     }
-  }, [form]);
+  }, [form, sameAsBilling]);
+
+  useEffect(() => {
+    console.log("[TEST] errors: ", errors)
+  }, [errors]);
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
       <p className="text-xl font-semibold text-gray-900 dark:text-white">
-        Checkout Form
+        Form
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Status */}
-        <div>
+        {/* <div>
           <label className="block" htmlFor="status">
             Status
           </label>
@@ -248,10 +242,10 @@ export default function CheckoutForm({ onChange }) {
           {errors.status && (
             <p className="text-red-500 text-sm">{errors.status}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Payment Method */}
-        <div>
+        {/* <div>
           <label className="block" htmlFor="payment_method">
             Payment Method
           </label>
@@ -270,10 +264,10 @@ export default function CheckoutForm({ onChange }) {
           {errors.payment_method && (
             <p className="text-red-500 text-sm">{errors.payment_method}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Payment Status */}
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="checkbox"
             name="payment_status"
@@ -285,7 +279,7 @@ export default function CheckoutForm({ onChange }) {
         </div>
         {errors.payment_status && (
           <p className="text-red-500 text-sm">{errors.payment_status}</p>
-        )}
+        )} */}
 
         {/* Billing Fields */}
         <h2>Billing</h2>

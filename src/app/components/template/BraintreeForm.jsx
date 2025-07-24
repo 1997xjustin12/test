@@ -133,13 +133,13 @@ export default function BraintreeForm() {
           total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
         }));
         const order_response = await createOrder(orders);
-        console.log("[TEST] order_response", order_response);
 
         if (order_response.success) {
           instance.teardown();
           setInstance(null);
-          clearCartItems();
-          router.push(`${BASE_URL}/payment_success`);
+          // clearCartItems();
+          // router.push(`${BASE_URL}/payment_success`);
+          alert("success!");
         }else{
           alert("Something went wrong! Please try again.")
         }
