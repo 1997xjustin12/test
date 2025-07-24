@@ -1,12 +1,10 @@
 'use client';
-import React, {useEffect} from 'react'
-import dynamic from 'next/dynamic'
-import CheckoutOrderSummary from "@/app/components/atom/CheckoutOrderSummary"
+import React, {useEffect} from 'react';
+import dynamic from 'next/dynamic';
+import CheckoutOrderSummary from "@/app/components/atom/CheckoutOrderSummary";
+import CheckoutForm from "@/app/components/atom/CheckoutForm"
 import { useCart } from "@/app/context/cart";
-import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 // import BraintreeForm from "@/app/components/template/BraintreeForm"
 const BraintreeForm = dynamic(() => import("@/app/components/template/BraintreeForm"), {
@@ -15,15 +13,15 @@ const BraintreeForm = dynamic(() => import("@/app/components/template/BraintreeF
 
 
 function CheckoutPage() {
-  const router = useRouter();
-  const { cartItems } = useCart();
-  // console.log("cartItems",cartItems);
+  const { cartItems, formattedCart } = useCart();
+  console.log("[TEST] cartItems",cartItems);
+  console.log("[TEST] formattedCart",formattedCart);
 
-  useEffect(()=>{
-    // if(cartItems.length === 0){
-      router.push(`${BASE_URL}/cart`);
-    // }
-  },[])
+  // useEffect(()=>{
+  //   // if(cartItems.length === 0){
+  //     router.push(`${BASE_URL}/cart`);
+  //   // }
+  // },[])
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">

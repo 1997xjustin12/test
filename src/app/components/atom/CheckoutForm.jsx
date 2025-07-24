@@ -1,8 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function CheckoutForm({ items }) {
+export default function CheckoutForm({ onChange }) {
+  const required_fields = [
+    "billing_first_name",
+    "billing_last_name",
+    "billing_email",
+    "billing_phone",
+    "billing_address",
+    "shipping_first_name",
+    "shipping_last_name",
+    "shipping_email",
+    "shipping_phone",
+    "shipping_address",
+  ];
   const initialForm = {
     status: null,
     payment_method: null,
@@ -63,38 +75,72 @@ export default function CheckoutForm({ items }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
+
+    const newForm = {
+      ...form,
       [name]: type === "checkbox" ? checked : value,
-    }));
+    };
+    setForm(newForm);
   };
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // const validate = () => {
+  //   const newErrors = {};
+  //   if (!form.billing_first_name.trim())
+  //     newErrors.billing_first_name = "Required";
+  //   if (!form.billing_last_name.trim())
+  //     newErrors.billing_last_name = "Required";
+  //   if (!form.billing_email.trim() || !isValidEmail(form.billing_email))
+  //     newErrors.billing_email = "Required";
+  //   if (!form.billing_phone.trim()) newErrors.billing_phone = "Required";
+  //   if (!form.billing_address.trim()) newErrors.billing_address = "Required";
+  //   if (!form.shipping_first_name.trim() && !sameAsBilling)
+  //     newErrors.shipping_first_name = "Required";
+  //   if (!form.shipping_last_name.trim() && !sameAsBilling)
+  //     newErrors.shipping_last_name = "Required";
+  //   if ((!form.shipping_email.trim() || !isValidEmail(form.shipping_email)) && !sameAsBilling)
+  //     newErrors.shipping_email = "Required";
+  //   if (!form.shipping_phone.trim() && !sameAsBilling)
+  //     newErrors.shipping_phone = "Required";
+  //   if (!form.shipping_address.trim() && !sameAsBilling)
+  //     newErrors.shipping_address = "Required";
+  //   return newErrors;
+  // };
 
   const validate = () => {
     const newErrors = {};
+
     if (!form.billing_first_name.trim())
       newErrors.billing_first_name = "Required";
     if (!form.billing_last_name.trim())
       newErrors.billing_last_name = "Required";
-    if (!form.billing_email.trim()) newErrors.billing_email = "Required";
+    if (!form.billing_email.trim()) {
+      newErrors.billing_email = "Required";
+    } else if (!isValidEmail(form.billing_email)) {
+      newErrors.billing_email = "Invalid email";
+    }
     if (!form.billing_phone.trim()) newErrors.billing_phone = "Required";
     if (!form.billing_address.trim()) newErrors.billing_address = "Required";
-    if (!form.shipping_first_name.trim() && !sameAsBilling)
+
+    if (!form.shipping_first_name.trim())
       newErrors.shipping_first_name = "Required";
-    if (!form.shipping_last_name.trim() && !sameAsBilling)
+    if (!form.shipping_last_name.trim())
       newErrors.shipping_last_name = "Required";
-    if (!form.shipping_email.trim() && !sameAsBilling)
+    if (!form.shipping_phone.trim()) newErrors.shipping_phone = "Required";
+    if (!form.shipping_address.trim()) newErrors.shipping_address = "Required";
+
+    if (!form.shipping_email.trim()) {
       newErrors.shipping_email = "Required";
-    if (!form.shipping_phone.trim() && !sameAsBilling)
-      newErrors.shipping_phone = "Required";
-    if (!form.shipping_address.trim() && !sameAsBilling)
-      newErrors.shipping_address = "Required";
+    } else if (!isValidEmail(form.shipping_email)) {
+      newErrors.shipping_email = "Invalid email";
+    }
+
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!items) return;
 
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
@@ -104,7 +150,12 @@ export default function CheckoutForm({ items }) {
 
     setSubmitting(true);
     try {
-      const formattedItems = items.map(item=> ({product_id: item?.product_id, price: item?.variants?.[0]?.price, quantity:item.count, total: Number((item?.variants?.[0]?.price * item.count).toFixed(2))  }));
+      const formattedItems = items.map((item) => ({
+        product_id: item?.product_id,
+        price: item?.variants?.[0]?.price,
+        quantity: item.count,
+        total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+      }));
       console.log("[TEST] handleSubmit", formattedItems);
       const newForm = form;
       newForm["items"] = formattedItems;
@@ -141,6 +192,33 @@ export default function CheckoutForm({ items }) {
       copyBillingToShipping();
     }
   };
+
+  const billingFields = [
+    "billing_first_name",
+    "billing_last_name",
+    "billing_email",
+    "billing_phone",
+    "billing_address",
+  ];
+
+  const hasBillingErrors = billingFields.some((field) => {
+    const value = form[field];
+    return (
+      !value?.trim() || (field === "billing_email" && !isValidEmail(value))
+    );
+  });
+
+  useEffect(() => {
+    onChange({
+      is_ready: Object.keys(validate(form)).length === 0,
+      data: form,
+    });
+
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    }
+  }, [form]);
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -224,7 +302,30 @@ export default function CheckoutForm({ items }) {
             "billing_country",
           ].map((field) => (
             <div key={field}>
-              <label className="block capitalize" htmlFor={field}>
+              <label
+                className="capitalize flex items-center gap-[7px]"
+                htmlFor={field}
+              >
+                {required_fields.includes(field) && (
+                  <span
+                    title="required"
+                    className={`${
+                      errors[field] ? "text-red-500" : "text-green-500"
+                    } text-xs`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m0 18c-4.39 0-8-3.61-8-8s3.61-8 8-8s8 3.61 8 8s-3.61 8-8 8m1-9.73l2.83-1.64l1 1.74L14 12l2.83 1.63l-1 1.74L13 13.73V17h-2v-3.27l-2.83 1.64l-1-1.74L10 12l-2.83-1.63l1-1.74L11 10.27V7h2z"
+                      />
+                    </svg>
+                  </span>
+                )}
                 {field.replace("billing_", "").replaceAll("_", " ")}
               </label>
               <input
@@ -235,9 +336,9 @@ export default function CheckoutForm({ items }) {
                 type={field.includes("email") ? "email" : "text"}
                 className="border p-2 w-full"
               />
-              {errors[field] && (
+              {/* {errors[field] && (
                 <p className="text-red-500 text-sm">{errors[field]}</p>
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -249,6 +350,7 @@ export default function CheckoutForm({ items }) {
             id="sameAsBilling"
             checked={sameAsBilling}
             onChange={handleSameAsBillingChange}
+            disabled={hasBillingErrors}
             className="mr-2"
           />
           <label htmlFor="sameAsBilling">
@@ -271,7 +373,30 @@ export default function CheckoutForm({ items }) {
             "shipping_country",
           ].map((field) => (
             <div key={field}>
-              <label className="block capitalize" htmlFor={field}>
+              <label
+                className="capitalize flex items-center gap-[7px]"
+                htmlFor={field}
+              >
+                {required_fields.includes(field) && (
+                  <span
+                    title="required"
+                    className={`${
+                      errors[field] ? "text-red-500" : "text-green-500"
+                    } text-xs`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m0 18c-4.39 0-8-3.61-8-8s3.61-8 8-8s8 3.61 8 8s-3.61 8-8 8m1-9.73l2.83-1.64l1 1.74L14 12l2.83 1.63l-1 1.74L13 13.73V17h-2v-3.27l-2.83 1.64l-1-1.74L10 12l-2.83-1.63l1-1.74L11 10.27V7h2z"
+                      />
+                    </svg>
+                  </span>
+                )}
                 {field.replace("shipping_", "").replaceAll("_", " ")}
               </label>
               <input
@@ -283,9 +408,9 @@ export default function CheckoutForm({ items }) {
                 className="border p-2 w-full"
                 disabled={sameAsBilling}
               />
-              {errors[field] && (
+              {/* {errors[field] && (
                 <p className="text-red-500 text-sm">{errors[field]}</p>
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -307,13 +432,13 @@ export default function CheckoutForm({ items }) {
         </div>
 
         {/* Submit */}
-        <button
+        {/* <button
           type="submit"
           disabled={submitting}
           className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
         >
           {submitting ? "Submitting..." : "Submit"}
-        </button>
+        </button> */}
       </form>
     </div>
   );

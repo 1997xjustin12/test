@@ -5,13 +5,15 @@ import dropin from "braintree-web-drop-in";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/cart";
 import { formatPrice, getSum } from "@/app/lib/helpers";
-
+import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function BraintreeForm() {
   const router = useRouter();
-  const { cartItems, clearCartItems } = useCart();
+  const { cartItems, clearCartItems, formattedCart } = useCart();
+  // console.log("[TEST] formatted Cart", formattedCart);
+  const [checkoutForm, setCheckoutForm] = useState({});
   const [totalPayable, setTotalPayable] = useState(0);
   const [clientToken, setClientToken] = useState(null);
   const [instance, setInstance] = useState(null);
@@ -19,7 +21,11 @@ export default function BraintreeForm() {
   console.log("cartItems", cartItems);
 
   useEffect(() => {
-    setTotalPayable(getSum(cartItems, "price").toFixed(2));
+    const payable = getSum(
+      cartItems.map((i) => ({ ...i, price: i?.variants?.[0]?.price })),
+      "price"
+    ).toFixed(2);
+    setTotalPayable(payable);
   }, [cartItems]);
 
   useEffect(() => {
@@ -67,9 +73,34 @@ export default function BraintreeForm() {
     initializeDropIn();
   }, []);
 
+  async function createOrder(orderData) {
+    try {
+      const response = await fetch("/api/orders/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const contentType = response.headers.get("content-type");
+      const result = contentType?.includes("application/json")
+        ? await response.json()
+        : { message: "Invalid JSON response from server" };
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create order");
+      }
+
+      console.log("Order created:", result.order);
+      return result.order;
+    } catch (error) {
+      console.error("Order creation failed:", error.message || error);
+      throw error;
+    }
+  }
+
   const handlePayment = async () => {
-    // console.log("total_payable",totalPayable);
-    // return;
     if (!instance) {
       alert("Drop-in UI is not initialized");
       return;
@@ -92,12 +123,26 @@ export default function BraintreeForm() {
 
       const result = await response.json();
       if (result.success) {
-        instance.teardown();
-        setInstance(null);
-        // clear Cart
-        clearCartItems();
-        // redirect to succes payment page
-        router.push(`${BASE_URL}/payment_success`)
+        const orders = checkoutForm?.data;
+        orders["status"] = "paid";
+        orders["payment_method"] = "stripe";
+        orders["items"] = formattedCart.map((item) => ({
+          product_id: item?.product_id,
+          price: item?.variants?.[0]?.price,
+          quantity: item.count,
+          total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+        }));
+        const order_response = await createOrder(orders);
+        console.log("[TEST] order_response", order_response);
+
+        if (order_response.success) {
+          instance.teardown();
+          setInstance(null);
+          clearCartItems();
+          router.push(`${BASE_URL}/payment_success`);
+        }else{
+          alert("Something went wrong! Please try again.")
+        }
       } else {
         alert(`Payment failed: ${result.error}`);
       }
@@ -107,16 +152,24 @@ export default function BraintreeForm() {
     }
   };
 
+  const handleCheckoutFormChange = (data) => {
+    // console.log("[TEST] data", data);
+    setCheckoutForm(data);
+  };
+
   return (
-    <div className="shadow-sm border p-3 rounded-lg">
-      <div ref={dropinContainer} className="min-h-[350px]"></div>
-      <button
-        onClick={handlePayment}
-        disabled={!instance}
-        className="text-sm md:text-base mt-2 font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md w-full max-w-[250px]"
-      >
-        Pay
-      </button>
-    </div>
+    <>
+      <CheckoutForm onChange={handleCheckoutFormChange} />
+      <div className="shadow-sm border p-3 rounded-lg">
+        <div ref={dropinContainer} className="min-h-[350px]"></div>
+        <button
+          onClick={handlePayment}
+          disabled={!instance || !checkoutForm?.is_ready}
+          className="text-sm md:text-base mt-2 font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md w-full max-w-[250px]"
+        >
+          Pay
+        </button>
+      </div>
+    </>
   );
 }

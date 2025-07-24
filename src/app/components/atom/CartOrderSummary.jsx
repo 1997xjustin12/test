@@ -26,6 +26,8 @@ function CartOrderSummary() {
       return;
     }
 
+    window.location.href = `${BASE_URL}/checkout`;
+
     // const line_items = cartItems.reduce((acc, item) => {
     //   const found = acc.find((i) => i.product_id === item.id);
     //   if (found) {
@@ -37,32 +39,32 @@ function CartOrderSummary() {
     // }, []);
 
     
-    const line_items = formattedCart.map((item)=> ({product_id: item?.variants?.[0]?.sku, quantity: item?.count}));
+    // const line_items = formattedCart.map((item)=> ({product_id: item?.variants?.[0]?.sku, quantity: item?.count}));
 
-    console.log("[TEST] line_items", line_items);
+    // console.log("[TEST] line_items", line_items);
 
-    try {
-      const response = await fetch("/api/create-cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ line_items }),
-      });
+    // try {
+    //   const response = await fetch("/api/create-cart", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ line_items }),
+    //   });
 
-      const data = await response.json();
-      console.log(data);
+    //   const data = await response.json();
+    //   console.log(data);
 
-      if (data?.checkout_url) {
-        window.location.href = data.checkout_url;
-      } else {
-        alert("Failed to create cart or get checkout URL.");
-        console.error(data);
-      }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      alert("Something went wrong while processing checkout.");
-    }
+    //   if (data?.checkout_url) {
+    //     window.location.href = data.checkout_url;
+    //   } else {
+    //     alert("Failed to create cart or get checkout URL.");
+    //     console.error(data);
+    //   }
+    // } catch (error) {
+    //   console.error("Checkout failed:", error);
+    //   alert("Something went wrong while processing checkout.");
+    // }
   };
 
   const getPriceSum = (items) => {
@@ -149,7 +151,7 @@ function CartOrderSummary() {
         <button
           onClick={handleCheckout}
           // disabled={true}
-          className="flex bg-theme-600 hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          className="flex bg-theme-600 hover:bg-theme-500 focus:outline-neutral-400 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
         >
           Proceed to Checkout
         </button>

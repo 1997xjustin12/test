@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('http://164.92.65.4:8800/api/orders/checkout', {
+    const response = await fetch('https://admin.solanabbqgrills.com/api/orders/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
