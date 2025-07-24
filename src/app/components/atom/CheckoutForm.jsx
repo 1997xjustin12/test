@@ -78,10 +78,10 @@ export default function CheckoutForm({ onChange }) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors({...newErrors});
-    }
+    // const newErrors = validate();
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors({...newErrors});
+    // }
 
     const newForm = {
       ...form,
@@ -205,9 +205,7 @@ export default function CheckoutForm({ onChange }) {
     });
 
     const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors({...newErrors});
-    }
+    setErrors({...newErrors});
   }, [form, sameAsBilling]);
 
   useEffect(() => {
