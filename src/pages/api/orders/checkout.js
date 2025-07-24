@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
+    return res.status(405).json({ success: false, message: 'Method Not Allowed' });
   }
 
   try {
@@ -12,17 +12,20 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body),
     });
 
-    // Check if response is JSON
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text(); // fallback
-      return res.status(500).json({ message: 'Invalid JSON response', raw: text });
+      const text = await response.text();
+      return res.status(500).json({ success: false, message: 'Invalid JSON response', raw: text });
     }
 
     const data = await response.json();
-    return res.status(response.status).json(data);
+
+    return res.status(response.status).json({
+      success: response.ok, // true if status 2xx
+      data,
+    });
   } catch (error) {
     console.error('Proxy Error:', error);
-    return res.status(500).json({ message: 'Proxy request failed', error: error.message });
+    return res.status(500).json({ success: false, message: 'Proxy request failed', error: error.message });
   }
 }

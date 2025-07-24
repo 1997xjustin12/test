@@ -86,17 +86,25 @@ export default function BraintreeForm() {
       const contentType = response.headers.get("content-type");
       const result = contentType?.includes("application/json")
         ? await response.json()
-        : { message: "Invalid JSON response from server" };
+        : { success: false, message: "Invalid JSON response from server" };
 
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create order");
+      if (!response.ok || result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to create order",
+        };
       }
 
-      console.log("Order created:", result.order);
-      return result.order;
+      return {
+        success: true,
+        data: result.data || result.order || result,
+      };
     } catch (error) {
       console.error("Order creation failed:", error.message || error);
-      throw error;
+      return {
+        success: false,
+        message: error.message || "Unexpected error while creating order",
+      };
     }
   }
 
@@ -135,14 +143,15 @@ export default function BraintreeForm() {
         }));
         const order_response = await createOrder(orders);
 
+        // console.log("[TEST] order_response", order_response);
         if (order_response.success) {
           instance.teardown();
           setInstance(null);
-          // clearCartItems();
-          // router.push(`${BASE_URL}/payment_success`);
-          alert("success!");
-        }else{
-          alert("Something went wrong! Please try again.")
+          clearCartItems();
+          router.push(`${BASE_URL}/payment_success`);
+          // alert("success!");
+        } else {
+          alert("Something went wrong! Please try again.");
         }
       } else {
         alert(`Payment failed: ${result.error}`);
@@ -165,7 +174,7 @@ export default function BraintreeForm() {
         <div ref={dropinContainer} className="min-h-[350px]"></div>
         <button
           onClick={handlePayment}
-          disabled={!instance || !checkoutForm?.is_ready}
+          disabled={!instance || !checkoutForm?.is_ready || !(totalPayable > 0)}
           className="text-sm md:text-base mt-2 font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md w-full max-w-[250px]"
         >
           Pay
