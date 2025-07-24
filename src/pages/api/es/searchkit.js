@@ -17,9 +17,8 @@ const apiClient = API(
         { field: "brand", weight: 2 },
         "description",
       ],
-      hit_fields: ["_id"],
       result_attributes: [
-        "_id",
+        "product_id",
         "handle",
         "title",
         "body_html",
