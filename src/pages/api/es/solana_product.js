@@ -2,7 +2,8 @@ import { areAllKeysEmpty } from "../../../app/lib/helpers";
 //  this hook is used for searching products
 export default async function handler(req, res) {
   const ESURL = "http://164.92.65.4:9200";
-  const ESShard = "solana_products";
+  // const ESShard = "solana_products";
+  const ESShard = "solana_updated_product_index";
   const ESApiKey =
     "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
 
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
 
       const data = await response.json();
       // elasticsearch result restructured to bigcommerce response object
-      const product = data?.hits?.hits.map((i) => i._source);
+      const product = data?.hits?.hits.map((i) => ({...i._source, product_id: i._id}));
 
       if (product?.[0] && product[0].accentuate_data?.[0]) {
         // send request to get product options data
@@ -84,7 +85,7 @@ export default async function handler(req, res) {
         );
         const product_options_json = await product_options_response.json();
         product_options = product_options_json?.hits?.hits.map(
-          (i) => i._source
+          (i) => ({...i._source, product_id: i._id})
         );
 
         // send request to get similar options data
@@ -161,7 +162,7 @@ export default async function handler(req, res) {
             const similar_products_json =
               await similar_products_response.json();
             similar_products = similar_products_json?.hits?.hits.map(
-              (i) => i._source
+              (i) => ({...i._source, product_id: i._id})
             );
           }
         }

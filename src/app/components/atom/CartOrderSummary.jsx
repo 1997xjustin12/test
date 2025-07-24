@@ -37,7 +37,9 @@ function CartOrderSummary() {
     // }, []);
 
     
-    const line_items = formattedCart.map((item)=> ({product_id: item?.variant?.[0]?.sku, quantity: item?.count}));
+    const line_items = formattedCart.map((item)=> ({product_id: item?.variants?.[0]?.sku, quantity: item?.count}));
+
+    console.log("[TEST] line_items", line_items);
 
     try {
       const response = await fetch("/api/create-cart", {
@@ -145,8 +147,8 @@ function CartOrderSummary() {
           </dl>
         </div>
         <button
-          // onClick={handleCheckout}
-          disabled={true}
+          onClick={handleCheckout}
+          // disabled={true}
           className="flex bg-theme-600 hover:bg-theme-500 focus:outline-orange-500 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
         >
           Proceed to Checkout

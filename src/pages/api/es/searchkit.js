@@ -6,7 +6,8 @@ const apiClient = API(
     connection: {
       host: "https://solanafireplaces.com/es",
       apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
-      index: "solana_products",
+      // index: "solana_products",
+      index: "solana_updated_product_index"
     },
     search_settings: {
       highlight_attributes: ["title"],
@@ -16,7 +17,9 @@ const apiClient = API(
         { field: "brand", weight: 2 },
         "description",
       ],
+      hit_fields: ["_id"],
       result_attributes: [
+        "_id",
         "handle",
         "title",
         "body_html",
@@ -185,6 +188,7 @@ export default async function handler(req, res) {
       results = await apiClient.handleRequest(data);
     }
 
+    console.log(results?.results?.[0]?.hits);
     res.status(200).json(results);
   } catch (err) {
     console.error("Searchkit Error:", err);

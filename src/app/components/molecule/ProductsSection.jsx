@@ -22,7 +22,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 // const es_index = "bigcommerce_products_3";
-const es_index = "solana_products";
+const es_index = "solana_updated_product_index";
 
 const searchClient = Client({
   url: `/api/es/searchkit/`,

@@ -54,6 +54,7 @@ function ProductQuickView({ data, product_link, onClose }) {
   };
 
   const handleAddToCart = async (item) => {
+    console.log("[TEST] QV handleAddToCart item", item)
     const items = createItemsArray(item, quantity);
     const response = await addToCart(items);
     const { code, message } = response;
@@ -122,7 +123,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                         View Item
                       </Link>
 
-                      {/* <button
+                      <button
                         onClick={() => handleAddToCart(data)}
                         className={`w-full bg-theme-600 hover:bg-theme-500 text-white p-2 font-semibold text-sm h-[38px] flex justify-center items-center ${
                           addToCartLoading
@@ -139,7 +140,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                         ) : (
                           "Add to cart"
                         )}
-                      </button> */}
+                      </button>
                     </div>
                     <Link
                       href={`tel:(888) 575-9720`}

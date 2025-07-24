@@ -48,6 +48,7 @@ const ProductCardPriceDisplay = ({ price_details }) => {
 };
 
 const ProductCard = ({ hit, page_details   }) => {
+  console.log("[TEST] ProductCard hit", hit);
   const router = useRouter();
   const { viewItem } = useQuickView();
   const { isPriceVisible, getProductUrl} = useSolanaCategories();

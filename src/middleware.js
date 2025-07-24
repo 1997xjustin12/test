@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const block_links = ["/cart", "/my-account", "/checkout"];
+const block_links = ["/my-account"]; // "/cart", "/checkout" 
 
 export function middleware(request) {
   const { pathname } = request.nextUrl

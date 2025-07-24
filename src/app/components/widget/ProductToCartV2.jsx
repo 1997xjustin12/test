@@ -179,7 +179,7 @@ const ProductToCart = ({ product, loading }) => {
                 ${formatPrice(productData?.variants?.[0]?.price)}
               </div>
             )}
-            {/* <div className="font-bold">QTY</div>
+            <div className="font-bold">QTY</div>
             <div className="flex items-center">
               <button
                 onClick={() => handleQuantityButtons("dec")}
@@ -239,10 +239,10 @@ const ProductToCart = ({ product, loading }) => {
                   />
                 </svg>
               </button>
-            </div> */}
+            </div>
           </div>
           <div className="font-bold text-white flex gap-[10px]">
-            {/* <button
+            <button
               className={`bg-pallete-green rounded-full py-[5px] px-[20px] ${
                 ATCLoading
                   ? "pointer-events-none relative"
@@ -272,8 +272,8 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               </div>
             </button>
-             */}
-            <FicDropDown>
+            
+            {/* <FicDropDown>
             <div className="bg-pallete-green text-white rounded-full py-[5px] px-[50px] flex flex-col items-center justify-center">
               <div className="text-2xl">Call to Order</div>
               <div
@@ -282,7 +282,7 @@ const ProductToCart = ({ product, loading }) => {
                 <ICRoundPhone width={20} height={20} /> (888) 575-9720
               </div>
             </div>
-            </FicDropDown>
+            </FicDropDown> */}
           </div>
         </>
       }
