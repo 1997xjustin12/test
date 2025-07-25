@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const key = `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`
   const {
-    query: { value },
+    query: { id },
   } = req;
 
 
