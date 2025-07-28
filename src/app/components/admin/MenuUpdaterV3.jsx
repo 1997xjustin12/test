@@ -129,7 +129,7 @@ const TreeItemWithEditLink = React.forwardRef(
       event.preventDefault();
       event.stopPropagation();
       const href = event?.target?.href;
-      console.log("[TEST href" , event);
+      console.log("[TEST href", event);
       if (href) {
         window.open(href, "_blank", "noopener,noreferrer");
       }
@@ -350,40 +350,57 @@ function MenuUpdaterV3() {
     return url.replace(/^\/|\/$/g, "").replace(/\//g, "-");
   }
 
+  const generateUniqueSlug = (key) => {
+    const existingSlugs = flattenMenu(menu).map((item) => item.slug);
+    const baseSlug = createSlug(key);
+    let uniqueSlug = baseSlug;
+    let counter = 1;
+
+    while (existingSlugs.includes(uniqueSlug)) {
+      uniqueSlug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+    return uniqueSlug;
+  };
+
   const handleAddMenuItem = () => {
     const selected = originMenu.filter((i) => i.selected);
     // need to format object from here
     const generated_id = generateId();
-    const mapped = selected.map((i) => ({
-      id: generated_id,
-      menu_id: generated_id,
-      parent_id: "",
-      key: i.key,
-      name: i.key,
-      url: createSlug(i.key),
-      slug: createSlug(i.key),
-      origin_name: i.key,
-      children: [],
-      price_visibility: "hide",
-      meta_title: "",
-      meta_description: "",
-      banner: {
-        img: {
-          src: null,
-          alt: "",
+    const mapped = selected.map((i) => {
+      const uniqueSlug = generateUniqueSlug(i.key);
+      return {
+        id: generated_id,
+        menu_id: generated_id,
+        parent_id: "",
+        key: i.key,
+        name: i.key,
+        url: uniqueSlug,
+        slug: uniqueSlug,
+        origin_name: i.key,
+        children: [],
+        price_visibility: "hide",
+        meta_title: "",
+        meta_description: "",
+        banner: {
+          img: {
+            src: null,
+            alt: "",
+          },
+          title: "",
+          tag_line: "",
         },
-        title: "",
-        tag_line: "",
-      },
-      page_contact_number: null,
-      searchable: true,
-      nav_visibility: true,
-      nav_type: i.nav_type,
-      faqs: {
-        visible: false,
-        data: [],
-      },
-    })); // inject properties
+        page_contact_number: null,
+        searchable: true,
+        nav_visibility: true,
+        nav_type: i.nav_type,
+        faqs: {
+          visible: false,
+          data: [],
+        },
+      };
+    }); // inject properties
     setMenu((prev) => {
       const newValue = [...prev, ...mapped];
       newValue.forEach((item, index) => {
@@ -622,8 +639,9 @@ function MenuUpdaterV3() {
   };
 
   // useEffect(() => {
-  //   console.log("[TEST] selectedMenu", selectedMenu);
-  // }, [selectedMenu]);
+  //   console.log("[TEST] check generateUniqueSlug effect");
+  //   console.log("[TEST] menu", menu);
+  // }, [menu]);
 
   const tmpFnSetCatId = (i) => {
     const name = i?.name;
