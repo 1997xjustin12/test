@@ -252,7 +252,9 @@ function MenuUpdaterV3() {
       const [menu_list, active_menu] = data;
       setMenuList(menu_list);
       setActiveMenu(active_menu);
-      const selected_menu = active_menu ?? menu_list?.[0]?.key;
+      // const selected_menu = active_menu ?? menu_list?.[0]?.key;
+      // console.log("[TEST] selected_menu", selected_menu);
+      const selected_menu = "menu-2r175z2fj";
       setSelectedMenu(selected_menu);
     });
   };
@@ -617,7 +619,7 @@ function MenuUpdaterV3() {
 
   const handleSelectMenuChange = (e) => {
     const { value } = e.target;
-    console.log("[TEST] selected menu", value);
+    // console.log("[TEST] selected menu", value);
     getSelectedMenuData(value);
     setSelectedMenu(value);
   };
@@ -792,7 +794,7 @@ function MenuUpdaterV3() {
             <button
               onClick={handleCreateNewMenu}
               className="cursor-pointer text-blue-600 hover:text-blue-700"
-              // disabled={true}
+              disabled={true}
             >
               create a new menu
             </button>
@@ -800,8 +802,9 @@ function MenuUpdaterV3() {
           </div>
           <div className="flex gap-[10px]">
             <select
-              // disabled
+              disabled
               onChange={handleSelectMenuChange}
+              value={selectedMenu}
               className="w-[calc(100%-121px)] bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               {menuList &&
