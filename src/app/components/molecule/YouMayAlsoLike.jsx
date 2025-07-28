@@ -75,22 +75,8 @@ export default function YouMayAlsoLike({ displayItems }) {
         You May Also Like
       </h3>
       <div className={`mt-6 gap-4 sm:mt-8 flex flex-wrap`}>
-        {products.length === 0
-          ? makeArray(displayItems ?? 3).map((item, idx) => (
-              <div
-                key={`product-card-${idx}`}
-                className={`space-y-6 overflow-hidden ${
-                  displayItems === 4 &&
-                  "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
-                } ${
-                  (displayItems === undefined || displayItems === 3) &&
-                  "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
-                }`}
-              >
-                <ProductCardLoader />
-              </div>
-            ))
-          : products.map((item, idx) => (
+        {products && Array.isArray(products) && products.length > 0
+          ? products.map((item, idx) => (
               <div
                 key={`product-card-wrapper-${idx}`}
                 className={`space-y-6 overflow-hidden ${
@@ -102,6 +88,20 @@ export default function YouMayAlsoLike({ displayItems }) {
                 }`}
               >
                 <ProductCard key={`product-card-${item}`} hit={item} />
+              </div>
+            ))
+          : makeArray(displayItems ?? 3).map((item, idx) => (
+              <div
+                key={`product-card-${idx}`}
+                className={`space-y-6 overflow-hidden ${
+                  displayItems === 4 &&
+                  "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
+                } ${
+                  (displayItems === undefined || displayItems === 3) &&
+                  "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
+                }`}
+              >
+                <ProductCardLoader />
               </div>
             ))}
       </div>
