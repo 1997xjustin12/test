@@ -418,7 +418,7 @@ export default function TuiNavbar({ logo, menu }) {
                               <div key={`sublink-col-${index}`}>
                                 {col.map((sublink) => (
                                   <div
-                                    className="py-2"
+                                    className="py-3"
                                     key={`sublink-col-${index}-${sublink?.slug}`}
                                   >
                                     <Link
@@ -432,7 +432,7 @@ export default function TuiNavbar({ logo, menu }) {
                                     {sublink?.children &&
                                       Array.isArray(sublink?.children) &&
                                       sublink?.children.length > 0 && (
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col gap-[5px]">
                                           {sublink.children.map((child) => (
                                             <Link
                                               prefetch={false}
