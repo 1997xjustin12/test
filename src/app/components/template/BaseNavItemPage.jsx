@@ -2,10 +2,15 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-function BaseNavItemPage({ page_details }) {
+import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
+
+
+async function BaseNavItemPage({ page_details }) {
   if (!page_details) {
     return notFound();
   }
+
+
 
   return (
     <div className="container mx-auto p-3">
@@ -23,28 +28,32 @@ function BaseNavItemPage({ page_details }) {
             Array.isArray(page_details?.children) &&
             page_details.children.length > 0 &&
             page_details.children.map((item, index) => (
-                <div key={`sidebar-category-link-${item?.slug}`} className="flex flex-col gap-[5px]">
+              <div
+                key={`sidebar-category-link-${item?.slug}`}
+                className="flex flex-col gap-[5px]"
+              >
+                <Link
+                  prefetch={false}
+                  href={`${BASE_URL}/${item?.url}`}
+                  className="text-lg font-semibold hover:underline hover:text-theme-800"
+                >
+                  {item?.name}
+                </Link>
+                {item &&
+                  item?.children &&
+                  Array.isArray(item?.children) &&
+                  item?.children?.length > 0 &&
+                  item?.children.map((sub, index2) => (
                     <Link
-                        prefetch={false}
-                        href={`${BASE_URL}/${item?.url}`}
-                        className="text-lg font-semibold hover:underline hover:text-theme-800"
+                      key={`sidebar-sub-category-link-${index}-${index2}-${item?.slug}`}
+                      prefetch={false}
+                      href={`${BASE_URL}/${sub?.url}`}
+                      className="hover:underline hover:text-theme-800"
                     >
-                        {item?.name}
+                      {sub?.name}
                     </Link>
-                    {
-                        item
-                        && item?.children
-                        && Array.isArray(item?.children)
-                        && item?.children?.length > 0
-                        && item?.children.map((sub,index2) =>
-                        <Link key={`sidebar-sub-category-link-${index}-${index2}-${item?.slug}`}
-                        prefetch={false}
-                        href={`${BASE_URL}/${sub?.url}`}
-                        className="hover:underline hover:text-theme-800">
-                            {sub?.name}
-                        </Link>)
-                    }
-                </div>
+                  ))}
+              </div>
             ))}
         </div>
         {/* content with category image and list */}
@@ -61,10 +70,23 @@ function BaseNavItemPage({ page_details }) {
                 className="w-full flex flex-col items-center gap-[15px]"
               >
                 <div className="w-full aspect-1 bg-neutral-200"></div>
-                <h4 className="text-center font-semibold text-sm">{item?.name}</h4>
+                <h4 className="text-center font-semibold text-sm">
+                  {item?.name}
+                </h4>
               </Link>
             ))}
         </div>
+      </div>
+      <div className="my-20">
+        {page_details?.collections &&
+          Array.isArray(page_details.collections) &&
+          page_details.collections.length > 0 &&
+          page_details.collections.map((collection) => (
+            <CollectionCarouselWrap
+              key={`collection-carousel-${collection?.mb_uid}`}
+              data={collection}
+            />
+          ))}
       </div>
     </div>
   );

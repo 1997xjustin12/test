@@ -4,6 +4,12 @@ import products_json from "@/app/data/filters/products.json";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
+export function updateOrderValues(items, startAt = 1) {
+  return items.map((item, index) => ({
+    ...item,
+    order: startAt + index
+  }));
+}
 
 export function areAllKeysEmpty(obj, keys) {
   return keys.every(key => !obj[key] || obj[key] === "");

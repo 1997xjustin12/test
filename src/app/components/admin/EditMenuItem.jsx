@@ -10,6 +10,7 @@ import {
   updateMenuItemById,
   generateId,
   flattenNavTree,
+  updateOrderValues,
 } from "@/app/lib/helpers";
 import HeroNotice from "@/app/components/atom/HeroNotice";
 
@@ -180,9 +181,7 @@ const HeroContent = ({ hero, images, onChange }) => {
                   onChange({ target: { name: "banner-image", value: image } })
                 }
                 className={`cursor-pointer w-[300px] h-[120px] bg-gray-300 flex-shrink-0 relative border-4 ${
-                  bannerImage === image
-                    ? "border-indigo-500"
-                    : "border-neutral-300"
+                  bannerImage === image ? "border-indigo-500" : "border-white"
                 }`}
               >
                 <Image
@@ -199,22 +198,6 @@ const HeroContent = ({ hero, images, onChange }) => {
     </div>
   );
 };
-
-// const PriceVisibility = ({ visibility, onChange }) => {
-//   return (
-//     <div className="flex flex-col gap-2">
-//       <div className="flex flex-col gap-1">
-//         <label className="inline-flex items-center space-x-2 cursor-pointer">
-//           <input
-//             type="checkbox"
-//             className="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-//           />
-//           <span className="text-gray-700">Price Visible</span>
-//         </label>
-//       </div>
-//     </div>
-//   );
-// };
 
 const FaqItem = ({ faq, onUpdate = () => {}, onDelete = () => {} }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -558,25 +541,29 @@ const FeatNav = ({ menuItem, onChange }) => {
   const activeFeatNavItems = useMemo(() => {
     if (!menuItem?.feat_nav) return [];
 
-    return menuItem.feat_nav.map(i=> i.menu_id);
+    return menuItem.feat_nav.map((i) => i.menu_id);
   }, [menuItem]);
-
 
   const handleOptionClick = (nav_item) => {
     const tmp = menuItem?.feat_nav ?? [];
-    const tmp1 = tmp.map(i=> i?.menu_id);
+    const tmp1 = tmp.map((i) => i?.menu_id);
 
     // console.log("[TEST] handleOptionClick", nav_item);
-    if(tmp1.includes(nav_item?.menu_id)){
-      onChange({target:{name:"feat-nav", value: tmp.filter(i=> i?.menu_id !== nav_item?.menu_id)}});
+    if (tmp1.includes(nav_item?.menu_id)) {
+      onChange({
+        target: {
+          name: "feat-nav",
+          value: tmp.filter((i) => i?.menu_id !== nav_item?.menu_id),
+        },
+      });
       return;
     }
 
-    if(tmp.length < 5){
-      onChange({target:{name:"feat-nav", value: [...tmp, nav_item]}})
+    if (tmp.length < 5) {
+      onChange({ target: { name: "feat-nav", value: [...tmp, nav_item] } });
       return;
     }
-  }
+  };
 
   return (
     <div>
@@ -587,8 +574,12 @@ const FeatNav = ({ menuItem, onChange }) => {
           {linkOptions.map((link, index) => (
             <div
               key={`feat-nav-option-${link?.slug}-${index}`}
-              className={`py-1 px-2 bg-white border border-slate-100 rounded-full shadow cursor-pointer ${activeFeatNavItems.includes(link?.menu_id) ? 'bg-indigo-800 text-white hover:bg-indigo-700': 'hover:bg-indigo-200'}`}
-              onClick={()=> handleOptionClick(link)}
+              className={`py-1 px-2 bg-white border border-slate-100 rounded-full shadow cursor-pointer ${
+                activeFeatNavItems.includes(link?.menu_id)
+                  ? "bg-indigo-800 text-white hover:bg-indigo-700"
+                  : "hover:bg-indigo-200"
+              }`}
+              onClick={() => handleOptionClick(link)}
             >
               {link?.name}
             </div>
@@ -597,18 +588,17 @@ const FeatNav = ({ menuItem, onChange }) => {
       </div>
       <div>Representation</div>
       <div className="flex w-full border border-slate-100 bg-white p-[20px] justify-evenly">
-          {
-            menuItem
-            && menuItem?.feat_nav
-            && Array.isArray(menuItem?.feat_nav)
-            && menuItem?.feat_nav.length > 0
-            && 
-            menuItem.feat_nav.map((nav_item,index) => <div
-            className="w-[200px] flex flex-col gap-[10px]"
-            key={`feat-nav-rep-${nav_item?.slug}-${index}`}>
+        {menuItem &&
+          menuItem?.feat_nav &&
+          Array.isArray(menuItem?.feat_nav) &&
+          menuItem?.feat_nav.length > 0 &&
+          menuItem.feat_nav.map((nav_item, index) => (
+            <div
+              className="w-[200px] flex flex-col gap-[10px]"
+              key={`feat-nav-rep-${nav_item?.slug}-${index}`}
+            >
               <div className="aspect-1 bg-white relative">
-                {
-                  nav_item?.feature_image &&
+                {nav_item?.feature_image && (
                   <Image
                     src={nav_item?.feature_image}
                     alt={`feat-nav-rep-${index}`}
@@ -616,11 +606,13 @@ const FeatNav = ({ menuItem, onChange }) => {
                     className="object-contain"
                     sizes="(max-width: 768px) 100vw, 300px"
                   />
-                }
+                )}
               </div>
-              <div className="text-center px-2 text-sm font-semibold">{nav_item?.name}</div>
-            </div>)
-          }
+              <div className="text-center px-2 text-sm font-semibold">
+                {nav_item?.name}
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -628,6 +620,204 @@ const FeatNav = ({ menuItem, onChange }) => {
 
 const FeatContent = ({ menuItem, onChange }) => {
   return <div>Feature Content</div>;
+};
+
+const CollectionCarouselItem = ({ collection, onChange }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: collection?.mb_uid });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  
+  const handleRemoveCollection = (item) => {
+    onChange({ target: { name: "remove-collection-item", value: item } });
+  };
+
+  const handleUpdateLabel = (event, collection) => {
+    const { value } = event.target;
+    onChange({
+      target: { name: "update-collection-label", value: { ...collection, mb_label: value } },
+    });
+  };
+
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <div className="p-3 bg-white flex items-center justify-between rounded border hover:shadow">
+        <div className="flex gap-5 items-center">
+          <button {...listeners} className="text-neutral-600 cursor-move">
+            <svg
+              className="pointer-events-none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M6.75 18.72c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127c-.114-.01-.247-.009-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.546-.546a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369m6 13.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127c-.115-.01-.248-.009-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.547-.546a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369"
+              />
+            </svg>
+          </button>
+          <div>
+            <div>
+              <small>Collection Name: {collection?.name}</small>
+            </div>
+            <input
+              type="text"
+              name={`label-${collection?.slug}`}
+              id={`label-${collection?.slug}`}
+              placeholder={`Enter Collection Label for ${collection?.name}`}
+              className="py-1 px-2 bg-neutral-50 rounded border"
+              value={collection?.mb_label || ""}
+              onChange={(e) => handleUpdateLabel(e, collection)}
+            />
+          </div>
+        </div>
+        <button
+          onClick={() => handleRemoveCollection(collection)}
+          title={`Remove collection ${collection?.name}`}
+        >
+          <svg
+            className="pointer-events-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const CollectionCarousel = ({ menuItem, onChange }) => {
+  const [collectionList, setCollectionList] = useState([]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleAddCollection = (item) => {
+    const withId = { ...item, mb_uid: generateId() };
+    onChange({ target: { name: "add-collection-item", value: withId } });
+  };
+
+  const handleDragEnd = (event) =>  {
+    const { active, over, items } = event;
+    if (active.id !== over.id) {
+      const oldIndex = menuItem?.collections?.findIndex((collection) => collection.mb_uid === active.id);
+      const newIndex = menuItem?.collections?.findIndex((collection) => collection.mb_uid === over.id);
+      const reorderedData = arrayMove(menuItem?.collections, oldIndex, newIndex);
+      const updatedData = { ...menuItem?.collections, data: reorderedData };
+      onChange({target:{name:"reorder-collections",value:updatedData.data}});
+    }
+  }
+
+  useEffect(() => {
+    const fetchCollectionList = async () => {
+      try {
+        const response = await fetch("/api/collections/collection-list");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCollectionList(data);
+      } catch (error) {
+        console.error("Failed to fetch collection list:", error);
+      }
+    };
+
+    fetchCollectionList();
+  }, []);
+
+  return (
+    <div>
+      <h4 className="font-bold">Page Collections Configuration</h4>
+      <div>
+        Create Collection display for a page, update labels and reorder.
+      </div>
+      <div className="flex gap-[15px] mt-[20px]">
+        <div className="flex flex-col overflow-hidden rounded bg-neutral-100 border border-neutral-300 w-[300px]">
+          <div className="bg-white p-3 border-b">Collection List</div>
+          <div className="flex gap-[2px] p-[7px] flex-col">
+            {collectionList &&
+              Array.isArray(collectionList) &&
+              collectionList.length > 0 &&
+              collectionList.map((collection) => (
+                <div
+                  key={`collection-option-${collection?.slug}`}
+                  className="p-3 bg-white rounded flex justify-between items-center border  hover:shadow"
+                >
+                  <div>{collection?.name}</div>
+                  <button
+                    title="Add collection"
+                    onClick={() => handleAddCollection(collection)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col overflow-hidden rounded bg-neutral-100 border border-neutral-300 w-[calc(100%-300px)]">
+          <div className=" bg-white p-3 border-b border-neutral-200">
+            Added Page Collections
+          </div>
+          <div className="w-full p-[7px] flex flex-col gap-[5px]">
+            {menuItem?.collections &&
+              Array.isArray(menuItem.collections) &&
+              menuItem.collections.length > 0 && (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={menuItem?.collections.map(i=> ({...i,id: i?.mb_uid}))}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {menuItem.collections
+                      .sort((a, b) => a.order - b.order)
+                      .map((collection) => (
+                        <CollectionCarouselItem
+                          key={`page-collection-${collection?.mb_uid}`}
+                          collection={collection}
+                          onChange={onChange}
+                        />
+                      ))}
+                  </SortableContext>
+                </DndContext>
+              )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 function EditMenuItem({ menu_id, images, feature_images }) {
@@ -640,7 +830,8 @@ function EditMenuItem({ menu_id, images, feature_images }) {
     { id: "feat_nav", label: "Featured Nav", isActive: false },
     { id: "feat_content", label: "Featured Content", isActive: false },
     { id: "faqs", label: "FAQs", isActive: false },
-    { id: "settings", label: "Settings", isActive: true },
+    { id: "collections", label: "Collections", isActive: true },
+    { id: "settings", label: "Settings", isActive: false },
   ]);
 
   // alert message
@@ -723,8 +914,6 @@ function EditMenuItem({ menu_id, images, feature_images }) {
     }
   };
 
-  const handlePriceVisibilityChange = (e) => {};
-
   const handleSettingsChange = (e) => {
     const { name, checked, value } = e.target;
     if (name === "contact-number") {
@@ -747,12 +936,57 @@ function EditMenuItem({ menu_id, images, feature_images }) {
   };
 
   const handleFeatNavChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     // console.log("[TEST] handleFeatNavChange", e);
-    if(name === "feat-nav"){
-      setMenuItem(prev=> ({...prev, feat_nav: value}))
+    if (name === "feat-nav") {
+      setMenuItem((prev) => ({ ...prev, feat_nav: value }));
     }
-  }
+  };
+
+  const handleCollectionCarouselChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "add-collection-item") {
+      setMenuItem((prev) => {
+        const collections = prev?.collections || [];
+        const reordered_collections = updateOrderValues([
+          ...collections,
+          value,
+        ]);
+        return {
+          ...prev,
+          collections: reordered_collections,
+        };
+      });
+    }
+
+    if (name === "remove-collection-item") {
+      setMenuItem((prev) => {
+        const collections = prev?.collections || [];
+        return {
+          ...prev,
+          collections: updateOrderValues(
+            collections.filter(({ mb_uid }) => mb_uid !== value?.mb_uid)
+          ),
+        };
+      });
+    }
+
+    if (name === "update-collection-label") {
+      setMenuItem((prev) => {
+        const collections = prev?.collections || [];
+        const filtered = collections.filter(
+          ({ mb_uid }) => mb_uid !== value?.mb_uid
+        );
+        const updated_collections = [...filtered, value];
+        return { ...prev, collections: [...updated_collections] };
+      });
+    }
+
+    if(name === "reorder-collections"){
+      setMenuItem((prev)=> ({...prev, collections: updateOrderValues(value)}))
+    }
+  };
 
   const showAlertMessage = (type, message) => {
     setAlertType(type);
@@ -905,8 +1139,16 @@ function EditMenuItem({ menu_id, images, feature_images }) {
             feature_images={feature_images}
           />
         )}
-        {activeTab.id === "feat_nav" && <FeatNav menuItem={menuItem} onChange={handleFeatNavChange}/>}
+        {activeTab.id === "feat_nav" && (
+          <FeatNav menuItem={menuItem} onChange={handleFeatNavChange} />
+        )}
         {activeTab.id === "feat_content" && <FeatContent menuItem={menuItem} />}
+        {activeTab.id === "collections" && (
+          <CollectionCarousel
+            menuItem={menuItem}
+            onChange={handleCollectionCarouselChange}
+          />
+        )}
       </div>
     </div>
   );
