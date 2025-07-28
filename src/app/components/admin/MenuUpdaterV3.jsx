@@ -202,7 +202,7 @@ function MenuUpdaterV3() {
   const [toggleCreateMenu, setToggleCreateMenu] = useState(false);
   const [menuList, setMenuList] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState("");
 
   const [scrollToSearch, setScrollToSearch] = useState("");
   const [searchList, setSearchList] = useState([]);
