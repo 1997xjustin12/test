@@ -617,6 +617,8 @@ function MenuUpdaterV3() {
 
   const handleSelectMenuChange = (e) => {
     const { value } = e.target;
+    console.log("[TEST] selected menu", value);
+    getSelectedMenuData(value);
     setSelectedMenu(value);
   };
 
@@ -678,10 +680,29 @@ function MenuUpdaterV3() {
     });
   };
 
+  const getSelectedMenuData = (menuKey) => {
+    redisGet(menuKey).then((data) => {
+      // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
+
+      if(!data) return;
+       
+      const nav_data = mapTreeWithId([
+        HomeNavItem,
+        ...data.filter(({ name }) => !["Home", "Search"].includes(name)),
+      ]);
+
+      // console.log("[TEST] nav_data", nav_data);
+
+      setMenu(nav_data);
+      setSearchList(flattenMenu(nav_data));
+    });
+  }
+
   useEffect(() => {
     updateMenuList();
     // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
-    redisGet(defaultMenuKey).then((data) => {
+    // redisGet(defaultMenuKey).then((data) => {
+    redisGet("menu-2r175z2fj").then((data) => {
       // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
 
       const nav_data = mapTreeWithId([
@@ -771,7 +792,7 @@ function MenuUpdaterV3() {
             <button
               onClick={handleCreateNewMenu}
               className="cursor-pointer text-blue-600 hover:text-blue-700"
-              disabled={true}
+              // disabled={true}
             >
               create a new menu
             </button>
@@ -779,7 +800,7 @@ function MenuUpdaterV3() {
           </div>
           <div className="flex gap-[10px]">
             <select
-              disabled
+              // disabled
               onChange={handleSelectMenuChange}
               className="w-[calc(100%-121px)] bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >

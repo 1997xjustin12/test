@@ -17,8 +17,9 @@ export const metadata = {
 };
 export default async function AdminLayout({ children }) {
   
-  const dafaultKey = keys.default_shopify_menu.value;
-  const mgetKeys = [dafaultKey];
+  // const defaultKey = keys.default_shopify_menu.value;
+  const defaultKey = process.env.NEXT_SOLANA_REDIS_DEV_MENU_KEY;
+  const mgetKeys = [defaultKey];
   const [menu] = await redis.mget(mgetKeys);
 
   return (

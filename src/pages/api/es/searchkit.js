@@ -13,9 +13,10 @@ const apiClient = API(
       highlight_attributes: ["title"],
       snippet_attributes: ["description:200"],
       search_attributes: [
-        { field: "title", weight: 3 },
-        { field: "brand", weight: 2 },
-        "description",
+        // "title","brands","tags"
+        // { field: "title", weight: 3 },
+        // { field: "brand", weight: 2 },
+        // "description",
       ],
       result_attributes: [
         "product_id",

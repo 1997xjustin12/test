@@ -15,7 +15,8 @@ import BaseNavPage from "@/app/components/template/BaseNavItemPage";
 
 const isShopify = true;
 
-const defaultMenuKey = keys.default_shopify_menu.value;
+// const defaultMenuKey = keys.default_shopify_menu.value;
+const defaultMenuKey = "menu-2r175z2fj"; // dev-menu-object
 
 const flattenNav = (navItems) => {
   let result = [];

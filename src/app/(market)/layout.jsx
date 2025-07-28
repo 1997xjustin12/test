@@ -28,9 +28,10 @@ export const metadata = await generateMetadata();
 export default async function MarketLayout({ children }) {
   const redisLogoKey = "admin_solana_market_logo";
   // const redisLogo = await redis.get(redisLogoKey);
-  const dafaultKey = shopify? keys.default_shopify_menu.value :keys.default_menu.value;
+  // const defaultKey = shopify? keys.default_shopify_menu.value :keys.default_menu.value;
+  const defaultKey = process.env.NEXT_SOLANA_REDIS_DEV_MENU_KEY;
   const themeKey = keys.theme.value;
-  const mgetKeys = [dafaultKey, redisLogoKey, themeKey];
+  const mgetKeys = [defaultKey, redisLogoKey, themeKey];
   const [menu, redisLogo, color] = await redis.mget(mgetKeys);
   return (
     <html lang="en">
