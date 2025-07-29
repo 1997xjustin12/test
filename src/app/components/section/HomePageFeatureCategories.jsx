@@ -18,20 +18,20 @@ const items = [
     img: "/images/home/categories/firepits.webp",
     url: `${BASE_URL}/fire-pits`,
   },
-  {
-    label: "BBQ Grills",
-    img: "/images/home/categories/bbq_grills.webp",
-    url: `${BASE_URL}/bbq-grills-and-smokers`,
-  },
-  {
-    label: "Outdoor Kitchen & Islands",
-    img: "/images/home/categories/outdoor_kitchen.webp",
-    url: `${BASE_URL}/outdoor-kitchen`,
-  },
+  // {
+  //   label: "BBQ Grills",
+  //   img: "/images/home/categories/bbq_grills.webp",
+  //   url: `${BASE_URL}/bbq-grills-and-smokers`,
+  // },
+  // {
+  //   label: "Outdoor Kitchen & Islands",
+  //   img: "/images/home/categories/outdoor_kitchen.webp",
+  //   url: `${BASE_URL}/outdoor-kitchen`,
+  // },
   {
     label: "Chimney",
     img: "/images/home/categories/chimney.webp",
-    url: `${BASE_URL}/`,
+    url: `${BASE_URL}/chimney`,
   },
   {
     label: "Gas Logs",
@@ -41,7 +41,7 @@ const items = [
   {
     label: "Clearance",
     img: "/images/home/categories/clearance.webp",
-    url: `${BASE_URL}/sale-open-box-clearance-sale`,
+    url: `${BASE_URL}/on-sale`,
   },
 ];
 
@@ -49,8 +49,10 @@ const items_per_break_point = [
   { minWidth: 0, value: 1 },
   { minWidth: 640, value: 2 },
   { minWidth: 768, value: 4 },
-  { minWidth: 1024, value: 6 },
-  { minWidth: 1280, value: 7 },
+  // { minWidth: 1024, value: 6 },
+  // { minWidth: 1280, value: 7 },
+  // { minWidth: 1024, value: 5 },
+  { minWidth: 1280, value: 5 },
 ];
 
 export default function HomePageFeatureCategories() {
