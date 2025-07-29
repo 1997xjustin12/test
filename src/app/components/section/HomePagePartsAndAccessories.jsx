@@ -182,9 +182,9 @@ export default function HomePagePartsAndAccessories() {
           </div>
         </div>
         <div className="mt-[20px] flex items-center justify-center md:hidden">
-          <button className="font-bold text-sm md:text-base bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
+          <Link prefetch={false} href={`${BASE_URL}/fireplace-accessories`} className="font-bold text-sm md:text-base bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
             Shop All Parts and Accessories
-          </button>
+          </Link>
         </div>
       </div>
     </div>

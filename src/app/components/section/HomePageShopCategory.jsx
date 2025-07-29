@@ -205,9 +205,9 @@ export default function HomePageShopCategory() {
             </div>
             <div className="flex justify-center">
               <a href="">
-                <button className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
+                <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
                   Shop Fireplaces & Stoves
-                </button>
+                </Link>
               </a>
             </div>
           </div>
