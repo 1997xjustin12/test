@@ -499,6 +499,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
                   <Image
                     src={fimg}
                     alt={imageSlug(fimg)}
+                    title={imageSlug(fimg)}
                     fill
                     className="object-contain"
                     sizes="(max-width: 768px) 100vw, 300px"

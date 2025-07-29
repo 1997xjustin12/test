@@ -52,7 +52,7 @@ export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
   const menuData = await redis.get(defaultMenuKey);
   const flatData = flattenNav(
-    menuData.map((i) => ({ ...i, is_base_nav: true }))
+    menuData.map((i) => ({ ...i, is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name) }))
   );
   const pageData = getPageData(slug, flatData);
 

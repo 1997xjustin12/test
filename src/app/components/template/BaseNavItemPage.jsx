@@ -1,6 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 
@@ -67,8 +68,8 @@ async function BaseNavItemPage({ page_details }) {
                   href={`${BASE_URL}/${item?.url}`}
                   className="w-full flex flex-col items-center gap-[15px]"
                 >
-                  <div className="w-full aspect-1 bg-neutral-200">
-                    {item?.feature_image && item.feature_image && (
+                  <div className={`w-full aspect-1 relative ${item?.feature_image ? "bg-white":"bg-neutral-200"}`}>
+                    {item?.feature_image && (
                       <Image
                         src={item?.feature_image}
                         alt={`feat-nav-image-${index}`}

@@ -52,7 +52,7 @@ export default async function MarketLayout({ children }) {
             </div>
           </div>
         </div>
-        <CategoriesProvider categories={menu.map(i=> ({...i, is_base_nav: true}))}>
+        <CategoriesProvider categories={menu.map(i=> ({...i, is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name)}))}>
           <CartProvider>
             <CompareProductsProvider>
               <SearchProvider>
