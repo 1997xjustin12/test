@@ -26,7 +26,8 @@ const SimpleTreeItemWrapper = dynamic(
 
 const menuListKey = keys.menu_list_shopify.value;
 const activeMenuKey = keys.active_shopify_menu.value;
-const defaultMenuKey = keys.default_shopify_menu.value;
+// const defaultMenuKey = keys.default_shopify_menu.value;
+const defaultMenuKey = keys.dev_shopify_menu.value;
 
 const HomeNavItem = {
   menu_id: "kw5dsac1q",

@@ -4,13 +4,10 @@ import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 
-
 async function BaseNavItemPage({ page_details }) {
   if (!page_details) {
     return notFound();
   }
-
-
 
   return (
     <div className="container mx-auto p-3">
@@ -57,24 +54,36 @@ async function BaseNavItemPage({ page_details }) {
             ))}
         </div>
         {/* content with category image and list */}
-        <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-[calc(100%-250px)] px-2">
-          {page_details &&
-            page_details?.children &&
-            Array.isArray(page_details?.children) &&
-            page_details.children.length > 0 &&
-            page_details.children.map((item, index) => (
-              <Link
-                key={`category-link-${item?.slug}`}
-                prefetch={false}
-                href={`${BASE_URL}/${item?.url}`}
-                className="w-full flex flex-col items-center gap-[15px]"
-              >
-                <div className="w-full aspect-1 bg-neutral-200"></div>
-                <h4 className="text-center font-semibold text-sm">
-                  {item?.name}
-                </h4>
-              </Link>
-            ))}
+        <div className="w-[calc(100%-250px)]">
+          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-2">
+            {page_details &&
+              page_details?.children &&
+              Array.isArray(page_details?.children) &&
+              page_details.children.length > 0 &&
+              page_details.children.map((item, index) => (
+                <Link
+                  key={`category-link-${item?.slug}`}
+                  prefetch={false}
+                  href={`${BASE_URL}/${item?.url}`}
+                  className="w-full flex flex-col items-center gap-[15px]"
+                >
+                  <div className="w-full aspect-1 bg-neutral-200">
+                    {item?.feature_image && item.feature_image && (
+                      <Image
+                        src={item?.feature_image}
+                        alt={`feat-nav-image-${index}`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    )}
+                  </div>
+                  <h4 className="text-center font-semibold text-sm">
+                    {item?.name}
+                  </h4>
+                </Link>
+              ))}
+          </div>
         </div>
       </div>
       <div className="my-20">

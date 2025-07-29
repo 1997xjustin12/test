@@ -23,6 +23,10 @@ export const keys = {
     description:"default menu for shopify product",
     value:"menu-7pajm2g8w",
   },
+  dev_shopify_menu:{
+    description:"menu for development environment",
+    value:"menu-2r175z2fj",
+  },
   active_menu:{
     description: "used to retreive the key of the active or currently used menu (bigcommerce).",
     value: "solana_active_menu",

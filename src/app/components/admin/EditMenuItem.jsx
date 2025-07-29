@@ -33,7 +33,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
 
-const defaultMenuKey = keys.default_shopify_menu.value;
+// const defaultMenuKey = keys.default_shopify_menu.value;
+const defaultMenuKey = keys.dev_shopify_menu.value;
 
 const PageMeta = ({ meta, onChange }) => {
   return (
