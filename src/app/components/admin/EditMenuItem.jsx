@@ -576,7 +576,7 @@ const FeatNav = ({ menuItem, onChange }) => {
               key={`feat-nav-option-${link?.slug}-${index}`}
               className={`py-1 px-2 bg-white border border-slate-100 rounded-full shadow cursor-pointer ${
                 activeFeatNavItems.includes(link?.menu_id)
-                  ? "bg-indigo-800 text-white hover:bg-indigo-700"
+                  ? "bg-indigo-700 text-white hover:bg-indigo-600"
                   : "hover:bg-indigo-200"
               }`}
               onClick={() => handleOptionClick(link)}
