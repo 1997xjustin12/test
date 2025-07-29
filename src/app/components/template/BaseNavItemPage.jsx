@@ -10,6 +10,8 @@ async function BaseNavItemPage({ page_details }) {
     return notFound();
   }
 
+  console.log("[TEST] page_details:", page_details);
+
   return (
     <div className="container mx-auto p-3">
       <div className="my-3">

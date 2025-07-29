@@ -15,11 +15,11 @@ const menu = [
       // { name: "Propane Fireplaces" },
       // { name: "Ventless Gas Fireplaces" },
       // { name: "Corner Electric Fireplaces" },
-      { name: "Gas Fireplaces", url: "gas-fireplaces"},
-      { name: "Wood Fireplaces", url: "wood-fireplaces"},
-      { name: "Electric Fireplaces", url: "electric-fireplaces"},
-      { name: "Outdoor Fireplaces", url: "outdoor-fireplaces"},
-      { name: "Chimney", url: "chimney"},
+      { name: "Gas Fireplaces", url: "gas-fireplaces" },
+      { name: "Wood Fireplaces", url: "wood-fireplaces" },
+      { name: "Electric Fireplaces", url: "electric-fireplaces" },
+      { name: "Outdoor Fireplaces", url: "outdoor-fireplaces" },
+      { name: "Chimney", url: "chimney" },
     ],
   },
   {
@@ -28,11 +28,14 @@ const menu = [
       // { name: "Bulk Savings on Fire Glass" },
       // { name: "Bulk Savings on Fire Starters" },
       // { name: "Firewood" },
-      { name: "Fireplace Doors", url: "fireplace-doors"},
-      { name: "Firewood Racks",  url: "firewood-racks"},
+      { name: "Fireplace Doors", url: "fireplace-doors" },
+      { name: "Firewood Racks", url: "firewood-racks" },
       { name: "Fireplace Screens", url: "fireplace-screens" },
       { name: "Fireplace Grates", url: "fireplace-grates" },
-      { name: "Fireplace Heaters & Blowers", url: "fireplace-heaters-and-blowers" },
+      {
+        name: "Fireplace Heaters & Blowers",
+        url: "fireplace-heaters-and-blowers",
+      },
       { name: "Fireplace Tools", url: "fireplace-tools" },
       { name: "Fireplace Mantels", url: "fireplace-mantels" },
       { name: "Wood Stoves", url: "wood-stoves" },
@@ -51,55 +54,48 @@ const menu = [
   },
 ];
 
+
 const fireplacesStoves = [
   {
-    name: "Electric Fireplaces",
-    img: "/images/home/fireplaces_and_stoves/electric-fireplaces.webp",
-  },
-  {
     name: "Gas Fireplaces",
-    img: "/images/home/fireplaces_and_stoves/gas-fireplaces.webp",
+    url: "gas-fireplaces",
+    img: "/images/feature/fire-pits-2.avif",
   },
-  // {
-  //   name: "Fireplace TV Stands",
-  //   img: "/images/home/fireplaces_and_stoves/fireplace-tv-stand.webp",
-  // },
-  // {
-  //   name: "Wall-Mounted Fireplaces",
-  //   img: "/images/home/fireplaces_and_stoves/wall-mounted-fireplace.webp",
-  // },
-  // {
-  //   name: "Smart Fireplaces",
-  //   img: "/images/home/fireplaces_and_stoves/smart-fireplace.webp",
-  // },
   {
-    name: "Freestanding Fireplaces",
-    img: "/images/home/fireplaces_and_stoves/freestanding-fireplace.webp",
+    name: "Wood Fireplaces",
+    url: "wood-fireplaces",
+    img: "/images/feature/outdoor-fireplaces.avif",
+  },
+  {
+    name: "Electric Fireplaces",
+    url: "electric-fireplaces",
+    img: "/images/feature/featured-collection-freestanding-electric-fireplaces.webp",
+  },
+  {
+    name: "Outdoor Fireplaces",
+    url: "outdoor-fireplaces",
+    img: "/images/feature/outdoor-fireplaces-3.webp",
   },
   {
     name: "Fireplace Inserts",
-    img: "/images/home/fireplaces_and_stoves/fireplace-inserts.webp",
+    url: "fireplace-inserts",
+    img: "/images/feature/fireplace-inserts.webp",
   },
   {
-    name: "Electric Stove Heaters",
-    img: "/images/home/fireplaces_and_stoves/electric-stove-heaters.webp",
-  },
-  // {
-  //   name: "Wood-Burning Stoves",
-  //   img: "/images/home/fireplaces_and_stoves/wood-burning-stove.webp",
-  // },
-  {
-    name: "Freestanding Stoves",
-    img: "/images/home/fireplaces_and_stoves/freestanding-stoves.webp",
+    name: "Fireplace Accessories",
+    url: "fireplace-accessories",
+    img: "/images/feature/fireplace-accessories.webp",
   },
   {
-    name: "Freestanding Gas Stoves",
-    img: "/images/home/fireplaces_and_stoves/freestanding-gas-stoves.webp",
+    name: "Chimney",
+    url: "chimney",
+    img: "/images/feature/chimney.webp",
   },
-  // {
-  //   name: "Pellet Stoves",
-  //   img: "/images/home/fireplaces_and_stoves/pellet-stoves.webp",
-  // },
+  {
+    name: "Stoves and Furnaces",
+    url: "stoves-and-furnaces",
+    img: "/images/feature/fireplaces-stoves-and-furnaces.webp",
+  },
 ];
 
 export default function HomePageShopCategory() {
@@ -116,7 +112,13 @@ export default function HomePageShopCategory() {
                   <div className="font-bold">{i.name}</div>
                   <div className="mt-3 flex flex-col gap-[3px]">
                     {i.child.map((i2, idx2) => (
-                      <Link prefetch={false} href={`${BASE_URL}/${i2?.url}`} key={`menu-sub-item-${idx}-${idx2}`}>{i2.name}</Link>
+                      <Link
+                        prefetch={false}
+                        href={`${BASE_URL}/${i2?.url}`}
+                        key={`menu-sub-item-${idx}-${idx2}`}
+                      >
+                        {i2.name}
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -129,9 +131,12 @@ export default function HomePageShopCategory() {
               <div className="flex flex-col gap-[30px] mt-5">
                 <div className=" w-full flex flex-col md:flex-row md:flex-wrap gap-[4px]">
                   {fireplacesStoves.map((i, idx) => (
-                    <div
+                    <Link
+                      prefetch={false}
+                      href={`${BASE_URL}/${i?.url}`}
                       key={`fireplace-stoves-1-${idx}`}
-                      className="border p-4 w-full lg:w-[calc(25%-4px)] xl:w-[calc(25%-4px)] flex flex-col gap-[10px] hover:shadow-lg transition-all duration-300">
+                      className="border p-4 w-full lg:w-[calc(25%-4px)] xl:w-[calc(25%-4px)] flex flex-col gap-[10px] hover:shadow-lg transition-all duration-300"
+                    >
                       <div className="relative aspect-1 bg-stone-100 border">
                         {
                           <Image
@@ -154,7 +159,7 @@ export default function HomePageShopCategory() {
                           {i.name}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -169,7 +174,8 @@ export default function HomePageShopCategory() {
               {fireplacesStoves.slice(0, 6).map((i, idx) => (
                 <div
                   key={`fireplace-stoves-1-${idx}`}
-                  className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300">
+                  className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300"
+                >
                   <div className="relative aspect-1 bg-stone-100 border">
                     {
                       // <img src={i.img} alt={i.name} className="object-fill" />
