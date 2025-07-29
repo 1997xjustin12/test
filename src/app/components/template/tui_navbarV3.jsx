@@ -94,7 +94,7 @@ export default function TuiNavbar({ logo, menu }) {
   };
 
   const handleExpandMenu = (menu_item) => {
-    if(menu_item?.name==="Home"){
+    if (menu_item?.name === "Home") {
       window.location.href = BASE_URL;
       return;
     }
@@ -133,7 +133,7 @@ export default function TuiNavbar({ logo, menu }) {
   };
 
   const handleLinkClick = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const href = e.currentTarget.getAttribute("href");
     if (href) {
       window.location.href = href;
@@ -450,6 +450,14 @@ export default function TuiNavbar({ logo, menu }) {
                                 ))}
                               </div>
                             ))}
+
+                            {expandedMenu?.links &&
+                              Array.isArray(expandedMenu.links) &&
+                              Array.from({
+                                length: 6 - expandedMenu?.links.length,
+                              }).map((_, index) => (
+                                <div key={`empty-div${index}`} />
+                              ))}
                           </div>
                         </>
                       )}
