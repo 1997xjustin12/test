@@ -1,10 +1,13 @@
 "use client";
 import { createContext, useContext, useMemo } from "react";
 import { hasCommonValue } from "@/app/lib/helpers";
-
+import { usePathname } from "next/navigation";
 const CategoriesContext = createContext([]);
 
 export function CategoriesProvider({ categories, children }) {
+  const pathName = usePathname();
+
+
   /**
    * Recursively flattens a nested category tree into a single-level array.
    *
@@ -54,7 +57,7 @@ export function CategoriesProvider({ categories, children }) {
       .map(({ key }) => key)
       .filter(Boolean);
 
-    const page_pathname = window.location.pathname.replace(/\//g, "");
+    const page_pathname = pathName;
 
     const visible_price_categories_urls = visible_price_categories
       .map(({ url }) => url)
@@ -132,7 +135,7 @@ export function CategoriesProvider({ categories, children }) {
       return "#";
     }
 
-    const pathname = window.location.pathname.replace(/\//g, "");
+    const pathname = pathName;
     const product_urls = getProductUrls(
       hit.product_category,
       hit.brand,
