@@ -172,7 +172,9 @@ export default function HomePageShopCategory() {
           <div className="flex flex-col gap-[30px] mt-5">
             <div className=" w-full flex flex-wrap gap-5">
               {fireplacesStoves.slice(0, 6).map((i, idx) => (
-                <div
+                <Link
+                prefetch={false}
+                href={`${BASE_URL}/${i?.url}`}
                   key={`fireplace-stoves-1-${idx}`}
                   className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300"
                 >
@@ -200,15 +202,13 @@ export default function HomePageShopCategory() {
                       {i.name}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
             <div className="flex justify-center">
-              <a href="">
-                <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
-                  Shop Fireplaces & Stoves
-                </Link>
-              </a>
+              <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md">
+                Shop Fireplaces & Stoves
+              </Link>
             </div>
           </div>
         </div>
