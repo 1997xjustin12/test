@@ -1,38 +1,52 @@
 import Image from "next/image";
+import Link from "next/link";
 import SectionHeader from "../atom/SectionHeader";
+import { BASE_URL } from "@/app/lib/helpers";
 
 const menu = [
   {
     name: "Fireplaces",
     child: [
-      { name: "Shop All Fireplaces" },
-      { name: "Shop Fireplace Savings" },
-      { name: "Electric Fireplace Inserts" },
-      { name: "Gas Fireplace Inserts" },
-      { name: "Wood-Burning Fireplace Inserts" },
-      { name: "Propane Fireplaces" },
-      { name: "Ventless Gas Fireplaces" },
-      { name: "Corner Electric Fireplaces" },
+      // { name: "Shop All Fireplaces" },
+      // { name: "Shop Fireplace Savings" },
+      // { name: "Electric Fireplace Inserts" },
+      // { name: "Gas Fireplace Inserts" },
+      // { name: "Wood-Burning Fireplace Inserts" },
+      // { name: "Propane Fireplaces" },
+      // { name: "Ventless Gas Fireplaces" },
+      // { name: "Corner Electric Fireplaces" },
+      { name: "Gas Fireplaces", url: "gas-fireplaces"},
+      { name: "Wood Fireplaces", url: "wood-fireplaces"},
+      { name: "Electric Fireplaces", url: "electric-fireplaces"},
+      { name: "Outdoor Fireplaces", url: "outdoor-fireplaces"},
+      { name: "Chimney", url: "chimney"},
     ],
   },
   {
     name: "Fireplaces & Stove Accessories",
     child: [
-      { name: "Bulk Savings on Fire Glass" },
-      { name: "Bulk Savings on Fire Starters" },
-      { name: "Firewood" },
-      { name: "Fireplace Screens" },
-      { name: "Firewood Racks" },
-      { name: "Fireplace Doors" },
+      // { name: "Bulk Savings on Fire Glass" },
+      // { name: "Bulk Savings on Fire Starters" },
+      // { name: "Firewood" },
+      { name: "Fireplace Doors", url: "fireplace-doors"},
+      { name: "Firewood Racks",  url: "firewood-racks"},
+      { name: "Fireplace Screens", url: "fireplace-screens" },
+      { name: "Fireplace Grates", url: "fireplace-grates" },
+      { name: "Fireplace Heaters & Blowers", url: "fireplace-heaters-and-blowers" },
+      { name: "Fireplace Tools", url: "fireplace-tools" },
+      { name: "Fireplace Mantels", url: "fireplace-mantels" },
+      { name: "Wood Stoves", url: "wood-stoves" },
+      { name: "Gas Burning Stoves", url: "gas-burning-stoves" },
+      { name: "Wood Stove Accessories", url: "wood-stove-accessories" },
     ],
   },
   {
     name: "Outdoor Heating",
     child: [
-      { name: "Outdoor Fireplaces" },
-      { name: "Fire Pits" },
-      { name: "Fire Pit Tables" },
-      { name: "Patio Heaters" },
+      { name: "Outdoor Fireplaces", url: "outdoor-fireplaces" },
+      { name: "Fire Pits", url: "fire-pits" },
+      { name: "Fire Pit Tables", url: "fire-pit-tables" },
+      { name: "Patio Heaters", url: "patio-heaters" },
     ],
   },
 ];
@@ -100,9 +114,9 @@ export default function HomePageShopCategory() {
               {menu.map((i, idx) => (
                 <div key={`menu-item-${idx}`} className="">
                   <div className="font-bold">{i.name}</div>
-                  <div className="mt-3">
+                  <div className="mt-3 flex flex-col gap-[3px]">
                     {i.child.map((i2, idx2) => (
-                      <div key={`menu-sub-item-${idx}-${idx2}`}>{i2.name}</div>
+                      <Link prefetch={false} href={`${BASE_URL}/${i2?.url}`} key={`menu-sub-item-${idx}-${idx2}`}>{i2.name}</Link>
                     ))}
                   </div>
                 </div>
