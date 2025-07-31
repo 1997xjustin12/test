@@ -36,6 +36,10 @@ import Link from "next/link";
 // const defaultMenuKey = keys.default_shopify_menu.value;
 const defaultMenuKey = keys.dev_shopify_menu.value;
 
+const imageSlug = (img_string) => {
+  return img_string.replace("/images/feature/", "").replace(".", "-");
+};
+
 const PageMeta = ({ meta, onChange }) => {
   return (
     <div className="flex flex-col gap-2">
@@ -443,10 +447,6 @@ const Faqs = ({ faqsProps, onChange }) => {
 };
 
 const Settings = ({ menuItem, onChange, feature_images }) => {
-  const imageSlug = (img_string) => {
-    return img_string.replace("/images/feature/", "").replace(".", "-");
-  };
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
@@ -576,10 +576,10 @@ const FeatNav = ({ menuItem, onChange }) => {
           {linkOptions.map((link, index) => (
             <div
               key={`feat-nav-option-${link?.slug}-${index}`}
-              className={`py-1 px-2 bg-white border border-slate-100 rounded-full shadow cursor-pointer ${
-                activeFeatNavItems.includes(link?.menu_id)
+              className={`py-1 px-2 border border-slate-100 rounded-full shadow cursor-pointer ${
+                link?.menu_id && activeFeatNavItems.includes(link?.menu_id)
                   ? "bg-indigo-700 text-white hover:bg-indigo-600"
-                  : "hover:bg-indigo-200"
+                  : "bg-white hover:bg-indigo-200 border-indigo-700"
               }`}
               onClick={() => handleOptionClick(link)}
             >
@@ -624,7 +624,7 @@ const FeatContent = ({ menuItem, onChange }) => {
   return <div>Feature Content</div>;
 };
 
-const CollectionCarouselItem = ({ collection, onChange }) => {
+const ProductCollectionItem = ({ collection, onChange }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: collection?.mb_uid });
 
@@ -633,7 +633,6 @@ const CollectionCarouselItem = ({ collection, onChange }) => {
     transition,
   };
 
-  
   const handleRemoveCollection = (item) => {
     onChange({ target: { name: "remove-collection-item", value: item } });
   };
@@ -641,10 +640,12 @@ const CollectionCarouselItem = ({ collection, onChange }) => {
   const handleUpdateLabel = (event, collection) => {
     const { value } = event.target;
     onChange({
-      target: { name: "update-collection-label", value: { ...collection, mb_label: value } },
+      target: {
+        name: "update-collection-label",
+        value: { ...collection, mb_label: value },
+      },
     });
   };
-
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
@@ -701,7 +702,7 @@ const CollectionCarouselItem = ({ collection, onChange }) => {
   );
 };
 
-const CollectionCarousel = ({ menuItem, onChange }) => {
+const ProductCollection = ({ menuItem, onChange }) => {
   const [collectionList, setCollectionList] = useState([]);
 
   const sensors = useSensors(
@@ -716,16 +717,26 @@ const CollectionCarousel = ({ menuItem, onChange }) => {
     onChange({ target: { name: "add-collection-item", value: withId } });
   };
 
-  const handleDragEnd = (event) =>  {
+  const handleDragEnd = (event) => {
     const { active, over, items } = event;
     if (active.id !== over.id) {
-      const oldIndex = menuItem?.collections?.findIndex((collection) => collection.mb_uid === active.id);
-      const newIndex = menuItem?.collections?.findIndex((collection) => collection.mb_uid === over.id);
-      const reorderedData = arrayMove(menuItem?.collections, oldIndex, newIndex);
+      const oldIndex = menuItem?.collections?.findIndex(
+        (collection) => collection.mb_uid === active.id
+      );
+      const newIndex = menuItem?.collections?.findIndex(
+        (collection) => collection.mb_uid === over.id
+      );
+      const reorderedData = arrayMove(
+        menuItem?.collections,
+        oldIndex,
+        newIndex
+      );
       const updatedData = { ...menuItem?.collections, data: reorderedData };
-      onChange({target:{name:"reorder-collections",value:updatedData.data}});
+      onChange({
+        target: { name: "reorder-collections", value: updatedData.data },
+      });
     }
-  }
+  };
 
   useEffect(() => {
     const fetchCollectionList = async () => {
@@ -800,14 +811,278 @@ const CollectionCarousel = ({ menuItem, onChange }) => {
                   onDragEnd={handleDragEnd}
                 >
                   <SortableContext
-                    items={menuItem?.collections.map(i=> ({...i,id: i?.mb_uid}))}
+                    items={menuItem?.collections.map((i) => ({
+                      ...i,
+                      id: i?.mb_uid,
+                    }))}
                     strategy={verticalListSortingStrategy}
                   >
                     {menuItem.collections
                       .sort((a, b) => a.order - b.order)
                       .map((collection) => (
-                        <CollectionCarouselItem
+                        <ProductCollectionItem
                           key={`page-collection-${collection?.mb_uid}`}
+                          collection={collection}
+                          onChange={onChange}
+                        />
+                      ))}
+                  </SortableContext>
+                </DndContext>
+              )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CategoryCollectionItem = ({ collection, onChange }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: collection?.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const handleCollectionLabelChange = (e) => {
+    const { value, name } = e.target;
+    const action = "collection-label-change";
+    const collection_id = name.replace("label-", "");
+    onChange({ target: { name: action, value: value, id: collection_id } });
+  };
+
+  const handleRemoveCollection = (collection_id) => {
+    onChange({target:{name:"remove-collection", value:collection_id}})
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <div className="p-3 bg-white flex items-center justify-between rounded border hover:shadow">
+        <div className="flex items-center w-full">
+          <button {...listeners} className="text-neutral-600 cursor-move">
+            <svg
+              className="pointer-events-none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M6.75 18.72c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127c-.114-.01-.247-.009-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.546-.546a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.478-.126a1.25 1.25 0 0 0 .546-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.546-.547a1.3 1.3 0 0 0-.479-.127a5 5 0 0 0-.369-.009H8.28c-.122 0-.255 0-.37.01c-.13.01-.3.036-.477.126a1.25 1.25 0 0 0-.547.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369m6 13.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.477c.01-.115.009-.248.009-.37v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127c-.115-.01-.248-.009-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.477c-.01.115-.009.248-.009.37zm0-6c0 .122 0 .255.01.37c.01.13.036.3.126.478c.12.235.311.426.547.546c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.546c.09-.177.116-.349.127-.479c.01-.114.009-.247.009-.369v-1.44c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.478a1.25 1.25 0 0 0-.547-.546a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369zm0-7.44v1.44c0 .122 0 .255.01.37c.01.13.036.3.126.477c.12.236.311.427.547.547c.176.09.348.116.478.127c.114.01.247.009.369.009h1.44c.122 0 .255 0 .37-.01c.13-.01.3-.036.477-.126a1.25 1.25 0 0 0 .547-.547c.09-.176.116-.348.127-.478c.01-.114.009-.247.009-.369V5.28c0-.122 0-.255-.01-.37a1.3 1.3 0 0 0-.126-.477a1.25 1.25 0 0 0-.547-.547a1.3 1.3 0 0 0-.477-.127a5 5 0 0 0-.37-.009h-1.44c-.122 0-.255 0-.37.01c-.13.01-.3.036-.478.126a1.25 1.25 0 0 0-.546.547c-.09.176-.116.348-.127.478c-.01.114-.009.247-.009.369"
+              />
+            </svg>
+          </button>
+          <div className="w-full bg-white overflow-hidden  p-3">
+            <div className="w-full flex items-center">
+              <input
+                type="text"
+                name={`label-${collection?.id}`}
+                id={`label-${collection?.id}`}
+                placeholder={`Enter Label`}
+                className="py-1 px-2 bg-neutral-100 rounded border w-[calc(100%-40px)] text-center focus:outline-none"
+                value={collection?.label || ""}
+                onChange={handleCollectionLabelChange}
+              />
+              <button onClick={()=>handleRemoveCollection(collection?.id)} className="p-2 w-[40px]" title="Remove">
+                <svg
+                  className="pointer-events-auto"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="w-[calc(100%-1px)] bg-white aspect-3 overflow-x-auto overflow-y-hidden p-3">
+              <div className="flex gap-[20px] w-max">
+                {collection?.links &&
+                  Array.isArray(collection?.links) &&
+                  collection?.links?.length > 0 &&
+                  collection.links.map((link) => (
+                    <div
+                      key={`cat-collection-item-link-${link?.menu_id}`}
+                      className="w-[250px] flex-shrink-0 text-center flex flex-col gap-[20px]"
+                    >
+                      <div className="aspect-1 bg-neutral-200 w-full relative">
+                        {link?.image && (
+                          <Image
+                            src={link?.image}
+                            alt={imageSlug(link?.image)}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 300px"
+                          />
+                        )}
+                      </div>
+                      <div>{link?.name}</div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CategoryCollection = ({ menuItem, onChange }) => {
+  const [linkOptions, setLinkOptions] = useState([]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setLinkOptions((prev) => {
+      return prev.map((i) => ({
+        ...i,
+        is_selected: i?.menu_id === name ? checked : i?.is_selected,
+      }));
+    });
+  };
+
+  const handleAddCategoryCollection = () => {
+    const selectedOptions = linkOptions.filter((i) => i?.is_selected);
+    console.log("[TEST] trigger handleAddCategoryCollection", selectedOptions);
+    if (selectedOptions.length === 0) return;
+    onChange({
+      target: {
+        name: "add-category-collection",
+        value: {
+          id: generateId(),
+          label: "",
+          links: selectedOptions.map((i) => ({
+            menu_id: i?.menu_id,
+            url: i?.url,
+            name: i?.name,
+            image: i?.feature_image,
+          })),
+        },
+      },
+    });
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over, items } = event;
+    if (active.id !== over.id) {
+      const oldIndex = menuItem?.cat_collections?.findIndex(
+        (collection) => collection.id === active.id
+      );
+      const newIndex = menuItem?.cat_collections?.findIndex(
+        (collection) => collection.id === over.id
+      );
+      const reorderedData = arrayMove(
+        menuItem?.cat_collections,
+        oldIndex,
+        newIndex
+      );
+      const updatedData = { ...menuItem?.cat_collections, data: reorderedData };
+      onChange({
+        target: { name: "reorder-collections", value: updatedData.data },
+      });
+    }
+  };
+
+  useEffect(() => {
+    setLinkOptions(
+      menuItem?.children
+        ? flattenNavTree(menuItem?.children).map((i) => ({
+            ...i,
+            is_selected: false,
+          }))
+        : []
+    );
+  }, [menuItem]);
+
+  return (
+    <div>
+      <h4 className="font-bold">Category Collections Configuration</h4>
+      <div>
+        Create Category Collection display for a page, update labels and
+        reorder.
+      </div>
+      <div className="flex gap-[15px] mt-[20px]">
+        <div className="flex flex-col overflow-hidden rounded bg-neutral-100 border border-neutral-300 w-[300px]">
+          <div className="bg-white p-3 border-b flex items-center justify-between">
+            <div>Page List</div>
+            <button
+              title="Add Category Collection"
+              onClick={handleAddCategoryCollection}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="flex gap-[2px] p-[7px] flex-col">
+            {linkOptions &&
+              Array.isArray(linkOptions) &&
+              linkOptions.length > 0 &&
+              linkOptions.map((category) => (
+                <div
+                  key={`category-option-${category?.menu_id}`}
+                  className=" bg-white rounded items-center border  hover:shadow"
+                >
+                  <label
+                    htmlFor={category?.menu_id}
+                    className="p-3 flex gap-[8px] w-full"
+                  >
+                    <input
+                      type="checkbox"
+                      name={`${category?.menu_id}`}
+                      id={`${category?.menu_id}`}
+                      checked={category?.is_selected}
+                      onChange={handleCheckboxChange}
+                    />
+                    {category?.name}
+                  </label>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col overflow-hidden rounded bg-neutral-100 border border-neutral-300 w-[calc(100%-300px)]">
+          <div className=" bg-white p-3 border-b border-neutral-200">
+            Added Category Collections
+          </div>
+          <div className="w-full p-[7px] flex flex-col gap-[5px]">
+            {menuItem?.cat_collections &&
+              Array.isArray(menuItem.cat_collections) &&
+              menuItem.cat_collections.length > 0 && (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={menuItem?.cat_collections}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {menuItem.cat_collections
+                      .sort((a, b) => a.order - b.order)
+                      .map((collection) => (
+                        <CategoryCollectionItem
+                          key={`cat-collection-item-component-${collection?.id}`}
                           collection={collection}
                           onChange={onChange}
                         />
@@ -832,7 +1107,16 @@ function EditMenuItem({ menu_id, images, feature_images }) {
     { id: "feat_nav", label: "Featured Nav", isActive: false },
     { id: "feat_content", label: "Featured Content", isActive: false },
     { id: "faqs", label: "FAQs", isActive: false },
-    { id: "collections", label: "Collections", isActive: true },
+    {
+      id: "product_collections",
+      label: "Product Collections",
+      isActive: false,
+    },
+    {
+      id: "category_collections",
+      label: "Category Collections",
+      isActive: true,
+    },
     { id: "settings", label: "Settings", isActive: false },
   ]);
 
@@ -945,7 +1229,7 @@ function EditMenuItem({ menu_id, images, feature_images }) {
     }
   };
 
-  const handleCollectionCarouselChange = (e) => {
+  const handleProductCollectionChange = (e) => {
     const { name, value } = e.target;
 
     if (name === "add-collection-item") {
@@ -985,8 +1269,40 @@ function EditMenuItem({ menu_id, images, feature_images }) {
       });
     }
 
-    if(name === "reorder-collections"){
-      setMenuItem((prev)=> ({...prev, collections: updateOrderValues(value)}))
+    if (name === "reorder-collections") {
+      setMenuItem((prev) => ({
+        ...prev,
+        collections: updateOrderValues(value),
+      }));
+    }
+  };
+
+  const handleCategoryCollectionChange = (e) => {
+    const { name, value, id } = e.target;
+    console.log("[TEST] handleCategoryCollectionChange", e);
+    if (name === "add-category-collection") {
+      setMenuItem((prev) => {
+        const cat_collections = prev?.cat_collections || [];
+        return { ...prev, cat_collections: [...cat_collections, value] };
+      });
+    }
+    if (name === "collection-label-change") {
+      console.log("[TEST] collection-label-change", e);
+      setMenuItem((prev) => {
+        const cat_collections = prev?.cat_collections || [];
+        const updated_collections = cat_collections.map((i) => ({
+          ...i,
+          label: i?.id === id ? value : i?.label,
+        }));
+        return { ...prev, cat_collections: updated_collections };
+      });
+    }
+    if (name === "remove-collection") {
+      setMenuItem((prev) => {
+        const cat_collections = prev?.cat_collections || [];
+        const updated_collections = cat_collections.filter(i => i?.id !== value);
+        return { ...prev, cat_collections: updated_collections };
+      });
     }
   };
 
@@ -1035,6 +1351,10 @@ function EditMenuItem({ menu_id, images, feature_images }) {
   if (menuItem === undefined) {
     notFound();
   }
+
+  useEffect(() => {
+    console.log("[TEST] menuItemChanged", menuItem);
+  }, [menuItem]);
 
   return (
     <div>
@@ -1145,10 +1465,17 @@ function EditMenuItem({ menu_id, images, feature_images }) {
           <FeatNav menuItem={menuItem} onChange={handleFeatNavChange} />
         )}
         {activeTab.id === "feat_content" && <FeatContent menuItem={menuItem} />}
-        {activeTab.id === "collections" && (
-          <CollectionCarousel
+        {activeTab.id === "product_collections" && (
+          <ProductCollection
             menuItem={menuItem}
-            onChange={handleCollectionCarouselChange}
+            onChange={handleProductCollectionChange}
+          />
+        )}
+
+        {activeTab.id === "category_collections" && (
+          <CategoryCollection
+            menuItem={menuItem}
+            onChange={handleCategoryCollectionChange}
           />
         )}
       </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
+import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap"
 
 async function BaseNavItemPage({ page_details }) {
   if (!page_details) {
@@ -70,7 +71,11 @@ async function BaseNavItemPage({ page_details }) {
                   href={`${BASE_URL}/${item?.url}`}
                   className="w-full flex flex-col items-center gap-[15px]"
                 >
-                  <div className={`w-full aspect-1 relative ${item?.feature_image ? "bg-white":"bg-neutral-200"}`}>
+                  <div
+                    className={`w-full aspect-1 relative ${
+                      item?.feature_image ? "bg-white" : "bg-neutral-200"
+                    }`}
+                  >
                     {item?.feature_image && (
                       <Image
                         src={item?.feature_image}
@@ -85,6 +90,18 @@ async function BaseNavItemPage({ page_details }) {
                     {item?.name}
                   </h4>
                 </Link>
+              ))}
+          </div>
+          <div className="flex flex-col gap-10 my-10">
+            {page_details?.cat_collections &&
+              Array.isArray(page_details?.cat_collections) &&
+              page_details.cat_collections.map((collection) => (
+                <div key={`cat-colleciton-display-${collection?.id}`} className="flex flex-col gap-5">
+                  <h3 className="text-center">{collection?.label}</h3>
+                    <CategoryCollectionCarouselWrap
+                      data={collection?.links}
+                    />
+                </div>
               ))}
           </div>
         </div>

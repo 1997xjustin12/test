@@ -7,16 +7,17 @@ const apiClient = API(
       host: "https://solanafireplaces.com/es",
       apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
       // index: "solana_products",
-      index: "solana_updated_product_index"
+      index: "solana_updated_product_index",
     },
     search_settings: {
       highlight_attributes: ["title"],
       snippet_attributes: ["description:200"],
       search_attributes: [
-        // "title","brands","tags"
-        // { field: "title", weight: 3 },
-        // { field: "brand", weight: 2 },
-        // "description",
+        { field: "title", weight: 3 },
+        { field: "tags", weight: 2 },
+        { field: "brand", weight: 2 },
+        { field: "handle", weight: 1 },
+        { field: "description", weight: 1 },
       ],
       result_attributes: [
         "product_id",
@@ -78,7 +79,7 @@ const apiClient = API(
           order: "asc",
         },
       },
-      defaultSorting: "popular" // 👈 applies default sorting
+      defaultSorting: "popular", // 👈 applies default sorting
     },
   }
   // { debug: true }
@@ -176,7 +177,10 @@ export default async function handler(req, res) {
     }
 
     // This will display no products for category links that are not known.
-    if(filter_key === "custom_page" &&  !["On Sale", "New Arrivals"].includes(filter_value)){
+    if (
+      filter_key === "custom_page" &&
+      !["On Sale", "New Arrivals", "undefined"].includes(filter_value)
+    ) {
       filter_query.push({
         term: {
           "product_category.category_name.keyword": filter_value,
@@ -197,7 +201,6 @@ export default async function handler(req, res) {
       results = await apiClient.handleRequest(data);
     }
 
-    console.log(results?.results?.[0]?.hits);
     res.status(200).json(results);
   } catch (err) {
     console.error("Searchkit Error:", err);
