@@ -853,8 +853,8 @@ const CategoryCollectionItem = ({ collection, onChange }) => {
   };
 
   const handleRemoveCollection = (collection_id) => {
-    onChange({target:{name:"remove-collection", value:collection_id}})
-  }
+    onChange({ target: { name: "remove-collection", value: collection_id } });
+  };
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
@@ -885,7 +885,11 @@ const CategoryCollectionItem = ({ collection, onChange }) => {
                 value={collection?.label || ""}
                 onChange={handleCollectionLabelChange}
               />
-              <button onClick={()=>handleRemoveCollection(collection?.id)} className="p-2 w-[40px]" title="Remove">
+              <button
+                onClick={() => handleRemoveCollection(collection?.id)}
+                className="p-2 w-[40px]"
+                title="Remove"
+              >
                 <svg
                   className="pointer-events-auto"
                   xmlns="http://www.w3.org/2000/svg"
@@ -933,8 +937,9 @@ const CategoryCollectionItem = ({ collection, onChange }) => {
   );
 };
 
-const CategoryCollection = ({ menuItem, onChange }) => {
+const CategoryCollection = ({ menuItem, allCategories, onChange }) => {
   const [linkOptions, setLinkOptions] = useState([]);
+  const [pageQuery, setPageQuery] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -974,6 +979,11 @@ const CategoryCollection = ({ menuItem, onChange }) => {
     });
   };
 
+  const handlePageQueryChange = (e) => {
+    const { value } = e.target;
+    setPageQuery(value || "");
+  };
+
   const handleDragEnd = (event) => {
     const { active, over, items } = event;
     if (active.id !== over.id) {
@@ -995,16 +1005,22 @@ const CategoryCollection = ({ menuItem, onChange }) => {
     }
   };
 
+  // useEffect(() => {
+  //   setLinkOptions(
+  //     menuItem?.children
+  //       ? flattenNavTree(menuItem?.children).map((i) => ({
+  //           ...i,
+  //           is_selected: false,
+  //         }))
+  //       : []
+  //   );
+  // }, [menuItem]);
+
   useEffect(() => {
     setLinkOptions(
-      menuItem?.children
-        ? flattenNavTree(menuItem?.children).map((i) => ({
-            ...i,
-            is_selected: false,
-          }))
-        : []
+      allCategories.filter((i) => !["Home", "Search"].includes(i?.name))
     );
-  }, [menuItem]);
+  }, [allCategories]);
 
   return (
     <div>
@@ -1014,50 +1030,70 @@ const CategoryCollection = ({ menuItem, onChange }) => {
         reorder.
       </div>
       <div className="flex gap-[15px] mt-[20px]">
-        <div className="flex flex-col overflow-hidden rounded bg-neutral-100 border border-neutral-300 w-[300px]">
-          <div className="bg-white p-3 border-b flex items-center justify-between">
-            <div>Page List</div>
-            <button
-              title="Add Category Collection"
-              onClick={handleAddCategoryCollection}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+        <div className="flex flex-col overflow-hidden  bg-white w-[300px]">
+          <div className="rounded border border-neutral-200">
+            <div className="bg-white p-3 border-b flex items-center justify-between">
+              <div>Page List</div>
+              <button
+                title="Add Category Collection"
+                onClick={handleAddCategoryCollection}
               >
-                <path
-                  fill="currentColor"
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="flex gap-[2px] p-[7px] flex-col">
-            {linkOptions &&
-              Array.isArray(linkOptions) &&
-              linkOptions.length > 0 &&
-              linkOptions.map((category) => (
-                <div
-                  key={`category-option-${category?.menu_id}`}
-                  className=" bg-white rounded items-center border  hover:shadow"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
                 >
-                  <label
-                    htmlFor={category?.menu_id}
-                    className="p-3 flex gap-[8px] w-full"
-                  >
-                    <input
-                      type="checkbox"
-                      name={`${category?.menu_id}`}
-                      id={`${category?.menu_id}`}
-                      checked={category?.is_selected}
-                      onChange={handleCheckboxChange}
-                    />
-                    {category?.name}
-                  </label>
-                </div>
-              ))}
+                  <path
+                    fill="currentColor"
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="w-full p-1 bg-neutral-500">
+              <input
+                type="text"
+                name="page-search"
+                id="page-search"
+                placeholder="Search..."
+                className="w-full p-2"
+                value={pageQuery}
+                onChange={handlePageQueryChange}
+              />
+            </div>
+            <div className="flex gap-[2px] p-[7px] flex-col h-[500px] bg-neutral-100 overflow-y-auto">
+              {linkOptions &&
+                Array.isArray(linkOptions) &&
+                linkOptions.length > 0 &&
+                linkOptions
+                  .filter((i) =>
+                    i?.name
+                      ?.toLowerCase()
+                      .includes(pageQuery.toLocaleLowerCase())
+                  )
+                  .map((category) => (
+                    <div
+                      key={`category-option-${category?.menu_id}`}
+                      className=" bg-white rounded items-center border  hover:shadow"
+                    >
+                      <label
+                        htmlFor={category?.menu_id}
+                        className="p-3 flex gap-[8px] w-full"
+                      >
+                        <input
+                          type="checkbox"
+                          name={`${category?.menu_id}`}
+                          id={`${category?.menu_id}`}
+                          value={`${category?.menu_id}`}
+                          checked={!!category?.is_selected}
+                          onChange={handleCheckboxChange}
+                        />
+                        {category?.name}
+                      </label>
+                    </div>
+                  ))}
+            </div>
           </div>
         </div>
 
@@ -1300,7 +1336,9 @@ function EditMenuItem({ menu_id, images, feature_images }) {
     if (name === "remove-collection") {
       setMenuItem((prev) => {
         const cat_collections = prev?.cat_collections || [];
-        const updated_collections = cat_collections.filter(i => i?.id !== value);
+        const updated_collections = cat_collections.filter(
+          (i) => i?.id !== value
+        );
         return { ...prev, cat_collections: updated_collections };
       });
     }
@@ -1475,6 +1513,7 @@ function EditMenuItem({ menu_id, images, feature_images }) {
         {activeTab.id === "category_collections" && (
           <CategoryCollection
             menuItem={menuItem}
+            allCategories={flatCategories}
             onChange={handleCategoryCollectionChange}
           />
         )}
