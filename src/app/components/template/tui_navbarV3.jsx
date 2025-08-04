@@ -110,7 +110,7 @@ export default function TuiNavbar({ logo, menu }) {
       return;
     }
 
-    if (["On Sale", "New Arrivals"].includes(menu_item?.name)) {
+    if (["New Arrivals"].includes(menu_item?.name)) {
       window.location.href = BASE_URL + `/${menu_item?.url}`;
       return;
     }
