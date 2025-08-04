@@ -35,7 +35,7 @@ const footer = [
       },
       {
         name: "Shipping policy",
-        url: "",
+        url: "shipping-policy",
       },
     ],
   },
