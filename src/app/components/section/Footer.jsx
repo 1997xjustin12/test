@@ -89,31 +89,31 @@ const footer = [
     child: [
       {
         name: "Open Box",
-        url: "",
+        url: "open-box",
       },
       {
         name: "Close Out Deals",
-        url: "",
+        url: "close-out-deals",
       },
       {
         name: "Package Deals",
-        url: "",
+        url: "package-deals",
       },
       {
         name: "Clearance Sale",
-        url: "",
+        url: "clearance-sale",
       },
       {
         name: "Free Shipping",
-        url: "",
+        url: "free-shipping",
       },
       {
         name: "Free Accessories",
-        url: "",
+        url: "free-accessories",
       },
       {
         name: "Contractor Discount Program",
-        url: "",
+        url: "contractor-discount-program",
       },
     ],
   },
