@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   FacebookIcon,
   InstagramIcon,
   YoutubeIcon,
   PinterestIcon,
 } from "../icons/lib";
+import { BASE_URL } from "@/app/lib/helpers";
 
 const footer = [
   {
@@ -13,7 +15,7 @@ const footer = [
     child: [
       {
         name: "Contact Us",
-        url: "",
+        url: "contact",
       },
       {
         name: "Track My Order",
@@ -25,11 +27,11 @@ const footer = [
       },
       {
         name: "Refund & Return Policy",
-        url: "",
+        url: "return-policy",
       },
       {
         name: "Privacy Policy",
-        url: "",
+        url: "privacy-policy",
       },
       {
         name: "Shipping policy",
@@ -43,15 +45,15 @@ const footer = [
     child: [
       {
         name: "About Us",
-        url: "",
+        url: "about",
       },
       {
         name: "Contact Us",
-        url: "",
+        url: "contact",
       },
       {
         name: "Our Brands",
-        url: "",
+        url: "brands",
       },
       {
         name: "Customer Reviews",
@@ -65,7 +67,7 @@ const footer = [
     child: [
       {
         name: "Blogs",
-        url: "",
+        url: "blogs",
       },
       {
         name: "Recipes",
@@ -160,18 +162,22 @@ export default function Footer() {
             {footer.map((i, idx) => (
               <div
                 key={`footer-section-${idx}`}
-                className="w-full md:w-[calc(50%-10px)] lg:w-full">
+                className="w-full md:w-[calc(50%-10px)] lg:w-full"
+              >
                 <div className="text-sm md:text-lg font-semibold">{i.name}</div>
                 {i.name !== "Follow us" ? (
                   <div className="mt-[20px] flex flex-col gap-[8px]">
                     {i.child.map((i1, idx1) => (
-                      <div
+                      <Link
+                        prefetch={false}
+                        href={`${BASE_URL}/${i1?.url}`}
                         key={`footer-section-${idx}-item-${idx1}`}
-                        className="font-light">
-                        <div className="text-xs md:text-base cursor-pointer w-[auto] inline-block">
-                          {i1.name}
+                        className="font-light"
+                      >
+                        <div className={`text-xs md:text-base cursor-pointer w-[auto] inline-block ${i1?.url ? "text-white":"text-red-600"}`}>
+                          {i1?.name}
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 ) : (
@@ -179,18 +185,19 @@ export default function Footer() {
                     {i.child.map((i1, idx1) => (
                       <div
                         key={`footer-section-${idx}-item-${idx1}`}
-                        className="cursor-pointer">
+                        className="cursor-pointer"
+                      >
                         {i1.name === "Facebook" && (
-                          <FacebookIcon color="white" width={48} height={48} />
+                          <FacebookIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
                         )}
                         {i1.name === "Instagram" && (
-                          <InstagramIcon color="white" width={48} height={48} />
+                          <InstagramIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
                         )}
                         {i1.name === "Youtube" && (
-                          <YoutubeIcon color="white" width={48} height={48} />
+                          <YoutubeIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
                         )}
                         {i1.name === "Pinterest" && (
-                          <PinterestIcon color="white" width={48} height={48} />
+                          <PinterestIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
                         )}
                       </div>
                     ))}
@@ -205,7 +212,8 @@ export default function Footer() {
               {payments.map((i, idx) => (
                 <div
                   key={`payment-img-${idx}`}
-                  className="w-[60px] md:w-[90px] md:h-[auto] relative aspect-2">
+                  className="w-[60px] md:w-[90px] md:h-[auto] relative aspect-2"
+                >
                   {
                     //   <img
                     //   src={i.img}
