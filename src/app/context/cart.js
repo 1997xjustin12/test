@@ -7,6 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
+import Cookies from 'js-cookie';
 
 const CartContext = createContext();
 
@@ -89,6 +90,7 @@ export const CartProvider = ({ children }) => {
         const updatedItems = [...savedItems, ...items];
         cartStorage.saveCart(updatedItems);
         setCartItemsCount(updatedItems.length);
+        Cookies.set('cart', JSON.stringify([...updatedItems]));
         return [...updatedItems];
       });
       setAddToCartLoading(false);
@@ -116,6 +118,7 @@ export const CartProvider = ({ children }) => {
       );
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
+      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
@@ -127,6 +130,7 @@ export const CartProvider = ({ children }) => {
       const updatedItems = [...savedItems, item];
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
+      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
@@ -155,6 +159,7 @@ export const CartProvider = ({ children }) => {
   const updateCart = (items) => {
     cartStorage.saveCart([...items]);
     setCartItemsCount(items.length);
+    Cookies.set('cart', JSON.stringify([...items]));
     setCartItems([...items]);
   };
 
@@ -163,6 +168,7 @@ export const CartProvider = ({ children }) => {
       const updatedItems = [];
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
+      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
