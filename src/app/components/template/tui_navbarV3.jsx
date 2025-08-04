@@ -25,7 +25,18 @@ import MyAccountButton from "@/app/components/atom/MyAccountButton";
 import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-
+const excludeBrandsSubLinks = [
+  "Cedar Creek Fireplaces",
+  "Delsol",
+  "Dynaque",
+  "Handles",
+  "Onlyfire",
+  "OutdoorKitchenOutlet",
+  "Premier Design",
+  "Sedona",
+  "Solana Outdoor",
+  "Solana Outdoor Products",
+];
 export default function TuiNavbar({ logo, menu }) {
   const { solana_categories: solana_menu_object } = useSolanaCategories();
   // console.log("solana_menu_object",solana_menu_object)
@@ -99,17 +110,29 @@ export default function TuiNavbar({ logo, menu }) {
       return;
     }
 
-    if(["On Sale", "New Arrivals"].includes(menu_item?.name)){
-      window.location.href = BASE_URL+`/${menu_item?.url}`;
+    if (["On Sale", "New Arrivals"].includes(menu_item?.name)) {
+      window.location.href = BASE_URL + `/${menu_item?.url}`;
       return;
     }
-    
+
     setExpandedMenu((prev) => {
+      if (menu_item && menu_item?.name === "Brands") {
+        const groups = Array.from({ length: 5 }, () => []);
+        menu_item.children
+          .filter((i) => !excludeBrandsSubLinks.includes(i?.name))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .forEach((item, i) => groups[i % 5].push(item));
+        menu_item["links2"] = groups;
+        // console.log("[TEST] links2 for brands", groups);
+      }
+
       if (!prev) return menu_item;
 
       if (prev?.name === menu_item?.name) return null;
 
-      if (prev?.name !== menu_item?.name) return menu_item;
+      if (prev?.name !== menu_item?.name) {
+        return menu_item;
+      }
     });
   };
 
@@ -262,103 +285,6 @@ export default function TuiNavbar({ logo, menu }) {
                             </div>
                           )}
                         </button>
-                        {/* {i.links && i.links.length > 0 && (
-                          <div className="bg-white absolute w-full left-0 top-[100%] z-[100] hidden shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
-                            <div className="container mx-auto py-5 px-[20px]">
-                              <div className="flex justify-between">
-                                <div className="w-full flex gap-[70px]">
-                                  {i.links.map((i1, index1) => (
-                                    <div
-                                      key={`${i.url}-col-${index1}`}
-                                      className="flex flex-col gap-[20px] text-xs"
-                                    >
-                                      {i1.map((i2, index2) => (
-                                        <div
-                                          key={`${i.url}-col-${index1}-content-${index2}`}
-                                        >
-                                          <Link
-                                            prefetch={false}
-                                            href={`${
-                                              i2?.url
-                                                ? BASE_URL + "/" + i2.url
-                                                : "#"
-                                            }`}
-                                          >
-                                            <div className="text-black font-bold mb-[10px] hover-text-theme-500 cursor-pointer">
-                                              {i2.name}
-                                            </div>
-                                          </Link>
-                                          <div className="flex flex-col gap-[5px]">
-                                            {i.name.toLowerCase() == "brands"
-                                              ? i2.children &&
-                                                i2.children.length > 0 &&
-                                                i2.children
-                                                  .slice(0, 3)
-                                                  .map((i3, index3) => (
-                                                    <Link
-                                                      prefetch={false}
-                                                      href={`${
-                                                        i3?.url
-                                                          ? BASE_URL +
-                                                            "/" +
-                                                            i3.url
-                                                          : "#"
-                                                      }`}
-                                                      key={`${i.url}-col-${index}-content-${index2}-child-${index3}`}
-                                                    >
-                                                      <div className="text-black hover-text-theme-500 cursor-pointer">
-                                                        {i3.name}
-                                                      </div>
-                                                    </Link>
-                                                  ))
-                                              : i2.children &&
-                                                i2.children.length > 0 &&
-                                                i2.children.map(
-                                                  (i3, index3) => (
-                                                    <Link
-                                                      prefetch={false}
-                                                      href={`${
-                                                        i3?.url
-                                                          ? BASE_URL +
-                                                            "/" +
-                                                            i3.url
-                                                          : "#"
-                                                      }`}
-                                                      key={`${i.url}-col-${index}-content-${index2}-child-${index3}`}
-                                                    >
-                                                      <div className="text-black hover-text-theme-500 cursor-pointer">
-                                                        {i3.name}
-                                                      </div>
-                                                    </Link>
-                                                  )
-                                                )}
-                                            <Link
-                                              prefetch={false}
-                                              href={`${
-                                                i2?.url
-                                                  ? BASE_URL + "/" + i2.url
-                                                  : "#"
-                                              }`}
-                                            >
-                                              <div className="text-black hover-text-theme-500 cursor-pointer flex gap-[10px] items-center">
-                                                <Icon
-                                                  icon="teenyicons:arrow-solid"
-                                                  width="12"
-                                                  height="12"
-                                                />
-                                                <div>Shop All</div>
-                                              </div>
-                                            </Link>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )} */}
                       </div>
                     ))}
                 </div>
@@ -415,7 +341,8 @@ export default function TuiNavbar({ logo, menu }) {
                       )}
                     {expandedMenu?.links &&
                       Array.isArray(expandedMenu.links) &&
-                      expandedMenu.links.length > 0 && (
+                      expandedMenu.links.length > 0 &&
+                      expandedMenu?.name !== "Brands" && (
                         <>
                           <hr className="border-gray-300" />
                           <div className="flex justify-between">
@@ -453,6 +380,73 @@ export default function TuiNavbar({ logo, menu }) {
                                       )}
                                   </div>
                                 ))}
+                              </div>
+                            ))}
+
+                            {expandedMenu?.links &&
+                              Array.isArray(expandedMenu.links) &&
+                              Array.from({
+                                length: 6 - expandedMenu?.links.length,
+                              }).map((_, index) => (
+                                <div key={`empty-div${index}`} />
+                              ))}
+                          </div>
+                        </>
+                      )}
+                    {/*  brands only */}
+                    {expandedMenu?.links2 &&
+                      Array.isArray(expandedMenu.links2) &&
+                      expandedMenu.links2.length > 0 &&
+                      expandedMenu?.name === "Brands" && (
+                        <>
+                          <hr className="border-gray-300" />
+                          <div className="flex justify-between">
+                            {expandedMenu?.links2?.map((col, index) => (
+                              <div key={`sublink-col-${index}`}>
+                                {col.map((sublink) => (
+                                  <div
+                                    className="py-3"
+                                    key={`sublink-col-${index}-${sublink?.slug}`}
+                                  >
+                                    <Link
+                                      prefetch={false}
+                                      href={`${BASE_URL}/${sublink?.url}`}
+                                      onClick={handleLinkClick}
+                                      className="text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800"
+                                    >
+                                      {sublink?.name}
+                                    </Link>
+                                    {sublink?.children &&
+                                      Array.isArray(sublink?.children) &&
+                                      sublink?.children.length > 0 && (
+                                        <div className="flex flex-col gap-[5px]">
+                                          {sublink.children.map((child) => (
+                                            <Link
+                                              prefetch={false}
+                                              onClick={handleLinkClick}
+                                              href={`${BASE_URL}/${child?.url}`}
+                                              className="text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800"
+                                              key={`sublink-col-${index}-${sublink?.slug}-${child?.slug}`}
+                                            >
+                                              {child?.name}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      )}
+                                  </div>
+                                ))}
+                                {index === 4 && (
+                                  <div className="py-3">
+                                    <Link
+                                      prefetch={false}
+                                      href={`${BASE_URL}/brands`}
+                                      onClick={handleLinkClick}
+                                      className="text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800"
+                                    >
+                                      Shop All Brands
+                                    </Link>
+                                  </div>
+                                )}
                               </div>
                             ))}
 
