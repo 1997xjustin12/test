@@ -21,16 +21,14 @@ function Contact() {
           <ICRoundPhone/>
           <div>{contact}</div>
         </Link>
-        <div></div>
       </div>
 
       <div className="mb-4 flex flex-col items-center justify-center">
         <h5>Email us at</h5>
-        <Link prefetch={false} href={`tel:${contact}`} className="flex items-center gap-1 font-semibold">
+        <Link prefetch={false} href={`mailto:${email}`} className="flex items-center gap-1 font-semibold">
           <MDIEmailOutline/>
           <div>{email}</div>
         </Link>
-        <div></div>
       </div>
 
     </div>
