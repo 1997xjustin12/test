@@ -269,7 +269,7 @@ export default function TuiNavbar({ logo, menu }) {
                           {i.name.toLowerCase() === "home" && <MingcuteHome7 />}
                           {i.name.toLowerCase() !== "home" && (
                             <div
-                              className={`text-xs ${
+                              className={`text-xs flex items-center gap-[20px]${
                                 i.url === ParentSlug
                                   ? "font-semibold  text-white"
                                   : "font-semibold text-neutral-800"
@@ -281,7 +281,18 @@ export default function TuiNavbar({ logo, menu }) {
                         }
                         `}
                             >
-                              {i.name}
+                              <div>{i.name}</div> 
+                              {
+                                i?.children?.length > 0 &&
+                                <>
+                                  {
+                                    expandedMenu?.name !== i?.name ?
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 10l5 5l5-5z"/></svg>
+                                    :
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 15l5-5l5 5z"/></svg>
+                                  }
+                                </>
+                              }
                             </div>
                           )}
                         </button>
