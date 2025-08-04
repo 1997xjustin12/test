@@ -14,7 +14,7 @@ import { CategoriesProvider } from "@/app/context/category";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
-
+import ExtrasHeader from "@/app/components/atom/ExtrasHeader"
 const shopify = true; // if shopify product structure
 
 const MontserratFont = Montserrat({
@@ -39,19 +39,7 @@ export default async function MarketLayout({ children }) {
         className={`antialiased ${MontserratFont.className} theme-${color}`}
       >
         <FreeShippingBanner />
-        <div className="hidden lg:block bg-theme-500 py-[8px] px-[30px] text-white">
-          <div className="container mx-auto  flex items-center justify-between">
-            <div className="flex justify-between w-full">
-              <div className="font-light text-xs">Promotions</div>
-              <div className="font-light text-xs">Learning Center</div>
-              <div className="font-light text-xs">Professional Program</div>
-              <div className="font-light text-xs">Order Status</div>
-              <div className="font-light text-xs">
-                Why Buy From The Expert In Fire?
-              </div>
-            </div>
-          </div>
-        </div>
+        <ExtrasHeader />
         <CategoriesProvider categories={menu.map(i=> ({...i, is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name)}))}>
           <CartProvider>
             <CompareProductsProvider>
