@@ -203,8 +203,8 @@ export default function TuiNavbar({ logo, menu }) {
                         <Link href={BASE_URL}>
                           <Image
                             alt="Logo"
-                            // src={logo ?? "/Logo.webp"}
-                            src={"/images/logo/solana-brand-logo.webp"}
+                            src={logo ?? "/Logo.webp"}
+                            // src={"/images/logo/solana-brand-logo.webp"}
                             className="w-full h-full object-cover"
                             width={500}
                             height={500}

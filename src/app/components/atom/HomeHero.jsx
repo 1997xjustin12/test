@@ -6,7 +6,7 @@ export default function Hero({ data }) {
   // console.log("data", data);
   const useBanner =
     !data?.banner?.img?.src || data?.banner?.img?.src === ""
-      ? "/images/banner/solana-home-hero.webp"
+      ? "/images/banner/solana-home-banner.webp"
       : data?.banner?.img?.src;
 
   return (
@@ -36,9 +36,6 @@ export default function Hero({ data }) {
                   </div>
                   <div className="max-w-6xl text-xs mx-auto md:text-[24px] font-normal mt-1 leading-8 text-white text-shadow-lg">
                     {data?.banner?.tag_line}
-                  </div>
-                  <div className="mt-10">
-                    <button className="text-white bg-stone-700 rounded-full text-[22px] px-[54px] py-[16px] font-bold hover:bg-stone-800 transition-colors duration-300">Shop Now</button>
                   </div>
                 </div>
               </div>
