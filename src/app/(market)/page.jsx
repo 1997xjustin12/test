@@ -15,7 +15,7 @@ import FrequentlyAskedSection from "@/app/components/section/HomePageFrequentlyA
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import { getPageData } from "@/app/lib/helpers";
 import { keys, redisGet } from "@/app/lib/redis";
-const defaultMenuKey = keys.default_menu.value;
+const defaultMenuKey = keys.dev_shopify_menu.value;
 const slug = "";
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
@@ -41,9 +41,11 @@ export default function HomePage({ params }) {
   };
 
   useEffect(() => {
+    console.log("[TEST] slug", slug)
     getMenu().then((data) => {
       const flatData = flattenNav(data);
       const _pageData = getPageData(slug, flatData);
+      console.log("[TEST] _pageData", _pageData)
       setPageData(_pageData);
     });
   }, [slug]);

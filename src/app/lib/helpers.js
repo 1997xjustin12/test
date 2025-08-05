@@ -235,6 +235,13 @@ export function formatPrice(price) {
 export function getPageData(pathname, categories) {
   // console.log("lib/helper.js fn(getPageData):params->pathname", pathname);
   // console.log("lib/helper.js fn(getPageData):params->categories", categories);
+    console.log("[TEST] categories:", categories)
+  if(pathname === ""){
+    const home = categories.find(({name})=> name === "Home");
+    console.log("[TEST] home:", home)
+    return home;
+  }
+
   return categories.find(({ url }) => url === pathname);
 }
 
