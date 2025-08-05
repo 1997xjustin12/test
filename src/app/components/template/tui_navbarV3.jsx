@@ -339,7 +339,7 @@ export default function TuiNavbar({ logo, menu }) {
                                     src={fnav?.feature_image}
                                     alt={`feat-nav-image-${index}`}
                                     fill
-                                    className="object-contain"
+                                    className="object-cover"
                                     sizes="(max-width: 768px) 100vw, 300px"
                                   />
                                 )}
