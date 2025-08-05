@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
-import { Montserrat } from "next/font/google";
+import { Inter } from "next/font/google";
 // import localFont from "next/font/local";
 import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
@@ -17,11 +17,11 @@ import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 Yo
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader"
 const shopify = true; // if shopify product structure
 
-const MontserratFont = Montserrat({
+const InterFont = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-montserrat", // Optional for Tailwind usage
+  variable: "--font-montserrat",
 });
 
 export const metadata = await generateMetadata();
@@ -36,7 +36,7 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`antialiased ${MontserratFont.className} theme-${color}`}
+        className={`antialiased ${InterFont.className} theme-${color}`}
       >
         <FreeShippingBanner />
         <ExtrasHeader />
