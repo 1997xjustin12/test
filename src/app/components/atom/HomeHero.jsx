@@ -6,7 +6,7 @@ export default function Hero({ data }) {
   // console.log("data", data);
   const useBanner =
     !data?.banner?.img?.src || data?.banner?.img?.src === ""
-      ? "/images/banner/home-banner.webp"
+      ? "/images/banner/solana-home-hero.webp"
       : data?.banner?.img?.src;
 
   return (
