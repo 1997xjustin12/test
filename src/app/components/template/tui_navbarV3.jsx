@@ -369,7 +369,7 @@ export default function TuiNavbar({ logo, menu }) {
                                       prefetch={false}
                                       href={`${BASE_URL}/${sublink?.url}`}
                                       onClick={handleLinkClick}
-                                      className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${sublink?.nav_type === "custom_page" ? "line-through":""}`}
+                                      className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${sublink?.nav_type === "custom_page" ? "hidden":""}`}
                                     >
                                       {sublink?.name}
                                     </Link>
@@ -382,7 +382,7 @@ export default function TuiNavbar({ logo, menu }) {
                                               prefetch={false}
                                               onClick={handleLinkClick}
                                               href={`${BASE_URL}/${child?.url}`}
-                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type === "custom_page" ? "line-through":""}`}
+                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type === "custom_page" ? "hidden":""}`}
                                               key={`sublink-col-${index}-${sublink?.slug}-${child?.slug}`}
                                             >
                                               {child?.name}
@@ -437,7 +437,7 @@ export default function TuiNavbar({ logo, menu }) {
                                               prefetch={false}
                                               onClick={handleLinkClick}
                                               href={`${BASE_URL}/${child?.url}`}
-                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type ==="custom_page"? "line-through":""}`}
+                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type ==="custom_page"? "hidden":""}`}
                                               key={`sublink-col-${index}-${sublink?.slug}-${child?.slug}`}
                                             >
                                               {child?.name}
@@ -453,7 +453,7 @@ export default function TuiNavbar({ logo, menu }) {
                                       prefetch={false}
                                       href={`${BASE_URL}/brands`}
                                       onClick={handleLinkClick}
-                                      className="text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 line-through"
+                                      className="text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 hidden"
                                     >
                                       Shop All Brands
                                     </Link>
