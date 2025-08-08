@@ -18,7 +18,7 @@ function ReturnPolicy() {
               <Link
                 prefetch={false}
                 href={BASE_URL}
-                className="font-bold text-theme-600"
+                className="font-bold text-theme-600 underline"
               >
                 {brandName}
               </Link>{" "}

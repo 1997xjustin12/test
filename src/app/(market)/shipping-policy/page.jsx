@@ -18,7 +18,7 @@ function ReturnPolicy() {
               <Link
                 prefetch={false}
                 href={BASE_URL}
-                className="font-bold text-theme-600"
+                className="font-bold text-theme-600 underline"
               >
                 {brandName}
               </Link>{" "}
@@ -37,9 +37,7 @@ function ReturnPolicy() {
                 days after payment is received.
               </li>
               <li>
-                Customer is responsible for returning the shipment given that
-                they change their mind or if the wrong item is ordered. Kindly
-                contact us to know more about the return policy.
+                Customer is responsible for return/restocking fee of orders made by mistake. Contact us to know more about the return policy.
               </li>
               <li>
                 Delivery times may vary depending on your location and the
@@ -63,7 +61,7 @@ function ReturnPolicy() {
             If you need any further assistance with your shipping policy or have
             any other questions, don't hesitate to reach out to our customer
             service team at{" "}
-            <Link prefecth={false} href={`tel:${contact}`} className="hover:underline text-blue-600">
+            <Link prefetch={false} href={`tel:${contact}`} className="hover:underline text-blue-600">
               {contact}
             </Link>
           </p>
