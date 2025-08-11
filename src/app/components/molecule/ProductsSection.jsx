@@ -24,15 +24,113 @@ import { ES_INDEX } from "@/app/lib/helpers";
 
 const es_index = ES_INDEX;
 
-const filter_setup = {
-  "grills": [
-    {
-      label: "",
-      attribute: "",
-      
-    }
-  ]
-}
+const filters = [
+  {
+    label: "brand",
+    attribute: "brand",
+    searchable: true,
+    type: "RefinementList",
+    filter_type: ["Grills", "Fireplaces"],
+  },
+  {
+    label: "configuration",
+    attribute: "configuration",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "number of burners",
+    attribute: "no_of_burners",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "price",
+    attribute: "price",
+    searchable: false,
+    type: "RangeInput",
+    filter_type: ["Grills", "Fireplaces"],
+  },
+  {
+    label: "lights",
+    attribute: "grill_lights",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "size",
+    attribute: "size",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Rear Infrared Burner",
+    attribute: "rear_infrared_burner",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Cut-Out Width",
+    attribute: "cut_out_width",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Cut-Out Depth",
+    attribute: "cut_out_depth",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Cut-Out Height",
+    attribute: "cut_out_height",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Made In USA",
+    attribute: "made_in_usa",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills","Fireplaces"],
+  },
+  {
+    label: "Material",
+    attribute: "material",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Thermometer",
+    attribute: "thermometer",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Rotisserie Kit",
+    attribute: "rotisserie_kit",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+  {
+    label: "Gas Type",
+    attribute: "gas_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["Grills"],
+  },
+];
 
 const searchClient = Client({
   url: `/api/es/searchkit/`,
@@ -74,7 +172,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
 
-  // console.log("[TEST] page_details", page_details);
+  console.log("[TEST] page_details", page_details);
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -110,7 +208,9 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             results?.nbHits && `(${results?.nbHits})`
           }`}</h1>
         </div>
-        <div className="pb-[100px] flex justify-center text-neutral-600 font-bold text-lg">No Results Found...</div>
+        <div className="pb-[100px] flex justify-center text-neutral-600 font-bold text-lg">
+          No Results Found...
+        </div>
       </div>
     );
   }
@@ -136,81 +236,27 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             {/* <FilterWrapper page_details={page_details} /> */}
             {page_details && page_details?.nav_type === "category" && (
               <DynamicWidgets facets={["*"]}>
-                <div className="my-5 facet_brand">
-                  <Panel header="brand">
-                    <RefinementList attribute="brand" searchable />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_no_of_burners">
-                  <Panel header="Number of Burners">
-                    <RefinementList attribute="no_of_burners"/>
-                  </Panel>
-                </div>
-                <div className="my-5 facet_configuration">
-                  <Panel header="Configuration">
-                    <RefinementList attribute="configuration_type"/>
-                  </Panel>
-                </div>
-                <div className="my-5">
-                  <Panel header="price">
-                    <RangeInput attribute="price" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_grill_light">
-                  <Panel header="Lights">
-                    <RefinementList attribute="grill_lights" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_size">
-                  <Panel header="Size">
-                    <RefinementList attribute="size" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_rear_infrared_burner">
-                  <Panel header="Rear Infrared Burner">
-                    <RefinementList attribute="rear_infrared_burner" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_cut_out_width">
-                  <Panel header="Cut Out Width">
-                    <RefinementList attribute="cut_out_width" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_cut_out_depth">
-                  <Panel header="Cut Out Depth">
-                    <RefinementList attribute="cut_out_depth" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_cut_out_height">
-                  <Panel header="Cut Out Height">
-                    <RefinementList attribute="cut_out_height" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_made_in_usa">
-                  <Panel header="Made In USA">
-                    <RefinementList attribute="made_in_usa" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_material">
-                  <Panel header="Material">
-                    <RefinementList attribute="material" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_material">
-                  <Panel header="Thermometer">
-                    <RefinementList attribute="thermometer" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_material">
-                  <Panel header="Rotisserie Kit">
-                    <RefinementList attribute="rotisserie_kit" />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_material">
-                  <Panel header="Gas Type">
-                    <RefinementList attribute="gas_type" />
-                  </Panel>
-                </div>
+                {filters
+                  .filter((item) =>
+                    item?.filter_type.includes(page_details?.filter_type)
+                  )
+                  .map((item) => (
+                    <div
+                      key={`filter-item-${item?.attribute}`}
+                      className={`my-5 facet_${item?.attribute}`}
+                    >
+                      <Panel header={item?.label}>
+                        {item?.attribute && item?.attribute !== "price" ? (
+                          <RefinementList
+                            attribute={item?.attribute}
+                            searchable={item?.searchable}
+                          />
+                        ) : (
+                          <RangeInput attribute="price" />
+                        )}
+                      </Panel>
+                    </div>
+                  ))}
               </DynamicWidgets>
             )}
 
@@ -230,28 +276,55 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             )}
 
             {page_details && page_details?.nav_type === "custom_page" && (
+              // <DynamicWidgets facets={["*"]}>
+              //   <div className="my-5">
+              //     <Panel header="Categories">
+              //       <RefinementList attribute="product_category" searchable />
+              //     </Panel>
+              //   </div>
+              //   <div className="my-5 facet_brand">
+              //     <Panel header="brand">
+              //       <RefinementList attribute="brand" searchable />
+              //     </Panel>
+              //   </div>
+              //   <div className="my-5">
+              //     <Panel header="price">
+              //       <RangeInput attribute="price" />
+              //     </Panel>
+              //   </div>
+              // </DynamicWidgets>
+              
               <DynamicWidgets facets={["*"]}>
-                <div className="my-5">
-                  <Panel header="Categories">
-                    <RefinementList attribute="product_category" searchable />
-                  </Panel>
-                </div>
-                <div className="my-5 facet_brand">
-                  <Panel header="brand">
-                    <RefinementList attribute="brand" searchable />
-                  </Panel>
-                </div>
-                <div className="my-5">
-                  <Panel header="price">
-                    <RangeInput attribute="price" />
-                  </Panel>
-                </div>
+                {filters
+                  .filter((item) =>
+                    item?.filter_type.includes(page_details?.filter_type)
+                  )
+                  .map((item) => (
+                    <div
+                      key={`filter-item-${item?.attribute}`}
+                      className={`my-5 facet_${item?.attribute}`}
+                    >
+                      <Panel header={item?.label}>
+                        {item?.attribute && item?.attribute !== "price" ? (
+                          <RefinementList
+                            attribute={item?.attribute}
+                            searchable={item?.searchable}
+                          />
+                        ) : (
+                          <RangeInput attribute="price" />
+                        )}
+                      </Panel>
+                    </div>
+                  ))}
               </DynamicWidgets>
             )}
 
-            
             <div className="relative lg:w-[240px] h-[360px]">
-              <Link href={`tel:${page_details?.contact_number || '(888) 575-9720'}`} prefetch={false} className="">
+              <Link
+                href={`tel:${page_details?.contact_number || "(888) 575-9720"}`}
+                prefetch={false}
+                className=""
+              >
                 <Image
                   src="/images/banner/sub-banner-image.webp"
                   alt={`Sub Banner Image`}
@@ -270,7 +343,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
             <Hits
               hitComponent={(props) => (
-                <SPProductCard {...props}  page_details={page_details}/>
+                <SPProductCard {...props} page_details={page_details} />
               )}
             />
             <Pagination />
@@ -370,7 +443,8 @@ function ProductsSection({ category, search = "" }) {
           } else if (details?.nav_type === "brand") {
             result = `page_brand:${details?.origin_name}`;
           } else if (details?.nav_type === "custom_page") {
-            result = `custom_page:${details?.origin_name}`;
+            // result = `custom_page:${details?.origin_name}`;
+            result = `custom_page:${details?.collection_display?.name || "NA"}`;
           }
           return result;
         });

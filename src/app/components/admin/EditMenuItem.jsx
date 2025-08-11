@@ -447,6 +447,35 @@ const Faqs = ({ faqsProps, onChange }) => {
 };
 
 const Settings = ({ menuItem, onChange, feature_images }) => {
+  const [collectionList, setCollectionList] = useState([]);
+  const [fetchStatus, setFetchStatus] = useState("initial");
+
+  const filter_types = ["Grills", "Fireplaces"];
+
+  useEffect(() => {
+    const fetchCollectionList = async () => {
+      try {
+        setFetchStatus("fetching");
+        const response = await fetch("/api/collections/collection-list");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCollectionList(data);
+        setFetchStatus("success");
+      } catch (error) {
+        setFetchStatus("error");
+        console.error("Failed to fetch collection list:", error);
+      }
+    };
+
+    fetchCollectionList();
+  }, []);
+
+
+  
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
@@ -514,6 +543,30 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
         it to the developer. Once uploaded, it will appear in the selection
         list.
       </div>
+      <div className="border-t border-gray-300 my-4"></div>
+      Product Display Collection
+      <div className="text-sm italic text-neutral-600">Select a collection</div>
+      <div className="flex gap-[10px] relative min-h-[26px]">
+        {
+          fetchStatus === "fetching" && <div className="absolute">Loading...</div>
+        }
+        {
+          fetchStatus === "error" && <div className="absolute">Error Fetching Collections...</div>
+        }
+        {
+          fetchStatus === "success" && collectionList.map((item,index) => <button key={`collection-option-${item?.id}-${item?.slug}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.collection_display?.id === item?.id? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"collection-display", value: item}})}>{item?.name}</button>)
+        }    
+      </div>
+      <div className="border-t border-gray-300 my-4"></div>
+
+      Product Display Filter
+      <div className="text-sm italic text-neutral-600">Select a filter type</div>
+      <div className="flex gap-[10px] relative min-h-[26px]">
+        {
+          filter_types.map((item, index)=> <button key={`filter-type-option-${item.replaceAll(" ","-").toLowerCase()}-${index}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.filter_type === item ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"filter-type", value: item.replaceAll(" ","-").toLowerCase()}})}>{item}</button>)
+        }
+      </div>
+      <div></div>
       <div className="border-t border-gray-300 my-4"></div>
       <div className="flex flex-col gap-1">
         <label htmlFor="contact-number">Contact Number</label>
@@ -1253,6 +1306,20 @@ function EditMenuItem({ menu_id, images, feature_images }) {
       setMenuItem((prev) => ({
         ...prev,
         feature_image: value,
+      }));
+    }
+
+    if (name === "collection-display") {
+      setMenuItem((prev) => ({
+        ...prev,
+        collection_display: value,
+      }));
+    }
+
+    if (name === "filter-type") {
+      setMenuItem((prev) => ({
+        ...prev,
+        filter_type: value,
       }));
     }
   };

@@ -258,6 +258,7 @@ export default async function handler(req, res) {
       filter_query.push({
         term: {
           "collections.name.keyword": filter_value,
+          // "collections.name.keyword": "Test",
         },
       });
     }
