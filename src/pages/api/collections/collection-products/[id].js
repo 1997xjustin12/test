@@ -1,4 +1,4 @@
-import { ES_INDEX } from "../../../app/lib/helpers";
+import { ES_INDEX } from "../../../../app/lib/helpers";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
