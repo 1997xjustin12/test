@@ -108,3 +108,17 @@ export const redisGet = async(key) =>{
     throw new Error(`RedisGetError: ${error}`);
   }
 }
+
+export const updatePopularSearches = async(req, res) => {
+  if (req.method === "POST") {
+    const { term } = req.body;
+    if (!term) return res.status(400).json({ error: "Search term required" });
+
+    // Increment score for this term in sorted set
+    await redis.zincrby("popular_searches", 1, term.toLowerCase());
+
+    return res.status(200).json({ message: "Search recorded" });
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
+}

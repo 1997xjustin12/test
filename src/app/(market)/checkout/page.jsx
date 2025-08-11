@@ -2,9 +2,7 @@
 import React, {useEffect} from 'react';
 import dynamic from 'next/dynamic';
 import CheckoutOrderSummary from "@/app/components/atom/CheckoutOrderSummary";
-import CheckoutForm from "@/app/components/atom/CheckoutForm"
 import { useCart } from "@/app/context/cart";
-import { notFound } from 'next/navigation';
 
 // import BraintreeForm from "@/app/components/template/BraintreeForm"
 const BraintreeForm = dynamic(() => import("@/app/components/template/BraintreeForm"), {

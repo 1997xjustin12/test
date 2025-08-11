@@ -274,6 +274,7 @@ export const SearchProvider = ({ children }) => {
     }
   };
 
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("@/app/lib/localForage")
@@ -293,6 +294,12 @@ export const SearchProvider = ({ children }) => {
           console.error("Error loading localForage module:", error);
         });
     }
+
+    fetch("/api/popular_searches")
+      .then((res) => res.json())
+      .then((res)=> {
+        console.log("[TEST] upstash response: ", res);
+      });
   }, []);
 
   // set url query string on the input if location =/search

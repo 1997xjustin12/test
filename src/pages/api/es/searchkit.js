@@ -52,7 +52,74 @@ const apiClient = API(
           type: "string",
         },
         { attribute: "brand", field: "brand.keyword", type: "string" },
+        {
+          attribute: "no_of_burners",
+          field: "accentuate_data.bbq.number_of_main_burners.keyword",
+          type: "string"
+        },
         { attribute: "price", field: "variants.price", type: "numeric" },
+        {
+          attribute: "grill_lights",
+          field: "accentuate_data.bbq.grill_lights.keyword",
+          type: "string",
+        },
+        {
+          attribute: "size",
+          field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions.keyword",
+          type: "string",
+        },
+        //
+
+        {
+          attribute: "rear_infrared_burner",
+          field: "accentuate_data.bbq.rear_infrared_burner.keyword",
+          type: "string",
+        },
+
+        {
+          attribute: "cut_out_width",
+          field: "accentuate_data.bbq.storage_specs_cutout_width.keyword",
+          type: "string",
+        },
+
+        {
+          attribute: "cut_out_depth",
+          field: "accentuate_data.bbq.storage_specs_cutout_depth.keyword",
+          type: "string",
+        },
+
+        {
+          attribute: "cut_out_height",
+          field: "accentuate_data.bbq.storage_specs_cutout_height.keyword",
+          type: "string",
+        },
+
+        //
+        {
+          attribute: "made_in_usa",
+          field: "accentuate_data.bbq.seo_meta_made_in_usa.keyword",
+          type: "string",
+        },
+        {
+          attribute: "material",
+          field: "accentuate_data.bbq.seo_meta_material.keyword",
+          type: "string",
+        },
+        {
+          attribute: "thermometer",
+          field: "accentuate_data.bbq.thermometer.keyword",
+          type: "string",
+        },
+        {
+          attribute: "rotisserie_kit",
+          field: "accentuate_data.bbq.rotisserie_kit.keyword",
+          type: "string",
+        },
+        {
+          attribute: "gas_type",
+          field: "accentuate_data.bbq.seo_meta_fuel_type.keyword",
+          type: "string",
+        },
       ],
       filter_attributes: [
         {

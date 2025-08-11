@@ -45,6 +45,7 @@ export default async function handler(req, res) {
       // elasticsearch result restructured to bigcommerce response object
       const product = data?.hits?.hits.map((i) => i._source);
 
+
       if (product?.[0] && product[0].accentuate_data?.[0]) {
         // send request to get product options data
         const accentuate_data = product[0].accentuate_data[0];

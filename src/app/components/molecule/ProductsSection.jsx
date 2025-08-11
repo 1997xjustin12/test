@@ -131,9 +131,81 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                     <RefinementList attribute="brand" searchable />
                   </Panel>
                 </div>
+                
+                <div className="my-5 facet_material">
+                  <Panel header="Number of Burners">
+                    <RefinementList attribute="no_of_burners"/>
+                  </Panel>
+                </div>
                 <div className="my-5">
                   <Panel header="price">
                     <RangeInput attribute="price" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_grill_light">
+                  <Panel header="Lights">
+                    <RefinementList attribute="grill_lights" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_size">
+                  <Panel header="Size">
+                    <RefinementList attribute="size" />
+                  </Panel>
+                </div>
+
+                
+                <div className="my-5 facet_rear_infrared_burner">
+                  <Panel header="Rear Infrared Burner">
+                    <RefinementList attribute="rear_infrared_burner" />
+                  </Panel>
+                </div>
+
+                
+                <div className="my-5 facet_cut_out_width">
+                  <Panel header="Cut Out Width">
+                    <RefinementList attribute="cut_out_width" />
+                  </Panel>
+                </div>
+
+                
+                <div className="my-5 facet_cut_out_depth">
+                  <Panel header="Cut Out Depth">
+                    <RefinementList attribute="cut_out_depth" />
+                  </Panel>
+                </div>
+
+                
+                <div className="my-5 facet_cut_out_height">
+                  <Panel header="Cut Out Height">
+                    <RefinementList attribute="cut_out_height" />
+                  </Panel>
+                </div>
+
+                
+
+                <div className="my-5 facet_made_in_usa">
+                  <Panel header="Made In USA">
+                    <RefinementList attribute="made_in_usa" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_material">
+                  <Panel header="Material">
+                    <RefinementList attribute="material" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_material">
+                  <Panel header="Thermometer">
+                    <RefinementList attribute="thermometer" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_material">
+                  <Panel header="Rotisserie Kit">
+                    <RefinementList attribute="rotisserie_kit" />
+                  </Panel>
+                </div>
+                <div className="my-5 facet_material">
+                  <Panel header="Gas Type">
+                    <RefinementList attribute="gas_type" />
                   </Panel>
                 </div>
               </DynamicWidgets>
