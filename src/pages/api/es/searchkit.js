@@ -56,75 +56,75 @@ const apiClient = API(
 
         {
           attribute: "configuration_type",
-          field: "accentuate_data.bbq.configuration_type.keyword",
+          field: "accentuate_data.bbq.configuration_type",
           type: "string",
         },
         {
           attribute: "no_of_burners",
-          field: "accentuate_data.bbq.number_of_main_burners.keyword",
+          field: "accentuate_data.bbq.number_of_main_burners",
           type: "string",
         },
         { attribute: "price", field: "variants.price", type: "numeric" },
         {
           attribute: "grill_lights",
-          field: "accentuate_data.bbq.grill_lights.keyword",
+          field: "accentuate_data.bbq.grill_lights",
           type: "string",
         },
         {
           attribute: "size",
-          field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions.keyword",
+          field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions",
           type: "string",
         },
         //
 
         {
           attribute: "rear_infrared_burner",
-          field: "accentuate_data.bbq.rear_infrared_burner.keyword",
+          field: "accentuate_data.bbq.rear_infrared_burner",
           type: "string",
         },
 
         {
           attribute: "cut_out_width",
-          field: "accentuate_data.bbq.storage_specs_cutout_width.keyword",
+          field: "accentuate_data.bbq.storage_specs_cutout_width",
           type: "string",
         },
 
         {
           attribute: "cut_out_depth",
-          field: "accentuate_data.bbq.storage_specs_cutout_depth.keyword",
+          field: "accentuate_data.bbq.storage_specs_cutout_depth",
           type: "string",
         },
 
         {
           attribute: "cut_out_height",
-          field: "accentuate_data.bbq.storage_specs_cutout_height.keyword",
+          field: "accentuate_data.bbq.storage_specs_cutout_height",
           type: "string",
         },
 
         //
         {
           attribute: "made_in_usa",
-          field: "accentuate_data.bbq.seo_meta_made_in_usa.keyword",
+          field: "accentuate_data.bbq.seo_meta_made_in_usa",
           type: "string",
         },
         {
           attribute: "material",
-          field: "accentuate_data.bbq.seo_meta_material.keyword",
+          field: "accentuate_data.bbq.seo_meta_material",
           type: "string",
         },
         {
           attribute: "thermometer",
-          field: "accentuate_data.bbq.thermometer.keyword",
+          field: "accentuate_data.bbq.thermometer",
           type: "string",
         },
         {
           attribute: "rotisserie_kit",
-          field: "accentuate_data.bbq.rotisserie_kit.keyword",
+          field: "accentuate_data.bbq.rotisserie_kit",
           type: "string",
         },
         {
           attribute: "gas_type",
-          field: "accentuate_data.bbq.seo_meta_fuel_type.keyword",
+          field: "accentuate_data.bbq.seo_meta_fuel_type",
           type: "string",
         },
       ],
