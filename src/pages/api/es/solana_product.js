@@ -1,8 +1,9 @@
-import { areAllKeysEmpty } from "../../../app/lib/helpers";
+import { areAllKeysEmpty, ES_INDEX } from "../../../app/lib/helpers";
+
 //  this hook is used for searching products
 export default async function handler(req, res) {
   const ESURL = "http://164.92.65.4:9200";
-  const ESShard = "solana_updated_product_index";
+  const ESShard = ES_INDEX;
   const ESApiKey =
     "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
 

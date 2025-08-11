@@ -4,6 +4,9 @@ import products_json from "@/app/data/filters/products.json";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
+// export const ES_INDEX = "solana_updated_product_index";
+export const ES_INDEX = "solana_updated_product_index_flat";
+
 export function updateOrderValues(items, startAt = 1) {
   return items.map((item, index) => ({
     ...item,

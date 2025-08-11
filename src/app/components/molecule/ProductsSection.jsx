@@ -20,9 +20,9 @@ import {
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
+import { ES_INDEX } from "@/app/lib/helpers";
 
-// const es_index = "bigcommerce_products_3";
-const es_index = "solana_updated_product_index";
+const es_index = ES_INDEX;
 
 const searchClient = Client({
   url: `/api/es/searchkit/`,
@@ -131,10 +131,14 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                     <RefinementList attribute="brand" searchable />
                   </Panel>
                 </div>
-                
-                <div className="my-5 facet_material">
+                <div className="my-5 facet_no_of_burners">
                   <Panel header="Number of Burners">
                     <RefinementList attribute="no_of_burners"/>
+                  </Panel>
+                </div>
+                <div className="my-5 facet_configuration">
+                  <Panel header="Configuration">
+                    <RefinementList attribute="configuration_type"/>
                   </Panel>
                 </div>
                 <div className="my-5">

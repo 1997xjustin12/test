@@ -1,10 +1,12 @@
+import { ES_INDEX } from "../../../app/lib/helpers";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
   const ESURL = "http://164.92.65.4:9200";
-  const ESShard = "solana_updated_product_index";
+  const ESShard = ES_INDEX;
   const ESApiKey =
     "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
 

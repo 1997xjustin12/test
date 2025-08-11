@@ -1,13 +1,14 @@
 // pages/api/es/searchkit.js
 import API from "@searchkit/api";
+import { ES_INDEX } from "../../../app/lib/helpers";
+
 const exclude_brands = ["Bull Outdoor Products"];
 const apiClient = API(
   {
     connection: {
       host: "https://solanafireplaces.com/es",
       apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
-      // index: "solana_products",
-      index: "solana_updated_product_index",
+      index: ES_INDEX,
     },
     search_settings: {
       highlight_attributes: ["title"],
@@ -52,10 +53,16 @@ const apiClient = API(
           type: "string",
         },
         { attribute: "brand", field: "brand.keyword", type: "string" },
+
+        {
+          attribute: "configuration_type",
+          field: "accentuate_data.bbq.configuration_type.keyword",
+          type: "string",
+        },
         {
           attribute: "no_of_burners",
           field: "accentuate_data.bbq.number_of_main_burners.keyword",
-          type: "string"
+          type: "string",
         },
         { attribute: "price", field: "variants.price", type: "numeric" },
         {
