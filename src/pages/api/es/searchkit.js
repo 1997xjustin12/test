@@ -257,7 +257,7 @@ export default async function handler(req, res) {
     ) {
       filter_query.push({
         term: {
-          "product_category.category_name.keyword": filter_value,
+          "collections.name.keyword": filter_value,
         },
       });
     }

@@ -24,6 +24,16 @@ import { ES_INDEX } from "@/app/lib/helpers";
 
 const es_index = ES_INDEX;
 
+const filter_setup = {
+  "grills": [
+    {
+      label: "",
+      attribute: "",
+      
+    }
+  ]
+}
+
 const searchClient = Client({
   url: `/api/es/searchkit/`,
 });
@@ -156,37 +166,26 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                     <RefinementList attribute="size" />
                   </Panel>
                 </div>
-
-                
                 <div className="my-5 facet_rear_infrared_burner">
                   <Panel header="Rear Infrared Burner">
                     <RefinementList attribute="rear_infrared_burner" />
                   </Panel>
                 </div>
-
-                
                 <div className="my-5 facet_cut_out_width">
                   <Panel header="Cut Out Width">
                     <RefinementList attribute="cut_out_width" />
                   </Panel>
                 </div>
-
-                
                 <div className="my-5 facet_cut_out_depth">
                   <Panel header="Cut Out Depth">
                     <RefinementList attribute="cut_out_depth" />
                   </Panel>
                 </div>
-
-                
                 <div className="my-5 facet_cut_out_height">
                   <Panel header="Cut Out Height">
                     <RefinementList attribute="cut_out_height" />
                   </Panel>
                 </div>
-
-                
-
                 <div className="my-5 facet_made_in_usa">
                   <Panel header="Made In USA">
                     <RefinementList attribute="made_in_usa" />
