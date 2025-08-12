@@ -30,7 +30,7 @@ const filters = [
     attribute: "brand",
     searchable: true,
     type: "RefinementList",
-    filter_type: ["Grills", "Fireplaces"],
+    filter_type: ["Grills", "Fireplaces", "Firepits"],
   },
   {
     label: "configuration",
@@ -51,7 +51,7 @@ const filters = [
     attribute: "price",
     searchable: false,
     type: "RangeInput",
-    filter_type: ["Grills", "Fireplaces"],
+    filter_type: ["Grills", "Fireplaces", "Firepits"],
   },
   {
     label: "lights",
@@ -100,7 +100,7 @@ const filters = [
     attribute: "made_in_usa",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills","Fireplaces"],
+    filter_type: ["Grills","Fireplaces", "Firepits"],
   },
   {
     label: "Material",
