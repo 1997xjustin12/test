@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 const block_links = ["/my-account"]; // "/cart", "/checkout" 
 
 export function middleware(request) {
   const { pathname } = request.nextUrl
-  const cartCookie = request.cookies.get('cart')?.value;
+  // const cartCookie = request.cookies.get('cart')?.value;
 
   if (block_links.includes(pathname)) {
     return NextResponse.redirect(new URL('/', request.url))
