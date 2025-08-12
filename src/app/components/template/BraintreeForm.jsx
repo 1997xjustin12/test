@@ -11,7 +11,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const store_domain = "solanafireplaces.com";
 
-
 export default function BraintreeForm() {
   const router = useRouter();
   const { cartItems, clearCartItems, formattedCart } = useCart();
@@ -110,6 +109,41 @@ export default function BraintreeForm() {
     }
   }
 
+  async function getPrice(orderData) {
+    try {
+      const response = await fetch("/api/orders/get-total", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const contentType = response.headers.get("content-type");
+      const result = contentType?.includes("application/json")
+        ? await response.json()
+        : { success: false, message: "Invalid JSON response from server" };
+
+      if (!response.ok || result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to create order",
+        };
+      }
+
+      return {
+        success: true,
+        data: result.data || result.order || result,
+      };
+    } catch (error) {
+      console.error("Order creation failed:", error.message || error);
+      return {
+        success: false,
+        message: error.message || "Unexpected error while creating order",
+      };
+    }
+  }
+
   const handlePayment = async () => {
     if (!instance) {
       alert("Drop-in UI is not initialized");
@@ -125,39 +159,57 @@ export default function BraintreeForm() {
         return;
       }
 
-      const response = await fetch("/api/braintree_checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nonce, amount: `${totalPayable}` }),
-      });
+      // get-total
+      const get_price_data = checkoutForm?.data;
+      get_price_data["status"] = "pending";
+      get_price_data["payment_method"] = "braintree";
+      get_price_data["payment_status"] = false;
+      get_price_data["payment_details"] = "";
+      get_price_data["store_domain"] = store_domain;
+      get_price_data["items"] = formattedCart.map((item) => ({
+        product_id: item?.product_id,
+        price: item?.variants?.[0]?.price,
+        quantity: item.count,
+        total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+      }));
 
-      const result = await response.json();
-      if (result.success) {
-        const orders = checkoutForm?.data;
-        orders["status"] = "paid";
-        orders["payment_method"] = "braintree";
-        orders["payment_status"] = true;
-        orders["payment_details"] = result?.transaction?.id;
-        orders["store_domain"] = store_domain;
-        orders["items"] = formattedCart.map((item) => ({
-          product_id: item?.product_id,
-          price: item?.variants?.[0]?.price,
-          quantity: item.count,
-          total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-        }));
+      const get_price = await getPrice(get_price_data);
+      if (get_price?.success) {
+        const total_amount = parseFloat(get_price?.data?.total_price || 0).toFixed(2);
+        const response = await fetch("/api/braintree_checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nonce, amount: `${total_amount}` }),
+        });
 
-        const order_response = await createOrder(orders);
+        const result = await response.json();
+        if (result.success) {
+          const orders = checkoutForm?.data;
+          orders["status"] = "paid";
+          orders["payment_method"] = "braintree";
+          orders["payment_status"] = true;
+          orders["payment_details"] = result?.transaction?.id;
+          orders["store_domain"] = store_domain;
+          orders["items"] = formattedCart.map((item) => ({
+            product_id: item?.product_id,
+            price: item?.variants?.[0]?.price,
+            quantity: item.count,
+            total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+          }));
 
-        if (order_response.success) {
-          instance.teardown();
-          setInstance(null);
-          clearCartItems();
-          router.push(`${BASE_URL}/payment_success`);
+          const order_response = await createOrder(orders);
+
+          if (order_response.success) {
+            instance.teardown();
+            setInstance(null);
+            clearCartItems();
+            router.push(`${BASE_URL}/payment_success`);
+          } else {
+            alert("Something went wrong! Please try again.");
+          }
         } else {
-          alert("Something went wrong! Please try again.");
+          alert(`Payment failed: ${result.error}`);
         }
-      } else {
-        alert(`Payment failed: ${result.error}`);
       }
     } catch (error) {
       console.error("Payment Error:", error);
