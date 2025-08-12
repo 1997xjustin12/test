@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 
 export default function CheckoutForm({ onChange }) {
-  const store_domain = "solanafireplaces.com";
   const required_fields = [
     "billing_first_name",
     "billing_last_name",
@@ -144,7 +143,6 @@ export default function CheckoutForm({ onChange }) {
       }));
       const newForm = form;
       newForm["items"] = formattedItems;
-      newForm["store_domain"] = store_domain;
       const response = await createOrder(form);
       setForm(initialForm);
       setSameAsBilling(false);

@@ -2,7 +2,6 @@
 import CartListItem from "@/app/components/atom/CartListItem";
 import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
-// import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
 import { useCart } from "@/app/context/cart";
 export default function CartPage() {
@@ -26,9 +25,7 @@ export default function CartPage() {
 
         <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
           <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-            {/* <div className="space-y-6">
-              <CheckoutForm items={formattedCart}/>
-            </div> */}
+           
             <div className="space-y-6">
               {formattedCart &&  formattedCart.length > 0 ? (
                 formattedCart.map((item, idx) => (

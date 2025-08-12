@@ -9,6 +9,9 @@ import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
+const store_domain = "solanafireplaces.com";
+
+
 export default function BraintreeForm() {
   const router = useRouter();
   const { cartItems, clearCartItems, formattedCart } = useCart();
@@ -18,7 +21,6 @@ export default function BraintreeForm() {
   const [clientToken, setClientToken] = useState(null);
   const [instance, setInstance] = useState(null);
   const dropinContainer = useRef(null);
-  console.log("cartItems", cartItems);
 
   useEffect(() => {
     const payable = getSum(
@@ -135,21 +137,22 @@ export default function BraintreeForm() {
         orders["status"] = "paid";
         orders["payment_method"] = "braintree";
         orders["payment_status"] = true;
+        orders["payment_details"] = result?.transaction?.id;
+        orders["store_domain"] = store_domain;
         orders["items"] = formattedCart.map((item) => ({
           product_id: item?.product_id,
           price: item?.variants?.[0]?.price,
           quantity: item.count,
           total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
         }));
+
         const order_response = await createOrder(orders);
 
-        // console.log("[TEST] order_response", order_response);
         if (order_response.success) {
           instance.teardown();
           setInstance(null);
           clearCartItems();
           router.push(`${BASE_URL}/payment_success`);
-          // alert("success!");
         } else {
           alert("Something went wrong! Please try again.");
         }
@@ -163,7 +166,6 @@ export default function BraintreeForm() {
   };
 
   const handleCheckoutFormChange = (data) => {
-    // console.log("[TEST] data", data);
     setCheckoutForm(data);
   };
 
