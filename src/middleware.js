@@ -11,16 +11,16 @@ export function middleware(request) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  if(pathname === "/checkout"){
-    // allow access only if cart items !== to zero
-    const cart = cartCookie ? JSON.parse(cartCookie) : [];
+  // if(pathname === "/checkout"){
+  //   // allow access only if cart items !== to zero
+  //   const cart = cartCookie ? JSON.parse(cartCookie) : [];
 
-    if (cart.length === 0) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
-    }
-  }
+  //   if (cart.length === 0) {
+  //     const url = request.nextUrl.clone();
+  //     url.pathname = '/';
+  //     return NextResponse.redirect(url);
+  //   }
+  // }
   
 
   return NextResponse.next()
