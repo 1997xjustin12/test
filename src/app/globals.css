@@ -29,7 +29,7 @@
     --theme-primary-950: oklch(0.266 0.079 36.259);
 
     /* product display and filter */
-    --pfd-filter-nav-width: 250px;
+    --pfd-filter-nav-width: 280px;
     --pfd-product-grid-gap: 10px;
     --pfd-product-grid-cols: 1;
   }
@@ -816,11 +816,17 @@ label.ais-RefinementList-label .ais-RefinementList-count{
 
 .ais-RangeInput-form{
   display:flex;
-  gap:10px;
+  gap:5px;
   align-items: center;
 }
 
+.ais-RangeInput-form input, .ais-SearchBox-input{
+  margin-bottom:0px;
+}
 
+.ais-RangeInput button.ais-RangeInput-submit{
+  padding:3px 12px;
+}
 
 /* filter tags START */
 
