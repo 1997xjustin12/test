@@ -133,7 +133,7 @@ export default function BraintreeForm() {
       if (result.success) {
         const orders = checkoutForm?.data;
         orders["status"] = "paid";
-        orders["payment_method"] = "stripe";
+        orders["payment_method"] = "braintree";
         orders["payment_status"] = true;
         orders["items"] = formattedCart.map((item) => ({
           product_id: item?.product_id,
