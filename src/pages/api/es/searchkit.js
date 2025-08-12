@@ -42,6 +42,7 @@ const apiClient = API(
         "region_pricing",
         "accentuate_data",
         "status",
+        "collections",
         "uploaded_at",
         "created_at",
         "updated_at",
