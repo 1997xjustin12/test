@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const CartContext = createContext();
 
@@ -41,14 +41,15 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     // Load the initial cart count from localforage on mount
     const loadCart = async () => {
-      if(!cartStorage) return;
+      if (!cartStorage) return;
       const cartItems = await cartStorage.getCart();
       setCartItems(cartItems);
       setCartItemsCount(cartItems.length);
       setLoadingCartItems(false);
+      syncCartToCookie();
     };
 
-      loadCart();
+    loadCart();
   }, [cartStorage]);
 
   // useEffect(() => {
@@ -78,6 +79,24 @@ export const CartProvider = ({ children }) => {
   //   }
   // }, [cartStorage]);
 
+  async function syncCartToCookie() {
+    try {
+      const cart = (await cartStorage.getCart()) || [];
+      console.log("[syncCartToCookie] cart", cart);
+
+      // Save to cookie (client + server readable)
+      Cookies.set("cart", JSON.stringify(cart.map(({product_id})=> product_id)), {
+        path: "/",
+        sameSite: "lax", // works cross-page, avoids blocking
+      });
+      // Verify
+      const cart_check = JSON.parse(Cookies.get("cart") || "[]");
+      console.log("[Cookie check]", cart_check);
+    } catch (error) {
+      console.log("[SYNCCARTOCOOKIE]", error);
+    }
+  }
+
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
@@ -86,13 +105,12 @@ export const CartProvider = ({ children }) => {
     try {
       const savedItems = await cartStorage.getCart();
       await sleep(2000);
+      const updatedItems = [...savedItems, ...items];
+      cartStorage.saveCart(updatedItems);
       setCartItems((prev) => {
-        const updatedItems = [...savedItems, ...items];
-        cartStorage.saveCart(updatedItems);
-        setCartItemsCount(updatedItems.length);
-        Cookies.set('cart', JSON.stringify([...updatedItems]));
         return [...updatedItems];
       });
+      setCartItemsCount(updatedItems.length);
       setAddToCartLoading(false);
       setAddedToCart(items);
       return {
@@ -118,7 +136,6 @@ export const CartProvider = ({ children }) => {
       );
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
-      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
@@ -130,7 +147,6 @@ export const CartProvider = ({ children }) => {
       const updatedItems = [...savedItems, item];
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
-      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
@@ -159,7 +175,6 @@ export const CartProvider = ({ children }) => {
   const updateCart = (items) => {
     cartStorage.saveCart([...items]);
     setCartItemsCount(items.length);
-    Cookies.set('cart', JSON.stringify([...items]));
     setCartItems([...items]);
   };
 
@@ -168,7 +183,6 @@ export const CartProvider = ({ children }) => {
       const updatedItems = [];
       cartStorage.saveCart(updatedItems);
       setCartItemsCount(updatedItems.length);
-      Cookies.set('cart', JSON.stringify([...updatedItems]));
       return [...updatedItems];
     });
   };
