@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 export default function CheckoutForm({ onChange }) {
+  const store_domain = "solanafireplaces.com";
   const required_fields = [
     "billing_first_name",
     "billing_last_name",
@@ -78,11 +79,6 @@ export default function CheckoutForm({ onChange }) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // const newErrors = validate();
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors({...newErrors});
-    // }
-
     const newForm = {
       ...form,
       [name]: type === "checkbox" ? checked : value,
@@ -146,11 +142,10 @@ export default function CheckoutForm({ onChange }) {
         quantity: item.count,
         total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
       }));
-      // console.log("[TEST] handleSubmit", formattedItems);
       const newForm = form;
       newForm["items"] = formattedItems;
+      newForm["store_domain"] = store_domain;
       const response = await createOrder(form);
-      // console.log("[TEST] createOrder", response);
       setForm(initialForm);
       setSameAsBilling(false);
     } catch (err) {
