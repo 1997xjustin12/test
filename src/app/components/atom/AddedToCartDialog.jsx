@@ -81,7 +81,7 @@ function AddedToCartDialog({ data, onClose }) {
       setImage(thumbnail);
       setToggle(true);
     } else {
-      setToggle(true);
+      setToggle(false);
     }
   }, [addedToCartItems]);
 
