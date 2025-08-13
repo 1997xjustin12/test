@@ -140,8 +140,8 @@ const Panel = ({ header, children }) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="panel">
-      <button onClick={()=> setExpanded(prev => !prev)} className="w-full pr-3 flex items-center gap-[20px]">
+    <div className="panel border-y border-gray-200 shadow">
+      <button onClick={()=> setExpanded(prev => !prev)} className="w-full flex items-center gap-[20px]">
         <h5 className="my-3 uppercase font-semibold">{header}</h5>
         {expanded ? (
           <svg

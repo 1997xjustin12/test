@@ -604,6 +604,7 @@ input[type="checkbox"].market:checked::before {
 
 .pfd-filter-section{
   width:var(--pfd-filter-nav-width);
+  padding-right:10px;
 }
 
 .pfd-product-section{
