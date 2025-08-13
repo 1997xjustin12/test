@@ -30,7 +30,7 @@ const filters = [
     attribute: "brand",
     searchable: true,
     type: "RefinementList",
-    filter_type: ["Grills", "Fireplaces", "Firepits"],
+    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
   },
   {
     label: "configuration",
@@ -51,7 +51,7 @@ const filters = [
     attribute: "price",
     searchable: false,
     type: "RangeInput",
-    filter_type: ["Grills", "Fireplaces", "Firepits"],
+    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
   },
   {
     label: "lights",
@@ -100,7 +100,7 @@ const filters = [
     attribute: "made_in_usa",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills","Fireplaces", "Firepits"],
+    filter_type: ["Grills","Fireplaces", "Firepits", "Search"],
   },
   {
     label: "Material",
@@ -275,29 +275,37 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               </DynamicWidgets>
             )}
 
-            {page_details && page_details?.nav_type === "custom_page" && (
-              // <DynamicWidgets facets={["*"]}>
-              //   <div className="my-5">
-              //     <Panel header="Categories">
-              //       <RefinementList attribute="product_category" searchable />
-              //     </Panel>
-              //   </div>
-              //   <div className="my-5 facet_brand">
-              //     <Panel header="brand">
-              //       <RefinementList attribute="brand" searchable />
-              //     </Panel>
-              //   </div>
-              //   <div className="my-5">
-              //     <Panel header="price">
-              //       <RangeInput attribute="price" />
-              //     </Panel>
-              //   </div>
-              // </DynamicWidgets>
-              
+            {page_details && page_details?.nav_type === "custom_page" && page_details?.name !== "Search" && (
               <DynamicWidgets facets={["*"]}>
                 {filters
                   .filter((item) =>
                     item?.filter_type.includes(page_details?.filter_type)
+                  )
+                  .map((item) => (
+                    <div
+                      key={`filter-item-${item?.attribute}`}
+                      className={`my-5 facet_${item?.attribute}`}
+                    >
+                      <Panel header={item?.label}>
+                        {item?.attribute && item?.attribute !== "price" ? (
+                          <RefinementList
+                            attribute={item?.attribute}
+                            searchable={item?.searchable}
+                          />
+                        ) : (
+                          <RangeInput attribute="price" />
+                        )}
+                      </Panel>
+                    </div>
+                  ))}
+              </DynamicWidgets>
+            )}
+
+            {page_details && page_details?.nav_type === "custom_page" && page_details?.name === "Search" && (
+              <DynamicWidgets facets={["*"]}>
+                {filters
+                  .filter((item) =>
+                    item?.filter_type.includes("Search")
                   )
                   .map((item) => (
                     <div
@@ -444,7 +452,11 @@ function ProductsSection({ category, search = "" }) {
             result = `page_brand:${details?.origin_name}`;
           } else if (details?.nav_type === "custom_page") {
             // result = `custom_page:${details?.origin_name}`;
-            result = `custom_page:${details?.collection_display?.name || "NA"}`;
+            if(details?.name === "Search"){
+              result = `custom_page:Search`;
+            }else{
+              result = `custom_page:${details?.collection_display?.name || "NA"}`;
+            }
           }
           return result;
         });

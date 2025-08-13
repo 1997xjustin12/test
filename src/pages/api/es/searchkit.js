@@ -250,16 +250,15 @@ export default async function handler(req, res) {
 
       filter_query.push(...tmp_query);
     }
-
+    
     // This will display no products for category links that are not known.
     if (
       filter_key === "custom_page" &&
-      !["On Sale", "New Arrivals", "undefined"].includes(filter_value)
+      !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
       filter_query.push({
         term: {
           "collections.name.keyword": filter_value,
-          // "collections.name.keyword": "Test",
         },
       });
     }

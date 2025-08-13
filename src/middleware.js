@@ -6,8 +6,6 @@ export function middleware(request) {
   const { pathname } = request.nextUrl
   const cart = JSON.parse(request.cookies.get('cart')?.value || '[]');
 
-  console.log("[MIDDLEWARE] cart:", cart);
-  
   if (block_links.includes(pathname)) {
     return NextResponse.redirect(new URL('/', request.url))
   }
