@@ -828,6 +828,11 @@ label.ais-RefinementList-label .ais-RefinementList-count{
   padding:3px 12px;
 }
 
+.panel .ais-RefinementList{
+  max-height:240px;
+  overflow-y:auto;  
+}
+
 /* filter tags START */
 
 

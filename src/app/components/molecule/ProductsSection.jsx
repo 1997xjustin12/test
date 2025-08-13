@@ -28,7 +28,7 @@ const filters = [
   {
     label: "brand",
     attribute: "brand",
-    searchable: true,
+    searchable: false,
     type: "RefinementList",
     filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
   },
@@ -100,7 +100,7 @@ const filters = [
     attribute: "made_in_usa",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills","Fireplaces", "Firepits", "Search"],
+    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
   },
   {
     label: "Material",
@@ -136,12 +136,37 @@ const searchClient = Client({
   url: `/api/es/searchkit/`,
 });
 
-const Panel = ({ header, children }) => (
-  <div className="panel">
-    <h5 className="my-3 uppercase font-semibold">{header}</h5>
-    {children}
-  </div>
-);
+const Panel = ({ header, children }) => {
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    <div className="panel">
+      <button onClick={()=> setExpanded(prev => !prev)} className="w-full pr-3 flex items-center gap-[20px]">
+        <h5 className="my-3 uppercase font-semibold">{header}</h5>
+        {expanded ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="m7 10l5 5l5-5z" />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="m7 15l5-5l5 5z" />
+          </svg>
+        )}
+      </button>
+      <div className={`${expanded ? "" : "hidden"}`}>{children}</div>
+    </div>
+  );
+};
 
 const QueryRulesBanner = () => {
   const { items } = useQueryRules({});
@@ -243,7 +268,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                   .map((item) => (
                     <div
                       key={`filter-item-${item?.attribute}`}
-                      className={`my-5 facet_${item?.attribute}`}
+                      className={`my-1 facet_${item?.attribute}`}
                     >
                       <Panel header={item?.label}>
                         {item?.attribute && item?.attribute !== "price" ? (
@@ -275,57 +300,59 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               </DynamicWidgets>
             )}
 
-            {page_details && page_details?.nav_type === "custom_page" && page_details?.name !== "Search" && (
-              <DynamicWidgets facets={["*"]}>
-                {filters
-                  .filter((item) =>
-                    item?.filter_type.includes(page_details?.filter_type)
-                  )
-                  .map((item) => (
-                    <div
-                      key={`filter-item-${item?.attribute}`}
-                      className={`my-5 facet_${item?.attribute}`}
-                    >
-                      <Panel header={item?.label}>
-                        {item?.attribute && item?.attribute !== "price" ? (
-                          <RefinementList
-                            attribute={item?.attribute}
-                            searchable={item?.searchable}
-                          />
-                        ) : (
-                          <RangeInput attribute="price" />
-                        )}
-                      </Panel>
-                    </div>
-                  ))}
-              </DynamicWidgets>
-            )}
+            {page_details &&
+              page_details?.nav_type === "custom_page" &&
+              page_details?.name !== "Search" && (
+                <DynamicWidgets facets={["*"]}>
+                  {filters
+                    .filter((item) =>
+                      item?.filter_type.includes(page_details?.filter_type)
+                    )
+                    .map((item) => (
+                      <div
+                        key={`filter-item-${item?.attribute}`}
+                        className={`my-1 facet_${item?.attribute}`}
+                      >
+                        <Panel header={item?.label}>
+                          {item?.attribute && item?.attribute !== "price" ? (
+                            <RefinementList
+                              attribute={item?.attribute}
+                              searchable={item?.searchable}
+                            />
+                          ) : (
+                            <RangeInput attribute="price" />
+                          )}
+                        </Panel>
+                      </div>
+                    ))}
+                </DynamicWidgets>
+              )}
 
-            {page_details && page_details?.nav_type === "custom_page" && page_details?.name === "Search" && (
-              <DynamicWidgets facets={["*"]}>
-                {filters
-                  .filter((item) =>
-                    item?.filter_type.includes("Search")
-                  )
-                  .map((item) => (
-                    <div
-                      key={`filter-item-${item?.attribute}`}
-                      className={`my-5 facet_${item?.attribute}`}
-                    >
-                      <Panel header={item?.label}>
-                        {item?.attribute && item?.attribute !== "price" ? (
-                          <RefinementList
-                            attribute={item?.attribute}
-                            searchable={item?.searchable}
-                          />
-                        ) : (
-                          <RangeInput attribute="price" />
-                        )}
-                      </Panel>
-                    </div>
-                  ))}
-              </DynamicWidgets>
-            )}
+            {page_details &&
+              page_details?.nav_type === "custom_page" &&
+              page_details?.name === "Search" && (
+                <DynamicWidgets facets={["*"]}>
+                  {filters
+                    .filter((item) => item?.filter_type.includes("Search"))
+                    .map((item) => (
+                      <div
+                        key={`filter-item-${item?.attribute}`}
+                        className={`my-1 facet_${item?.attribute}`}
+                      >
+                        <Panel header={item?.label}>
+                          {item?.attribute && item?.attribute !== "price" ? (
+                            <RefinementList
+                              attribute={item?.attribute}
+                              searchable={item?.searchable}
+                            />
+                          ) : (
+                            <RangeInput attribute="price" />
+                          )}
+                        </Panel>
+                      </div>
+                    ))}
+                </DynamicWidgets>
+              )}
 
             <div className="relative lg:w-[240px] h-[360px]">
               <Link
@@ -452,10 +479,12 @@ function ProductsSection({ category, search = "" }) {
             result = `page_brand:${details?.origin_name}`;
           } else if (details?.nav_type === "custom_page") {
             // result = `custom_page:${details?.origin_name}`;
-            if(details?.name === "Search"){
+            if (details?.name === "Search") {
               result = `custom_page:Search`;
-            }else{
-              result = `custom_page:${details?.collection_display?.name || "NA"}`;
+            } else {
+              result = `custom_page:${
+                details?.collection_display?.name || "NA"
+              }`;
             }
           }
           return result;
