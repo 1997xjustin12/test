@@ -75,6 +75,18 @@ const sac_contents = [
   },
 ];
 
+const about_content = {
+  image: "/images/banner/fireplace-banner.webp",
+  contact: "(888) 667-4986",
+  content: {
+    title: "About Solana Fireplaces",
+    par: [
+      "At Solana Fireplaces, we believe that the heart of a home extends beyond its walls. We specialize in creating exceptional outdoor living experiences through our expertly curated selection of high-quality fireplaces, fire pits, and related accessories. We are committed to providing you with products and the knowledge and support you need to transform your outdoor space into a warm, inviting haven.",
+      "Beyond fireplaces, Solana also caters to outdoor living enthusiasts by offering a wide range of outdoor kitchen products. Our selection includes top-of-the-line grills, BBQ islands, and accessories to create the ultimate outdoor cooking and entertainment area. With Solana Fireplaces, you can rely on our expertise and dedication to quality, knowing that you are choosing a partner committed to enhancing your home and lifestyle with the best in both indoor and outdoor heating and cooking solutions.",
+    ],
+  },
+};
+
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
   const [pageData, setPageData] = useState(null);
@@ -113,7 +125,7 @@ export default function HomePage({ params }) {
       <HomeHero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
-      <AboutProductSection />
+      <AboutProductSection data={about_content} />
       <ReviewsSection />
       <ShopCategorySection />
       <GuidesAndInspirationSection />

@@ -3,6 +3,7 @@ import Image from "next/image";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
 import ShopAllClearanceSection from "@/app/components/section/HomePageShopAllClearance";
+import AboutProductSection from "@/app/components/section/HomePageAboutProduct";
 
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
@@ -43,7 +44,6 @@ const feat_carousel_items = [
     url: `${BASE_URL}/#`,
   },
 ];
-
 const sac_contents = [
   {
     image: {
@@ -76,6 +76,23 @@ const sac_contents = [
     },
   },
 ];
+const about_content = {
+  image: "/images/home/about-solana-grills-image.webp",
+  imageWrap:{
+    className:"relative aspect-1 w-[300px]"
+  },
+  contact: "(888) 667-4986",
+  content: {
+    title: "About Solana BBQ Grills",
+    par: [
+      "At Solana BBQ Grills, we’re passionate about bringing people together through great food and outdoor living. We specialize in high-quality grills, side burners, and outdoor kitchen equipment from trusted brands like Bull, Blaze, and more. From building a full outdoor kitchen to upgrading your backyard grill station, we provide reliable, performance-driven products that match your style, space, and budget.",
+      "We believe outdoor cooking should be easy, enjoyable, and built to last. That’s why we offer expert support, fast shipping, and a carefully selected range of products known for durability and value. At Solana BBQ Grills, we don’t just sell equipment; we help you create unforgettable moments, one perfectly grilled meal at a time.",
+    ],
+  },
+  button:{
+    className: "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]"
+  }
+};
 
 // FUNCTIONS
 const getMenu = async () => {
@@ -156,6 +173,7 @@ export default async function SolanaGrillsPage() {
       <Hero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
+      <AboutProductSection data={about_content} />
     </>
   );
 }
