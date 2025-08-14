@@ -46,7 +46,6 @@ export default function YmalCarousel({
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: false,
     autoplaySpeed: 2000,

@@ -143,11 +143,9 @@ const YouMightAlsoLike = () => {
     <div>
       <h3>You Might Also Like</h3>
       <div className="min-h-[366px]">
-        <YmalCarousel breakpoints={items_per_break_point}>
-          {products &&
-            Array.isArray(products) &&
-            products.length > 0 &&
-            products.map((item, index) => (
+        {products && Array.isArray(products) && products.length > 0 && (
+          <YmalCarousel breakpoints={items_per_break_point}>
+            {products.map((item, index) => (
               <div
                 key={`ymal-product-${index}`}
                 className="min-w-[170px] flex flex-col p-3"
@@ -169,7 +167,8 @@ const YouMightAlsoLike = () => {
                 <YmalAddToCartBtn item={item} />
               </div>
             ))}
-        </YmalCarousel>
+          </YmalCarousel>
+        )}
       </div>
     </div>
   );
@@ -341,7 +340,7 @@ function AddedToCartDialog({ data, onClose }) {
                   </div>
                 </div>
               </div>
-              <div className="flex bg-stone-200 px-[15px] py-[15px] gap-[10px]">
+              <div className="flex bg-white border-y border-neutral-300 shadow-inner px-[15px] py-[15px] gap-[10px]">
                 <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
                   {image && (
                     <Image
