@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, parseRatingCount } from "@/app/lib/helpers";
 import { ICRoundPhone } from "../icons/lib";
 import { useQuickView } from "@/app/context/quickview";
 import { useSolanaCategories } from "@/app/context/category";
@@ -59,14 +59,6 @@ const ProductCard = ({ hit, page_details   }) => {
     viewItem(item);
   };
 
-  function parseRatingCount(value) {
-    if (typeof value === "string") {
-      // Remove any non-digit characters (like surrounding quotes)
-      value = value.replace(/[^\d]/g, "");
-    }
-    const count = parseInt(value, 10);
-    return isNaN(count) ? 0 : count;
-  }
   
   const handleProductItemClick = (e) => {
     const card = e.target.closest('.product-card-wrap');

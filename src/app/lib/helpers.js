@@ -1,21 +1,28 @@
 import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 
-
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
 export const ES_INDEX = "solana_updated_product_index";
 
+export function parseRatingCount(value) {
+  if (typeof value === "string") {
+    value = value.replace(/[^\d]/g, "");
+  }
+  const count = parseInt(value, 10);
+  return isNaN(count) ? 0 : count;
+}
+
 export function updateOrderValues(items, startAt = 1) {
   return items.map((item, index) => ({
     ...item,
-    order: startAt + index
+    order: startAt + index,
   }));
 }
 
 export function areAllKeysEmpty(obj, keys) {
-  return keys.every(key => !obj[key] || obj[key] === "");
+  return keys.every((key) => !obj[key] || obj[key] === "");
 }
 
 export function getSum(array, prop) {
@@ -57,7 +64,7 @@ export function getCategoryIds(category_slug, categories, bc_categories) {
   )?.key_words;
   // console.log("category_keywords",category_keywords)
   // console.log("Array.isArray(category_keywords)",Array.isArray(category_keywords))
-  
+
   if (Array.isArray(category_keywords)) {
     const ids =
       category_keywords.length > 0
@@ -238,8 +245,8 @@ export function formatPrice(price) {
 export function getPageData(pathname, categories) {
   // console.log("lib/helper.js fn(getPageData):params->pathname", pathname);
   // console.log("lib/helper.js fn(getPageData):params->categories", categories);
-  if(pathname === ""){
-    const home = categories.find(({name})=> name === "Home");
+  if (pathname === "") {
+    const home = categories.find(({ name }) => name === "Home");
     return home;
   }
 
@@ -288,19 +295,18 @@ export function isProductOnSale(categories) {
   return categories.filter((i) => onsale_category_ids.includes(i)).length > 0;
 }
 
-
 export const generateId = () => {
   return Math.random().toString(36).substring(2, 11);
 };
 
 export const stripHtmlTags = (html) => {
   if (typeof document !== "undefined") {
-      let tempDiv = document.createElement("div");
-      tempDiv.innerHTML = html;
-      return tempDiv.innerText || tempDiv.textContent;
+    let tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    return tempDiv.innerText || tempDiv.textContent;
   }
-  return html.replace(/<[^>]+>/g, ''); // Fallback for SSR
-}
+  return html.replace(/<[^>]+>/g, ""); // Fallback for SSR
+};
 
 /**
  * Flattens a nested menu tree into a single-level array,
@@ -329,8 +335,7 @@ export const flattenNavTree = (tree) => {
 
   traverse(tree);
   return result;
-}
-
+};
 
 /**
  * Recursively updates a menu item in a nested tree structure based on its `menu_id`.
@@ -344,7 +349,7 @@ export const flattenNavTree = (tree) => {
  * const updatedTree = updateMenuItemById(menuTree, 4, { name: "My Profile" });
  */
 export const updateMenuItemById = (tree, menuId, newItem) => {
-  return tree.map(item => {
+  return tree.map((item) => {
     if (item.menu_id === menuId) {
       return { ...item, ...newItem }; // Replace or merge properties
     }
@@ -352,10 +357,10 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
     if (item.children) {
       return {
         ...item,
-        children: updateMenuItemById(item.children, menuId, newItem)
+        children: updateMenuItemById(item.children, menuId, newItem),
       };
     }
 
     return item;
   });
-}
+};

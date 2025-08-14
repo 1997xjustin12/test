@@ -24,8 +24,7 @@ async function CollectionCarouselWrap({ data }) {
     { minWidth: 0, value: 1 },
     { minWidth: 640, value: 2 },
     { minWidth: 768, value: 3 },
-    { minWidth: 1024, value: 4 },
-    { minWidth: 1280, value: 5 },
+    { minWidth: 1280, value: 4 },
   ];
 
   return (

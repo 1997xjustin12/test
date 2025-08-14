@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Rating } from "@smastrom/react-rating";
 import {useSolanaCategories} from "@/app/context/category";
+import { parseRatingCount } from "@/app/lib/helpers";
 
 function PriceDisplay({ price, compare_at_price }) {
 
@@ -46,15 +47,6 @@ function CompareProductCard({ is_active = false, product }) {
     }
     return null;
   }, [product]);
-
-  function parseRatingCount(value) {
-    if (typeof value === "string") {
-      // Remove any non-digit characters (like surrounding quotes)
-      value = value.replace(/[^\d]/g, "");
-    }
-    const count = parseInt(value, 10);
-    return isNaN(count) ? 0 : count;
-  }
 
   return (
     <div className="py-1 px-5">
