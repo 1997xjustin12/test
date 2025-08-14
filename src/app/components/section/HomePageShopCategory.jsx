@@ -102,7 +102,6 @@ export default function HomePageShopCategory() {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
-        {/* md desktop visible -- hides on lower screens */}
         <div className="hidden lg:block">
           <SectionHeader text="Shop Fireplaces" />
           <div className="flex-col md:flex-row flex gap-[10px] mt-5">
@@ -166,7 +165,6 @@ export default function HomePageShopCategory() {
             </div>
           </div>
         </div>
-        {/* visible on on lower screen */}
         <div className="lg:hidden">
           <SectionHeader text="Shop Fireplaces & Stoves" />
           <div className="flex flex-col gap-[30px] mt-5">
@@ -180,20 +178,12 @@ export default function HomePageShopCategory() {
                 >
                   <div className="relative aspect-1 bg-stone-100 border">
                     {
-                      // <img src={i.img} alt={i.name} className="object-fill" />
-
                       <Image
                         src={i.img}
                         alt={`${i.name}-image`}
                         className="w-full h-full object-contain"
-                        // width={100}
-                        // height={100}
                         fill
                         sizes="100vw"
-                        // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-
-                        // loading="eager"
-                        // priority={false}
                       />
                     }
                   </div>

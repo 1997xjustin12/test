@@ -1,9 +1,15 @@
 // COMPONENTS
 import Image from "next/image";
+import Link from "next/link";
+import SectionHeader from "@/app/components/atom/SectionHeader";
+
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
 import ShopAllClearanceSection from "@/app/components/section/HomePageShopAllClearance";
 import AboutProductSection from "@/app/components/section/HomePageAboutProduct";
+import ReviewsSection from "@/app/components/section/HomePageReviews";
+
+import NewsLetterSection from "@/app/components/section/NewsLetter";
 
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
@@ -78,8 +84,8 @@ const sac_contents = [
 ];
 const about_content = {
   image: "/images/home/about-solana-grills-image.webp",
-  imageWrap:{
-    className:"relative aspect-1 w-[300px]"
+  imageWrap: {
+    className: "relative aspect-1 w-[300px]",
   },
   contact: "(888) 667-4986",
   content: {
@@ -89,9 +95,10 @@ const about_content = {
       "We believe outdoor cooking should be easy, enjoyable, and built to last. That’s why we offer expert support, fast shipping, and a carefully selected range of products known for durability and value. At Solana BBQ Grills, we don’t just sell equipment; we help you create unforgettable moments, one perfectly grilled meal at a time.",
     ],
   },
-  button:{
-    className: "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]"
-  }
+  button: {
+    className:
+      "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]",
+  },
 };
 
 // FUNCTIONS
@@ -162,6 +169,170 @@ const Hero = ({ data }) => {
   );
 };
 
+const BestBBQBrands = () => {
+  const bbb_menu = [
+    {
+      name: "Blaze Outdoor Products",
+      url: "#",
+      child: [
+        { name: "Blaze Open Box", url: "#" },
+        { name: "Blaze Grills", url: "#" },
+        { name: "Blaze Side Burners", url: "#" },
+        { name: "Blaze Storage", url: "#" },
+        { name: "Blaze Refrigeration", url: "#" },
+        { name: "Blaze Accessories", url: "#" },
+      ],
+    },
+    {
+      name: "Bull outdoor Products",
+      url:"#"
+    },
+    {
+      name: "Napoleon",
+      url:"#"
+    },
+    {
+      name: "Eloquence Outdoor Kitchen Products",
+      url:"#"
+    },
+    {
+      name: "Grandeur",
+      url:"#"
+    },
+  ];
+
+  const items = [
+    {
+      name: "Gas Fireplaces",
+      url: "gas-fireplaces",
+      img: "/images/feature/fire-pits-2.avif",
+    },
+    {
+      name: "Wood Fireplaces",
+      url: "wood-fireplaces",
+      img: "/images/feature/outdoor-fireplaces.avif",
+    },
+    {
+      name: "Electric Fireplaces",
+      url: "electric-fireplaces",
+      img: "/images/feature/featured-collection-freestanding-electric-fireplaces.webp",
+    },
+    {
+      name: "Outdoor Fireplaces",
+      url: "outdoor-fireplaces",
+      img: "/images/feature/outdoor-fireplaces-3.webp",
+    },
+  ];
+  return (
+    <div className="w-full mt-10">
+      <div className="container mx-auto px-[10px] lg:px-[20px]">
+        <div className="hidden lg:block">
+          <SectionHeader text="Best BBQ Brands" />
+          <div className="flex-col md:flex-row flex gap-[10px] mt-5">
+            <div className="w-[25%] min-w-[250px] flex flex-col gap-5">
+              {bbb_menu.map((i, idx) => (
+                <div key={`menu-item-${idx}`} className="">
+                  <Link prefetch={false} href={i?.url || "#"} className="font-bold">{i?.name}</Link>
+                  <div className="mt-3 flex flex-col gap-[3px]">
+                    {i?.child && Array.isArray(i?.child) && i?.child?.length > 0 && i.child.map((i2, idx2) => (
+                      <Link
+                        prefetch={false}
+                        href={`${BASE_URL}/${i2?.url}`}
+                        key={`menu-sub-item-${idx}-${idx2}`}
+                      >
+                        {i2.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="border-l w-[calc(100%-250px)]  pl-[20px]">
+              <div className="text-3xl italic font-semibold __className_b1512a">
+                Blaze Outdoor Products
+              </div>
+              <div className="flex flex-col gap-[30px] mt-5 min-h-[230px] items-center justify-center border-4 rounded">
+                <div className="text-neutral-400 font-bold text-3xl">{"<CONTENT SOON />"}</div>
+                {/* <div className=" w-full flex flex-col md:flex-row md:flex-wrap gap-[4px]">
+                  {items.map((i, idx) => (
+                    <Link
+                      prefetch={false}
+                      href={`${BASE_URL}/${i?.url}`}
+                      key={`fireplace-stoves-1-${idx}`}
+                      className="border p-4 w-full lg:w-[calc(25%-4px)] xl:w-[calc(25%-4px)] flex flex-col gap-[10px] hover:shadow-lg transition-all duration-300"
+                    >
+                      <div className="relative aspect-1 bg-stone-100 border">
+                        {
+                          <Image
+                            src={i.img}
+                            alt={`${i.name}-image`}
+                            className="w-full h-full object-cover"
+                            fill
+                            sizes="100vw"
+                          />
+                        }
+                      </div>
+                      <div className="h-[72px] flex justify-center items-center">
+                        <div className="font-medium text-sm md:text-base text-center">
+                          {i.name}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div> */}
+              </div>
+              <div className="flex mt-5 items-center justify-end">
+                <Link prefetch={false} href="#" className="font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]">Shop All Blaze Products</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="lg:hidden">
+          <SectionHeader text="Shop Fireplaces & Stoves" />
+          <div className="flex flex-col gap-[30px] mt-5">
+            <div className=" w-full flex flex-wrap gap-5">
+              {items.slice(0, 6).map((i, idx) => (
+                <Link
+                  prefetch={false}
+                  href={`${BASE_URL}/${i?.url}`}
+                  key={`fireplace-stoves-1-${idx}`}
+                  className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="relative aspect-1 bg-stone-100 border">
+                    {
+                      <Image
+                        src={i.img}
+                        alt={`${i.name}-image`}
+                        className="w-full h-full object-contain"
+                        fill
+                        sizes="100vw"
+                      />
+                    }
+                  </div>
+                  <div className="h-[49px]">
+                    <div className="font-bold text-sm text-center">
+                      {i.name}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="flex justify-center">
+              <Link
+                prefetch={false}
+                href={`${BASE_URL}/fireplaces`}
+                className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md"
+              >
+                Shop Fireplaces & Stoves
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
   const menu = await getMenu();
@@ -174,6 +345,9 @@ export default async function SolanaGrillsPage() {
       <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
       <AboutProductSection data={about_content} />
+      <ReviewsSection />
+      <BestBBQBrands />
+      <NewsLetterSection />
     </>
   );
 }
