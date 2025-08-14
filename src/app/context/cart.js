@@ -104,6 +104,7 @@ export const CartProvider = ({ children }) => {
     // getCart everytime we add or remove items
     try {
       const savedItems = await cartStorage.getCart();
+      await sleep(2000);
       const updatedItems = [...savedItems, ...items];
       cartStorage.saveCart(updatedItems);
       setCartItems((prev) => {
