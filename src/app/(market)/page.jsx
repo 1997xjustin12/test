@@ -13,10 +13,41 @@ import ShopOpenBoxSection from "@/app/components/section/HomePageShopOpenBox";
 import PartsAndAccessoriesSection from "@/app/components/section/HomePagePartsAndAccessories";
 import FrequentlyAskedSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
-import { getPageData } from "@/app/lib/helpers";
+import { BASE_URL, getPageData } from "@/app/lib/helpers";
 import { keys, redisGet } from "@/app/lib/redis";
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const slug = "";
+
+const feat_carousel_items = [
+  {
+    label: "Fireplaces",
+    img: "/images/home/categories/Fireplace.webp",
+    url: `${BASE_URL}/fireplaces`,
+  },
+  {
+    label: "Fire Pits",
+    img: "/images/home/categories/firepits.webp",
+    url: `${BASE_URL}/fire-pits`,
+  },
+  {
+    label: "Chimney",
+    img: "/images/home/categories/chimney.webp",
+    url: `${BASE_URL}/chimney`,
+  },
+  {
+    label: "Gas Logs",
+    img: "/images/home/categories/gas_logs.webp",
+    url: `${BASE_URL}/gas-logs`,
+  },
+  {
+    label: "Clearance",
+    img: "/images/home/categories/clearance.webp",
+    url: `${BASE_URL}/on-sale`,
+  },
+];
+
+
+
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
   const [pageData, setPageData] = useState(null);
@@ -41,11 +72,9 @@ export default function HomePage({ params }) {
   };
 
   useEffect(() => {
-    console.log("[TEST] slug", slug)
     getMenu().then((data) => {
       const flatData = flattenNav(data);
       const _pageData = getPageData(slug, flatData);
-      console.log("[TEST] _pageData", _pageData)
       setPageData(_pageData);
     });
   }, [slug]);
@@ -55,7 +84,7 @@ export default function HomePage({ params }) {
     <>
       <MobileLoader />
       <HomeHero data={pageData} />
-      <FeatureCategoriesSection />
+      <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection />
       <AboutProductSection />
       <ReviewsSection />

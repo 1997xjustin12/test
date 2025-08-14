@@ -6,44 +6,6 @@ const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
 });
 import Image from "next/image";
 import Link from "next/link";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-const items = [
-  {
-    label: "Fireplaces",
-    img: "/images/home/categories/Fireplace.webp",
-    url: `${BASE_URL}/fireplaces`,
-  },
-  {
-    label: "Fire Pits",
-    img: "/images/home/categories/firepits.webp",
-    url: `${BASE_URL}/fire-pits`,
-  },
-  // {
-  //   label: "BBQ Grills",
-  //   img: "/images/home/categories/bbq_grills.webp",
-  //   url: `${BASE_URL}/bbq-grills-and-smokers`,
-  // },
-  // {
-  //   label: "Outdoor Kitchen & Islands",
-  //   img: "/images/home/categories/outdoor_kitchen.webp",
-  //   url: `${BASE_URL}/outdoor-kitchen`,
-  // },
-  {
-    label: "Chimney",
-    img: "/images/home/categories/chimney.webp",
-    url: `${BASE_URL}/chimney`,
-  },
-  {
-    label: "Gas Logs",
-    img: "/images/home/categories/gas_logs.webp",
-    url: `${BASE_URL}/gas-logs`,
-  },
-  {
-    label: "Clearance",
-    img: "/images/home/categories/clearance.webp",
-    url: `${BASE_URL}/on-sale`,
-  },
-];
 
 const items_per_break_point = [
   { minWidth: 0, value: 1 },
@@ -52,10 +14,10 @@ const items_per_break_point = [
   // { minWidth: 1024, value: 6 },
   // { minWidth: 1280, value: 7 },
   // { minWidth: 1024, value: 5 },
-  { minWidth: 1280, value: 5 },
+  { minWidth: 1280, value: 6 },
 ];
 
-export default function HomePageFeatureCategories() {
+export default function HomePageFeatureCategories({items}) {
   return (
     <div className="container mx-auto overflow-hidden min-h-[220px]">
       <Carousel breakpoints={items_per_break_point}>
