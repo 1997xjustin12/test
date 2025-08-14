@@ -27,30 +27,37 @@ export async function getCollectionProducts(id) {
   return res.json();
 }
 
-const YmalPriceDisplay = ({data}) => {
-  console.log("[PriceComponent] data", data);
+const YmalPriceDisplay = ({ data }) => {
   const [formattedPrice, setFormattedPrice] = useState("0.00");
   const [formattedComparePrice, setFormattedComparePrice] = useState("0.00");
-  useEffect(()=>{
-    if(data){
-      const price = data?.price && data?.price !== "0" ? formatPrice(data?.price) : "0.00";
+  useEffect(() => {
+    if (data) {
+      const price =
+        data?.price && data?.price !== "0" ? formatPrice(data?.price) : "0.00";
       setFormattedPrice(price);
-      const compare_price = data?.compare_at_price && data?.compare_at_price !== "0" ? formatPrice(data?.compare_at_price) : "0.00";
+      const compare_price =
+        data?.compare_at_price && data?.compare_at_price !== "0"
+          ? formatPrice(data?.compare_at_price)
+          : "0.00";
       setFormattedComparePrice(compare_price);
     }
-  },[data])
+  }, [data]);
 
-  return <div className="mb-5 flex items-center gap-[10px]">
-    {
-      data?.compare_at_price === 0 ? 
-        <div className="text-sm">${formattedPrice}</div>:
-        <>
+  return (
+    <div className="mb-5 flex items-center gap-[10px]">
+      {data?.compare_at_price === 0 ? (
         <div className="text-sm">${formattedPrice}</div>
-        <div className="text-[0.65em] line-through text-neutral-700">${formattedComparePrice}</div>
+      ) : (
+        <>
+          <div className="text-sm">${formattedPrice}</div>
+          <div className="text-[0.65em] line-through text-neutral-700">
+            ${formattedComparePrice}
+          </div>
         </>
-    }
-  </div>
-}
+      )}
+    </div>
+  );
+};
 
 const YmalImage = ({ images, title = "" }) => {
   const [image, setImage] = useState(null);
@@ -135,7 +142,7 @@ const YouMightAlsoLike = () => {
   return (
     <div>
       <h3>You Might Also Like</h3>
-      <div>
+      <div className="min-h-[366px]">
         <YmalCarousel breakpoints={items_per_break_point}>
           {products &&
             Array.isArray(products) &&
@@ -152,13 +159,13 @@ const YouMightAlsoLike = () => {
                   {item?.title}
                 </div>
                 <Rating
-                className="mb-2"
+                  className="mb-2"
                   readOnly
                   value={parseRatingCount(item?.ratings?.rating_count)}
                   fractions={2}
                   style={{ maxWidth: 80 }}
                 ></Rating>
-                <YmalPriceDisplay data={item?.variants?.[0]}/>
+                <YmalPriceDisplay data={item?.variants?.[0]} />
                 <YmalAddToCartBtn item={item} />
               </div>
             ))}
@@ -239,13 +246,13 @@ const GrillProtectionSection = () => {
         </div>
       </div>
       <div className="w-[240px] p-4 flex flex-col items-center justify-evenly">
-        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-300">
+        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-800">
           5 Year - $159.99
         </button>
-        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-300">
+        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-800">
           3 Year - $99.99
         </button>
-        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-300">
+        <button className="border px-5 py-2 w-full rounded text-theme-800 font-bold text-sm bg-white border-theme-800">
           2 Year - $79.99
         </button>
       </div>
@@ -353,14 +360,31 @@ function AddedToCartDialog({ data, onClose }) {
                 >
                   {data ? (
                     <>
-                      <div className="font-bold text-sm lg:text-xl">
-                        {addedToCartItems?.title}
+                      <div className="font-bold">{addedToCartItems?.title}</div>
+                      <div className="flex gap-[20px] items-center">
+                        <div className="font-extrabold text-theme-600 text-right">{`$${formatPrice(
+                          addedToCartItems?.count *
+                            addedToCartItems?.variants?.[0]?.price
+                        )}`}</div>
+                        <div className="font-medium text-neutral-700">{`($${formatPrice(
+                          addedToCartItems?.variants?.[0]?.price
+                        )}x${addedToCartItems?.count})`}</div>
                       </div>
-                      <div className="font-medium text-sm">{`$${addedToCartItems?.variants?.[0]?.price}x${addedToCartItems?.count}`}</div>
-                      <div className="font-extrabold text-theme-600 text-lg lg:text-2xl text-right">{`$${
-                        addedToCartItems?.count *
-                        addedToCartItems?.variants?.[0]?.price
-                      }`}</div>
+                      <div className="flex justify-between items-center gap-[10px]">
+                        <Link
+                          onClick={handleGoToCartClick}
+                          href={cartPageUrl}
+                          className="border border-theme-600 py-2 px-4 text-white bg-theme-600 hover:bg-theme-500 font-medium w-full text-center"
+                        >
+                          Go to Cart
+                        </Link>
+                        <button
+                          onClick={handleClose}
+                          className="border border-theme-700 text-theme-700 py-2 px-4 hover:bg-theme-50 bg-white font-medium w-full"
+                        >
+                          Continue Shopping
+                        </button>
+                      </div>
                     </>
                   ) : (
                     <Eos3DotsLoading />
@@ -372,23 +396,6 @@ function AddedToCartDialog({ data, onClose }) {
               </div>
               <div className="flex flex-col p-3">
                 <YouMightAlsoLike />
-              </div>
-
-              {/* action buttons */}
-              <div className="flex justify-between items-center p-[10px] border-t ">
-                <button
-                  onClick={handleClose}
-                  className="border border-stone-300 rounded-md py-1 px-2 hover:bg-stone-50 text-sm font-medium"
-                >
-                  Continue Shopping
-                </button>
-                <Link
-                  onClick={handleGoToCartClick}
-                  href={cartPageUrl}
-                  className="border border-stone-300 rounded-md py-1 px-2 text-white bg-theme-600 hover:bg-theme-500 text-sm font-medium"
-                >
-                  Go to Cart
-                </Link>
               </div>
             </DialogPanel>
           </div>

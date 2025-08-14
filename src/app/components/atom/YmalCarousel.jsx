@@ -12,9 +12,9 @@ function SampleNextArrow(props) {
     <div
       onClick={onClick}
       className="absolute z-[1] top-[50%] right-[0px] group">
-      <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg group-hover:border-2 group-hover:border-neutral-300">
-        <div className="bg-white text-neutral-600 opacity-70 group-hover:opacity-100 cursor-pointer">
-          <FluentChevronRight />
+      <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg border-2 border-transparent group-hover:border-2 group-hover:border-neutral-300">
+        <div className="bg-white text-neutral-600 bg-opacity-30 group-hover:bg-opacity-100 cursor-pointer">
+          <FluentChevronRight width={"24"} height={"24"}/>
         </div>
       </div>
     </div>
@@ -27,9 +27,9 @@ function SamplePrevArrow(props) {
     <div
       onClick={onClick}
       className="absolute z-[1] top-[50%] left-[0px] group">
-      <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg group-hover:border-2 group-hover:border-neutral-300">
-        <div className="bg-white text-neutral-600 opacity-70 group-hover:opacity-100 cursor-pointer">
-          <FluentChevronLeft />
+      <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg border-2 border-transparent group-hover:border-2 group-hover:border-neutral-300">
+        <div className="bg-white text-neutral-600 bg-opacity-30 group-hover:bg-opacity-100 cursor-pointer">
+          <FluentChevronLeft width={"24"} height={"24"}/>
         </div>
       </div>
     </div>
@@ -43,8 +43,8 @@ export default function YmalCarousel({
 }) {
   const breakpoint_value = useBreakpointValue(breakpoints);
   const predefined = {
-    dots: true,
-    infinite: true,
+    dots: false,
+    infinite: false,
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
