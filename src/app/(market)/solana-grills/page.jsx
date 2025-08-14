@@ -2,12 +2,13 @@
 import Image from "next/image";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
+import ShopAllClearanceSection from "@/app/components/section/HomePageShopAllClearance";
 
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL } from "@/app/lib/helpers";
 
-// CONSTANTS 
+// CONSTANTS
 const pathname = "solana-grills";
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const feat_carousel_items = [
@@ -40,6 +41,39 @@ const feat_carousel_items = [
     label: "Covers",
     img: "/images/home/categories/covers.webp",
     url: `${BASE_URL}/#`,
+  },
+];
+
+const sac_contents = [
+  {
+    image: {
+      src: "/images/home/unmatched-power-and-precision-from-bull-outdoor-products.webp",
+      alt: "Unmatched Power and Precision from Bull Outdoor Products Image",
+    },
+    title: "Unmatched Power and Precision from Bull Outdoor Products",
+    content:
+      "Bull Outdoor Products has been a trusted name in outdoor kitchen equipment since 1993, offering durable, high-performance grills and accessories. At Solana BBQ Grills, we proudly carry Bull’s top-quality products to help you create a reliable and stylish outdoor cooking space.",
+    button: {
+      label: "Shop All Bull Products",
+      url: `${BASE_URL}/bull-outdoor-products`,
+      className:
+        "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700",
+    },
+  },
+  {
+    image: {
+      src: "/images/home/cook-with-power-and-precision-using-blaze-grills.webp",
+      alt: "Cook with Power and Precision Using Blaze Grills Image",
+    },
+    title: "Cook with Power and Precision Using Blaze Grills",
+    content:
+      "Blaze Grills delivers commercial-grade performance and sleek design at a great value. Made with durable stainless steel and precise engineering, Blaze is trusted by backyard chefs who want pro-level results. At Solana BBQ Grills, we proudly offer Blaze products to help you create a high-performance outdoor kitchen.",
+    button: {
+      label: "Shop All Blaze Products",
+      url: `${BASE_URL}/blaze-outdoor-products`,
+      className:
+        "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700",
+    },
   },
 ];
 
@@ -121,7 +155,7 @@ export default async function SolanaGrillsPage() {
       <MobileLoader />
       <Hero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
-      
+      <ShopAllClearanceSection contents={sac_contents} />
     </>
   );
 }

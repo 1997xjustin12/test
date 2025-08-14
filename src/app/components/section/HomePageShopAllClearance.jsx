@@ -1,37 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-export default function HomePageShopAllClearance() {
-  const contents = [
-    {
-      image: {
-        src: "/images/home/elevate-your-fireplace.webp",
-        alt: "Modern-Fireplace-Designs-Img",
-      },
-      title: "Modern Fireplace Designs",
-      content:
-        "A modern fireplace can elevate your home, providing both warmth and a stylish focal point for family gatherings or quiet evenings. We offer a wide selection of fireplaces including wood-burning, gas, and electric.",
-      button: {
-        label: "Shop All Fireplaces",
-        url: `${BASE_URL}/fireplaces`,
-      },
-    },
-    {
-      image: {
-        src: "/images/home/clearance.webp",
-        alt: "Outdoor-Kitchen-Deals-Img",
-      },
-      title: "Outdoor Kitchen Deals",
-      content:
-        "Create your dream backyard kitchen with top-of-the-line grills, BBQ islands, and all the essential accessories, all while taking advantage of great deals and savings.",
-      button: {
-        label: "Shop All Outdoor Kitchen Deals",
-        url: `${BASE_URL}/outdoor-kitchen`,
-      },
-    },
-  ];
+export default function HomePageShopAllClearance({contents}) {
   return (
     <div className="container mx-auto px-[10px] lg:px-[20px] mt-5">
       {/* font-bell */}
@@ -59,7 +30,7 @@ export default function HomePageShopAllClearance() {
              {/* absolute bottom-[20px] left-1/2 -translate-x-1/2 */}
              <div className="absolute bottom-[20px] left-0 w-full flex justify-center">
                 <Link href={item.button.url} prefetch={false}>
-                  <button className="font-medium border px-[20px] py-[8px] rounded-xl bg-theme-600 text-white shadow-md text-lg cursor-pointer hover:bg-theme-500">
+                  <button className={item?.button?.className || "font-medium border px-[20px] py-[8px] rounded-xl bg-theme-600 text-white shadow-md text-lg cursor-pointer hover:bg-theme-500"}>
                     {item.button.label}
                   </button>
                 </Link>

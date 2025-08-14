@@ -46,7 +46,34 @@ const feat_carousel_items = [
   },
 ];
 
-
+const sac_contents = [
+  {
+    image: {
+      src: "/images/home/elevate-your-fireplace.webp",
+      alt: "Modern-Fireplace-Designs-Img",
+    },
+    title: "Modern Fireplace Designs",
+    content:
+      "A modern fireplace can elevate your home, providing both warmth and a stylish focal point for family gatherings or quiet evenings. We offer a wide selection of fireplaces including wood-burning, gas, and electric.",
+    button: {
+      label: "Shop All Fireplaces",
+      url: `${BASE_URL}/fireplaces`,
+    },
+  },
+  {
+    image: {
+      src: "/images/home/clearance.webp",
+      alt: "Outdoor-Kitchen-Deals-Img",
+    },
+    title: "Outdoor Kitchen Deals",
+    content:
+      "Create your dream backyard kitchen with top-of-the-line grills, BBQ islands, and all the essential accessories, all while taking advantage of great deals and savings.",
+    button: {
+      label: "Shop All Outdoor Kitchen Deals",
+      url: `${BASE_URL}/outdoor-kitchen`,
+    },
+  },
+];
 
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
@@ -85,7 +112,7 @@ export default function HomePage({ params }) {
       <MobileLoader />
       <HomeHero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
-      <ShopAllClearanceSection />
+      <ShopAllClearanceSection contents={sac_contents} />
       <AboutProductSection />
       <ReviewsSection />
       <ShopCategorySection />
