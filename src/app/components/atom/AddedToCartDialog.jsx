@@ -6,8 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Eos3DotsLoading } from "../icons/lib";
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
-import { createSlug, formatPrice, parseRatingCount } from "@/app/lib/helpers";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import ProductCartToCart from "@/app/components/atom/ProductCardToCart"
+import { BASE_URL, createSlug, formatPrice, parseRatingCount } from "@/app/lib/helpers";
 const cartPageUrl = `${BASE_URL}/cart`;
 import { useCart } from "@/app/context/cart";
 import { Rating } from "@smastrom/react-rating";
@@ -27,93 +27,6 @@ export async function getCollectionProducts(id) {
   return res.json();
 }
 
-const YmalPriceDisplay = ({ data }) => {
-  const [formattedPrice, setFormattedPrice] = useState("0.00");
-  const [formattedComparePrice, setFormattedComparePrice] = useState("0.00");
-  useEffect(() => {
-    if (data) {
-      const price =
-        data?.price && data?.price !== "0" ? formatPrice(data?.price) : "0.00";
-      setFormattedPrice(price);
-      const compare_price =
-        data?.compare_at_price && data?.compare_at_price !== "0"
-          ? formatPrice(data?.compare_at_price)
-          : "0.00";
-      setFormattedComparePrice(compare_price);
-    }
-  }, [data]);
-
-  return (
-    <div className="mb-5 flex items-center gap-[10px]">
-      {data?.compare_at_price === 0 ? (
-        <div className="text-sm">${formattedPrice}</div>
-      ) : (
-        <>
-          <div className="text-sm">${formattedPrice}</div>
-          <div className="text-[0.65em] line-through text-neutral-700">
-            ${formattedComparePrice}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
-const YmalImage = ({ images, title = "" }) => {
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    if (images && Array.isArray(images)) {
-      const img = images.find(({ position }) => position === 1)?.src;
-      console.log("[TEST] images", images);
-      console.log("[TEST] img", img);
-      setImage(img);
-    }
-  }, [images]);
-
-  if (!images && !Array.isArray(images)) {
-    return;
-  }
-
-  if (image) {
-    return (
-      <Image
-        src={image}
-        alt={`${createSlug(title)}-image`}
-        fill
-        className="object-contain"
-        sizes="(max-width: 768px) 100vw, 300px"
-      />
-    );
-  }
-};
-
-const YmalAddToCartBtn = ({ item }) => {
-  const { addToCart } = useCart();
-  const [loading, setLoading] = useState(false);
-
-  const createItemsArray = (item, quantity) => {
-    return new Array(quantity).fill(item);
-  };
-
-  const handleAddToCart = async (item) => {
-    setLoading(true);
-    const quantity = 1;
-    const items = createItemsArray(item, quantity);
-    const response = await addToCart(items);
-    setLoading(false);
-  };
-
-  return (
-    <button
-      onClick={() => handleAddToCart(item)}
-      className="hover:bg-theme-600 bg-theme-700 text-white rounded py-1 px-4 font-bold text-sm h-[28px] w-[110px] flex items-center justify-center"
-      disabled={loading}
-    >
-      {loading ? <Eos3DotsLoading width={30} height={30} /> : "Add to Cart"}
-    </button>
-  );
-};
 
 const YouMightAlsoLike = () => {
   const [products, setProducts] = useState([]);
@@ -122,7 +35,6 @@ const YouMightAlsoLike = () => {
     const fetchProducts = async () => {
       try {
         const ymal_products = await getCollectionProducts(1);
-        console.log("[YMAL]", ymal_products);
         setProducts(ymal_products);
       } catch (error) {
         setProducts([]);
@@ -150,21 +62,9 @@ const YouMightAlsoLike = () => {
                 key={`ymal-product-${index}`}
                 className="min-w-[170px] flex flex-col p-3"
               >
-                <div className="w-full aspect-1 relative mb-3">
-                  <YmalImage images={item?.images} title={item?.title} />
-                </div>
-                <div className="text-xs line-clamp-3 min-h-[50px] mb-2">
-                  {item?.title}
-                </div>
-                <Rating
-                  className="mb-2"
-                  readOnly
-                  value={parseRatingCount(item?.ratings?.rating_count)}
-                  fractions={2}
-                  style={{ maxWidth: 80 }}
-                ></Rating>
-                <YmalPriceDisplay data={item?.variants?.[0]} />
-                <YmalAddToCartBtn item={item} />
+                    <ProductCartToCart
+                    item={item}
+                    />
               </div>
             ))}
           </YmalCarousel>
