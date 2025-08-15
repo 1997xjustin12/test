@@ -1,3 +1,10 @@
+
+export const metadata = {
+  title: 'Shop Outdoor Kitchen Equipment | Solana BBQ Grills',
+  description: 'Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!',
+};
+
+
 // NPM
 import Image from "next/image";
 import Link from "next/link";
