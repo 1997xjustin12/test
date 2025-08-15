@@ -118,6 +118,7 @@ export function CategoriesProvider({ categories, children }) {
         product_brand,
       ]),
     ].filter(Boolean);
+    
     const valid_product_categories = valid_categories.filter(
       ({ origin_name }) => product_categories_brand.includes(origin_name)
     );
