@@ -10,6 +10,7 @@ import AboutProductSection from "@/app/components/section/HomePageAboutProduct";
 import ReviewsSection from "@/app/components/section/HomePageReviews";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
+import BlogsSection from "@/app/components/section/HomeBlogs"
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
@@ -99,6 +100,34 @@ const about_content = {
       "font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]",
   },
 };
+const blogs_title = "Your Backyard Cooking Resource Hub";
+const blogs = [
+  {
+    title: "The Ultimate Guide to Building Your Dream Outdoor BBQ Kitchen",
+    img: "/images/home/blogs/the-ultimate-guide-to-building-your-dream-outdoor-bbq-kitchen-solana.webp",
+    tag: "Buying Guide",
+    tag_bg: "bg-green-600",
+    content:
+      "This comprehensive guide will walk you through every step of the process, from initial planning to adding those final personal touches.",
+  },
+  {
+    title: "Your Guide to Affordable BBQ Bliss",
+    img: "/images/home/blogs/your-guide-to-affordable-bbq-bliss-image-solana.webp",
+    tag: "Buying Guide",
+    tag_bg: "bg-green-600",
+    content:
+      "This guide will walk you through the steps to designing a fantastic outdoor BBQ kitchen without breaking the bank.",
+  },
+  {
+    title: "Essential Outdoor Kitchen Maintenance Tips for Long-Lasting Performance",
+    img: "/images/home/blogs/essential-outdoor-kitchen-maintenance-tips-for-long-lasting-performance-image-solana.webp",
+    tag: "Tips & Tricks",
+    tag_bg: "bg-rose-600",
+    content:
+      "This guide provides key tips for effective outdoor kitchen maintenance, helping you preserve both beauty and functionality.",
+  },
+];
+
 // FUNCTIONS
 const getMenu = async () => {
   return await redis.get(defaultMenuKey);
@@ -327,6 +356,7 @@ export default async function SolanaGrillsPage() {
       <AboutProductSection data={about_content} />
       <ReviewsSection />
       <BestBBQBrands />
+      <BlogsSection title={blogs_title} contents={blogs}/> 
       <NewsLetterSection />
     </>
   );
