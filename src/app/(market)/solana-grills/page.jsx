@@ -9,7 +9,8 @@ import ShopAllClearanceSection from "@/app/components/section/HomePageShopAllCle
 import AboutProductSection from "@/app/components/section/HomePageAboutProduct";
 import ReviewsSection from "@/app/components/section/HomePageReviews";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
-import ProductCartToCart from "@/app/components/atom/ProductCardToCart"
+import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
+import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL } from "@/app/lib/helpers";
@@ -211,6 +212,13 @@ const BestBBQBrands = async () => {
     },
   ];
 
+  const items_per_break_point = [
+    { minWidth: 0, value: 1 },
+    { minWidth: 640, value: 2 },
+    { minWidth: 768, value: 3 },
+    { minWidth: 1280, value: 4 },
+  ];
+
   const items = await getBlazeProducts();
 
   return (
@@ -251,10 +259,11 @@ const BestBBQBrands = async () => {
                 Blaze Outdoor Products
               </div>
               <div className="flex gap-[30px] mt-5 min-h-[230px]">
-                  {items && items.map((item, idx) => (
+                {items &&
+                  items.map((item, idx) => (
                     <ProductCartToCart
-                    key={`product-cart-to-cart-item-${idx}`}
-                    item={item}
+                      key={`product-cart-to-cart-item-${idx}`}
+                      item={item}
                     />
                   ))}
               </div>
@@ -270,47 +279,35 @@ const BestBBQBrands = async () => {
             </div>
           </div>
         </div>
-        {/* <div className="lg:hidden">
-          <SectionHeader text="Shop Fireplaces & Stoves" />
+        <div className="lg:hidden">
+          <SectionHeader text="Shop Blaze Products" />
           <div className="flex flex-col gap-[30px] mt-5">
             <div className=" w-full flex flex-wrap gap-5">
-              {items.slice(0, 6).map((i, idx) => (
-                <Link
-                  prefetch={false}
-                  href={`${BASE_URL}/${i?.url}`}
-                  key={`fireplace-stoves-1-${idx}`}
-                  className="w-[calc(50%-10px)] border p-4 lg:w-full flex flex-col gap-4 hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="relative aspect-1 bg-stone-100 border">
-                    {
-                      <Image
-                        src={i.img}
-                        alt={`${i.name}-image`}
-                        className="w-full h-full object-contain"
-                        fill
-                        sizes="100vw"
+              <YmalCarousel breakpoints={items_per_break_point}>
+                {items &&
+                  items.map((item, idx) => (
+                    <div
+                        key={`product-cart-to-cart-item-${idx}`}
+                        className="px-10"
+                    >
+                      <ProductCartToCart
+                        item={item}
                       />
-                    }
-                  </div>
-                  <div className="h-[49px]">
-                    <div className="font-bold text-sm text-center">
-                      {i.name}
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  ))}
+              </YmalCarousel>
             </div>
             <div className="flex justify-center">
               <Link
                 prefetch={false}
-                href={`${BASE_URL}/fireplaces`}
-                className="text-sm md:text-base font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md"
+                href={`${BASE_URL}/blaze-outdoor-products`}
+                className="font-medium border px-[20px] py-[8px] rounded bg-neutral-800 text-white shadow-md text-lg cursor-pointer hover:bg-neutral-700 flex items-center gap-[10px]"
               >
-                Shop Fireplaces & Stoves
+                Shop All Blaze Products
               </Link>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
