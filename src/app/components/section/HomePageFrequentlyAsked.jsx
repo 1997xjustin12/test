@@ -41,8 +41,8 @@ const static_questions = [
   },
 ];
 
-export default function HomePageFrequentlyAsked() {
-  const [questions, setQuestions] = useState(static_questions);
+export default function HomePageFrequentlyAsked({faqs, itemClassName="bg-theme-600 hover:bg-theme-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"}) {
+  const [questions, setQuestions] = useState(faqs);
 
   const toggleAnswer = (id) => {
     setQuestions((prev) => {
@@ -64,11 +64,11 @@ export default function HomePageFrequentlyAsked() {
               key={`frequent-question-${i.id}-${idx}`}
               className="text-xs md:text-base">
               <div
-                className="bg-theme-600 hover:bg-theme-500  text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
+                className={itemClassName}
                 onClick={() => toggleAnswer(i.id)}>
-                <div className="w-[calc(100%-70px)]  self-center">{`${
+                <div className="w-[calc(100%-70px)]  self-center"><h3>{`${
                   idx + 1
-                }. ${i.question}`}</div>
+                }. ${i.question}`}</h3></div>
                 <div>
                   {i.is_open ? <MingcuteUpLine /> : <MingcuteDownLine />}
                 </div>

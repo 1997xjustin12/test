@@ -8,6 +8,7 @@ import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCa
 import ShopAllClearanceSection from "@/app/components/section/HomePageShopAllClearance";
 import AboutProductSection from "@/app/components/section/HomePageAboutProduct";
 import ReviewsSection from "@/app/components/section/HomePageReviews";
+import FAQsSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
 import BlogsSection from "@/app/components/section/HomeBlogs"
@@ -15,7 +16,7 @@ import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, createSlug } from "@/app/lib/helpers";
 // CONSTANTS
 const pathname = "solana-grills";
 const defaultMenuKey = keys.dev_shopify_menu.value;
@@ -126,6 +127,43 @@ const blogs = [
     tag_bg: "bg-rose-600",
     content:
       "This guide provides key tips for effective outdoor kitchen maintenance, helping you preserve both beauty and functionality.",
+  },
+];
+const faqs = [
+  {
+    id: "Q1",
+    is_open: false,
+    question: "What does every outdoor kitchen need?",
+    answer:
+      "Every outdoor kitchen needs a quality grill, ample counter space, weather-resistant storage, proper ventilation, and access to gas, electricity, or water. Essentials like side burners, a sink, and a refrigerator enhance function and convenience. Durable materials and smart layout design ensure long-lasting performance and easy outdoor cooking year-round.",
+  },
+  {
+    id: "Q2",
+    is_open: false,
+    question: "Which brand is best for barbecue grills?",
+    answer:
+      "Some of the best barbecue grill brands known for quality and performance include Bull, Blaze, Weber, Napoleon, and Lynx. For professional-grade outdoor kitchens, Bull and Blaze stand out for their durable stainless steel construction, powerful burners, and long-lasting value, making them top choices for serious backyard chefs.",
+  },
+  {
+    id: "Q3",
+    is_open: false,
+    question: "What to use for an outdoor kitchen?",
+    answer:
+      "For an outdoor kitchen, use weather-resistant materials like stainless steel for appliances and cabinets, stone or granite for countertops, and sealed pavers or concrete for flooring. Equip it with a quality grill, side burners, storage, a sink, and a fridge. Choose materials and appliances rated for outdoor use to ensure durability and safety.",
+  },
+  {
+    id: "Q4",
+    is_open: false,
+    question: "What are the basic kitchen equipments?",
+    answer:
+      "Basic kitchen equipment includes a grill or stove, refrigerator, sink, countertop, and storage cabinets. For outdoor kitchens, it's also important to use weather-resistant materials like stainless steel and stone. Optional additions like side burners or a pizza oven can enhance functionality, but the essentials focus on cooking, cleaning, storing, and prepping food safely.",
+  },
+  {
+    id: "Q5",
+    is_open: false,
+    question: "What are the different types of BBQ grills?",
+    answer:
+      "The main types of BBQ grills include gas grills, charcoal grills, pellet grills, and electric grills. Gas grills offer convenience and quick heat-up, while charcoal grills deliver classic smoky flavor. Pellet grills use wood pellets for precise temperature control, and electric grills are ideal for small spaces with easy plug-in use.",
   },
 ];
 
@@ -355,6 +393,43 @@ const ShopAllOpenBox = async() => {
       </div>
     </div>)
 }
+const OuterKitchenAndAccessories = () => {
+  const items = [
+    {image:"/images/feature/outdoor-kitchen-storage.webp", label:"Outdoor Kitchen Storage", url:"#"},
+    {image:"/images/feature/side-burners.webp", label:"Side Burners", url:"#"},
+    {image:"/images/feature/grill-covers.webp", label:"Grill Covers", url:"#"},
+    {image:"/images/feature/grill-attachments.webp", label:"Grill Attachments", url:"#"},
+    {image:"/images/feature/grill-tools-and-utensils.webp", label:"Grilling Tools & Utensils", url:"#"},
+  ];
+  
+  return (<div className="w-full mt-10">
+      <div className="container mx-auto px-[10px] lg:px-[20px]">
+        <SectionHeader text="Outer Kitchen Products & Accessories" />
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {
+            items && items.map((item,index) => <Link key={`extras-category-links-${index}`} prefetch={false} href={`${BASE_URL}/${item?.url}`}>
+              <div className="shadow-lg py-5 px-3 text-center">
+                <div className="w-full aspect-w-4 aspect-h-5 relative bg-white">
+                  {
+                    item?.image &&
+                        <Image
+                          src={item?.image}
+                          title={item?.label}
+                          alt={`${createSlug(item?.label)}-image`}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                        />
+                  }
+                </div>
+                <h4 className="font-semibold h-[48px] flex items-center justify-center">{item?.label}</h4>
+              </div>
+            </Link>)
+          }
+        </div>
+      </div>
+    </div>)
+}
 
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
@@ -372,8 +447,9 @@ export default async function SolanaGrillsPage() {
       <BestBBQBrands />
       <BlogsSection title={blogs_title} contents={blogs}/> 
       <ShopAllOpenBox />
+      <OuterKitchenAndAccessories />
+      <FAQsSection faqs={faqs} itemClassName="bg-stone-600 hover:bg-stone-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium" />
       <NewsLetterSection />
-
     </>
   );
 }

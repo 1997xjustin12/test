@@ -87,6 +87,45 @@ const about_content = {
   },
 };
 
+const faqs = [
+  {
+    id: "Q1",
+    is_open: false,
+    question: "What is a fireplace also called?",
+    answer:
+      "A fireplace is often referred to by names highlighting its parts and design, such as mantel, chimney, firebox, flue, grate, hearthstone, or fire surround.",
+  },
+  {
+    id: "Q2",
+    is_open: false,
+    question: "What is a fireplace used for?",
+    answer:
+      "A fireplace or hearth, made of brick, stone, or metal, contains a fire for heating and ambiance. Modern designs offer varying heat efficiency.",
+  },
+  {
+    id: "Q3",
+    is_open: false,
+    question: "What is the definition of a fireplace?",
+    answer:
+      "A fireplace is a framed chimney opening or metal container with a smoke pipe for an open fire. It can also be an outdoor brick, stone, or metal structure for fires.",
+  },
+  {
+    id: "Q4",
+    is_open: false,
+    question: "What does a fireplace symbolize?",
+    answer:
+      "In art, literature, and film, the fireplace symbolizes home, warmth, comfort, and safety, enriching storytelling.",
+  },
+  {
+    id: "Q5",
+    is_open: false,
+    question: "Which type of fireplace is best?",
+    answer:
+      "Gas fireplaces are more efficient, cleaner, and safer than wood-burning ones, producing fewer emissions and no ash or soot. They’re easier to maintain and can operate during power outages.",
+  },
+];
+
+
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
   const [pageData, setPageData] = useState(null);
@@ -131,7 +170,7 @@ export default function HomePage({ params }) {
       <GuidesAndInspirationSection />
       <ShopOpenBoxSection />
       <PartsAndAccessoriesSection />
-      {/* <FrequentlyAskedSection /> */}
+      {/* <FrequentlyAskedSection faqs={faqs}/> */}
       <NewsLetterSection />
     </>
   );
