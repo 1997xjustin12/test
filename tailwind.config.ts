@@ -87,7 +87,7 @@ export default {
       },
       fontFamily: {
         // montserrat: "var(--font-montserrat)",
-        // bell: "var(--font-bell)",
+        libre: "var(--font-libre-baskerville)",
       },
     },
   },

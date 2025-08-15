@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
-import { Inter } from "next/font/google";
+import { Inter, Libre_Baskerville } from "next/font/google";
 // import localFont from "next/font/local";
 import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
@@ -21,7 +21,14 @@ const InterFont = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-montserrat",
+  variable: "--font-inter",
+});
+
+const libreBaskerville = Libre_Baskerville({
+  weight: ['400', '700'], // Available weights: 400 (regular), 700 (bold)
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-libre-baskerville',
 });
 
 export const metadata = await generateMetadata();
@@ -36,7 +43,7 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`antialiased ${InterFont.className} theme-${color}`}
+        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} theme-${color}`}
       >
         <FreeShippingBanner />
         <ExtrasHeader />

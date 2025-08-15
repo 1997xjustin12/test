@@ -41,9 +41,9 @@ export default function HomePageReviews() {
       <div className="container mx-auto">
         <div className="flex-col lg:flex-row flex gap-[50px] lg:gap-[10px] items-center">
           <div className="lg:w-[30%] lg:p-[20px] flex flex-col gap-[8px] justify-center text-center lg:justify-normal lg:text-left">
-            <div className="font-bell text-xl lg:text-3xl">
+            <h2 className="font-libre text-xl lg:text-3xl font-normal italic">
               Our customer reviews
-            </div>
+            </h2>
             <div className="flex justify-center lg:justify-start">
               <Rating
                 readOnly

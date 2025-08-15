@@ -31,7 +31,7 @@ export default function HomeBlogs({ title = "", contents }) {
                 </div>
                 <div className="py-[15px] flex flex-col gap-[20px] transition-all duration-500">
                   <div className="flex flex-col gap-[15px] h-[150px]">
-                    <div className="px-2 group-hover:underline font-bold md:font-normal font-bell transition-all duration-300 italic text-center h-[48px] line-clamp-2">
+                    <div className="px-2 group-hover:underline font-normal font-libre transition-all duration-300 italic text-center h-[52px] line-clamp-2">
                       <h3>{i.title}</h3>
                     </div>
                     <div className="text-sm md:text-base h-[72px] line-clamp-3 px-2">
