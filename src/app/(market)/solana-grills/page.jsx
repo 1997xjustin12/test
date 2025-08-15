@@ -11,6 +11,7 @@ import ReviewsSection from "@/app/components/section/HomePageReviews";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
 import BlogsSection from "@/app/components/section/HomeBlogs"
+import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap"
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
@@ -341,6 +342,19 @@ const BestBBQBrands = async () => {
     </div>
   );
 };
+const ShopAllOpenBox = async() => {
+  // Solana Home Open Box ID: 5
+  const collection_id = 5;
+  return (<div className="w-full mt-10">
+      <div className="container mx-auto px-[10px] lg:px-[20px]">
+        <SectionHeader text="Shop All Open Box" />
+        <div className="mt-5">Save big on like-new items that have been opened, inspected, and approved for resale. Same great quality, just a better price.</div>
+        <div className="mt-5">
+          <CollectionCarouselWrap data={{id:collection_id}} />
+        </div>
+      </div>
+    </div>)
+}
 
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
@@ -357,7 +371,9 @@ export default async function SolanaGrillsPage() {
       <ReviewsSection />
       <BestBBQBrands />
       <BlogsSection title={blogs_title} contents={blogs}/> 
+      <ShopAllOpenBox />
       <NewsLetterSection />
+
     </>
   );
 }
