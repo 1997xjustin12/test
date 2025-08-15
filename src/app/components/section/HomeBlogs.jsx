@@ -35,7 +35,7 @@ export default function HomeBlogs({title = "", contents}) {
                     </div>
                     <div className="text-sm md:text-base h-[72px] line-clamp-3 px-2">{i.content}</div>
                 </div>
-                <div className="text-sm md:text-base underline font-bold text-right">
+                <div className="text-sm md:text-base underline font-bold text-right px-4">
                   LEARN MORE
                 </div>
               </div>
