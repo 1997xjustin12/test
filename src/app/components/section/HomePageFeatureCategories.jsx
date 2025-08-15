@@ -11,9 +11,6 @@ const items_per_break_point = [
   { minWidth: 0, value: 1 },
   { minWidth: 640, value: 2 },
   { minWidth: 768, value: 4 },
-  // { minWidth: 1024, value: 6 },
-  // { minWidth: 1280, value: 7 },
-  // { minWidth: 1024, value: 5 },
   { minWidth: 1280, value: 6 },
 ];
 
@@ -39,7 +36,7 @@ export default function HomePageFeatureCategories({items}) {
             </div>
             <div
               className={`flex items-center justify-center w-full h-[60px] overflow-hidden`}>
-              <div className="break-words text-center">{v.label}</div>
+              <h2 className="break-words text-center text-normal text-base font-semibold">{v.label}</h2>
             </div>
           </Link>
         ))}

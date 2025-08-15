@@ -21,9 +21,9 @@ export default function HomePageShopAllClearance({contents}) {
                 sizes="100vw"
               />
             </div>
-            <div className="text-center text-xl md:text-3xl font-semibold">
+            <h2 className="text-center text-xl md:text-3xl font-semibold">
               {item.title}
-            </div>
+            </h2>
             <div className="text-center px-[10px] md:text-lg">
               {item.content}
             </div>

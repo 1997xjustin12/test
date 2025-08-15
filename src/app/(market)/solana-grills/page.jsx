@@ -303,7 +303,7 @@ const BestBBQBrands = async () => {
                     href={i?.url || "#"}
                     className="font-bold"
                   >
-                    {i?.name}
+                    <h3>{i?.name}</h3>
                   </Link>
                   <div className="mt-3 flex flex-col gap-[3px]">
                     {i?.child &&

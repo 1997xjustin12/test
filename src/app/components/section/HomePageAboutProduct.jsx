@@ -13,9 +13,9 @@ export default function HomePageAboutProduct({data}) {
     <div className="container mx-auto bg-[#F6F6F6] mt-5">
       <div className="w-full flex flex-col md:flex-row">
         <div className="w-full xl:w-[60%] p-[40px] flex flex-col gap-[30px]">
-          <div className="text-xl md:text-3xl font-semibold">
+          <h2 className="text-xl md:text-3xl font-semibold">
             {data?.content?.title}
-          </div>
+          </h2>
           <div className={`flex items-center justify-center xl:hidden ${data?.imageWrap?.className || "relative w-full aspect-2"}`}>
             {
               <Image
