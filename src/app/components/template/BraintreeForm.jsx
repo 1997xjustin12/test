@@ -9,7 +9,7 @@ import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-const store_domain = "solanafireplaces.com";
+const store_domain = "https://solanafireplaces.com";
 
 export default function BraintreeForm() {
   const router = useRouter();
