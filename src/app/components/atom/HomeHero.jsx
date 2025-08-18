@@ -1,12 +1,13 @@
 import Image from "next/image";
-// import RenderBanner from "@/app/components/atom/RenderBanner";
 
 export default function Hero({ data }) {
-  // console.log("data", data);
   const useBanner =
     !data?.banner?.img?.src || data?.banner?.img?.src === ""
       ? "/images/banner/solana-home-hero.webp"
       : data?.banner?.img?.src;
+
+    // title: Modern Fireplaces and Outdoor Living
+    // tag_line: Transform Your Spaces with Elegant Designs Built for Comfort and Durability
 
   return (
     <div
@@ -14,24 +15,21 @@ export default function Hero({ data }) {
         data ? "fade-in" : "opacity-0"
       }`}
     >
-      {/* <div className={`w-full ${data?.children && data?.children.length > 0 ? 'md:w-[calc(100%-370px)]':'md:w-full'}`}> */}
       <div className={`w-full md:w-full`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)] md:max-h-[550px]">
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-white h-[250px] md:h-[calc(100vh-450px)] md:max-h-[550px]">
           {
             <Image
               src={useBanner}
               alt={data?.banner?.img?.alt ?? "Banner"}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               fill
               loading="eager"
               priority={true}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
             />
           }
-          {/* <RenderBanner img={useBanner} /> */}
           <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
             <div className="container text-center flex justify-center">
-              {/* <div className="px-[20px] py-[7px]"> */}
                 <div className="flex flex-col items-center justify-center w-full">
                   <div className="w-[90%]">
                     <h1 className="text-balance text-md tracking-wide text-white md:text-4xl drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] italic">
@@ -48,7 +46,6 @@ export default function Hero({ data }) {
             </div>
           </div>
         </div>
-      {/* </div> */}
     </div>
   );
 }
