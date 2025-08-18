@@ -50,14 +50,14 @@ const sac_contents = [
   {
     image: {
       src: "/images/home/elevate-your-fireplace.webp",
-      alt: "Modern-Fireplace-Designs-Img",
+      alt: "Outdoor kitchen island with grill and bar seating in a backyard",
     },
-    title: "Modern Fireplace Designs",
+    title: "How to Choose the Right Outdoor Kitchen Island for Your Backyard",
     content:
       "A modern fireplace can elevate your home, providing both warmth and a stylish focal point for family gatherings or quiet evenings. We offer a wide selection of fireplaces including wood-burning, gas, and electric.",
     button: {
-      label: "Shop All Fireplaces",
-      url: `${BASE_URL}/fireplaces`,
+      label: "Learn More",
+      url: `https://outdoorkitchenoutlet.com/blogs/general-information/best-custom-outdoor-kitchen`,
     },
   },
   {
@@ -65,12 +65,12 @@ const sac_contents = [
       src: "/images/home/clearance.webp",
       alt: "Outdoor-Kitchen-Deals-Img",
     },
-    title: "Outdoor Kitchen Deals",
+    title: "Name your budget",
     content:
-      "Create your dream backyard kitchen with top-of-the-line grills, BBQ islands, and all the essential accessories, all while taking advantage of great deals and savings.",
+      "On a budget, no problem. Create your dream backyard kitchen with top-of-the-line grills, BBQ islands, and all the essential accessories, all while taking advantage of great deals and savings. Expert standing by!",
     button: {
-      label: "Shop All Outdoor Kitchen Deals",
-      url: `${BASE_URL}/outdoor-kitchen`,
+      label: "Call now to Save",
+      url: `https://outdoorkitchenoutlet.com/pages/contact-us`,
     },
   },
 ];
