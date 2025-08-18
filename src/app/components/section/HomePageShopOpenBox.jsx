@@ -11,6 +11,7 @@ import ItemPrice from "@/app/components/atom/openBoxItemPrice";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
 import { useQuickView } from "@/app/context/quickview";
+import ProductCard from "@/app/components/atom/ProductCard";
 // const products = [
 //   {
 //     img: "/images/home/open-box/open-boxes-image-1.webp",
@@ -115,7 +116,7 @@ export default function HomePageShopOpenBox() {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
-        <SectionHeader text="Shop Open Box Blaze Products" />
+        <SectionHeader text="Shop Open Box" />
         <div className="text-xl md:text-4xl underline italic font-semibold font-bell"></div>
         <div className="flex flex-col md:flex-row gap-[10px] mt-5 min-h-[511px]">
           <Carousel breakpoints={carousel_breakpoints}>
@@ -123,9 +124,10 @@ export default function HomePageShopOpenBox() {
               products.map(({_source}, idx) => (
                 <div
                   key={`open-box-product-${idx}`}
-                  className="aspect-1 border w-full bg-[#f8f8f8]"
+                  className="border w-full bg-[#f8f8f8]"
                 >
-                  <div className="relative">
+                  <ProductCard hit={_source}/>
+                  {/* <div className="relative">
                     <div className="text-white bg-theme-600 absolute left-0 rounded-sm px-[15px] py-[5px] z-[1] font-medium">
                       {"Open Box"}
                     </div>
@@ -210,16 +212,15 @@ export default function HomePageShopOpenBox() {
                         fractions={2}
                         style={{ maxWidth: 80 }}
                       ></Rating>
-                      {/* <div className={``}>{i.reviews} Reviews</div> */}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               ))}
           </Carousel>
         </div>
         <div className="mt-5 text-center">
           <button className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-theme-600 hover:bg-theme-500 text-white font-bold cursor-pointer">
-            Shop All Open Box Blaze Products
+            Shop All Open Box
           </button>
         </div>
       </div>

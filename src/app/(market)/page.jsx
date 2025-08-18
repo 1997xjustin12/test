@@ -164,12 +164,12 @@ export default function HomePage({ params }) {
       <HomeHero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
+      <ShopOpenBoxSection />
       <AboutProductSection data={about_content} />
       <ReviewsSection />
-      <ShopCategorySection />
+      {/* <ShopCategorySection /> */}
       <GuidesAndInspirationSection />
-      <ShopOpenBoxSection />
-      <PartsAndAccessoriesSection />
+      {/* <PartsAndAccessoriesSection /> */}
       {/* <FrequentlyAskedSection faqs={faqs}/> */}
       <NewsLetterSection />
     </>

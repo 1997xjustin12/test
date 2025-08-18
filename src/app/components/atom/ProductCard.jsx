@@ -117,7 +117,7 @@ const ProductCard = ({ hit, page_details   }) => {
         </div>
         <div className="flex flex-col px-[15px] pt-[5px] border-t">
           <div
-            className="text-sm line-clamp-2 font-semibold text-stone-700"
+            className="text-sm min-h-[40px] line-clamp-2 font-semibold text-stone-700 hover:text-theme-600 hover:underline"
             title={hit.title}
           >
             {hit.title}
@@ -131,7 +131,7 @@ const ProductCard = ({ hit, page_details   }) => {
             ></Rating>
             {/* <div className={`text-[0.75rem]`}>git  */}
           </div>
-          <div className="mt-3">{hit.brand}</div>
+          <div className="mt-3 text-xs">{hit.brand}</div>
           <div className="mt-3">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <div className="font-medium text-[14px] text-stone-700">
