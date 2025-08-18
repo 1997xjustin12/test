@@ -1,10 +1,3 @@
-
-export const metadata = {
-  title: 'Shop Outdoor Kitchen Equipment | Solana BBQ Grills',
-  description: 'Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!',
-};
-
-
 // NPM
 import Image from "next/image";
 import Link from "next/link";
@@ -25,38 +18,42 @@ import YmalCarousel from "@/app/components/atom/YmalCarousel";
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
 // CONSTANTS
-const pathname = "solana-grills";
+const pathname = "solana-bbq-grills";
+export const metadata = {
+  title: 'Shop Outdoor Kitchen Equipment | Solana BBQ Grills',
+  description: 'Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!',
+};
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const feat_carousel_items = [
   {
     label: "Gas Grills and Smokers",
     img: "/images/home/categories/bbq-grills-and-smokers.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-grills`,
   },
   {
     label: "Outdoor Kitchen Storage",
     img: "/images/home/categories/outdoor-kitchen-storage.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-storage`,
   },
   {
     label: "Side Burners",
     img: "/images/home/categories/side-burners.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-side-burners`,
   },
   {
     label: "Outdoor Refrigeration",
     img: "/images/home/categories/outdoor-refrigeration.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-refrigeration`,
   },
   {
     label: "Accessories",
     img: "/images/home/categories/accessories.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-accessories`,
   },
   {
     label: "Covers",
     img: "/images/home/categories/covers.webp",
-    url: `${BASE_URL}/#`,
+    url: `${BASE_URL}/solana-covers`,
   },
 ];
 const sac_contents = [
@@ -193,12 +190,12 @@ const flattenNav = (navItems) => {
   return result;
 };
 // EXTENDED COMPONENT
-const Hero = ({ data }) => {
-  const useBanner =
-    !data?.banner?.img?.src || data?.banner?.img?.src === ""
-      ? "/images/banner/solana-home-hero.webp"
-      : data?.banner?.img?.src;
-
+const Hero = () => {
+  const useBanner = "/images/banner/home-banner.webp"
+ const data = {
+  title:"Grill Better for Less with Solana Outdoor Kitchen Equipments",
+  tag_line: "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
+ };
   return (
     <div
       className={`w-full mx-auto flex flex-col md:flex-row ${
@@ -210,7 +207,7 @@ const Hero = ({ data }) => {
           {
             <Image
               src={useBanner}
-              alt={data?.banner?.img?.alt ?? "Banner"}
+              alt={data?.title ?? "Banner"}
               className="w-full h-full object-cover"
               fill
               loading="eager"
@@ -223,12 +220,12 @@ const Hero = ({ data }) => {
               <div className="flex flex-col items-center justify-center w-full">
                 <div className="w-[90%]">
                   <h1 className="text-balance text-md tracking-wide text-white md:text-4xl drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] italic">
-                    {data?.banner?.title}
+                    {data?.title}
                   </h1>
                 </div>
                 <div className="w-[75%]">
                   <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-center">
-                    {data?.banner?.tag_line}
+                    {data?.tag_line}
                   </h2>
                 </div>
               </div>
@@ -440,13 +437,13 @@ const OuterKitchenAndAccessories = () => {
 
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
-  const menu = await getMenu();
+  // const menu = await getMenu();
 
-  const pageData = flattenNav(menu).find(({ url }) => url === pathname);
+  // const pageData = flattenNav(menu).find(({ url }) => url === pathname);
   return (
     <>
       <MobileLoader />
-      <Hero data={pageData} />
+      <Hero />
       <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
       <AboutProductSection data={about_content} />
