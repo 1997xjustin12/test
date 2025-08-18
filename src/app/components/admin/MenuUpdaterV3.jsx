@@ -255,7 +255,7 @@ function MenuUpdaterV3() {
       setActiveMenu(active_menu);
       // const selected_menu = active_menu ?? menu_list?.[0]?.key;
       // console.log("[TEST] selected_menu", selected_menu);
-      const selected_menu = "menu-2r175z2fj";
+      const selected_menu = defaultMenuKey;
       setSelectedMenu(selected_menu);
     });
   };
@@ -705,7 +705,7 @@ function MenuUpdaterV3() {
     updateMenuList();
     // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
     // redisGet(defaultMenuKey).then((data) => {
-    redisGet("menu-2r175z2fj").then((data) => {
+    redisGet(defaultMenuKey).then((data) => {
       // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
 
       const nav_data = mapTreeWithId([

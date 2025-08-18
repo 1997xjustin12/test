@@ -25,6 +25,10 @@ export const keys = {
   },
   dev_shopify_menu:{
     description:"menu for development environment",
+    value: "menu-5q8vn2rcy",
+  },
+  dev_shopify_menu_v2:{
+    description:"menu for development environment v2",
     value:"menu-2r175z2fj",
   },
   active_menu:{

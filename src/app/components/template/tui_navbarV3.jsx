@@ -110,7 +110,7 @@ export default function TuiNavbar({ logo, menu }) {
       return;
     }
 
-    if (["New Arrivals"].includes(menu_item?.name)) {
+    if (["New Arrivals", "Open Box", "Current Deals"].includes(menu_item?.name)) {
       window.location.href = BASE_URL + `/${menu_item?.url}`;
       return;
     }
@@ -169,7 +169,7 @@ export default function TuiNavbar({ logo, menu }) {
   };
 
   useEffect(() => {
-    // console.log("tui_navbar", menu);
+    console.log("[TEST MENU] menu", menu);
     const injectedMenu = addLinksProperty(menu)
       .filter((i) => i.nav_visibility === true)
       .sort((a, b) => a.order - b.order);
@@ -254,7 +254,7 @@ export default function TuiNavbar({ logo, menu }) {
                     navigation.map((i, index) => (
                       <div
                         key={`parent-nav-${index}`}
-                        className={`group py-[5px] px-[10px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center border-b ${
+                        className={`group py-[5px] px-[10px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center ${
                           i.url === ParentSlug ? "bg-theme-600 text-white" : ""
                         }
                         ${i.url === expandedMenu?.url ? "bg-white" : ""}`}
@@ -282,18 +282,36 @@ export default function TuiNavbar({ logo, menu }) {
                         }
                         `}
                             >
-                              <div>{i.name}</div> 
-                              {
-                                i?.children?.length > 0 &&
+                              <div>{i.name}</div>
+                              {i?.children?.length > 0 && (
                                 <>
-                                  {
-                                    expandedMenu?.name !== i?.name ?
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 10l5 5l5-5z"/></svg>
-                                    :
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 15l5-5l5 5z"/></svg>
-                                  }
+                                  {expandedMenu?.name !== i?.name ? (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="m7 10l5 5l5-5z"
+                                      />
+                                    </svg>
+                                  ) : (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        fill="currentColor"
+                                        d="m7 15l5-5l5 5z"
+                                      />
+                                    </svg>
+                                  )}
                                 </>
-                              }
+                              )}
                             </div>
                           )}
                         </button>
@@ -363,13 +381,17 @@ export default function TuiNavbar({ logo, menu }) {
                                 {col.map((sublink) => (
                                   <div
                                     className="py-3"
-                                    key={`sublink-col-${index}-${sublink?.slug}`}
+                                    key={`sublink-col-${index}-${sublink?.url}`}
                                   >
                                     <Link
                                       prefetch={false}
                                       href={`${BASE_URL}/${sublink?.url}`}
                                       onClick={handleLinkClick}
-                                      className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${sublink?.nav_type === "custom_page" ? "line-through":""}`}
+                                      className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${
+                                        sublink?.nav_type === "custom_page"
+                                          ? "line-through"
+                                          : ""
+                                      }`}
                                     >
                                       {sublink?.name}
                                     </Link>
@@ -382,7 +404,12 @@ export default function TuiNavbar({ logo, menu }) {
                                               prefetch={false}
                                               onClick={handleLinkClick}
                                               href={`${BASE_URL}/${child?.url}`}
-                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type === "custom_page" ? "line-through":""}`}
+                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${
+                                                child?.nav_type ===
+                                                "custom_page"
+                                                  ? "line-through"
+                                                  : ""
+                                              }`}
                                               key={`sublink-col-${index}-${sublink?.slug}-${child?.slug}`}
                                             >
                                               {child?.name}
@@ -437,7 +464,12 @@ export default function TuiNavbar({ logo, menu }) {
                                               prefetch={false}
                                               onClick={handleLinkClick}
                                               href={`${BASE_URL}/${child?.url}`}
-                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${child?.nav_type ==="custom_page"? "line-through":""}`}
+                                              className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${
+                                                child?.nav_type ===
+                                                "custom_page"
+                                                  ? "line-through"
+                                                  : ""
+                                              }`}
                                               key={`sublink-col-${index}-${sublink?.slug}-${child?.slug}`}
                                             >
                                               {child?.name}
