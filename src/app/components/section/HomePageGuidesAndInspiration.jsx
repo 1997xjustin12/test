@@ -34,40 +34,36 @@ export default function HomePageGuidesAndInspiration() {
         <SectionHeader text="Fireplaces How-To Guides & Inspiration" />
         <div className="flex flex-col lg:flex-row gap-[20px] mt-5">
           {blogs.map((i, idx) => (
-            <div key={`blog-${idx}`} className="w-full group hover:shadow">
+            <div key={`blog-${idx}`} className="w-full group hover:shadow-lg border border-neutral-300 rounded-lg hover:border-neutral-500 overflow-hidden">
               <div className="relative bg-green-400">
                 <div
-                  className={`font-medium text-sm md:text-base z-[1] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}>
+                  className={`font-medium text-sm md:text-base z-[1] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}
+                >
                   {i.tag}
                 </div>
                 <div className="aspect-w-3 aspect-h-2 bg-stone-800">
-                  {
-                    // <img
-                    //   src={i.img}
-                    //   alt={i.title}
-                    //   className={`object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500`}
-                    // />
+                  {i?.img && (
                     <Image
                       src={i.img}
                       alt={`${i.title}-image`}
                       className="object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500"
-                      // fill
                       width={1000}
                       height={0}
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-
-                      // loading="eager"
-                      // priority={false}
                     />
-                  }
+                  )}
                 </div>
               </div>
-              <div className="py-[15px] flex flex-col gap-[20px] group-hover:px-[15px] transition-all duration-500">
-                <div className="group-hover:underline text-lg md:text-2xl  font-bold md:font-normal font-bell transition-all duration-300">
-                  {i.title}
+              <div className="py-[15px] flex flex-col gap-[20px] transition-all duration-500">
+                <div className="flex flex-col gap-[15px] h-[150px]">
+                  <div className="px-2 group-hover:underline font-normal font-libre transition-all duration-300 italic text-center h-[52px] line-clamp-2">
+                    <h3>{i.title}</h3>
+                  </div>
+                  <div className="text-sm md:text-base h-[72px] line-clamp-3 px-2">
+                    {i.content}
+                  </div>
                 </div>
-                <div className="text-sm md:text-base">{i.content}</div>
-                <div className="text-sm md:text-base underline font-bold text-right">
+                <div className="text-sm md:text-base underline font-bold text-right px-4">
                   LEARN MORE
                 </div>
               </div>
