@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Store-Domain': "https://solanafireplaces.com/"
+        'X-Store-Domain': "https://solanafireplaces.com"
       },
       body: JSON.stringify(req.body),
     });
