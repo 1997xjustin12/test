@@ -546,7 +546,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
       <div className="border-t border-gray-300 my-4"></div>
       Product Display Collection
       <div className="text-sm italic text-neutral-600">Select a collection</div>
-      <div className="flex gap-[10px] relative min-h-[26px]">
+      <div className="flex gap-[10px] relative min-h-[26px] flex-wrap">
         {
           fetchStatus === "fetching" && <div className="absolute">Loading...</div>
         }
@@ -563,7 +563,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
       <div className="text-sm italic text-neutral-600">Select a filter type</div>
       <div className="flex gap-[10px] relative min-h-[26px]">
         {
-          filter_types.map((item, index)=> <button key={`filter-type-option-${item.replaceAll(" ","-").toLowerCase()}-${index}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.filter_type === item ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"filter-type", value: item.replaceAll(" ","-").toLowerCase()}})}>{item}</button>)
+          filter_types.map((item, index)=> <button key={`filter-type-option-${item.replaceAll(" ","-").toLowerCase()}-${index}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.filter_type === item.replaceAll(" ","-").toLowerCase() ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"filter-type", value: item.replaceAll(" ","-").toLowerCase()}})}>{item}</button>)
         }
       </div>
       <div></div>
