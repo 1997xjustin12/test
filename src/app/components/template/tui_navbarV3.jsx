@@ -176,8 +176,9 @@ export default function TuiNavbar({ logo, menu }) {
   useEffect(() => {
     // console.log("[TEST MENU] menu", menu);
     const injectedMenu = addLinksProperty(menu)
-      .filter((i) => i.nav_visibility === true)
-      .sort((a, b) => a.order - b.order);
+      .filter((i) => i?.nav_visibility === true)
+      .filter((i) => i?.name !== "Brands")
+      .sort((a, b) => a?.order - b?.order);
     setNavigation(injectedMenu);
     setActiveMenu(injectedMenu);
   }, [menu]);
