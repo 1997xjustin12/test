@@ -394,7 +394,7 @@ export default function TuiNavbar({ logo, menu }) {
                                       href={`${BASE_URL}/${sublink?.url}`}
                                       onClick={handleLinkClick}
                                       className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${
-                                        sublink?.nav_type === "custom_page"
+                                        (sublink?.nav_type === "custom_page" && !sublink?.collection_display)
                                           ? "line-through"
                                           : ""
                                       }`}

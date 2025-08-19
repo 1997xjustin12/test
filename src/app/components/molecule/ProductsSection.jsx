@@ -30,105 +30,105 @@ const filters = [
     attribute: "brand",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
+    filter_type: ["grills", "fireplaces", "firepits", "Search"],
   },
   {
     label: "configuration",
     attribute: "configuration",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "number of burners",
     attribute: "no_of_burners",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "price",
     attribute: "price",
     searchable: false,
     type: "RangeInput",
-    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
+    filter_type: ["grills", "fireplaces", "firepits", "Search"],
   },
   {
     label: "lights",
     attribute: "grill_lights",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "size",
     attribute: "size",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Rear Infrared Burner",
     attribute: "rear_infrared_burner",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Cut-Out Width",
     attribute: "cut_out_width",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Cut-Out Depth",
     attribute: "cut_out_depth",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Cut-Out Height",
     attribute: "cut_out_height",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Made In USA",
     attribute: "made_in_usa",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills", "Fireplaces", "Firepits", "Search"],
+    filter_type: ["grills", "fireplaces", "firepits", "Search"],
   },
   {
     label: "Material",
     attribute: "material",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Thermometer",
     attribute: "thermometer",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Rotisserie Kit",
     attribute: "rotisserie_kit",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
   {
     label: "Gas Type",
     attribute: "gas_type",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["Grills"],
+    filter_type: ["grills"],
   },
 ];
 
@@ -197,7 +197,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
 
-  console.log("[TEST] page_details", page_details);
 
   useEffect(() => {
     setLoadHint((prev) => {

@@ -25,24 +25,29 @@ const feat_carousel_items = [
     url: `${BASE_URL}/fireplaces`,
   },
   {
-    label: "Fire Pits",
-    img: "/images/home/categories/firepits.webp",
-    url: `${BASE_URL}/fire-pits`,
+    label: "Patio Heaters",
+    img: "/images/feature/patio-heaters-1.webp",
+    url: `${BASE_URL}/patio-heaters`,
   },
   {
-    label: "Chimney",
-    img: "/images/home/categories/chimney.webp",
-    url: `${BASE_URL}/chimney`,
+    label: "Built-In Grills",
+    img: "/images/feature/built-in-grills.webp",
+    url: `${BASE_URL}/built-in-grills`,
   },
   {
-    label: "Gas Logs",
-    img: "/images/home/categories/gas_logs.webp",
-    url: `${BASE_URL}/gas-logs`,
+    label: "Freestanding Grills",
+    img: "/images/feature/freestanding-grills.webp",
+    url: `${BASE_URL}/freestanding-grills`,
   },
   {
-    label: "Clearance",
+    label: "Open Box",
+    img: "/images/feature/open-box.webp",
+    url: `${BASE_URL}/open-box`,
+  },
+  {
+    label: "Current Deals",
     img: "/images/home/categories/clearance.webp",
-    url: `${BASE_URL}/on-sale`,
+    url: `${BASE_URL}/brand/eloquence`,
   },
 ];
 
