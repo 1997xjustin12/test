@@ -110,8 +110,13 @@ export default function TuiNavbar({ logo, menu }) {
       return;
     }
 
-    if (["New Arrivals", "Open Box", "Current Deals"].includes(menu_item?.name)) {
+    if (["New Arrivals"].includes(menu_item?.name)) {
       window.location.href = BASE_URL + `/${menu_item?.url}`;
+      return;
+    }
+
+    if(menu_item?.name === "Current Deals"){
+      window.location.href = BASE_URL + `/brand/eloquence`;
       return;
     }
 
@@ -169,7 +174,7 @@ export default function TuiNavbar({ logo, menu }) {
   };
 
   useEffect(() => {
-    console.log("[TEST MENU] menu", menu);
+    // console.log("[TEST MENU] menu", menu);
     const injectedMenu = addLinksProperty(menu)
       .filter((i) => i.nav_visibility === true)
       .sort((a, b) => a.order - b.order);
