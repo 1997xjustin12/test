@@ -10,7 +10,7 @@ function ExtrasHeader() {
         {name: "Why Buy From The Expert In Fire?", url:""},
     ]
   return (
-    <div className="hidden lg:block bg-theme-500 py-[8px] px-[30px] text-white">
+    <div className="hidden lg:block bg-orange-500 py-[8px] px-[30px] text-white">
       <div className="container mx-auto  flex items-center justify-between">
         <div className="flex justify-between w-full">
             {
