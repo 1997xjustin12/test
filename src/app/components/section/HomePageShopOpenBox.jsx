@@ -124,96 +124,9 @@ export default function HomePageShopOpenBox() {
               products.map(({_source}, idx) => (
                 <div
                   key={`open-box-product-${idx}`}
-                  className="border w-full bg-[#f8f8f8]"
+                  className="w-full"
                 >
                   <ProductCard hit={_source}/>
-                  {/* <div className="relative">
-                    <div className="text-white bg-theme-600 absolute left-0 rounded-sm px-[15px] py-[5px] z-[1] font-medium">
-                      {"Open Box"}
-                    </div>
-                    <div
-                      className={`${
-                        _source?.variants?.[0].price <
-                        (_source?.variants?.[0]?.compare_at_price ||
-                          _source?.variants?.[0]?.price)
-                          ? "visible"
-                          : "invisible"
-                      } text-white bg-theme-600 absolute left-[10px] bottom-[3px] rounded-sm px-[15px] py-[5px] z-[1] font-medium`}
-                    >
-                      {"SALE"}
-                    </div>
-                    <div className="relative aspect-1 flex justify-center">
-                      {
-                        // <img src={i.img} alt={i.name} />
-                        _source?.images && _source?.images?.length > 0 && 
-                        <Image
-                          src={_source.images.find((img) => img.position === 1)?.src}
-                          alt={`${createSlug(_source?.title)}-image`}
-                          className="w-full h-full object-contain"
-                          width={500}
-                          height={500}
-                          // loading="eager"
-                          priority={false}
-                        />
-                      }
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center py-[10px]">
-                    <button
-                      onClick={(e) => handleQuickViewClick(e, _source)}
-                      className="rounded-full border-[2px] border-theme-500 px-[15px] py-[3px] text-theme-700 font-bold cursor-pointer"
-                    >
-                      Quickview
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-[5px] p-[10px]">
-                    <div className="h-[45px]">
-                      <div className="line-clamp-2 font-bold">{_source?.title}</div>
-                    </div>
-                    <div
-                      className={`text-theme-700 text-sm font-bold ${
-                        _source?.free_shipping ? "visible" : "invisible"
-                      }`}
-                    >
-                      Free Shipping
-                    </div>
-                    <div className="text-stone-700 underline text-sm">
-                      {_source?.brand}
-                    </div>
-                    <div className="text-sm">
-                      <ItemPrice
-                        sale_price={_source?.variants?.[0]?.price}
-                        original_price={
-                          _source?.variants?.[0]?.compare_at_price ||
-                          _source?.variants?.[0]?.price
-                        }
-                      />
-                    </div>
-                    <div
-                      className={`flex items-center gap-[3px] ${
-                        (parseInt(
-                          String(_source?.ratings?.rating_count || "").replace(
-                            /^'+|'+$/g,
-                            ""
-                          )
-                        ) || 0) !== 0
-                          ? "visible"
-                          : "invisible"
-                      }`}
-                    >
-                      <Rating
-                        readOnly
-                        value={(parseInt(
-                          String(_source?.ratings?.rating_count || "").replace(
-                            /^'+|'+$/g,
-                            ""
-                          )
-                        ) || 0)}
-                        fractions={2}
-                        style={{ maxWidth: 80 }}
-                      ></Rating>
-                    </div>
-                  </div> */}
                 </div>
               ))}
           </Carousel>
