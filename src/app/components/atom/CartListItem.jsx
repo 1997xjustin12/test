@@ -29,6 +29,11 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   };
 
   const handleCount = (item, increment) => {
+    if(!increment && item?.count === 1){
+      // trigger remove item
+      handleRemoveItem(item);
+      return;
+    }
     onItemCountUpdate({ product: item, increment: increment });
   };
 
@@ -168,7 +173,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
                 </div>
               )}
           </div>
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <button
               onClick={() => handleRemoveItem(item)}
               type="button"
@@ -193,7 +198,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
               </svg>
               Remove
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

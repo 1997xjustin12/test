@@ -4,6 +4,7 @@ import { useCart } from "@/app/context/cart";
 import { formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import CheckoutButtons from "@/app/components/atom/CheckoutButtons"
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
 
@@ -128,10 +129,11 @@ function CartOrderSummary() {
 
             <dl className="flex items-center justify-between gap-4">
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
-                Store Pickup
+                Shipping
               </dt>
-              <dd className="text-base font-medium text-gray-900 dark:text-white">
-                ${formatPrice(deliveryOption)}
+              <dd className="text-base font-medium dark:text-white text-green-600">
+                {/* ${formatPrice(deliveryOption)} */}
+                FREE
               </dd>
             </dl>
 
@@ -161,7 +163,7 @@ function CartOrderSummary() {
         >
           Proceed to Checkout
         </button>
-
+        {/* <CheckoutButtons /> */}
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
             {" "}
