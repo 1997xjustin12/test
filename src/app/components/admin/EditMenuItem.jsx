@@ -652,6 +652,9 @@ const FeatNav = ({ menuItem, onChange }) => {
               className="w-[200px] flex flex-col gap-[10px]"
               key={`feat-nav-rep-${nav_item?.slug}-${index}`}
             >
+              <div className="flex w-full justify-center">
+               <button onClick={() => handleOptionClick(nav_item)} className="rounded-full bg-slate-700 text-white uppercase text-xs py-1 px-3">remove</button>
+              </div>
               <div className="aspect-1 bg-white relative">
                 {nav_item?.feature_image && (
                   <Image
