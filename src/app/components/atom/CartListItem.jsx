@@ -10,8 +10,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   useEffect(() => {
     if (item) {
       setThumbnail((prev) => {
-        return item.images.find(({ position }) => position===1)
-          ?.src;
+        return item.images.find(({ position }) => position === 1)?.src;
       });
     }
   }, [item]);
@@ -30,10 +29,21 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   };
 
   const handleCount = (item, increment) => {
-    onItemCountUpdate({product:item, increment:increment})
+    onItemCountUpdate({ product: item, increment: increment });
+  };
+
+  function getDiscountPercentage(originalPrice, currentPrice) {
+    if (!originalPrice || originalPrice <= 0) return 0;
+    const discount = ((originalPrice - currentPrice) / originalPrice) * 100;
+    return Math.round(discount);
   }
 
-  
+  function getSavings(originalPrice, currentPrice) {
+    if (!originalPrice || originalPrice <= 0) return 0;
+    const savings = originalPrice - currentPrice;
+    return savings > 0 ? savings : 0;
+  }
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
@@ -53,7 +63,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
         <div className="flex items-center justify-between md:order-3 md:justify-end">
           <div className="flex items-center">
             <button
-              onClick={()=> handleCount(item, false)}
+              onClick={() => handleCount(item, false)}
               type="button"
               id="decrement-button"
               data-input-counter-decrement="counter-input"
@@ -87,7 +97,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
               required
             />
             <button
-              onClick={()=> handleCount(item,true)}
+              onClick={() => handleCount(item, true)}
               type="button"
               id="increment-button"
               data-input-counter-increment="counter-input"
@@ -111,9 +121,22 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             </button>
           </div>
           <div className="text-end md:order-4 md:w-32">
-            <p className="text-base font-bold text-gray-900 dark:text-white">
+            <div className="text-base font-bold text-gray-900 dark:text-white">
               ${formatPrice(item?.variants?.[0]?.price * item?.count)}
-            </p>
+            </div>
+            {Number(item?.variants?.[0]?.compare_at_price) > 0 && (
+              <div className="w-full flex justify-end">
+                  <div className="font-semibold text-green-700 dark:text-white text-xs border border-green-700 px-[2px]">
+                    SAVE $
+                    {formatPrice(
+                      getSavings(
+                        item?.variants?.[0]?.compare_at_price,
+                        item?.variants?.[0]?.price
+                      ) * item?.count
+                    )}
+                  </div>
+              </div>
+              )}
           </div>
         </div>
 
@@ -125,6 +148,26 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             {item?.title}
           </a>
 
+          <div className="flex items-center gap-[20px]">
+            {Number(item?.variants?.[0]?.compare_at_price) > 0 && (
+              <div className="line-through font-medium">
+                ${formatPrice(item?.variants?.[0]?.compare_at_price)}
+              </div>
+            )}
+            <div className="font-medium text-green-700">
+              ${formatPrice(item?.variants?.[0]?.price)}
+            </div>
+            {Number(item?.variants?.[0]?.compare_at_price) > 0 &&
+              Number(item?.variants?.[0]?.price) > 0 && (
+                <div className="font-medium text-red-700">
+                  {getDiscountPercentage(
+                    item?.variants?.[0]?.compare_at_price,
+                    item?.variants?.[0]?.price
+                  )}
+                  % off
+                </div>
+              )}
+          </div>
           <div className="flex items-center gap-4">
             <button
               onClick={() => handleRemoveItem(item)}

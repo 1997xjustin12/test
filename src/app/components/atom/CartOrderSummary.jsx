@@ -38,7 +38,6 @@ function CartOrderSummary() {
     //   return acc;
     // }, []);
 
-    
     // const line_items = formattedCart.map((item)=> ({product_id: item?.variants?.[0]?.sku, quantity: item?.count}));
 
     // console.log("[TEST] line_items", line_items);
@@ -68,12 +67,17 @@ function CartOrderSummary() {
   };
 
   const getPriceSum = (items) => {
-    return items.reduce((sum, item) => sum + item?.variants?.[0].price, 0)
-  }
+    return items.reduce((sum, item) => sum + item?.variants?.[0].price, 0);
+  };
 
   const getOriginalPriceSum = (items) => {
-    return items.reduce((sum, item) => sum + (item?.variants?.[0].compare_at_price || item?.variants?.[0].price), 0)
-  }
+    return items.reduce(
+      (sum, item) =>
+        sum +
+        (item?.variants?.[0].compare_at_price || item?.variants?.[0].price),
+      0
+    );
+  };
 
   const cartTotal = useMemo(() => {
     if (cartItems.length > 0) {
@@ -95,18 +99,20 @@ function CartOrderSummary() {
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
+      <div className=" border-green-700 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 rounded-lg bg-green-300 border font-extrabold sm:p-6 italic">
+          You are saving ${formatPrice(savings)} plus Free Shipping
+      </div>
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <p className="text-xl font-semibold text-gray-900 dark:text-white">
           Order summary
         </p>
-
         <div className="space-y-4">
           <div className="space-y-2">
             <dl className="flex items-center justify-between gap-4">
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Original price
               </dt>
-              <dd className="text-base font-medium text-gray-900 dark:text-white">
+              <dd className="text-base font-semibold text-gray-900 dark:text-white">
                 ${formatPrice(originalPrice)}
               </dd>
             </dl>
@@ -115,8 +121,8 @@ function CartOrderSummary() {
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Savings
               </dt>
-              <dd className="text-base font-medium text-green-600">
-                -${formatPrice(savings)}
+              <dd className="text-base font-semibold text-green-600">
+                ${formatPrice(savings)}
               </dd>
             </dl>
 
@@ -133,8 +139,8 @@ function CartOrderSummary() {
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Tax
               </dt>
-              <dd className="text-base font-medium text-gray-900 dark:text-white">
-                ${formatPrice(tax)}
+              <dd className="text-xs italic text-gray-400 dark:text-white">
+                Sales Tax Calculated at Checkout
               </dd>
             </dl>
           </div>
