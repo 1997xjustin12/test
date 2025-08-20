@@ -165,11 +165,11 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             {Number(item?.variants?.[0]?.compare_at_price) > 0 &&
               Number(item?.variants?.[0]?.price) > 0 && (
                 <div className="font-medium text-red-700">
-                  {getDiscountPercentage(
+                  <span className="italic">{getDiscountPercentage(
                     item?.variants?.[0]?.compare_at_price,
                     item?.variants?.[0]?.price
                   )}
-                  % off
+                  %</span> off
                 </div>
               )}
           </div>
