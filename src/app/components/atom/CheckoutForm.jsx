@@ -211,67 +211,6 @@ export default function CheckoutForm({ onChange }) {
         Form
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Status */}
-        {/* <div>
-          <label className="block" htmlFor="status">
-            Status
-          </label>
-          <select
-            name="status"
-            value={form.status || ""}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          >
-            <option value="">Select status</option>
-            <option value="pending">Pending</option>
-            <option value="paid">Paid</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="refunded">Refunded</option>
-          </select>
-          {errors.status && (
-            <p className="text-red-500 text-sm">{errors.status}</p>
-          )}
-        </div> */}
-
-        {/* Payment Method */}
-        {/* <div>
-          <label className="block" htmlFor="payment_method">
-            Payment Method
-          </label>
-          <select
-            name="payment_method"
-            value={form.payment_method || ""}
-            onChange={handleChange}
-            className="border p-2 w-full"
-          >
-            <option value="">Select method</option>
-            <option value="cod">Cash on Delivery</option>
-            <option value="paypal">Paypal</option>
-            <option value="stripe">Stripe</option>
-            <option value="gcash">GCash</option>
-          </select>
-          {errors.payment_method && (
-            <p className="text-red-500 text-sm">{errors.payment_method}</p>
-          )}
-        </div> */}
-
-        {/* Payment Status */}
-        {/* <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="payment_status"
-            checked={form.payment_status}
-            onChange={handleChange}
-            className="mr-2"
-          />
-          <label htmlFor="payment_status">Payment Status</label>
-        </div>
-        {errors.payment_status && (
-          <p className="text-red-500 text-sm">{errors.payment_status}</p>
-        )} */}
-
         {/* Billing Fields */}
         <h2>Billing</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -311,7 +250,12 @@ export default function CheckoutForm({ onChange }) {
                     </svg>
                   </span>
                 )}
-                {field.replace("billing_", "").replaceAll("_", " ")}
+                {
+                  field === "billing_province" ? 
+                  "State"
+                  :
+                  field.replace("billing_", "").replaceAll("_", " ")
+                }
               </label>
               <input
                 id={field}
@@ -382,7 +326,13 @@ export default function CheckoutForm({ onChange }) {
                     </svg>
                   </span>
                 )}
-                {field.replace("shipping_", "").replaceAll("_", " ")}
+                
+                {
+                  field === "shipping_province" ? 
+                  "Shipping State"
+                  :
+                  field.replace("billing_", "").replaceAll("_", " ")
+                }
               </label>
               <input
                 id={field}
@@ -393,9 +343,6 @@ export default function CheckoutForm({ onChange }) {
                 className="border p-2 w-full"
                 disabled={sameAsBilling}
               />
-              {/* {errors[field] && (
-                <p className="text-red-500 text-sm">{errors[field]}</p>
-              )} */}
             </div>
           ))}
         </div>
@@ -415,15 +362,6 @@ export default function CheckoutForm({ onChange }) {
             <p className="text-red-500 text-sm">{errors.notes}</p>
           )}
         </div>
-
-        {/* Submit */}
-        {/* <button
-          type="submit"
-          disabled={submitting}
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          {submitting ? "Submitting..." : "Submit"}
-        </button> */}
       </form>
     </div>
   );
