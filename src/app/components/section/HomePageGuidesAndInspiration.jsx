@@ -1,7 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import SectionHeader from "../atom/SectionHeader";
+import { BASE_URL } from "@/app/lib/helpers";
 const blogs = [
   {
+    url:`${BASE_URL}/blogs/fireplace-ideas`,
     title: "Fireplace Ideas",
     img: "/images/home/blogs/fireplace-ideas.webp",
     tag: "Inspiration Guide",
@@ -10,6 +13,7 @@ const blogs = [
       "Explore the most popular fireplace design styles and features to help you choose the perfect one for your home.",
   },
   {
+    url: `${BASE_URL}/blogs/fireplace-tv-stand-guide`,
     title: "How to Choose a Fireplace TV Stand",
     img: "/images/home/blogs/fireplace-tv-stand.webp",
     tag: "Buying Guide",
@@ -18,6 +22,7 @@ const blogs = [
       "Learn how to choose a fireplace TV stand, where to place it and make it fit seamlessly into your current decor.",
   },
   {
+    url: `${BASE_URL}/blogs/types-of-fireplace-mantels-a-complete-guide`,
     title: "Types of Fireplaces & Mantels",
     img: "/images/home/blogs/types-of-fireplaces.webp",
     tag: "Buying Guide",
@@ -34,7 +39,7 @@ export default function HomePageGuidesAndInspiration() {
         <SectionHeader text="Fireplaces How-To Guides & Inspiration" />
         <div className="flex flex-col lg:flex-row gap-[20px] mt-5">
           {blogs.map((i, idx) => (
-            <div key={`blog-${idx}`} className="w-full group hover:shadow-lg border border-neutral-300 rounded-lg hover:border-neutral-500 overflow-hidden">
+            <Link prefetch={false} href={i?.url} key={`blog-${idx}`} className="w-full group hover:shadow-lg border border-neutral-300 rounded-lg hover:border-neutral-500 overflow-hidden">
               <div className="relative bg-green-400">
                 <div
                   className={`font-medium text-sm md:text-base z-[1] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}
@@ -67,7 +72,7 @@ export default function HomePageGuidesAndInspiration() {
                   LEARN MORE
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
