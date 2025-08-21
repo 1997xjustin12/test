@@ -116,7 +116,7 @@ export default function TuiNavbar({ logo, menu }) {
     }
 
     if(menu_item?.name === "Current Deals"){
-      window.location.href = BASE_URL + `/brand/eloquence`;
+      window.location.href = BASE_URL + `/eloquence`;
       return;
     }
 

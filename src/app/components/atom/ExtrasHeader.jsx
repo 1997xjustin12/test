@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 function ExtrasHeader() {
     const extrasLinks = [
-        {name: "Promotions", url:`${BASE_URL}/brand/eloquence`},
+        {name: "Promotions", url:`${BASE_URL}/eloquence`},
         {name: "Learning Center", url:" https://outdoorkitchenoutlet.com/blogs/general-information"},
         {name: "Professional Program", url:"https://outdoorkitchenoutlet.com/pages/contractor-program"},
         {name: "Order Status", url:" https://outdoorkitchenoutlet.com/pages/contact-us"},
