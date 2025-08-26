@@ -116,7 +116,7 @@ export default function HomePageShopOpenBox() {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
-        <SectionHeader text="Shop Open Box" />
+        <SectionHeader text="Shop All Open Box" />
         <div className="text-xl md:text-4xl underline italic font-semibold font-bell"></div>
         <div className="flex flex-col md:flex-row gap-[10px] mt-5 min-h-[511px]">
           <Carousel breakpoints={carousel_breakpoints}>
