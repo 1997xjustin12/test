@@ -5,7 +5,7 @@ function ExtrasHeader() {
         {name: "Promotions", url:`https://outdoorkitchenoutlet.com/collections/eloquence-1`},
         {name: "Learning Center", url:" https://outdoorkitchenoutlet.com/blogs/general-information"},
         {name: "Professional Program", url:"https://outdoorkitchenoutlet.com/pages/contractor-program"},
-        {name: "Order Status", url:" https://outdoorkitchenoutlet.com/pages/contact-us"},
+        {name: "Support", url:" https://outdoorkitchenoutlet.com/pages/contact-us"},
         // {name: "Why Buy From The Expert In Fire?", url:""},
     ]
   return (
