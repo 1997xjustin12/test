@@ -85,10 +85,14 @@ export const CartProvider = ({ children }) => {
       console.log("[syncCartToCookie] cart", cart);
 
       // Save to cookie (client + server readable)
-      Cookies.set("cart", JSON.stringify(cart.map(({product_id})=> product_id)), {
-        path: "/",
-        sameSite: "lax", // works cross-page, avoids blocking
-      });
+      Cookies.set(
+        "cart",
+        JSON.stringify(cart.map(({ product_id }) => product_id)),
+        {
+          path: "/",
+          sameSite: "lax", // works cross-page, avoids blocking
+        }
+      );
       // Verify
       const cart_check = JSON.parse(Cookies.get("cart") || "[]");
       console.log("[Cookie check]", cart_check);
@@ -191,6 +195,24 @@ export const CartProvider = ({ children }) => {
     setAddedToCart(null);
   };
 
+  const fetchOrderTotal = async (orderData) => {
+    try {
+      const response = await fetch("/api/get-total", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("Frontend Fetch Error:", error);
+      return { success: false, message: error.message };
+    }
+  };
+
   const formattedCart = useMemo(() => {
     if (cartItems.length === 0) {
       return [];
@@ -221,11 +243,12 @@ export const CartProvider = ({ children }) => {
         decreaseProductQuantity,
         removeCartItem,
         updateCart,
+        fetchOrderTotal,
         addToCartLoading,
       }}
     >
       {children}
-      <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart}/>
+      <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
     </CartContext.Provider>
   );
 };
