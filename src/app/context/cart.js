@@ -197,7 +197,7 @@ export const CartProvider = ({ children }) => {
 
   const fetchOrderTotal = async (orderData) => {
     try {
-      const response = await fetch("/api/get-total", {
+      const response = await fetch("/api/orders/get-total", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

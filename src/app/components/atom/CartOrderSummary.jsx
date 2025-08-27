@@ -1,16 +1,16 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/cart";
 import { formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import CheckoutButtons from "@/app/components/atom/CheckoutButtons"
+import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-function CartOrderSummary() {
+function CartOrderSummary({ cartTotal, checkoutButton = true }) {
   const router = useRouter();
   const { cartItems, formattedCart } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
@@ -28,43 +28,6 @@ function CartOrderSummary() {
     }
 
     window.location.href = `${BASE_URL}/checkout`;
-
-    // const line_items = cartItems.reduce((acc, item) => {
-    //   const found = acc.find((i) => i.product_id === item.id);
-    //   if (found) {
-    //     found.quantity += 1;
-    //   } else {
-    //     acc.push({ product_id: item.id, quantity: 1 });
-    //   }
-    //   return acc;
-    // }, []);
-
-    // const line_items = formattedCart.map((item)=> ({product_id: item?.variants?.[0]?.sku, quantity: item?.count}));
-
-    // console.log("[TEST] line_items", line_items);
-
-    // try {
-    //   const response = await fetch("/api/create-cart", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ line_items }),
-    //   });
-
-    //   const data = await response.json();
-    //   console.log(data);
-
-    //   if (data?.checkout_url) {
-    //     window.location.href = data.checkout_url;
-    //   } else {
-    //     alert("Failed to create cart or get checkout URL.");
-    //     console.error(data);
-    //   }
-    // } catch (error) {
-    //   console.error("Checkout failed:", error);
-    //   alert("Something went wrong while processing checkout.");
-    // }
   };
 
   const getPriceSum = (items) => {
@@ -80,7 +43,7 @@ function CartOrderSummary() {
     );
   };
 
-  const cartTotal = useMemo(() => {
+  useEffect(() => {
     if (cartItems.length > 0) {
       const _originalPrice = getOriginalPriceSum(cartItems);
       const _salePrice = getPriceSum(cartItems);
@@ -92,20 +55,17 @@ function CartOrderSummary() {
       setSavings(_savings);
       setDeliveryOption(_deliveryOption);
       setTax(_tax);
-      return _salePrice + _deliveryOption + _tax;
-    } else {
-      return 0;
     }
   }, [cartItems]);
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-      {
-        Number(savings) > 0 && 
-        <div className=" border-green-700 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 rounded-lg bg-green-300 border font-extrabold sm:p-6 italic">
-          You are saving ${formatPrice(savings)} plus Free Shipping
-      </div>
-      }
+      {Number(savings) > 0 && (
+        <div className=" border-green-700 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 rounded-lg bg-green-300 border font-extrabold sm:p-6 italic text-center">
+          You are saving ${formatPrice(savings) + " "}{" "}
+          {cartTotal?.total_shipping === 0 ? "plus Free Shipping" : ""}
+        </div>
+      )}
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <p className="text-xl font-semibold text-gray-900 dark:text-white">
           Order summary
@@ -134,9 +94,14 @@ function CartOrderSummary() {
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Shipping
               </dt>
-              <dd className="text-base font-medium dark:text-white text-green-600">
-                {/* ${formatPrice(deliveryOption)} */}
-                FREE
+              <dd
+                className={`text-base font-medium dark:text-white  ${
+                  cartTotal?.total_shipping > 0 ? "" : "text-green-600"
+                }`}
+              >
+                {cartTotal?.total_shipping
+                  ? `${"$" + formatPrice(cartTotal?.total_shipping)}`
+                  : "FREE"}
               </dd>
             </dl>
 
@@ -155,20 +120,20 @@ function CartOrderSummary() {
               Total
             </dt>
             <dd className="text-base font-bold text-gray-900 dark:text-white">
-              ${formatPrice(cartTotal)}
+              ${cartTotal?.total_price ? formatPrice(cartTotal?.total_price): formatPrice(0)}
             </dd>
           </dl>
         </div>
         <button
           onClick={handleCheckout}
           // disabled={true}
-          className="flex bg-theme-600 hover:bg-theme-500 focus:outline-neutral-400 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          className={`flex bg-theme-600 hover:bg-theme-500 focus:outline-neutral-400 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ${checkoutButton ? "":"hidden"}`}
         >
           Proceed to Checkout
         </button>
         {/* <CheckoutButtons /> */}
         <div className="flex items-center justify-center gap-2">
-          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+          <span className={`text-sm font-normal text-gray-500 dark:text-gray-400 ${checkoutButton ? "":"hidden"}`}>
             {" "}
             or{" "}
           </span>

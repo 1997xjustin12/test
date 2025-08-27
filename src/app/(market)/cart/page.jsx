@@ -1,20 +1,48 @@
 "use client";
+import { useState, useEffect } from "react";
 import CartListItem from "@/app/components/atom/CartListItem";
 import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 
 import { useCart } from "@/app/context/cart";
 export default function CartPage() {
-  const { formattedCart, loadingCartItems, increaseProductQuantity, decreaseProductQuantity } = useCart();
+  const [cartTotal, setCartTotal] = useState({});
+  const {
+    formattedCart,
+    loadingCartItems,
+    increaseProductQuantity,
+    decreaseProductQuantity,
+    fetchOrderTotal,
+  } = useCart();
 
-  const handleItemCountUpdate=(value)=>{
-    const {increment, product} = value;
-    if(increment){
+  const handleItemCountUpdate = (value) => {
+    const { increment, product } = value;
+    if (increment) {
       increaseProductQuantity(product);
-    }else{
+    } else {
       decreaseProductQuantity(product);
     }
-  }
+  };
+
+  const getOrderTotal = async () => {
+    const items = formattedCart.map((item) => ({
+      product_id: item?.product_id,
+      price: item?.variants?.[0]?.price,
+      quantity: item.count,
+      total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+    }));
+    const orderTotal = await fetchOrderTotal({ items });
+    if (orderTotal?.success) {
+      console.log("[CARTTOTAL]", orderTotal?.data);
+      setCartTotal(orderTotal?.data);
+    }
+  };
+
+  useEffect(() => {
+    if (formattedCart) {
+      getOrderTotal();
+    }
+  }, [formattedCart]);
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
@@ -25,14 +53,13 @@ export default function CartPage() {
 
         <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
           <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-           
             <div className="space-y-6">
-              {formattedCart &&  formattedCart.length > 0 ? (
+              {formattedCart && formattedCart.length > 0 ? (
                 formattedCart.map((item, idx) => (
                   <CartListItem
-                  key={`cart-list-item-${idx}`}
-                  item={item}
-                  onItemCountUpdate={handleItemCountUpdate}
+                    key={`cart-list-item-${idx}`}
+                    item={item}
+                    onItemCountUpdate={handleItemCountUpdate}
                   />
                 ))
               ) : (
@@ -44,10 +71,10 @@ export default function CartPage() {
               )}
             </div>
           </div>
-          <CartOrderSummary />
+          <CartOrderSummary cartTotal={cartTotal} />
         </div>
         <div className="mt-6">
-            <YouMayAlsoLike displayItems={4} />
+          <YouMayAlsoLike displayItems={4} />
         </div>
       </div>
     </section>
