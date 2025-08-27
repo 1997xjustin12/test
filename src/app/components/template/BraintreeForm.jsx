@@ -11,7 +11,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const store_domain = "https://solanafireplaces.com";
 
-export default function BraintreeForm() {
+export default function BraintreeForm({cartTotal}) {
   const router = useRouter();
   const { cartItems, clearCartItems, formattedCart } = useCart();
   // console.log("[TEST] formatted Cart", formattedCart);
@@ -160,22 +160,22 @@ export default function BraintreeForm() {
       }
 
       // get-total
-      const get_price_data = checkoutForm?.data;
-      get_price_data["status"] = "pending";
-      get_price_data["payment_method"] = "braintree";
-      get_price_data["payment_status"] = false;
-      get_price_data["payment_details"] = "";
-      get_price_data["store_domain"] = store_domain;
-      get_price_data["items"] = formattedCart.map((item) => ({
-        product_id: item?.product_id,
-        price: item?.variants?.[0]?.price,
-        quantity: item.count,
-        total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-      }));
+      // const get_price_data = checkoutForm?.data;
+      // get_price_data["status"] = "pending";
+      // get_price_data["payment_method"] = "braintree";
+      // get_price_data["payment_status"] = false;
+      // get_price_data["payment_details"] = "";
+      // get_price_data["store_domain"] = store_domain;
+      // get_price_data["items"] = formattedCart.map((item) => ({
+      //   product_id: item?.product_id,
+      //   price: item?.variants?.[0]?.price,
+      //   quantity: item.count,
+      //   total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+      // }));
 
-      const get_price = await getPrice(get_price_data);
-      if (get_price?.success) {
-        const total_amount = parseFloat(get_price?.data?.total_price || 0).toFixed(2);
+      // const get_price = await getPrice(get_price_data);
+      // if (get_price?.success) {
+        const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
         const response = await fetch("/api/braintree_checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -210,7 +210,7 @@ export default function BraintreeForm() {
         } else {
           alert(`Payment failed: ${result.error}`);
         }
-      }
+      // }
     } catch (error) {
       console.error("Payment Error:", error);
       alert("Payment error. Try again.");
