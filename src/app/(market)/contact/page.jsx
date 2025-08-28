@@ -12,12 +12,12 @@ function Contact() {
       <h1 className="text-2xl font-bold mb-4 text-center">Contact Us</h1>
 
       <p className="mb-10 text-center">
-        At <Link prefetch={false} href={`${BASE_URL}`}className="text-theme-600 font-bold underline">{brandName}</Link> customer service is our top priority. Whether its a question for product or help with your order we are here to assist. Here are three ways to get in contact with us. 
+        At <Link prefetch={false} href={`${BASE_URL}`}className="text-theme-600 font-bold underline">{brandName}</Link> customer service comes first. Whether you need details about a product or assistance with your order, our team is ready to help. You can reach us in three convenient ways.
       </p>
 
       <div className="mb-4 flex flex-col items-center justify-center">
         <h5>Give us a call at</h5>
-        <Link prefetch={false} href={`tel:${contact}`} className="flex items-center gap-1 font-semibold">
+        <Link prefetch={false} href={`tel:${contact}`} className="flex items-center gap-1 font-semibold text-theme-600">
           <ICRoundPhone/>
           <div>{contact}</div>
         </Link>
@@ -25,7 +25,7 @@ function Contact() {
 
       <div className="mb-4 flex flex-col items-center justify-center">
         <h5>Email us at</h5>
-        <Link prefetch={false} href={`mailto:${email}`} className="flex items-center gap-1 font-semibold">
+        <Link prefetch={false} href={`mailto:${email}`} className="flex items-center gap-1 font-semibold text-theme-600">
           <MDIEmailOutline/>
           <div>{email}</div>
         </Link>
