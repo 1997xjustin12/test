@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 // import Carousel from "@/app/components/atom/Carousel";
 const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
@@ -9,7 +10,7 @@ import SectionHeader from "../atom/SectionHeader";
 import { Rating } from "@smastrom/react-rating";
 import ItemPrice from "@/app/components/atom/openBoxItemPrice";
 import Image from "next/image";
-import { createSlug } from "@/app/lib/helpers";
+import { BASE_URL, createSlug } from "@/app/lib/helpers";
 import { useQuickView } from "@/app/context/quickview";
 import ProductCard from "@/app/components/atom/ProductCard";
 // const products = [
@@ -76,6 +77,7 @@ export default function HomePageShopOpenBox() {
   const [products, setProducts] = useState(null);
   const {viewItem} = useQuickView();
 
+  const shopAllOpenBoxUrl = `${BASE_URL}/shop-all-open-box`;
   const productCategory = "outdoor-grill";
   
   const handleQuickViewClick = (e, item) => {
@@ -132,9 +134,9 @@ export default function HomePageShopOpenBox() {
           </Carousel>
         </div>
         <div className="mt-5 text-center">
-          <button className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-theme-600 hover:bg-theme-500 text-white font-bold cursor-pointer">
+          <Link prefetch={false} href={shopAllOpenBoxUrl} className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-theme-600 hover:bg-theme-500 text-white font-bold cursor-pointer">
             Shop All Open Box
-          </button>
+          </Link>
         </div>
       </div>
     </div>
