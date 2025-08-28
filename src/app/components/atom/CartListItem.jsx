@@ -29,11 +29,6 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   };
 
   const handleCount = (item, increment) => {
-    if(!increment && item?.count === 1){
-      // trigger remove item
-      handleRemoveItem(item);
-      return;
-    }
     onItemCountUpdate({ product: item, increment: increment });
   };
 
@@ -66,82 +61,99 @@ export default function CartListItem({ item, onItemCountUpdate }) {
           Choose quantity:
         </label>
         <div className="flex items-center justify-between md:order-3 md:justify-end">
-          <div className="flex items-center">
-            <button
-              onClick={() => handleCount(item, false)}
-              type="button"
-              id="decrement-button"
-              data-input-counter-decrement="counter-input"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-            >
+          {/* quantity action buttons */}
+          <div className="flex flex-col items-center gap-[15px]">
+            <div className="flex items-center">
+              <button
+                onClick={() => handleCount(item, false)}
+                type="button"
+                id="decrement-button"
+                data-input-counter-decrement="counter-input"
+                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+              >
+                <svg
+                  className="h-2.5 w-2.5 text-gray-900 dark:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 18 2"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M1 1h16"
+                  />
+                </svg>
+              </button>
+              <input
+                readOnly
+                min={1}
+                type="text"
+                id="counter-input"
+                data-input-counter
+                className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
+                placeholder=""
+                value={item?.count}
+                required
+              />
+              <button
+                onClick={() => handleCount(item, true)}
+                type="button"
+                id="increment-button"
+                data-input-counter-increment="counter-input"
+                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+              >
+                <svg
+                  className="h-2.5 w-2.5 text-gray-900 dark:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 18 18"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 1v16M1 9h16"
+                  />
+                </svg>
+              </button>
+            </div>
+            <button title="Remove Item" className="hover:text-theme-700 text-neutral-600" onClick={()=> handleRemoveItem(item)}>
               <svg
-                className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 2"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
               >
                 <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 1h16"
-                />
-              </svg>
-            </button>
-            <input
-              readOnly
-              min={1}
-              type="text"
-              id="counter-input"
-              data-input-counter
-              className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
-              placeholder=""
-              value={item?.count}
-              required
-            />
-            <button
-              onClick={() => handleCount(item, true)}
-              type="button"
-              id="increment-button"
-              data-input-counter-increment="counter-input"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-            >
-              <svg
-                className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 1v16M1 9h16"
+                  fill="currentColor"
+                  d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"
                 />
               </svg>
             </button>
           </div>
+          {/* price display */}
           <div className="text-end md:order-4 md:w-32">
             <div className="text-base font-bold text-gray-900 dark:text-white">
               ${formatPrice(item?.variants?.[0]?.price * item?.count)}
             </div>
             {Number(item?.variants?.[0]?.compare_at_price) > 0 && (
               <div className="w-full flex justify-end">
-                  <div className="font-semibold text-green-700 dark:text-white text-xs border border-green-700 px-[2px]">
-                    SAVE $
-                    {formatPrice(
-                      getSavings(
-                        item?.variants?.[0]?.compare_at_price,
-                        item?.variants?.[0]?.price
-                      ) * item?.count
-                    )}
-                  </div>
+                <div className="font-semibold text-green-700 dark:text-white text-xs border border-green-700 px-[2px]">
+                  SAVE $
+                  {formatPrice(
+                    getSavings(
+                      item?.variants?.[0]?.compare_at_price,
+                      item?.variants?.[0]?.price
+                    ) * item?.count
+                  )}
+                </div>
               </div>
-              )}
+            )}
           </div>
         </div>
 
@@ -165,11 +177,14 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             {Number(item?.variants?.[0]?.compare_at_price) > 0 &&
               Number(item?.variants?.[0]?.price) > 0 && (
                 <div className="font-medium text-red-700">
-                  <span className="italic">{getDiscountPercentage(
-                    item?.variants?.[0]?.compare_at_price,
-                    item?.variants?.[0]?.price
-                  )}
-                  %</span> off
+                  <span className="italic">
+                    {getDiscountPercentage(
+                      item?.variants?.[0]?.compare_at_price,
+                      item?.variants?.[0]?.price
+                    )}
+                    %
+                  </span>{" "}
+                  off
                 </div>
               )}
           </div>
