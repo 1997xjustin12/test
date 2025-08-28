@@ -82,7 +82,7 @@ const sac_contents = [
 
 const about_content = {
   image: "/images/banner/fireplace-banner.webp",
-  contact: "(888) 667-4986",
+  contact: "(888) 575-9720",
   content: {
     title: "About Solana Fireplaces",
     par: [
