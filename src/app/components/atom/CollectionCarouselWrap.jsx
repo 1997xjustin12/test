@@ -30,7 +30,7 @@ async function CollectionCarouselWrap({ data }) {
 
   return (
     <div>
-      <h4 className="font-bold text-lg">{data?.mb_label}</h4>
+      <h4 className="font-bold text-2xl mb-3">{data?.mb_label}</h4>
       <CollectionCarousel breakpoints={items_per_break_point}>
         {collection &&
           Array.isArray(collection) &&

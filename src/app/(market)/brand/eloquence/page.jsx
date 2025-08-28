@@ -11,17 +11,18 @@ import ReviewsSection from "@/app/components/section/HomePageReviews";
 import FAQsSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
-import BlogsSection from "@/app/components/section/HomeBlogs"
-import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap"
+import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
 // CONSTANTS
 const pathname = "solana-bbq-grills";
+const shopUrl = `${BASE_URL}/eloquence`;
 export const metadata = {
-  title: 'Shop Outdoor Kitchen Equipment | Solana BBQ Grills',
-  description: 'Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!',
+  title: "Shop Outdoor Kitchen Equipment | Solana BBQ Grills",
+  description:
+    "Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!",
 };
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const feat_carousel_items = [
@@ -107,32 +108,6 @@ const about_content = {
   },
 };
 const blogs_title = "Your Backyard Cooking Resource Hub";
-const blogs = [
-  {
-    title: "The Ultimate Guide to Building Your Dream Outdoor BBQ Kitchen",
-    img: "/images/home/blogs/the-ultimate-guide-to-building-your-dream-outdoor-bbq-kitchen-solana.webp",
-    tag: "Buying Guide",
-    tag_bg: "bg-green-600",
-    content:
-      "This comprehensive guide will walk you through every step of the process, from initial planning to adding those final personal touches.",
-  },
-  {
-    title: "Your Guide to Affordable BBQ Bliss",
-    img: "/images/home/blogs/your-guide-to-affordable-bbq-bliss-image-solana.webp",
-    tag: "Buying Guide",
-    tag_bg: "bg-green-600",
-    content:
-      "This guide will walk you through the steps to designing a fantastic outdoor BBQ kitchen without breaking the bank.",
-  },
-  {
-    title: "Essential Outdoor Kitchen Maintenance Tips for Long-Lasting Performance",
-    img: "/images/home/blogs/essential-outdoor-kitchen-maintenance-tips-for-long-lasting-performance-image-solana.webp",
-    tag: "Tips & Tricks",
-    tag_bg: "bg-rose-600",
-    content:
-      "This guide provides key tips for effective outdoor kitchen maintenance, helping you preserve both beauty and functionality.",
-  },
-];
 const faqs = [
   {
     id: "Q1",
@@ -191,11 +166,12 @@ const flattenNav = (navItems) => {
 };
 // EXTENDED COMPONENT
 const Hero = () => {
-  const useBanner = "/images/banner/home-banner.webp"
- const data = {
-  title:"Grill Better for Less with Solana Outdoor Kitchen Equipments",
-  tag_line: "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
- };
+  const useBanner = "/images/banner/home-banner.webp";
+  const data = {
+    title: "Grill Better for Less with Solana Outdoor Kitchen Equipments",
+    tag_line:
+      "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
+  };
   return (
     <div
       className={`w-full mx-auto flex flex-col md:flex-row ${
@@ -359,12 +335,10 @@ const BestBBQBrands = async () => {
                 {items &&
                   items.map((item, idx) => (
                     <div
-                        key={`product-cart-to-cart-item-${idx}`}
-                        className="px-10"
+                      key={`product-cart-to-cart-item-${idx}`}
+                      className="px-10"
                     >
-                      <ProductCartToCart
-                        item={item}
-                      />
+                      <ProductCartToCart item={item} />
                     </div>
                   ))}
               </YmalCarousel>
@@ -384,59 +358,262 @@ const BestBBQBrands = async () => {
     </div>
   );
 };
-const ShopAllOpenBox = async() => {
+const ShopAllOpenBox = async () => {
   // Solana Home Open Box ID: 5
   const collection_id = 5;
-  return (<div className="w-full mt-10">
+  return (
+    <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
         <SectionHeader text="Shop All Open Box" />
-        <div className="mt-5">Save big on like-new items that have been opened, inspected, and approved for resale. Same great quality, just a better price.</div>
         <div className="mt-5">
-          <CollectionCarouselWrap data={{id:collection_id}} />
+          Save big on like-new items that have been opened, inspected, and
+          approved for resale. Same great quality, just a better price.
+        </div>
+        <div className="mt-5">
+          <CollectionCarouselWrap data={{ id: collection_id }} />
         </div>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 const OuterKitchenAndAccessories = () => {
   const items = [
-    {image:"/images/feature/outdoor-kitchen-storage.webp", label:"Outdoor Kitchen Storage", url:"#"},
-    {image:"/images/feature/side-burners.webp", label:"Side Burners", url:"#"},
-    {image:"/images/feature/grill-covers.webp", label:"Grill Covers", url:"#"},
-    {image:"/images/feature/grill-attachments.webp", label:"Grill Attachments", url:"#"},
-    {image:"/images/feature/grill-tools-and-utensils.webp", label:"Grilling Tools & Utensils", url:"#"},
+    {
+      image: "/images/feature/outdoor-kitchen-storage.webp",
+      label: "Outdoor Kitchen Storage",
+      url: "#",
+    },
+    {
+      image: "/images/feature/side-burners.webp",
+      label: "Side Burners",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-covers.webp",
+      label: "Grill Covers",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-attachments.webp",
+      label: "Grill Attachments",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-tools-and-utensils.webp",
+      label: "Grilling Tools & Utensils",
+      url: "#",
+    },
   ];
-  
-  return (<div className="w-full mt-10">
+
+  return (
+    <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
         <SectionHeader text="Outer Kitchen Products & Accessories" />
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {
-            items && items.map((item,index) => <Link key={`extras-category-links-${index}`} prefetch={false} href={`${BASE_URL}/${item?.url}`}>
-              <div className="shadow-lg py-5 px-3 text-center">
-                <div className="w-full aspect-w-4 aspect-h-5 relative bg-white">
-                  {
-                    item?.image &&
-                        <Image
-                          src={item?.image}
-                          title={item?.label}
-                          alt={`${createSlug(item?.label)}-image`}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 768px) 100vw, 300px"
-                        />
-                  }
+          {items &&
+            items.map((item, index) => (
+              <Link
+                key={`extras-category-links-${index}`}
+                prefetch={false}
+                href={`${BASE_URL}/${item?.url}`}
+              >
+                <div className="shadow-lg py-5 px-3 text-center">
+                  <div className="w-full aspect-w-4 aspect-h-5 relative bg-white">
+                    {item?.image && (
+                      <Image
+                        src={item?.image}
+                        title={item?.label}
+                        alt={`${createSlug(item?.label)}-image`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    )}
+                  </div>
+                  <h4 className="font-semibold h-[48px] flex items-center justify-center">
+                    {item?.label}
+                  </h4>
                 </div>
-                <h4 className="font-semibold h-[48px] flex items-center justify-center">{item?.label}</h4>
-              </div>
-            </Link>)
-          }
+              </Link>
+            ))}
         </div>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
+
+// ELOQUENCE COMPONENTS
+const sub_category_obj = [
+  {
+    name: "Eloquence Grills",
+    url: `${BASE_URL}/eloquence-grills`,
+    image: "/images/feature/eloquence-grills.webp",
+  },
+  {
+    name: "Eloquence Side Burners",
+    url: `${BASE_URL}/eloquence-side-burners`,
+    image: "/images/feature/eloquence-side-burners.webp",
+  },
+  {
+    name: "Eloquence Storage",
+    url: `${BASE_URL}/eloquence-storage`,
+    image: "/images/feature/eloquence-storage.webp",
+  },
+  {
+    name: "Eloquence Accessories",
+    url: `${BASE_URL}/eloquence-accessories`,
+    image: "/images/feature/eloquence-accessories.webp",
+  },
+];
+
+const SubCategoriesDisplay = ({ categories }) => {
+  if (!categories) {
+    return;
+  }
+  return (
+    <div>
+      <div className="container mx-auto mb-10">
+        <div className="flex gap-[30px]">
+          {categories &&
+            Array.isArray(categories) &&
+            categories?.length > 0 &&
+            categories.map((category, index) => (
+              <Link
+                prefetch={false}
+                href={category?.url}
+                className="w-[220px] flex flex-col gap-[15px] group"
+                key={`sub-category-flex-display-${index}`}
+              >
+                <div className="aspect-1 p-[30px] rounded-full bg-neutral-white relative box-border border-[10px] border-white group-hover:border-slate-300 group-hover:shadow transition-all duration-300 ease-in-out group-hover:pb-[40px] group-hover:pt-[20px] overflow-hidden">
+                  <div className="aspect-1 box-border relative">
+                    {category?.image && (
+                    <Image
+                      src={category?.image}
+                      title={`${category?.name} Image`}
+                      alt={`${createSlug(category?.name)}-image`}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 300px"
+                    />
+                  )}
+                  </div>
+                </div>
+                <div className="text-center font-bold">{category?.name}</div>
+              </Link>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AboutSection = () => {
+  return (
+    <div className="container mx-auto mb-10">
+      <div className="flex">
+        <div className="w-full">
+          <div className="aspect-w-3 aspect-h-2 relative">
+            <Image
+              src={`/images/home/blogs/why-eloquence_720x.webp`}
+              title={`Why Eloquence Image`}
+              alt={`why-eloquence-image`}
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 300px"
+            />
+          </div>
+        </div>
+        <div className="w-full flex items-center">
+          <div className="p-3 flex flex-col gap-[10px]">
+            <div className="h-[80px] relative flex items-start justify-start text-left">
+              <Image
+                src={`/images/feature/eloquence-text-logo.avif`}
+                title={`Eloquence Text Logo`}
+                alt={`${createSlug(`Eloquence Text Logo`)}-image`}
+                fill
+                className="object-contain object-left"
+                sizes="(max-width: 768px) 100vw, 300px"
+              />
+            </div>
+            <div>
+              <h2 className="text-2xl">
+                Elevating Outdoor Cooking with Affordable Luxury
+              </h2>
+            </div>
+            <div>
+              <p>
+                All Eloquence built-in grills are crafted with precision,
+                featuring high-performance burners, heavy-duty stainless steel
+                construction, sleek dual-lined hoods, and premium cooking grates
+                for consistent, even heat. Designed for both style and strength,
+                Eloquence grills offer the perfect blend of elegance and
+                functionality. Each unit is engineered for easy integration into
+                our custom outdoor kitchens, making it simple to upgrade your
+                backyard with a touch of luxury that lasts.
+              </p>
+            </div>
+            <div className="box-border py-5">
+              <Link
+                prefetch={false}
+                href={`${BASE_URL}/eloquence`}
+                className="box-border bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
+              >
+                Shop All Eloquent Best Sellers
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const blogs = [
+  {
+    title: "Blog 1",
+    img: "/images/home/blogs/the-ultimate-guide-to-building-your-dream-outdoor-bbq-kitchen-solana.webp",
+    tag: "Buying Guide",
+    tag_bg: "bg-green-600",
+    content:
+      "This comprehensive guide will walk you through every step of the process, from initial planning to adding those final personal touches.",
+  },
+  {
+    title: "Blog 2",
+    img: "/images/home/blogs/your-guide-to-affordable-bbq-bliss-image-solana.webp",
+    tag: "Buying Guide",
+    tag_bg: "bg-green-600",
+    content:
+      "This guide will walk you through the steps to designing a fantastic outdoor BBQ kitchen without breaking the bank.",
+  },
+  {
+    title:
+      "Blog 3",
+    img: "/images/home/blogs/essential-outdoor-kitchen-maintenance-tips-for-long-lasting-performance-image-solana.webp",
+    tag: "Tips & Tricks",
+    tag_bg: "bg-rose-600",
+    content:
+      "This guide provides key tips for effective outdoor kitchen maintenance, helping you preserve both beauty and functionality.",
+  },
+];
+
+const BlogsSection = ({ blogs }) => {
+  return <div className="container mx-auto mb-10">
+    <h4 className="font-bold text-2xl mb-3">Elouqence Resource Center</h4>
+    <div className="flex gap-[20px]">
+      {
+        blogs && Array.isArray(blogs) && blogs?.length > 0 && blogs.map((blog, index)=>(<div key={`blog-item-${index}`} className="w-full flex flex-col gap-[15px]">
+          <div className="aspect-2 relative bg-neutral-200 flex items-center justify-center">
+            <div className="font-bold text-neutral-500">Blog Image Here</div>
+          </div>
+          <h5 className="text-lg font-bold text-center">{blog?.title}</h5>
+        </div>))
+      }
+    </div>
+  </div>;
+};
 
 // MAIN COMPONENT
-export default async function SolanaGrillsPage() {
+export default async function EloquencePage() {
   // const menu = await getMenu();
 
   // const pageData = flattenNav(menu).find(({ url }) => url === pathname);
@@ -444,7 +621,54 @@ export default async function SolanaGrillsPage() {
     <>
       <MobileLoader />
       <Hero />
-      <FeatureCategoriesSection items={feat_carousel_items} />
+      <div className="bg-[#e53237] mb-10">
+        <div className="container mx-auto p-2">
+          <Link
+            prefetch={false}
+            href={shopUrl}
+            className="flex justify-center items-center gap-[20px] font-medium text-white"
+          >
+            Price so low we cannot advertise. Call for Closeout Availability{" "}
+            <button className="p-2 bg-neutral-50 font-bold text-black">
+              See Offers!
+            </button>
+          </Link>
+        </div>
+      </div>
+      <SubCategoriesDisplay categories={sub_category_obj} />
+      <div className="bg-black mb-10">
+        <div className="container mx-auto p-2">
+          <Link
+            prefetch={false}
+            href={shopUrl}
+            className="flex justify-center items-center gap-[20px] font-medium text-white"
+          >
+            Free White Glove Service on Selected Items.Export{" "}
+            <button className="p-2 bg-neutral-50 font-bold text-black">
+              Find Out More!
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="container mx-auto mb-10 flex flex-col gap-[20px]">
+        <CollectionCarouselWrap
+          data={{ id: 1, mb_label: "Exclusive Offers For You" }}
+        />
+        <div className="text-center">
+          <Link
+            prefetch={false}
+            href={`${BASE_URL}/eloquence-grills`}
+            className="bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
+          >
+            Shop All Eloquence Exclusives
+          </Link>
+        </div>
+      </div>
+
+      <AboutSection />
+      <BlogsSection blogs={blogs} />
+      {/* <FeatureCategoriesSection items={feat_carousel_items} />
       <ShopAllClearanceSection contents={sac_contents} />
       <AboutProductSection data={about_content} />
       <ReviewsSection />
@@ -453,7 +677,7 @@ export default async function SolanaGrillsPage() {
       <ShopAllOpenBox />
       <OuterKitchenAndAccessories />
       <FAQsSection faqs={faqs} itemClassName="bg-stone-600 hover:bg-stone-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium" />
-      <NewsLetterSection />
+      <NewsLetterSection /> */}
     </>
   );
 }
