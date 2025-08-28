@@ -17,14 +17,14 @@ const footer = [
         name: "Contact Us",
         url: "contact",
       },
-      {
-        name: "Track My Order",
-        url: "",
-      },
-      {
-        name: "FAQ's",
-        url: "",
-      },
+      // {
+      //   name: "Track My Order",
+      //   url: "",
+      // },
+      // {
+      //   name: "FAQ's",
+      //   url: "",
+      // },
       {
         name: "Refund & Return Policy",
         url: "return-policy",
@@ -55,34 +55,34 @@ const footer = [
         name: "Our Brands",
         url: "brands",
       },
-      {
-        name: "Customer Reviews",
-        url: "",
-      },
+      // {
+      //   name: "Customer Reviews",
+      //   url: "",
+      // },
     ],
   },
-  {
-    name: "Resources",
-    url: "",
-    child: [
-      {
-        name: "Blogs",
-        url: "blogs",
-      },
-      {
-        name: "Recipes",
-        url: "",
-      },
-      {
-        name: "Comparison Guides",
-        url: "",
-      },
-      {
-        name: "Videos",
-        url: "",
-      },
-    ],
-  },
+  // {
+  //   name: "Resources",
+  //   url: "",
+  //   child: [
+  //     {
+  //       name: "Blogs",
+  //       url: "blogs",
+  //     },
+  //     {
+  //       name: "Recipes",
+  //       url: "",
+  //     },
+  //     {
+  //       name: "Comparison Guides",
+  //       url: "",
+  //     },
+  //     {
+  //       name: "Videos",
+  //       url: "",
+  //     },
+  //   ],
+  // },
   {
     name: "Deals & Promotions",
     url: "",
@@ -123,19 +123,19 @@ const footer = [
     child: [
       {
         name: "Facebook",
-        url: "",
+        url: "https://www.facebook.com/profile.php?id=61576364267085",
       },
-      {
-        name: "Instagram",
-        url: "",
-      },
-      {
-        name: "Youtube",
-        url: "",
-      },
+      // {
+      //   name: "Instagram",
+      //   url: "",
+      // },
+      // {
+      //   name: "Youtube",
+      //   url: "",
+      // },
       {
         name: "Pinterest",
-        url: "",
+        url: "https://www.pinterest.com/solanafireplaces/",
       },
     ],
   },
