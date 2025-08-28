@@ -29,7 +29,6 @@ export default function CartPage() {
     if (items.length > 0) {
       const orderTotal = await fetchOrderTotal({ items });
       if (orderTotal?.success) {
-        console.log("[CARTTOTAL]", orderTotal?.data);
         setCartTotal(orderTotal?.data);
       }
     }

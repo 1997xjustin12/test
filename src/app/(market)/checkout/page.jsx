@@ -21,10 +21,11 @@ function CheckoutPage() {
 
   const getOrderTotal = async () => {
     const items = mapOrderItems(formattedCart);
-    const orderTotal = await fetchOrderTotal({ items });
-    if (orderTotal?.success) {
-      console.log("[CARTTOTAL]", orderTotal?.data);
-      setCartTotal(orderTotal?.data);
+    if(items.length > 0){
+      const orderTotal = await fetchOrderTotal({ items });
+      if (orderTotal?.success) {
+        setCartTotal(orderTotal?.data);
+      }
     }
   };
 
