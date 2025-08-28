@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import dropin from "braintree-web-drop-in";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/cart";
-import { BASE_URL, getSum, mapOrderItems } from "@/app/lib/helpers";
+import { BASE_URL, getSum, mapOrderItems, store_domain } from "@/app/lib/helpers";
 import CheckoutForm from "@/app/components/atom/CheckoutForm";
-
-const store_domain = "https://solanafireplaces.com";
 
 export default function BraintreeForm({cartTotal}) {
   const router = useRouter();

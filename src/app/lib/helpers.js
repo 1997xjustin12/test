@@ -2,6 +2,7 @@ import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+export const store_domain = "https://solanafireplaces.com";
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
 export const ES_INDEX = "solana_updated_product_index";
@@ -368,7 +369,7 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
 export const mapOrderItems = (items) => {
   return items.map((item) => ({
     product_id: item?.product_id,
-    product_link: `${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`,
+    product_link: `${store_domain}/${createSlug(item?.brand)}/product/${item?.handle}`,
     price: item?.variants?.[0]?.price,
     quantity: item.count,
     total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
