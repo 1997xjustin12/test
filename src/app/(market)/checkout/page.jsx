@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import CheckoutOrderSummary from "@/app/components/atom/CheckoutOrderSummary";
 import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
+import { BASE_URL, mapOrderItems } from "@/app/lib/helpers";
+
 import { useCart } from "@/app/context/cart";
 
 // import BraintreeForm from "@/app/components/template/BraintreeForm"
@@ -18,12 +20,7 @@ function CheckoutPage() {
   const { cartItems, formattedCart, fetchOrderTotal } = useCart();
 
   const getOrderTotal = async () => {
-    const items = formattedCart.map((item) => ({
-      product_id: item?.product_id,
-      price: item?.variants?.[0]?.price,
-      quantity: item.count,
-      total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-    }));
+    const items = mapOrderItems(formattedCart);
     const orderTotal = await fetchOrderTotal({ items });
     if (orderTotal?.success) {
       console.log("[CARTTOTAL]", orderTotal?.data);

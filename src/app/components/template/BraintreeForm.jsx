@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import dropin from "braintree-web-drop-in";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/cart";
-import { formatPrice, getSum } from "@/app/lib/helpers";
+import { BASE_URL, getSum, mapOrderItems } from "@/app/lib/helpers";
 import CheckoutForm from "@/app/components/atom/CheckoutForm";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const store_domain = "https://solanafireplaces.com";
 
@@ -190,12 +188,7 @@ export default function BraintreeForm({cartTotal}) {
           orders["payment_status"] = true;
           orders["payment_details"] = result?.transaction?.id;
           orders["store_domain"] = store_domain;
-          orders["items"] = formattedCart.map((item) => ({
-            product_id: item?.product_id,
-            price: item?.variants?.[0]?.price,
-            quantity: item.count,
-            total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-          }));
+          orders["items"] = mapOrderItems(formattedCart);
 
           const order_response = await createOrder(orders);
 

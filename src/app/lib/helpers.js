@@ -364,3 +364,13 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
     return item;
   });
 };
+
+export const mapOrderItems = (items) => {
+  return items.map((item) => ({
+    product_id: item?.product_id,
+    product_link: `${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`,
+    price: item?.variants?.[0]?.price,
+    quantity: item.count,
+    total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+  }));
+};

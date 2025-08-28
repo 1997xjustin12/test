@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CartListItem from "@/app/components/atom/CartListItem";
 import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
-
+import { BASE_URL, mapOrderItems } from "@/app/lib/helpers";
 import { useCart } from "@/app/context/cart";
 export default function CartPage() {
   const [cartTotal, setCartTotal] = useState({});
@@ -25,16 +25,13 @@ export default function CartPage() {
   };
 
   const getOrderTotal = async () => {
-    const items = formattedCart.map((item) => ({
-      product_id: item?.product_id,
-      price: item?.variants?.[0]?.price,
-      quantity: item.count,
-      total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-    }));
-    const orderTotal = await fetchOrderTotal({ items });
-    if (orderTotal?.success) {
-      console.log("[CARTTOTAL]", orderTotal?.data);
-      setCartTotal(orderTotal?.data);
+    const items = mapOrderItems(formattedCart);
+    if (items.length > 0) {
+      const orderTotal = await fetchOrderTotal({ items });
+      if (orderTotal?.success) {
+        console.log("[CARTTOTAL]", orderTotal?.data);
+        setCartTotal(orderTotal?.data);
+      }
     }
   };
 
