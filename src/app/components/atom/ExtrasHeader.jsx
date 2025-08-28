@@ -1,11 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import { BASE_URL } from "@/app/lib/helpers";
 function ExtrasHeader() {
     const extrasLinks = [
         {name: "Promotions", url:`https://outdoorkitchenoutlet.com/collections/eloquence-1`},
         {name: "Learning Center", url:" https://outdoorkitchenoutlet.com/blogs/general-information"},
-        {name: "Professional Program", url:"https://outdoorkitchenoutlet.com/pages/contractor-program"},
-        {name: "Support", url:" https://outdoorkitchenoutlet.com/pages/contact-us"},
+        {name: "Professional Program", url:`${BASE_URL}/professional-program`},
+        {name: "Support", url:`${BASE_URL}/contact`},
         // {name: "Why Buy From The Expert In Fire?", url:""},
     ]
   return (
