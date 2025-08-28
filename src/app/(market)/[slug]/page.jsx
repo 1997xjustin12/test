@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { keys, redis } from "@/app/lib/redis";
-import { getPageData } from "@/app/lib/helpers";
+import { getPageData, BASE_URL } from "@/app/lib/helpers";
 import TuiHero from "@/app/components/template/tui_hero";
 import ProductsSection from "@/app/components/section/Products";
+import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
 import ShopifyProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import Faq from "@/app/components/molecule/Faq";
@@ -14,6 +15,39 @@ import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap
 import BaseNavPage from "@/app/components/template/BaseNavItemPage";
 
 const isShopify = true;
+
+const feat_carousel_items = [
+  {
+    label: "Fireplaces",
+    img: "/images/home/categories/Fireplace.webp",
+    url: `${BASE_URL}/fireplaces`,
+  },
+  {
+    label: "Patio Heaters",
+    img: "/images/feature/patio-heaters-1.webp",
+    url: `${BASE_URL}/patio-heaters`,
+  },
+  {
+    label: "Built-In Grills",
+    img: "/images/feature/built-in-grills.webp",
+    url: `${BASE_URL}/built-in-grills`,
+  },
+  {
+    label: "Freestanding Grills",
+    img: "/images/feature/freestanding-grills.webp",
+    url: `${BASE_URL}/freestanding-grills`,
+  },
+  {
+    label: "Open Box",
+    img: "/images/feature/open-box.webp",
+    url: `${BASE_URL}/open-box`,
+  },
+  {
+    label: "Current Deals",
+    img: "/images/home/categories/clearance.webp",
+    url: `${BASE_URL}/brand/eloquence`,
+  },
+];
 
 // const defaultMenuKey = keys.default_shopify_menu.value;
 const defaultMenuKey = keys.dev_shopify_menu.value; // dev-menu-object
@@ -85,7 +119,10 @@ export default async function GenericCategoryPage({ params }) {
         )}
 
       <Reviews />
-      <CategoriesCarousel />
+      {/* <CategoriesCarousel /> */}
+
+      <FeatureCategoriesSection items={feat_carousel_items} />
+        
       {pageData?.faqs &&
         pageData?.faqs?.visible &&
         pageData?.faqs?.data &&
