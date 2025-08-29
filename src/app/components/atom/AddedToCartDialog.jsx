@@ -203,7 +203,8 @@ function AddedToCartDialog({ data, onClose }) {
   const handleGoToCartClick = (e) => {
     e.preventDefault();
     handleClose();
-    router.push(cartPageUrl);
+    window.location.href = cartPageUrl;
+    // router.push(cartPageUrl);
   };
 
   return (
