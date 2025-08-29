@@ -116,7 +116,7 @@ export default function TuiNavbar({ logo, menu }) {
     }
 
     if(menu_item?.name === "Current Deals"){
-      window.location.href = `https://outdoorkitchenoutlet.com/collections/eloquence-1`;
+      window.location.href = `${BASE_URL}/brand/eloquence`;
       return;
     }
 
