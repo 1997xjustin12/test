@@ -137,7 +137,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             </button>
           </div>
           {/* price display */}
-          <div className="text-end md:order-4 md:w-32">
+          <div className="text-end md:order-4 md:w-32 flex flex-col gap-[15px]">
             <div className="text-base font-bold text-gray-900 dark:text-white">
               ${formatPrice(item?.variants?.[0]?.price * item?.count)}
             </div>
@@ -157,7 +157,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
           </div>
         </div>
 
-        <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+        <div className="w-full min-w-0 flex flex-col gap-[15px] md:order-2 md:max-w-md">
           <a
             href={`#`}
             className="text-base font-medium text-gray-900 hover:underline dark:text-white"
