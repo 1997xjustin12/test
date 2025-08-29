@@ -653,7 +653,7 @@ export default async function EloquencePage() {
 
       <div className="container mx-auto mb-10 flex flex-col gap-[20px]">
         <CollectionCarouselWrap
-          data={{ id: 1, mb_label: "Exclusive Offers For You" }}
+          data={{ id: 17, mb_label: "Exclusive Offers For You" }}
         />
         <div className="text-center">
           <Link
@@ -662,6 +662,21 @@ export default async function EloquencePage() {
             className="bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
           >
             Shop All Eloquence Exclusives
+          </Link>
+        </div>
+      </div>
+
+      <div className="container mx-auto mb-10 flex flex-col gap-[20px]">
+        <CollectionCarouselWrap
+          data={{ id: 17, mb_label: "Best Seller For Eloquence" }}
+        />
+        <div className="text-center">
+          <Link
+            prefetch={false}
+            href={`${BASE_URL}/brand/eloquence`}
+            className="bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
+          >
+            Shop All Eloquence Best Sellers
           </Link>
         </div>
       </div>
