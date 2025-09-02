@@ -74,7 +74,7 @@ export default function HomePageFrequentlyAsked({faqs, itemClassName="bg-theme-6
                 </div>
               </div>
               <div
-                className={`border border-theme-400 text-stone-700 py-[10px] px-[20px] ${
+                className={`border border-neutral-700 text-stone-700 py-[10px] px-[20px] ${
                   i.is_open ? "block" : "hidden"
                 }`}>
                 {`${i.answer}`}
