@@ -65,12 +65,12 @@ function ReturnPolicy() {
           </p>
         </ul>
         <div className="flex flex-col gap-[15px] py-5 justify-center items-center">
-          <h3>To sign up, please fill out the form below.</h3>
+          {/* <h3>To sign up, please fill out the form below.</h3> */}
           <h3>Call <Link prefetch={false} href={`tel:${contact}`} className="text-theme-600 hover:underline">{contact}</Link>  for assistance!</h3>
         </div>
-        <div className="aspect-1 bg-neutral-200 flex items-center justify-center">
+        {/* <div className="aspect-1 bg-neutral-200 flex items-center justify-center">
           <div className="text-neutral-500 text-2xl font-bold">{"Insert Form Here"}</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
