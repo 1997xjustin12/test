@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
-import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap"
+import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
 
 async function BaseNavItemPage({ page_details }) {
   if (!page_details) {
@@ -23,7 +23,7 @@ async function BaseNavItemPage({ page_details }) {
       <h1>{page_details?.name}</h1>
       <div className="flex my-[30px]">
         {/* side bar with category list */}
-        <div className="w-[250px] pr-3 flex flex-col gap-[20px]">
+        <div className="w-[250px] pr-3 flex-col gap-[20px] hidden md:flex">
           {page_details &&
             page_details?.children &&
             Array.isArray(page_details?.children) &&
@@ -58,7 +58,7 @@ async function BaseNavItemPage({ page_details }) {
             ))}
         </div>
         {/* content with category image and list */}
-        <div className="w-[calc(100%-250px)]">
+        <div className="w-full md:w-[calc(100%-250px)]">
           <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-2">
             {page_details &&
               page_details?.children &&
@@ -72,19 +72,21 @@ async function BaseNavItemPage({ page_details }) {
                   className="w-full flex flex-col items-center gap-[15px]"
                 >
                   <div
-                    className={`w-full aspect-1 relative ${
+                    className={`w-full p-5 ${
                       item?.feature_image ? "bg-white" : "bg-neutral-200"
                     }`}
                   >
-                    {item?.feature_image && (
-                      <Image
-                        src={item?.feature_image}
-                        alt={`feat-nav-image-${index}`}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 300px"
-                      />
-                    )}
+                    <div className="aspect-1 relative ">
+                      {item?.feature_image && (
+                        <Image
+                          src={item?.feature_image}
+                          alt={`feat-nav-image-${index}`}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                        />
+                      )}
+                    </div>
                   </div>
                   <h4 className="text-center font-semibold text-sm">
                     {item?.name}
@@ -96,11 +98,12 @@ async function BaseNavItemPage({ page_details }) {
             {page_details?.cat_collections &&
               Array.isArray(page_details?.cat_collections) &&
               page_details.cat_collections.map((collection) => (
-                <div key={`cat-colleciton-display-${collection?.id}`} className="flex flex-col gap-5">
+                <div
+                  key={`cat-colleciton-display-${collection?.id}`}
+                  className="flex flex-col gap-5"
+                >
                   <h3 className="text-center">{collection?.label}</h3>
-                    <CategoryCollectionCarouselWrap
-                      data={collection?.links}
-                    />
+                  <CategoryCollectionCarouselWrap data={collection?.links} />
                 </div>
               ))}
           </div>
