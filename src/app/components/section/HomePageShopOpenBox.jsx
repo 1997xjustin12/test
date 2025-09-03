@@ -75,24 +75,42 @@ const carousel_breakpoints = [
 
 export default function HomePageShopOpenBox() {
   const [products, setProducts] = useState(null);
-  const {viewItem} = useQuickView();
+  const { viewItem } = useQuickView();
 
   const shopAllOpenBoxUrl = `${BASE_URL}/shop-all-open-box`;
   const productCategory = "outdoor-grill";
-  
+
   const handleQuickViewClick = (e, item) => {
     e.stopPropagation();
     e.preventDefault();
-    viewItem(item,productCategory);
+    viewItem(item, productCategory);
   };
 
   // fetch data
   useEffect(() => {
+    // const rawQuery = {
+    //   size: 10,
+    //   query: {
+    //     match_phrase: {
+    //       tags: "Blaze Open Box",
+    //     },
+    //   },
+    // };
+
     const rawQuery = {
-      size: 5,
+      size: 10,
       query: {
-        match_phrase: {
-          tags: "Blaze Open Box",
+        bool: {
+          must: {
+            match_phrase: {
+              tags: "Blaze Open Box",
+            },
+          },
+          must_not: {
+            term: {
+              product_id: 1099,
+            },
+          },
         },
       },
     };
@@ -104,7 +122,7 @@ export default function HomePageShopOpenBox() {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log("response data:", data); 
+        // console.log("response data:", data);
 
         const products = data?.hits?.hits;
 
@@ -123,18 +141,19 @@ export default function HomePageShopOpenBox() {
         <div className="flex flex-col md:flex-row gap-[10px] mt-5 min-h-[511px]">
           <Carousel breakpoints={carousel_breakpoints}>
             {products &&
-              products.map(({_source}, idx) => (
-                <div
-                  key={`open-box-product-${idx}`}
-                  className="w-full"
-                >
-                  <ProductCard hit={_source}/>
+              products.map(({ _source }, idx) => (
+                <div key={`open-box-product-${idx}`} className="w-full">
+                  <ProductCard hit={_source} />
                 </div>
               ))}
           </Carousel>
         </div>
         <div className="mt-5 text-center">
-          <Link prefetch={false} href={shopAllOpenBoxUrl} className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-theme-600 hover:bg-theme-500 text-white font-bold cursor-pointer">
+          <Link
+            prefetch={false}
+            href={shopAllOpenBoxUrl}
+            className="text-sm md:text-base py-[4px] px-[10px] md:py-[7px] md:px-[25px] gap-[5px] md:gap-[10px] rounded-md bg-theme-600 hover:bg-theme-500 text-white font-bold cursor-pointer"
+          >
             Shop All Open Box
           </Link>
         </div>
