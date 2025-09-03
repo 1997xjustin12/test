@@ -104,7 +104,7 @@ const sac_contents_2 = [
       "On a budget, no problem. Create your dream backyard kitchen with top-of-the-line grills, BBQ islands, and all the essential accessories, all while taking advantage of great deals and savings. Expert standing by!",
     button: {
       label: "Call now to Save",
-      url: `https://outdoorkitchenoutlet.com/pages/contact-us`,
+      url: `${BASE_URL}/contact`,
     },
   },
 ];
@@ -197,7 +197,7 @@ export default function HomePage({ params }) {
       <MobileLoader />
       <HomeHero data={pageData} />
       <FeatureCategoriesSection items={feat_carousel_items} />
-      <ShopAllClearanceSection contents={sac_contents} />
+      {/* <ShopAllClearanceSection contents={sac_contents} /> */}
       <ShopAllClearanceSection contents={sac_contents_2} />
       <ShopOpenBoxSection />
       <AboutProductSection data={about_content} />
