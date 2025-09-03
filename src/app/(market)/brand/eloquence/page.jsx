@@ -379,6 +379,21 @@ export default async function EloquencePage() {
   return (
     <>
       <MobileLoader />
+      
+      <div className="bg-black">
+        <div className="container mx-auto p-2 text-xs sm:text-base">
+          <Link
+            prefetch={false}
+            href={shopUrl}
+            className="flex justify-center items-center gap-[20px] font-medium text-white"
+          >
+            <b>Package Deals</b> Save money and stress with our package deals customized to your needs.{" "}
+            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
+              Shop now
+            </button>
+          </Link>
+        </div>
+      </div>
       <Hero />
       <div className="bg-[#e53237] mb-10">
         <div className="container mx-auto p-2 text-xs sm:text-base">
@@ -387,7 +402,7 @@ export default async function EloquencePage() {
             href={shopUrl}
             className="flex justify-center items-center gap-[20px] font-medium text-white"
           >
-            Price so low we cannot advertise. Call for Closeout Availability{" "}
+            <b>Price so low we cannot advertise.</b> Call for Closeout Availability{" "}
             <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
               See Offers!
             </button>
@@ -402,7 +417,7 @@ export default async function EloquencePage() {
             href={shopUrl}
             className="flex justify-center items-center gap-[20px] font-medium text-white"
           >
-            Free White Glove Service on Selected Items.Export{" "}
+            <b>Free White Glove Service on Selected Items.</b> Export{" "}
             <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
               Find Out More!
             </button>
