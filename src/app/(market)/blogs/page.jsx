@@ -1,5 +1,70 @@
 const DEFAULT_URL = "https://bbq-blog.onsitestorage.com";
+import { BASE_URL } from "@/app/lib/helpers";
 import he from "he";
+import Link from "next/link";
+// import Paginator from "@/app/components/atom/Paginator"
+
+const Paginator = ({ current_page = 1, total_pages = 1 }) => {
+  const btn_class =
+    "border border-[#ccc] rounded shadow bg-white flex items-center justify-center w-[40px] h-[30px]";
+
+  return (
+    <div className="flex items-center gap-[15px]">
+      <Link
+        prefetch={false}
+        href={`${BASE_URL}/blogs?page=${1}`}
+        disabled={parseInt(current_page) === 1}
+        className={btn_class}
+      >
+        {"<<"}
+      </Link>
+
+      <Link
+        prefetch={false}
+        href={`${BASE_URL}/blogs?page=${
+          parseInt(current_page) < 1 ? 1 : current_page - 1
+        }`}
+        disabled={parseInt(current_page) === 1}
+        className={btn_class}
+      >
+        {"<"}
+      </Link>
+
+      {Array.from({ length: total_pages }).map((_, i) => (
+        <Link
+          prefetch={false}
+          href={`${BASE_URL}/blogs?page=${i + 1}`}
+          key={i}
+          className={
+            btn_class +
+            " " +
+            `${parseInt(current_page) === parseInt(i + 1) ? "bg-[#ccc]" : ""}`
+          }
+        >
+          {i + 1}
+        </Link>
+      ))}
+      <Link
+        prefetch={false}
+        href={`${BASE_URL}/blogs?page=${
+          parseInt(current_page) > parseInt(total_pages)
+            ? total_pages
+            : parseInt(current_page) + 1
+        }`}
+        className={btn_class}
+      >
+        {">"}
+      </Link>
+      <Link
+        prefetch={false}
+        href={`${BASE_URL}/blogs?page=${total_pages}`}
+        className={btn_class}
+      >
+        {">>"}
+      </Link>
+    </div>
+  );
+};
 
 export async function generateMetadata() {
   const CATEGORY_ID = 2;
@@ -58,7 +123,6 @@ export async function generateMetadata() {
 
 export default async function Blogs({ searchParams }) {
   const urlParams = await searchParams;
-  console.log("[BLOGS URL PARAMS]", await searchParams);
   const page = urlParams?.page || 1;
   const perPage = urlParams?.per_page || 12;
   const search = urlParams?.search;
@@ -67,7 +131,9 @@ export default async function Blogs({ searchParams }) {
 
   // Fetch blog posts
   const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}&page=${page}&per_page=${perPage}${search? `&search${search}`:""}`,
+    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}&page=${page}&per_page=${perPage}${
+      search ? `&search${search}` : ""
+    }`,
     {
       cache: "no-store",
     }
@@ -81,8 +147,6 @@ export default async function Blogs({ searchParams }) {
   // Pagination info is in headers
   const totalPosts = res.headers.get("X-WP-Total");
   const totalPages = res.headers.get("X-WP-TotalPages");
-  console.log("[TOTAL BLOGS]", totalPosts);
-  console.log("[TOTAL BLOG PAGES]", totalPages);
 
   // Fetch Featured Images
   const postsWithImages = await Promise.all(
@@ -128,7 +192,11 @@ export default async function Blogs({ searchParams }) {
                 </a>
                 <div className="p-4">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    <a href={`/blogs/${post.slug}`} className="hover:underline line-clamp-2" title={he.decode(post.title.rendered)}>
+                    <a
+                      href={`/blogs/${post.slug}`}
+                      className="hover:underline line-clamp-2"
+                      title={he.decode(post.title.rendered)}
+                    >
                       {he.decode(post.title.rendered)}
                     </a>
                   </h3>
@@ -148,6 +216,9 @@ export default async function Blogs({ searchParams }) {
           ) : (
             <p className="text-gray-500">No blog posts available.</p>
           )}
+        </div>
+        <div className="mt-10">
+          <Paginator total_pages={totalPages} current_page={page} />
         </div>
       </div>
     </section>
