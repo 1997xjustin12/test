@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPost({ params }) {
-    const { slug } = params;
+    const { slug } = await params;
     const CATEGORY_ID = 2; // Replace with actual "Solana" category ID
     const PER_PAGE = 5;
     const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;

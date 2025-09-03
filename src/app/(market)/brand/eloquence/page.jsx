@@ -2,11 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 // COMPONENTS
-import SectionHeader from "@/app/components/atom/SectionHeader";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
-import FAQsSection from "@/app/components/atom/FAQs"
+import FAQsSection from "@/app/components/atom/FAQs";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
+import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
@@ -77,45 +77,28 @@ const flattenNav = (navItems) => {
 };
 // EXTENDED COMPONENT
 const Hero = () => {
-  const useBanner = "/images/banner/home-banner.webp";
+  const useBanner = "/images/banner/eloquence-fathers-day.webp";
+  const bgWrapClass = `absolute inset-0 bg-[url('/images/banner/eloquence-fathers-day.webp')] bg-cover bg-center blur-xl to-transparent opacity-50`;
   // const data = {
   //   title: "Grill Better for Less with Solana Outdoor Kitchen Equipments",
   //   tag_line:
   //     "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
   // };
   return (
-    <div
-      className={`w-full mx-auto flex flex-col md:flex-row`}
-    >
-      <div className={`w-full md:w-full`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover bg-stone-800 h-[250px] md:h-[calc(100vh-450px)] md:max-h-[550px]">
+    <div className={`w-full mx-auto flex flex-col md:flex-row`}>
+      <div className={`w-full md:w-full relative overflow-hidden`}>
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[500/143]">
           {
             <Image
               src={useBanner}
               alt={"Banner"}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               fill
               loading="eager"
               priority={true}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
             />
           }
-          {/* <div className="absolute z-[9999] inset-0 m-auto flex items-center justify-center">
-            <div className="container text-center flex justify-center">
-              <div className="flex flex-col items-center justify-center w-full">
-                <div className="w-[90%]">
-                  <h1 className="text-balance text-md tracking-wide text-white md:text-4xl drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] italic">
-                    {data?.title}
-                  </h1>
-                </div>
-                <div className="w-[75%]">
-                  <h2 className="text-xs md:text-base text-balance font-normal mt-1 tracking-wide text-white drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] text-center">
-                    {data?.tag_line}
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>
@@ -153,7 +136,7 @@ const SubCategoriesDisplay = ({ categories }) => {
   return (
     <div>
       <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-        <div className="flex gap-[30px]">
+        <div className="hidden md:flex gap-[30px]">
           {categories &&
             Array.isArray(categories) &&
             categories?.length > 0 &&
@@ -182,6 +165,47 @@ const SubCategoriesDisplay = ({ categories }) => {
               </Link>
             ))}
         </div>
+        {/* mobile */}
+        <div className="flex md:hidden">
+          <YmalCarousel
+            breakpoints={[
+              { minWidth: 0, value: 1 },
+              { minWidth: 375, value: 2 },
+              { minWidth: 560, value: 3 },
+              // { minWidth: 1280, value: 4 },
+              // { minWidth: 1380, value: 5 },
+              // { minWidth: 1480, value: 6 },
+            ]}
+          >
+{categories &&
+            Array.isArray(categories) &&
+            categories?.length > 0 &&
+            categories.map((category, index) => (
+              <Link
+                prefetch={false}
+                href={category?.url}
+                className="w-[220px] flex flex-col gap-[15px] group"
+                key={`sub-category-flex-display-${index}`}
+              >
+                <div className="aspect-1 p-[30px] rounded-full bg-neutral-white relative box-border border-[10px] border-white group-hover:border-slate-300 group-hover:shadow transition-all duration-300 ease-in-out group-hover:pb-[40px] group-hover:pt-[20px] overflow-hidden">
+                  <div className="aspect-1 box-border relative">
+                    {category?.image && (
+                      <Image
+                        src={category?.image}
+                        title={`${category?.name} Image`}
+                        alt={`${createSlug(category?.name)}-image`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="text-center font-bold">{category?.name}</div>
+              </Link>
+            ))}
+            </YmalCarousel>
+        </div>
       </div>
     </div>
   );
@@ -190,7 +214,7 @@ const SubCategoriesDisplay = ({ categories }) => {
 const AboutSection = () => {
   return (
     <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         <div className="w-full">
           <div className="aspect-w-3 aspect-h-2 relative">
             <Image
@@ -250,28 +274,19 @@ const AboutSection = () => {
 
 const blogs = [
   {
-    title: "Blog 1",
-    img: "/images/home/blogs/the-ultimate-guide-to-building-your-dream-outdoor-bbq-kitchen-solana.webp",
-    tag: "Buying Guide",
-    tag_bg: "bg-green-600",
-    content:
-      "This comprehensive guide will walk you through every step of the process, from initial planning to adding those final personal touches.",
+    title: "Outdoor Refrigerator Maintenance: A Step-by-Step Guide",
+    url: `${BASE_URL}/blogs/outdoor-refrigerator-maintenance-tips`,
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/refrigerator-maintenance.webp",
   },
   {
-    title: "Blog 2",
-    img: "/images/home/blogs/your-guide-to-affordable-bbq-bliss-image-solana.webp",
-    tag: "Buying Guide",
-    tag_bg: "bg-green-600",
-    content:
-      "This guide will walk you through the steps to designing a fantastic outdoor BBQ kitchen without breaking the bank.",
+    title: "Blaze Prelude Grill: Durable Stainless Steel Grill",
+    url: `${BASE_URL}/blogs/blaze-prelude-grill`,
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/blaze-prelude-grill.webp",
   },
   {
-    title: "Blog 3",
-    img: "/images/home/blogs/essential-outdoor-kitchen-maintenance-tips-for-long-lasting-performance-image-solana.webp",
-    tag: "Tips & Tricks",
-    tag_bg: "bg-rose-600",
-    content:
-      "This guide provides key tips for effective outdoor kitchen maintenance, helping you preserve both beauty and functionality.",
+    title: "Grill Showdown: Small Propane vs. Charcoal Grill",
+    url: `${BASE_URL}/blogs/small-propane-vs-charcoal-grill`,
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/propane-grill-vs.-charcoal-grill.webp",
   },
 ];
 
@@ -288,12 +303,28 @@ const BlogsSection = ({ blogs }) => {
               key={`blog-item-${index}`}
               className="w-full flex flex-col gap-[15px]"
             >
-              <div className="aspect-[4/3] relative bg-neutral-200 flex items-center justify-center">
-                <div className="font-bold text-neutral-500">
-                  Blog Image Here
-                </div>
-              </div>
-              <h5 className="text-lg font-bold text-center">{blog?.title}</h5>
+              <Link
+                prefetch={false}
+                href={blog?.url}
+                title={blog?.title}
+                className="aspect-[16/9] relative bg-white flex items-center justify-center"
+              >
+                {blog?.img && (
+                  <Image
+                    src={blog?.img}
+                    title={`${blog?.title} Image`}
+                    alt={`${createSlug(blog?.title)}-image`}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
+                )}
+              </Link>
+              <h5 className="text-lg font-bold text-center">
+                <Link prefetch={false} href={blog?.url} title={blog?.title}>
+                  {blog?.title}
+                </Link>
+              </h5>
             </div>
           ))}
       </div>
@@ -302,33 +333,42 @@ const BlogsSection = ({ blogs }) => {
 };
 
 const videos = [
-  {title: `TWIN EAGLES 18″ OUTDOOR BAR Outdoor Kitchen Outlet`, src: "https://www.youtube.com/embed/-0u7Q_WBmyE" },
-  {title: `Welcome to Outdoor Kitchen Outlet`, src: "https://www.youtube.com/embed/RhECp_AXlNQ" },
-  {title: `TWIN EAGLES FREESTANDING DINE & BREAKFAST CLUB 30” Gas Grill Base with 2 Doors Outdoor Kitchen Outlet`, src: "https://www.youtube.com/embed/jsjhMVh4aHY" }
+  {
+    title: `TWIN EAGLES 18″ OUTDOOR BAR Outdoor Kitchen Outlet`,
+    src: "https://www.youtube.com/embed/-0u7Q_WBmyE",
+  },
+  {
+    title: `Welcome to Outdoor Kitchen Outlet`,
+    src: "https://www.youtube.com/embed/RhECp_AXlNQ",
+  },
+  {
+    title: `TWIN EAGLES FREESTANDING DINE & BREAKFAST CLUB 30” Gas Grill Base with 2 Doors Outdoor Kitchen Outlet`,
+    src: "https://www.youtube.com/embed/jsjhMVh4aHY",
+  },
 ];
 
-const VideoSection = ({videos}) => {
+const VideoSection = ({ videos }) => {
   return (
     <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
       <h4 className="font-bold text-2xl mb-3">Elouqence Videos</h4>
       <div className="flex flex-col md:flex-row gap-[20px]">
-        {
-          videos && Array.isArray(videos) && videos?.length > 0 &&
-          videos.map((video, index) => 
-        <div key={`video-section-item-${index}`} className="w-full">
-          <iframe
-            className="w-full aspect-[4/3]"
-            src={video?.src}
-            title={video?.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>)
-        }
+        {videos &&
+          Array.isArray(videos) &&
+          videos?.length > 0 &&
+          videos.map((video, index) => (
+            <div key={`video-section-item-${index}`} className="w-full">
+              <iframe
+                className="w-full aspect-[4/3]"
+                src={video?.src}
+                title={video?.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          ))}
       </div>
     </div>
   );
-
 };
 
 // MAIN COMPONENT
@@ -341,14 +381,14 @@ export default async function EloquencePage() {
       <MobileLoader />
       <Hero />
       <div className="bg-[#e53237] mb-10">
-        <div className="container mx-auto p-2">
+        <div className="container mx-auto p-2 text-xs sm:text-base">
           <Link
             prefetch={false}
             href={shopUrl}
             className="flex justify-center items-center gap-[20px] font-medium text-white"
           >
             Price so low we cannot advertise. Call for Closeout Availability{" "}
-            <button className="p-2 bg-neutral-50 font-bold text-black">
+            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
               See Offers!
             </button>
           </Link>
@@ -356,21 +396,21 @@ export default async function EloquencePage() {
       </div>
       <SubCategoriesDisplay categories={sub_category_obj} />
       <div className="bg-black mb-10">
-        <div className="container mx-auto p-2">
+        <div className="container mx-auto p-2 text-xs sm:text-base">
           <Link
             prefetch={false}
             href={shopUrl}
             className="flex justify-center items-center gap-[20px] font-medium text-white"
           >
             Free White Glove Service on Selected Items.Export{" "}
-            <button className="p-2 bg-neutral-50 font-bold text-black">
+            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
               Find Out More!
             </button>
           </Link>
         </div>
       </div>
 
-      <div className="container mx-auto mb-10 flex flex-col gap-[20px]">
+      <div className="container mx-auto mb-10 flex flex-col gap-[20px] px-[10px] lg:px-[20px]">
         <CollectionCarouselWrap
           data={{ id: 17, mb_label: "Exclusive Offers For You" }}
         />
@@ -385,7 +425,7 @@ export default async function EloquencePage() {
         </div>
       </div>
 
-      <div className="container mx-auto mb-10 flex flex-col gap-[20px]">
+      <div className="container mx-auto mb-10 flex flex-col gap-[20px] px-[10px] lg:px-[20px]">
         <CollectionCarouselWrap
           data={{ id: 17, mb_label: "Best Seller For Eloquence" }}
         />
@@ -404,7 +444,10 @@ export default async function EloquencePage() {
       <VideoSection videos={videos} />
       <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
         <h4 className="font-bold text-2xl mb-3">Frequently Asked Questions</h4>
-        <FAQsSection faqs={faqs} itemClassName="bg-red-600 hover:bg-red-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"/>
+        <FAQsSection
+          faqs={faqs}
+          itemClassName="bg-red-600 hover:bg-red-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
+        />
       </div>
     </>
   );

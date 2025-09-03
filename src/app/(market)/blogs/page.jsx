@@ -56,13 +56,18 @@ export async function generateMetadata() {
   };
 }
 
-export default async function Blogs() {
+export default async function Blogs({ searchParams }) {
+  const urlParams = await searchParams;
+  console.log("[BLOGS URL PARAMS]", await searchParams);
+  const page = urlParams?.page || 1;
+  const perPage = urlParams?.per_page || 12;
+  const search = urlParams?.search;
   const CATEGORY_ID = 2;
   const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;
 
   // Fetch blog posts
   const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}`,
+    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}&page=${page}&per_page=${perPage}${search? `&search${search}`:""}`,
     {
       cache: "no-store",
     }
@@ -72,6 +77,12 @@ export default async function Blogs() {
     return <p className="text-red-500">Error fetching blog posts.</p>;
 
   const posts = await res.json();
+
+  // Pagination info is in headers
+  const totalPosts = res.headers.get("X-WP-Total");
+  const totalPages = res.headers.get("X-WP-TotalPages");
+  console.log("[TOTAL BLOGS]", totalPosts);
+  console.log("[TOTAL BLOG PAGES]", totalPages);
 
   // Fetch Featured Images
   const postsWithImages = await Promise.all(
@@ -94,12 +105,6 @@ export default async function Blogs() {
     })
   );
 
-  function decodeHTMLEntities(text) {
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = text;
-    return textarea.value;
-  }
-
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-8">
       <div className="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -116,25 +121,24 @@ export default async function Blogs() {
                 <a href={`/blogs/${post.slug}`} className="block">
                   <img
                     src={post.featuredImage}
-                    alt={post.title.rendered}
+                    alt={he.decode(post.title.rendered)}
+                    title={he.decode(post.title.rendered)}
                     className="w-full h-48 object-cover rounded-t-lg"
                   />
                 </a>
                 <div className="p-4">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    <a href={`/blogs/${post.slug}`} className="hover:underline">
-                      {post.title.rendered}
+                    <a href={`/blogs/${post.slug}`} className="hover:underline line-clamp-2" title={he.decode(post.title.rendered)}>
+                      {he.decode(post.title.rendered)}
                     </a>
                   </h3>
                   <p className="text-gray-500 dark:text-gray-300 text-sm mt-2 line-clamp-3">
-                    {he.decode(
-                      post.excerpt.rendered
-                        .replace(/<[^>]*>?/gm, "")
-                    )}
+                    {he.decode(post.excerpt.rendered.replace(/<[^>]*>?/gm, ""))}
                   </p>
                   <a
                     href={`/blogs/${post.slug}`}
                     className="text-blue-600 dark:text-blue-400 font-semibold mt-2 inline-block"
+                    title={he.decode(post.title.rendered)}
                   >
                     Read more →
                   </a>
