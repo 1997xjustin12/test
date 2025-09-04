@@ -2,7 +2,8 @@
 import API from "@searchkit/api";
 import { ES_INDEX } from "../../../app/lib/helpers";
 
-const exclude_brands = ["Bull Outdoor Products"];
+// const exclude_brands = ["Bull Outdoor Products"];
+const exclude_brands = [];
 const apiClient = API(
   {
     connection: {

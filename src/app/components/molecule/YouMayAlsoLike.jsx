@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/app/components/atom/ProductCard";
 import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
 
-const exclude_brands = ["Bull Outdoor Products"];
+// const exclude_brands = ["Bull Outdoor Products"];
+const exclude_brands = [];
 
 export default function YouMayAlsoLike({ displayItems }) {
   const [products, setProducts] = useState([]);

@@ -11,7 +11,8 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-const exclude_brands = ["Bull Outdoor Products"];
+// const exclude_brands = ["Bull Outdoor Products"];
+const exclude_brands = [];
 
 const SearchContext = createContext();
 export const useSearch = () => {
