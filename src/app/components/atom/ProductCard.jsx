@@ -132,7 +132,7 @@ const ProductCard = ({ hit, page_details   }) => {
             {/* <div className={`text-[0.75rem]`}>git  */}
           </div>
           <div className="mt-3 text-xs">{hit.brand}</div>
-          <div className="mt-3">
+          <div className="mt-3 min-h-[45px] flex items-center">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <div className="font-medium text-[14px] text-stone-700">
                 Contact us for pricing.

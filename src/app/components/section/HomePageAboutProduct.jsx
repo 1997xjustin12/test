@@ -3,14 +3,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { ICRoundPhone } from "../icons/lib";
 
-export default function HomePageAboutProduct({data}) {
+export default function HomePageAboutProduct({data, textColor="text-black", bgColor="bg-white", children}) {
   const [expand, setExpand] = useState(false);
 
   const handleExpandContent = () => {
     setExpand((prev) => !prev);
   };
   return (
-    <div className="container mx-auto bg-[#F6F6F6] mt-5">
+    <div className={`container mx-auto ${textColor} ${bgColor}`}>
       <div className="w-full flex flex-col md:flex-row">
         <div className="w-full xl:w-[60%] p-[40px] flex flex-col gap-[30px]">
           <h2 className="md:text-4xl text-[30px] font-normal italic font-libre">
@@ -54,7 +54,8 @@ export default function HomePageAboutProduct({data}) {
             ))}
           </div>
           <div className="flex justify-center md:justify-start">
-            <a href={`tel:${data?.contact}`}>
+            {
+              children ? children: <a href={`tel:${data?.contact}`}>
               <button className={data?.button?.className || "font-bold bg-theme-600 hover:bg-theme-500 text-white py-[4px] px-[10px] md:py-[7px] md:px-[25px] rounded-md flex items-center gap-[5px] md:gap-[10px]"}>
                 <ICRoundPhone />
                 <div className="text-sm md:text-base">
@@ -62,6 +63,7 @@ export default function HomePageAboutProduct({data}) {
                 </div>
               </button>
             </a>
+            }
           </div>
         </div>
         <div className="hidden xl:flex w-full xl:w-[40%] p-[40px] items-center justify-center">

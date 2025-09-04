@@ -1,7 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import SectionHeader from "../atom/SectionHeader";
 
-export default function HomeBlogs({ title = "", contents }) {
+export default function HomeBlogs({ title = "", contents, imageAspect="aspect-[4/3]"}) {
   return (
     <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
@@ -16,8 +17,9 @@ export default function HomeBlogs({ title = "", contents }) {
                   >
                     {i.tag}
                   </div>
-                  <div className="aspect-w-3 aspect-h-2 bg-stone-800">
+                  <div className={`${imageAspect} bg-stone-800`}>
                     {i?.img && (
+                      <Link prefetch={false} href={i?.url || "#"}>
                       <Image
                         src={i.img}
                         alt={`${i.title}-image`}
@@ -26,21 +28,22 @@ export default function HomeBlogs({ title = "", contents }) {
                         height={0}
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
                       />
+                      </Link>
                     )}
                   </div>
                 </div>
                 <div className="py-[15px] flex flex-col gap-[20px] transition-all duration-500">
                   <div className="flex flex-col gap-[15px] h-[150px]">
-                    <div className="px-2 group-hover:underline font-normal font-libre transition-all duration-300 italic text-center h-[52px] line-clamp-2">
+                    <Link prefetch={false} href={i?.url || "#"} className="px-2 group-hover:underline font-normal font-libre transition-all duration-300 italic text-center h-[52px] line-clamp-2">
                       <h3>{i.title}</h3>
-                    </div>
+                    </Link>
                     <div className="text-sm md:text-base h-[72px] line-clamp-3 px-2">
                       {i.content}
                     </div>
                   </div>
-                  <div className="text-sm md:text-base underline font-bold text-right px-4">
+                  <Link prefetch={false} href={i?.url || "#"} className="text-sm md:text-base underline font-bold text-right px-4">
                     LEARN MORE
-                  </div>
+                  </Link>
                 </div>
               </div>
             ))}

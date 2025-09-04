@@ -6,10 +6,10 @@ import Link from "next/link";
 
 const Paginator = ({ current_page = 1, total_pages = 1 }) => {
   const btn_class =
-    "border border-[#ccc] rounded shadow bg-white flex items-center justify-center w-[40px] h-[30px]";
+    "border border-[#ccc] rounded shadow bg-white flex items-center justify-center w-[40px] h-[30px] text-xs";
 
   return (
-    <div className="flex items-center gap-[15px]">
+    <div className="flex items-center gap-[5px] md:gap-[15px]">
       <Link
         prefetch={false}
         href={`${BASE_URL}/blogs?page=${1}`}
@@ -146,6 +146,7 @@ export default async function Blogs({ searchParams }) {
 
   // Pagination info is in headers
   const totalPosts = res.headers.get("X-WP-Total");
+  console.log("[totalPosts]", totalPosts);
   const totalPages = res.headers.get("X-WP-TotalPages");
 
   // Fetch Featured Images
