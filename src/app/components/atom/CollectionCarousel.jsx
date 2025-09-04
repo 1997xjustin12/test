@@ -11,7 +11,7 @@ function SampleNextArrow(props) {
   return (
     <div
       onClick={onClick}
-      className="absolute z-[1] top-[50%] right-[0px] group">
+      className="absolute z-[1] right-[0px] top-1/2 -translate-y-1/2 group">
       <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg group-hover:border-2 group-hover:border-neutral-300">
         <div className="bg-white text-neutral-600 opacity-70 group-hover:opacity-100 cursor-pointer">
           <FluentChevronRight />
@@ -26,7 +26,7 @@ function SamplePrevArrow(props) {
   return (
     <div
       onClick={onClick}
-      className="absolute z-[1] top-[50%] left-[0px] group">
+      className="absolute z-[1] left-[0px] top-1/2 -translate-y-1/2 group">
       <div className="rounded-full shadow-md overflow-hidden group-hover:shadow-lg group-hover:border-2 group-hover:border-neutral-300">
         <div className="bg-white text-neutral-600 opacity-70 group-hover:opacity-100 cursor-pointer">
           <FluentChevronLeft />

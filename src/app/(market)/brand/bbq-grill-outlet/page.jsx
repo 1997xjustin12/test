@@ -14,6 +14,7 @@ import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
 import BlogsSection from "@/app/components/section/HomeBlogs";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
+import CollectionCarousel from "@/app/components/atom/CollectionCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
@@ -496,6 +497,76 @@ const OuterKitchenAndAccessories = () => {
     </div>
   );
 };
+const TopBrandsCarousel = () => {
+  const brands = [
+    {
+      name: "Blaze Outdoor Products",
+      image: "/images/feature/blaze-outdoor-products-logo.webp",
+      url: `${BASE_URL}/blaze-outdoor-products`,
+    },
+    {
+      name: "American Outdoor Grill",
+      image: "/images/feature/aog-logo.webp",
+      url: `${BASE_URL}/aog`,
+    },
+    {
+      name: "Bull Outdoor Products",
+      image: "/images/feature/bull-outdoor-products-logo.webp",
+      url: `${BASE_URL}/bull-outdoor-products`,
+    },
+    {
+      name: "Delta Heat",
+      image: "/images/feature/delta-heat-logo.webp",
+      url: `${BASE_URL}/delta-heat`,
+    },
+    {
+      name: "Broilmaster",
+      image: "/images/feature/broilmaster-logo.webp",
+      url: `${BASE_URL}/broilmaster`,
+    },
+    {
+      name: "Bonfire",
+      image: "/images/feature/bonefire-logo.webp",
+      url: `${BASE_URL}/bonfire`,
+    },
+  ];
+
+  const items_per_break_point = [
+    { minWidth: 0, value: 3 },
+    { minWidth: 640, value: 4 },
+    { minWidth: 768, value: 5 },
+    { minWidth: 1280, value: 6 },
+    { minWidth: 1550, value: 8 },
+  ];
+
+  return (
+    <div className="container mx-auto my-[50px]">
+      <h2 className="text-xl md:text-4xl text-[30px] font-normal underline italic font-libre">
+        Our Top Brands
+      </h2>
+      <CollectionCarousel breakpoints={items_per_break_point}  settings={{autoplay:true, dots:true}}>
+        {brands &&
+          Array.isArray(brands) &&
+          brands.map((brand) => (
+            <Link prefetch={false} href={brand?.url || "#"} key={`brand-${createSlug(brand?.name)}`}
+            className="relative aspect-1 flex items-center"
+            >
+              {brand?.image && (
+                <Image
+                  src={brand?.image}
+                  title={brand?.name}
+                  alt={`${createSlug(brand?.name)}-image`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 300px"
+                />
+              )}
+            </Link>
+          ))}
+      </CollectionCarousel>
+    </div>
+  );
+};
 
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
@@ -529,6 +600,7 @@ export default async function SolanaGrillsPage() {
       </div>
       <ReviewsSection />
       <ShopAllGrills />
+      <TopBrandsCarousel />
       <BlogsSection
         title={blogs_title}
         contents={blogs}
