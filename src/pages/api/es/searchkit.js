@@ -1,6 +1,6 @@
 // pages/api/es/searchkit.js
 import API from "@searchkit/api";
-import { ES_INDEX } from "../../../app/lib/helpers";
+import { BaseNavKeys, BaseNavObj, ES_INDEX } from "../../../app/lib/helpers";
 
 // const exclude_brands = ["Bull Outdoor Products"];
 const exclude_brands = [];
@@ -251,17 +251,29 @@ export default async function handler(req, res) {
 
       filter_query.push(...tmp_query);
     }
+      console.log("[TEST NI] filter_value:", filter_value)
     
     // This will display no products for category links that are not known.
     if (
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-      filter_query.push({
-        term: {
-          "collections.name.keyword": filter_value,
-        },
-      });
+
+      if(BaseNavKeys.includes(filter_value)){
+        const value_array = BaseNavObj?.[filter_value];
+        console.log("[TEST NI]", value_array);
+        filter_query.push({
+          terms: {
+            "collections.name.keyword": value_array,
+          },
+        });
+      }else{
+        filter_query.push({
+          term: {
+            "collections.name.keyword": filter_value,
+          },
+        });
+      }
     }
 
     const data = req.body;

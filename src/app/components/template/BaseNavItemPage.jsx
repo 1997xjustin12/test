@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
+import ProductsSection from "@/app/components/molecule/ProductsSection";
 
 async function BaseNavItemPage({ page_details }) {
   if (!page_details) {
@@ -119,6 +120,9 @@ async function BaseNavItemPage({ page_details }) {
               data={collection}
             />
           ))}
+      </div>
+      <div>
+        <ProductsSection category={page_details?.url} />
       </div>
     </div>
   );

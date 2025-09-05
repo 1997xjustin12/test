@@ -510,7 +510,7 @@ const TopBrandsCarousel = () => {
       url: `${BASE_URL}/aog`,
     },
     {
-      name: "Bull Outdoor Products",
+      name: "Bull Outdoor Products",     
       image: "/images/feature/bull-outdoor-products-logo.webp",
       url: `${BASE_URL}/bull-outdoor-products`,
     },

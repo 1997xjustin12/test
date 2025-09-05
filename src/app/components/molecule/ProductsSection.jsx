@@ -20,7 +20,7 @@ import {
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
-import { ES_INDEX } from "@/app/lib/helpers";
+import { BaseNavKeys, ES_INDEX } from "@/app/lib/helpers";
 
 const es_index = ES_INDEX;
 
@@ -141,7 +141,10 @@ const Panel = ({ header, children }) => {
 
   return (
     <div className="panel border border-gray-200 shadow p-2">
-      <button onClick={()=> setExpanded(prev => !prev)} className="w-full flex items-center gap-[20px]">
+      <button
+        onClick={() => setExpanded((prev) => !prev)}
+        className="w-full flex items-center gap-[20px]"
+      >
         <h5 className="uppercase font-semibold">{header}</h5>
         {expanded ? (
           <svg
@@ -196,7 +199,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const { setSearchPageProductCount } = useSearch();
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
-
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -481,9 +483,15 @@ function ProductsSection({ category, search = "" }) {
             if (details?.name === "Search") {
               result = `custom_page:Search`;
             } else {
-              result = `custom_page:${
-                details?.collection_display?.name || "NA"
-              }`;
+              const page_name = details?.name;
+              // TEMPORARY: extend value assignment
+              if (BaseNavKeys.includes(page_name)) {
+                result = `custom_page:${page_name}`;
+              } else {
+                result = `custom_page:${
+                  details?.collection_display?.name || "NA"
+                }`;
+              }
             }
           }
           return result;

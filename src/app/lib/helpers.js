@@ -369,9 +369,41 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
 export const mapOrderItems = (items) => {
   return items.map((item) => ({
     product_id: item?.product_id,
-    product_link: `${store_domain}/${createSlug(item?.brand)}/product/${item?.handle}`,
+    product_link: `${store_domain}/${createSlug(item?.brand)}/product/${
+      item?.handle
+    }`,
     price: item?.variants?.[0]?.price,
     quantity: item.count,
     total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
   }));
 };
+
+export const BaseNavObj = {
+  Fireplaces: ["Shop Gas Fireplaces", "Shop Electric Fireplaces"],
+  "Patio Heaters": [
+    "Shop Electric Patio Heaters",
+    "Shop Gas Patio Heaters",
+    "Shop Freestanding Patio Heaters",
+  ],
+  "Built-In Grills": [
+    "Shop Blaze Built-In Grills",
+    "Shop Bull Built-In Grills",
+    "Shop Eloquence Built-In Grills",
+    "Shop Twin Eagles Built-an Grills",
+  ],
+  "Freestanding Grills": [
+    "Shop Blaze Freestanding Grills",
+    "Shop Bull Freestanding Grills",
+    "Shop Twin Eagles Freestanding Grills",
+  ],
+  "Freestanding Grills": [
+    "Shop Blaze Freestanding Grills",
+    "Shop Bull Freestanding Grills",
+    "Shop Twin Eagles Freestanding Grills",
+  ],
+  "Open Box": [
+    "Shop Open Box",
+  ],
+};
+
+export const BaseNavKeys = Object.keys(BaseNavObj);
