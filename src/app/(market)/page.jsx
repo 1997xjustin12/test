@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 // home page section import in order
 import HomeHero from "@/app/components/atom/HomeHero";
@@ -160,6 +161,32 @@ const faqs = [
 ];
 
 
+const Hero = () => {
+  const useBanner = "/images/banner/home-banner-202509.webp";
+  return (
+    <div className={`w-full mx-auto flex flex-col md:flex-row`}>
+      <div className={`w-full md:w-full relative overflow-hidden`}>
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[414/77]">
+          {
+            <Image
+              src={useBanner}
+              alt={"Banner"}
+              className="w-full h-full object-contain"
+              fill
+              loading="eager"
+              priority={true}
+              quality={100}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
+          }
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {
   const [pageData, setPageData] = useState(null);
@@ -195,8 +222,12 @@ export default function HomePage({ params }) {
     // <HomePageWrapper data={page_data} />
     <>
       <MobileLoader />
-      <HomeHero data={pageData} />
-      <FeatureCategoriesSection items={feat_carousel_items} />
+      <Hero />
+      {/* <HomeHero data={pageData} /> */}
+      <div className="mt-10">
+        <FeatureCategoriesSection items={feat_carousel_items} />
+      </div>
+
       {/* <ShopAllClearanceSection contents={sac_contents} /> */}
       <ShopAllClearanceSection contents={sac_contents_2} />
       <ShopOpenBoxSection />
