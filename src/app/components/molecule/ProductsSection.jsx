@@ -34,7 +34,7 @@ const filters = [
   },
   {
     label: "configuration",
-    attribute: "configuration",
+    attribute: "configuration_type",
     searchable: false,
     type: "RefinementList",
     filter_type: ["grills"],
