@@ -1,6 +1,6 @@
 // pages/api/es/searchkit.js
 import API from "@searchkit/api";
-import { BaseNavKeys, BaseNavObj, ES_INDEX } from "../../../app/lib/helpers";
+import { BaseNavKeys, BaseNavObj, burnerBuckets, ES_INDEX } from "../../../app/lib/helpers";
 
 // const exclude_brands = ["Bull Outdoor Products"];
 const exclude_brands = [];
@@ -115,24 +115,6 @@ const apiClient = API(
 
           // Define normalized buckets
           facetQuery: () => {
-            const burnerBuckets = {
-              "1 Burner": ["1", "1 Burner", "one"],
-              "2 Burners": ["2", "2 Burner", "two"],
-              "3 Burners": ["3", "3 Burner", "three"],
-              "4 Burners": ["4", "4 Burner", "four"],
-              "5+ Burners": [
-                "5",
-                "6",
-                "7",
-                "8",
-                "5 Burners",
-                "five",
-                "six",
-                "seven",
-                "eight",
-              ],
-            };
-
             return {
               filters: {
                 filters: Object.fromEntries(
@@ -163,22 +145,6 @@ const apiClient = API(
 
           // Build filter query when user selects a value
           filterQuery: (field, value) => {
-            const burnerBuckets = {
-              "1 Burner": ["1", "1 Burner", "one"],
-              "2 Burners": ["2", "2 Burner", "two"],
-              "3 Burners": ["3", "3 Burner", "three"],
-              "4 Burners": ["4", "4 Burner", "four"],
-              "5+ Burners": [
-                "5",
-                "6",
-                "7",
-                "8",
-                "5 Burners",
-                "six",
-                "seven",
-                "eight",
-              ],
-            };
 
             return {
               terms: {
