@@ -37,7 +37,7 @@ async function BaseNavItemPage({ page_details }) {
                 <Link
                   prefetch={false}
                   href={`${BASE_URL}/${item?.url}`}
-                  className="text-lg font-semibold hover:underline hover:text-theme-800"
+                  className="text-sm font-semibold hover:underline hover:text-theme-800"
                 >
                   {item?.name}
                 </Link>
@@ -50,7 +50,7 @@ async function BaseNavItemPage({ page_details }) {
                       key={`sidebar-sub-category-link-${index}-${index2}-${item?.slug}`}
                       prefetch={false}
                       href={`${BASE_URL}/${sub?.url}`}
-                      className="hover:underline hover:text-theme-800"
+                      className="hover:underline hover:text-theme-800 text-xs"
                     >
                       {sub?.name}
                     </Link>
