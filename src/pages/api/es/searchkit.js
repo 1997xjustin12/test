@@ -55,17 +55,140 @@ const apiClient = API(
           type: "string",
         },
         { attribute: "brand", field: "brand.keyword", type: "string" },
-
         {
           attribute: "configuration_type",
-          field: "accentuate_data.bbq.configuration_type",
+          field: "accentuate_data.bbq.configuration_type", // informational only
           type: "string",
+
+          facetQuery: () => ({
+            // We don’t rely on ES aggregations here
+            filters: {
+              filters: {
+                "Built-In": {
+                  match_phrase: {
+                    tags: "built in",
+                  },
+                },
+                Freestanding: {
+                  match_phrase: {
+                    tags: "freestanding",
+                  },
+                },
+              },
+            },
+          }),
+
+          facetResponse: (aggregation) => {
+            const buckets = aggregation.buckets || {};
+            return Object.keys(buckets).reduce((acc, key) => {
+              const count = buckets[key]?.doc_count ?? 0;
+              if (count > 0) {
+                acc[key] = count; // only include non-zero
+              }
+              return acc;
+            }, {});
+          },
+
+          filterQuery: (field, value) => {
+            if (value === "Built-In") {
+              return {
+                match_phrase: {
+                  tags: "built in",
+                },
+              };
+            }
+            if (value === "Freestanding") {
+              return {
+                match_phrase: {
+                  tags: "freestanding",
+                },
+              };
+            }
+            return {};
+          },
         },
+
         {
           attribute: "no_of_burners",
           field: "accentuate_data.bbq.number_of_main_burners",
           type: "string",
+
+          // Define normalized buckets
+          facetQuery: () => {
+            const burnerBuckets = {
+              "1 Burner": ["1", "1 Burner", "one"],
+              "2 Burners": ["2", "2 Burner", "two"],
+              "3 Burners": ["3", "3 Burner", "three"],
+              "4 Burners": ["4", "4 Burner", "four"],
+              "5+ Burners": [
+                "5",
+                "6",
+                "7",
+                "8",
+                "5 Burners",
+                "five",
+                "six",
+                "seven",
+                "eight",
+              ],
+            };
+
+            return {
+              filters: {
+                filters: Object.fromEntries(
+                  Object.entries(burnerBuckets).map(([label, values]) => [
+                    label,
+                    {
+                      terms: {
+                        "accentuate_data.bbq.number_of_main_burners": values,
+                      },
+                    },
+                  ])
+                ),
+              },
+            };
+          },
+
+          // Map ES response to facet values & hide zero counts
+          facetResponse: (aggregation) => {
+            const buckets = aggregation.buckets || {};
+            return Object.keys(buckets).reduce((acc, key) => {
+              const count = buckets[key]?.doc_count ?? 0;
+              if (count > 0) {
+                acc[key] = count; // only include non-zero
+              }
+              return acc;
+            }, {});
+          },
+
+          // Build filter query when user selects a value
+          filterQuery: (field, value) => {
+            const burnerBuckets = {
+              "1 Burner": ["1", "1 Burner", "one"],
+              "2 Burners": ["2", "2 Burner", "two"],
+              "3 Burners": ["3", "3 Burner", "three"],
+              "4 Burners": ["4", "4 Burner", "four"],
+              "5+ Burners": [
+                "5",
+                "6",
+                "7",
+                "8",
+                "5 Burners",
+                "six",
+                "seven",
+                "eight",
+              ],
+            };
+
+            return {
+              terms: {
+                "accentuate_data.bbq.number_of_main_burners":
+                  burnerBuckets[value] || [],
+              },
+            };
+          },
         },
+
         { attribute: "price", field: "variants.price", type: "numeric" },
         {
           attribute: "grill_lights",
@@ -251,15 +374,14 @@ export default async function handler(req, res) {
 
       filter_query.push(...tmp_query);
     }
-      console.log("[TEST NI] filter_value:", filter_value)
-    
+    console.log("[TEST NI] filter_value:", filter_value);
+
     // This will display no products for category links that are not known.
     if (
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-
-      if(BaseNavKeys.includes(filter_value)){
+      if (BaseNavKeys.includes(filter_value)) {
         const value_array = BaseNavObj?.[filter_value];
         console.log("[TEST NI]", value_array);
         filter_query.push({
@@ -267,7 +389,7 @@ export default async function handler(req, res) {
             "collections.name.keyword": value_array,
           },
         });
-      }else{
+      } else {
         filter_query.push({
           term: {
             "collections.name.keyword": filter_value,
