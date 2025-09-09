@@ -255,7 +255,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                   .map((item) => (
                     <div
                       key={`filter-item-${item?.attribute}`}
-                      className={`my-1 facet_${item?.attribute}`}
+                      className={`facet-wrapper my-1 facet_${item?.attribute}`}
                     >
                       <Panel header={item?.label}>
                         {item?.attribute && item?.attribute !== "price" ? (
@@ -298,7 +298,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                     .map((item) => (
                       <div
                         key={`filter-item-${item?.attribute}`}
-                        className={`my-1 facet_${item?.attribute}`}
+                        className={`facet-wrapper my-1 facet_${item?.attribute}`}
                       >
                         <Panel header={item?.label}>
                           {item?.attribute && item?.attribute !== "price" ? (

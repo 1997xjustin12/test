@@ -834,6 +834,10 @@ label.ais-RefinementList-label .ais-RefinementList-count{
   overflow-y:auto;  
 }
 
+.facet-wrapper:has(.ais-RefinementList--noRefinement) {
+  display: none;
+}
+
 /* filter tags START */
 
 
