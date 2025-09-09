@@ -143,27 +143,13 @@ const Panel = ({ header, children }) => {
     <div className="panel border border-gray-200 shadow p-2">
       <button
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center gap-[20px]"
+        className="w-full flex items-center gap-[20px] justify-between"
       >
         <h5 className="uppercase font-semibold">{header}</h5>
         {expanded ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="currentColor" d="m7 10l5 5l5-5z" />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13H5v-2h14z"/></svg>
         ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="currentColor" d="m7 15l5-5l5 5z" />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
         )}
       </button>
       <div className={`${expanded ? "" : "hidden"}`}>{children}</div>
