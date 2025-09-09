@@ -401,9 +401,19 @@ export const BaseNavObj = {
     "Shop Bull Freestanding Grills",
     "Shop Twin Eagles Freestanding Grills",
   ],
-  "Open Box": [
-    "Shop Open Box",
-  ],
+  "Open Box": ["Shop Open Box"],
 };
 
 export const BaseNavKeys = Object.keys(BaseNavObj);
+
+// helper object for no. of burners filter
+export const burnerBuckets = {
+  "1 Burner": ["1", "1 Burner", "one"],
+  "2 Burners": ["2", "2 Burner", "two"],
+  "3 Burners": ["3", "3 Burner", "three"],
+  "4 Burners": ["4", "4 Burner", "four"],
+  "5 Burners": ["5","5 Burners"],
+  "6 Burners": ["6","6 Burners"],
+  "7 Burners": ["7","7 Burners"],
+  "8 Burners": ["8","8 Burners"],
+};
