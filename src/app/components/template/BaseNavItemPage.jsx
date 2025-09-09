@@ -22,7 +22,7 @@ async function BaseNavItemPage({ page_details }) {
         </Link>
       </div>
       <h1>{page_details?.name}</h1>
-      <div className="flex my-[30px]">
+      <div className="flex mt-[30px]">
         {/* side bar with category list */}
         <div className="w-[250px] pr-3 flex-col gap-[20px] hidden md:flex">
           {page_details &&
@@ -110,18 +110,20 @@ async function BaseNavItemPage({ page_details }) {
           </div>
         </div>
       </div>
-      <div className="my-20">
-        {page_details?.collections &&
-          Array.isArray(page_details.collections) &&
-          page_details.collections.length > 0 &&
-          page_details.collections.map((collection) => (
-            <CollectionCarouselWrap
-              key={`collection-carousel-${collection?.mb_uid}`}
-              data={collection}
-            />
-          ))}
-      </div>
-      <div>
+      {page_details?.collections &&
+        Array.isArray(page_details.collections) &&
+        page_details.collections.length > 0 && (
+          <div className="my-20">
+            {page_details.collections.map((collection) => (
+              <CollectionCarouselWrap
+                key={`collection-carousel-${collection?.mb_uid}`}
+                data={collection}
+              />
+            ))}
+          </div>
+        )}
+      <hr className="border-gray-300" />
+      <div className="my-[30px]">
         <ProductsSection category={page_details?.url} />
       </div>
     </div>
