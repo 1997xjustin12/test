@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://admin.solanabbqgrills.com/api/orders/get-total', {
+    const response = await fetch('https://admin.solanabbqgrills.com/api/abandoned-carts/create/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
