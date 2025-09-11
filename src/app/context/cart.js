@@ -180,15 +180,10 @@ export const CartProvider = ({ children }) => {
       }
       // update cart only if > 1
       cartObj["items"] = tmpCartItems;
-      updateCart(cartObj);
+      const newCart = await buildCartObject(cartObj);
+      setCart((prev) => newCart);
+      cartStorage.saveCart(newCart);
     }
-  };
-
-  const updateCart = (cartObj) => {
-    const items = cartObj?.items;
-    cartStorage.saveCart(cartObj);
-    setCartItemsCount(items.length);
-    setCartItems([...items]);
   };
 
   const clearCartItems = async () => {
@@ -264,7 +259,6 @@ export const CartProvider = ({ children }) => {
         increaseProductQuantity,
         decreaseProductQuantity,
         removeCartItem,
-        updateCart,
         fetchOrderTotal,
         addToCartLoading,
       }}
