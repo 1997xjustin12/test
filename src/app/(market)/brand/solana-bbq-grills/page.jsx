@@ -11,8 +11,8 @@ import ReviewsSection from "@/app/components/section/HomePageReviews";
 import FAQsSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
-import BlogsSection from "@/app/components/section/HomeBlogs"
-import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap"
+import BlogsSection from "@/app/components/section/HomeBlogs";
+import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
@@ -20,8 +20,9 @@ import { BASE_URL, createSlug } from "@/app/lib/helpers";
 // CONSTANTS
 const pathname = "solana-bbq-grills";
 export const metadata = {
-  title: 'Shop Outdoor Kitchen Equipment | Solana BBQ Grills',
-  description: 'Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!',
+  title: "Shop Outdoor Kitchen Equipment | Solana BBQ Grills",
+  description:
+    "Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!",
 };
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const feat_carousel_items = [
@@ -125,7 +126,8 @@ const blogs = [
       "This guide will walk you through the steps to designing a fantastic outdoor BBQ kitchen without breaking the bank.",
   },
   {
-    title: "Essential Outdoor Kitchen Maintenance Tips for Long-Lasting Performance",
+    title:
+      "Essential Outdoor Kitchen Maintenance Tips for Long-Lasting Performance",
     img: "/images/home/blogs/essential-outdoor-kitchen-maintenance-tips-for-long-lasting-performance-image-solana.webp",
     tag: "Tips & Tricks",
     tag_bg: "bg-rose-600",
@@ -191,11 +193,12 @@ const flattenNav = (navItems) => {
 };
 // EXTENDED COMPONENT
 const Hero = () => {
-  const useBanner = "/images/banner/home-banner.webp"
- const data = {
-  title:"Grill Better for Less with Solana Outdoor Kitchen Equipments",
-  tag_line: "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
- };
+  const useBanner = "/images/banner/home-banner.webp";
+  const data = {
+    title: "Grill Better for Less with Solana Outdoor Kitchen Equipments",
+    tag_line:
+      "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
+  };
   return (
     <div
       className={`w-full mx-auto flex flex-col md:flex-row ${
@@ -247,6 +250,7 @@ const BestBBQBrands = async () => {
     );
 
     if (!res.ok) {
+      return false;
       throw new Error(`Failed to fetch collection ${id}`);
     }
 
@@ -330,15 +334,22 @@ const BestBBQBrands = async () => {
               <div className="text-3xl italic font-semibold __className_b1512a">
                 Blaze Outdoor Products
               </div>
-              <div className="flex gap-[30px] mt-5 min-h-[230px]">
-                {items &&
-                  items.map((item, idx) => (
+              {items && Array.isArray(items) && items?.length > 0 ? (
+                <div className="flex gap-[30px] mt-5 min-h-[230px]">
+                  {items.map((item, idx) => (
                     <ProductCartToCart
                       key={`product-cart-to-cart-item-${idx}`}
                       item={item}
                     />
                   ))}
-              </div>
+                </div>
+              ) : (
+                <div className="mt-5 min-h-[230px] flex items-center justify-center">
+                  <div className="text-neutral-500 text-lg font-bold">
+                    [COLLECTION IS NOT AVAILABLE]
+                  </div>
+                </div>
+              )}
               <div className="flex mt-5 items-center justify-end">
                 <Link
                   prefetch={false}
@@ -359,12 +370,10 @@ const BestBBQBrands = async () => {
                 {items &&
                   items.map((item, idx) => (
                     <div
-                        key={`product-cart-to-cart-item-${idx}`}
-                        className="px-10"
+                      key={`product-cart-to-cart-item-${idx}`}
+                      className="px-10"
                     >
-                      <ProductCartToCart
-                        item={item}
-                      />
+                      <ProductCartToCart item={item} />
                     </div>
                   ))}
               </YmalCarousel>
@@ -384,56 +393,89 @@ const BestBBQBrands = async () => {
     </div>
   );
 };
-const ShopAllOpenBox = async() => {
+const ShopAllOpenBox = async () => {
   // Solana Home Open Box ID: 5
   const collection_id = 5;
-  return (<div className="w-full mt-10">
+  return (
+    <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
         <SectionHeader text="Shop All Open Box" />
-        <div className="mt-5">Save big on like-new items that have been opened, inspected, and approved for resale. Same great quality, just a better price.</div>
         <div className="mt-5">
-          <CollectionCarouselWrap data={{id:collection_id}} />
+          Save big on like-new items that have been opened, inspected, and
+          approved for resale. Same great quality, just a better price.
+        </div>
+        <div className="mt-5">
+          <CollectionCarouselWrap data={{ id: collection_id }} />
         </div>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 const OuterKitchenAndAccessories = () => {
   const items = [
-    {image:"/images/feature/outdoor-kitchen-storage.webp", label:"Outdoor Kitchen Storage", url:"#"},
-    {image:"/images/feature/side-burners.webp", label:"Side Burners", url:"#"},
-    {image:"/images/feature/grill-covers.webp", label:"Grill Covers", url:"#"},
-    {image:"/images/feature/grill-attachments.webp", label:"Grill Attachments", url:"#"},
-    {image:"/images/feature/grill-tools-and-utensils.webp", label:"Grilling Tools & Utensils", url:"#"},
+    {
+      image: "/images/feature/outdoor-kitchen-storage.webp",
+      label: "Outdoor Kitchen Storage",
+      url: "#",
+    },
+    {
+      image: "/images/feature/side-burners.webp",
+      label: "Side Burners",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-covers.webp",
+      label: "Grill Covers",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-attachments.webp",
+      label: "Grill Attachments",
+      url: "#",
+    },
+    {
+      image: "/images/feature/grill-tools-and-utensils.webp",
+      label: "Grilling Tools & Utensils",
+      url: "#",
+    },
   ];
-  
-  return (<div className="w-full mt-10">
+
+  return (
+    <div className="w-full mt-10">
       <div className="container mx-auto px-[10px] lg:px-[20px]">
         <SectionHeader text="Outer Kitchen Products & Accessories" />
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {
-            items && items.map((item,index) => <Link key={`extras-category-links-${index}`} prefetch={false} href={`${BASE_URL}/${item?.url}`}>
-              <div className="shadow-lg py-5 px-3 text-center">
-                <div className="w-full aspect-w-4 aspect-h-5 relative bg-white">
-                  {
-                    item?.image &&
-                        <Image
-                          src={item?.image}
-                          title={item?.label}
-                          alt={`${createSlug(item?.label)}-image`}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 768px) 100vw, 300px"
-                        />
-                  }
+          {items &&
+            items.map((item, index) => (
+              <Link
+                key={`extras-category-links-${index}`}
+                prefetch={false}
+                href={`${BASE_URL}/${item?.url}`}
+              >
+                <div className="shadow-lg py-5 px-3 text-center">
+                  <div className="w-full aspect-w-4 aspect-h-5 relative bg-white">
+                    {item?.image && (
+                      <Image
+                        src={item?.image}
+                        title={item?.label}
+                        alt={`${createSlug(item?.label)}-image`}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    )}
+                  </div>
+                  <h4 className="font-semibold h-[48px] flex items-center justify-center">
+                    {item?.label}
+                  </h4>
                 </div>
-                <h4 className="font-semibold h-[48px] flex items-center justify-center">{item?.label}</h4>
-              </div>
-            </Link>)
-          }
+              </Link>
+            ))}
         </div>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 
 // MAIN COMPONENT
 export default async function SolanaGrillsPage() {
@@ -449,10 +491,13 @@ export default async function SolanaGrillsPage() {
       <AboutProductSection data={about_content} />
       <ReviewsSection />
       <BestBBQBrands />
-      <BlogsSection title={blogs_title} contents={blogs}/> 
+      <BlogsSection title={blogs_title} contents={blogs} />
       <ShopAllOpenBox />
       <OuterKitchenAndAccessories />
-      <FAQsSection faqs={faqs} itemClassName="bg-stone-600 hover:bg-stone-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium" />
+      <FAQsSection
+        faqs={faqs}
+        itemClassName="bg-stone-600 hover:bg-stone-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
+      />
       <NewsLetterSection />
     </>
   );

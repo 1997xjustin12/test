@@ -12,12 +12,15 @@ export async function getCollectionProducts(id) {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch collection products");
+    return false;
+    // throw new Error("Failed to fetch collection products");
   }
 
   return res.json();
 }
 async function CollectionCarouselWrap({ data }) {
+  if (!data?.id) return;
+
   const collection = await getCollectionProducts(data?.id);
 
   const items_per_break_point = [
@@ -31,15 +34,22 @@ async function CollectionCarouselWrap({ data }) {
   return (
     <div>
       <h4 className="font-bold text-2xl mb-3">{data?.mb_label}</h4>
-      <CollectionCarousel breakpoints={items_per_break_point}>
-        {collection &&
-          Array.isArray(collection) &&
-          collection.map((product) => (
-            <div key={`collection-${data?.mb_uid}-list-item-product-${product.product_id}`}>
-              <ProductCard hit={product} />
-            </div>
-          ))}
-      </CollectionCarousel>
+      {collection && Array.isArray(collection) && collection.length > 0 ? (
+        <CollectionCarousel breakpoints={items_per_break_point}>
+          {
+            collection.map((product) => (
+              <div
+                key={`collection-${data?.mb_uid}-list-item-product-${product.product_id}`}
+              >
+                <ProductCard hit={product} />
+              </div>
+            ))}
+        </CollectionCarousel>
+      ) : (
+        <div className="mt-5 min-h-[230px] flex items-center justify-center">
+          <div className="text-neutral-500 text-lg font-bold">[COLLECTION IS NOT AVAILABLE]</div>
+        </div>
+      )}
     </div>
   );
 }
