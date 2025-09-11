@@ -33,18 +33,15 @@ export const CartProvider = ({ children }) => {
 
     import("@/app/lib/cartStorage").then(async (module) => {
       if (!mounted) return;
-      // module.saveCart(null);
-      // const cartObj = await module.getCart();
-      // console.log("[ONLOAD CART OBJECT]", cartObj);
-      // const cartItems = cartObj?.items || [];
-      // setCartItems(cartItems);
-      // setCartItemsCount(cartItems.length);
-      // setLoadingCartItems(false);
+      const cartObj = await module.getCart();
+      const newCart = await buildCartObject(cartObj);
+      const items = newCart?.items || [];
+      setCart(newCart);
+      setLoadingCartItems(false);
+      if (items.length > 0) {
+        syncCartToCookie(items);
+      }
       setCartStorage(module);
-      // ✅ Only sync if cart has items
-      // if (cartItems.length > 0) {
-      //   syncCartToCookie(cartItems);
-      // }
     });
 
     return () => {
@@ -52,19 +49,6 @@ export const CartProvider = ({ children }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (cartStorage) {
-      initCartObject().then((res) => {
-        const cartObj = res;
-        const items = cartObj?.items || [];
-        setCart(cartObj);
-        setLoadingCartItems(false);
-        if (items.length > 0) {
-          syncCartToCookie(items);
-        }
-      });
-    }
-  }, [cartStorage]);
 
   async function syncCartToCookie(items) {
     try {
@@ -85,15 +69,11 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  const initCartObject = async () => {
-    const cartObj = await cartStorage.getCart();
-    return await buildCartObject(cartObj);
-  };
-
   const buildCartObject = async (cartObject) => {
     if (!cartObject) return null;
     if (!cartObject?.items) return null;
     const items = mapOrderItems(formatItems(cartObject?.items));
+    syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
     return {
       ...cartObject,
