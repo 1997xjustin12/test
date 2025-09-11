@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
 import Cookies from "js-cookie";
+import { getOrCreateSessionId } from "@/app/lib/session";
+import { store_domain, mapOrderItems } from "@/app/lib/helpers";
 
 const CartContext = createContext();
 
@@ -16,14 +18,13 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState(null);
   const [cartStorage, setCartStorage] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  // const [cartItems, setCartItems] = useState([]);
+  // const [cartItemsCount, setCartItemsCount] = useState(0);
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
-
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -32,16 +33,18 @@ export const CartProvider = ({ children }) => {
 
     import("@/app/lib/cartStorage").then(async (module) => {
       if (!mounted) return;
-
-      const cartItems = await module.getCart();
-      setCartItems(cartItems);
-      setCartItemsCount(cartItems.length);
-      setLoadingCartItems(false);
-
+      // module.saveCart(null);
+      // const cartObj = await module.getCart();
+      // console.log("[ONLOAD CART OBJECT]", cartObj);
+      // const cartItems = cartObj?.items || [];
+      // setCartItems(cartItems);
+      // setCartItemsCount(cartItems.length);
+      // setLoadingCartItems(false);
+      setCartStorage(module);
       // ✅ Only sync if cart has items
-      if (cartItems.length > 0) {
-        syncCartToCookie(cartItems);
-      }
+      // if (cartItems.length > 0) {
+      //   syncCartToCookie(cartItems);
+      // }
     });
 
     return () => {
@@ -49,15 +52,26 @@ export const CartProvider = ({ children }) => {
     };
   }, []);
 
-  async function syncCartToCookie() {
-    try {
-      const cart = (await cartStorage.getCart()) || [];
-      console.log("[syncCartToCookie] cart", cart);
+  useEffect(() => {
+    if (cartStorage) {
+      initCartObject().then((res) => {
+        const cartObj = res;
+        const items = cartObj?.items || [];
+        setCart(cartObj);
+        setLoadingCartItems(false);
+        if (items.length > 0) {
+          syncCartToCookie(items);
+        }
+      });
+    }
+  }, [cartStorage]);
 
+  async function syncCartToCookie(items) {
+    try {
       // Save to cookie (client + server readable)
       Cookies.set(
         "cart",
-        JSON.stringify(cart.map(({ product_id }) => product_id)),
+        JSON.stringify(items.map(({ product_id }) => product_id)),
         {
           path: "/",
           sameSite: "lax", // works cross-page, avoids blocking
@@ -71,20 +85,64 @@ export const CartProvider = ({ children }) => {
     }
   }
 
+  const initCartObject = async () => {
+    const cartObj = await cartStorage.getCart();
+    return await buildCartObject(cartObj);
+  };
+
+  const buildCartObject = async (cartObject) => {
+    if (!cartObject) return null;
+    if (!cartObject?.items) return null;
+    const items = mapOrderItems(formatItems(cartObject?.items));
+    const { data } = await fetchOrderTotal({ items });
+    return {
+      ...cartObject,
+      sub_total: data?.sub_total,
+      total_tax: data?.total_tax,
+      total_shipping: data?.total_shipping,
+      total_price: data?.total_price,
+    };
+  };
+
+  function getUserAgent() {
+    if (typeof navigator !== "undefined") {
+      return navigator.userAgent;
+    }
+    return null; // SSR-safe
+  }
+
+  function createCartId() {
+    if (typeof window === "undefined") return null;
+    return crypto.randomUUID();
+  }
+
+  const createCartObj = () => {
+    return {
+      id: createCartId(),
+      session_id: getOrCreateSessionId(),
+      user_agent: getUserAgent(),
+      store_domain: store_domain,
+      items: [],
+    };
+  };
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
     setAddToCartLoading(true);
     // getCart everytime we add or remove items
     try {
-      const savedItems = await cartStorage.getCart();
-      await sleep(2000);
-      const updatedItems = [...savedItems, ...items];
-      cartStorage.saveCart(updatedItems);
-      setCartItems((prev) => {
-        return [...updatedItems];
-      });
-      setCartItemsCount(updatedItems.length);
+      const cartObj = await cartStorage.getCart();
+      let _cartObj = {};
+      if (Array.isArray(cartObj) || !cartObj) {
+        _cartObj = createCartObj();
+      } else {
+        _cartObj = cartObj;
+      }
+      const updatedItems = [..._cartObj?.items, ...items];
+      _cartObj.items = updatedItems;
+      const newCart = await buildCartObject(_cartObj);
+      setCart((prev) => newCart);
+      cartStorage.saveCart(newCart);
       setAddToCartLoading(false);
       setAddedToCart(items);
       return {
@@ -102,31 +160,30 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeCartItem = async (item) => {
-    // getCart everytime we add or remove items
-    const items = await cartStorage.getCart();
-    setCartItems((prev) => {
-      const updatedItems = items.filter(
-        (i) => i?.variants?.[0]?.sku !== item?.variants?.[0]?.sku
-      );
-      cartStorage.saveCart(updatedItems);
-      setCartItemsCount(updatedItems.length);
-      return [...updatedItems];
-    });
+    const cartObj = await cartStorage.getCart();
+    const items = cartObj?.items;
+    const updatedItems = items.filter(
+      (i) => i?.variants?.[0]?.sku !== item?.variants?.[0]?.sku
+    );
+    cartObj["items"] = updatedItems;
+    const newCart = await buildCartObject(cartObj);
+    setCart(updatedItems.length === 0 ? null : newCart);
+    cartStorage.saveCart(updatedItems.length === 0 ? null : newCart);
   };
 
   const increaseProductQuantity = async (item) => {
-    const savedItems = await cartStorage.getCart();
-    // await sleep(2000);
-    setCartItems((prev) => {
-      const updatedItems = [...savedItems, item];
-      cartStorage.saveCart(updatedItems);
-      setCartItemsCount(updatedItems.length);
-      return [...updatedItems];
-    });
+    const cartObj = await cartStorage.getCart();
+    const savedItems = cartObj?.items;
+    const updatedItems = [...savedItems, item];
+    cartObj["items"] = updatedItems;
+    const newCart = await buildCartObject(cartObj);
+    setCart((prev) => newCart);
+    cartStorage.saveCart(newCart);
   };
 
   const decreaseProductQuantity = async (item) => {
-    const savedItems = await cartStorage.getCart();
+    const cartObj = await cartStorage.getCart();
+    const savedItems = cartObj?.items;
     const tmpCartItems = savedItems;
     const idToFindAndPop = item?.variants?.[0].sku;
     if (
@@ -142,23 +199,21 @@ export const CartProvider = ({ children }) => {
         tmpCartItems.splice(indexToRemove, 1); // Removes 1 element at the found index
       }
       // update cart only if > 1
-      updateCart(tmpCartItems);
+      cartObj["items"] = tmpCartItems;
+      updateCart(cartObj);
     }
   };
 
-  const updateCart = (items) => {
-    cartStorage.saveCart([...items]);
+  const updateCart = (cartObj) => {
+    const items = cartObj?.items;
+    cartStorage.saveCart(cartObj);
     setCartItemsCount(items.length);
     setCartItems([...items]);
   };
 
   const clearCartItems = async () => {
-    setCartItems((prev) => {
-      const updatedItems = [];
-      cartStorage.saveCart(updatedItems);
-      setCartItemsCount(updatedItems.length);
-      return [...updatedItems];
-    });
+    setCartItems([]);
+    cartStorage.saveCart([]);
   };
 
   const handleCloseAddedToCart = () => {
@@ -183,13 +238,13 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const formattedCart = useMemo(() => {
-    if (cartItems.length === 0) {
+  const formatItems = (items) => {
+    if (items.length === 0) {
       return [];
     }
 
     return Object.values(
-      cartItems.reduce((acc, item) => {
+      items.reduce((acc, item) => {
         const sku = item?.variants?.[0]?.sku;
         if (!acc[sku]) {
           acc[sku] = { ...item, count: 0 };
@@ -198,11 +253,28 @@ export const CartProvider = ({ children }) => {
         return acc;
       }, {})
     ).sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  const cartItems = useMemo(() => {
+    if (!cart) return [];
+
+    return cart?.items;
+  }, [cart]);
+
+  const cartItemsCount = useMemo(() => {
+    if (!cart) return 0;
+
+    return cart?.items?.length || 0;
+  }, [cart]);
+
+  const formattedCart = useMemo(() => {
+    return formatItems(cartItems);
   }, [cartItems]);
 
   return (
     <CartContext.Provider
       value={{
+        cartObject: cart,
         cartItems,
         cartItemsCount,
         formattedCart,

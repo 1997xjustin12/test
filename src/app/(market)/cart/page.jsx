@@ -8,11 +8,12 @@ import { useCart } from "@/app/context/cart";
 export default function CartPage() {
   const [cartTotal, setCartTotal] = useState({});
   const {
+    cartObject,
     formattedCart,
     loadingCartItems,
     increaseProductQuantity,
     decreaseProductQuantity,
-    fetchOrderTotal,
+    // fetchOrderTotal,
   } = useCart();
 
   const handleItemCountUpdate = (value) => {
@@ -24,21 +25,21 @@ export default function CartPage() {
     }
   };
 
-  const getOrderTotal = async () => {
-    const items = mapOrderItems(formattedCart);
-    if (items.length > 0) {
-      const orderTotal = await fetchOrderTotal({ items });
-      if (orderTotal?.success) {
-        setCartTotal(orderTotal?.data);
-      }
-    }
-  };
+  // const getOrderTotal = async () => {
+  //   const items = mapOrderItems(formattedCart);
+  //   if (items.length > 0) {
+  //     const orderTotal = await fetchOrderTotal({ items });
+  //     if (orderTotal?.success) {
+  //       setCartTotal(orderTotal?.data);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    if (formattedCart) {
-      getOrderTotal();
-    }
-  }, [formattedCart]);
+  // useEffect(() => {
+  //   if (formattedCart) {
+  //     getOrderTotal();
+  //   }
+  // }, [formattedCart]);
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
@@ -67,7 +68,7 @@ export default function CartPage() {
               )}
             </div>
           </div>
-          <CartOrderSummary cartTotal={cartTotal} />
+          <CartOrderSummary/>
         </div>
         <div className="mt-6">
           <YouMayAlsoLike displayItems={4} />

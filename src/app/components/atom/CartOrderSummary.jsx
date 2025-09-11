@@ -10,9 +10,9 @@ import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-function CartOrderSummary({ cartTotal, checkoutButton = true }) {
+function CartOrderSummary({ checkoutButton = true }) {
   const router = useRouter();
-  const { cartItems, formattedCart } = useCart();
+  const { cartObject, cartItems, formattedCart } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
   const [savings, setSavings] = useState(0);
@@ -60,10 +60,10 @@ function CartOrderSummary({ cartTotal, checkoutButton = true }) {
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-      {Number(savings) > 0 && (
+      {cartObject && (
         <div className=" border-green-700 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 rounded-lg bg-green-300 border font-extrabold sm:p-6 italic text-center">
           You are saving ${formatPrice(savings) + " "}{" "}
-          {cartTotal?.total_shipping === 0 ? "plus Free Shipping" : ""}
+          {cartObject?.total_shipping === 0 ? "plus Free Shipping" : ""}
         </div>
       )}
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -77,7 +77,9 @@ function CartOrderSummary({ cartTotal, checkoutButton = true }) {
                 Original price
               </dt>
               <dd className="text-base font-semibold text-gray-900 dark:text-white">
-                ${formatPrice(originalPrice)}
+                ${
+                  cartObject ? formatPrice(originalPrice): formatPrice(0)
+                }
               </dd>
             </dl>
 
@@ -86,7 +88,9 @@ function CartOrderSummary({ cartTotal, checkoutButton = true }) {
                 Savings
               </dt>
               <dd className="text-base font-semibold text-green-600">
-                ${formatPrice(savings)}
+                ${
+                  cartObject ? formatPrice(savings): formatPrice(0)
+                }
               </dd>
             </dl>
 
@@ -96,12 +100,12 @@ function CartOrderSummary({ cartTotal, checkoutButton = true }) {
               </dt>
               <dd
                 className={`text-base font-medium dark:text-white  ${
-                  cartTotal?.total_shipping > 0 ? "" : "text-green-600"
+                  cartObject ? (cartObject?.total_shipping && cartObject?.total_shipping >  0) ? "text-green-600":"" : ""
                 }`}
               >
-                {cartTotal?.total_shipping
-                  ? `${"$" + formatPrice(cartTotal?.total_shipping)}`
-                  : "FREE"}
+                {cartObject ? cartObject?.total_shipping
+                  ? `${"$" + formatPrice(cartObject?.total_shipping)}`
+                  : "FREE": `${"$" + formatPrice(0)}`}
               </dd>
             </dl>
 
@@ -120,7 +124,7 @@ function CartOrderSummary({ cartTotal, checkoutButton = true }) {
               Total
             </dt>
             <dd className="text-base font-bold text-gray-900 dark:text-white">
-              ${cartTotal?.total_price ? formatPrice(cartTotal?.total_price): formatPrice(0)}
+              ${cartObject?.total_price ? formatPrice(cartObject?.total_price): formatPrice(0)}
             </dd>
           </dl>
         </div>
