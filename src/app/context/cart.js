@@ -26,58 +26,28 @@ export const CartProvider = ({ children }) => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
-    // Dynamically import the cartStorage module only on the client-side
-    if (typeof window !== "undefined") {
-      import("@/app/lib/cartStorage")
-        .then((module) => {
-          setCartStorage(module);
-        })
-        .catch((error) => {
-          console.error("Error loading cartStorage module:", error);
-        });
-    }
-  }, []);
+    if (typeof window === "undefined") return;
 
-  useEffect(() => {
-    // Load the initial cart count from localforage on mount
-    const loadCart = async () => {
-      if (!cartStorage) return;
-      const cartItems = await cartStorage.getCart();
+    let mounted = true;
+
+    import("@/app/lib/cartStorage").then(async (module) => {
+      if (!mounted) return;
+
+      const cartItems = await module.getCart();
       setCartItems(cartItems);
       setCartItemsCount(cartItems.length);
       setLoadingCartItems(false);
-      syncCartToCookie();
+
+      // ✅ Only sync if cart has items
+      if (cartItems.length > 0) {
+        syncCartToCookie(cartItems);
+      }
+    });
+
+    return () => {
+      mounted = false;
     };
-
-    loadCart();
-  }, [cartStorage]);
-
-  // useEffect(() => {
-  //   const loadCart = async () => {
-  //     let attempts = 0;
-  //     let items = [];
-
-  //     while (attempts < 5) {
-  //       const cartItems = await cartStorage.getCart();
-
-  //       if (Array.isArray(cartItems) && cartItems.length > 0) {
-  //         items = cartItems;
-  //         break; // success
-  //       }
-
-  //       attempts++;
-  //       await new Promise((resolve) => setTimeout(resolve, 200)); // wait 200ms before retrying
-  //     }
-
-  //     setCartItems(items);
-  //     setCartItemsCount(items.length);
-  //     setLoadingCartItems(false);
-  //   };
-
-  //   if (cartStorage) {
-  //     loadCart();
-  //   }
-  // }, [cartStorage]);
+  }, []);
 
   async function syncCartToCookie() {
     try {
