@@ -30,11 +30,11 @@ export async function getCollectionProducts(id) {
 
 const YouMightAlsoLike = () => {
   const [products, setProducts] = useState([]);
-
+ const collection_id = 33; // Shop All BBQ Grilling Tools and Accessories
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const ymal_products = await getCollectionProducts(1);
+        const ymal_products = await getCollectionProducts(collection_id);
         setProducts(ymal_products);
       } catch (error) {
         setProducts([]);
