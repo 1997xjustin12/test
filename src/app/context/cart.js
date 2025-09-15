@@ -7,9 +7,11 @@ import React, {
   useMemo,
 } from "react";
 import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
+import GuestBillingFOrmDialog from "@/app/components/atom/GuestBillingFOrmDialog";
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
+import { sendAbandonedCart } from "@/app/lib/api";
 
 const CartContext = createContext();
 
@@ -17,7 +19,10 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
+const ABANDONED_CART_SPAN = 5; // -> minuites
+
 export const CartProvider = ({ children }) => {
+  const ABANDON_TIMEOUT = ABANDONED_CART_SPAN * 60 * 1000;
   const [cart, setCart] = useState(null);
   const [cartStorage, setCartStorage] = useState(null);
   // const [cartItems, setCartItems] = useState([]);
@@ -25,6 +30,31 @@ export const CartProvider = ({ children }) => {
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+
+  const createAbandonedCart = async () => {
+    if (!cartStorage) return;
+    const cartObj = await cartStorage.getCart();
+    if (!cartObj) return;
+    const now = Date.now();
+    const updatedAt = new Date(cartObj.updated_at).getTime();
+    const timedout = now - updatedAt > ABANDON_TIMEOUT;
+    if (cartObj && cartObj?.cart_status !== "abandoned" && timedout) {
+      const sendCart = cartObj;
+      sendCart["abandoned_cart_id"] = sendCart["id"];
+      sendCart["items"] = mapOrderItems(formatItems(sendCart["items"]));
+      console.log("[SENDCART]", sendCart);
+      // sendAbandonedCart(sendCart);
+      // if success
+      // cartObj["cart_status"] = "abandoned";
+      // await cartStorage.saveCart(cartObj);
+    } else {
+      console.log("[NO ACTION] CART ALREADY ON ABANDONED STATE");
+      console.log("[NO ACTION] cartObj", cartObj);
+      console.log("[NO ACTION] timedout", timedout);
+      console.log("[NO ACTION] updatedAt", updatedAt);
+      console.log("[NO ACTION] condition", cartObj && cartObj?.cart_status !== "abandoned" && timedout);
+    }
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -34,12 +64,24 @@ export const CartProvider = ({ children }) => {
     import("@/app/lib/cartStorage").then(async (module) => {
       if (!mounted) return;
       const cartObj = await module.getCart();
-      const newCart = await buildCartObject(cartObj);
-      const items = newCart?.items || [];
-      setCart(newCart);
-      setLoadingCartItems(false);
-      if (items.length > 0) {
-        syncCartToCookie(items);
+      await module.saveCart(null);
+      if (cartObj) {
+        // temp line
+        // cartObj["cart_status"] = "active";
+
+        const newCart = await buildCartObject(cartObj);
+
+        // temp line
+        // module.saveCart(newCart);
+
+        const items = newCart?.items || [];
+        setCart(newCart);
+        setLoadingCartItems(false);
+        if (items.length > 0) {
+          syncCartToCookie(items);
+        }
+
+        createAbandonedCart();
       }
       setCartStorage(module);
     });
@@ -49,6 +91,21 @@ export const CartProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!cartStorage) return;
+
+    const activityEvents = ["click", "keydown", "scroll"];
+
+    activityEvents.forEach((evt) => {
+      document.addEventListener(evt, createAbandonedCart);
+    });
+
+    return () => {
+      activityEvents.forEach((evt) => {
+        document.removeEventListener(evt, createAbandonedCart);
+      });
+    };
+  }, [cartStorage]);
 
   async function syncCartToCookie(items) {
     try {
@@ -75,13 +132,15 @@ export const CartProvider = ({ children }) => {
     const items = mapOrderItems(formatItems(cartObject?.items));
     syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
-    return {
+    const rebuild = {
       ...cartObject,
       sub_total: data?.sub_total,
       total_tax: data?.total_tax,
       total_shipping: data?.total_shipping,
       total_price: data?.total_price,
     };
+    console.log("[REBUILD CART]", rebuild);
+    return rebuild;
   };
 
   function getUserAgent() {
@@ -112,11 +171,20 @@ export const CartProvider = ({ children }) => {
     // getCart everytime we add or remove items
     try {
       const cartObj = await cartStorage.getCart();
+      const now = new Date().toISOString();
       let _cartObj = {};
       if (Array.isArray(cartObj) || !cartObj) {
         _cartObj = createCartObj();
+        _cartObj["created_at"] = now;
+        _cartObj["updated_at"] = now;
       } else {
         _cartObj = cartObj;
+        _cartObj["updated_at"] = now;
+
+        if (_cartObj?.cart_status === "abandoned") {
+          // if cart status is once abandoned then updated later.. then flip status to revived
+          _cartObj.cart_status = "revived";
+        }
       }
       const updatedItems = [..._cartObj?.items, ...items];
       _cartObj.items = updatedItems;
@@ -140,28 +208,41 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeCartItem = async (item) => {
+    const now = new Date().toISOString();
     const cartObj = await cartStorage.getCart();
     const items = cartObj?.items;
     const updatedItems = items.filter(
       (i) => i?.variants?.[0]?.sku !== item?.variants?.[0]?.sku
     );
     cartObj["items"] = updatedItems;
+    cartObj["updated_at"] = now;
+    if (cartObj?.cart_status === "abandoned") {
+      // if cart status is once abandoned then updated later.. then flip status to revived
+      cartObj.cart_status = "revived";
+    }
     const newCart = await buildCartObject(cartObj);
     setCart(updatedItems.length === 0 ? null : newCart);
     cartStorage.saveCart(updatedItems.length === 0 ? null : newCart);
   };
 
   const increaseProductQuantity = async (item) => {
+    const now = new Date().toISOString();
     const cartObj = await cartStorage.getCart();
     const savedItems = cartObj?.items;
     const updatedItems = [...savedItems, item];
     cartObj["items"] = updatedItems;
+    cartObj["updated_at"] = now;
+    if (cartObj?.cart_status === "abandoned") {
+      // if cart status is once abandoned then updated later.. then flip status to revived
+      cartObj.cart_status = "revived";
+    }
     const newCart = await buildCartObject(cartObj);
     setCart((prev) => newCart);
     cartStorage.saveCart(newCart);
   };
 
   const decreaseProductQuantity = async (item) => {
+    const now = new Date().toISOString();
     const cartObj = await cartStorage.getCart();
     const savedItems = cartObj?.items;
     const tmpCartItems = savedItems;
@@ -180,6 +261,11 @@ export const CartProvider = ({ children }) => {
       }
       // update cart only if > 1
       cartObj["items"] = tmpCartItems;
+      cartObj["updated_at"] = now;
+      if (cartObj?.cart_status === "abandoned") {
+        // if cart status is once abandoned then updated later.. then flip status to revived
+        cartObj.cart_status = "revived";
+      }
       const newCart = await buildCartObject(cartObj);
       setCart((prev) => newCart);
       cartStorage.saveCart(newCart);
@@ -187,8 +273,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCartItems = async () => {
-    setCartItems([]);
-    cartStorage.saveCart([]);
+    cartStorage.saveCart(null);
   };
 
   const handleCloseAddedToCart = () => {
@@ -265,6 +350,7 @@ export const CartProvider = ({ children }) => {
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
+      <GuestBillingFOrmDialog open={true} onClose={()=>{}}/>
     </CartContext.Provider>
   );
 };
