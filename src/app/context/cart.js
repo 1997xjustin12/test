@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
-import GuestBillingFOrmDialog from "@/app/components/atom/GuestBillingFOrmDialog";
+import GuestBillingFormDialog from "@/app/components/atom/GuestBillingFormDialog";
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
@@ -25,69 +25,125 @@ export const CartProvider = ({ children }) => {
   const ABANDON_TIMEOUT = ABANDONED_CART_SPAN * 60 * 1000;
   const [cart, setCart] = useState(null);
   const [cartStorage, setCartStorage] = useState(null);
+  const [billingStorage, setBillingStorage] = useState(null);
+  const [toggleBillingDialog, setToggleBillingDialog] = useState(false);
+  const [preaddedItem, setPreaddedItem] = useState(null);
   // const [cartItems, setCartItems] = useState([]);
   // const [cartItemsCount, setCartItemsCount] = useState(0);
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const sendAbandonedCartBeacon = (cart) => {
+    if (!cart || !cart?.items || cart?.items?.length === 0) return;
+    const url = "/api/abandoned-carts/create";
+    const data = JSON.stringify(cart);
 
-  const createAbandonedCart = async () => {
+    navigator.sendBeacon(url, data);
+  };
+
+  // const createAbandonedCart = async (sendBeacon = false) => {
+  //   if (!cartStorage) return;
+  //   const cartObj = await cartStorage.getCart();
+  //   if (!cartObj) return;
+  //   const now = Date.now();
+  //   const updatedAt = new Date(cartObj.updated_at).getTime();
+  //   const timedout = now - updatedAt > ABANDON_TIMEOUT;
+  //   if (cartObj?.cart_status !== "abandoned") {
+  //     const sendCart = cartObj;
+  //     sendCart["abandoned_cart_id"] = sendCart["id"];
+  //     sendCart["items"] = mapOrderItems(formatItems(sendCart["items"]));
+  //     console.log("[SENDCART]", sendCart);
+  //     if (sendBeacon) {
+  //       sendAbandonedCartBeacon(sendCart);
+  //     } else {
+  //       if (timedout) {
+  //         sendAbandonedCart(sendCart);
+  //       }
+  //     }
+  //     // if success
+  //     cartObj["cart_status"] = "abandoned";
+  //     await cartStorage.saveCart(cartObj);
+  //   }
+  // };
+
+  const createAbandonedCart = async (sendBeacon = false) => {
     if (!cartStorage) return;
+
     const cartObj = await cartStorage.getCart();
     if (!cartObj) return;
-    const now = Date.now();
+    if (cartObj.cart_status === "abandoned") return;
+
     const updatedAt = new Date(cartObj.updated_at).getTime();
-    const timedout = now - updatedAt > ABANDON_TIMEOUT;
-    if (cartObj && cartObj?.cart_status !== "abandoned" && timedout) {
-      const sendCart = cartObj;
-      sendCart["abandoned_cart_id"] = sendCart["id"];
-      sendCart["items"] = mapOrderItems(formatItems(sendCart["items"]));
-      console.log("[SENDCART]", sendCart);
-      // sendAbandonedCart(sendCart);
-      // if success
-      // cartObj["cart_status"] = "abandoned";
-      // await cartStorage.saveCart(cartObj);
-    } else {
-      console.log("[NO ACTION] CART ALREADY ON ABANDONED STATE");
-      console.log("[NO ACTION] cartObj", cartObj);
-      console.log("[NO ACTION] timedout", timedout);
-      console.log("[NO ACTION] updatedAt", updatedAt);
-      console.log("[NO ACTION] condition", cartObj && cartObj?.cart_status !== "abandoned" && timedout);
+    const timedout = Date.now() - updatedAt > ABANDON_TIMEOUT;
+
+    const sendCart = {
+      ...cartObj,
+      abandoned_cart_id: cartObj.id,
+      items: mapOrderItems(formatItems(cartObj.items)),
+    };
+
+    // console.log("[SENDCART]", sendCart);
+
+    if (sendBeacon) {
+      sendAbandonedCartBeacon(sendCart);
+    } else if (timedout) {
+      sendAbandonedCart(sendCart);
     }
+
+    cartObj.cart_status = "abandoned";
+    await cartStorage.saveCart(cartObj);
   };
 
   useEffect(() => {
+    const handleUnload = () => {
+      console.log("[UNLOAD]");
+      createAbandonedCart(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        console.log("[HIDDEN]");
+        createAbandonedCart(true);
+      }
+    };
+
     if (typeof window === "undefined") return;
 
     let mounted = true;
+    let tmp_billing = {};
+    let tmp_cart = {};
+
+    import("@/app/lib/billingStorage").then(async (billingModule) => {
+      if (!mounted) return;
+      tmp_billing = await billingModule.get();
+      setBillingStorage(billingModule);
+    });
 
     import("@/app/lib/cartStorage").then(async (module) => {
       if (!mounted) return;
       const cartObj = await module.getCart();
-      await module.saveCart(null);
+      // await module.saveCart(null);
       if (cartObj) {
-        // temp line
-        // cartObj["cart_status"] = "active";
-
-        const newCart = await buildCartObject(cartObj);
-
-        // temp line
-        // module.saveCart(newCart);
-
+        tmp_cart = { ...cartObj, tmp_billing };
+        const newCart = await buildCartObject(tmp_cart);
         const items = newCart?.items || [];
         setCart(newCart);
         setLoadingCartItems(false);
         if (items.length > 0) {
           syncCartToCookie(items);
         }
-
         createAbandonedCart();
       }
       setCartStorage(module);
     });
 
+    window.addEventListener("beforeunload", handleUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       mounted = false;
+      window.removeEventListener("beforeunload", handleUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -129,6 +185,9 @@ export const CartProvider = ({ children }) => {
   const buildCartObject = async (cartObject) => {
     if (!cartObject) return null;
     if (!cartObject?.items) return null;
+    const billing_info = billingStorage
+      ? (await billingStorage.get()) || null
+      : null;
     const items = mapOrderItems(formatItems(cartObject?.items));
     syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
@@ -138,8 +197,10 @@ export const CartProvider = ({ children }) => {
       total_tax: data?.total_tax,
       total_shipping: data?.total_shipping,
       total_price: data?.total_price,
+      ...(billing_info || {}),
     };
-    console.log("[REBUILD CART]", rebuild);
+    // console.log("[REBUILD CART]", rebuild);
+    setCart(rebuild);
     return rebuild;
   };
 
@@ -174,15 +235,26 @@ export const CartProvider = ({ children }) => {
       const now = new Date().toISOString();
       let _cartObj = {};
       if (Array.isArray(cartObj) || !cartObj) {
-        _cartObj = createCartObj();
-        _cartObj["created_at"] = now;
-        _cartObj["updated_at"] = now;
+        // insert create cart here
+        // step 1: get user billing info by triggering the billing form dialog
+        console.log("[ATC CART]", cartObj);
+        const billing_info = (await billingStorage.get()) || null;
+        console.log("[ATC BI]", billing_info);
+        if (billing_info) {
+          _cartObj = createCartObj();
+          _cartObj["created_at"] = now;
+          _cartObj["updated_at"] = now;
+        } else {
+          setPreaddedItem(items);
+          setToggleBillingDialog(true);
+        }
       } else {
         _cartObj = cartObj;
         _cartObj["updated_at"] = now;
 
         if (_cartObj?.cart_status === "abandoned") {
           // if cart status is once abandoned then updated later.. then flip status to revived
+          _cartObj.id = createCartId();
           _cartObj.cart_status = "revived";
         }
       }
@@ -280,6 +352,22 @@ export const CartProvider = ({ children }) => {
     setAddedToCart(null);
   };
 
+  const handleBillingDialogOnClose = (e) => {
+    console.log("[handleBillingDialogOnClose]");
+    console.log("[Product not Added To Cart]");
+    setToggleBillingDialog(false);
+    setAddToCartLoading(false);
+  };
+
+  const handleBillingDialogOnSave = async (billing_info) => {
+    setToggleBillingDialog(false);
+    // console.log("[handleBillingDialogOnSave]", billing_info);
+    // console.log("[handleBillingDialogOnSave Item]", preaddedItem);
+    if (preaddedItem) {
+      await addToCart(preaddedItem);
+    }
+  };
+
   const fetchOrderTotal = async (orderData) => {
     try {
       const response = await fetch("/api/orders/get-total", {
@@ -305,7 +393,7 @@ export const CartProvider = ({ children }) => {
 
     return Object.values(
       items.reduce((acc, item) => {
-        const sku = item?.variants?.[0]?.sku;
+        const sku = item?.product_id;
         if (!acc[sku]) {
           acc[sku] = { ...item, count: 0 };
         }
@@ -318,7 +406,7 @@ export const CartProvider = ({ children }) => {
   const cartItems = useMemo(() => {
     if (!cart) return [];
 
-    return cart?.items;
+    return cart?.items || [];
   }, [cart]);
 
   const cartItemsCount = useMemo(() => {
@@ -350,7 +438,11 @@ export const CartProvider = ({ children }) => {
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
-      <GuestBillingFOrmDialog open={true} onClose={()=>{}}/>
+      <GuestBillingFormDialog
+        open={toggleBillingDialog}
+        onClose={handleBillingDialogOnClose}
+        onSave={handleBillingDialogOnSave}
+      />
     </CartContext.Provider>
   );
 };

@@ -3,10 +3,10 @@ import localForage from "localforage";
 
 // Configure localForage (optional, but can specify a store name)
 localForage.config({
-  driver: localForage.LOCALSTORAGE, // You can choose IndexedDB, WebSQL, or LocalStorage
-  name: "cartStore",
-  storeName: "cartItems", // You can change the name of the store
-  description: "Store cart items for guest users",
+  driver: localForage.LOCALSTORAGE, 
+  name: "solanaStore",
+  storeName: "vairables",
+  description: "variables for guest users",
 });
 
 // Function to save cart items

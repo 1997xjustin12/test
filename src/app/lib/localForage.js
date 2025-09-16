@@ -4,7 +4,7 @@ localForage.config({
   driver: localForage.LOCALSTORAGE,
   name: "solanaStore",
   storeName: "vairables",
-  description: "Store cart items for guest users",
+  description: "variables for guest users",
 });
 
 export const setItem = async (key, value) => {

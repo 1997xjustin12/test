@@ -367,15 +367,20 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
 };
 
 export const mapOrderItems = (items) => {
-  return items.map((item) => ({
-    product_id: item?.product_id,
-    product_link: `${store_domain}/${createSlug(item?.brand)}/product/${
-      item?.handle
-    }`,
-    price: item?.variants?.[0]?.price,
-    quantity: item.count,
-    total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-  }));
+  return items.map((item) => {
+    // return if already formatted
+    if(item?.product_link && item?.price && item?.quantity && item?.total) return {...item};
+
+    return {
+      product_id: item?.product_id,
+      product_link: `${store_domain}/${createSlug(item?.brand)}/product/${
+        item?.handle
+      }`,
+      price: item?.variants?.[0]?.price,
+      quantity: item.count,
+      total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+    };
+  });
 };
 
 export const BaseNavObj = {
@@ -412,8 +417,8 @@ export const burnerBuckets = {
   "2 Burners": ["2", "2 Burner", "two"],
   "3 Burners": ["3", "3 Burner", "three"],
   "4 Burners": ["4", "4 Burner", "four"],
-  "5 Burners": ["5","5 Burners"],
-  "6 Burners": ["6","6 Burners"],
-  "7 Burners": ["7","7 Burners"],
-  "8 Burners": ["8","8 Burners"],
+  "5 Burners": ["5", "5 Burners"],
+  "6 Burners": ["6", "6 Burners"],
+  "7 Burners": ["7", "7 Burners"],
+  "8 Burners": ["8", "8 Burners"],
 };
