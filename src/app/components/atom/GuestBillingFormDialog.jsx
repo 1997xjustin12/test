@@ -12,15 +12,24 @@ function GuestBillingFormDialog({ open, onClose, onSave }) {
   const [toggle, setToggle] = useState(true);
   const [billingStorage, setBillingStorage] = useState(null);
   const [formData, setFormData] = useState({
-    billing_first_name: "Justin",
-    billing_last_name: "Cedeno  ",
-    billing_email: "justin@onsitestorage.com",
-    billing_phone: "0999-1234-123",
-    billing_address: "Toril District, Davao City",
-    billing_city: "Davao City",
-    billing_province: "Davao Del Sur",
-    billing_zip_code: "8000",
-    billing_country: "Philippines",
+    // billing_first_name: "Justin",
+    // billing_last_name: "Cedeno  ",
+    // billing_email: "justin@onsitestorage.com",
+    // billing_phone: "0999-1234-123",
+    // billing_address: "Toril District, Davao City",
+    // billing_city: "Davao City",
+    // billing_province: "Davao Del Sur",
+    // billing_zip_code: "8000",
+    // billing_country: "Philippines",
+    billing_first_name: "",
+    billing_last_name: "",
+    billing_email: "",
+    billing_phone: "",
+    billing_address: "",
+    billing_city: "",
+    billing_province: "",
+    billing_zip_code: "",
+    billing_country: "",
   });
 
   const handleChange = (e) => {
