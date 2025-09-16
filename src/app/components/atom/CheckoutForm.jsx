@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 
+
 export default function CheckoutForm({ onChange }) {
   const required_fields = [
     "billing_first_name",
@@ -47,6 +48,8 @@ export default function CheckoutForm({ onChange }) {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [sameAsBilling, setSameAsBilling] = useState(false);
+  const [billingStorage, setBillingStorage] = useState(null);
+
 
   async function createOrder(orderData) {
     try {
@@ -201,9 +204,29 @@ export default function CheckoutForm({ onChange }) {
     setErrors({...newErrors});
   }, [form, sameAsBilling]);
 
-  useEffect(() => {
-    console.log("[TEST] errors: ", errors)
-  }, [errors]);
+  // useEffect(() => {
+  //   console.log("[TEST] errors: ", errors)
+  // }, [errors]);
+  
+    useEffect(() => {
+      if (typeof window === "undefined") return;
+  
+      let mounted = true;
+  
+      import("@/app/lib/billingStorage").then(async (module) => {
+        if (!mounted) return;
+        const billing_info = await module.get();
+        // console.log("billing_info", billing_info);
+        if(billing_info && Object.keys(billing_info)?.length > 0){
+          setForm(prev=>({...prev,...billing_info}))
+        }
+        setBillingStorage(module);
+      });
+  
+      return () => {
+        mounted = false;
+      };
+    }, []);
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">

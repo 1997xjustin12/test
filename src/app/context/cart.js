@@ -128,12 +128,12 @@ export const CartProvider = ({ children }) => {
         const newCart = await buildCartObject(tmp_cart);
         const items = newCart?.items || [];
         setCart(newCart);
-        setLoadingCartItems(false);
         if (items.length > 0) {
           syncCartToCookie(items);
         }
         createAbandonedCart();
       }
+      setLoadingCartItems(false);
       setCartStorage(module);
     });
 
