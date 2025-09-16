@@ -80,9 +80,17 @@ const GrillProtectionSection = () => {
       <div className="w-[calc(100%-240px)] p-4">
         <h4 className="font-bold text-sm">Grill Protection Plan</h4>
         <div className="flex mt-4">
-          <div className="">
-            <div className="bg-neutral-200 w-[140px] aspect-1 flex relative items-center justify-center">
-              IMG
+          <div className="flex relative">
+            <div className="bg-white w-[140px] flex relative items-center justify-center">
+                  {(
+                    <Image
+                      src={'/images/bbq-guy-protection.webp'}
+                      alt={'Protection-Image'}
+                      className="w-full h-full"
+                      objectFit="contain"
+                      fill
+                    />
+                  )}
             </div>
           </div>
           <div className="w-full pl-4 flex flex-col gap-[25px]">

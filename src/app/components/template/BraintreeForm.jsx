@@ -10,6 +10,8 @@ import CheckoutForm from "@/app/components/atom/CheckoutForm";
 export default function BraintreeForm({cartTotal}) {
   const router = useRouter();
   const { cartItems, clearCartItems, formattedCart } = useCart();
+  const [billingStorage, setBillingStorage] = useState(null);
+
   // console.log("[TEST] formatted Cart", formattedCart);
   const [checkoutForm, setCheckoutForm] = useState({});
   const [totalPayable, setTotalPayable] = useState(0);
@@ -68,6 +70,22 @@ export default function BraintreeForm({cartTotal}) {
     }
 
     initializeDropIn();
+  }, []);
+
+  
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let mounted = true;
+
+    import("@/app/lib/billingStorage").then(async (module) => {
+      if (!mounted) return;
+      setBillingStorage(module);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   async function createOrder(orderData) {
@@ -194,11 +212,24 @@ export default function BraintreeForm({cartTotal}) {
             instance.teardown();
             setInstance(null);
             clearCartItems();
+            if(billingStorage){
+              const billing_info = Object.fromEntries(
+                Object.entries(checkoutForm?.data || {})
+                  .filter(([key]) => key.startsWith("billing_"))
+              );
+              console.log("billing_info after transaction");
+              billingStorage.set(billing_info);              
+            }
             router.push(`${BASE_URL}/payment_success`);
           } else {
             alert("Something went wrong! Please try again.");
           }
         } else {
+          const billing_info = Object.fromEntries(
+            Object.entries(checkoutForm?.data || {})
+              .filter(([key]) => key.startsWith("billing_"))
+          );
+          console.log("billing_info after transaction", billing_info);
           alert(`Payment failed: ${result.error}`);
         }
       // }
