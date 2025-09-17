@@ -1,5 +1,7 @@
 // pages/api/es/searchkit.js
 import API from "@searchkit/api";
+import { redis, keys } from "../../../app/lib/redis";
+
 import { BaseNavKeys, BaseNavObj, burnerBuckets, ES_INDEX } from "../../../app/lib/helpers";
 
 // const exclude_brands = ["Bull Outdoor Products"];
@@ -257,6 +259,7 @@ export default async function handler(req, res) {
   }
 
   try {
+
     const check_filter = req.body?.[0]?.params?.filter;
 
     let filter_key = null;
@@ -340,16 +343,22 @@ export default async function handler(req, res) {
 
       filter_query.push(...tmp_query);
     }
-    console.log("[TEST NI] filter_value:", filter_value);
+    // console.log("[TEST NI] filter_value:", filter_value);
 
     // This will display no products for category links that are not known.
     if (
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-      if (BaseNavKeys.includes(filter_value)) {
-        const value_array = BaseNavObj?.[filter_value];
-        console.log("[TEST NI]", value_array);
+      const menu_key = keys.dev_shopify_menu.value;
+      const nav_obj = await redis.get(menu_key);
+      const base_nav_array =  nav_obj ?  nav_obj.map(item => item?.name):[];
+      const isBaseNav = base_nav_array.includes(filter_value);
+      const BaseNavItem = isBaseNav ? nav_obj.find(item=> item?.name === filter_value):null;
+
+      if (BaseNavItem) {
+        const value_array = BaseNavItem?.children.map(item => item?.collection_display?.name);
+        console.log("[collection name array]", value_array);
         filter_query.push({
           terms: {
             "collections.name.keyword": value_array,
