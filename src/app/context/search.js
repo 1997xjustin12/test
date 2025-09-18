@@ -79,7 +79,26 @@ export const SearchProvider = ({ children }) => {
   const [categoryResults, setCategoryResults] = useState([]);
   const [brandResults, setBrandResults] = useState([]);
 
-  // new fetch function
+  const [popularSearches, setPopularSearches] = useState([]);
+  const [popularResults, setPopularResults] = useState([]);
+
+  const addPopularSearches = async(query) => {
+    try{
+      const res = await fetch("/api/add_popular_searches", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ term: query }),
+      });
+      
+      const data = await res.json();
+      console.log("Response:", data);
+    }catch(err){
+      console.log("[ERROR] Add Popular Searches")
+    }
+  }
+
   const fetchProducts = async (query_string) => {
     try {
       const trim_query = query_string.trim();
@@ -189,8 +208,14 @@ export const SearchProvider = ({ children }) => {
           : recent
               .filter((i) => i.includes(query))
               .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+      const popular_searches = popularSearches
+        .filter((item) =>
+          item?.term?.toLowerCase()?.includes(query?.toLowerCase())
+        )
+        .map((item) => item?.term);
 
       setRecentResults(results);
+      setPopularResults(popular_searches);
 
       setCategoryResults((prev) => {
         if (query === "") {
@@ -254,7 +279,11 @@ export const SearchProvider = ({ children }) => {
     }
   };
 
-  const redirectToSearchPage = () => {
+  const redirectToSearchPage = async() => {
+    // set recentSearch and popularSearch
+    const recent = await getRecentSearch();
+    await setRecentSearch([...recent, searchQuery]);
+    await addPopularSearches(searchQuery);
     router.push(`${BASE_URL}/search?query=${searchQuery}`);
   };
 
@@ -269,21 +298,21 @@ export const SearchProvider = ({ children }) => {
 
   const setRecentSearch = async (value) => {
     try {
-      await lForage.setItem(recentSearchKey, value);
+      await lForage.setItem(recentSearchKey, [...new Set(value.map((str) => str.toLowerCase()))]);
     } catch (error) {
       console.log("[LocalForage] setRecentSearch error:", error);
     }
   };
 
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("@/app/lib/localForage")
-        .then((module) => {
+        .then(async (module) => {
           setLForage(module);
           // set initial recent serach value
+          const recentLS = await module.getItem(recentSearchKey);
+          console.log("[recentLS]", recentLS)
           setRecentResults((prev) => {
-            const recentLS = module.getItem(recentSearchKey);
             if (recentLS) {
               return Array.isArray(recentLS) ? recentLS : [];
             } else {
@@ -296,18 +325,23 @@ export const SearchProvider = ({ children }) => {
         });
     }
 
-    fetch("/api/popular_searches")
-      .then((res) => res.json())
-      .then((res)=> {
-        console.log("[TEST] upstash response: ", res);
-      });
+    const fetchPopularSearches = async () => {
+      fetch("/api/popular_searches")
+        .then((res) => res.json())
+        .then((data) => {
+          setPopularSearches(data);
+        })
+        .catch((err) => console.error("Failed to fetch popular searches", err));
+    };
+
+    fetchPopularSearches();
   }, []);
 
   // set url query string on the input if location =/search
   useEffect(() => {
     const urlQuery = searchParams.get("query");
     if (pathname === "/search" && urlQuery) {
-        setSearch(urlQuery);
+      setSearch(urlQuery);
     }
   }, [pathname, searchParams]);
 
@@ -325,6 +359,14 @@ export const SearchProvider = ({ children }) => {
           visible: true,
           data: recentResults,
           showExpand: recentResults.length > 3,
+        },
+        {
+          total: popularResults?.length,
+          prop: "popular",
+          label: "Popular Searches",
+          visible: true,
+          data: popularResults || [],
+          showExpand: popularResults?.length > 0,
         },
         {
           total: searchPageProductCount || (productResultsCount ?? 0),
@@ -375,6 +417,7 @@ export const SearchProvider = ({ children }) => {
   }, [
     recentResults,
     productResults,
+    popularResults,
     categoryResults,
     brandResults,
     loading,

@@ -2,9 +2,8 @@ import { redis } from "../../app/lib/redis";
 
 export default async function handler(req, res) {
   // Fetch top 10 search terms, highest score first
-  const results = await redis.zrange("popular_searches", -10, -1, {
-    byScore: false,
-    rev: true,
+  const results = await redis.zrange("popular:searches", 0, 9, {
+
     withScores: true
   });
 

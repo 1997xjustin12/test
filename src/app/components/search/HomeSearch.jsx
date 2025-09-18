@@ -44,6 +44,7 @@ const HomeSearch = ({ main, controlled_height }) => {
   }, [openSearch]);
 
   const handleRedirectToSearchPage = () => {
+    // set recent and popular search
     setOpenSearch(false);
     redirectToSearchPage();
   };
@@ -73,8 +74,8 @@ const HomeSearch = ({ main, controlled_height }) => {
   }, []);
 
   const handleOptionSelect = async() => {
-    const recents = await getRecentSearch();
-    if(recents && searchQuery.length > 3){
+    const recents = await getRecentSearch() || [];
+    if(searchQuery.length > 3){
       setRecentSearch([...new Set([...recents, searchQuery])]);
     }
     setOpenSearch(false);

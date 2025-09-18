@@ -62,6 +62,23 @@ function SearchResultSection({ section, onOptionSelect }) {
               </Link>
             ))}
 
+            
+          { sectionData && section.prop === "popular" &&
+            sectionData.map((popular, index) => (
+              <Link
+                prefetch={false}
+                onClick={handleOptionClick}
+                key={`popular-search-${index}`}
+                href={`${BASE_URL}/search?query=${popular}`}
+              >
+                <div className="group hover:bg-stone-50 px-2 py-[5px]">
+                  <div className="text-[14px] group-hover:text-theme-600">
+                    {popular}
+                  </div>
+                </div>
+              </Link>
+            ))}
+
           { sectionData && section.prop === "product" &&
             sectionData.map((product, index) => (
               <Link 
