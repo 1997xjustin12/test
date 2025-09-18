@@ -76,7 +76,13 @@ const HomeSearch = ({ main, controlled_height }) => {
   const handleOptionSelect = async() => {
     const recents = await getRecentSearch() || [];
     if(searchQuery.length > 3){
-      setRecentSearch([...new Set([...recents, searchQuery])]);
+      setRecentSearch((prev) => {
+        const updated = [
+          { term: searchQuery, timestamp: Date.now() },
+          ...prev.filter((item) => item.term !== searchQuery),
+        ];
+        return updated;
+      });
     }
     setOpenSearch(false);
   }

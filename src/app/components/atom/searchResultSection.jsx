@@ -52,11 +52,11 @@ function SearchResultSection({ section, onOptionSelect }) {
                 prefetch={false}
                 onClick={handleOptionClick}
                 key={`recent-search-${index}`}
-                href={`${BASE_URL}/search?query=${recent}`}
+                href={`${BASE_URL}/search?query=${recent?.term}`}
               >
                 <div className="group hover:bg-stone-50 px-2 py-[5px]">
                   <div className="text-[14px] group-hover:text-theme-600">
-                    {recent}
+                    {recent?.term}
                   </div>
                 </div>
               </Link>

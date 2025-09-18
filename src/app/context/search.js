@@ -82,8 +82,8 @@ export const SearchProvider = ({ children }) => {
   const [popularSearches, setPopularSearches] = useState([]);
   const [popularResults, setPopularResults] = useState([]);
 
-  const addPopularSearches = async(query) => {
-    try{
+  const addPopularSearches = async (query) => {
+    try {
       const res = await fetch("/api/add_popular_searches", {
         method: "POST",
         headers: {
@@ -91,13 +91,13 @@ export const SearchProvider = ({ children }) => {
         },
         body: JSON.stringify({ term: query }),
       });
-      
+
       const data = await res.json();
       console.log("Response:", data);
-    }catch(err){
-      console.log("[ERROR] Add Popular Searches")
+    } catch (err) {
+      console.log("[ERROR] Add Popular Searches");
     }
-  }
+  };
 
   const fetchProducts = async (query_string) => {
     try {
@@ -206,12 +206,14 @@ export const SearchProvider = ({ children }) => {
         query === ""
           ? recent
           : recent
-              .filter((i) => i.includes(query))
-              .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+              .filter((i) => i.term.toLowerCase().includes(query.toLowerCase()))
+              .sort((a, b) => b.timestamp - a.timestamp);
+
       const popular_searches = popularSearches
         .filter((item) =>
           item?.term?.toLowerCase()?.includes(query?.toLowerCase())
         )
+        .sort((a, b) => b.score - a.score)
         .map((item) => item?.term);
 
       setRecentResults(results);
@@ -279,10 +281,13 @@ export const SearchProvider = ({ children }) => {
     }
   };
 
-  const redirectToSearchPage = async() => {
+  const redirectToSearchPage = async () => {
     // set recentSearch and popularSearch
     const recent = await getRecentSearch();
-    await setRecentSearch([...recent, searchQuery]);
+    await setRecentSearch([
+      { term: searchQuery, timestamp: Date.now() },
+      ...recent,
+    ]);
     await addPopularSearches(searchQuery);
     router.push(`${BASE_URL}/search?query=${searchQuery}`);
   };
@@ -298,10 +303,27 @@ export const SearchProvider = ({ children }) => {
 
   const setRecentSearch = async (value) => {
     try {
-      await lForage.setItem(recentSearchKey, [...new Set(value.map((str) => str.toLowerCase()))]);
+      const new_value = dedupeRecents(value);
+      await lForage.setItem(
+        recentSearchKey,
+        new_value.map((item) => ({ ...item, term: item?.term?.toLowerCase() }))
+      );
     } catch (error) {
       console.log("[LocalForage] setRecentSearch error:", error);
     }
+  };
+
+  const dedupeRecents = (data) => {
+    const map = new Map();
+
+    data.forEach((item) => {
+      const existing = map.get(item.term);
+      if (!existing || item.timestamp > existing.timestamp) {
+        map.set(item.term, item);
+      }
+    });
+
+    return Array.from(map.values());
   };
 
   useEffect(() => {
@@ -311,7 +333,7 @@ export const SearchProvider = ({ children }) => {
           setLForage(module);
           // set initial recent serach value
           const recentLS = await module.getItem(recentSearchKey);
-          console.log("[recentLS]", recentLS)
+          console.log("[recentLS]", recentLS);
           setRecentResults((prev) => {
             if (recentLS) {
               return Array.isArray(recentLS) ? recentLS : [];
