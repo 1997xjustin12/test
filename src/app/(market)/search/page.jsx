@@ -14,6 +14,7 @@ export default function SearchPage(props) {
   const [tab, setTab] = useState("product");
   const { query } = searchParams;
   const { searchQuery, setSearch, searchResults, noResults } = useSearch();
+  console.log("[SEARCH RESULTS]", searchResults)
   useEffect(()=>{
     if(query){
       setSearch(query);
@@ -41,7 +42,7 @@ export default function SearchPage(props) {
             {searchResults &&
               searchResults.length > 0 &&
               searchResults
-                .filter((i) => i.label !== "Recent")
+                .filter((i) => !["popular", "recent"].includes(i.prop))
                 .map((i, idx) => (
                   <button onClick={()=>handleTabChange(i.prop)} key={`search-page-tab-${i.prop}`} className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${tab===i.prop?"border-theme-600":"text-stone-500"}`}>
                     {i.label} ({i.total})
