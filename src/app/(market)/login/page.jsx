@@ -43,9 +43,9 @@ export default function LoginPage() {
     if (res.ok && data?.token) {
       // Store token if needed (localStorage/cookies)
       // localStorage.setItem('bc_token', data.token);
-
+      console.log("[USER TOKEN]",token);
       // Redirect or show success message
-      window.location.href = '/my-account'; // Or wherever you want
+      // window.location.href = '/my-account'; // Or wherever you want
     } else {
       setError(data?.error || 'Login failed.');
     }

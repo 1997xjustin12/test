@@ -96,13 +96,13 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     const handleUnload = () => {
-      console.log("[UNLOAD]");
+      console.log("[UNLOAD] trigger abandoned cart");
       createAbandonedCart(true);
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        console.log("[HIDDEN]");
+        console.log("[HIDDEN] trigger abandoned cart");
         createAbandonedCart(true);
       }
     };

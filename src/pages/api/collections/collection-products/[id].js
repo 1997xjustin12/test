@@ -5,14 +5,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const key = `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`;
   const {
     query: { id },
   } = req;
 
   try {
+    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/collections/collection-products/${id}`;
+    const key = `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`;
+
     const response = await fetch(
-      `https://admin.solanabbqgrills.com/api/collections/collection-products/${id}`,
+      url,
       {
         method: "GET",
         headers: {

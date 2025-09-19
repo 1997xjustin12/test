@@ -4,7 +4,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://admin.solanabbqgrills.com/api/abandoned-carts/create/', {
+    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/abandoned-carts/create/`;
+    
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
