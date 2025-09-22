@@ -23,9 +23,20 @@ export const getItem = async (key) => {
     console.error(`[LocalForage] getItem: key params required`);
   }
   try {
-    return (await localForage.getItem(key)) || [];
+    return (await localForage.getItem(key)) || null;
   } catch (error) {
     console.error(`[LocalForage] Error retrieving [${key}]`, error);
     return [];
+  }
+};
+
+export const removeItem = async (key) => {
+  if (!key) {
+    console.error(`[LocalForage] removeItem: key param required`);
+  }
+  try {
+    await localForage.removeItem(key);
+  } catch (error) {
+    console.error(`[LocalForage] Error removing [${key}]`, error);
   }
 };

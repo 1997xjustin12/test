@@ -4,30 +4,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserAccountIconBB } from "@/app/components/icons/lib";
 import { useUserSession } from "@/app/context/session";
-
+import { useAuth } from "@/app/context/auth";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function MyAccountButton({ className }) {
-  const { userSession, loading } = useUserSession();
+  const {isLoggedIn, logout} = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
-    await fetch("/api/logout", { method: "POST" });
-    router.push("/login");
+    logout();
   };
 
   const handleClick = () => {
-    if (!userSession) {
+    if (!isLoggedIn) {
       router.push("/login");
     } else {
       setIsOpen(!isOpen);
     }
   };
-
-  if (loading) return null;
-
-  return null; // temporary hide my-account button
 
   return (
     <div className={`relative inline-block ${className}`}>
@@ -38,7 +33,7 @@ export default function MyAccountButton({ className }) {
         <UserAccountIconBB width="24" height="24" />
       </button>
 
-      {isOpen && userSession && (
+      {isOpen && isLoggedIn && (
         <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md z-50">
           <Link
             href={`${BASE_URL}/my-account`}

@@ -7,6 +7,7 @@ import FixedHeader from "@/app/components/template/fixed_header";
 import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
 import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
 import Footer from "@/app/components/section/Footer";
+import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
 import { SearchProvider } from "@/app/context/search";
@@ -14,7 +15,7 @@ import { CategoriesProvider } from "@/app/context/category";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
-import ExtrasHeader from "@/app/components/atom/ExtrasHeader"
+import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 const shopify = true; // if shopify product structure
 
 const InterFont = Inter({
@@ -25,10 +26,10 @@ const InterFont = Inter({
 });
 
 const libreBaskerville = Libre_Baskerville({
-  weight: ['400', '700'], // Available weights: 400 (regular), 700 (bold)
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-libre-baskerville',
+  weight: ["400", "700"], // Available weights: 400 (regular), 700 (bold)
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-libre-baskerville",
 });
 
 export const metadata = await generateMetadata();
@@ -47,21 +48,31 @@ export default async function MarketLayout({ children }) {
       >
         <FreeShippingBanner />
         <ExtrasHeader />
-        <CategoriesProvider categories={menu.map(i=> ({...i, is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name)}))}>
-          <CartProvider>
-            <CompareProductsProvider>
-              <SearchProvider>
-              <SessionWrapper>
-                <TuiNavBar logo={redisLogo} menu={menu} />
-                <FixedHeader />
-                <QuickViewProvider>
-                  <div className="flex flex-col min-h-screen">{children}</div>
-                </QuickViewProvider>
-                </SessionWrapper>
-              </SearchProvider>
-            </CompareProductsProvider>
-          </CartProvider>
-        </CategoriesProvider>
+        <AuthProvider>
+          <CategoriesProvider
+            categories={menu.map((i) => ({
+              ...i,
+              is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
+            }))}
+          >
+            <CartProvider>
+              <CompareProductsProvider>
+                <SearchProvider>
+                  <SessionWrapper>
+                    <TuiNavBar logo={redisLogo} menu={menu} />
+                    <FixedHeader />
+                    <QuickViewProvider>
+                      <div className="flex flex-col min-h-screen">
+                        {children}
+                      </div>
+                    </QuickViewProvider>
+                  </SessionWrapper>
+                </SearchProvider>
+              </CompareProductsProvider>
+            </CartProvider>
+          </CategoriesProvider>
+        </AuthProvider>
+
         <Footer />
       </body>
     </html>

@@ -1,29 +1,45 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useUserSession } from "@/app/context/session";
+"use client";
+import { useMemo } from "react";
+import { useAuth } from "@/app/context/auth";
+import Link from "next/link";
+import { BASE_URL } from "@/app/lib/helpers";
 export default function MyAccountPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const success = searchParams.get('success') === '1';
-  const { userSession, loading } = useUserSession();
-  const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    if (!loading && !userSession) {
-      router.push('/login'); // Redirect to login if no session
-    }
-  }, [loading, userSession, router]);
+  const { isLoggedIn, user, fullName } = useAuth();
 
-  if (loading || !userSession) return null;
+  
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    const link = e.target.closest("a");
+
+    if (link) {
+        window.location.href = link;
+    }
+  };
+
+
+  if (!isLoggedIn && !user) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      {/* Your account content here */}
-      <div className="bg-white p-8 rounded shadow text-center">
-        <h1 className="text-xl font-bold">Welcome to your account</h1>
-        {success && <p className="text-green-600 mt-2">Action was successful!</p>}
-      </div>
+    <div className="bg-white w-full p-[20px] shadow-lg border rounded-lg">
+      <h3>Dashboard</h3>
+
+      {user && (
+        <div className="pt-[20px] flex gap-[20px] flex-col">
+          <p>
+            Hello{" "}
+            <span className="font-bold">
+              {fullName}
+            </span>,{" "}
+            (<span className="text-neutral-500">Not</span>{" "}
+            <span className="text-neutral-500 font-bold">
+              {fullName}?
+            </span>{" "}
+            <Link onClick={handleLinkClick} prefetch={false} href={`${BASE_URL}/logout`} className="text-red-700 font-semibold">Logout</Link>)
+          </p>
+          <p>From your account dashboard you can view your recent <Link onClick={handleLinkClick} prefetch={false} href={`${BASE_URL}/my-account/orders`} className="text-red-700 font-semibold">orders</Link>, manage your{" "}<Link onClick={handleLinkClick} prefetch={false} href={`${BASE_URL}/my-account/profile`} className="text-red-700 font-semibold">shipping and billing addresses</Link>, and change your{" "}<Link onClick={handleLinkClick} prefetch={false} href={`${BASE_URL}/my-account/change-password`} className="text-red-700 font-semibold">password.</Link>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
