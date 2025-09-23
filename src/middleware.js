@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const block_links = ["/test"]; // "/cart", "/checkout"
+// const block_links = []; // "/cart", "/checkout"
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -28,6 +28,6 @@ export function middleware(request) {
   return NextResponse.next();
 }
 
-export const config = {
-  matcher: block_links,
-};
+// export const config = {
+//   matcher: block_links,
+// };
