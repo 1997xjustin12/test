@@ -49,7 +49,8 @@ export default function HomePageReviews() {
                 readOnly
                 value={4.5}
                 fractions={2}
-                style={{ maxWidth: 150 }}></Rating>
+                style={{ maxWidth: 150 }}
+              ></Rating>
             </div>
             <div className="text-xs lg:text-base">
               4.4 stars out of based from{" "}
@@ -83,15 +84,12 @@ export default function HomePageReviews() {
                     <div className="flex items-center justify-center">
                       <div className="relative w-[30px] h-[30px]">
                         {
-                          // <img src={i.img} alt={i.name} />
                           <Image
                             src={i.img}
                             alt={`${i.name}-image`}
                             className="w-full h-full object-cover"
                             width={200}
                             height={200}
-                            // loading="eager"
-                            // priority={false}
                           />
                         }
                       </div>

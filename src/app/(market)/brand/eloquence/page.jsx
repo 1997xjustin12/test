@@ -5,11 +5,15 @@ import Link from "next/link";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import FAQsSection from "@/app/components/atom/FAQs";
-import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
-import YmalCarousel from "@/app/components/atom/YmalCarousel";
+import BlogsSection from "@/app/components/section/HomeBlogs";
+
+import CarouselWrap from "@/app/components/atom/CarouselWrap";
+import { Rating } from "@smastrom/react-rating";
+import { parseRatingCount } from "@/app/lib/helpers";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
+import openBoxItemPrice from "@/app/components/atom/openBoxItemPrice";
 // CONSTANTS
 const pathname = "solana-bbq-grills";
 const shopUrl = `${BASE_URL}/eloquence`;
@@ -19,6 +23,12 @@ export const metadata = {
     "Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!",
 };
 const defaultMenuKey = keys.dev_shopify_menu.value;
+
+const contact_number = "(888) 667-4986";
+
+const color1 = "#e98f3b";
+const color2 = "#e53237";
+
 const faqs = [
   {
     id: "Q1",
@@ -57,42 +67,18 @@ const faqs = [
   },
 ];
 
-// FUNCTIONS
-const getMenu = async () => {
-  return await redis.get(defaultMenuKey);
-};
-const flattenNav = (navItems) => {
-  let result = [];
-
-  const extractLinks = (items) => {
-    items.forEach(({ children = [], ...rest }) => {
-      result.push({ ...rest, children });
-      extractLinks(children);
-    });
-  };
-
-  extractLinks(navItems);
-
-  return result;
-};
 // EXTENDED COMPONENT
 const Hero = () => {
-  const useBanner = "/images/banner/eloquence-fathers-day.webp";
-  const bgWrapClass = `absolute inset-0 bg-[url('/images/banner/eloquence-fathers-day.webp')] bg-cover bg-center blur-xl to-transparent opacity-50`;
-  // const data = {
-  //   title: "Grill Better for Less with Solana Outdoor Kitchen Equipments",
-  //   tag_line:
-  //     "Solana Grills offers high-quality grills, burners, and outdoor kitchen accessories from trusted brands to help you build a stylish and functional outdoor cooking space that fits your needs.",
-  // };
+  const useBanner = "/images/home/eloquence/eloquence-banner-202509.webp";
   return (
     <div className={`w-full mx-auto flex flex-col md:flex-row`}>
       <div className={`w-full md:w-full relative overflow-hidden`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[500/143]">
+        <div className="w-full relative aspect-[640/119] bg-red-200">
           {
             <Image
               src={useBanner}
               alt={"Banner"}
-              className="w-full h-full object-contain"
+              className="object-contain"
               fill
               loading="eager"
               priority={true}
@@ -105,165 +91,64 @@ const Hero = () => {
   );
 };
 
-// ELOQUENCE COMPONENTS
-const sub_category_obj = [
-  {
-    name: "Eloquence Grills",
-    url: `${BASE_URL}/eloquence-grills`,
-    image: "/images/feature/eloquence-grills.webp",
-  },
-  {
-    name: "Eloquence Side Burners",
-    url: `${BASE_URL}/eloquence-side-burners`,
-    image: "/images/feature/eloquence-side-burners.webp",
-  },
-  {
-    name: "Eloquence Storage",
-    url: `${BASE_URL}/eloquence-storage`,
-    image: "/images/feature/eloquence-storage.webp",
-  },
-  {
-    name: "Eloquence Accessories",
-    url: `${BASE_URL}/eloquence-accessories`,
-    image: "/images/feature/eloquence-accessories.webp",
-  },
-];
-
-const SubCategoriesDisplay = ({ categories }) => {
-  if (!categories) {
-    return;
-  }
+const HeroAlert = () => {
   return (
-    <div>
-      <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-        <div className="hidden md:flex gap-[30px]">
-          {categories &&
-            Array.isArray(categories) &&
-            categories?.length > 0 &&
-            categories.map((category, index) => (
-              <Link
-                prefetch={false}
-                href={category?.url}
-                className="w-[220px] flex flex-col gap-[15px] group"
-                key={`sub-category-flex-display-${index}`}
-              >
-                <div className="aspect-1 p-[30px] rounded-full bg-neutral-white relative box-border border-[10px] border-white group-hover:border-slate-300 group-hover:shadow transition-all duration-300 ease-in-out group-hover:pb-[40px] group-hover:pt-[20px] overflow-hidden">
-                  <div className="aspect-1 box-border relative">
-                    {category?.image && (
-                      <Image
-                        src={category?.image}
-                        title={`${category?.name} Image`}
-                        alt={`${createSlug(category?.name)}-image`}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 300px"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="text-center font-bold">{category?.name}</div>
-              </Link>
-            ))}
-        </div>
-        {/* mobile */}
-        <div className="flex md:hidden">
-          <YmalCarousel
-            breakpoints={[
-              { minWidth: 0, value: 1 },
-              { minWidth: 375, value: 2 },
-              { minWidth: 560, value: 3 },
-              // { minWidth: 1280, value: 4 },
-              // { minWidth: 1380, value: 5 },
-              // { minWidth: 1480, value: 6 },
-            ]}
-          >
-{categories &&
-            Array.isArray(categories) &&
-            categories?.length > 0 &&
-            categories.map((category, index) => (
-              <Link
-                prefetch={false}
-                href={category?.url}
-                className="w-[220px] flex flex-col gap-[15px] group"
-                key={`sub-category-flex-display-${index}`}
-              >
-                <div className="aspect-1 p-[30px] rounded-full bg-neutral-white relative box-border border-[10px] border-white group-hover:border-slate-300 group-hover:shadow transition-all duration-300 ease-in-out group-hover:pb-[40px] group-hover:pt-[20px] overflow-hidden">
-                  <div className="aspect-1 box-border relative">
-                    {category?.image && (
-                      <Image
-                        src={category?.image}
-                        title={`${category?.name} Image`}
-                        alt={`${createSlug(category?.name)}-image`}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 300px"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="text-center font-bold">{category?.name}</div>
-              </Link>
-            ))}
-            </YmalCarousel>
-        </div>
+    <div className="bg-[#4c4c53]">
+      <div className="container mx-auto p-2 text-xs sm:text-base">
+        <Link
+          prefetch={false}
+          href={`tel:${contact_number}`}
+          className="text-white"
+        >
+          <div className="text-center">
+            Call For Best Pricing{" "}
+            <span className="underline">{`888-667-4986`}</span>
+          </div>
+          <div className="text-center">
+            Experts are standing by to provide you with best pricing and
+            exclusive package deal discounts. Save today with just 1 call.
+          </div>
+        </Link>
       </div>
     </div>
   );
 };
 
-const AboutSection = () => {
+const Block1 = () => {
+  const image = "/images/home/eloquence/built-to-impress-priced-to-compete.webp";
+  const imageAlt = "Build to Impress. Priced to Compete";
   return (
-    <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-      <div className="flex flex-col lg:flex-row">
-        <div className="w-full">
-          <div className="aspect-w-3 aspect-h-2 relative">
-            <Image
-              src={`/images/home/blogs/why-eloquence_720x.webp`}
-              title={`Why Eloquence Image`}
-              alt={`why-eloquence-image`}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 300px"
-            />
+    <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
+      <div className="flex gap-[20px]">
+        <div className="w-full aspect-[500/260] bg-white flex items-center justify-center">
+          <div className="font-bold text-xl text-neutral-400 relative">
+              <Image
+                src={image}
+                alt={imageAlt}
+                className="object-cover"
+                width={1000}
+                height={0}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              />
           </div>
         </div>
         <div className="w-full flex items-center">
-          <div className="p-3 flex flex-col gap-[10px]">
-            <div className="h-[80px] relative flex items-start justify-start text-left">
-              <Image
-                src={`/images/feature/eloquence-text-logo.avif`}
-                title={`Eloquence Text Logo`}
-                alt={`${createSlug(`Eloquence Text Logo`)}-image`}
-                fill
-                className="object-contain object-left"
-                sizes="(max-width: 768px) 100vw, 300px"
-              />
-            </div>
+          <div className="flex flex-col gap-[20px]">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+              Build to Impress. Priced to Compete
+            </h2>
+            <p>
+              Eloquence Outdoor Living combines premium outdoor kitchen
+              equipment with timeless design to enhance backyard kitchens of
+              every style. For outdoow cooking essentials to storage solutions,
+              fireplaces, and accessories, each piece is built for lasting
+              performance. Designed to impress and priced to compete, we make
+              creating your dream outdoor space easier then ever
+            </p>
             <div>
-              <h2 className="text-2xl">
-                Elevating Outdoor Cooking with Affordable Luxury
-              </h2>
-            </div>
-            <div>
-              <p>
-                All Eloquence built-in grills are crafted with precision,
-                featuring high-performance burners, heavy-duty stainless steel
-                construction, sleek dual-lined hoods, and premium cooking grates
-                for consistent, even heat. Designed for both style and strength,
-                Eloquence grills offer the perfect blend of elegance and
-                functionality. Each unit is engineered for easy integration into
-                our custom outdoor kitchens, making it simple to upgrade your
-                backyard with a touch of luxury that lasts.
-              </p>
-            </div>
-            <div className="box-border py-5">
-              <Link
-                prefetch={false}
-                href={`${BASE_URL}/eloquence`}
-                className="box-border bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
-              >
-                Shop All Eloquent Best Sellers
-              </Link>
+              <button className="py-2 px-10 font-semibold text-white bg-[#e53237] rounded-[15px]">
+                Shop now
+              </button>
             </div>
           </div>
         </div>
@@ -272,198 +157,512 @@ const AboutSection = () => {
   );
 };
 
-const blogs = [
+const block2_items = [
   {
-    title: "Outdoor Refrigerator Maintenance: A Step-by-Step Guide",
-    url: `${BASE_URL}/blogs/outdoor-refrigerator-maintenance-tips`,
-    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/refrigerator-maintenance.webp",
+    label: "Eloquence Grills",
+    image: "/images/home/eloquence/eloquence-home-eloquence-grills.webp",
+    url: `${BASE_URL}/eloquence-grills`,
   },
   {
-    title: "Blaze Prelude Grill: Durable Stainless Steel Grill",
-    url: `${BASE_URL}/blogs/blaze-prelude-grill`,
-    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/blaze-prelude-grill.webp",
+    label: "Eloquence Side Burners",
+    image: "/images/home/eloquence/eloquence-home-eloquence-side-burners.webp",
+    url: `${BASE_URL}/eloquence-side-burners`,
   },
   {
-    title: "Grill Showdown: Small Propane vs. Charcoal Grill",
-    url: `${BASE_URL}/blogs/small-propane-vs-charcoal-grill`,
-    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/propane-grill-vs.-charcoal-grill.webp",
+    label: "Eloquence Storage",
+    image: "/images/home/eloquence/eloquence-home-eloquence-storage.webp",
+    url: `${BASE_URL}/eloquence-storage`,
+  },
+  {
+    label: "Eloquence Accessories",
+    image: "/images/home/eloquence/eloquence-home-eloquence-accessories.webp",
+    url: `${BASE_URL}/eloquence-accessories`,
+  },
+  {
+    label: "Eloquence Fireplaces",
+    image: "/images/home/eloquence/eloquence-home-eloquence-fireplaces.webp",
+    url: `${BASE_URL}/eloquence-fireplaces`,
   },
 ];
 
-const BlogsSection = ({ blogs }) => {
+const Block2 = () => {
+  const breakpoints = [
+    { minWidth: 0, value: 1 },
+    { minWidth: 350, value: 2 },
+    { minWidth: 750, value: 3 },
+    { minWidth: 850, value: 4 },
+    { minWidth: 1024, value: 5 },
+    { minWidth: 1280, value: 6 },
+  ];
   return (
-    <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-      <h4 className="font-bold text-2xl mb-3">Elouqence Resource Center</h4>
-      <div className="flex  flex-col md:flex-row  gap-[20px]">
-        {blogs &&
-          Array.isArray(blogs) &&
-          blogs?.length > 0 &&
-          blogs.map((blog, index) => (
-            <div
-              key={`blog-item-${index}`}
-              className="w-full flex flex-col gap-[15px]"
+    <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair mb-5 text-center">
+        Design You Can Feel. Performance You Can Trust
+      </h2>
+      <p className="mb-7">
+        We bring together premium outdoor kitchen equipment and styling design
+        to transform your backyard into a true culinary destination. Explore our
+        collections of built-in grills, side burners, storage solutions, outdoor
+        fireplaces, and kitchen accessories crafted for lasting performance and
+        timeless appeal.
+      </p>
+      <div className="flex gap-[20px] w-full">
+        <CarouselWrap breakpoints={breakpoints}>
+          {block2_items.map((item, index) => (
+            <Link
+              key={`eloquence-products-categories-${createSlug(item?.label)}`}
+              prefetch={false}
+              href={item?.url}
+              className="flex flex-col border-[3px] border-white hover:border-[#e98f3b] transition-all duration-300 w-full aspect-[236/362]"
             >
-              <Link
-                prefetch={false}
-                href={blog?.url}
-                title={blog?.title}
-                className="aspect-[16/9] relative bg-white flex items-center justify-center"
-              >
-                {blog?.img && (
+              <div className="bg-neutral-200  aspect-[100/120] flex items-center justify-center relative">
+                
+                {item?.image && (
                   <Image
-                    src={blog?.img}
-                    title={`${blog?.title} Image`}
-                    alt={`${createSlug(blog?.title)}-image`}
+                    src={item?.image}
+                    title={`${item?.label} Image`}
+                    alt={`${createSlug(item?.label)}-image`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
+                )}
+              </div>
+              <div className="font-playfair font-medium bg-[#e98f3b] min-h-[80px] flex items-center justify-center text-center px-[8px]">
+                {item?.label}
+              </div>
+            </Link>
+          ))}
+          
+            <Link
+              prefetch={false}
+              href={`${BASE_URL}/eloquence`}
+              className="relative border-[3px] border-white hover:border-[#e98f3b] bg-[#333333] transition-all duration-300 w-full aspect-[236/362]"
+            >
+              <div className="absolute inset-0 flex items-center justify-center flex-col gap-[35px]">
+                <div className="relative aspect-1 w-[65%]">
+                  <Image
+                    src="/images/home/eloquence/eloquence-logo-only.webp"
+                    title={`Eloquence Logo Only`}
+                    alt={`eloquence-logo-only-image`}
                     fill
                     className="object-contain"
                     sizes="(max-width: 768px) 100vw, 300px"
                   />
-                )}
-              </Link>
-              <h5 className="text-lg font-bold text-center">
-                <Link prefetch={false} href={blog?.url} title={blog?.title}>
-                  {blog?.title}
-                </Link>
-              </h5>
-            </div>
-          ))}
+                </div>
+                <div className="font-playfair text-lg font-[300] text-white">Shop All Eloquence</div>
+              </div>
+            </Link>
+        </CarouselWrap>
       </div>
     </div>
   );
 };
 
-const videos = [
-  {
-    title: `TWIN EAGLES 18″ OUTDOOR BAR Outdoor Kitchen Outlet`,
-    src: "https://www.youtube.com/embed/-0u7Q_WBmyE",
-  },
-  {
-    title: `Welcome to Outdoor Kitchen Outlet`,
-    src: "https://www.youtube.com/embed/RhECp_AXlNQ",
-  },
-  {
-    title: `TWIN EAGLES FREESTANDING DINE & BREAKFAST CLUB 30” Gas Grill Base with 2 Doors Outdoor Kitchen Outlet`,
-    src: "https://www.youtube.com/embed/jsjhMVh4aHY",
-  },
-];
+const getCollectionProducts = async (id) => {
+  const res = await fetch(
+    `${BASE_URL}/api/collections/collection-products/${id}`,
+    {
+      cache: "no-store",
+    }
+  );
 
-const VideoSection = ({ videos }) => {
+  if (!res.ok) {
+    return false;
+    // throw new Error("Failed to fetch collection products");
+  }
+
+  return res.json();
+};
+
+const Block3 = async () => {
+  // eloquence-grills id 483
+  const data = await getCollectionProducts(483);
+
+  const items_per_break_point = [
+    { minWidth: 0, value: 1 },
+    { minWidth: 640, value: 2 },
+    { minWidth: 768, value: 3 },
+    { minWidth: 1280, value: 4 },
+  ];
+
   return (
-    <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-      <h4 className="font-bold text-2xl mb-3">Elouqence Videos</h4>
-      <div className="flex flex-col md:flex-row gap-[20px]">
-        {videos &&
-          Array.isArray(videos) &&
-          videos?.length > 0 &&
-          videos.map((video, index) => (
-            <div key={`video-section-item-${index}`} className="w-full">
-              <iframe
-                className="w-full aspect-[4/3]"
-                src={video?.src}
-                title={video?.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+    <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair mb-5 text-center">
+        Our Best Sellers
+      </h2>
+      <CarouselWrap breakpoints={items_per_break_point}>
+        {data.map((item, index) => (
+          <div
+            key={`carousel-product-item-${item?.handle}`}
+            className="bg-blue-50 transition-all delay-300 px-[10px] py-[20px] hover:shadow"
+          >
+            <div
+              className="aspect-[120/80] px-[10px] relative bg-white mb-3"
+              title={item?.title}
+            >
+              <DisplayImage data={item} />
+            </div>
+            <div className="px-[20px] flex flex-col gap-[15px]">
+              <div className="h-[480x] line-clamp-2" title={item?.title}>
+                {item?.title}
+              </div>
+              <div>
+                <Rating
+                  readOnly
+                  value={parseRatingCount(item?.ratings?.rating_count)}
+                  fractions={2}
+                  style={{ maxWidth: 120 }}
+                ></Rating>
+              </div>
+              <div>
+                <PriceFormatter price={item?.variants?.[0]?.price} />
+              </div>
+              <div className="text-center">
+                <button
+                  className={`bg-[${color2}] text-white font-semibold rounded-full py-2 px-10`}
+                  title={item?.title}
+                >
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </CarouselWrap>
+      <div className="text-center">
+        <button
+          className={`bg-[${color2}] text-white font-bold rounded-[15px] py-2 px-20`}
+        >
+          Shop now
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const PriceFormatter = ({ price }) => {
+  // Format price into integer and decimals
+  const formatPrice = (in_price) => {
+    if (!in_price) return { intPart: "", decimalPart: "" };
+
+    const [intPart, decimalPart = "00"] = String(in_price).split(".");
+    return {
+      intPart,
+      decimalPart: decimalPart.padEnd(2, "0").slice(0, 2), // always 2 digits
+    };
+  };
+
+  const { intPart, decimalPart } = formatPrice(price);
+
+  return (
+    <div>
+      {intPart && (
+        <div className="text-3xl font-semibold relative text-[#e98f3b]">
+          ${intPart}
+          <sup className="text-sm">{decimalPart}</sup>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const DisplayImage = ({ data }) => {
+  if (!data && data.images) return;
+  const image = data.images.find(({ position }) => position === 1);
+  return (
+    <>
+      {image && (
+        <Image
+          src={image?.src}
+          title={`${data.title} Image`}
+          alt={`${createSlug(data.title)}-image`}
+          fill
+          className="object-contain"
+          sizes="(max-width: 768px) 100vw, 300px"
+        />
+      )}
+    </>
+  );
+};
+
+const Reviews = () => {
+  const reviews = [
+    {
+      rating: 5,
+      title: "Unlock Your Inner Chef",
+      text: "I'm thrilled with this Blaze grill! It's live having a professional grade.",
+      img: "/images/home/user-profile-review-1.webp",
+      name: "Rendell Silver",
+    },
+    {
+      rating: 5,
+      title: "Impressive Quality",
+      text: "What a fantastic grill! This Grandeur Premium has...",
+      img: "/images/home/user-profile-review-1.webp",
+      name: "Zachary Pugh",
+    },
+    {
+      rating: 5,
+      title: "Super Team",
+      text: "Great customer service and even sent me a replacement...",
+      img: "/images/home/user-profile-review-2.webp",
+      name: "Sarah Smith",
+    },
+  ];
+
+  const carousel_breakpoints = [
+    { minWidth: 0, value: 1 },
+    { minWidth: 1024, value: 2 },
+    { minWidth: 1280, value: 3 },
+  ];
+  return (
+    <div className="w-full mt-10">
+      <div className="container mx-auto">
+        <div className="flex-col lg:flex-row flex gap-[50px] lg:gap-[10px] items-center">
+          <div className="lg:w-[30%] lg:p-[20px] flex flex-col gap-[8px] justify-center text-center lg:justify-normal lg:text-left">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+              Our customer reviews
+            </h2>
+            <div className="flex justify-center lg:justify-start">
+              <Rating
+                readOnly
+                value={4.5}
+                fractions={2}
+                style={{ maxWidth: 150 }}
+              ></Rating>
+            </div>
+            <div className="text-xs lg:text-base">
+              4.4 stars out of based from{" "}
+              <span className="underline cursor-pointer">122 reviews</span>
+            </div>
+            <div className="flex justify-center lg:justify-start">
+              <div className="w-[250px] border  border-stone-500 bg-stone-200 h-[35px] rounded-lg overflow-hidden">
+                <div className="h-[35px] w-[90%] bg-amber-400 border-t border-t-white"></div>
+              </div>
+            </div>
+            <div className="text-xs lg:text-sm underline text-stone-700 cursor-pointer">
+              Write a review
+            </div>
+          </div>
+          <div className="w-full lg:w-[70%] flex-col lg:flex-row flex gap-[10px] min-h-[227px]">
+            <CarouselWrap breakpoints={carousel_breakpoints}>
+              {reviews.map((i, idx) => (
+                <div key={`review-${idx}`} className="bg-white w-full p-[20px]">
+                  <div className=" flex flex-col gap-[15px]  justify-center items-center  text-center">
+                    <div className="flex text-center justify-center">
+                      <Rating
+                        readOnly
+                        value={i.rating}
+                        style={{ maxWidth: 150 }}
+                      />
+                    </div>
+                    <div className="font-extrabold text-sm lg:text-base">
+                      {i.title}
+                    </div>
+                    <div className="text-xs lg:text-sm">{i.text}</div>
+                    <div className="flex items-center justify-center">
+                      <div className="relative w-[30px] h-[30px]">
+                        {
+                          <Image
+                            src={i.img}
+                            alt={`${i.name}-image`}
+                            className="w-full h-full object-cover"
+                            width={200}
+                            height={200}
+                          />
+                        }
+                      </div>
+                      <div className="text-xs text-stone-700">{i.name}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CarouselWrap>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Block4 = () => {
+  return <Reviews />;
+};
+
+const Block5 = () => {
+  const image ="/images/home/eloquence/where-lasting-flavor-meets-lasting-value.webp";
+  const imageAlt ="Where Lasting Flavor, Meets Lasting Value";
+  return (
+    <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
+      <div className="flex gap-[20px]">
+        <div className="w-full flex items-center">
+          <div className="flex flex-col gap-[20px]">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+              Where Lasting Flavor, Meets Lasting Value
+            </h2>
+            <p>
+              An outdoor kitchen is more than a cooking space, it's the heart of
+              the family gatherings and celebrations. At Eloquence Outdoor
+              Living, we craft premium grills, storage, and fireplaces that
+              bring lasting flavor to every meal and timeless value to your
+              backyard kitchen. Designed to impress and built to endure, our
+              collections turn outdoor living into an experience worth savoring.
+            </p>
+            <div>
+              <button className="py-2 px-10 font-semibold text-white bg-[#e53237] rounded-[15px]">
+                Shop now
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="w-full aspect-[500/260] bg-white flex items-center justify-center shadow">
+          <div className="font-bold text-xl text-neutral-400 relative">
+            <Image
+                src={image}
+                alt={imageAlt}
+                className="object-cover"
+                width={1000}
+                height={0}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Block6 = () => {
+  return <Blogs />;
+};
+
+const Blogs = () => {
+  const blogs = [
+    {
+      title:
+        "The Eloquence Journey: From Ordinary to Extraordinary Backyard Outdoor Kitchens",
+      img: "/images/home/eloquence/proven-tips-to-extend-your-grills-lifespan.webp",
+      tag: "Buying Guide",
+      tag_bg: "bg-green-600",
+      content:
+        "Eloquence was born from a simple belief. The backyard outdoor kitchen should feel luxurious withiout luxurious price.",
+    },
+    {
+      title: "Stainless BBQ Grill Showdown: Eloquence vs Bull",
+      img: "/images/home/eloquence/key-outdoor-kitchen-appliances-for-bbq-mastery.webp",
+      tag: "Buying Guide",
+      tag_bg: "bg-green-600",
+      content:
+        "Outdoor living with a stainless BBQ grill is no longer a trend. It's a lifestyle. Families gather around patio tables...",
+    },
+    {
+      title: "Best Materials for Outdoor Kitchens That Last Years",
+      img: "/images/home/eloquence/key-outdoor-kitchen-appliances-for-bbq-mastery-1.webp",
+      tag: "Tips & Tricks",
+      tag_bg: "bg-rose-600",
+      content:
+        "Transforming your backyard with an outdoor kitchen starts with selecting the best materials for outdoor kitchens to ensure durability...",
+    },
+  ];
+
+  return (
+    <div className="container mx-auto px-[10px] lg:px-[20px]">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+        Your Trusted Backyard BBQ Resource
+      </h2>
+      <div className="flex flex-col lg:flex-row gap-[20px] mt-5">
+        {blogs &&
+          blogs.map((i, idx) => (
+            <div key={`blog-${idx}`} className="w-full group hover:shadow">
+              <div className="relative bg-green-400">
+                <div
+                  className={`font-medium text-sm md:text-base z-[1] absolute bottom-[20px] right-[0px] h-[auto] w-[content] text-white px-[25px] py-[5px] shadow-md ${i.tag_bg}`}
+                >
+                  {i.tag}
+                </div>
+                <div className={`aspect-[538/333] bg-stone-800`}>
+                  {i?.img && (
+                    <Link prefetch={false} href={i?.url || "#"}>
+                      <Image
+                        src={i.img}
+                        alt={`${i.title}-image`}
+                        className="object-cover group-hover:opacity-100 opacity-50 transition-opacity duration-500"
+                        width={1000}
+                        height={0}
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                      />
+                    </Link>
+                  )}
+                </div>
+              </div>
+              <div className="py-[15px] flex flex-col gap-[20px] transition-all duration-500">
+                <div className="flex flex-col gap-[15px] h-[150px]">
+                  <Link
+                    prefetch={false}
+                    href={i?.url || "#"}
+                    className="px-2 group-hover:underline font-normal font-libre transition-all duration-300 italic text-center h-[52px] line-clamp-2"
+                  >
+                    <h3>{i.title}</h3>
+                  </Link>
+                  <div className="text-sm md:text-base h-[72px] line-clamp-3 px-2">
+                    {i.content}
+                  </div>
+                </div>
+                <Link
+                  prefetch={false}
+                  href={i?.url || "#"}
+                  className="text-sm md:text-base underline font-bold text-right px-4"
+                >
+                  LEARN MORE
+                </Link>
+              </div>
             </div>
           ))}
       </div>
     </div>
   );
 };
+
+const Block7 = ()=> {
+  return (
+    <div className="mt-20 bg-[#f1f1f1] py-[30px]">
+      <div className="container mx-auto  gap-[30px] flex flex-col justify-center text-center">
+        <div className="text-stone-800 text-sm md:text-lg px-[20px]">
+          Stay in the Loop! Subscribe to Our Mailing List for Exclusive Sales,
+          Blogs, Recipes, Guides and more!
+        </div>
+        <div>
+          <div className="border inline-block">
+            <input
+              type="text"
+              placeholder="Enter Email Address"
+              className=" text-sm md:text-base p-[15px] rounded-none outline-none focus:border-stone-700 focus:ring-stone-700 bg-[#f1f1f1] ring:2 border-stone-500 border md:w-[500px]"
+            />
+            <button className="py-[15px] px-[30px] text-white bg-stone-800 border border-stone-500 text-sm md:text-base">
+              Join
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // MAIN COMPONENT
 export default async function EloquencePage() {
-  // const menu = await getMenu();
-
-  // const pageData = flattenNav(menu).find(({ url }) => url === pathname);
   return (
     <>
       <MobileLoader />
-      
-      <div className="bg-black">
-        <div className="container mx-auto p-2 text-xs sm:text-base">
-          <Link
-            prefetch={false}
-            href={shopUrl}
-            className="flex justify-center items-center gap-[20px] font-medium text-white"
-          >
-            <b>Package Deals</b> Save money and stress with our package deals customized to your needs.{" "}
-            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
-              Shop now
-            </button>
-          </Link>
-        </div>
-      </div>
       <Hero />
-      <div className="bg-[#e53237] mb-10">
-        <div className="container mx-auto p-2 text-xs sm:text-base">
-          <Link
-            prefetch={false}
-            href={shopUrl}
-            className="flex justify-center items-center gap-[20px] font-medium text-white"
-          >
-            <b>Price so low we cannot advertise.</b> Call for Closeout Availability{" "}
-            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
-              See Offers!
-            </button>
-          </Link>
-        </div>
-      </div>
-      <SubCategoriesDisplay categories={sub_category_obj} />
-      <div className="bg-black mb-10">
-        <div className="container mx-auto p-2 text-xs sm:text-base">
-          <Link
-            prefetch={false}
-            href={shopUrl}
-            className="flex justify-center items-center gap-[20px] font-medium text-white"
-          >
-            <b>Free White Glove Service on Selected Items.</b> Export{" "}
-            <button className="p-2 bg-neutral-50 font-bold text-black min-w-[132px]">
-              Find Out More!
-            </button>
-          </Link>
-        </div>
-      </div>
-
-      <div className="container mx-auto mb-10 flex flex-col gap-[20px] px-[10px] lg:px-[20px]">
-        <CollectionCarouselWrap
-          data={{ id: 17, mb_label: "Exclusive Offers For You" }}
-        />
-        <div className="text-center">
-          <Link
-            prefetch={false}
-            href={`${BASE_URL}/eloquence-grills`}
-            className="bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
-          >
-            Shop All Eloquence Exclusives
-          </Link>
-        </div>
-      </div>
-
-      <div className="container mx-auto mb-10 flex flex-col gap-[20px] px-[10px] lg:px-[20px]">
-        <CollectionCarouselWrap
-          data={{ id: 17, mb_label: "Best Seller For Eloquence" }}
-        />
-        <div className="text-center">
-          <Link
-            prefetch={false}
-            href={`${BASE_URL}/brand/eloquence`}
-            className="bg-theme-600 text-white font-bold py-3 px-10 rounded-full hover:shadow-md"
-          >
-            Shop All Eloquence Best Sellers
-          </Link>
-        </div>
-      </div>
-      <AboutSection />
-      <BlogsSection blogs={blogs} />
-      <VideoSection videos={videos} />
-      <div className="container mx-auto mb-10 px-[10px] lg:px-[20px]">
-        <h4 className="font-bold text-2xl mb-3">Frequently Asked Questions</h4>
-        <FAQsSection
-          faqs={faqs}
-          itemClassName="bg-red-600 hover:bg-red-500 text-white py-[10px] px-[20px] cursor-pointer flex justify-between font-medium"
-        />
-      </div>
+      <HeroAlert />
+      <Block1 />
+      <Block2 />
+      <Block3 />
+      <Block4 />
+      <Block5 />
+      <Block6 />
+      <Block7 />
     </>
   );
 }
