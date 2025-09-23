@@ -1,4 +1,4 @@
-import MyAccountLinks from "@/app/components/atom/myAccountLinks";
+import MyAccountLinks from "@/app/components/atom/MyAccountLinks";
 
 export default function MyAccountLayout({ children }) {
   return (
