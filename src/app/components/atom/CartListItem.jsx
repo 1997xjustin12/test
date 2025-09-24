@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice } from "@/app/lib/helpers";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import Link from "next/link";
+import Image from "next/image";
+import { BASE_URL, formatPrice, createSlug } from "@/app/lib/helpers";
 export default function CartListItem({ item, onItemCountUpdate }) {
   const { removeCartItem } = useCart();
   const [thumbnail, setThumbnail] = useState(null);
@@ -47,15 +48,18 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-        <a href={`#`} className="shrink-0 md:order-1">
+        <Link prefetch={false} href={`${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`} className="shrink-0 md:order-1 relative w-20 h-20 aspect-1">
           {thumbnail && (
-            <img
-              className="h-20 w-20 dark:hidden"
-              src={thumbnail}
-              alt={item?.title}
-            />
+              <Image
+                src={thumbnail}
+                title={`${item.title}`}
+                alt={`${createSlug(item.title)}-image`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 300px"
+              />
           )}
-        </a>
+        </Link>
 
         <label htmlFor="counter-input" className="sr-only">
           Choose quantity:
@@ -158,12 +162,12 @@ export default function CartListItem({ item, onItemCountUpdate }) {
         </div>
 
         <div className="w-full min-w-0 flex flex-col gap-[15px] md:order-2 md:max-w-md">
-          <a
-            href={`#`}
+          <Link
+            prefetch={false} href={`${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`}
             className="text-base font-medium text-gray-900 hover:underline dark:text-white"
           >
             {item?.title}
-          </a>
+          </Link>
 
           <div className="flex items-center gap-[20px]">
             {Number(item?.variants?.[0]?.compare_at_price) > 0 && (

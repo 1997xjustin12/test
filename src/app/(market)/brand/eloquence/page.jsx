@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 // COMPONENTS
 import MobileLoader from "@/app/components/molecule/MobileLoader";
+import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import FAQsSection from "@/app/components/atom/FAQs";
 import BlogsSection from "@/app/components/section/HomeBlogs";
@@ -115,26 +116,27 @@ const HeroAlert = () => {
 };
 
 const Block1 = () => {
-  const image = "/images/home/eloquence/built-to-impress-priced-to-compete.webp";
+  const image =
+    "/images/home/eloquence/built-to-impress-priced-to-compete.webp";
   const imageAlt = "Build to Impress. Priced to Compete";
   return (
     <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
       <div className="flex gap-[20px]">
         <div className="w-full aspect-[500/260] bg-white flex items-center justify-center">
           <div className="font-bold text-xl text-neutral-400 relative">
-              <Image
-                src={image}
-                alt={imageAlt}
-                className="object-cover"
-                width={1000}
-                height={0}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-              />
+            <Image
+              src={image}
+              alt={imageAlt}
+              className="object-cover"
+              width={1000}
+              height={0}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
           </div>
         </div>
         <div className="w-full flex items-center">
           <div className="flex flex-col gap-[20px]">
-            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display">
               Build to Impress. Priced to Compete
             </h2>
             <p>
@@ -196,7 +198,7 @@ const Block2 = () => {
   ];
   return (
     <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
-      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair mb-5 text-center">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display mb-5 text-center">
         Design You Can Feel. Performance You Can Trust
       </h2>
       <p className="mb-7">
@@ -216,11 +218,10 @@ const Block2 = () => {
               className="flex flex-col border-[3px] border-white hover:border-[#e98f3b] transition-all duration-300 w-full aspect-[236/362]"
             >
               <div className="bg-neutral-200  aspect-[100/120] flex items-center justify-center relative">
-                
                 {item?.image && (
                   <Image
                     src={item?.image}
-                    title={`${item?.label} Image`}
+                    title={`${item?.label}`}
                     alt={`${createSlug(item?.label)}-image`}
                     fill
                     className="object-cover"
@@ -228,31 +229,33 @@ const Block2 = () => {
                   />
                 )}
               </div>
-              <div className="font-playfair font-medium bg-[#e98f3b] min-h-[80px] flex items-center justify-center text-center px-[8px]">
+              <div className="font-playfair-display font-medium bg-[#e98f3b] min-h-[80px] flex items-center justify-center text-center px-[8px]">
                 {item?.label}
               </div>
             </Link>
           ))}
-          
-            <Link
-              prefetch={false}
-              href={`${BASE_URL}/eloquence`}
-              className="relative border-[3px] border-white hover:border-[#e98f3b] bg-[#333333] transition-all duration-300 w-full aspect-[236/362]"
-            >
-              <div className="absolute inset-0 flex items-center justify-center flex-col gap-[35px]">
-                <div className="relative aspect-1 w-[65%]">
-                  <Image
-                    src="/images/home/eloquence/eloquence-logo-only.webp"
-                    title={`Eloquence Logo Only`}
-                    alt={`eloquence-logo-only-image`}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 768px) 100vw, 300px"
-                  />
-                </div>
-                <div className="font-playfair text-lg font-[300] text-white">Shop All Eloquence</div>
+
+          <Link
+            prefetch={false}
+            href={`${BASE_URL}/eloquence`}
+            className="relative border-[3px] border-white hover:border-[#e98f3b] bg-[#333333] transition-all duration-300 w-full aspect-[236/362]"
+          >
+            <div className="absolute inset-0 flex items-center justify-center flex-col gap-[35px]">
+              <div className="relative aspect-1 w-[65%]">
+                <Image
+                  src="/images/home/eloquence/eloquence-logo-only.webp"
+                  title={`Shop All Eloquence`}
+                  alt={`eloquence-logo-only-image`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 300px"
+                />
               </div>
-            </Link>
+              <div className="font-playfair-display text-lg font-[300] text-white">
+                Shop All Eloquence
+              </div>
+            </div>
+          </Link>
         </CarouselWrap>
       </div>
     </div>
@@ -288,47 +291,62 @@ const Block3 = async () => {
 
   return (
     <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
-      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair mb-5 text-center">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display mb-5 text-center">
         Our Best Sellers
       </h2>
       <CarouselWrap breakpoints={items_per_break_point}>
-        {data.map((item, index) => (
-          <div
-            key={`carousel-product-item-${item?.handle}`}
-            className="bg-blue-50 transition-all delay-300 px-[10px] py-[20px] hover:shadow"
-          >
+        {data &&
+          data.map((item, index) => (
             <div
-              className="aspect-[120/80] px-[10px] relative bg-white mb-3"
-              title={item?.title}
+              key={`carousel-product-item-${item?.handle}`}
+              className="bg-blue-50 transition-all delay-300 px-[10px] py-[20px] hover:shadow"
             >
-              <DisplayImage data={item} />
-            </div>
-            <div className="px-[20px] flex flex-col gap-[15px]">
-              <div className="h-[480x] line-clamp-2" title={item?.title}>
-                {item?.title}
-              </div>
-              <div>
-                <Rating
-                  readOnly
-                  value={parseRatingCount(item?.ratings?.rating_count)}
-                  fractions={2}
-                  style={{ maxWidth: 120 }}
-                ></Rating>
-              </div>
-              <div>
-                <PriceFormatter price={item?.variants?.[0]?.price} />
-              </div>
-              <div className="text-center">
-                <button
-                  className={`bg-[${color2}] text-white font-semibold rounded-full py-2 px-10`}
+              <Link
+                prefetch={false}
+                href={`${BASE_URL}/${createSlug(item?.brand)}/product/${
+                  item?.handle
+                }`}
+                title={item?.title}
+              >
+                <div className="aspect-[120/80] px-[10px] relative bg-white mb-3 w-full">
+                  <DisplayImage data={item} />
+                </div>
+              </Link>
+              <div className="px-[20px] flex flex-col gap-[15px]">
+                <Link
+                  prefetch={false}
+                  href={`${BASE_URL}/${createSlug(item?.brand)}/product/${
+                    item?.handle
+                  }`}
+                  className="h-[480x] line-clamp-2 transition-all delay-75 hover:text-theme-600 hover:underline"
                   title={item?.title}
                 >
-                  Buy Now
-                </button>
+                  {item?.title}
+                </Link>
+                <div>
+                  <Rating
+                    readOnly
+                    value={parseRatingCount(item?.ratings?.rating_count)}
+                    fractions={2}
+                    style={{ maxWidth: 120 }}
+                  ></Rating>
+                </div>
+                <div>
+                  <PriceFormatter price={item?.variants?.[0]?.price} />
+                </div>
+                <div className="text-center">
+                  <AddToCartButtonWrap product={item}>
+                    <button
+                      className={`bg-[${color2}] text-white font-semibold rounded-full py-2 px-10`}
+                      title={item?.title}
+                    >
+                      Buy Now
+                    </button>
+                  </AddToCartButtonWrap>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </CarouselWrap>
       <div className="text-center">
         <button
@@ -375,7 +393,7 @@ const DisplayImage = ({ data }) => {
       {image && (
         <Image
           src={image?.src}
-          title={`${data.title} Image`}
+          title={`${data.title}`}
           alt={`${createSlug(data.title)}-image`}
           fill
           className="object-contain"
@@ -421,7 +439,7 @@ const Reviews = () => {
       <div className="container mx-auto">
         <div className="flex-col lg:flex-row flex gap-[50px] lg:gap-[10px] items-center">
           <div className="lg:w-[30%] lg:p-[20px] flex flex-col gap-[8px] justify-center text-center lg:justify-normal lg:text-left">
-            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display">
               Our customer reviews
             </h2>
             <div className="flex justify-center lg:justify-start">
@@ -491,14 +509,15 @@ const Block4 = () => {
 };
 
 const Block5 = () => {
-  const image ="/images/home/eloquence/where-lasting-flavor-meets-lasting-value.webp";
-  const imageAlt ="Where Lasting Flavor, Meets Lasting Value";
+  const image =
+    "/images/home/eloquence/where-lasting-flavor-meets-lasting-value.webp";
+  const imageAlt = "Where Lasting Flavor, Meets Lasting Value";
   return (
     <div className="container mx-auto p-[10px] md:px-[20] md:py-[40px]">
       <div className="flex gap-[20px]">
         <div className="w-full flex items-center">
           <div className="flex flex-col gap-[20px]">
-            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+            <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display">
               Where Lasting Flavor, Meets Lasting Value
             </h2>
             <p>
@@ -519,13 +538,13 @@ const Block5 = () => {
         <div className="w-full aspect-[500/260] bg-white flex items-center justify-center shadow">
           <div className="font-bold text-xl text-neutral-400 relative">
             <Image
-                src={image}
-                alt={imageAlt}
-                className="object-cover"
-                width={1000}
-                height={0}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-              />
+              src={image}
+              alt={imageAlt}
+              className="object-cover"
+              width={1000}
+              height={0}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
           </div>
         </div>
       </div>
@@ -568,7 +587,7 @@ const Blogs = () => {
 
   return (
     <div className="container mx-auto px-[10px] lg:px-[20px]">
-      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair">
+      <h2 className="text-[#e98f3b] text-[40px] font-medium leading-[120%] italic font-playfair-display">
         Your Trusted Backyard BBQ Resource
       </h2>
       <div className="flex flex-col lg:flex-row gap-[20px] mt-5">
@@ -624,7 +643,7 @@ const Blogs = () => {
   );
 };
 
-const Block7 = ()=> {
+const Block7 = () => {
   return (
     <div className="mt-20 bg-[#f1f1f1] py-[30px]">
       <div className="container mx-auto  gap-[30px] flex flex-col justify-center text-center">
@@ -647,7 +666,7 @@ const Block7 = ()=> {
       </div>
     </div>
   );
-}
+};
 
 // MAIN COMPONENT
 export default async function EloquencePage() {

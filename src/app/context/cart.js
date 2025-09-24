@@ -228,6 +228,7 @@ export const CartProvider = ({ children }) => {
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
+    console.log("[CONTEXT][CART][ADDTOCART] items", items)
     setAddToCartLoading(true);
     // getCart everytime we add or remove items
     try {

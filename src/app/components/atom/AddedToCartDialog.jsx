@@ -6,8 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Eos3DotsLoading } from "../icons/lib";
 import YmalCarousel from "@/app/components/atom/YmalCarousel";
-import ProductCartToCart from "@/app/components/atom/ProductCardToCart"
-import { BASE_URL, createSlug, formatPrice, parseRatingCount } from "@/app/lib/helpers";
+import ProductCartToCart from "@/app/components/atom/ProductCardToCart";
+import {
+  BASE_URL,
+  createSlug,
+  formatPrice,
+  parseRatingCount,
+} from "@/app/lib/helpers";
 const cartPageUrl = `${BASE_URL}/cart`;
 import { useCart } from "@/app/context/cart";
 import { Rating } from "@smastrom/react-rating";
@@ -26,7 +31,6 @@ export async function getCollectionProducts(id) {
 
   return res.json();
 }
-
 
 const YouMightAlsoLike = () => {
   const [products, setProducts] = useState([]);
@@ -62,9 +66,7 @@ const YouMightAlsoLike = () => {
                 key={`ymal-product-${index}`}
                 className="min-w-[170px] flex flex-col p-3"
               >
-                    <ProductCartToCart
-                    item={item}
-                    />
+                <ProductCartToCart item={item} />
               </div>
             ))}
           </YmalCarousel>
@@ -82,15 +84,15 @@ const GrillProtectionSection = () => {
         <div className="flex mt-4">
           <div className="flex relative">
             <div className="bg-white w-[140px] flex relative items-center justify-center">
-                  {(
-                    <Image
-                      src={'/images/bbq-guy-protection.webp'}
-                      alt={'Protection-Image'}
-                      className="w-full h-full"
-                      objectFit="contain"
-                      fill
-                    />
-                  )}
+              {
+                <Image
+                  src={"/images/bbq-guy-protection.webp"}
+                  alt={"Protection-Image"}
+                  className="w-full h-full"
+                  objectFit="contain"
+                  fill
+                />
+              }
             </div>
           </div>
           <div className="w-full pl-4 flex flex-col gap-[25px]">
@@ -192,6 +194,7 @@ function AddedToCartDialog({ data, onClose }) {
 
   useEffect(() => {
     if (addedToCartItems) {
+      console.log("[ADDEDTOCARTITEMS]", addedToCartItems);
       const thumbnail =
         addedToCartItems?.images?.find(({ position }) => position === 1)?.src ??
         null;
@@ -215,6 +218,8 @@ function AddedToCartDialog({ data, onClose }) {
     // router.push(cartPageUrl);
   };
 
+  if (!addedToCartItems) return;
+
   return (
     <Dialog open={toggle} onClose={setToggle} className="relative z-10">
       <DialogBackdrop
@@ -222,16 +227,16 @@ function AddedToCartDialog({ data, onClose }) {
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
 
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="w-screen h-screen relative">
-          <div className="absolute inset-0  flex items-end justify-center md:p-4 text-center sm:items-center sm:p-[10px]">
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto overflow-x-hidden">
+        <div className="w-screen h-full relative">
+          <div className="absolute top-10 left-0 right-0 flex items-end justify-center md:p-4 text-center sm:items-center sm:p-[10px]">
             <DialogPanel
               transition
               className="w-full relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[800px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto rounded-lg"
             >
               <div className="flex items-center justify-center h-[100px]">
                 <div className="font-bold text-xl text-stone-700">
-                  <div className="flex justify-center text-green-500">
+                  <div className="flex justify-center text-theme-600">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="32"
@@ -250,17 +255,25 @@ function AddedToCartDialog({ data, onClose }) {
                 </div>
               </div>
               <div className="flex bg-white border-y border-neutral-300 shadow-inner px-[15px] py-[15px] gap-[10px]">
-                <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
-                  {image && (
-                    <Image
-                      src={image}
-                      alt={addedToCartItems?.title}
-                      className="w-full h-full"
-                      objectFit="contain"
-                      fill
-                    />
-                  )}
-                </div>
+                <Link
+                  prefetch={false}
+                  href={`${BASE_URL}/${createSlug(
+                    addedToCartItems?.brand
+                  )}/product/${addedToCartItems?.handle}`}
+                >
+                  <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
+                    {image && (
+                      <Image
+                        src={image}
+                        title={addedToCartItems?.title}
+                        alt={addedToCartItems?.title}
+                        className="w-full h-full"
+                        objectFit="contain"
+                        fill
+                      />
+                    )}
+                  </div>
+                </Link>
                 <div
                   className={`w-[calc(100%-100px)] text-stone-700 flex gap-[10px] ${
                     data ? "flex-col" : "justify-center items-center h-[100px]"
@@ -268,7 +281,17 @@ function AddedToCartDialog({ data, onClose }) {
                 >
                   {data ? (
                     <>
-                      <div className="font-bold">{addedToCartItems?.title}</div>
+                      <Link
+                        prefetch={false}
+                        href={`${BASE_URL}/${createSlug(
+                          addedToCartItems?.brand
+                        )}/product/${addedToCartItems?.handle}`}
+                      >
+                        <div className="font-bold hover:underline">
+                          {addedToCartItems?.title}
+                        </div>
+                      </Link>
+
                       <div className="flex gap-[20px] items-center">
                         <div className="font-extrabold text-theme-600 text-right">{`$${formatPrice(
                           addedToCartItems?.count *

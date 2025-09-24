@@ -88,7 +88,9 @@ export default {
       fontFamily: {
         // montserrat: "var(--font-montserrat)",
         libre: "var(--font-libre-baskerville)",
-        playfair: "var(--font-playfair-display)",
+        "playfair": "var(--font-playfair)",
+        "playfair-display": "var(--font-playfair-display)",
+        "playfair-display-sc": "var(--font-playfair-display-sc)",
       },
     },
   },

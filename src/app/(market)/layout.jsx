@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
-import { Inter, Libre_Baskerville, Playfair_Display } from "next/font/google";
+import { Inter, Libre_Baskerville, Playfair_Display, Playfair, Playfair_Display_SC } from "next/font/google";
 // import localFont from "next/font/local";
 import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
@@ -32,13 +32,27 @@ const libreBaskerville = Libre_Baskerville({
   variable: "--font-libre-baskerville",
 });
 
+const playfair = Playfair({
+  subsets:["latin"],
+  weight:["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-playfair",
+})
+
 const playfair_display = Playfair_Display({
   subsets:["latin"],
   weight:["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
   display: "swap",
   variable: "--font-playfair-display",
 })
 
+const playfair_display_sc = Playfair_Display_SC({
+  subsets:["latin"],
+  weight:["400", "700", "900"],
+  display: "swap",
+  variable: "--font-playfair-display-sc",
+})
 // add playfair_display font
 // add 
 export const metadata = await generateMetadata();
@@ -53,7 +67,7 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair_display.variable} theme-${color}`}
+        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
         <FreeShippingBanner />
         <ExtrasHeader />
