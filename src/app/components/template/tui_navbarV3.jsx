@@ -231,7 +231,7 @@ export default function TuiNavbar({ logo, menu }) {
                       <CartButton className="text-gray-700 hover:text-theme-500" />
                     </li>
                     <li className="relative">
-                      <MyAccountButton className="text-gray-700 hover:text-theme-500" />
+                      <MyAccountButton className="text-gray-700 " />
                     </li>
                     {/* <li className="relative">
                     <div className="absolute text-[7px] w-full text-white bg-stone-900 uppercase text-center top-[20%] z-[1]">

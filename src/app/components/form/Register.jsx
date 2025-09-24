@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { BASE_URL } from "@/app/lib/helpers";
+import { useAuth } from "@/app/context/auth";
 
-function RegisterForm({toggleRegister}) {
+function RegisterForm() {
+  const { accountBenefits } = useAuth();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -53,12 +55,12 @@ function RegisterForm({toggleRegister}) {
     setLoading(false);
 
     if (res.ok) {
-      setMessage({ type: "success", text: "✅ Registration successful!" });
+      setMessage({ type: "success", text: "Registration successful!" });
       window.location.href = "/login?success=1";
     } else {
       setMessage({
         type: "error",
-        text: data?.error || data?.title || "❌ Registration failed.",
+        text: data?.error || data?.title || "Registration failed.",
       });
     }
   };
@@ -73,10 +75,9 @@ function RegisterForm({toggleRegister}) {
       <div className="mb-10">
         <div className="text-sm font-bold mb-3">Benefits</div>
         <ul className="list-disc list-inside space-y-2 marker:text-red-500">
-          <li className="text-xs">Earn 1 point per $1 spent</li>
-          <li className="text-xs">Track your orders</li>
-          <li className="text-xs">Save Favorite items</li>
-          <li className="text-xs">Quick and easy checkout</li>
+          {
+            accountBenefits && Array.isArray(accountBenefits) && accountBenefits.length > 0 && accountBenefits.map((item,index)=> <li key={`li-acc-benefit-${index}`} className="text-sm text-neutral-600">{item}</li>)
+          }
         </ul>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">

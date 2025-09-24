@@ -42,6 +42,14 @@ const myAccountLinks = [
   },
 ];
 
+
+const accountBenefits = [
+  "Earn 1 point per $1 spent",
+  "Track your orders",
+  "Save Favorite items",
+  "Quick and easy checkout"
+]
+
 export function AuthProvider({ children }) {
   const pathname = usePathname();
   const [forage, setForage] = useState(null);
@@ -213,6 +221,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         accessToken,
+        accountBenefits,
         forage,
         fullName,
         isLoggedIn,

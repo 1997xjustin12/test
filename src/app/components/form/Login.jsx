@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import Link from "next/link";
+import { BASE_URL } from "@/app/lib/helpers";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -38,7 +39,7 @@ function LoginForm() {
     }
 
     login(data);
-    router.push("/my-account");
+    window.location.href = `${BASE_URL}/my-account`;
     setLoading(false);
   };
 
