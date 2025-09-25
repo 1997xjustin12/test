@@ -67,7 +67,7 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
+        className={`min-h-screen antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
         <FreeShippingBanner />
         <ExtrasHeader />
@@ -85,7 +85,7 @@ export default async function MarketLayout({ children }) {
                     <TuiNavBar logo={redisLogo} menu={menu} />
                     <FixedHeader />
                     <QuickViewProvider>
-                      <div className="flex flex-col min-h-screen">
+                      <div className="flex flex-col">
                         {children}
                       </div>
                     </QuickViewProvider>

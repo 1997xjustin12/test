@@ -1,0 +1,860 @@
+"use client";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import dropin from "braintree-web-drop-in";
+import {
+  BASE_URL,
+  mapOrderItems,
+  formatPrice,
+  createSlug,
+  debounce,
+  store_domain,
+} from "@/app/lib/helpers";
+import Image from "next/image";
+import Link from "next/link";
+
+import { useAuth } from "@/app/context/auth";
+import { useCart } from "@/app/context/cart";
+
+const initialForm = {
+  status: null,
+  payment_method: "braintree",
+  payment_status: false,
+  billing_first_name: "",
+  billing_last_name: "",
+  billing_email: "",
+  billing_phone: "",
+  billing_address: "",
+  billing_city: "",
+  billing_province: "",
+  billing_zip_code: "",
+  billing_country: "",
+  shipping_first_name: "",
+  shipping_last_name: "",
+  shipping_email: "",
+  shipping_phone: "",
+  shipping_address: "",
+  shipping_city: "",
+  shipping_province: "",
+  shipping_zip_code: "",
+  shipping_country: "",
+  notes: "",
+  items: [],
+  // font end form fields
+  newsletter: false,
+  save_information: false,
+  shipping_to_billing: true,
+};
+
+const ItemsList = ({ items }) => {
+  return (
+    <ul className="flex flex-col gap-[20px]">
+      {/* items */}
+      {items &&
+        Array.isArray(items) &&
+        items.length > 0 &&
+        items.map((item, index) => (
+          <li
+            key={`mob-os-item-${index}`}
+            className="flex gap-[10px] items-center"
+          >
+            {/* image */}
+            <div className="w-16 h-16 bg-white rounded relative border-[2px] border-gray-200 shadow">
+              {/* badge */}
+              <div className="absolute z-10 text-xs top-[-10px] right-[-10px] w-[24px] h-[24px] flex items-center justify-center bg-stone-950 rounded-md text-white border border-white">
+                {item?.count || 0}
+              </div>
+              {item?.images &&
+                Array.isArray(item.images) &&
+                item.images.length > 0 &&
+                item.images.find((img) => img?.position === 1) &&
+                item.images.find((img) => img?.position === 1)?.src && (
+                  <Image
+                    src={item.images.find((img) => img?.position === 1).src}
+                    title={`${item.title}`}
+                    alt={`${createSlug(item.title)}-image`}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
+                )}
+            </div>
+            {/* label */}
+            <div className="w-[calc(100%-164px)]">
+              <div className="line-clamp-2 text-xs" title={item?.title}>
+                {item?.title}
+              </div>
+            </div>
+            {/* price */}
+            <div className="w-[100px] text-right text-xs">
+              ${formatPrice(item?.count * item?.variants?.[0]?.price || 0)}
+            </div>
+          </li>
+        ))}
+    </ul>
+  );
+};
+
+const ComputationSection = ({ data }) => {
+  return (
+    <>
+      <div className="text-xs flex items-center justify-between">
+        <div>Subtotal · {data?.items_count || 0} items</div>
+        <div>${formatPrice(data?.sub_total || 0)}</div>
+      </div>
+      <div className="text-xs flex items-center justify-between mt-3">
+        <div className="flex gap-[5px] items-center">
+          Shipping{" "}
+          <svg
+            className="text-neutral-600"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+          >
+            <g fill="none">
+              <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+              <path
+                fill="currentColor"
+                d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 12a1 1 0 1 1 0 2a1 1 0 0 1 0-2m0-9.5a3.625 3.625 0 0 1 1.348 6.99a.8.8 0 0 0-.305.201c-.044.05-.051.114-.05.18L13 14a1 1 0 0 1-1.993.117L11 14v-.25c0-1.153.93-1.845 1.604-2.116a1.626 1.626 0 1 0-2.229-1.509a1 1 0 1 1-2 0A3.625 3.625 0 0 1 12 6.5"
+              />
+            </g>
+          </svg>
+        </div>
+        <div className="text-neutral-500">
+          {data?.allowPay ? "Calculated" : "Enter Shipping Address"}
+        </div>
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex gap-[5px] items-center font-bold">Total</div>
+        <div className="font-bold">${formatPrice(data?.total_price || 0)}</div>
+      </div>
+      <p className="text-xs text-neutral-500">
+        Including ${formatPrice(data?.total_tax || 0)} in taxes
+      </p>
+    </>
+  );
+};
+
+const MobileOrderSummary = ({ data }) => {
+  const [expandOrderSummary, setExpandOrderSummary] = useState(false);
+
+  if (!data) return;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setExpandOrderSummary((prev) => !prev)}
+        className="h-[64px] md:hidden bg-neutral-200 border-b border-neutral-300 flex items-center w-full"
+      >
+        <div className="flex justify-between items-center container mx-auto px-[20px]">
+          <div className="flex gap-[20px] items-center">
+            <span className="font-light">Order Summary</span>
+            <span>
+              {expandOrderSummary ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    fillRule="evenodd"
+                    d="M16.53 14.03a.75.75 0 0 1-1.06 0L12 10.56l-3.47 3.47a.75.75 0 0 1-1.06-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    fillRule="evenodd"
+                    d="M16.53 8.97a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 0 1-1.06 0l-4-4a.75.75 0 1 1 1.06-1.06L12 12.44l3.47-3.47a.75.75 0 0 1 1.06 0"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </span>
+          </div>
+          <div>${formatPrice(data?.total_price || 0)}</div>
+        </div>
+      </button>
+      <div
+        className={`md:hidden container mx-auto px-[20px]  transition-all delay-300 overflow-hidden ${
+          expandOrderSummary ? "h-auto" : "h-[0px]"
+        }`}
+      >
+        <div className="py-[30px]">
+          <ItemsList items={data?.items} />
+        </div>
+        <ComputationSection data={data} />
+      </div>
+    </>
+  );
+};
+
+const ReviewOrderButton = () => {
+  return (
+    <button
+      type="submit"
+      className="bg-yellow-500 text-black text-xs font-semibold w-full py-3 rounded mt-3"
+    >
+      Review order
+    </button>
+  );
+};
+
+function CheckoutComponent() {
+  const [cartTotal, setCartTotal] = useState({});
+  const [expandOrderSummary, setExpandOrderSummary] = useState(false);
+  const { clearCartItems, formattedCart, fetchOrderTotal } = useCart();
+  // braintree
+  const dropinContainer = useRef(null);
+  const [instance, setInstance] = useState(null);
+  // checkout form
+  const [form, setForm] = useState(initialForm);
+  // forage
+  const [forage, setForage] = useState(null);
+  // auth
+  const { isLoggedIn } = useAuth();
+
+  const getOrderTotal = async (newForm) => {
+    const items = mapOrderItems(newForm?.items);
+    if (items.length > 0) {
+      const response = await fetchOrderTotal({ ...newForm, items });
+
+      const hasCompleteShipping = Boolean(
+        newForm?.shipping_country &&
+          newForm?.shipping_city &&
+          newForm?.shipping_province &&
+          newForm?.shipping_zip_code
+      );
+
+      if (response?.success) {
+        const updatedCartTotal = {
+          ...response.data,
+          allowPay: hasCompleteShipping,
+        };
+
+        setCartTotal(updatedCartTotal);
+      }
+    }
+  };
+
+  async function createOrder(orderData) {
+    try {
+      const response = await fetch("/api/orders/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const contentType = response.headers.get("content-type");
+      const result = contentType?.includes("application/json")
+        ? await response.json()
+        : { success: false, message: "Invalid JSON response from server" };
+
+      if (!response.ok || result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to create order",
+        };
+      }
+
+      return {
+        success: true,
+        data: result.data || result.order || result,
+      };
+    } catch (error) {
+      console.error("Order creation failed:", error.message || error);
+      return {
+        success: false,
+        message: error.message || "Unexpected error while creating order",
+      };
+    }
+  }
+  
+  const debouncedGetOrderTotal = useMemo(
+    () => debounce(getOrderTotal, 300),
+    []
+  );
+
+  const saveInformation = (condition) => {
+    // shipping and billing info only
+    // saving defer for guest and registered users
+    // guest: localforage
+    // registered: redis
+    if (condition) {
+      const {
+        items,
+        newsletter,
+        save_information,
+        payment_details,
+        payment_status,
+        payment_method,
+        status,
+        ...toSave
+      } = form;
+      forage.setItem("checkout_info", toSave);
+    } else {
+      forage.removeItem("checkout_info");
+    }
+
+    // TODO: SAVE FOR LOGGED IN USER
+  };
+
+  const shippingAsBilling = (condition, newForm) => {
+    // shipping and billing info only
+    return {
+      ...newForm,
+      billing_first_name: condition ? newForm?.shipping_first_name : "",
+      billing_last_name: condition ? newForm?.shipping_last_name : "",
+      billing_phone: condition ? newForm?.shipping_phone : "",
+      billing_address: condition ? newForm?.shipping_address : "",
+      billing_city: condition ? newForm?.shipping_city : "",
+      billing_province: condition ? newForm?.shipping_province : "",
+      billing_zip_code: condition ? newForm?.shipping_zip_code : "",
+      billing_country: condition ? newForm?.shipping_country : "",
+    };
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    let newForm = {
+      ...form,
+      [name]: type === "checkbox" ? checked : value,
+    };
+
+    // shipping and billing email is the same
+    if (name === "shipping_email") {
+      newForm = {
+        ...newForm,
+        billing_email: newForm?.shipping_email,
+      };
+    }
+
+    // set and unset
+    if (name === "shipping_to_billing") {
+      newForm = shippingAsBilling(checked, newForm);
+    }
+
+    // retrigger query of cartTotal for shipping info change
+    if (
+      [
+        "shipping_zip_code",
+        "shipping_country",
+        "shipping_city",
+        "shipping_province",
+      ].includes(name)
+    ) {
+      debouncedGetOrderTotal(newForm);
+    }
+
+    console.log("[handleChange][newForm]", newForm);
+
+    setForm({ ...newForm });
+  };
+
+  const handleLogin = () => {
+    alert("TODO: Must Popup a Modal for Login");
+  };
+
+  const handleRegister = () => {
+    alert("TODO: Must open another tab for registration");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!cartTotal?.allowPay) {
+      alert(
+        "Please Make Sure You Fillout Neccessary shipping information for us to recalculate your shipping total."
+      );
+    }
+
+    if (!instance) {
+      alert("Drop-in UI is not initialized");
+      return;
+    }
+
+    try {
+      const { nonce } = await instance.requestPaymentMethod();
+      console.log("Generated Nonce:", nonce);
+
+      if (!nonce) {
+        alert("Error: No nonce received. Try again.");
+        return;
+      }
+
+      const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
+
+      const response = await fetch("/api/braintree_checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nonce, amount: `${total_amount}` }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const orders = form;
+        orders["status"] = "paid";
+        orders["payment_status"] = true;
+        orders["payment_details"] = result?.transaction?.id;
+        orders["store_domain"] = store_domain;
+        orders["items"] = mapOrderItems(formattedCart);
+
+        const order_response = await createOrder(orders);
+
+        if (order_response.success) {
+          instance.teardown();
+          setInstance(null);
+          clearCartItems();
+          saveInformation(form?.save_information);
+          window.location.href = `${BASE_URL}/payment_success`;
+        } else {
+          alert("Something went wrong! Please try again.");
+        }
+      } else {
+        alert(`Payment failed: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Payment Error:", error);
+      alert("Payment error. Try again.");
+    }
+  };
+
+  useEffect(() => {
+    if (
+      formattedCart &&
+      Array.isArray(formattedCart) &&
+      formattedCart.length > 0
+    ) {
+      let newForm = { ...form, items: formattedCart };
+      setForm((prev) => ({ ...newForm }));
+      getOrderTotal(newForm);
+    }
+  }, [formattedCart]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let mounted = true;
+
+    import("@/app/lib/localForage").then(async (module) => {
+      if (!mounted) return;
+      const checkout_info = await module.getItem("checkout_info");
+      setForm(prev=> ({...prev, ...checkout_info}));
+      console.log("[FORAGE ONLOAD] checkout_info", checkout_info);
+      setForage(module);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    async function initializeDropIn() {
+      if (!dropinContainer.current) return;
+
+      try {
+        const res = await fetch("/api/braintree_token");
+        const data = await res.json();
+        // setClientToken(data.clientToken);
+
+        if (!data.clientToken) {
+          alert("Error: No client token received");
+          return;
+        }
+
+        if (instance) {
+          await instance.teardown();
+          setInstance(null);
+        }
+
+        const dropinInstance = await dropin.create({
+          authorization: data.clientToken,
+          container: dropinContainer.current,
+          vaultManager: false, // Disable stored payment methods
+          card: {
+            cardholderName: { required: true },
+            overrides: {
+              fields: {
+                number: { placeholder: "4111 1111 1111 1111" },
+                cvv: { required: true, placeholder: "123" }, // ✅ Force CVV
+                expirationDate: { placeholder: "MM/YY" },
+              },
+            },
+          },
+        });
+
+        setInstance(dropinInstance);
+      } catch (error) {
+        console.log("[BRAINTREEINIT] ERROR", error);
+        // alert("Payment UI failed to load.");
+      }
+    }
+
+    clearCartItems();
+    initializeDropIn();
+  }, []);
+
+  return (
+    <section className="bg-white">
+      <MobileOrderSummary data={{ ...cartTotal, items: formattedCart }} />
+      {/* desktop */}
+      <div className="container mx-auto">
+        <form onSubmit={handleSubmit}>
+          <div className="flex gap-0 md:gap-[20px] flex-col md:flex-row py-5 md:py-0">
+            {/* form section */}
+            <div className="w-full flex md:justify-end">
+              <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+                <div className="border-b border-neutral-300 pb-2">
+                  <label
+                    htmlFor="email"
+                    className="font-semibold flex items-center justify-between"
+                  >
+                    <span>Contact</span>
+                    <div className="flex gap-[5px]">
+                      <button
+                        type="button"
+                        className="underline font-light text-xs"
+                        onClick={handleLogin}
+                      >
+                        Sign In
+                      </button>
+                      <Link
+                        href={`${BASE_URL}/login`} target="_blank" rel="noopener noreferrer"
+                        className="underline font-light text-xs"
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  </label>
+                  <input
+                    type="email"
+                    name="shipping_email"
+                    placeholder="Email"
+                    value={form?.shipping_email || ""}
+                    onChange={handleChange}
+                    required
+                    className="text-sm  w-full mt-2 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                  />
+                </div>
+                <div className="flex items-start text-sm text-neutral-700 py-1">
+                  <input
+                    id="newsletter"
+                    name="newsletter"
+                    type="checkbox"
+                    value={form?.newsletter}
+                    onChange={handleChange}
+                    className="text-sm mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
+                  />
+                  <label htmlFor="newsletter" className="text-sm">
+                    Email me with news and offers
+                  </label>
+                </div>
+                <div className="pb-2 mt-3">
+                  <label className="font-semibold">Delivery</label>
+                  <div className="flex flex-col gap-[10px] mt-2">
+                    <input
+                      type="text"
+                      name="shipping_country"
+                      placeholder="Country"
+                      value={form?.shipping_country || ""}
+                      onChange={handleChange}
+                      required
+                      className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                    />
+                    <div className="flex gap-[10px]">
+                      <input
+                        type="text"
+                        name="shipping_first_name"
+                        placeholder="First Name"
+                        value={form?.shipping_first_name || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                      <input
+                        type="text"
+                        name="shipping_last_name"
+                        placeholder="Last Name"
+                        value={form?.shipping_last_name || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      name="shipping_address"
+                      placeholder="Address"
+                      value={form?.shipping_address || ""}
+                      onChange={handleChange}
+                      required
+                      className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                    />
+                    <div className="flex gap-[10px]">
+                      <input
+                        type="text"
+                        name="shipping_zip_code"
+                        placeholder="Postal code"
+                        value={form?.shipping_zip_code || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                      <input
+                        type="text"
+                        name="shipping_city"
+                        placeholder="City"
+                        value={form?.shipping_city || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                    </div>
+                    <div className="flex gap-[10px]">
+                      <input
+                        type="text"
+                        name="shipping_province"
+                        placeholder="State"
+                        value={form?.shipping_province || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                      <input
+                        type="text"
+                        name="shipping_phone"
+                        placeholder="Phone"
+                        value={form?.shipping_phone || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      name="notes"
+                      placeholder="Notes: Give me a call, and etc (optional)"
+                      value={form?.notes || ""}
+                      onChange={handleChange}
+                      className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                    />{" "}
+                  </div>
+                  <div className="flex items-start text-sm text-neutral-700 py-1 mt-2">
+                    <input
+                      id="save_information"
+                      name="save_information"
+                      type="checkbox"
+                      value={form?.save_information}
+                      onChange={handleChange}
+                      className="text-sm mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
+                    />
+                    <label htmlFor="save_information" className="text-sm">
+                      Save this information for next time
+                    </label>
+                  </div>
+                </div>
+                {/* braintree form */}
+                <div className="border rounded bg-neutral-200 w-full min-h-[330px]">
+                  <div ref={dropinContainer}></div>
+                </div>
+                <div className="flex items-start text-sm text-neutral-700 py-1 mt-2">
+                  <input
+                    id="shipping_to_billing"
+                    name="shipping_to_billing"
+                    type="checkbox"
+                    value={form?.shipping_to_billing}
+                    onChange={handleChange}
+                    className="text-sm mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
+                  />
+                  <label htmlFor="shipping_to_billing" className="text-sm">
+                    Use shipping address as billing address
+                  </label>
+                </div>
+                {!form?.shipping_to_billing ? (
+                  <div className="pb-2 mt-3 ">
+                    <label className="font-semibold">Billing</label>
+                    <div className="flex flex-col gap-[10px] mt-2">
+                      <input
+                        type="text"
+                        name="billing_country"
+                        placeholder="Country"
+                        value={form?.billing_country || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                      <div className="flex gap-[10px]">
+                        <input
+                          type="text"
+                          name="billing_first_name"
+                          placeholder="First Name"
+                          value={form?.billing_first_name || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                        <input
+                          type="text"
+                          name="billing_last_name"
+                          placeholder="Last Name"
+                          value={form?.billing_last_name || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        name="billing_address"
+                        placeholder="Address"
+                        value={form?.billing_address || ""}
+                        onChange={handleChange}
+                        required
+                        className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                      />
+                      <div className="flex gap-[10px]">
+                        <input
+                          type="text"
+                          name="billing_zip_code"
+                          placeholder="Postal code"
+                          value={form?.billing_zip_code || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                        <input
+                          type="text"
+                          name="billing_city"
+                          placeholder="City"
+                          value={form?.billing_city || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                      </div>
+                      <div className="flex gap-[10px]">
+                        <input
+                          type="text"
+                          name="billing_province"
+                          placeholder="State"
+                          value={form?.billing_province || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                        <input
+                          type="text"
+                          name="billing_phone"
+                          placeholder="Phone"
+                          value={form?.billing_phone || ""}
+                          onChange={handleChange}
+                          required
+                          className="text-sm w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-stone-600"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="hidden md:flex">
+                  <ReviewOrderButton />
+                </div>
+              </div>
+            </div>
+            {/* divider */}
+            <div className="border-l border-neutral-300 hidden md:block"></div>
+            {/* items section */}
+            <div className="w-full flex md:justify-start">
+              <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+                <div className="md:hidden">
+                  <button
+                    type="button"
+                    onClick={() => setExpandOrderSummary((prev) => !prev)}
+                    className="w-full flex items-center justify-between py-[10px]"
+                  >
+                    <span className="font-semibold">Order Summary</span>
+                    <span className="font-light text-xs flex items-center gap-[4px]">
+                      {expandOrderSummary ? (
+                        <>
+                          <span>Hide</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="currentColor"
+                              fillRule="evenodd"
+                              d="M16.53 14.03a.75.75 0 0 1-1.06 0L12 10.56l-3.47 3.47a.75.75 0 0 1-1.06-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </>
+                      ) : (
+                        <>
+                          <span>Show</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="currentColor"
+                              fillRule="evenodd"
+                              d="M16.53 8.97a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 0 1-1.06 0l-4-4a.75.75 0 1 1 1.06-1.06L12 12.44l3.47-3.47a.75.75 0 0 1 1.06 0"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                  <div
+                    className={`${
+                      expandOrderSummary ? "" : "hidden"
+                    } py-[20px]`}
+                  >
+                    <ItemsList items={formattedCart} />
+                  </div>
+                </div>
+                <div className="hidden md:block mb-5">
+                  <ItemsList items={formattedCart} />
+                </div>
+                <ComputationSection data={cartTotal} />
+                <div className="md:hidden">
+                  <ReviewOrderButton />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <style jsx>{`
+        :global(.braintree-placeholder) {
+          display: none !important;
+        }
+        :global(.braintree-sheet__container.braintree-sheet--active) {
+          margin: 0px;
+        }
+      `}</style>
+    </section>
+  );
+}
+
+export default CheckoutComponent;

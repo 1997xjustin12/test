@@ -228,7 +228,6 @@ export const CartProvider = ({ children }) => {
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
-    console.log("[CONTEXT][CART][ADDTOCART] items", items)
     setAddToCartLoading(true);
     // getCart everytime we add or remove items
     try {
@@ -238,17 +237,17 @@ export const CartProvider = ({ children }) => {
       if (Array.isArray(cartObj) || !cartObj) {
         // insert create cart here
         // step 1: get user billing info by triggering the billing form dialog
-        console.log("[ATC CART]", cartObj);
-        const billing_info = (await billingStorage.get()) || null;
-        console.log("[ATC BI]", billing_info);
-        if (billing_info) {
+        // console.log("[ATC CART]", cartObj);
+        // const billing_info = (await billingStorage.get()) || null;
+        // console.log("[ATC BI]", billing_info);
+        // if (billing_info) {
           _cartObj = createCartObj();
           _cartObj["created_at"] = now;
           _cartObj["updated_at"] = now;
-        } else {
-          setPreaddedItem(items);
-          setToggleBillingDialog(true);
-        }
+        // } else {
+        //   setPreaddedItem(items);
+        //   setToggleBillingDialog(true);
+        // }
       } else {
         _cartObj = cartObj;
         _cartObj["updated_at"] = now;
@@ -346,7 +345,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCartItems = async () => {
-    cartStorage.saveCart(null);
+    syncCartToCookie([])
+    if(cartStorage) cartStorage.saveCart(null); 
   };
 
   const handleCloseAddedToCart = () => {

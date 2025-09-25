@@ -428,3 +428,11 @@ export function capitalizeFirstLetter(str) {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function debounce(fn, delay=300) {
+  let timer;
+  return function (...args) {   // accept args
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay); // forward args
+  };
+}

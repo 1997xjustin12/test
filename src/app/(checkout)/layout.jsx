@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
+import Link from "next/link";
 import {
   Inter,
   Libre_Baskerville,
@@ -22,6 +23,7 @@ import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
+import { BASE_URL } from "../lib/helpers";
 const shopify = true; // if shopify product structure
 
 const InterFont = Inter({
@@ -67,10 +69,10 @@ const Header = () => {
   return (
     <section className="bg-white border-b border-neutral-300 shadow">
       <div className="container mx-auto px-5">
-        <div className="min-h-[160px] flex items-center justify-between">
+        <div className="min-h-[130px] flex items-center justify-between">
           <div className="text-2xl font-bold border-[5px] border-neutral-500 text-neutral-500 p-2">BRAND LOGO</div>
           <div>
-            <button className="border p-3 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700">BACK TO CART</button>
+            <Link prefetch={false} href={`${BASE_URL}/cart`}className="border p-3 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700">BACK TO CART</Link>
           </div>
         </div>
       </div>

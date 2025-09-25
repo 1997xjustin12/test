@@ -123,41 +123,6 @@ export default function BraintreeForm({cartTotal}) {
     }
   }
 
-  async function getPrice(orderData) {
-    try {
-      const response = await fetch("/api/orders/get-total", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const contentType = response.headers.get("content-type");
-      const result = contentType?.includes("application/json")
-        ? await response.json()
-        : { success: false, message: "Invalid JSON response from server" };
-
-      if (!response.ok || result.success === false) {
-        return {
-          success: false,
-          message: result.message || "Failed to create order",
-        };
-      }
-
-      return {
-        success: true,
-        data: result.data || result.order || result,
-      };
-    } catch (error) {
-      console.error("Order creation failed:", error.message || error);
-      return {
-        success: false,
-        message: error.message || "Unexpected error while creating order",
-      };
-    }
-  }
-
   const handlePayment = async () => {
     if (!instance) {
       alert("Drop-in UI is not initialized");
@@ -173,22 +138,6 @@ export default function BraintreeForm({cartTotal}) {
         return;
       }
 
-      // get-total
-      // const get_price_data = checkoutForm?.data;
-      // get_price_data["status"] = "pending";
-      // get_price_data["payment_method"] = "braintree";
-      // get_price_data["payment_status"] = false;
-      // get_price_data["payment_details"] = "";
-      // get_price_data["store_domain"] = store_domain;
-      // get_price_data["items"] = formattedCart.map((item) => ({
-      //   product_id: item?.product_id,
-      //   price: item?.variants?.[0]?.price,
-      //   quantity: item.count,
-      //   total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
-      // }));
-
-      // const get_price = await getPrice(get_price_data);
-      // if (get_price?.success) {
         const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
         const response = await fetch("/api/braintree_checkout", {
           method: "POST",
