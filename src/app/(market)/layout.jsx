@@ -1,6 +1,12 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
-import { Inter, Libre_Baskerville, Playfair_Display, Playfair, Playfair_Display_SC } from "next/font/google";
+import {
+  Inter,
+  Libre_Baskerville,
+  Playfair_Display,
+  Playfair,
+  Playfair_Display_SC,
+} from "next/font/google";
 // import localFont from "next/font/local";
 import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
@@ -33,30 +39,31 @@ const libreBaskerville = Libre_Baskerville({
 });
 
 const playfair = Playfair({
-  subsets:["latin"],
-  weight:["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
   variable: "--font-playfair",
-})
+});
 
 const playfair_display = Playfair_Display({
-  subsets:["latin"],
-  weight:["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-playfair-display",
-})
+});
 
 const playfair_display_sc = Playfair_Display_SC({
-  subsets:["latin"],
-  weight:["400", "700", "900"],
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
   display: "swap",
   variable: "--font-playfair-display-sc",
-})
+});
 // add playfair_display font
-// add 
+// add
 export const metadata = await generateMetadata();
 export default async function MarketLayout({ children }) {
+  const deskHeadFootHeight = 656; //px
   const redisLogoKey = "admin_solana_market_logo";
   // const redisLogo = await redis.get(redisLogoKey);
   // const defaultKey = shopify? keys.default_shopify_menu.value :keys.default_menu.value;
@@ -67,7 +74,7 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`min-h-screen antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
+        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
         <FreeShippingBanner />
         <ExtrasHeader />
@@ -85,7 +92,12 @@ export default async function MarketLayout({ children }) {
                     <TuiNavBar logo={redisLogo} menu={menu} />
                     <FixedHeader />
                     <QuickViewProvider>
-                      <div className="flex flex-col">
+                      <div
+                        style={{
+                          minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,
+                        }}
+                        className={`flex flex-col`}
+                      >
                         {children}
                       </div>
                     </QuickViewProvider>
