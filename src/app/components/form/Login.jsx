@@ -21,11 +21,6 @@ function LoginForm() {
     }));
   };
 
-  const handleForgotPassword = (e) => {
-    e.preventDefault();
-    alert("TODO:PENDING");
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -96,11 +91,8 @@ function LoginForm() {
           </button>
           <Link
             prefetch={false}
-            href="#"
-            className="text-theme-600 hover:underline block text-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleForgotPassword}
+            href={`${BASE_URL}/forgot-password`}
+            className="text-theme-600 hover:underline block text-sm font-bold"
           >
             Forgot your password?
           </Link>
