@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Inter,
   Libre_Baskerville,
@@ -65,14 +66,27 @@ const playfair_display_sc = Playfair_Display_SC({
 // add
 export const metadata = await generateMetadata();
 
-const Header = () => {
+const Header = ({ logo }) => {
   return (
-    <section className="bg-white border-b border-neutral-300 shadow">
+    <section className="border-b border-neutral-300 shadow">
       <div className="container mx-auto px-5">
         <div className="min-h-[130px] flex items-center justify-between">
-          <div className="text-2xl font-bold border-[5px] border-neutral-500 text-neutral-500 p-2">BRAND LOGO</div>
+          <div className="w-[180px] aspect-[191/94] relative">
+            <Image
+              src={logo || `/Logo.webp`}
+              alt="Logo"
+              fill
+              objectFit="contain"
+            />
+          </div>
           <div>
-            <Link prefetch={false} href={`${BASE_URL}/cart`}className="border p-3 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700">BACK TO CART</Link>
+            <Link
+              prefetch={false}
+              href={`${BASE_URL}/cart`}
+              className="border p-3 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700"
+            >
+              BACK TO CART
+            </Link>
           </div>
         </div>
       </div>
@@ -80,45 +94,22 @@ const Header = () => {
   );
 };
 
-export default async function MarketLayout({ children }) {
-  const redisLogoKey = "admin_solana_market_logo";
-  // const redisLogo = await redis.get(redisLogoKey);
-  // const defaultKey = shopify? keys.default_shopify_menu.value :keys.default_menu.value;
-  const defaultKey = keys.dev_shopify_menu.value;
+export default async function CheckoutLayout({ children }) {
+  const redisLogoKey = keys.logo.value;
   const themeKey = keys.theme.value;
-  const mgetKeys = [defaultKey, redisLogoKey, themeKey];
-  const [menu, redisLogo, color] = await redis.mget(mgetKeys);
+  const mgetKeys = [redisLogoKey, themeKey];
+  const [redisLogo, color] = await redis.mget(mgetKeys);
   return (
     <html lang="en">
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
-        {/* <FreeShippingBanner /> */}
-        {/* <ExtrasHeader /> */}
         <AuthProvider>
-          <CategoriesProvider
-            categories={menu.map((i) => ({
-              ...i,
-              is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
-            }))}
-          >
-            <CartProvider>
-              <CompareProductsProvider>
-                <SearchProvider>
-                  {/* <SessionWrapper> */}
-                  {/* <TuiNavBar logo={redisLogo} menu={menu} /> */}
-                  {/* <FixedHeader /> */}
-                  <Header />
-                  <QuickViewProvider>
-                    <div className="flex flex-col min-h-screen">{children}</div>
-                  </QuickViewProvider>
-                  {/* </SessionWrapper> */}
-                </SearchProvider>
-              </CompareProductsProvider>
-            </CartProvider>
-          </CategoriesProvider>
+          <CartProvider>
+            <Header logo={redisLogo} />
+            <div className="flex flex-col min-h-screen">{children}</div>
+          </CartProvider>
         </AuthProvider>
-
         <Footer />
       </body>
     </html>

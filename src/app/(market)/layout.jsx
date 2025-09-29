@@ -76,9 +76,9 @@ export default async function MarketLayout({ children }) {
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
-        <FreeShippingBanner />
-        <ExtrasHeader />
         <AuthProvider>
+          <FreeShippingBanner />
+          <ExtrasHeader />
           <CategoriesProvider
             categories={menu.map((i) => ({
               ...i,
@@ -107,7 +107,6 @@ export default async function MarketLayout({ children }) {
             </CartProvider>
           </CategoriesProvider>
         </AuthProvider>
-
         <Footer />
       </body>
     </html>

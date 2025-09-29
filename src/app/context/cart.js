@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
 import { sendAbandonedCart } from "@/app/lib/api";
+import { useAuth } from "@/app/context/auth";
+import { redisGet, redisSet } from "@/app/lib/redis";
 
 const CartContext = createContext();
 
@@ -23,6 +25,7 @@ const ABANDONED_CART_SPAN = 5; // -> minuites
 
 export const CartProvider = ({ children }) => {
   const ABANDON_TIMEOUT = ABANDONED_CART_SPAN * 60 * 1000;
+  const { loading, isLoggedIn, user } = useAuth();
   const [cart, setCart] = useState(null);
   const [cartStorage, setCartStorage] = useState(null);
   const [billingStorage, setBillingStorage] = useState(null);
@@ -33,6 +36,7 @@ export const CartProvider = ({ children }) => {
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+
   const sendAbandonedCartBeacon = (cart) => {
     if (!cart || !cart?.items || cart?.items?.length === 0) return;
     const url = "/api/abandoned-carts/create";
@@ -41,35 +45,10 @@ export const CartProvider = ({ children }) => {
     navigator.sendBeacon(url, data);
   };
 
-  // const createAbandonedCart = async (sendBeacon = false) => {
-  //   if (!cartStorage) return;
-  //   const cartObj = await cartStorage.getCart();
-  //   if (!cartObj) return;
-  //   const now = Date.now();
-  //   const updatedAt = new Date(cartObj.updated_at).getTime();
-  //   const timedout = now - updatedAt > ABANDON_TIMEOUT;
-  //   if (cartObj?.cart_status !== "abandoned") {
-  //     const sendCart = cartObj;
-  //     sendCart["abandoned_cart_id"] = sendCart["id"];
-  //     sendCart["items"] = mapOrderItems(formatItems(sendCart["items"]));
-  //     console.log("[SENDCART]", sendCart);
-  //     if (sendBeacon) {
-  //       sendAbandonedCartBeacon(sendCart);
-  //     } else {
-  //       if (timedout) {
-  //         sendAbandonedCart(sendCart);
-  //       }
-  //     }
-  //     // if success
-  //     cartObj["cart_status"] = "abandoned";
-  //     await cartStorage.saveCart(cartObj);
-  //   }
-  // };
-
   const createAbandonedCart = async (sendBeacon = false) => {
     if (!cartStorage) return;
 
-    const cartObj = await cartStorage.getCart();
+    const cartObj = await getCart();
     if (!cartObj) return;
     if (cartObj.cart_status === "abandoned") return;
 
@@ -91,77 +70,8 @@ export const CartProvider = ({ children }) => {
     }
 
     cartObj.cart_status = "abandoned";
-    await cartStorage.saveCart(cartObj);
+    await saveCart(cartObj);
   };
-
-  useEffect(() => {
-    const handleUnload = () => {
-      console.log("[UNLOAD] trigger abandoned cart");
-      createAbandonedCart(true);
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        console.log("[HIDDEN] trigger abandoned cart");
-        createAbandonedCart(true);
-      }
-    };
-
-    if (typeof window === "undefined") return;
-
-    let mounted = true;
-    let tmp_billing = {};
-    let tmp_cart = {};
-
-    import("@/app/lib/billingStorage").then(async (billingModule) => {
-      if (!mounted) return;
-      tmp_billing = await billingModule.get();
-      setBillingStorage(billingModule);
-    });
-
-    import("@/app/lib/cartStorage").then(async (module) => {
-      if (!mounted) return;
-      const cartObj = await module.getCart();
-      // await module.saveCart(null);
-      if (cartObj) {
-        tmp_cart = { ...cartObj, tmp_billing };
-        const newCart = await buildCartObject(tmp_cart);
-        const items = newCart?.items || [];
-        setCart(newCart);
-        if (items.length > 0) {
-          syncCartToCookie(items);
-        }
-        createAbandonedCart();
-      }
-      setLoadingCartItems(false);
-      setCartStorage(module);
-    });
-
-    window.addEventListener("beforeunload", handleUnload);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      mounted = false;
-      window.removeEventListener("beforeunload", handleUnload);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!cartStorage) return;
-
-    const activityEvents = ["click", "keydown", "scroll"];
-
-    activityEvents.forEach((evt) => {
-      document.addEventListener(evt, createAbandonedCart);
-    });
-
-    return () => {
-      activityEvents.forEach((evt) => {
-        document.removeEventListener(evt, createAbandonedCart);
-      });
-    };
-  }, [cartStorage]);
 
   async function syncCartToCookie(items) {
     try {
@@ -185,9 +95,7 @@ export const CartProvider = ({ children }) => {
   const buildCartObject = async (cartObject) => {
     if (!cartObject) return null;
     if (!cartObject?.items) return null;
-    const billing_info = billingStorage
-      ? (await billingStorage.get()) || null
-      : null;
+    console.log("buildCartObject");
     const items = mapOrderItems(formatItems(cartObject?.items));
     syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
@@ -197,9 +105,8 @@ export const CartProvider = ({ children }) => {
       total_tax: data?.total_tax,
       total_shipping: data?.total_shipping,
       total_price: data?.total_price,
-      ...(billing_info || {}),
     };
-    // console.log("[REBUILD CART]", rebuild);
+    console.log("[REBUILD CART]", rebuild);
     setCart(rebuild);
     return rebuild;
   };
@@ -216,53 +123,135 @@ export const CartProvider = ({ children }) => {
     return crypto.randomUUID();
   }
 
-  const createCartObj = () => {
+  const createCartObj = async () => {
     return {
       id: createCartId(),
-      session_id: getOrCreateSessionId(),
+      session_id: await getOrCreateSessionId(),
       user_agent: getUserAgent(),
       store_domain: store_domain,
       items: [],
     };
   };
+
+  const mergeGuestToLoggedInUser = async () => {
+    if (!user) {
+      console.log("[mergeGuestToLoggedInUser] Not Merged: No User");
+      return;
+    }
+    const userKey = `user:${user?.email}`;
+    const guestCart = await getGuestCart();
+    const userObj = await redisGet(userKey);
+
+    let user_obj = {};
+
+    if (!userObj && guestCart) {
+      // save user object to redis with the guest cart
+      const { session_id, ...saveCart } = guestCart;
+      // give cart a new id
+      saveCart["id"] = createCartId();
+      user_obj = {
+        cart: saveCart,
+        addresses: [],
+      };
+    } else {
+      user_obj = { ...userObj };
+
+      const to_merge = (guestCart?.items || []).filter(
+        (item) => item?.merged !== true
+      );
+
+      user_obj["cart"]["items"] = [
+        ...to_merge,
+        ...(userObj?.cart?.items || []),
+      ];
+
+      await saveCart({
+        ...guestCart,
+        items: to_merge.map((item) => ({ ...item, merged: true })),
+      });
+    }
+
+    console.log("[user_obj]", user_obj);
+    const save = await redisSet(userKey, user_obj);
+    if (save?.success) {
+      loadCart();
+    }
+  };
+
+  const getGuestCart = async () => {
+    return await cartStorage.getCart();
+  };
+
+  const getUserCart = async () => {
+    const redis_user = await redisGet(`user:${user?.email}`);
+    const redis_cart = redis_user?.cart || {};
+
+    return redis_cart;
+  };
+
+  const getCart = async () => {
+    if (cartStorage && !loading) {
+      if (isLoggedIn && user) {
+        return await getUserCart();
+      } else {
+        return await getGuestCart();
+      }
+    }
+  };
+
+  // load cart to state
+  const loadCart = async () => {
+    if (cartStorage && !loading) {
+      const loadedCart = await getCart();
+      const items = loadedCart?.items || [];
+      setCart(loadedCart);
+      if (items.length > 0) {
+        syncCartToCookie(items);
+      }
+      createAbandonedCart();
+      setLoadingCartItems(false);
+    }
+  };
+
+  const saveCart = async (newCart) => {
+    if (isLoggedIn && user && user?.email) {
+      // save to redis
+      const redis_key = `user:${user.email}`;
+      const redis_user = await redisGet(redis_key);
+      redis_user["cart"] = newCart;
+      await redisSet(`user:${user.email}`, redis_user);
+    } else {
+      // save to localforage
+      await cartStorage.saveCart(newCart);
+    }
+  };
+
   // Function to add to cart and update cart count
   // item param must be an array
   const addToCart = async (items) => {
     setAddToCartLoading(true);
     // getCart everytime we add or remove items
     try {
-      const cartObj = await cartStorage.getCart();
+      const cartObj = await getCart();
       const now = new Date().toISOString();
       let _cartObj = {};
-      if (Array.isArray(cartObj) || !cartObj) {
-        // insert create cart here
-        // step 1: get user billing info by triggering the billing form dialog
-        // console.log("[ATC CART]", cartObj);
-        // const billing_info = (await billingStorage.get()) || null;
-        // console.log("[ATC BI]", billing_info);
-        // if (billing_info) {
-          _cartObj = createCartObj();
-          _cartObj["created_at"] = now;
-          _cartObj["updated_at"] = now;
-        // } else {
-        //   setPreaddedItem(items);
-        //   setToggleBillingDialog(true);
-        // }
+      if (!cartObj) {
+        _cartObj = await createCartObj();
+        _cartObj["created_at"] = now;
+        _cartObj["updated_at"] = now;
       } else {
         _cartObj = cartObj;
         _cartObj["updated_at"] = now;
-
         if (_cartObj?.cart_status === "abandoned") {
-          // if cart status is once abandoned then updated later.. then flip status to revived
           _cartObj.id = createCartId();
           _cartObj.cart_status = "revived";
         }
       }
-      const updatedItems = [..._cartObj?.items, ...items];
-      _cartObj.items = updatedItems;
+      const updatedItems = [...(_cartObj?.items || []), ...(items || [])];
+      _cartObj["items"] = updatedItems;
       const newCart = await buildCartObject(_cartObj);
       setCart((prev) => newCart);
-      cartStorage.saveCart(newCart);
+      await saveCart(newCart);
       setAddToCartLoading(false);
       setAddedToCart(items);
       return {
@@ -281,7 +270,7 @@ export const CartProvider = ({ children }) => {
 
   const removeCartItem = async (item) => {
     const now = new Date().toISOString();
-    const cartObj = await cartStorage.getCart();
+    const cartObj = await getCart();
     const items = cartObj?.items;
     const updatedItems = items.filter(
       (i) => i?.variants?.[0]?.sku !== item?.variants?.[0]?.sku
@@ -293,13 +282,13 @@ export const CartProvider = ({ children }) => {
       cartObj.cart_status = "revived";
     }
     const newCart = await buildCartObject(cartObj);
-    setCart(updatedItems.length === 0 ? null : newCart);
-    cartStorage.saveCart(updatedItems.length === 0 ? null : newCart);
+    setCart(newCart);
+    await saveCart(newCart);
   };
 
   const increaseProductQuantity = async (item) => {
     const now = new Date().toISOString();
-    const cartObj = await cartStorage.getCart();
+    const cartObj = await getCart();
     const savedItems = cartObj?.items;
     const updatedItems = [...savedItems, item];
     cartObj["items"] = updatedItems;
@@ -310,12 +299,12 @@ export const CartProvider = ({ children }) => {
     }
     const newCart = await buildCartObject(cartObj);
     setCart((prev) => newCart);
-    cartStorage.saveCart(newCart);
+    await saveCart(newCart);
   };
 
   const decreaseProductQuantity = async (item) => {
     const now = new Date().toISOString();
-    const cartObj = await cartStorage.getCart();
+    const cartObj = await getCart();
     const savedItems = cartObj?.items;
     const tmpCartItems = savedItems;
     const idToFindAndPop = item?.variants?.[0].sku;
@@ -340,13 +329,13 @@ export const CartProvider = ({ children }) => {
       }
       const newCart = await buildCartObject(cartObj);
       setCart((prev) => newCart);
-      cartStorage.saveCart(newCart);
+      await saveCart(newCart);
     }
   };
 
   const clearCartItems = async () => {
-    syncCartToCookie([])
-    if(cartStorage) cartStorage.saveCart(null); 
+    syncCartToCookie([]);
+    if (cartStorage) saveCart(null);
   };
 
   const handleCloseAddedToCart = () => {
@@ -388,7 +377,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const formatItems = (items) => {
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
       return [];
     }
 
@@ -403,6 +392,66 @@ export const CartProvider = ({ children }) => {
       }, {})
     ).sort((a, b) => a.title.localeCompare(b.title));
   };
+
+  useEffect(() => {
+    const handleUnload = () => {
+      console.log("[UNLOAD] trigger abandoned cart");
+      createAbandonedCart(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        console.log("[HIDDEN] trigger abandoned cart");
+        createAbandonedCart(true);
+      }
+    };
+
+    if (typeof window === "undefined") return;
+
+    let mounted = true;
+    let tmp_billing = {};
+    let tmp_cart = {};
+
+    // import("@/app/lib/billingStorage").then(async (billingModule) => {
+    //   if (!mounted) return;
+    //   tmp_billing = await billingModule.get();
+    //   setBillingStorage(billingModule);
+    // });
+
+    import("@/app/lib/cartStorage").then(async (module) => {
+      if (!mounted) return;
+      setCartStorage(module);
+    });
+
+    window.addEventListener("beforeunload", handleUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("beforeunload", handleUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!cartStorage) return;
+
+    const activityEvents = ["click", "keydown", "scroll"];
+
+    activityEvents.forEach((evt) => {
+      document.addEventListener(evt, createAbandonedCart);
+    });
+
+    return () => {
+      activityEvents.forEach((evt) => {
+        document.removeEventListener(evt, createAbandonedCart);
+      });
+    };
+  }, [cartStorage]);
+
+  useEffect(() => {
+    loadCart();
+  }, [cartStorage, loading, isLoggedIn, user]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];
@@ -430,10 +479,11 @@ export const CartProvider = ({ children }) => {
         loadingCartItems,
         addToCart,
         clearCartItems,
-        increaseProductQuantity,
         decreaseProductQuantity,
-        removeCartItem,
         fetchOrderTotal,
+        increaseProductQuantity,
+        mergeGuestToLoggedInUser,
+        removeCartItem,
         addToCartLoading,
       }}
     >

@@ -1,10 +1,14 @@
-export function getOrCreateSessionId() {
+import {getItem, setItem} from "@/app/lib/localForage"
+
+export const getOrCreateSessionId = async() => {
   if (typeof window === "undefined") return null; // SSR guard
 
-  let sessionId = localStorage.getItem("session_id");
+  let sessionId = await getItem("session_id");
+  
   if (!sessionId) {
     sessionId = crypto.randomUUID();
-    localStorage.setItem("session_id", sessionId);
+    await setItem("session_id", sessionId);
   }
+
   return sessionId;
 }

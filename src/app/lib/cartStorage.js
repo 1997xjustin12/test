@@ -33,5 +33,12 @@ export const getCart = async () => {
   }
 };
 
+export const removeCart = async () => {
+  try {
+    await localForage.removeItem("cart");
+  } catch (error) {
+    console.error(`Error removing cart`, error);
+  }
+};
 
 

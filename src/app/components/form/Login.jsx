@@ -6,7 +6,7 @@ import { useAuth } from "@/app/context/auth";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 
-function LoginForm() {
+function LoginForm({successLogin = null}) {
   const { login } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({ username: "", password: "" });
@@ -35,11 +35,17 @@ function LoginForm() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data?.error || "Login failed.");
+      setError(data?.error || data?.detail || "Login failed.");
+      setLoading(false);
+      return;
     }
 
     login(data);
-    window.location.href = `${BASE_URL}/my-account`;
+    if(successLogin){
+      successLogin(true);
+    }else{
+      window.location.href = `${BASE_URL}/my-account`;
+    }
     setLoading(false);
   };
 

@@ -194,7 +194,6 @@ function AddedToCartDialog({ data, onClose }) {
 
   useEffect(() => {
     if (addedToCartItems) {
-      console.log("[ADDEDTOCARTITEMS]", addedToCartItems);
       const thumbnail =
         addedToCartItems?.images?.find(({ position }) => position === 1)?.src ??
         null;
