@@ -405,8 +405,14 @@ const FormLoader = () => {
 function CheckoutComponent() {
   const [cartTotal, setCartTotal] = useState({});
   const [expandOrderSummary, setExpandOrderSummary] = useState(false);
-  const { clearCartItems, formattedCart, fetchOrderTotal, loadCart, cartItems, loadingCartItems } =
-    useCart();
+  const {
+    clearCartItems,
+    formattedCart,
+    fetchOrderTotal,
+    loadCart,
+    cartItems,
+    loadingCartItems,
+  } = useCart();
   // braintree
   const dropinContainer = useRef(null);
   const [instance, setInstance] = useState(null);
@@ -418,6 +424,9 @@ function CheckoutComponent() {
   const { isLoggedIn, user, loading, updateProfile } = useAuth();
   // login modal
   const [openLogin, setOpenLogin] = useState(false);
+
+  const [successPayment, setSuccessPayment] = useState(false);
+  
   const router = useRouter();
 
   const getOrderTotal = async (newForm) => {
@@ -741,14 +750,18 @@ function CheckoutComponent() {
           setInstance(null);
           clearCartItems();
           saveInformation(form?.save_information);
-          window.location.href = `${BASE_URL}/payment_success`;
+          setSuccessPayment(true);
+          router.push(`${BASE_URL}/payment_success`);
         } else {
+          setSuccessPayment(false);
           alert("Something went wrong! Please try again.");
         }
       } else {
+        setSuccessPayment(false);
         alert(`Payment failed: ${result.error}`);
       }
     } catch (error) {
+      setSuccessPayment(false);
       console.error("Payment Error:", error);
       alert("Payment error. Try again.");
     }
@@ -804,6 +817,14 @@ function CheckoutComponent() {
       });
     };
 
+    const reloadCart = async() => {
+      const status = await loadCart();
+      // console.log("[reloadCartStatus]", status);
+      // // if(status==="redirect"){
+      // //   router.push(BASE_URL);
+      // // }
+    }
+
     if (loading && !forage) return;
 
     if (isLoggedIn) {
@@ -812,16 +833,14 @@ function CheckoutComponent() {
       fillGuestInfo();
     }
 
-    loadCart();
-
-
+    reloadCart();
   }, [loading, forage, isLoggedIn, user]);
 
-  useEffect(()=>{
-    if(!loading && isLoggedIn && cartItems.length === 0 && !loadingCartItems){
-      router.push(`${BASE_URL}`)
-    }
-  },[loading, isLoggedIn, cartItems, loadingCartItems]);
+  // useEffect(() => {
+  //   if (!loading && isLoggedIn && cartItems.length === 0 && !loadingCartItems && !successPayment) {
+  //      router.push(`${BASE_URL}`);
+  //   }
+  // }, [loading, isLoggedIn, cartItems, loadingCartItems, successPayment]);
 
   useEffect(() => {
     async function initializeDropIn() {

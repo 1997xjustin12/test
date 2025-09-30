@@ -48,7 +48,7 @@ export const CartProvider = ({ children }) => {
     const cartObj = await getCart();
 
     if (!cartObj) return;
-  
+
     if (cartObj.cart_status === "abandoned") return;
 
     const updatedAt = new Date(cartObj.updated_at).getTime();
@@ -144,9 +144,11 @@ export const CartProvider = ({ children }) => {
     const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged);
 
     if (toMerge.length === 0) {
-      console.log("[mergeGuestToLoggedInUser] Not Merged: No new items that needs merging");
+      console.log(
+        "[mergeGuestToLoggedInUser] Not Merged: No new items that needs merging"
+      );
       return;
-    };
+    }
 
     console.log("[mergeGuestToLoggedInUser] Processing Merge");
     const userKey = `user:${user.email}`;
@@ -155,29 +157,33 @@ export const CartProvider = ({ children }) => {
 
     let newCart;
 
-    if(userCart){
+    if (userCart) {
       newCart = {
         ...userCart,
         items: [...(userCart.items ?? []), ...toMerge],
         updated_at: new Date().toISOString(),
       };
-    }else{
+    } else {
       newCart = createCartObj();
       newCart = {
         ...newCart,
         items: [...toMerge],
-      }
+      };
     }
 
-    const saveUserCart = userObj ? {...userObj, cart: newCart} : {cart:newCart};
+    const saveUserCart = userObj
+      ? { ...userObj, cart: newCart }
+      : { cart: newCart };
     const save = await redisSet(userKey, saveUserCart);
 
     if (save?.success) {
       await cartStorage.saveCart({
         ...guestCart,
-        items: (guestCart.items ?? []).map((item) => ({ ...item, merged: true }))
+        items: (guestCart.items ?? []).map((item) => ({
+          ...item,
+          merged: true,
+        })),
       });
-      loadCart();
     }
   };
 
@@ -204,7 +210,7 @@ export const CartProvider = ({ children }) => {
   // load cart to state
   const loadCart = async () => {
     if (cartStorage && !loading) {
-      console.log("[RELOAD CART]")
+      console.log("[RELOAD CART]");
       setLoadingCartItems(true);
       const loadedCart = await getCart();
       const items = loadedCart?.items || [];
@@ -212,7 +218,13 @@ export const CartProvider = ({ children }) => {
       syncCartToCookie(items);
       // createAbandonedCart();
       setLoadingCartItems(false);
+      if(items.length === 0){
+        return "redirect";
+      }else{
+        return true;
+      }
     }
+    return false;
   };
 
   const saveCart = async (newCart) => {
@@ -418,12 +430,18 @@ export const CartProvider = ({ children }) => {
   // }, [cartStorage]);
 
   useEffect(() => {
-    if(cartStorage && !loading && isLoggedIn && user){
-      mergeGuestToLoggedInUser();
-    }
-    loadCart();
-  }, [cartStorage, loading, isLoggedIn, user]);
+    const mergeCartItems = async () => {
+      if (cartStorage && isLoggedIn && user) {
+        await mergeGuestToLoggedInUser();
+      }
 
+      await loadCart();
+    };
+
+    if (loading) return;
+
+    mergeCartItems();
+  }, [cartStorage, loading, isLoggedIn, user]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];
