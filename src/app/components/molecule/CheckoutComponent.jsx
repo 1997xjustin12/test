@@ -1,6 +1,7 @@
 "use client";
 //react
 import React, { useState, useEffect, useMemo, useRef, use } from "react";
+import { useRouter } from "next/navigation";
 // components
 import dropin from "braintree-web-drop-in";
 import Image from "next/image";
@@ -131,10 +132,14 @@ const ComputationSection = ({ data }) => {
             </g>
           </svg>
         </div>
-        {data?.allowPay ? data?.total_shipping === 0 ? (
-          <div className="text-green-600 font-bold">FREE</div>
-        ):(
-          <div className="text-neutral-900">{formatPrice(data?.total_shipping)}</div>
+        {data?.allowPay ? (
+          data?.total_shipping === 0 ? (
+            <div className="text-green-600 font-bold">FREE</div>
+          ) : (
+            <div className="text-neutral-900">
+              {formatPrice(data?.total_shipping)}
+            </div>
+          )
         ) : (
           <div className="text-neutral-500">Enter Shipping Postal Code</div>
         )}
@@ -400,12 +405,8 @@ const FormLoader = () => {
 function CheckoutComponent() {
   const [cartTotal, setCartTotal] = useState({});
   const [expandOrderSummary, setExpandOrderSummary] = useState(false);
-  const {
-    clearCartItems,
-    formattedCart,
-    fetchOrderTotal,
-    mergeGuestToLoggedInUser,
-  } = useCart();
+  const { clearCartItems, formattedCart, fetchOrderTotal, loadCart, cartItems, loadingCartItems } =
+    useCart();
   // braintree
   const dropinContainer = useRef(null);
   const [instance, setInstance] = useState(null);
@@ -417,6 +418,7 @@ function CheckoutComponent() {
   const { isLoggedIn, user, loading, updateProfile } = useAuth();
   // login modal
   const [openLogin, setOpenLogin] = useState(false);
+  const router = useRouter();
 
   const getOrderTotal = async (newForm) => {
     const items = mapOrderItems(newForm?.items);
@@ -648,7 +650,8 @@ function CheckoutComponent() {
     setOpenLogin(true);
   };
 
-  const fillUserToForm = () => {
+  const fillUserToForm = (user) => {
+    if (!user) return;
     setForm((prev) => {
       const updated = {
         ...prev,
@@ -687,7 +690,7 @@ function CheckoutComponent() {
   };
 
   const handleLoginSuccess = () => {
-    fillUserToForm();
+    //   fillUserToForm(user);
   };
 
   const handleSubmit = async (e) => {
@@ -804,11 +807,21 @@ function CheckoutComponent() {
     if (loading && !forage) return;
 
     if (isLoggedIn) {
-      fillUserToForm();
+      fillUserToForm(user);
     } else {
       fillGuestInfo();
     }
-  }, [loading, forage, isLoggedIn]);
+
+    loadCart();
+
+
+  }, [loading, forage, isLoggedIn, user]);
+
+  useEffect(()=>{
+    if(!loading && isLoggedIn && cartItems.length === 0 && !loadingCartItems){
+      router.push(`${BASE_URL}`)
+    }
+  },[loading, isLoggedIn, cartItems, loadingCartItems]);
 
   useEffect(() => {
     async function initializeDropIn() {
