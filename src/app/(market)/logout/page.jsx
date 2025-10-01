@@ -2,34 +2,35 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
+import { useCart } from "@/app/context/cart";
 import { BASE_URL } from "@/app/lib/helpers";
+import { useRouter } from "next/navigation";
 export default function LogoutPage() {
   const { logout, forage } = useAuth();
-
+  const { createAbandonedCart } = useCart();
+  const router = useRouter();
   const logUserOut = async () => {
     try {
       const response = await logout();
+      const response2 = await createAbandonedCart("forced");
       if (!response.ok) {
         console.log("[LogoutPage][error]");
         return;
       }
 
-      window.location.href = `${BASE_URL}/login`;
+      router.push(`${BASE_URL}/login`);
     } catch (err) {
       console.log("[LogoutPage][error]");
     }
   };
 
   useEffect(() => {
-    if (forage) {
-      console.log("[FORAGE]", forage);
-      logUserOut();
-    }
-  }, [forage]);
+    logUserOut();
+  }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+    <div className="flex items-center justify-center px-4">
+      <div className="container mx-auto flex justify-center">
         <h2 className="text-2xl font-bold mb-6 text-center">Logging Out...</h2>
       </div>
     </div>

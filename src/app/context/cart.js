@@ -44,14 +44,17 @@ export const CartProvider = ({ children }) => {
     navigator.sendBeacon(url, data);
   };
 
-  const createAbandonedCart = async (sendBeacon = false) => {
+  const createAbandonedCart = async (trigger = "timed") => {
     if (loading) return;
     if (!isLoggedIn) return;
     if (!user) return;
 
-    const cartObj = await getCart();
+    const cartObj = await getUserCart();
+    const cartItems = cartObj?.items ?? [];
 
     if (!cartObj) return;
+
+    if (cartItems.length === 0) return;
 
     if (cartObj.cart_status === "abandoned") return;
 
@@ -62,17 +65,55 @@ export const CartProvider = ({ children }) => {
     const sendCart = {
       ...cartObj,
       abandoned_cart_id: cartObj.id,
-      items: mapOrderItems(formatItems(cartObj.items)),
+      items: mapOrderItems(formatItems(cartItems)),
+      billing_address: user?.profile?.billing_address,
+      billing_city: user?.profile?.billing_city,
+      billing_country: user?.profile?.billing_country,
+      billing_email: user?.email,
+      billing_first_name: user?.first_name,
+      billing_last_name: user?.last_name,
+      billing_province: user?.profile?.billing_state,
+      billing_zip_code: user?.profile?.billing_zip,
+      shipping_address: user?.profile?.shipping_address,
+      shipping_city: user?.profile?.shipping_city,
+      shipping_country: user?.profile?.shipping_country,
+      shipping_email: user?.email,
+      shipping_first_name: user?.first_name,
+      shipping_last_name: user?.last_name,
+      shipping_province: user?.profile?.shipping_state,
+      shipping_zip_code: user?.profile?.shipping_zip,
     };
 
-    if (sendBeacon) {
+    // console.log("[createAbandonedCart]", sendCart);
+
+
+    if (trigger === "beacon") {
+      // console.log("TRIGGERED ABANDONED CART BEACON", cartObj);
+      cartObj.cart_status = "abandoned";
+      await saveCart(cartObj);
       sendAbandonedCartBeacon(sendCart);
-    } else if (timedout) {
-      sendAbandonedCart(sendCart);
     }
 
-    cartObj.cart_status = "abandoned";
-    await saveCart(cartObj);
+    if (trigger === "timed") {
+      // console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
+      if (timedout) {
+        const response = await sendAbandonedCart(sendCart);
+        // console.log("TRIGGERED ABANDONED CART TIMED", response);
+        if (response.ok) {
+          cartObj.cart_status = "abandoned";
+          await saveCart(cartObj);
+        }
+      }
+    }
+
+    if (trigger === "forced") {
+      const response = await sendAbandonedCart(sendCart);
+      // console.log("TRIGGERED ABANDONED CART FORCED", response);
+      if (response.ok) {
+        cartObj.cart_status = "abandoned";
+        await saveCart(cartObj);
+      }
+    }
   };
 
   async function syncCartToCookie(items) {
@@ -106,7 +147,7 @@ export const CartProvider = ({ children }) => {
       total_shipping: data?.total_shipping,
       total_price: data?.total_price,
     };
-    setCart(rebuild);
+    // setCart(rebuild);
     return rebuild;
   };
 
@@ -137,27 +178,27 @@ export const CartProvider = ({ children }) => {
   };
 
   const mergeUserCartItems = async () => {
-    console.log("[mergeUserCartItems]");
+    // console.log("[mergeUserCartItems]");
     if (!user) {
-      console.log("[mergeUserCartItems] Not Merged: No User");
+      // console.log("[mergeUserCartItems] Not Merged: No User");
       return;
     }
-    console.log("[mergeUserCartItems] Processing Merge");
+    // console.log("[mergeUserCartItems] Processing Merge");
 
     const guestCart = await getGuestCart();
 
     const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged);
 
-    // if (toMerge.length === 0) {
-    //   console.log(
-    //     "[mergeUserCartItems] Not Merged: No new items that needs merging"
-    //   );
-    //   return ;
-    // }
-
     const userKey = `user:${user.email}`;
     const userObj = await redisGet(userKey);
     const userCart = userObj?.cart || null;
+
+    if (toMerge.length === 0) {
+      // console.log("[mergeUserCartItems] Nothing to Merge");
+      return userCart;
+    }
+
+    // console.log("[mergeUserCartItems] Process Merge");
 
     let newCart;
 
@@ -168,7 +209,7 @@ export const CartProvider = ({ children }) => {
         updated_at: new Date().toISOString(),
       };
     } else {
-      newCart = createCartObj();
+      newCart = await createCartObj();
       newCart = {
         ...newCart,
         items: [...toMerge],
@@ -221,16 +262,11 @@ export const CartProvider = ({ children }) => {
       setLoadingCartItems(true);
       const loadedCart = await getCart();
       const items = loadedCart?.items || [];
-      // console.log("[RELOAD CART] items",items.length);
       setCart(loadedCart);
       syncCartToCookie(items);
-      // createAbandonedCart();
+      createAbandonedCart(); // timed
       setLoadingCartItems(false);
-      // if(items.length === 0 && pathname === "/checkout"){
-      //   router.push(`${BASE_URL}/cart`);
-      // }
     }
-    // return false;
   };
 
   const saveCart = async (newCart) => {
@@ -260,6 +296,11 @@ export const CartProvider = ({ children }) => {
         ...cartObj,
         items: [...(cartObj?.items ?? []), ...(items ?? [])],
       });
+
+      if (newCart?.cart_status === "abandoned") {
+        newCart.cart_status = "active";
+        newCart.id = createCartId();
+      }
 
       setCart(newCart);
       await saveCart(newCart);
@@ -295,6 +336,11 @@ export const CartProvider = ({ children }) => {
       updated_at: new Date().toISOString(),
     });
 
+    if (newCart?.cart_status === "abandoned") {
+      newCart.cart_status = "active";
+      newCart.id = createCartId();
+    }
+
     setCart(newCart);
     await saveCart(newCart);
   };
@@ -310,6 +356,11 @@ export const CartProvider = ({ children }) => {
       items: updatedItems,
       updated_at: new Date().toISOString(),
     });
+
+    if (newCart?.cart_status === "abandoned") {
+      newCart.cart_status = "active";
+      newCart.id = createCartId();
+    }
 
     setCart(newCart);
     await saveCart(newCart);
@@ -337,6 +388,11 @@ export const CartProvider = ({ children }) => {
         items: updatedItems,
         updated_at: new Date().toISOString(),
       });
+
+      if (newCart?.cart_status === "abandoned") {
+        newCart.cart_status = "active";
+        newCart.id = createCartId();
+      }
 
       setCart(newCart);
       await saveCart(newCart);
@@ -389,14 +445,12 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     // const handleUnload = () => {
-    //   console.log("[UNLOAD] trigger abandoned cart");
-    //   createAbandonedCart(true);
+    //   createAbandonedCart("beacon");
     // };
 
     // const handleVisibilityChange = () => {
     //   if (document.visibilityState === "hidden") {
-    //     console.log("[HIDDEN] trigger abandoned cart");
-    //     createAbandonedCart(true);
+    //     createAbandonedCart("beacon");
     //   }
     // };
 
@@ -436,8 +490,39 @@ export const CartProvider = ({ children }) => {
   // }, [cartStorage]);
 
   useEffect(() => {
-    if(cartStorage) loadCart();
-  }, [cartStorage, loading]);
+    const handleUnload = async() => {
+      console.log("UNLOAD");
+      await createAbandonedCart("beacon");
+    };
+
+    const handleVisibilityChange = async() => {
+      console.log("VISIBILITY", document.visibilityState);
+      if (document.visibilityState === "hidden") {
+        await createAbandonedCart("beacon");
+      }
+    };
+
+    if (!cartStorage) return;
+
+    loadCart();
+
+    const activityEvents = ["click", "keydown", "scroll"];
+
+    activityEvents.forEach((evt) => {
+      document.addEventListener(evt, createAbandonedCart);
+    });
+
+    window.addEventListener("beforeunload", handleUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      activityEvents.forEach((evt) => {
+        document.removeEventListener(evt, createAbandonedCart);
+      });
+      window.removeEventListener("beforeunload", handleUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [cartStorage, loading, isLoggedIn, user]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];
@@ -465,6 +550,7 @@ export const CartProvider = ({ children }) => {
         loadingCartItems,
         addToCart,
         clearCartItems,
+        createAbandonedCart,
         decreaseProductQuantity,
         fetchOrderTotal,
         increaseProductQuantity,

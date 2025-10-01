@@ -104,19 +104,6 @@ const ItemsList = ({ items }) => {
 };
 
 const ComputationSection = ({ data, items }) => {
-  // if (items?.length === 0) {
-  //   return (
-  //     <div className="flex flex-col items-center">
-  //       <div className="text-neutral-700 font-bold">No Items Found</div>
-  //       <Link
-  //         href={`${BASE_URL}/cart`}
-  //         className="text-xs text-theme-600 underline"
-  //       >
-  //         Return to Cart
-  //       </Link>
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -284,8 +271,15 @@ const LoginModal = ({ isOpen, setOpen }) => {
 const LogoutDropDown = () => {
   const [open, setOpen] = useState(false);
   const { logout } = useAuth();
+  const {createAbandonedCart} = useCart();
   const dropdownRef = useRef(null);
 
+  const handleLogout = async() => {
+    const isLogout = await logout();
+    if(isLogout){
+      createAbandonedCart("forced");
+    }
+  }
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -330,7 +324,7 @@ const LogoutDropDown = () => {
           <button
             type="button"
             className="text-xs text-neutral-700 w-full text-center hover:text-neutral-900"
-            onClick={logout}
+            onClick={handleLogout}
           >
             Sign out
           </button>
