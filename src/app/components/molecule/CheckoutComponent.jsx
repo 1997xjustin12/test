@@ -103,7 +103,14 @@ const ItemsList = ({ items }) => {
   );
 };
 
-const ComputationSection = ({ data }) => {
+const ComputationSection = ({ data, items }) => {
+
+  if(items?.length === 0){
+    return <div className="flex flex-col items-center">
+      <div className="text-neutral-700 font-bold">No Items Found</div>
+      <Link href={`${BASE_URL}/cart`} className="text-xs text-theme-600 underline">Return to Cart</Link>
+    </div>
+  }
   return (
     <>
       <div className="text-xs flex items-center justify-between">
@@ -213,16 +220,17 @@ const MobileOrderSummary = ({ data }) => {
         <div className="py-[30px]">
           <ItemsList items={data?.items} />
         </div>
-        <ComputationSection data={data} />
+        <ComputationSection data={data} items={data?.items}/>
       </div>
     </>
   );
 };
 
-const ReviewOrderButton = () => {
+const CompletePaymentButton = ({items}) => {
   return (
     <button
       type="submit"
+      disabled={items?.length === 0}
       className="bg-yellow-500 text-black text-xs font-semibold w-full py-3 rounded mt-3"
     >
       Complete Payment
@@ -230,10 +238,9 @@ const ReviewOrderButton = () => {
   );
 };
 
-const LoginModal = ({ isOpen, setOpen, loginSuccess }) => {
+const LoginModal = ({ isOpen, setOpen }) => {
   const handleSuccessLogin = (data) => {
     setOpen(false);
-    loginSuccess();
   };
   return (
     <Dialog open={isOpen} onClose={setOpen} className="relative z-10">
@@ -698,10 +705,6 @@ function CheckoutComponent() {
     });
   };
 
-  const handleLoginSuccess = () => {
-    //   fillUserToForm(user);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -762,8 +765,8 @@ function CheckoutComponent() {
       }
     } catch (error) {
       setSuccessPayment(false);
-      console.error("Payment Error:", error);
-      alert("Payment error. Try again.");
+      // console.error("Payment Error:", error);
+      // alert("Payment error. Try again.");
     }
   };
 
@@ -817,14 +820,6 @@ function CheckoutComponent() {
       });
     };
 
-    const reloadCart = async() => {
-      const status = await loadCart();
-      // console.log("[reloadCartStatus]", status);
-      // // if(status==="redirect"){
-      // //   router.push(BASE_URL);
-      // // }
-    }
-
     if (loading && !forage) return;
 
     if (isLoggedIn) {
@@ -833,14 +828,8 @@ function CheckoutComponent() {
       fillGuestInfo();
     }
 
-    reloadCart();
+    loadCart();
   }, [loading, forage, isLoggedIn, user]);
-
-  // useEffect(() => {
-  //   if (!loading && isLoggedIn && cartItems.length === 0 && !loadingCartItems && !successPayment) {
-  //      router.push(`${BASE_URL}`);
-  //   }
-  // }, [loading, isLoggedIn, cartItems, loadingCartItems, successPayment]);
 
   useEffect(() => {
     async function initializeDropIn() {
@@ -893,7 +882,6 @@ function CheckoutComponent() {
       <MobileOrderSummary data={{ ...cartTotal, items: formattedCart }} />
       {/* desktop */}
       <div className="container mx-auto">
-        {/* <div><button onClick={mergeGuestToLoggedInUser} className="mt-[20px] px-3 py-1 bg-red-500 hover:bg-red-600 text-white font-bold">TEST MERGE</button></div> */}
         <form onSubmit={handleSubmit}>
           <div className="flex gap-0 md:gap-[20px] flex-col md:flex-row py-5 md:py-0">
             {/* form section */}
@@ -1242,7 +1230,7 @@ function CheckoutComponent() {
                     </div>
                   ) : null}
                   <div className="hidden md:flex">
-                    <ReviewOrderButton />
+                    <CompletePaymentButton items={formattedCart} />
                   </div>
                 </div>
               )}
@@ -1308,9 +1296,9 @@ function CheckoutComponent() {
                 <div className="hidden md:block mb-5">
                   <ItemsList items={formattedCart} />
                 </div>
-                <ComputationSection data={cartTotal} />
+                <ComputationSection data={cartTotal} items={formattedCart}/>
                 <div className="md:hidden">
-                  <ReviewOrderButton />
+                  <CompletePaymentButton items={formattedCart}/>
                 </div>
               </div>
             </div>
@@ -1328,7 +1316,6 @@ function CheckoutComponent() {
       <LoginModal
         isOpen={openLogin}
         setOpen={setOpenLogin}
-        loginSuccess={handleLoginSuccess}
       />
     </section>
   );

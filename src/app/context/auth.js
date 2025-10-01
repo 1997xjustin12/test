@@ -173,7 +173,7 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (data) => {
-    if (!data || !data.access || !data.refresh) return; // fail early if missing
+    if (!data || !data.access || !data.refresh) return false; // fail early if missing
     setIsLoggedIn(true);
     setAccessToken(data.access);
 
@@ -182,6 +182,8 @@ export function AuthProvider({ children }) {
     } else {
       console.log("REFRESH TO FORAGE ERROR");
     }
+
+    return true;
   };
 
   const logout = async () => {
@@ -194,7 +196,7 @@ export function AuthProvider({ children }) {
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Logout failed:", errorData.error || response.statusText);
-        return;
+        return false;
       }
 
       // Clear frontend tokens/state

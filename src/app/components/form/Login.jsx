@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
+import { useCart } from "@/app/context/cart";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 
@@ -40,13 +41,19 @@ function LoginForm({successLogin = null}) {
       return;
     }
 
-    login(data);
+    const isLogin = await login(data);
+
+    setLoading(false);
+
+    if(!isLogin){
+      console.log("Login Error")
+    }
+
     if(successLogin){
       successLogin(true);
     }else{
-      window.location.href = `${BASE_URL}/my-account`;
+      router.push(`${BASE_URL}/my-account`)
     }
-    setLoading(false);
   };
 
   return (

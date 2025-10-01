@@ -14,6 +14,7 @@ export default function CartPage() {
     increaseProductQuantity,
     decreaseProductQuantity,
     // fetchOrderTotal,
+    loadCart,
   } = useCart();
 
   const handleItemCountUpdate = (value) => {

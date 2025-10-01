@@ -14,6 +14,8 @@ import { store_domain, mapOrderItems } from "@/app/lib/helpers";
 import { sendAbandonedCart } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
 import { redisGet, redisSet } from "@/app/lib/redis";
+import { usePathname, useRouter } from "next/navigation";
+import { BASE_URL } from "@/app/lib/helpers";
 
 const CartContext = createContext();
 
@@ -24,6 +26,8 @@ export const useCart = () => {
 const ABANDONED_CART_SPAN = 5; // -> minuites
 
 export const CartProvider = ({ children }) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const ABANDON_TIMEOUT = ABANDONED_CART_SPAN * 60 * 1000;
   const { loading, isLoggedIn, user } = useAuth();
   const [cart, setCart] = useState(null);
@@ -132,25 +136,25 @@ export const CartProvider = ({ children }) => {
     };
   };
 
-  const mergeGuestToLoggedInUser = async () => {
-    console.log("[mergeGuestToLoggedInUser]");
+  const mergeUserCartItems = async () => {
+    console.log("[mergeUserCartItems]");
     if (!user) {
-      console.log("[mergeGuestToLoggedInUser] Not Merged: No User");
+      console.log("[mergeUserCartItems] Not Merged: No User");
       return;
     }
+    console.log("[mergeUserCartItems] Processing Merge");
 
     const guestCart = await getGuestCart();
 
     const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged);
 
-    if (toMerge.length === 0) {
-      console.log(
-        "[mergeGuestToLoggedInUser] Not Merged: No new items that needs merging"
-      );
-      return;
-    }
+    // if (toMerge.length === 0) {
+    //   console.log(
+    //     "[mergeUserCartItems] Not Merged: No new items that needs merging"
+    //   );
+    //   return ;
+    // }
 
-    console.log("[mergeGuestToLoggedInUser] Processing Merge");
     const userKey = `user:${user.email}`;
     const userObj = await redisGet(userKey);
     const userCart = userObj?.cart || null;
@@ -185,6 +189,8 @@ export const CartProvider = ({ children }) => {
         })),
       });
     }
+
+    return newCart;
   };
 
   const getGuestCart = async () => {
@@ -192,9 +198,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const getUserCart = async () => {
-    const redis_user = await redisGet(`user:${user?.email}`);
-    const redis_cart = redis_user?.cart || null;
-    return redis_cart;
+    // const redis_user = await redisGet(`user:${user?.email}`);
+    // const redis_cart = redis_user?.cart || null;
+    // return redis_cart;
+    return await mergeUserCartItems();
   };
 
   const getCart = async () => {
@@ -214,17 +221,16 @@ export const CartProvider = ({ children }) => {
       setLoadingCartItems(true);
       const loadedCart = await getCart();
       const items = loadedCart?.items || [];
+      // console.log("[RELOAD CART] items",items.length);
       setCart(loadedCart);
       syncCartToCookie(items);
       // createAbandonedCart();
       setLoadingCartItems(false);
-      if(items.length === 0){
-        return "redirect";
-      }else{
-        return true;
-      }
+      // if(items.length === 0 && pathname === "/checkout"){
+      //   router.push(`${BASE_URL}/cart`);
+      // }
     }
-    return false;
+    // return false;
   };
 
   const saveCart = async (newCart) => {
@@ -430,18 +436,8 @@ export const CartProvider = ({ children }) => {
   // }, [cartStorage]);
 
   useEffect(() => {
-    const mergeCartItems = async () => {
-      if (cartStorage && isLoggedIn && user) {
-        await mergeGuestToLoggedInUser();
-      }
-
-      await loadCart();
-    };
-
-    if (loading) return;
-
-    mergeCartItems();
-  }, [cartStorage, loading, isLoggedIn, user]);
+    if(cartStorage) loadCart();
+  }, [cartStorage, loading]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];
@@ -472,7 +468,7 @@ export const CartProvider = ({ children }) => {
         decreaseProductQuantity,
         fetchOrderTotal,
         increaseProductQuantity,
-        mergeGuestToLoggedInUser,
+        mergeUserCartItems,
         removeCartItem,
         loadCart,
         addToCartLoading,
