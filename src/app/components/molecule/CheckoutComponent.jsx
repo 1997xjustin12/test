@@ -104,18 +104,25 @@ const ItemsList = ({ items }) => {
 };
 
 const ComputationSection = ({ data, items }) => {
+  // if (items?.length === 0) {
+  //   return (
+  //     <div className="flex flex-col items-center">
+  //       <div className="text-neutral-700 font-bold">No Items Found</div>
+  //       <Link
+  //         href={`${BASE_URL}/cart`}
+  //         className="text-xs text-theme-600 underline"
+  //       >
+  //         Return to Cart
+  //       </Link>
+  //     </div>
+  //   );
+  // }
 
-  if(items?.length === 0){
-    return <div className="flex flex-col items-center">
-      <div className="text-neutral-700 font-bold">No Items Found</div>
-      <Link href={`${BASE_URL}/cart`} className="text-xs text-theme-600 underline">Return to Cart</Link>
-    </div>
-  }
   return (
     <>
       <div className="text-xs flex items-center justify-between">
-        <div>Subtotal · {data?.items_count || 0} items</div>
-        <div>${formatPrice(data?.sub_total || 0)}</div>
+        <div>Subtotal · {items?.length === 0 ? 0: (data?.items_count || 0)} items</div>
+        <div>${formatPrice((items?.length === 0 ? 0: (data?.sub_total || 0)))}</div>
       </div>
       <div className="text-xs flex items-center justify-between mt-3">
         <div
@@ -139,7 +146,9 @@ const ComputationSection = ({ data, items }) => {
             </g>
           </svg>
         </div>
-        {data?.allowPay ? (
+        {items?.length === 0 ? (
+          <div className="text-neutral-500">Enter Shipping Postal Code</div>
+        ): data?.allowPay ? (
           data?.total_shipping === 0 ? (
             <div className="text-green-600 font-bold">FREE</div>
           ) : (
@@ -153,10 +162,10 @@ const ComputationSection = ({ data, items }) => {
       </div>
       <div className="flex items-center justify-between mt-4">
         <div className="flex gap-[5px] items-center font-bold">Total</div>
-        <div className="font-bold">${formatPrice(data?.total_price || 0)}</div>
+        <div className="font-bold">${formatPrice((items?.length ===0 ? 0: (data?.total_price || 0)))}</div>
       </div>
       <p className="text-xs text-neutral-500">
-        Including ${formatPrice(data?.total_tax || 0)} in taxes
+        Including ${formatPrice((items?.length === 0 ? 0: (data?.total_tax || 0)))} in taxes
       </p>
     </>
   );
@@ -164,6 +173,7 @@ const ComputationSection = ({ data, items }) => {
 
 const MobileOrderSummary = ({ data }) => {
   const [expandOrderSummary, setExpandOrderSummary] = useState(false);
+  const { loading } = useAuth();
 
   if (!data) return;
 
@@ -217,16 +227,20 @@ const MobileOrderSummary = ({ data }) => {
           expandOrderSummary ? "h-auto" : "h-[0px]"
         }`}
       >
-        <div className="py-[30px]">
-          <ItemsList items={data?.items} />
-        </div>
-        <ComputationSection data={data} items={data?.items}/>
+        {!loading && (
+          <>
+            <div className="py-[30px]">
+              <ItemsList items={data?.items} />
+            </div>
+            <ComputationSection data={data} items={data?.items} />
+          </>
+        )}
       </div>
     </>
   );
 };
 
-const CompletePaymentButton = ({items}) => {
+const CompletePaymentButton = ({ items }) => {
   return (
     <button
       type="submit"
@@ -433,7 +447,7 @@ function CheckoutComponent() {
   const [openLogin, setOpenLogin] = useState(false);
 
   const [successPayment, setSuccessPayment] = useState(false);
-  
+
   const router = useRouter();
 
   const getOrderTotal = async (newForm) => {
@@ -1293,12 +1307,19 @@ function CheckoutComponent() {
                     <ItemsList items={formattedCart} />
                   </div>
                 </div>
-                <div className="hidden md:block mb-5">
-                  <ItemsList items={formattedCart} />
-                </div>
-                <ComputationSection data={cartTotal} items={formattedCart}/>
+                {!loading && (
+                  <>
+                    <div className="hidden md:block mb-5">
+                      <ItemsList items={formattedCart} />
+                    </div>
+                    <ComputationSection
+                      data={cartTotal}
+                      items={formattedCart}
+                    />
+                  </>
+                )}
                 <div className="md:hidden">
-                  <CompletePaymentButton items={formattedCart}/>
+                  <CompletePaymentButton items={formattedCart} />
                 </div>
               </div>
             </div>
@@ -1313,10 +1334,7 @@ function CheckoutComponent() {
           margin: 0px;
         }
       `}</style>
-      <LoginModal
-        isOpen={openLogin}
-        setOpen={setOpenLogin}
-      />
+      <LoginModal isOpen={openLogin} setOpen={setOpenLogin} />
     </section>
   );
 }
