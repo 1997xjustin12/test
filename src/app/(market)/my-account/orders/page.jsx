@@ -1,7 +1,22 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 export default function OrdersPage() {
-  const { isLoggedIn } = useAuth();
+  const { loading, isLoggedIn, user, getUserOrders } = useAuth();
+  useEffect(() => {
+    const getOrders = async () => {
+      const response = await getUserOrders();
+      if (!response.ok) {
+        console.log("[FAILED FETCH USER ORDERS]");
+      } else {
+        console.log("[SUCCESS FETCH USER ORDERS]", await response.json());
+      }
+    };
+
+    if (!loading && user) {
+      getOrders();
+    }
+  }, [loading, user]);
 
   if (!isLoggedIn) return null;
 
