@@ -9,21 +9,12 @@ import {
   Playfair,
   Playfair_Display_SC,
 } from "next/font/google";
-// import localFont from "next/font/local";
-import FixedHeader from "@/app/components/template/fixed_header";
-// import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
-import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
-import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
 import Footer from "@/app/components/section/Footer";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
-import { QuickViewProvider } from "@/app/context/quickview";
-import { SearchProvider } from "@/app/context/search";
-import { CategoriesProvider } from "@/app/context/category";
-import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
-import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
-import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
+import { CartIcon } from "@/app/components/icons/lib";
+
 import { BASE_URL } from "../lib/helpers";
 const shopify = true; // if shopify product structure
 
@@ -70,23 +61,34 @@ const Header = ({ logo }) => {
   return (
     <section className="border-b border-neutral-300 shadow">
       <div className="container mx-auto px-5">
-        <div className="min-h-[130px] flex items-center justify-between">
-          <div className="w-[180px] aspect-[191/94] relative">
-            <Image
-              src={logo || `/Logo.webp`}
-              alt="Logo"
-              fill
-              objectFit="contain"
-            />
-          </div>
-          <div>
-            <Link
-              prefetch={false}
-              href={`${BASE_URL}/cart`}
-              className="border p-3 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700"
-            >
-              BACK TO CART
-            </Link>
+        <div className="flex items-center justify-center">
+          <div className="w-full max-w-[1000px] flex items-center justify-between py-3">
+            <div className="w-[150px] aspect-[191/94] relative">
+              <Image
+                src={logo || `/Logo.webp`}
+                alt="Logo"
+                fill
+                objectFit="contain"
+              />
+            </div>
+            <div>
+              {/* <Link
+                prefetch={false}
+                href={`${BASE_URL}/cart`}
+                className="border py-2 px-10 shadow rounded-[4px] font-bold text-white bg-theme-600 hover:bg-theme-700 text-sm"
+              >
+                BACK TO CART
+              </Link>
+               */}
+              <Link
+                href={`${BASE_URL}/cart`}
+                title="Back to cart"
+                prefetch={false}
+                className={`relative text-theme-600 hover:text-theme-700`}
+              >
+                <CartIcon width="24" height="24" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
