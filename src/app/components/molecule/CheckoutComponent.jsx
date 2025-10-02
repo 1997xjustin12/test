@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import dropin from "braintree-web-drop-in";
 import Image from "next/image";
 import Link from "next/link";
-import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import LoginForm from "@/app/components/form/Login";
+// import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+// import LoginForm from "@/app/components/form/Login";
+import AuthButtons from "@/app/components/molecule/AuthButtons";
 // context
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
@@ -104,12 +105,15 @@ const ItemsList = ({ items }) => {
 };
 
 const ComputationSection = ({ data, items }) => {
-
   return (
     <>
       <div className="text-xs flex items-center justify-between">
-        <div>Subtotal · {items?.length === 0 ? 0: (data?.items_count || 0)} items</div>
-        <div>${formatPrice((items?.length === 0 ? 0: (data?.sub_total || 0)))}</div>
+        <div>
+          Subtotal · {items?.length === 0 ? 0 : data?.items_count || 0} items
+        </div>
+        <div>
+          ${formatPrice(items?.length === 0 ? 0 : data?.sub_total || 0)}
+        </div>
       </div>
       <div className="text-xs flex items-center justify-between mt-3">
         <div
@@ -135,7 +139,7 @@ const ComputationSection = ({ data, items }) => {
         </div>
         {items?.length === 0 ? (
           <div className="text-neutral-500">Enter Shipping Postal Code</div>
-        ): data?.allowPay ? (
+        ) : data?.allowPay ? (
           data?.total_shipping === 0 ? (
             <div className="text-green-600 font-bold">FREE</div>
           ) : (
@@ -149,10 +153,13 @@ const ComputationSection = ({ data, items }) => {
       </div>
       <div className="flex items-center justify-between mt-4">
         <div className="flex gap-[5px] items-center font-bold">Total</div>
-        <div className="font-bold">${formatPrice((items?.length ===0 ? 0: (data?.total_price || 0)))}</div>
+        <div className="font-bold">
+          ${formatPrice(items?.length === 0 ? 0 : data?.total_price || 0)}
+        </div>
       </div>
       <p className="text-xs text-neutral-500">
-        Including ${formatPrice((items?.length === 0 ? 0: (data?.total_tax || 0)))} in taxes
+        Including ${formatPrice(items?.length === 0 ? 0 : data?.total_tax || 0)}{" "}
+        in taxes
       </p>
     </>
   );
@@ -239,47 +246,47 @@ const CompletePaymentButton = ({ items }) => {
   );
 };
 
-const LoginModal = ({ isOpen, setOpen }) => {
-  const handleSuccessLogin = (data) => {
-    setOpen(false);
-  };
-  return (
-    <Dialog open={isOpen} onClose={setOpen} className="relative z-10">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
-      />
+// const LoginModal = ({ isOpen, setOpen }) => {
+//   const handleSuccessLogin = (data) => {
+//     setOpen(false);
+//   };
+//   return (
+//     <Dialog open={isOpen} onClose={setOpen} className="relative z-10">
+//       <DialogBackdrop
+//         transition
+//         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+//       />
 
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto overflow-x-hidden">
-        <div className="w-screen h-full relative">
-          <div className="absolute top-10 left-0 right-0 flex items-end justify-center md:p-4 text-center sm:items-center sm:p-[10px]">
-            <DialogPanel
-              transition
-              className="w-full relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[500px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto rounded-lg"
-            >
-              <div className=" flex items-center justify-center p-5">
-                <LoginForm successLogin={handleSuccessLogin} />
-              </div>
-            </DialogPanel>
-          </div>
-        </div>
-      </div>
-    </Dialog>
-  );
-};
+//       <div className="fixed inset-0 z-10 w-screen overflow-y-auto overflow-x-hidden">
+//         <div className="w-screen h-full relative">
+//           <div className="absolute top-10 left-0 right-0 flex items-end justify-center md:p-4 text-center sm:items-center sm:p-[10px]">
+//             <DialogPanel
+//               transition
+//               className="w-full relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[500px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto rounded-lg"
+//             >
+//               <div className=" flex items-center justify-center p-5">
+//                 <LoginForm successLogin={handleSuccessLogin} />
+//               </div>
+//             </DialogPanel>
+//           </div>
+//         </div>
+//       </div>
+//     </Dialog>
+//   );
+// };
 
 const LogoutDropDown = () => {
   const [open, setOpen] = useState(false);
   const { logout } = useAuth();
-  const {createAbandonedCart} = useCart();
+  const { createAbandonedCart } = useCart();
   const dropdownRef = useRef(null);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     const isLogout = await logout();
-    if(isLogout){
+    if (isLogout) {
       createAbandonedCart("forced");
     }
-  }
+  };
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -356,6 +363,16 @@ const QuestionIcon = () => {
 const FormLoader = () => {
   return (
     <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+      <div className="w-full flex justify-center border-b border-neutral-300">
+        <div className="w-full mb-5 flex flex-col gap-[20px]">
+          <div className="flex w-full justify-center">
+            <div className="h-[40px] w-full max-w-[300px] bg-neutral-300 rounded"></div>
+          </div>
+          <div  className="flex w-full justify-center">
+            <div className="h-[16px] w-full max-w-[200px] bg-neutral-200"></div>
+          </div>
+        </div>
+      </div>
       <div className="w-full h-[78px]">
         <div className="flex justify-between">
           <div className="h-[24px]"></div>
@@ -367,7 +384,7 @@ const FormLoader = () => {
         <div className="h-[37.8px] w-full bg-neutral-200 rounded mt-2"></div>
       </div>
       <div className="pb-2 mt-[49px]">
-        <label className="font-semibold">Delivery</label>
+        <label className="font-semibold">Shipping</label>
         <div className="flex flex-col gap-[10px] mt-2">
           <div className="flex gap-[10px]">
             <div className="w-full h-[37.8px] bg-neutral-200 rounded"></div>
@@ -890,14 +907,21 @@ function CheckoutComponent() {
       <MobileOrderSummary data={{ ...cartTotal, items: formattedCart }} />
       {/* desktop */}
       <div className="container mx-auto">
-        <form onSubmit={handleSubmit}>
-          <div className="flex gap-0 md:gap-[20px] flex-col md:flex-row py-5 md:py-0">
-            {/* form section */}
-            <div className="w-full flex md:justify-end">
-              {loading ? (
-                <FormLoader />
-              ) : (
-                <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+        <div className="flex gap-0 md:gap-[20px] flex-col md:flex-row py-5 md:py-0">
+          {/* form section */}
+          <div className="w-full flex md:justify-end">
+            {loading ? (
+              <FormLoader />
+            ) : (
+              <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+                {!isLoggedIn && (
+                  <div className="w-full flex justify-center border-b border-neutral-300">
+                    <div className="max-w-[300px] w-full mb-5">
+                      <AuthButtons />
+                    </div>
+                  </div>
+                )}
+                <form onSubmit={handleSubmit}>
                   {isLoggedIn ? (
                     <div className="border-b border-neutral-300 pb-2 flex items-center justify-between">
                       {user && (
@@ -922,7 +946,7 @@ function CheckoutComponent() {
                           className="font-semibold flex items-center justify-between"
                         >
                           <span>Contact</span>
-                          <div className="flex gap-[5px]">
+                          {/* <div className="flex gap-[5px]">
                             <button
                               type="button"
                               className="underline font-light text-xs"
@@ -938,7 +962,7 @@ function CheckoutComponent() {
                             >
                               Register
                             </Link>
-                          </div>
+                          </div> */}
                         </label>
                         <input
                           type="email"
@@ -967,7 +991,7 @@ function CheckoutComponent() {
                     </>
                   )}
                   <div className="pb-2 mt-3">
-                    <label className="font-semibold">Delivery</label>
+                    <label className="font-semibold">Shipping</label>
                     <div className="flex flex-col gap-[10px] mt-2">
                       <div className="flex gap-[10px]">
                         <input
@@ -1240,85 +1264,80 @@ function CheckoutComponent() {
                   <div className="hidden md:flex">
                     <CompletePaymentButton items={formattedCart} />
                   </div>
+                </form>
+              </div>
+            )}
+          </div>
+          {/* divider */}
+          <div className="border-l border-neutral-300 hidden md:block"></div>
+          {/* items section */}
+          <div className="w-full flex md:justify-start">
+            <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
+              <div className="md:hidden">
+                <button
+                  type="button"
+                  onClick={() => setExpandOrderSummary((prev) => !prev)}
+                  className="w-full flex items-center justify-between py-[10px]"
+                >
+                  <span className="font-semibold">Order Summary</span>
+                  <span className="font-light text-xs flex items-center gap-[4px]">
+                    {expandOrderSummary ? (
+                      <>
+                        <span>Hide</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            d="M16.53 14.03a.75.75 0 0 1-1.06 0L12 10.56l-3.47 3.47a.75.75 0 0 1-1.06-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </>
+                    ) : (
+                      <>
+                        <span>Show</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            fillRule="evenodd"
+                            d="M16.53 8.97a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 0 1-1.06 0l-4-4a.75.75 0 1 1 1.06-1.06L12 12.44l3.47-3.47a.75.75 0 0 1 1.06 0"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </>
+                    )}
+                  </span>
+                </button>
+                <div
+                  className={`${expandOrderSummary ? "" : "hidden"} py-[20px]`}
+                >
+                  <ItemsList items={formattedCart} />
                 </div>
-              )}
-            </div>
-            {/* divider */}
-            <div className="border-l border-neutral-300 hidden md:block"></div>
-            {/* items section */}
-            <div className="w-full flex md:justify-start">
-              <div className="w-full md:max-w-[500px] flex flex-col gap-2 md:py-5 px-5">
-                <div className="md:hidden">
-                  <button
-                    type="button"
-                    onClick={() => setExpandOrderSummary((prev) => !prev)}
-                    className="w-full flex items-center justify-between py-[10px]"
-                  >
-                    <span className="font-semibold">Order Summary</span>
-                    <span className="font-light text-xs flex items-center gap-[4px]">
-                      {expandOrderSummary ? (
-                        <>
-                          <span>Hide</span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="currentColor"
-                              fillRule="evenodd"
-                              d="M16.53 14.03a.75.75 0 0 1-1.06 0L12 10.56l-3.47 3.47a.75.75 0 0 1-1.06-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </>
-                      ) : (
-                        <>
-                          <span>Show</span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="currentColor"
-                              fillRule="evenodd"
-                              d="M16.53 8.97a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 0 1-1.06 0l-4-4a.75.75 0 1 1 1.06-1.06L12 12.44l3.47-3.47a.75.75 0 0 1 1.06 0"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </>
-                      )}
-                    </span>
-                  </button>
-                  <div
-                    className={`${
-                      expandOrderSummary ? "" : "hidden"
-                    } py-[20px]`}
-                  >
+              </div>
+              {!loading && (
+                <>
+                  <div className="hidden md:block mb-5">
                     <ItemsList items={formattedCart} />
                   </div>
-                </div>
-                {!loading && (
-                  <>
-                    <div className="hidden md:block mb-5">
-                      <ItemsList items={formattedCart} />
-                    </div>
-                    <ComputationSection
-                      data={cartTotal}
-                      items={formattedCart}
-                    />
-                  </>
-                )}
-                <div className="md:hidden">
-                  <CompletePaymentButton items={formattedCart} />
-                </div>
+                  <ComputationSection data={cartTotal} items={formattedCart} />
+                </>
+              )}
+              <div className="md:hidden">
+                <CompletePaymentButton items={formattedCart} />
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
       <style jsx>{`
         :global(.braintree-placeholder) {
@@ -1328,7 +1347,7 @@ function CheckoutComponent() {
           margin: 0px;
         }
       `}</style>
-      <LoginModal isOpen={openLogin} setOpen={setOpenLogin} />
+      {/* <LoginModal isOpen={openLogin} setOpen={setOpenLogin} /> */}
     </section>
   );
 }
