@@ -184,7 +184,11 @@ function CartOrderSummary({ checkoutButton = true }) {
       </div>
       {
       loading
-        ? "Loader..."
+        ? (
+            <div className="w-full flex items-center justify-center px-1">
+              <div className="w-full bg-neutral-300 rounded-[4px] h-[16px]"></div>
+            </div>
+          )
         : !user && (
             <div className="w-full flex items-center justify-center">
               <AuthButtons uiVersion={2} />
