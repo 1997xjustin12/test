@@ -6,14 +6,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
-import {useAuth} from "@/app/context/auth"
+import { useAuth } from "@/app/context/auth";
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 function CartOrderSummary({ checkoutButton = true }) {
-  const {loading, user } = useAuth();
+  const { loading, user } = useAuth();
   const router = useRouter();
   const { cartObject, cartItems, formattedCart } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
@@ -58,15 +58,22 @@ function CartOrderSummary({ checkoutButton = true }) {
       setSavings(_savings);
       setDeliveryOption(_deliveryOption);
       setTax(_tax);
+    } else {
+      setOriginalPrice(0);
+      setSalePrice(0);
+      setSavings(0);
+      setDeliveryOption(0);
+      setTax(0);
     }
   }, [cartItems]);
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-      {cartObject && (
-        <div className=" border-green-700 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 rounded-lg bg-green-300 border font-extrabold sm:p-6 italic text-center">
-          You are saving ${formatPrice(savings) + " "}{" "}
-          {cartObject?.total_shipping === 0 ? "plus Free Shipping" : ""}
+
+      {cartObject && savings > 0 && (
+        <div className=" bg-green-700 border font-light text-center text-white border-x-8 border-green-900 text-sm py-1">
+          You are saving<span className="font-bold text-normal not-italic">{" $"+formatPrice(savings) + " "}</span>{" "}
+          {cartObject?.total_shipping === 0 ? (<span>plus <span className="font-bold text-normal not-italic">FREE</span> Shipping</span>) : ""}
         </div>
       )}
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -88,8 +95,12 @@ function CartOrderSummary({ checkoutButton = true }) {
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Savings
               </dt>
-              <dd className="text-base font-semibold text-green-600">
-                ${cartObject ? formatPrice(savings) : formatPrice(0)}
+              <dd
+                className={`text-base font-semibold ${
+                  savings > 0 ? "text-green-700" : ""
+                }`}
+              >
+                ${cartObject && savings ? formatPrice(savings) : formatPrice(0)}
               </dd>
             </dl>
 
@@ -102,7 +113,7 @@ function CartOrderSummary({ checkoutButton = true }) {
                   cartObject
                     ? cartObject?.total_shipping &&
                       cartObject?.total_shipping > 0
-                      ? "text-green-600"
+                      ? "text-green-700"
                       : ""
                     : ""
                 }`}
@@ -110,7 +121,9 @@ function CartOrderSummary({ checkoutButton = true }) {
                 {cartObject
                   ? cartObject?.total_shipping
                     ? `${"$" + formatPrice(cartObject?.total_shipping)}`
-                    : "FREE"
+                    : cartItems.length > 0
+                    ? "FREE"
+                    : `${"$" + formatPrice(0)}`
                   : `${"$" + formatPrice(0)}`}
               </dd>
             </dl>
@@ -182,18 +195,17 @@ function CartOrderSummary({ checkoutButton = true }) {
           </Link>
         </div>
       </div>
-      {
-      loading
-        ? (
-            <div className="w-full flex items-center justify-center px-1">
-              <div className="w-full bg-neutral-300 rounded-[4px] h-[16px]"></div>
-            </div>
-          )
-        : !user && (
-            <div className="w-full flex items-center justify-center">
-              <AuthButtons uiVersion={2} />
-            </div>
-          )}
+      {loading ? (
+        <div className="w-full flex items-center justify-center px-1">
+          <div className="w-full bg-neutral-300 rounded-[4px] h-[16px]"></div>
+        </div>
+      ) : (
+        !user && (
+          <div className="w-full flex items-center justify-center">
+            <AuthButtons uiVersion={2} />
+          </div>
+        )
+      )}
       {/* Voucher or giftcard seciton */}
       {/* <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <form className="space-y-4">
