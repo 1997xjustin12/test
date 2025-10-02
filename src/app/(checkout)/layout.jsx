@@ -86,7 +86,7 @@ const Header = ({ logo }) => {
                 prefetch={false}
                 className={`relative text-theme-600 hover:text-theme-700`}
               >
-                <CartIcon width="100" height="100" />
+                <CartIcon width="30" height="30" />
               </Link>
             </div>
           </div>
