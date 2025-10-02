@@ -86,7 +86,6 @@ export const CartProvider = ({ children }) => {
 
     // console.log("[createAbandonedCart]", sendCart);
 
-
     if (trigger === "beacon") {
       // console.log("TRIGGERED ABANDONED CART BEACON", cartObj);
       cartObj.cart_status = "abandoned";
@@ -163,10 +162,23 @@ export const CartProvider = ({ children }) => {
     return crypto.randomUUID();
   }
 
+  function createOrderNumber() {
+    const date = new Date();
+    const y = date.getFullYear().toString().slice(-2);
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    const h = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+    const s = String(date.getSeconds()).padStart(2, "0");
+    const rand = Math.floor(Math.random() * 9000) + 1000; // 4-digit random
+    return `SF-${y}${m}${d}${h}${min}${s}-${rand}`;
+  }
+
   const createCartObj = async () => {
     const now = new Date().toISOString();
     return {
       id: createCartId(),
+      order_number: createOrderNumber(),
       session_id: await getOrCreateSessionId(),
       user_agent: getUserAgent(),
       store_domain: store_domain,
@@ -300,6 +312,7 @@ export const CartProvider = ({ children }) => {
       if (newCart?.cart_status === "abandoned") {
         newCart.cart_status = "active";
         newCart.id = createCartId();
+        newCart.order_number = createOrderNumber();
       }
 
       setCart(newCart);
@@ -339,6 +352,7 @@ export const CartProvider = ({ children }) => {
     if (newCart?.cart_status === "abandoned") {
       newCart.cart_status = "active";
       newCart.id = createCartId();
+      newCart.order_number = createOrderNumber();
     }
 
     setCart(newCart);
@@ -360,6 +374,7 @@ export const CartProvider = ({ children }) => {
     if (newCart?.cart_status === "abandoned") {
       newCart.cart_status = "active";
       newCart.id = createCartId();
+      newCart.order_number = createOrderNumber();
     }
 
     setCart(newCart);
@@ -392,6 +407,7 @@ export const CartProvider = ({ children }) => {
       if (newCart?.cart_status === "abandoned") {
         newCart.cart_status = "active";
         newCart.id = createCartId();
+        newCart.order_number = createOrderNumber();
       }
 
       setCart(newCart);
@@ -490,12 +506,12 @@ export const CartProvider = ({ children }) => {
   // }, [cartStorage]);
 
   useEffect(() => {
-    const handleUnload = async() => {
+    const handleUnload = async () => {
       console.log("UNLOAD");
       await createAbandonedCart("beacon");
     };
 
-    const handleVisibilityChange = async() => {
+    const handleVisibilityChange = async () => {
       console.log("VISIBILITY", document.visibilityState);
       if (document.visibilityState === "hidden") {
         await createAbandonedCart("beacon");

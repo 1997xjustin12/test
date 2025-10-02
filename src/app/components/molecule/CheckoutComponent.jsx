@@ -275,6 +275,19 @@ const CompletePaymentButton = ({ items }) => {
 //   );
 // };
 
+const OrderQuerySection = ({order_number}) => {
+  return (<div className="my-10 border border-neutral-300 shadow p-5 rounded">
+    <h2 className="text-center">Need help with your order?</h2>
+    <div className="flex flex-col gap-[8px] text-sm font-medium text-neutral-600 items-center justify-center my-5">
+      <div className="text-center"><span className="font-bold">Call </span>{" "}<span className="text-theme-600 font-bold"><Link prefetch={false} href={`tel:(888) 575-9720`}>(888) 575-9720</Link></span></div>
+      <div className="text-center"><span className="font-bold">Email </span>{" "}<span className="text-theme-600 font-bold"><a href={`mailto:info@solanafireplaces.com`}>info@solanafireplaces.com</a></span></div>
+      <div className="text-center"><span className="font-bold">SALES</span> &#9679; Mon-Fri: 5:00am - 5:00pm PST &#9679; Sat and Sun: Closed</div>
+      <div className="text-center"><span className="font-bold">SUPPORT</span> &#9679; Mon-Fri: 5:00am - 5:00pm PST &#9679; Sat and Sun: Closed</div>
+    </div>
+    <h2  className="text-center">Order #: <span className="text-theme-600">{order_number}</span></h2>
+  </div>)
+}
+
 const LogoutDropDown = () => {
   const [open, setOpen] = useState(false);
   const { logout } = useAuth();
@@ -442,6 +455,7 @@ function CheckoutComponent() {
     formattedCart,
     fetchOrderTotal,
     loadCart,
+    cartObject,
     cartItems,
     loadingCartItems,
   } = useCart();
@@ -1340,6 +1354,7 @@ function CheckoutComponent() {
               <div className="md:hidden">
                 <CompletePaymentButton items={formattedCart} />
               </div>
+              <OrderQuerySection order_number={cartObject?.order_number}/>
             </div>
           </div>
         </div>
