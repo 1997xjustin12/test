@@ -51,7 +51,7 @@ const initialForm = {
   // font end form fields
   newsletter: false,
   save_information: false,
-  shipping_to_billing: false,
+  shipping_to_billing: true,
 };
 
 // components
@@ -384,7 +384,7 @@ const FormLoader = () => {
         <div className="h-[37.8px] w-full bg-neutral-200 rounded mt-2"></div>
       </div>
       <div className="pb-2 mt-[49px]">
-        <label className="font-semibold">Shipping</label>
+        <label className="font-semibold">Shipping Address</label>
         <div className="flex flex-col gap-[10px] mt-2">
           <div className="flex gap-[10px]">
             <div className="w-full h-[37.8px] bg-neutral-200 rounded"></div>
@@ -407,7 +407,7 @@ const FormLoader = () => {
       <div className="border rounded bg-neutral-200 w-full min-h-[330px] mt-[35px]"></div>
 
       <div className="pb-2 mt-[55px] ">
-        <label className="font-semibold">Billing</label>
+        <label className="font-semibold">Billing Address</label>
         <div className="flex flex-col gap-[10px] mt-2">
           <div className="flex gap-[10px]">
             <div className="w-full h-[37.8px] bg-neutral-200 rounded"></div>
@@ -718,7 +718,7 @@ function CheckoutComponent() {
         is_valid_billing_zip: false,
         newsletter: false,
         save_information: false,
-        shipping_to_billing: false,
+        shipping_to_billing: true,
       };
       debouncedZipQuery(updated.shipping_zip_code, (result) => {
         updateOnZipChange("shipping_zip_code", result);
@@ -833,7 +833,7 @@ function CheckoutComponent() {
           is_valid_billing_zip: false,
           newsletter: false,
           save_information: false,
-          shipping_to_billing: false,
+          shipping_to_billing: true,
         };
         debouncedZipQuery(updated.shipping_zip_code, (result) => {
           updateOnZipChange("shipping_zip_code", result);
@@ -855,6 +855,7 @@ function CheckoutComponent() {
 
     loadCart();
   }, [loading, forage, isLoggedIn, user]);
+
 
   useEffect(() => {
     async function initializeDropIn() {
@@ -901,6 +902,10 @@ function CheckoutComponent() {
 
     initializeDropIn();
   }, [loading]);
+
+  // useEffect(()=>{
+  //   console.log("FORM", form);
+  // },[form])
 
   return (
     <section className="bg-white">
@@ -991,7 +996,7 @@ function CheckoutComponent() {
                     </>
                   )}
                   <div className="pb-2 mt-3">
-                    <label className="font-semibold">Shipping</label>
+                    <label className="font-semibold">Shipping Address</label>
                     <div className="flex flex-col gap-[10px] mt-2">
                       <div className="flex gap-[10px]">
                         <input
@@ -1146,7 +1151,7 @@ function CheckoutComponent() {
                   </div>
                   {!form?.shipping_to_billing ? (
                     <div className="pb-2 mt-3 ">
-                      <label className="font-semibold">Billing</label>
+                      <label className="font-semibold">Billing Address</label>
 
                       <div className="flex flex-col gap-[10px] mt-2">
                         <div className="flex gap-[10px]">
