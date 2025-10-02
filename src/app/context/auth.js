@@ -172,6 +172,25 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const getUserOrders = async () => {
+    try {
+      const bearer = `Bearer ${accessToken}`;
+      console.log("[BEARER]", bearer)
+      console.log("[USER]", user)
+      return await fetch("/api/auth/orders", {
+        headers: {
+          Authorization: bearer,
+        },
+      });
+      // const data = await response.json();
+      // console.log("[ORDERS]", data);
+      // const user_obj = injectUserFields(data);
+      // setOrders(user_obj);
+    } catch (err) {
+      return err;
+    }
+  };
+
   const login = async (data) => {
     if (!data || !data.access || !data.refresh) return false; // fail early if missing
     setIsLoggedIn(true);
@@ -415,6 +434,7 @@ export function AuthProvider({ children }) {
         accountBenefits,
         forage,
         fullName,
+        getUserOrders,
         isLoggedIn,
         user,
         myAccountLinks,
