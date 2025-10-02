@@ -220,6 +220,7 @@ export function AuthProvider({ children }) {
 
       // Clear frontend tokens/state
       setAccessToken(null);
+      setUser(null);
 
       if (forage) {
         console.log("[CONTEXT][logout][forageRemoveItem]");

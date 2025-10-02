@@ -6,12 +6,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
+import {useAuth} from "@/app/context/auth"
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 function CartOrderSummary({ checkoutButton = true }) {
+  const {loading, user } = useAuth();
   const router = useRouter();
   const { cartObject, cartItems, formattedCart } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
@@ -180,9 +182,14 @@ function CartOrderSummary({ checkoutButton = true }) {
           </Link>
         </div>
       </div>
-      <div className="w-full flex items-center justify-center">
-        <AuthButtons uiVersion={2} />
-      </div>
+      {
+      loading
+        ? "Loader..."
+        : !user && (
+            <div className="w-full flex items-center justify-center">
+              <AuthButtons uiVersion={2} />
+            </div>
+          )}
       {/* Voucher or giftcard seciton */}
       {/* <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <form className="space-y-4">
