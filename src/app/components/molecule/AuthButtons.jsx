@@ -37,7 +37,29 @@ function AuthButtons({ uiVersion = 1 }) {
   const [openLogin, setOpenLogin] = useState(false);
 
   if (uiVersion === 2) {
-    return <div>AuthButtonWidget uiVersion2</div>;
+    return (
+      <>
+        <div>
+          <button
+            type="button"
+            onClick={() => setOpenLogin(true)}
+            className=" text-xs font-semibold underline"
+          >
+            Sign In
+          </button>
+          <span className="text-xs font-light">{" "}OR{" "}</span>
+          <Link
+            href={`${BASE_URL}/login`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-theme-600 hover:text-theme-700 text-xs font-semibold underline"
+          >
+            No account yet? Register here!
+          </Link>
+        </div>
+        <LoginModal isOpen={openLogin} setOpen={setOpenLogin} />
+      </>
+    );
   }
 
   // uiVersion 1 is used in checkout page

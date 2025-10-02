@@ -5,6 +5,7 @@ import { formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
+import AuthButtons from "@/app/components/molecule/AuthButtons";
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
 
@@ -77,9 +78,7 @@ function CartOrderSummary({ checkoutButton = true }) {
                 Original price
               </dt>
               <dd className="text-base font-semibold text-gray-900 dark:text-white">
-                ${
-                  cartObject ? formatPrice(originalPrice): formatPrice(0)
-                }
+                ${cartObject ? formatPrice(originalPrice) : formatPrice(0)}
               </dd>
             </dl>
 
@@ -88,9 +87,7 @@ function CartOrderSummary({ checkoutButton = true }) {
                 Savings
               </dt>
               <dd className="text-base font-semibold text-green-600">
-                ${
-                  cartObject ? formatPrice(savings): formatPrice(0)
-                }
+                ${cartObject ? formatPrice(savings) : formatPrice(0)}
               </dd>
             </dl>
 
@@ -100,12 +97,19 @@ function CartOrderSummary({ checkoutButton = true }) {
               </dt>
               <dd
                 className={`text-base font-medium dark:text-white  ${
-                  cartObject ? (cartObject?.total_shipping && cartObject?.total_shipping >  0) ? "text-green-600":"" : ""
+                  cartObject
+                    ? cartObject?.total_shipping &&
+                      cartObject?.total_shipping > 0
+                      ? "text-green-600"
+                      : ""
+                    : ""
                 }`}
               >
-                {cartObject ? cartObject?.total_shipping
-                  ? `${"$" + formatPrice(cartObject?.total_shipping)}`
-                  : "FREE": `${"$" + formatPrice(0)}`}
+                {cartObject
+                  ? cartObject?.total_shipping
+                    ? `${"$" + formatPrice(cartObject?.total_shipping)}`
+                    : "FREE"
+                  : `${"$" + formatPrice(0)}`}
               </dd>
             </dl>
 
@@ -124,20 +128,29 @@ function CartOrderSummary({ checkoutButton = true }) {
               Total
             </dt>
             <dd className="text-base font-bold text-gray-900 dark:text-white">
-              ${cartObject?.total_price ? formatPrice(cartObject?.total_price): formatPrice(0)}
+              $
+              {cartObject?.total_price
+                ? formatPrice(cartObject?.total_price)
+                : formatPrice(0)}
             </dd>
           </dl>
         </div>
         <button
           onClick={handleCheckout}
           // disabled={true}
-          className={`flex bg-theme-600 hover:bg-theme-500 focus:outline-neutral-400 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ${checkoutButton ? "":"hidden"}`}
+          className={`flex bg-theme-600 hover:bg-theme-500 focus:outline-neutral-400 focus:outline-[3px] w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ${
+            checkoutButton ? "" : "hidden"
+          }`}
         >
           Proceed to Checkout
         </button>
         {/* <CheckoutButtons /> */}
         <div className="flex items-center justify-center gap-2">
-          <span className={`text-sm font-normal text-gray-500 dark:text-gray-400 ${checkoutButton ? "":"hidden"}`}>
+          <span
+            className={`text-sm font-normal text-gray-500 dark:text-gray-400 ${
+              checkoutButton ? "" : "hidden"
+            }`}
+          >
             {" "}
             or{" "}
           </span>
@@ -148,6 +161,7 @@ function CartOrderSummary({ checkoutButton = true }) {
             className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
           >
             Continue Shopping
+            {/* flowbite:arrow-right-outline */}
             <svg
               className="h-5 w-5"
               aria-hidden="true"
@@ -165,6 +179,9 @@ function CartOrderSummary({ checkoutButton = true }) {
             </svg>
           </Link>
         </div>
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <AuthButtons uiVersion={2} />
       </div>
       {/* Voucher or giftcard seciton */}
       {/* <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
