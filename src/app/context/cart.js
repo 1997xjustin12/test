@@ -556,6 +556,9 @@ export const CartProvider = ({ children }) => {
     return formatItems(cartItems);
   }, [cartItems]);
 
+  useEffect(()=>{
+    console.log("[CART]",cart)
+  },[cart])
   return (
     <CartContext.Provider
       value={{

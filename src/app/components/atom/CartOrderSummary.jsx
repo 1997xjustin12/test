@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CheckoutButtons from "@/app/components/atom/CheckoutButtons";
@@ -9,8 +9,48 @@ import AuthButtons from "@/app/components/molecule/AuthButtons";
 import { useAuth } from "@/app/context/auth";
 
 // import CallWrapper from "@/app/components/atom/CallWrapper";
+const YourSavingsSection = ({ savings, shipping_cost }) => {
+  return (
+    <div className=" bg-green-700 border font-light text-center text-white border-x-8 border-green-900 text-sm py-1">
+      You are saving
+      <span className="font-bold text-normal not-italic">
+        {" $" + formatPrice(savings) + " "}
+      </span>{" "}
+      {shipping_cost === 0 ? (
+        <span>
+          plus <span className="font-bold text-normal not-italic">FREE</span>{" "}
+          Shipping
+        </span>
+      ) : (
+        ""
+      )}
+    </div>
+  );
+};
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+const YourSavingsSection2 = ({ savings, shipping_cost }) => {
+  return (
+    <div className="space-y-1 rounded-lg border border-neutral-300 bg-blue-50 p-2 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-3">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        Your Savings!
+      </h2>
+      <p className="text-sm text-neutral-700">
+        You are saving
+        <span className="font-bold text-normal not-italic text-green-700">
+          {" $" + formatPrice(savings) + " "}
+        </span>{" "}
+        {shipping_cost === 0 ? (
+          <span>
+            plus <span className="font-bold text-normal not-italic text-green-700">FREE</span>{" "}
+            Shipping
+          </span>
+        ) : (
+          ""
+        )}
+      </p>
+    </div>
+  );
+};
 
 function CartOrderSummary({ checkoutButton = true }) {
   const { loading, user } = useAuth();
@@ -68,35 +108,41 @@ function CartOrderSummary({ checkoutButton = true }) {
   }, [cartItems]);
 
   return (
-    <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-
+    <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-2 lg:mt-0 lg:w-full ">
       {cartObject && savings > 0 && (
-        <div className=" bg-green-700 border font-light text-center text-white border-x-8 border-green-900 text-sm py-1">
-          You are saving<span className="font-bold text-normal not-italic">{" $"+formatPrice(savings) + " "}</span>{" "}
-          {cartObject?.total_shipping === 0 ? (<span>plus <span className="font-bold text-normal not-italic">FREE</span> Shipping</span>) : ""}
-        </div>
+        <>
+          {/* <YourSavingsSection
+            savings={savings}
+            shipping_cost={cartObject?.total_shipping}
+          /> */}
+
+          <YourSavingsSection2
+            savings={savings}
+            shipping_cost={cartObject?.total_shipping}
+          />
+        </>
       )}
-      <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-        <p className="text-xl font-semibold text-gray-900 dark:text-white">
+      <div className="space-y-4 rounded-lg border border-neutral-300 bg-blue-50 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-3">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           Order summary
-        </p>
+        </h2>
         <div className="space-y-4">
           <div className="space-y-2">
             <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
+              <dt className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 Original price
               </dt>
-              <dd className="text-base font-semibold text-gray-900 dark:text-white">
+              <dd className="text-sm font-semibold text-gray-900 dark:text-white">
                 ${cartObject ? formatPrice(originalPrice) : formatPrice(0)}
               </dd>
             </dl>
 
             <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
+              <dt className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 Savings
               </dt>
               <dd
-                className={`text-base font-semibold ${
+                className={`text-sm font-semibold ${
                   savings > 0 ? "text-green-700" : ""
                 }`}
               >
@@ -105,11 +151,11 @@ function CartOrderSummary({ checkoutButton = true }) {
             </dl>
 
             <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
+              <dt className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 Shipping
               </dt>
               <dd
-                className={`text-base font-medium dark:text-white  ${
+                className={`text-sm font-medium dark:text-white  ${
                   cartObject
                     ? cartObject?.total_shipping &&
                       cartObject?.total_shipping > 0
@@ -129,7 +175,7 @@ function CartOrderSummary({ checkoutButton = true }) {
             </dl>
 
             <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
+              <dt className="text-sm font-normal text-gray-500 dark:text-gray-400">
                 Tax
               </dt>
               <dd className="text-xs italic text-gray-400 dark:text-white">
@@ -139,10 +185,10 @@ function CartOrderSummary({ checkoutButton = true }) {
           </div>
 
           <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <dt className="text-base font-bold text-gray-900 dark:text-white">
+            <dt className="text-sm font-bold text-gray-900 dark:text-white">
               Total
             </dt>
-            <dd className="text-base font-bold text-gray-900 dark:text-white">
+            <dd className="text-sm font-bold text-gray-900 dark:text-white">
               $
               {cartObject?.total_price
                 ? formatPrice(cartObject?.total_price)
@@ -207,7 +253,7 @@ function CartOrderSummary({ checkoutButton = true }) {
         )
       )}
       {/* Voucher or giftcard seciton */}
-      {/* <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+      {/* <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-3">
         <form className="space-y-4">
           <div>
             <label
