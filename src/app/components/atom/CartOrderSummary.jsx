@@ -108,7 +108,7 @@ function CartOrderSummary({ checkoutButton = true }) {
   }, [cartItems]);
 
   return (
-    <div className="mx-auto mt-6 flex-1 space-y-2 md:mt-0 lg:w-full ">
+    <div className="mx-auto mt-2 flex-1 space-y-2 lg:mt-0 lg:w-full ">
       {cartObject && savings > 0 && (
         <>
           {/* <YourSavingsSection
