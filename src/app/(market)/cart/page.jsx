@@ -57,32 +57,55 @@ const NoCartItems = () => {
       <div className="flex flex-col gap-5">
         <div className="text-theme-600 text-center flex justify-center">
           <div className="w-[80px] h-[80px] bg-white border border-neutral-300 shadow flex items-center justify-center rounded-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="42"
-            height="42"
-            viewBox="0 0 32 32"
-          >
-            <circle cx="10" cy="28" r="2" fill="currentColor" />
-            <circle cx="24" cy="28" r="2" fill="currentColor" />
-            <path
-              fill="currentColor"
-              d="M4.98 2.804A1 1 0 0 0 4 2H0v2h3.18l3.84 19.196A1 1 0 0 0 8 24h18v-2H8.82l-.8-4H26a1 1 0 0 0 .976-.783L29.244 7h-2.047l-1.999 9H7.62Z"
-            />
-            <path fill="currentColor" d="M18 6V2h-2v4h-4v2h4v4h2V8h4V6z" />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="42"
+              height="42"
+              viewBox="0 0 32 32"
+            >
+              <circle cx="10" cy="28" r="2" fill="currentColor" />
+              <circle cx="24" cy="28" r="2" fill="currentColor" />
+              <path
+                fill="currentColor"
+                d="M4.98 2.804A1 1 0 0 0 4 2H0v2h3.18l3.84 19.196A1 1 0 0 0 8 24h18v-2H8.82l-.8-4H26a1 1 0 0 0 .976-.783L29.244 7h-2.047l-1.999 9H7.62Z"
+              />
+              <path fill="currentColor" d="M18 6V2h-2v4h-4v2h4v4h2V8h4V6z" />
+            </svg>
           </div>
         </div>
         <div className="space-y-5">
-          <h2 className="text-stone-800 text-center">Your shopping cart is empty!</h2>
+          <h2 className="text-stone-800 text-center">
+            Your shopping cart is empty!
+          </h2>
           <p className="text-xs text-neutral-800 text-center">
             You currently do not have any items in your shopping cart.
           </p>
         </div>
         <div className="text-center">
-          <Link prefetch={false} href={`${BASE_URL}/fireplaces`}className="border border-neutral-400 font-semibold text-theme-600 py-2 px-4 text-sm">
+          <Link
+            prefetch={false}
+            href={`${BASE_URL}/fireplaces`}
+            className="border border-neutral-400 font-semibold text-theme-600 py-2 px-4 text-sm"
+          >
             Continue Shopping
           </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CartOnloadLoader = () => {
+  return (
+    <div className="h-[300px] border border-neutral-300 bg-stone-100 w-full flex items-center justify-center p-3">
+      <div className="flex flex-col gap-5">
+        <div className="space-y-5">
+          <h2 className="text-stone-800 text-center">
+            Loading Cart...
+          </h2>
+          <p className="text-xs text-neutral-800 text-center">
+            Please wait a bit, We are loading your cart.
+          </p>
         </div>
       </div>
     </div>
@@ -150,76 +173,84 @@ export default function CartPage() {
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        {!loading && formattedCart.length === 0 ? (
-          <NoCartItems />
+        {loadingCartItems ? (
+          <CartOnloadLoader />
         ) : (
           <>
-            <div className="mt-4 sm:mt-8 md:gap-4 md:flex lg:items-start xl:gap-6">
-              <div className="mx-auto w-full flex-none md:max-w-lg lg:max-w-2xl xl:max-w-4xl">
-                <div>
-                  <Link
-                    href={`${BASE_URL}/fireplaces`}
-                    prefetch={false}
-                    title=""
-                    className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
-                  >
-                    {/* flowbite:arrow-left-outline */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 12h14M5 12l4-4m-4 4l4 4"
-                      />
-                    </svg>
-                    Back To Shopping
-                  </Link>
+            {formattedCart.length === 0 ? (
+              <NoCartItems />
+            ) : (
+              <>
+                <div className="mt-4 sm:mt-8 md:gap-4 md:flex lg:items-start xl:gap-6">
+                  <div className="mx-auto w-full flex-none md:max-w-lg lg:max-w-2xl xl:max-w-4xl">
+                    <div>
+                      <Link
+                        href={`${BASE_URL}/fireplaces`}
+                        prefetch={false}
+                        title=""
+                        className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
+                      >
+                        {/* flowbite:arrow-left-outline */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 12h14M5 12l4-4m-4 4l4 4"
+                          />
+                        </svg>
+                        Back To Shopping
+                      </Link>
 
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-8">
-                    Shopping Cart
-                  </h2>
-                  {cartObject?.order_number && (
-                    <h5 className="font-bold text-neutral-600 text-sm">
-                      ORDER #:{" "}
-                      <span className="text-theme-600">
-                        {cartObject?.order_number}
-                      </span>
-                    </h5>
-                  )}
-                </div>
-              </div>
-
-              <ShoppingAssistanceSection />
-            </div>
-            <div className="mt-4 sm:mt-8 gap-2 lg:flex lg:items-start xl:gap-4">
-              <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-                <div className="space-y-2">
-                  {formattedCart && formattedCart.length > 0 ? (
-                    formattedCart.map((item, idx) => (
-                      <CartListItem
-                        key={`cart-list-item-${idx}`}
-                        item={item}
-                        onItemCountUpdate={handleItemCountUpdate}
-                      />
-                    ))
-                  ) : (
-                    <div className="min-h-[190px] font-bold text-stone-500 text-lg flex items-center justify-center">
-                      <div>
-                        {loadingCartItems ? "Loading..." : "Nothing to display"}
-                      </div>
+                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-8">
+                        Shopping Cart
+                      </h2>
+                      {cartObject?.order_number && (
+                        <h5 className="font-bold text-neutral-600 text-sm">
+                          ORDER #:{" "}
+                          <span className="text-theme-600">
+                            {cartObject?.order_number}
+                          </span>
+                        </h5>
+                      )}
                     </div>
-                  )}
+                  </div>
+
+                  <ShoppingAssistanceSection />
                 </div>
-              </div>
-              <CartOrderSummary />
-            </div>
+                <div className="mt-4 sm:mt-8 gap-2 lg:flex lg:items-start xl:gap-4">
+                  <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+                    <div className="space-y-2">
+                      {formattedCart && formattedCart.length > 0 ? (
+                        formattedCart.map((item, idx) => (
+                          <CartListItem
+                            key={`cart-list-item-${idx}`}
+                            item={item}
+                            onItemCountUpdate={handleItemCountUpdate}
+                          />
+                        ))
+                      ) : (
+                        <div className="min-h-[190px] font-bold text-stone-500 text-lg flex items-center justify-center">
+                          <div>
+                            {loadingCartItems
+                              ? "Loading..."
+                              : "Nothing to display"}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <CartOrderSummary />
+                </div>
+              </>
+            )}
           </>
         )}
         <div className="mt-6">
