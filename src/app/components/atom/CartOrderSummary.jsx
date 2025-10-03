@@ -42,7 +42,7 @@ const YourSavingsSection2 = ({ savings, shipping_cost }) => {
         {shipping_cost === 0 ? (
           <span>
             plus <span className="font-bold text-normal not-italic text-green-700">FREE</span>{" "}
-            Shipping
+            Shipping and Concierge Service
           </span>
         ) : (
           ""
@@ -108,7 +108,7 @@ function CartOrderSummary({ checkoutButton = true }) {
   }, [cartItems]);
 
   return (
-    <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-2 lg:mt-0 lg:w-full ">
+    <div className="mx-auto mt-6 flex-1 space-y-2 md:mt-0 lg:w-full ">
       {cartObject && savings > 0 && (
         <>
           {/* <YourSavingsSection
