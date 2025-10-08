@@ -20,8 +20,12 @@ import { SearchProvider } from "@/app/context/search";
 import { CategoriesProvider } from "@/app/context/category";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
-import SessionWrapper from "@/app/components/wrapper/SessionWrapper"; // 👈 You'll create this file
+import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
+
+
+import Script from 'next/script';
+
 const shopify = true; // if shopify product structure
 
 const InterFont = Inter({
@@ -73,6 +77,16 @@ export default async function MarketLayout({ children }) {
   const [menu, redisLogo, color] = await redis.mget(mgetKeys);
   return (
     <html lang="en">
+      <head>
+        <Script
+          id="vtag-ai-js"
+          async
+          src="https://r2.leadsy.ai/tag.js"
+          data-pid="aIG8Pch3BLdKL5yi"
+          data-version="062024"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
