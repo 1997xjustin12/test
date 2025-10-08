@@ -71,7 +71,7 @@ const ItemsList = ({ items }) => {
             <div className="w-16 h-16 bg-white rounded relative border-[2px] border-gray-200 shadow">
               {/* badge */}
               <div className="absolute z-10 text-xs top-[-10px] right-[-10px] w-[24px] h-[24px] flex items-center justify-center bg-stone-950 rounded-md text-white border border-white">
-                {item?.count || 0}
+                {item?.quantity || 0}
               </div>
               {item?.images &&
                 Array.isArray(item.images) &&
@@ -96,7 +96,7 @@ const ItemsList = ({ items }) => {
             </div>
             {/* price */}
             <div className="w-[100px] text-right text-xs">
-              ${formatPrice(item?.count * item?.variants?.[0]?.price || 0)}
+              ${formatPrice(item?.quantity * item?.variants?.[0]?.price || 0)}
             </div>
           </li>
         ))}
@@ -275,7 +275,7 @@ const CompletePaymentButton = ({ items }) => {
 //   );
 // };
 
-const OrderQuerySection = ({ order_number }) => {
+const OrderQuerySection = ({ tracking_number }) => {
   return (
     <div className="my-10 border border-neutral-300 shadow p-5 rounded">
       <h2 className="text-center">Need help with your order?</h2>
@@ -305,9 +305,9 @@ const OrderQuerySection = ({ order_number }) => {
           5:00pm PST &#9679; Sat and Sun: Closed
         </div>
       </div>
-      {order_number ? (
+      {tracking_number ? (
         <h2 className="text-center">
-          Order #: <span className="text-theme-600">{order_number}</span>
+          Order #: <span className="text-theme-600">{tracking_number}</span>
         </h2>
       ) : (
         <div className="h-[24px] w-full bg-neutral-200"></div>
@@ -480,7 +480,6 @@ function CheckoutComponent() {
   const [expandOrderSummary, setExpandOrderSummary] = useState(false);
   const {
     clearCartItems,
-    formattedCart,
     fetchOrderTotal,
     loadCart,
     cartObject,
@@ -724,7 +723,6 @@ function CheckoutComponent() {
         updatedForm.billing_province = error ? "" : data?.province;
         updatedForm.is_valid_billing_zip = !Boolean(error);
       }
-
       return updatedForm;
     });
   };
@@ -811,10 +809,10 @@ function CheckoutComponent() {
         orders["payment_status"] = true;
         orders["payment_details"] = result?.transaction?.id;
         orders["store_domain"] = store_domain;
-        orders["items"] = mapOrderItems(formattedCart);
-
+        orders["items"] = mapOrderItems(cartItems);
+        // console.log("[OrderData]", orders);
         const order_response = await createOrder(orders);
-
+        // console.log("ORDER RESPONSE", order_response);
         if (order_response.success) {
           instance.teardown();
           setInstance(null);
@@ -825,7 +823,7 @@ function CheckoutComponent() {
         } else {
           setSuccessPayment(false);
           alert("Something went wrong! Please try again.");
-        }
+      }
       } else {
         setSuccessPayment(false);
         alert(`Payment failed: ${result.error}`);
@@ -838,16 +836,17 @@ function CheckoutComponent() {
   };
 
   useEffect(() => {
+    console.log("[FORMATTEDCART]", cartItems);
     if (
-      formattedCart &&
-      Array.isArray(formattedCart) &&
-      formattedCart.length > 0
+      cartItems &&
+      Array.isArray(cartItems) &&
+      cartItems.length > 0
     ) {
-      let newForm = { ...form, items: formattedCart };
+      let newForm = { ...form, items: cartItems };
       setForm((prev) => ({ ...newForm }));
       getOrderTotal(newForm);
     }
-  }, [formattedCart]);
+  }, [cartItems]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -950,7 +949,7 @@ function CheckoutComponent() {
 
   return (
     <section className="bg-white">
-      <MobileOrderSummary data={{ ...cartTotal, items: formattedCart }} />
+      <MobileOrderSummary data={{ ...cartTotal, items: cartItems }} />
       {/* desktop */}
       <div className="container mx-auto">
         <div className="flex gap-0 md:gap-[20px] flex-col md:flex-row py-5 md:py-0">
@@ -1308,7 +1307,7 @@ function CheckoutComponent() {
                     </div>
                   ) : null}
                   <div className="hidden md:flex">
-                    <CompletePaymentButton items={formattedCart} />
+                    <CompletePaymentButton items={cartItems} />
                   </div>
                 </form>
               </div>
@@ -1367,21 +1366,21 @@ function CheckoutComponent() {
                 <div
                   className={`${expandOrderSummary ? "" : "hidden"} py-[20px]`}
                 >
-                  <ItemsList items={formattedCart} />
+                  <ItemsList items={cartItems} />
                 </div>
               </div>
               {!loading && (
                 <>
                   <div className="hidden md:block mb-5">
-                    <ItemsList items={formattedCart} />
+                    <ItemsList items={cartItems} />
                   </div>
-                  <ComputationSection data={cartTotal} items={formattedCart} />
+                  <ComputationSection data={cartTotal} items={cartItems} />
                 </>
               )}
               <div className="md:hidden">
-                <CompletePaymentButton items={formattedCart} />
+                <CompletePaymentButton items={cartItems} />
               </div>
-              <OrderQuerySection order_number={cartObject?.order_number} />
+              <OrderQuerySection tracking_number={cartObject?.tracking_number} />
             </div>
           </div>
         </div>

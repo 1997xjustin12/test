@@ -49,14 +49,9 @@ function ProductQuickView({ data, product_link, onClose }) {
     setQuantity(value);
   };
 
-  const createItemsArray = (item, quantity) => {
-    return new Array(quantity).fill(item);
-  };
-
   const handleAddToCart = async (item) => {
     // console.log("[TEST] QV handleAddToCart item", item)
-    const items = createItemsArray(item, quantity);
-    const response = await addToCart(items);
+    const response = await addToCart({...item, quantity: quantity});
     const { code, message } = response;
     if (code === 200) {
       handleClose();

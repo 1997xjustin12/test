@@ -17,9 +17,25 @@ const connectDomains = [
   "https://r2.leadsy.ai", // Required for the new script
   "https://wvbknd.leadsy.ai", 
   "https://api.iconify.design",
-  "https://tag.trovo-tag.com"
+  "https://tag.trovo-tag.com",
+  "https://api.zippopotam.us",
+  "https://payments.sandbox.braintree-api.com",
+  "https://gateway-sand.sandbox.braintree-api.com",
+  "https://origin-analytics-sand.sandbox.braintree-api.com",
+  "https://assets.braintreegateway.com",
+  "https://www.paypal.com",
   // "http://164.92.65.4", // Assuming 9200 is unnecessary and you need the IP
 ];
+
+const styleSrcDomains = [
+  "https://assets.braintreegateway.com",
+
+];
+
+const frameSrcDomains = [
+  "https://tag.trovo-tag.com",
+  "https://assets.braintreegateway.com"
+]
 
 module.exports = {
   // Required: Next.js Image component configuration
@@ -33,13 +49,13 @@ module.exports = {
       
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com;
       
-      style-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' ${styleSrcDomains.join(" ")};
       
       img-src 'self' data: blob: ${imageDomains.join(" ")}; 
       
       connect-src 'self' ${connectDomains.join(" ")}; 
 
-      frame-src 'self' https://tag.trovo-tag.com; 
+      frame-src 'self' ${frameSrcDomains.join(" ")}; 
     `;
 
     return [

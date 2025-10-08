@@ -89,8 +89,7 @@ const ProductToCart = ({ product, loading }) => {
 
   const handleAddToCart = async (item) => {
     setATCLoading(true);
-    const items = createItemsArray(item, quantity);
-    const response = await addToCart(items);
+    const response = await addToCart({...item, quantity:quantity});
     setATCLoading(false);
   };
 

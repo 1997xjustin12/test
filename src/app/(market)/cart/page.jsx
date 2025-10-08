@@ -10,6 +10,110 @@ import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 
+const TemporaryComponent = () => {
+  const { user, userCartGet, userCartCreate, userCartClose, userCartUpdate } =
+    useAuth();
+  const { cartItems, cartObject } = useCart();
+
+  if (!user) return;
+
+  const userProfileToCart = (user = {}) => {
+    return {
+      billing_address: user?.profile?.billing_address,
+      billing_city: user?.profile?.billing_city,
+      billing_country: user?.profile?.billing_country,
+      billing_email: user?.email,
+      billing_first_name: user?.first_name,
+      billing_last_name: user?.last_name,
+      billing_phone: user?.profile?.phone,
+      billing_province: user?.profile?.billing_state,
+      billing_zip_code: user?.profile?.billing_zip,
+      shipping_address: user?.profile?.shipping_address,
+      shipping_city: user?.profile?.shipping_city,
+      shipping_country: user?.profile?.shipping_country,
+      shipping_email: user?.email,
+      shipping_first_name: user?.first_name,
+      shipping_last_name: user?.last_name,
+      shipping_phone: user?.profile?.phone,
+      shipping_province: user?.profile?.shipping_state,
+      shipping_zip_code: user?.profile?.shipping_zip,
+    };
+  };
+
+  const fetchUserCart = async () => {
+    const response = await userCartGet();
+    console.log("[GET][CART][REPSPONSE]", response);
+  };
+
+  const createUserCart = async () => {
+    console.log("[CREATE][CART] LOCAL CART", cartObject);
+    if (!cartObject) {
+      console.log("[CART OBJECT IS NULL]");
+      return;
+    }
+    const response = await userCartCreate({
+      items: cartObject?.items,
+      tracking_number: cartObject?.tracking_number,
+    });
+    console.log("[CREATE][CART][REPSPONSE]", response);
+  };
+
+  const closeUserCart = async () => {
+    const response = await userCartClose();
+    console.log("[CREATE][CLOSE][REPSPONSE]", response);
+  };
+
+  const updateUserCart = async () => {
+    console.log("[UPDATE][CART] LOCAL CART", cartObject);
+    console.log("[UPDATE][CART] User", user);
+    if (!cartObject) {
+      console.log("[CART OBJECT IS NULL]");
+      return;
+    }
+    const user_profile = userProfileToCart(user);
+    const injected_items = (cartObject?.items || []).map(item=> ({...item, product_id: 3687, variant_data: {test:"test"}, custom_fields:{test:"test"}}))
+    const response = await userCartUpdate({
+      items: injected_items,
+      tracking_number: cartObject?.tracking_number,
+      ...user_profile,
+    });
+    console.log("[UPDATE][CART][REPSPONSE]", response);
+  };
+
+  return (
+    <div className="mb-10">
+      <h2>TEMPORARY COMPONENT</h2>
+      <p className="text-neutral-500 text-sm">Cart Enpoint Triggers</p>
+      <div className="mt-5 flex gap-[20px]">
+        <button
+          onClick={fetchUserCart}
+          className="text-white text-sm font-bold bg-green-600 hover:bg-green-700 rounded-[2px] py-1 px-4"
+        >
+          GET
+        </button>
+        <button
+          onClick={createUserCart}
+          className="text-white text-sm font-bold bg-blue-600 hover:bg-blue-700 rounded-[2px] py-1 px-4"
+        >
+          CREATE
+        </button>
+        <button
+          onClick={updateUserCart}
+          className="text-white text-sm font-bold bg-orange-600 hover:bg-orange-700 rounded-[2px] py-1 px-4"
+        >
+          UPDATE
+        </button>
+        <button
+          onClick={closeUserCart}
+          className="text-white text-sm font-bold bg-red-600 hover:bg-red-700 rounded-[2px] py-1 px-4"
+        >
+          CLOSE
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ShoppingAssistanceSection = () => {
   return (
     <div className="sm-auto mt-3 flex-1 space-y-2 lg:mt-0 md:w-full">
@@ -100,9 +204,7 @@ const CartOnloadLoader = () => {
     <div className="h-[300px] border border-neutral-300 bg-stone-100 w-full flex items-center justify-center p-3">
       <div className="flex flex-col gap-5">
         <div className="space-y-5">
-          <h2 className="text-stone-800 text-center">
-            Loading Cart...
-          </h2>
+          <h2 className="text-stone-800 text-center">Loading Cart...</h2>
           <p className="text-xs text-neutral-800 text-center">
             Please wait a bit, We are loading your cart.
           </p>
@@ -116,7 +218,7 @@ export default function CartPage() {
   const [cartTotal, setCartTotal] = useState({});
   const {
     cartObject,
-    formattedCart,
+    cartItems,
     loadingCartItems,
     increaseProductQuantity,
     decreaseProductQuantity,
@@ -138,10 +240,9 @@ export default function CartPage() {
   useEffect(() => {
     const reloadCartTotal = async (data) => {
       const response = await fetchOrderTotal({ ...data });
-      console.log("[RELOAD CART TOTAL]", response);
     };
 
-    if (!loading && formattedCart.length > 0) {
+    if (!loading && cartItems.length > 0) {
       let data;
       if (user) {
         // console.log("[TRIGGER RECALCULATE TOTAL USING USER DATA]", user);
@@ -157,27 +258,28 @@ export default function CartPage() {
         );
 
         data = {
-          items: mapOrderItems(formattedCart),
+          items: mapOrderItems(cartItems),
           ...(allFilled ? shipping_details : {}),
         };
       } else {
         // console.log("[TRIGGER RECALCULATE TOTAL AS GUEST]");
         data = {
-          items: mapOrderItems(formattedCart),
+          items: mapOrderItems(cartItems),
         };
       }
       reloadCartTotal(data);
     }
-  }, [loading, isLoggedIn, user, formattedCart]);
+  }, [loading, isLoggedIn, user, cartItems]);
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <TemporaryComponent />
         {loadingCartItems ? (
           <CartOnloadLoader />
         ) : (
           <>
-            {formattedCart.length === 0 ? (
+            {cartItems.length === 0 ? (
               <NoCartItems />
             ) : (
               <>
@@ -212,26 +314,25 @@ export default function CartPage() {
                       <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-8">
                         Shopping Cart
                       </h2>
-                      {cartObject?.order_number && (
+                      {cartObject?.tracking_number && (
                         <h5 className="font-bold text-neutral-600 text-sm">
                           ORDER #:{" "}
                           <span className="text-theme-600">
-                            {cartObject?.order_number}
+                            {cartObject?.tracking_number}
                           </span>
                         </h5>
                       )}
                     </div>
                   </div>
-
                   <ShoppingAssistanceSection />
                 </div>
                 <div className="mt-4 sm:mt-8 gap-2 lg:flex lg:items-start xl:gap-4">
                   <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
                     <div className="space-y-2">
-                      {formattedCart && formattedCart.length > 0 ? (
-                        formattedCart.map((item, idx) => (
+                      {cartObject && cartObject?.items && cartObject.items.length > 0 ? (
+                        cartObject.items.map((item, idx) => (
                           <CartListItem
-                            key={`cart-list-item-${idx}`}
+                            key={`cart-list-item-${idx}-${item?.id}`}
                             item={item}
                             onItemCountUpdate={handleItemCountUpdate}
                           />

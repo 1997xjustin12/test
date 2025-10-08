@@ -174,36 +174,17 @@ function AddedToCartDialog({ data, onClose }) {
   const [toggle, setToggle] = useState(true);
   const [image, setImage] = useState(null);
 
-  const addedToCartItems = useMemo(() => {
-    if (!data || data.length === 0) {
-      return null;
-    }
-
-    const formattedVal = Object.values(
-      data.reduce((acc, item) => {
-        if (!acc[item.id]) {
-          acc[item.id] = { ...item, count: 0 };
-        }
-        acc[item.id].count += 1;
-        return acc;
-      }, {})
-    );
-
-    return formattedVal[0];
-  }, [data]);
-
   useEffect(() => {
-    if (addedToCartItems) {
+    if (data) {
       const thumbnail =
-        addedToCartItems?.images?.find(({ position }) => position === 1)?.src ??
+        data?.images?.find(({ position }) => position === 1)?.src ??
         null;
       setImage(thumbnail);
       setToggle(true);
     } else {
       setToggle(false);
-      // setToggle(true);
     }
-  }, [addedToCartItems]);
+  }, [data]);
 
   const handleClose = () => {
     setToggle(false);
@@ -217,7 +198,7 @@ function AddedToCartDialog({ data, onClose }) {
     // router.push(cartPageUrl);
   };
 
-  if (!addedToCartItems) return;
+  if (!data) return;
 
   return (
     <Dialog open={toggle} onClose={setToggle} className="relative z-10">
@@ -257,15 +238,15 @@ function AddedToCartDialog({ data, onClose }) {
                 <Link
                   prefetch={false}
                   href={`${BASE_URL}/${createSlug(
-                    addedToCartItems?.brand
-                  )}/product/${addedToCartItems?.handle}`}
+                    data?.brand
+                  )}/product/${data?.handle}`}
                 >
                   <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
                     {image && (
                       <Image
                         src={image}
-                        title={addedToCartItems?.title}
-                        alt={addedToCartItems?.title}
+                        title={data?.title}
+                        alt={data?.title}
                         className="w-full h-full"
                         objectFit="contain"
                         fill
@@ -283,22 +264,22 @@ function AddedToCartDialog({ data, onClose }) {
                       <Link
                         prefetch={false}
                         href={`${BASE_URL}/${createSlug(
-                          addedToCartItems?.brand
-                        )}/product/${addedToCartItems?.handle}`}
+                          data?.brand
+                        )}/product/${data?.handle}`}
                       >
                         <div className="font-bold hover:underline">
-                          {addedToCartItems?.title}
+                          {data?.title}
                         </div>
                       </Link>
 
                       <div className="flex gap-[20px] items-center">
                         <div className="font-extrabold text-theme-600 text-right">{`$${formatPrice(
-                          addedToCartItems?.count *
-                            addedToCartItems?.variants?.[0]?.price
+                          data?.quantity *
+                            data?.variants?.[0]?.price
                         )}`}</div>
                         <div className="font-medium text-neutral-700">{`($${formatPrice(
-                          addedToCartItems?.variants?.[0]?.price
-                        )}x${addedToCartItems?.count})`}</div>
+                          data?.variants?.[0]?.price
+                        )}x${data?.quantity})`}</div>
                       </div>
                       <div className="flex justify-between items-center gap-[10px]">
                         <Link

@@ -55,7 +55,7 @@ const YourSavingsSection2 = ({ savings, shipping_cost }) => {
 function CartOrderSummary({ checkoutButton = true }) {
   const { loading, user } = useAuth();
   const router = useRouter();
-  const { cartObject, cartItems, formattedCart } = useCart();
+  const { cartObject, cartItems } = useCart();
   const [originalPrice, setOriginalPrice] = useState(0);
   const [salePrice, setSalePrice] = useState(0);
   const [savings, setSavings] = useState(0);
@@ -74,16 +74,19 @@ function CartOrderSummary({ checkoutButton = true }) {
   };
 
   const getPriceSum = (items) => {
-    return items.reduce((sum, item) => sum + item?.variants?.[0].price, 0);
+    if (!Array.isArray(items)) return 0;
+    return items.reduce((total, item) => {
+      const itemTotal = (item?.variants?.[0].price || 0) * (item.quantity || 0);
+      return total + itemTotal;
+    }, 0);
   };
 
   const getOriginalPriceSum = (items) => {
-    return items.reduce(
-      (sum, item) =>
-        sum +
-        (item?.variants?.[0].compare_at_price || item?.variants?.[0].price),
-      0
-    );
+    if (!Array.isArray(items)) return 0;
+    return items.reduce((total, item) => {
+      const itemTotal = (item?.variants?.[0].compare_at_price || item?.variants?.[0].price || 0) * (item.quantity || 0);
+      return total + itemTotal;
+    }, 0);
   };
 
   useEffect(() => {

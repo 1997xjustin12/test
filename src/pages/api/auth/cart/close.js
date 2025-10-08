@@ -1,3 +1,5 @@
+import { store_domain } from "../../../../app/lib/helpers";
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -8,15 +10,16 @@ export default async function handler(req, res) {
 
      // Read authorization header from the incoming request
     const authHeader = req.headers.authorization;
-    const body = await req.body;
+    // const body = await req.body;
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Store-Domain": store_domain,
         ...(authHeader ? { Authorization: authHeader } : {}),
       },
-      body: JSON.stringify(body),
+      // body: JSON.stringify(body),
     });
 
     // Check if response is JSON

@@ -9,7 +9,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   const [thumbnail, setThumbnail] = useState(null);
 
   useEffect(() => {
-    if (item) {
+    if (item?.images) {
       setThumbnail((prev) => {
         return item.images.find(({ position }) => position === 1)?.src;
       });
@@ -48,12 +48,12 @@ export default function CartListItem({ item, onItemCountUpdate }) {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-        <Link prefetch={false} href={`${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`} className="shrink-0 md:order-1 relative w-20 h-20 aspect-1">
-          {thumbnail && (
+        <Link prefetch={false} href={item?.product_link || "#"} className="shrink-0 md:order-1 relative w-20 h-20 aspect-1">
+          {(thumbnail || item?.product_image_url) && (
               <Image
-                src={thumbnail}
-                title={`${item.title}`}
-                alt={`${createSlug(item.title)}-image`}
+                src={thumbnail || item?.product_image_url}
+                title={`${item?.title || item?.product_title}`}
+                alt={`${createSlug(item?.title || item?.product_title || "")}-image`}
                 fill
                 className="object-contain"
                 sizes="(max-width: 768px) 100vw, 300px"
@@ -99,7 +99,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
                 data-input-counter
                 className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
                 placeholder=""
-                value={item?.count}
+                value={item?.quantity}
                 required
               />
               <button
@@ -143,7 +143,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
           {/* price display */}
           <div className="text-end md:order-4 md:w-32 flex flex-col gap-[15px]">
             <div className="text-base font-bold text-gray-900 dark:text-white">
-              ${formatPrice(item?.variants?.[0]?.price * item?.count)}
+              ${formatPrice((item?.variants?.[0]?.price) * (item?.quantity))}
             </div>
             {Number(item?.variants?.[0]?.compare_at_price) > 0 && (
               <div className="w-full flex justify-end">
@@ -152,8 +152,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
                   {formatPrice(
                     getSavings(
                       item?.variants?.[0]?.compare_at_price,
-                      item?.variants?.[0]?.price
-                    ) * item?.count
+                      item?.variants?.[0]?.price) * item?.quantity
                   )}
                 </div>
               </div>
@@ -163,28 +162,28 @@ export default function CartListItem({ item, onItemCountUpdate }) {
 
         <div className="w-full min-w-0 flex flex-col gap-[15px] md:order-2 md:max-w-md">
           <Link
-            prefetch={false} href={`${BASE_URL}/${createSlug(item?.brand)}/product/${item?.handle}`}
+            prefetch={false} href={item?.product_link || "#"}
             className="text-base font-medium text-gray-900 hover:underline dark:text-white"
           >
-            {item?.title}
+            {item?.title || item?.product_title}
           </Link>
 
           <div className="flex items-center gap-[20px]">
-            {Number(item?.variants?.[0]?.compare_at_price) > 0 && (
+            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data.compare_at_price) > 0 && (
               <div className="line-through font-medium">
-                ${formatPrice(item?.variants?.[0]?.compare_at_price)}
+                ${formatPrice(item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price)}
               </div>
             )}
             <div className="font-medium text-green-700">
-              ${formatPrice(item?.variants?.[0]?.price)}
+              ${formatPrice(item?.variants?.[0]?.price || item?.variant_data?.price)}
             </div>
-            {Number(item?.variants?.[0]?.compare_at_price) > 0 &&
-              Number(item?.variants?.[0]?.price) > 0 && (
+            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data.compare_at_price) > 0 &&
+              Number(item?.variants?.[0]?.price || item?.variant_data?.price) > 0 && (
                 <div className="font-medium text-red-700">
                   <span className="italic">
                     {getDiscountPercentage(
-                      item?.variants?.[0]?.compare_at_price,
-                      item?.variants?.[0]?.price
+                      (item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price),
+                      (item?.variants?.[0]?.price || item?.variant_data?.price) 
                     )}
                     %
                   </span>{" "}

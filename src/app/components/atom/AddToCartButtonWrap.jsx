@@ -5,8 +5,8 @@ function AddToCartButtonWrap({ product, children }) {
   const { addToCart } = useCart();
 
   const handleClick = () => {
-    console.log("[TRIGGER ADD TO CART] product", product)
-    addToCart([product]);
+    console.log("[AddToCartButtonWrap] product", product)
+    addToCart({...product, quantity: 1});
   }
 
   return React.cloneElement(children, {

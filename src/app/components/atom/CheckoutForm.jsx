@@ -141,8 +141,8 @@ export default function CheckoutForm({ onChange }) {
       const formattedItems = items.map((item) => ({
         product_id: item?.product_id,
         price: item?.variants?.[0]?.price,
-        quantity: item.count,
-        total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+        quantity: item.quantity,
+        total: Number((item?.variants?.[0]?.price * item.quantity).toFixed(2)),
       }));
       const newForm = form;
       newForm["items"] = formattedItems;

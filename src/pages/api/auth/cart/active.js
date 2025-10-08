@@ -1,3 +1,5 @@
+import { store_domain } from "../../../../app/lib/helpers";
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -13,6 +15,7 @@ export default async function handler(req, res) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Store-Domain": store_domain,
         ...(authHeader ? { Authorization: authHeader } : {}), // forward bearer token if exists
       },
     });

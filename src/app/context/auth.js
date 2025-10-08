@@ -175,8 +175,6 @@ export function AuthProvider({ children }) {
   const getUserOrders = async () => {
     try {
       const bearer = `Bearer ${accessToken}`;
-      console.log("[BEARER]", bearer)
-      console.log("[USER]", user)
       return await fetch("/api/auth/orders", {
         headers: {
           Authorization: bearer,
@@ -188,6 +186,120 @@ export function AuthProvider({ children }) {
       // setOrders(user_obj);
     } catch (err) {
       return err;
+    }
+  };
+
+  const userCartGet = async () => {
+    console.log("[userCartGet]");
+    if (loading) return;
+    if (!user) {
+      console.log("[userCartGet][CANT GET CART] USER UNDEFINED");
+    }
+
+    try {
+      const bearer = `Bearer ${accessToken}`;
+
+      const response = await fetch("/api/auth/cart/active", {
+        headers: {
+          Authorization: bearer,
+        },
+      });
+
+      if(response.status === 404){
+        return null;
+      }
+
+      return response.json();
+
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const userCartCreate = async (cart = {}) => {
+    console.log("[userCartCreate]");
+    if (loading) return;
+    if (!user) {
+      console.log("[userCartCreate][CANT CREATE CART] USER UNDEFINED");
+      return null;
+    }
+
+    try {
+      const bearer = `Bearer ${accessToken}`;
+
+      const response =  await fetch("/api/auth/cart/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: bearer,
+        },
+        body: JSON.stringify(cart),
+      });
+
+      if(!response.ok){
+        return null;
+      }
+
+      return await response.json();
+      
+    } catch (err) {
+      console.error("[userCartCreate] error:", err);
+      return null;
+    }
+  };
+
+  const userCartUpdate = async (cart = {}) => {
+    console.log("[userCartUpdate]");
+    if (loading) return;
+    if (!user) {
+      console.log("[userCartUpdate][CANT CREATE CART] USER UNDEFINED");
+      return null;
+    }
+
+    try {
+      const bearer = `Bearer ${accessToken}`;
+
+      const response = await fetch("/api/auth/cart/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: bearer,
+        },
+        body: JSON.stringify(cart),
+      });
+      
+      if(!response.ok){
+        return null;
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error("[userCartUpdate] error:", err);
+      return null;
+    }
+  };
+
+  const userCartClose = async (cart = {}) => {
+    console.log("[userCartClose]");
+    if (loading) return;
+    if (!user || !isLoggedIn) {
+      console.log("[userCartClose][CANT CLOSE CART] USER UNDEFINED");
+      return null;
+    }
+
+    try {
+      const bearer = `Bearer ${accessToken}`;
+
+      return await fetch("/api/auth/cart/close", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: bearer,
+        },
+      });
+    } catch (err) {
+      console.error("[userCartClose] error:", err);
+      return null;
     }
   };
 
@@ -436,6 +548,10 @@ export function AuthProvider({ children }) {
         forage,
         fullName,
         getUserOrders,
+        userCartClose,
+        userCartCreate,
+        userCartGet,
+        userCartUpdate,
         isLoggedIn,
         user,
         myAccountLinks,

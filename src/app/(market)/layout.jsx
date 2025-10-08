@@ -78,14 +78,14 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <Script
+        {/* <Script
           id="vtag-ai-js"
           async
           src="https://r2.leadsy.ai/tag.js"
           data-pid="aIG8Pch3BLdKL5yi"
           data-version="062024"
           strategy="beforeInteractive"
-        />
+        /> */}
       </head>
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}

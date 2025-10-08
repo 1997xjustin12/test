@@ -373,12 +373,10 @@ export const mapOrderItems = (items) => {
 
     return {
       product_id: item?.product_id,
-      product_link: `${store_domain}/${createSlug(item?.brand)}/product/${
-        item?.handle
-      }`,
+      product_link: item?.product_link || "",
       price: item?.variants?.[0]?.price,
-      quantity: item.count,
-      total: Number((item?.variants?.[0]?.price * item.count).toFixed(2)),
+      quantity: item.quantity,
+      total: Number((item?.variants?.[0]?.price * item.quantity).toFixed(2)),
     };
   });
 };

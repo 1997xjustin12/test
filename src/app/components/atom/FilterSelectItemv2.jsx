@@ -69,7 +69,7 @@ export default function FilterSelectItemV2({ data, labelStyle, multiSelect, onCh
             htmlFor={item.prop}
             className={`${labelStyle ?? "font-medium text-sm text-gray-600"}`}>
             {item.label}
-            {item.count > 0 && `(${item.count})`}
+            {item.quantity > 0 && `(${item.quantity})`}
             {["on sale", "quick ship"].includes(item.label.toLowerCase()) ? (
               <span className="text-[10px]">Soon</span>
             ) : (

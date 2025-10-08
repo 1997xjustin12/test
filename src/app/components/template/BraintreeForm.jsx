@@ -9,10 +9,9 @@ import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
 export default function BraintreeForm({cartTotal}) {
   const router = useRouter();
-  const { cartItems, clearCartItems, formattedCart } = useCart();
+  const { cartItems, clearCartItems} = useCart();
   const [billingStorage, setBillingStorage] = useState(null);
 
-  // console.log("[TEST] formatted Cart", formattedCart);
   const [checkoutForm, setCheckoutForm] = useState({});
   const [totalPayable, setTotalPayable] = useState(0);
   const [clientToken, setClientToken] = useState(null);
@@ -153,7 +152,7 @@ export default function BraintreeForm({cartTotal}) {
           orders["payment_status"] = true;
           orders["payment_details"] = result?.transaction?.id;
           orders["store_domain"] = store_domain;
-          orders["items"] = mapOrderItems(formattedCart);
+          orders["items"] = mapOrderItems(cartItems);
 
           const order_response = await createOrder(orders);
 

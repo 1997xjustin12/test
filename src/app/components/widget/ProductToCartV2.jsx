@@ -96,14 +96,10 @@ const ProductToCart = ({ product, loading }) => {
   const handleHeartToggle = (e) => {
     setProductData((prev) => ({ ...prev, like: !prev.like }));
   };
-  const createItemsArray = (item, quantity) => {
-    return new Array(quantity).fill(item);
-  };
 
   const handleAddToCart = async (item) => {
     setATCLoading(true);
-    const items = createItemsArray(item, quantity);
-    const response = await addToCart(items);
+    const response = await addToCart({...item, quantity: quantity});
     setATCLoading(false);
   };
 

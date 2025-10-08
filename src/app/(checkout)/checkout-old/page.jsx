@@ -17,10 +17,10 @@ const BraintreeForm = dynamic(
 
 function CheckoutPage() {
   const [cartTotal, setCartTotal] = useState({});
-  const { cartItems, formattedCart, fetchOrderTotal } = useCart();
+  const { cartItems, fetchOrderTotal } = useCart();
 
   const getOrderTotal = async () => {
-    const items = mapOrderItems(formattedCart);
+    const items = mapOrderItems(cartItems);
     if(items.length > 0){
       const orderTotal = await fetchOrderTotal({ items });
       if (orderTotal?.success) {
@@ -30,10 +30,10 @@ function CheckoutPage() {
   };
 
   useEffect(() => {
-    if (formattedCart) {
+    if (cartItems) {
       getOrderTotal();
     }
-  }, [formattedCart]);
+  }, [cartItems]);
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">

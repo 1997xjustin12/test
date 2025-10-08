@@ -79,15 +79,12 @@ const AddToCartBtn = ({ item }) => {
   const { addToCart } = useCart();
   const [loading, setLoading] = useState(false);
 
-  const createItemsArray = (item, quantity) => {
-    return new Array(quantity).fill(item);
-  };
-
   const handleAddToCart = async (item) => {
     setLoading(true);
-    const quantity = 1;
-    const items = createItemsArray(item, quantity);
-    const response = await addToCart(items);
+    const response = await addToCart({
+      ...item,
+      quantity: 1
+    });
     setLoading(false);
   };
 
