@@ -318,14 +318,14 @@ const OrderQuerySection = ({ tracking_number }) => {
 
 const LogoutDropDown = () => {
   const [open, setOpen] = useState(false);
-  const { logout } = useAuth();
-  const { createAbandonedCart } = useCart();
+  const { user, logout } = useAuth();
+  const { cart, createAbandonedCart } = useCart();
   const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
     const isLogout = await logout();
     if (isLogout) {
-      createAbandonedCart("forced");
+      createAbandonedCart(cart, user, "forced");
     }
   };
   useEffect(() => {

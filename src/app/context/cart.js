@@ -66,76 +66,77 @@ export const CartProvider = ({ children }) => {
     navigator.sendBeacon(url, data);
   };
 
-  const createAbandonedCart = async (trigger = "timed") => {
-    if (loading) return;
-    if (!isLoggedIn) return;
-    if (!user) return;
+  const createAbandonedCart = async (cart_obj, user_obj, trigger = "timed") => {
+    if (!cart_obj && !cart_obj?.id) return;
+    if (!user_obj) return;
 
-    const cartObj = await getUserCart();
-    const cartItems = cartObj?.items ?? [];
+    const cart_items = cart_obj?.items ?? [];
 
-    if (!cartObj) return;
+    if (cart_items.length === 0) return;
 
-    if (cartItems.length === 0) return;
+    if (cart_obj?.abandoned_cart_id) return;
 
-    if (cartObj.status === "abandoned") return;
-
-    const updatedAt = new Date(cartObj.updated_at).getTime();
+    const updatedAt = new Date(cart_obj.updated_at).getTime();
 
     const timedout = Date.now() - updatedAt > ABANDON_TIMEOUT;
 
     const sendCart = {
-      ...cartObj,
-      abandoned_cart_id: cartObj.id,
-      // items: mapOrderItems(formatItems(cartItems)),
-      items: mapOrderItems(cartItems),
-      billing_address: user?.profile?.billing_address,
-      billing_city: user?.profile?.billing_city,
-      billing_country: user?.profile?.billing_country,
-      billing_email: user?.email,
-      billing_first_name: user?.first_name,
-      billing_last_name: user?.last_name,
-      billing_province: user?.profile?.billing_state,
-      billing_zip_code: user?.profile?.billing_zip,
-      shipping_address: user?.profile?.shipping_address,
-      shipping_city: user?.profile?.shipping_city,
-      shipping_country: user?.profile?.shipping_country,
-      shipping_email: user?.email,
-      shipping_first_name: user?.first_name,
-      shipping_last_name: user?.last_name,
-      shipping_province: user?.profile?.shipping_state,
-      shipping_zip_code: user?.profile?.shipping_zip,
+      ...cart_obj,
+      abandoned_cart_id: cart_obj.id,
+      items: mapOrderItems(cart_items),
+      billing_address: user_obj?.profile?.billing_address,
+      billing_city: user_obj?.profile?.billing_city,
+      billing_country: user_obj?.profile?.billing_country,
+      billing_email: user_obj?.email,
+      billing_first_name: user_obj?.first_name,
+      billing_last_name: user_obj?.last_name,
+      billing_province: user_obj?.profile?.billing_state,
+      billing_zip_code: user_obj?.profile?.billing_zip,
+      shipping_address: user_obj?.profile?.shipping_address,
+      shipping_city: user_obj?.profile?.shipping_city,
+      shipping_country: user_obj?.profile?.shipping_country,
+      shipping_email: user_obj?.email,
+      shipping_first_name: user_obj?.first_name,
+      shipping_last_name: user_obj?.last_name,
+      shipping_province: user_obj?.profile?.shipping_state,
+      shipping_zip_code: user_obj?.profile?.shipping_zip,
     };
 
+    console.log("TRIGGERED ABANDONED CART BUT THIS FEATURE IS TEMPORARY DISABLED");
     // console.log("[createAbandonedCart]", sendCart);
 
-    if (trigger === "beacon") {
-      // console.log("TRIGGERED ABANDONED CART BEACON", cartObj);
-      cartObj.status = "abandoned";
-      await saveCart(cartObj);
-      sendAbandonedCartBeacon(sendCart);
-    }
+    // if (trigger === "beacon") {
+    //   console.log("TRIGGERED ABANDONED CART BEACON", cart_obj);
+    //   await saveCart({...cart_obj, status:"abandoned"});
+    //   sendAbandonedCartBeacon(sendCart);
+    //   return;
+    // }
 
-    if (trigger === "timed") {
-      // console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
-      if (timedout) {
-        const response = await sendAbandonedCart(sendCart);
-        // console.log("TRIGGERED ABANDONED CART TIMED", response);
-        if (response.ok) {
-          cartObj.status = "abandoned";
-          await saveCart(cartObj);
-        }
-      }
-    }
+    // let response = null;
 
-    if (trigger === "forced") {
-      const response = await sendAbandonedCart(sendCart);
-      // console.log("TRIGGERED ABANDONED CART FORCED", response);
-      if (response.ok) {
-        cartObj.status = "abandoned";
-        await saveCart(cartObj);
-      }
-    }
+    // if (trigger === "timed") {
+    //   console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
+    //   if (timedout) {
+    //     response = await sendAbandonedCart(sendCart);
+    //   }
+    // }
+
+    // if (trigger === "forced") {
+    //   console.log("TRIGGERED ABANDONED CART FORCED", response);
+    //   response = await sendAbandonedCart(sendCart);
+    // }
+
+    // if(!response) return;
+
+    // const {success, data} = await response.json(); 
+
+    // if (success) {
+    //   await saveCart({ ...cart, status: "abandoned" });
+    // }
+
+    // if(data?.error === ""){
+      
+    // }
   };
 
   async function syncCartToCookie(items) {
@@ -257,9 +258,11 @@ export const CartProvider = ({ children }) => {
           })),
         };
 
-
     if (toMerge.length === 0) {
-      return {...userCart, tracking_number: userCart?.tracking_number ?? createOrderNumber()};
+      return {
+        ...userCart,
+        tracking_number: userCart?.tracking_number ?? createOrderNumber(),
+      };
     }
 
     let newCart;
@@ -269,7 +272,7 @@ export const CartProvider = ({ children }) => {
         ...userCart,
         items: [...(userCart.items ?? []), ...toMerge],
         updated_at: new Date().toISOString(),
-        tracking_number: userCart?.tracking_number ?? createOrderNumber()
+        tracking_number: userCart?.tracking_number ?? createOrderNumber(),
       };
     } else {
       newCart = await createCartObj();
@@ -278,11 +281,11 @@ export const CartProvider = ({ children }) => {
         ...newCart,
         items: [...toMerge],
         ...user_profile,
-        tracking_number: createOrderNumber()
+        tracking_number: createOrderNumber(),
       };
       newCart = await userCartCreate(newCart);
     }
-    
+
     let saved = null;
     const user_cart_items = userCart?.items || [];
     if (user_cart_items.length > 0) {
@@ -332,10 +335,10 @@ export const CartProvider = ({ children }) => {
       const items = loadedCart?.items || [];
       setCart(loadedCart);
       syncCartToCookie(items);
-      // createAbandonedCart(); // timed
+      createAbandonedCart(loadedCart, user, "timed"); // timed
       setLoadingCartItems(false);
     }
-  }, [cartStorage, loading, getCart, syncCartToCookie, createAbandonedCart]);
+  }, [cartStorage, loading, user, getCart, syncCartToCookie, createAbandonedCart]);
 
   const saveCart = async (newCart) => {
     if (isLoggedIn && user && user?.email) {
@@ -397,7 +400,7 @@ export const CartProvider = ({ children }) => {
       const cartObj = await getOrCreateCart();
       const cart_items = cartObj?.items || [];
       const injected_item = appendToMergeItems(cart_items, item);
-      console.log("[addToCart][cartObj]", cartObj)
+      console.log("[addToCart][cartObj]", cartObj);
       const newCart = await buildCartObject({
         ...cartObj,
         items: injected_item,
@@ -553,9 +556,9 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCartItems = async () => {
-    if(isLoggedIn && user){
+    if (isLoggedIn && user) {
       await userCartClose();
-    }else{
+    } else {
       await saveCart(null);
     }
     syncCartToCookie([]);
@@ -584,23 +587,6 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // const formatItems = (items) => {
-  //   if (!items || items.length === 0) {
-  //     return [];
-  //   }
-
-  //   return Object.values(
-  //     items.reduce((acc, item) => {
-  //       const product_id = item?.product_id;
-  //       if (!acc[product_id]) {
-  //         acc[product_id] = { ...item, quantity: 0 };
-  //       }
-  //       acc[product_id].quantity += 1;
-  //       return acc;
-  //     }, {})
-  //   ).sort((a, b) => a.title.localeCompare(b.title));
-  // };
-
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -616,56 +602,48 @@ export const CartProvider = ({ children }) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (!cartStorage) return;
-
-  //   const activityEvents = ["click", "keydown", "scroll"];
-
-  //   activityEvents.forEach((evt) => {
-  //     document.addEventListener(evt, createAbandonedCart);
-  //   });
-
-  //   return () => {
-  //     activityEvents.forEach((evt) => {
-  //       document.removeEventListener(evt, createAbandonedCart);
-  //     });
-  //   };
-  // }, [cartStorage]);
+  useEffect(() => {
+    if (!cartStorage) return;
+    loadCart();
+  }, [cartStorage, loading, isLoggedIn, user]);
 
   useEffect(() => {
-    // const handleUnload = async () => {
-    //   console.log("UNLOAD");
-    //   await createAbandonedCart("beacon");
-    // };
+    if(!cart || !user) return;
 
-    // const handleVisibilityChange = async () => {
-    //   console.log("VISIBILITY", document.visibilityState);
-    //   if (document.visibilityState === "hidden") {
-    //     await createAbandonedCart("beacon");
-    //   }
-    // };
+    const handleUnload = async () => {
+      // console.log("AbandonedCart Event Unload");
+      await createAbandonedCart(cart, user, "beacon");
+    };
 
-    if (!cartStorage) return;
+    const handleVisibilityChange = async () => {
+      // console.log("AbandonedCart Event Visibility Hidden");
+      if (document.visibilityState === "hidden") {
+        await createAbandonedCart(cart, user, "beacon");
+      }
+    };
 
-    loadCart();
+    const handleEvent = async () => {
+      // console.log("AbandonedCart Event click, keydown and scroll");
+      await createAbandonedCart(cart, user, "timed");
+    }
 
-    // const activityEvents = ["click", "keydown", "scroll"];
+    const activityEvents = ["click", "keydown", "scroll"];
 
-    // activityEvents.forEach((evt) => {
-    //   document.addEventListener(evt, createAbandonedCart);
-    // });
+    activityEvents.forEach((evt) => {
+      document.addEventListener(evt, handleEvent);
+    });
 
-    // window.addEventListener("beforeunload", handleUnload);
-    // document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("beforeunload", handleUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      // activityEvents.forEach((evt) => {
-      //   document.removeEventListener(evt, createAbandonedCart);
-      // });
-      // window.removeEventListener("beforeunload", handleUnload);
-      // document.removeEventListener("visibilitychange", handleVisibilityChange);
+      activityEvents.forEach((evt) => {
+        document.removeEventListener(evt, handleEvent);
+      });
+      window.removeEventListener("beforeunload", handleUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [cartStorage, loading, isLoggedIn, user]);
+  }, [cart, user, createAbandonedCart]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];

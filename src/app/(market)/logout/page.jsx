@@ -6,13 +6,13 @@ import { useCart } from "@/app/context/cart";
 import { BASE_URL } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 export default function LogoutPage() {
-  const { logout, forage } = useAuth();
-  const { createAbandonedCart } = useCart();
+  const { user, logout, forage } = useAuth();
+  const { cart, createAbandonedCart } = useCart();
   const router = useRouter();
   const logUserOut = async () => {
     try {
       const response = await logout();
-      const response2 = await createAbandonedCart("forced");
+      const response2 = await createAbandonedCart(cart, user, "forced");
       if (!response.ok) {
         console.log("[LogoutPage][error]");
         return;
