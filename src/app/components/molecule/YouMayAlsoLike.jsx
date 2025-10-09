@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/app/components/atom/ProductCard";
 import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
-import { exclude_brands } from "@/app/lib/helpers"
+import { exclude_brands } from "@/app/lib/helpers";
 
 export default function YouMayAlsoLike({ displayItems }) {
   const [products, setProducts] = useState([]);
@@ -23,6 +23,11 @@ export default function YouMayAlsoLike({ displayItems }) {
                   must: [
                     {
                       match_all: {},
+                    },
+                    {
+                      term: {
+                        published: true,
+                      },
                     },
                   ],
                   must_not: [

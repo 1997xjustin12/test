@@ -2,7 +2,13 @@
 import API from "@searchkit/api";
 import { redis, keys } from "../../../app/lib/redis";
 
-import { BaseNavKeys, BaseNavObj, burnerBuckets, ES_INDEX, exclude_brands } from "../../../app/lib/helpers";
+import {
+  BaseNavKeys,
+  BaseNavObj,
+  burnerBuckets,
+  ES_INDEX,
+  exclude_brands,
+} from "../../../app/lib/helpers";
 
 const apiClient = API(
   {
@@ -145,7 +151,6 @@ const apiClient = API(
 
           // Build filter query when user selects a value
           filterQuery: (field, value) => {
-
             return {
               terms: {
                 "accentuate_data.bbq.number_of_main_burners":
@@ -257,7 +262,6 @@ export default async function handler(req, res) {
   }
 
   try {
-
     const check_filter = req.body?.[0]?.params?.filter;
 
     let filter_key = null;
@@ -275,10 +279,14 @@ export default async function handler(req, res) {
           },
         },
       },
-      // adding the query below solves an issue when visiting the /brands page where an error occurs when toggling sort options.
       {
         exists: {
           field: "brand.keyword",
+        },
+      },
+      {
+        term: {
+          published: true,
         },
       },
     ];
@@ -350,12 +358,16 @@ export default async function handler(req, res) {
     ) {
       const menu_key = keys.dev_shopify_menu.value;
       const nav_obj = await redis.get(menu_key);
-      const base_nav_array =  nav_obj ?  nav_obj.map(item => item?.name):[];
+      const base_nav_array = nav_obj ? nav_obj.map((item) => item?.name) : [];
       const isBaseNav = base_nav_array.includes(filter_value);
-      const BaseNavItem = isBaseNav ? nav_obj.find(item=> item?.name === filter_value):null;
+      const BaseNavItem = isBaseNav
+        ? nav_obj.find((item) => item?.name === filter_value)
+        : null;
 
       if (BaseNavItem) {
-        const value_array = BaseNavItem?.children.map(item => item?.collection_display?.name);
+        const value_array = BaseNavItem?.children.map(
+          (item) => item?.collection_display?.name
+        );
         console.log("[collection name array]", value_array);
         filter_query.push({
           terms: {
