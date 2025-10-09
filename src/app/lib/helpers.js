@@ -434,3 +434,9 @@ export function debounce(fn, delay=300) {
     timer = setTimeout(() => fn(...args), delay); // forward args
   };
 }
+
+
+//  varaible used to exclude products by brand from displaying on the app
+export const exclude_brands = [
+  "Cedar Creek Fireplaces"
+];

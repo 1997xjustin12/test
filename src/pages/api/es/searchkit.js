@@ -2,10 +2,8 @@
 import API from "@searchkit/api";
 import { redis, keys } from "../../../app/lib/redis";
 
-import { BaseNavKeys, BaseNavObj, burnerBuckets, ES_INDEX } from "../../../app/lib/helpers";
+import { BaseNavKeys, BaseNavObj, burnerBuckets, ES_INDEX, exclude_brands } from "../../../app/lib/helpers";
 
-// const exclude_brands = ["Bull Outdoor Products"];
-const exclude_brands = [];
 const apiClient = API(
   {
     connection: {

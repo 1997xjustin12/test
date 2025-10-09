@@ -9,10 +9,8 @@ import React, {
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
+import { BASE_URL, exclude_brands } from "@/app/lib/helpers"
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-// const exclude_brands = ["Bull Outdoor Products"];
-const exclude_brands = [];
 
 const SearchContext = createContext();
 export const useSearch = () => {
