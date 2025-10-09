@@ -441,3 +441,6 @@ export const exclude_brands = [
   "Cedar Creek Fireplaces",
   "American Fire Glass",
 ];
+
+//  varaible used to exclude products by collections from displaying on the app
+export const exclude_collections = ["Dimplex Fireplace Accessories"]

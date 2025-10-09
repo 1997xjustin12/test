@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/app/components/atom/ProductCard";
 import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
-import { exclude_brands } from "@/app/lib/helpers";
+import { exclude_brands, exclude_collections } from "@/app/lib/helpers";
 
 export default function YouMayAlsoLike({ displayItems }) {
   const [products, setProducts] = useState([]);
@@ -34,6 +34,11 @@ export default function YouMayAlsoLike({ displayItems }) {
                     {
                       terms: {
                         "brand.keyword": exclude_brands,
+                      },
+                    },
+                    {
+                      terms: {
+                        "collections.name.keyword": exclude_collections,
                       },
                     },
                   ],

@@ -8,6 +8,7 @@ import {
   burnerBuckets,
   ES_INDEX,
   exclude_brands,
+  exclude_collections,
 } from "../../../app/lib/helpers";
 
 const apiClient = API(
@@ -272,11 +273,18 @@ export default async function handler(req, res) {
     let filter_query = [
       {
         bool: {
-          must_not: {
-            terms: {
-              "brand.keyword": exclude_brands,
+          must_not: [
+            {
+              terms: {
+                "brand.keyword": exclude_brands,
+              },
             },
-          },
+            {
+              terms: {
+                "collections.name.keyword": exclude_collections,
+              },
+            },
+          ],
         },
       },
       {

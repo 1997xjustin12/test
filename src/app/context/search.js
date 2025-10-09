@@ -9,8 +9,11 @@ import React, {
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
-import { BASE_URL, exclude_brands } from "@/app/lib/helpers"
-
+import {
+  BASE_URL,
+  exclude_brands,
+  exclude_collections,
+} from "@/app/lib/helpers";
 
 const SearchContext = createContext();
 export const useSearch = () => {
@@ -142,6 +145,11 @@ export const SearchProvider = ({ children }) => {
                   {
                     terms: {
                       "brand.keyword": exclude_brands,
+                    },
+                  },
+                  {
+                    terms: {
+                      "collections.name.keyword": exclude_collections,
                     },
                   },
                 ],
