@@ -364,18 +364,20 @@ export default async function handler(req, res) {
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-      const menu_key = keys.dev_shopify_menu.value;
-      const nav_obj = await redis.get(menu_key);
-      const base_nav_array = nav_obj ? nav_obj.map((item) => item?.name) : [];
-      const isBaseNav = base_nav_array.includes(filter_value);
-      const BaseNavItem = isBaseNav
-        ? nav_obj.find((item) => item?.name === filter_value)
-        : null;
+      // Menu Driven Item Display
+      // const menu_key = keys.dev_shopify_menu.value;
+      // const nav_obj = await redis.get(menu_key); 
+      // const base_nav_array = nav_obj ? nav_obj.map((item) => item?.name) : [];
+      // const isBaseNav = base_nav_array.includes(filter_value);
+      // const BaseNavItem = isBaseNav
+      //   ? nav_obj.find((item) => item?.name === filter_value)
+      //   : null;
+      // const value_array = isBaseNav ? BaseNavItem?.children.map(
+      //   (item) => item?.collection_display?.name
+      // ):null;
+      const value_array = BaseNavObj?.[filter_value] || null; // Collection Driven
 
-      if (BaseNavItem) {
-        const value_array = BaseNavItem?.children.map(
-          (item) => item?.collection_display?.name
-        );
+      if (value_array) {
         console.log("[collection name array]", value_array);
         filter_query.push({
           terms: {

@@ -389,10 +389,11 @@ export const BaseNavObj = {
     "Shop Freestanding Patio Heaters",
   ],
   "Built-In Grills": [
-    "Shop Blaze Built-In Grills",
-    "Shop Bull Built-In Grills",
-    "Shop Eloquence Built-In Grills",
-    "Shop Twin Eagles Built-an Grills",
+    // "Shop Blaze Built-In Grills",
+    // "Shop Bull Built-In Grills",
+    // "Shop Eloquence Built-In Grills",
+    // "Shop Twin Eagles Built-an Grills",
+    "Shop All Built In Grills"
   ],
   "Freestanding Grills": [
     "Shop Blaze Freestanding Grills",
