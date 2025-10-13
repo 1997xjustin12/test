@@ -13,6 +13,7 @@ export default async function handler(req, res) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
         ...(authHeader ? { Authorization: authHeader } : {}), // forward bearer token if exists
       },
     });

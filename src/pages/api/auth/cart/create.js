@@ -1,14 +1,12 @@
-import { store_domain } from "../../../../app/lib/helpers";
-
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
   }
 
   try {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/cart/create`;
 
-     // Read authorization header from the incoming request
+    // Read authorization header from the incoming request
     const authHeader = req.headers.authorization;
     const body = await req.body;
 
@@ -16,23 +14,27 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Store-Domain": store_domain,
+        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
         ...(authHeader ? { Authorization: authHeader } : {}),
       },
       body: JSON.stringify(body),
     });
 
     // Check if response is JSON
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
       const text = await response.text();
-      return res.status(500).json({ message: 'Invalid JSON response', raw: text });
+      return res
+        .status(500)
+        .json({ message: "Invalid JSON response", raw: text });
     }
 
     const data = await response.json();
     return res.status(response.status).json(data);
   } catch (error) {
-    console.error('Proxy Error:', error);
-    return res.status(500).json({ message: 'Proxy request failed', error: error.message });
+    console.error("Proxy Error:", error);
+    return res
+      .status(500)
+      .json({ message: "Proxy request failed", error: error.message });
   }
 }

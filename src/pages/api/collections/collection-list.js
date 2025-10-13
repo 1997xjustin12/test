@@ -11,6 +11,7 @@ export default async function handler(req, res) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
         'Authorization': key
       },
     });

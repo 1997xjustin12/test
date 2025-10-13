@@ -14,6 +14,7 @@ export default async function handler(req, res) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
         ...(authHeader ? { Authorization: authHeader } : {}),
       },
       body: JSON.stringify({old_password, new_password}),
