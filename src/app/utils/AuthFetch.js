@@ -8,16 +8,21 @@ export async function authFetch(url, options = {}) {
     ...options,
     headers: {
       ...defaultHeaders,
-      ...(options.headers || {}),
+      ...(options.headers || {})
     },
+    cache: "no-store",
   };
 
   try {
     const response = await fetch(url, mergedOptions);
 
-    return response;
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("authFetch error:", error);
     throw error;
   }
 }
