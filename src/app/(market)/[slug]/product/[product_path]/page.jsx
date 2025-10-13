@@ -17,6 +17,7 @@ import { useSolanaCategories } from "@/app/context/category";
 import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 import CompareProductsTable from "@/app/components/molecule/CompareProductsTable"
+import ProductReviewSection from "@/app/components/molecule/ProductReviewSection"
 
 const BreadCrumbs = ({ slug, product_path }) => {
   const { getNameBySlug } = useSolanaCategories();
@@ -305,6 +306,12 @@ export default function Product({ params }) {
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
               <ProductMetaTabs product={product} />
+            </div>
+          </div>
+          
+          <div className="p-4">
+            <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
+              <ProductReviewSection product={product} />
             </div>
           </div>
           {
