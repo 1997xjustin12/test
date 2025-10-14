@@ -10,6 +10,7 @@ import {
 import { capitalizeFirstLetter, BASE_URL } from "@/app/lib/helpers";
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
+import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog"
 
 const AuthContext = createContext(null);
 
@@ -563,6 +564,7 @@ export function AuthProvider({ children }) {
       }}
     >
       {children}
+      <GuestEmailDialog />
     </AuthContext.Provider>
   );
 }

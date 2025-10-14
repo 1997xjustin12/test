@@ -18,6 +18,9 @@ import { useAuth } from "@/app/context/auth";
 import { redisGet, redisSet } from "@/app/lib/redis";
 import { usePathname, useRouter } from "next/navigation";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
+import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog"
+
+
 
 const CartContext = createContext();
 
@@ -695,6 +698,7 @@ export const CartProvider = ({ children }) => {
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
+      <GuestEmailDialog isLoggedIn={isLoggedIn} cart={cart}/>
     </CartContext.Provider>
   );
 };
