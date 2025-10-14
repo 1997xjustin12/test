@@ -10,8 +10,6 @@ const Subscribe = () => {
   const [loading, setLoading] = useState(false); 
   const {user} = useAuth();
 
-  console.log("USER", user)
-
   const handleSubscribe = async() => {
     try{
       setLoading(true);
