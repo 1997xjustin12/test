@@ -326,7 +326,7 @@ export default function TuiNavbar({ logo, menu }) {
                 </div>
               </div>
             </div>
-            <div className="relative z-[100] border-t">
+            <div className="relative z-[100]">
               {expandedMenu && (
                 <div
                   ref={dropdownRef}
