@@ -296,13 +296,20 @@ const OrderQuerySection = ({ tracking_number }) => {
             </a>
           </span>
         </div>
-        <div className="text-center">
+        {/* <div className="text-center">
           <span className="font-bold">SALES</span> &#9679; Mon-Fri: 5:00am -
-          5:00pm PST &#9679; Sat and Sun: Closed
+          5:00pm PST &#9679; Sat and Sun: 
         </div>
         <div className="text-center">
           <span className="font-bold">SUPPORT</span> &#9679; Mon-Fri: 5:00am -
           5:00pm PST &#9679; Sat and Sun: Closed
+        </div> */}
+        <div className="flex flex-col justify-center items-center mt-1 bg-neutral-100 border border-neutral-200 px-10 py-1 rounded-sm">
+            <div className="font-bold text-lg">Sales & Support</div>
+            <div className="text-neutral-700 font-semibold mt-1">Mon-Fri</div>
+            <div className="text-neutral-500">5:00am - 5:00pm PST</div>
+            <div className="text-neutral-700 font-semibold">Sat and Sun</div>
+            <div className="text-neutral-500">Closed</div>
         </div>
       </div>
       {tracking_number ? (
@@ -494,7 +501,8 @@ function CheckoutComponent() {
   // forage
   const [forage, setForage] = useState(null);
   // auth
-  const { isLoggedIn, user, loading, updateProfile, userOrderCreate } = useAuth();
+  const { isLoggedIn, user, loading, updateProfile, userOrderCreate } =
+    useAuth();
   // login modal
   const [openLogin, setOpenLogin] = useState(false);
 
@@ -524,7 +532,7 @@ function CheckoutComponent() {
 
   async function createOrder(orderData) {
     try {
-      const response = await userOrderCreate(orderData)
+      const response = await userOrderCreate(orderData);
 
       const contentType = response.headers.get("content-type");
       const result = contentType?.includes("application/json")
@@ -818,7 +826,7 @@ function CheckoutComponent() {
         } else {
           setSuccessPayment(false);
           alert("Something went wrong! Please try again.");
-      }
+        }
       } else {
         setSuccessPayment(false);
         alert(`Payment failed: ${result.error}`);
@@ -832,11 +840,7 @@ function CheckoutComponent() {
 
   useEffect(() => {
     console.log("[FORMATTEDCART]", cartItems);
-    if (
-      cartItems &&
-      Array.isArray(cartItems) &&
-      cartItems.length > 0
-    ) {
+    if (cartItems && Array.isArray(cartItems) && cartItems.length > 0) {
       let newForm = { ...form, items: cartItems };
       setForm((prev) => ({ ...newForm }));
       getOrderTotal(newForm);
@@ -1375,7 +1379,9 @@ function CheckoutComponent() {
               <div className="md:hidden">
                 <CompletePaymentButton items={cartItems} />
               </div>
-              <OrderQuerySection tracking_number={cartObject?.tracking_number} />
+              <OrderQuerySection
+                tracking_number={cartObject?.tracking_number}
+              />
             </div>
           </div>
         </div>
