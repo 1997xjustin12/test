@@ -5,6 +5,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import {
   BASE_URL,
@@ -129,8 +130,17 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
               className="w-full relative transform overflow-hidden bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[800px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto rounded-lg"
             >
               <div className="flex flex-col sm:flex-row w-full overflow-hidden">
-                <div className="w-full bg-neutral-600 flex items-center justify-center font-bold text-white">
-                  {"<FeatureImage />"}
+                <div className="w-full bg-neutral-300 flex items-center justify-center font-bold text-white relative">
+                  {/* {"<FeatureImage />"} */}
+                  
+                                <Image
+                                  src={`/images/outdoor-kitchen-email-capture.webp`}
+                                  title={`Outdoor-Kitchen-Image`}
+                                  alt={`Outdoor-Kitchen-Image`}
+                                  fill
+                                  className="object-cover"
+                                  sizes="(max-width: 768px) 100vw, 300px"
+                                />
                 </div>
                 <div className="w-full p-3">
                   <h2>Don’t lose your cart</h2>
