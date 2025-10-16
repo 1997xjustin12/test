@@ -169,7 +169,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
           </Link>
 
           <div className="flex items-center gap-[20px]">
-            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data.compare_at_price) > 0 && (
+            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price) > 0 && (
               <div className="line-through font-medium">
                 ${formatPrice(item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price)}
               </div>
@@ -177,7 +177,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             <div className="font-medium text-green-700">
               ${formatPrice(item?.variants?.[0]?.price || item?.variant_data?.price)}
             </div>
-            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data.compare_at_price) > 0 &&
+            {Number(item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price) > 0 &&
               Number(item?.variants?.[0]?.price || item?.variant_data?.price) > 0 && (
                 <div className="font-medium text-red-700">
                   <span className="italic">
