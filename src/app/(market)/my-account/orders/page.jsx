@@ -7,7 +7,6 @@ import { getProductsByIds } from "@/app/lib/api";
 import { BASE_URL, createSlug, formatPrice } from "@/app/lib/helpers";
 
 const OrderStatusBadge = ({status}) => {
-  if(!["pending", "paid", "shipped", "delivered", "cancelled", "refunded"].includes(status)) return null;
   const badges = {
     pending: {
       color:"#FACC15",
@@ -41,6 +40,9 @@ const OrderStatusBadge = ({status}) => {
   const useLabel = useMemo(()=>{
     return badges?.[status]?.label;
   },[status, badges])
+
+  if(!["pending", "paid", "shipped", "delivered", "cancelled", "refunded"].includes(status)) return null;
+
   return (<div style={{color:useColor, border:`2px solid ${useColor}`}} className="px-1 font-bold">{useLabel}</div>);
 }
 
