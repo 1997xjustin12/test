@@ -494,7 +494,7 @@ function CheckoutComponent() {
   // forage
   const [forage, setForage] = useState(null);
   // auth
-  const { isLoggedIn, user, loading, updateProfile } = useAuth();
+  const { isLoggedIn, user, loading, updateProfile, userOrderCreate } = useAuth();
   // login modal
   const [openLogin, setOpenLogin] = useState(false);
 
@@ -524,13 +524,7 @@ function CheckoutComponent() {
 
   async function createOrder(orderData) {
     try {
-      const response = await fetch("/api/orders/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
+      const response = await userOrderCreate(orderData)
 
       const contentType = response.headers.get("content-type");
       const result = contentType?.includes("application/json")
@@ -819,7 +813,8 @@ function CheckoutComponent() {
           clearCartItems();
           saveInformation(form?.save_information);
           setSuccessPayment(true);
-          router.push(`${BASE_URL}/payment_success`);
+          alert("success");
+          // router.push(`${BASE_URL}/payment_success`);
         } else {
           setSuccessPayment(false);
           alert("Something went wrong! Please try again.");

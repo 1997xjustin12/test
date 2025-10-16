@@ -192,6 +192,34 @@ export function AuthProvider({ children }) {
     return response.json();
   };
 
+  const userOrderCreate = async(order) => {
+    try {
+      console.log("[userOrderCreate]");
+      
+      if (loading) return;
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      
+      if (accessToken) {
+        headers.Authorization = `Bearer ${accessToken}`;
+      }
+
+      console.log("headers", headers);
+
+      return await fetch("/api/orders/checkout", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(order),
+      });
+
+    } catch (err) {
+      console.error("[userCartCreate] error:", err);
+      return null;
+    }
+  };
+
   const userCartGet = async () => {
     console.log("[userCartGet]");
     if (loading) return;
@@ -577,6 +605,7 @@ export function AuthProvider({ children }) {
         accountBenefits,
         forage,
         fullName,
+        userOrderCreate,
         userOrdersGet,
         userCartClose,
         userCartCreate,
