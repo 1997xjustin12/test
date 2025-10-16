@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Rating } from "@smastrom/react-rating";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
+import { useAuth } from "@/app/context/auth";
 
 const FirstReview = ({ openForm }) => {
   return (
@@ -36,17 +37,40 @@ const FirstReview = ({ openForm }) => {
 };
 
 const ReviewForm = ({ product }) => {
+  const { productReviewCreate, productReviewList } = useAuth();
   const inputRef = useRef(null);
   const [form, setForm] = useState({
     product: product?.product_id,
-    rating: 3,
-    title: "",
-    comment: "",
+    rating: 4,
+    title: "Good value for the price",
+    comment:
+      "A few scratches on the exterior but nothing major. Still a great deal for the price.",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      console.log("[form]", form);
+      const response = await productReviewCreate(form);
+      const data = await response.json();
+      console.log("[response]", response);
+      console.log("[data]", data);
+      if (!response.ok) {
+        console.warn("[handleSubmit]", err);
+        return;
+      }
+    } catch (err) {
+      console.warn("[handleSubmit]", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -58,9 +82,20 @@ const ReviewForm = ({ product }) => {
     return product.images.find((image) => image?.position === 1)?.src ?? null;
   }, [product]);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const reviews = await productReviewList([product?.product_id]);
+      console.log("[reviews]", reviews);
+    };
+    if (product) {
+      setForm((prev) => ({ ...prev, product: product?.product_id }));
+      fetchReviews();
+    }
+  }, [product]);
+
   return (
     <div className="rounded shadow-lg p-5 mt-5 border border-neutral-300">
-      <form className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <h3>Write a review</h3>
         <div className="flex items-center gap-5">
           <div className="h-[100px] w-[100px] relative">
@@ -130,7 +165,7 @@ const ReviewForm = ({ product }) => {
             Cancel Review
           </button>
           <button
-            type="button"
+            type="submit"
             className="text-[12px] sm:text-base px-10 py-1 bg-stone-600 hover:bg-stone-700 border-2 border-stone-600 hover:border-stone-700 text-white"
           >
             Submit Review
@@ -179,8 +214,8 @@ const ReviewSummary = ({ product }) => {
   }, [reviewSummary]);
 
   return (
-    <div className="flex items-center gap-2 w-full">
-      <div className="w-[150px] text-center">
+    <div className="flex flex-col gap-2 w-full">
+      <div className="w-full text-center">
         <div className="text-4xl font-bold">
           {reviewSummary?.overall_rating}
         </div>
@@ -191,21 +226,34 @@ const ReviewSummary = ({ product }) => {
           {total_votes} ratings
         </div>
       </div>
-      <div className="w-[calc(100%-150px)]">
+      <div className="w-full">
         {reviewSummary?.by_star?.length &&
           reviewSummary?.by_star.map((item) => (
             <div
               className="flex items-center gap-2"
               key={`review-summary-${item?.name}`}
             >
-              <div className="w-[calc(100%-50px)]">
+              <div className="w-[100px]">
+                <Rating
+                  readOnly
+                  value={item?.star}
+                  style={{ maxWidth: 100 }}
+                ></Rating>
+              </div>
+              <div className="w-[calc(100%-60px)]">
                 <div className="h-2 bg-neutral-200 rounded-full">
-                  <div 
-                  style={{ width: `${calculatePercentage(total_votes, item?.votes)}%` }}
-                  className={`h-2 bg-indigo-500 rounded-full`}></div>
+                  <div
+                    style={{
+                      width: `${calculatePercentage(
+                        total_votes,
+                        item?.votes
+                      )}%`,
+                    }}
+                    className={`h-2 bg-indigo-500 rounded-full`}
+                  ></div>
                 </div>
               </div>
-              <div className="w-[50px] text-xs text-neutral-500 text-right">
+              <div className="w-[60px] text-xs text-neutral-500 text-right">
                 {item?.votes} rating
               </div>
             </div>
@@ -231,12 +279,11 @@ function ProductReviewSection({ product }) {
       <h2>Customer Reviews</h2>
       {review ? (
         <div className="mt-5 flex gap-[20px]">
-            <div className="w-full p-5 rounded-md border border-neutral-300">
-                <ReviewSummary product={product} />
-            </div>
-            <div className="w-full">Review Carousel</div>
+          <div className="w-full p-5 rounded-md border border-neutral-300">
+            <ReviewSummary product={product} />
+          </div>
         </div>
-        ) : (
+      ) : (
         <FirstReview openForm={handleFormToggle} />
       )}
       {visibleForm && (

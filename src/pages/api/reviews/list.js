@@ -3,14 +3,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
+  const { product_id } = req.query;
+  
+  if (req.method !== 'GET') {
+    return res.status(400).json({ message: '[product_id] required' });
+  }
+  
   try {
-    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/list`;
+    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/list?product_id=${product_id}`;
 
      // Read authorization header from the incoming request
     const authHeader = req.headers.authorization;
 
     const response = await fetch(url, {
       method: "GET",
+      cache: "no-store",
+      "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
       headers: {
         "Content-Type": "application/json",
         'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,

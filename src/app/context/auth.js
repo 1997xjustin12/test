@@ -205,12 +205,11 @@ export function AuthProvider({ children }) {
         },
       });
 
-      if(response.status === 404){
+      if (response.status === 404) {
         return null;
       }
 
       return response.json();
-
     } catch (err) {
       return err;
     }
@@ -227,7 +226,7 @@ export function AuthProvider({ children }) {
     try {
       const bearer = `Bearer ${accessToken}`;
 
-      const response =  await fetch("/api/auth/cart/create", {
+      const response = await fetch("/api/auth/cart/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,12 +235,11 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(cart),
       });
 
-      if(!response.ok){
+      if (!response.ok) {
         return null;
       }
 
       return await response.json();
-      
     } catch (err) {
       console.error("[userCartCreate] error:", err);
       return null;
@@ -267,8 +265,8 @@ export function AuthProvider({ children }) {
         },
         body: JSON.stringify(cart),
       });
-      
-      if(!response.ok){
+
+      if (!response.ok) {
         return null;
       }
 
@@ -491,6 +489,35 @@ export function AuthProvider({ children }) {
     return res;
   };
 
+  const productReviewCreate = async (data) => {
+    try {
+      return await fetch("/api/reviews/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.warn("[productReviewCreate] API error:", err);
+    }
+  };
+
+  const productReviewList = async (product_id) => {
+    try {
+      return await fetch(`/api/reviews/list?product_id=${product_id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    } catch (err) {
+      console.warn("[productReviewList] API error:", err);
+    }
+  };
+
   // ---- on mount, load localForage and then refresh once ----
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -556,6 +583,8 @@ export function AuthProvider({ children }) {
         user,
         myAccountLinks,
         changePassword,
+        productReviewCreate,
+        productReviewList,
         login,
         logout,
         updateProfile,
