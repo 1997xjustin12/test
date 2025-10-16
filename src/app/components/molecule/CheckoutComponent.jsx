@@ -279,7 +279,7 @@ const OrderQuerySection = ({ tracking_number }) => {
   return (
     <div className="my-10 border border-neutral-300 shadow p-5 rounded">
       <h2 className="text-center">Need help with your order?</h2>
-      <div className="flex flex-col gap-[8px] text-sm font-medium text-neutral-600 items-center justify-center my-5">
+      <div className="flex flex-col gap-[8px] text-sm font-medium text-neutral-600 items-center justify-center my-2">
         <div className="text-center">
           <span className="font-bold">Call </span>{" "}
           <span className="text-theme-600 font-bold">
