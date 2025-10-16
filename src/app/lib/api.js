@@ -1,4 +1,4 @@
-export const sendAbandonedCart = async(cart) => {
+export const sendAbandonedCart = async (cart) => {
   try {
     if (!cart) {
       console.warn("[ABANDONED CART] No valid cart to send");
@@ -12,14 +12,12 @@ export const sendAbandonedCart = async(cart) => {
       },
       body: JSON.stringify(cart),
     });
-
   } catch (err) {
     console.warn("[ABANDONED CART] API error:", err);
   }
-}
+};
 
-
-export const subscribe = async(email) => {
+export const subscribe = async (email) => {
   try {
     if (!email) {
       console.warn("[email] Requied field missing.");
@@ -31,15 +29,14 @@ export const subscribe = async(email) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({email}),
+      body: JSON.stringify({ email }),
     });
-
   } catch (err) {
     console.warn("[subscribe] API error:", err);
   }
-}
+};
 
-export const unsubscribe = async(email) => {
+export const unsubscribe = async (email) => {
   try {
     if (!email) {
       console.warn("[email] Requied field missing.");
@@ -51,10 +48,23 @@ export const unsubscribe = async(email) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({email}),
+      body: JSON.stringify({ email }),
     });
-
   } catch (err) {
     console.warn("[unsubscribe] API error:", err);
   }
-}
+};
+
+export const getProductsByIds = async (ids) => {
+  try {
+    if (!ids) {
+      console.warn("[ids] Requied field missing.");
+      return;
+    }
+    const uniqueIds = [...new Set(ids)];
+    const query = uniqueIds.map(id => `product_ids=${id}`).join('&');
+    return await fetch(`/api/es/products-by-ids?${query}`);
+  } catch (err) {
+    console.warn("[unsubscribe] API error:", err);
+  }
+};

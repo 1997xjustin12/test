@@ -172,21 +172,24 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const getUserOrders = async () => {
-    try {
-      const bearer = `Bearer ${accessToken}`;
-      return await fetch("/api/auth/orders", {
-        headers: {
-          Authorization: bearer,
-        },
-      });
-      // const data = await response.json();
-      // console.log("[ORDERS]", data);
-      // const user_obj = injectUserFields(data);
-      // setOrders(user_obj);
-    } catch (err) {
-      return err;
+  const userOrdersGet = async () => {
+    const headers = {};
+
+    if (accessToken) {
+      headers.Authorization = `Bearer ${accessToken}`;
     }
+
+    const response = await fetch("/api/auth/orders", {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) {
+      // Throw readable error instead of silent fail
+      throw new Error(`Failed to fetch orders: ${response.status}`);
+    }
+
+    return response.json();
   };
 
   const userCartGet = async () => {
@@ -574,7 +577,7 @@ export function AuthProvider({ children }) {
         accountBenefits,
         forage,
         fullName,
-        getUserOrders,
+        userOrdersGet,
         userCartClose,
         userCartCreate,
         userCartGet,
