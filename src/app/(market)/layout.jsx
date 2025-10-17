@@ -23,8 +23,7 @@ import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 
-
-import Script from 'next/script';
+import Script from "next/script";
 
 const shopify = true; // if shopify product structure
 
@@ -66,15 +65,39 @@ const playfair_display_sc = Playfair_Display_SC({
 // add playfair_display font
 // add
 export const metadata = await generateMetadata();
+
+const init = async () => {
+  try {
+    const redisLogoKey = "admin_solana_market_logo";
+    const defaultKey = keys.dev_shopify_menu.value;
+    const themeKey = keys.theme.value;
+    const mgetKeys = [defaultKey, redisLogoKey, themeKey];
+    return await redis.mget(mgetKeys);
+  } catch (err) {
+    console.warn("[init]", err);
+    return null;
+  }
+};
+
 export default async function MarketLayout({ children }) {
   const deskHeadFootHeight = 656; //px
-  const redisLogoKey = "admin_solana_market_logo";
-  // const redisLogo = await redis.get(redisLogoKey);
-  // const defaultKey = shopify? keys.default_shopify_menu.value :keys.default_menu.value;
-  const defaultKey = keys.dev_shopify_menu.value;
-  const themeKey = keys.theme.value;
-  const mgetKeys = [defaultKey, redisLogoKey, themeKey];
-  const [menu, redisLogo, color] = await redis.mget(mgetKeys);
+  const init_data = await init();
+
+  if (init_data) {
+    return (
+      <html lang="en">
+        <body  className="flex items-center justify-center h-screen w-screen">
+          <div className="text-center">
+            <h1>Network error</h1>
+            <p>Your device may be offline. Try again.</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
+  const [menu, redisLogo, color] = init_data;
+
   return (
     <html lang="en">
       <head>
