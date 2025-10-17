@@ -83,7 +83,7 @@ export default async function MarketLayout({ children }) {
   const deskHeadFootHeight = 656; //px
   const init_data = await init();
 
-  if (init_data) {
+  if (!init_data) {
     return (
       <html lang="en">
         <body  className="flex items-center justify-center h-screen w-screen">
