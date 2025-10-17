@@ -520,7 +520,7 @@ export function AuthProvider({ children }) {
     return res;
   };
 
-  const productReviewCreate = async (data) => {
+  const userReviewCreate = async (data) => {
     try {
       return await fetch("/api/reviews/create", {
         method: "POST",
@@ -531,23 +531,11 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(data),
       });
     } catch (err) {
-      console.warn("[productReviewCreate] API error:", err);
+      console.warn("[userReviewCreate] API error:", err);
     }
   };
 
-  const productReviewList = async (product_id) => {
-    try {
-      return await fetch(`/api/reviews/list?product_id=${product_id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-    } catch (err) {
-      console.warn("[productReviewList] API error:", err);
-    }
-  };
+  
 
   // ---- on mount, load localForage and then refresh once ----
   useEffect(() => {
@@ -615,8 +603,7 @@ export function AuthProvider({ children }) {
         user,
         myAccountLinks,
         changePassword,
-        productReviewCreate,
-        productReviewList,
+        userReviewCreate,
         login,
         logout,
         updateProfile,

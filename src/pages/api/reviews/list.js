@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/list?product_id=${product_id}`;
 
      // Read authorization header from the incoming request
-    const authHeader = req.headers.authorization;
+    // const authHeader = req.headers.authorization;
 
     const response = await fetch(url, {
       method: "GET",
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
       headers: {
         "Content-Type": "application/json",
         'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
-        ...(authHeader ? { Authorization: authHeader } : {}), // forward bearer token if exists
+        // ...(authHeader ? { Authorization: authHeader } : {}), // forward bearer token if exists
       },
     });
 

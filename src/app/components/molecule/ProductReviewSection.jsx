@@ -4,7 +4,10 @@ import { Rating } from "@smastrom/react-rating";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
-
+import { getReviewsByProductId } from "@/app/lib/api";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 const FirstReview = ({ openForm }) => {
   return (
     <div className="mt-2">
@@ -37,7 +40,7 @@ const FirstReview = ({ openForm }) => {
 };
 
 const ReviewForm = ({ product }) => {
-  const { productReviewCreate, productReviewList } = useAuth();
+  const { userReviewCreate } = useAuth();
   const inputRef = useRef(null);
   const [form, setForm] = useState({
     product: product?.product_id,
@@ -58,7 +61,7 @@ const ReviewForm = ({ product }) => {
     try {
       setLoading(true);
       console.log("[form]", form);
-      const response = await productReviewCreate(form);
+      const response = await userReviewCreate(form);
       const data = await response.json();
       console.log("[response]", response);
       console.log("[data]", data);
@@ -80,17 +83,6 @@ const ReviewForm = ({ product }) => {
   const productImage = useMemo(() => {
     if (!product?.images?.length) return null;
     return product.images.find((image) => image?.position === 1)?.src ?? null;
-  }, [product]);
-
-  useEffect(() => {
-    const fetchReviews = async () => {
-      const reviews = await productReviewList([product?.product_id]);
-      console.log("[reviews]", reviews);
-    };
-    if (product) {
-      setForm((prev) => ({ ...prev, product: product?.product_id }));
-      fetchReviews();
-    }
   }, [product]);
 
   return (
@@ -265,7 +257,7 @@ const ReviewSummary = ({ product }) => {
 
 function ProductReviewSection({ product }) {
   const [visibleForm, setVisibleForm] = useState("review");
-  const [review, setReview] = useState(1);
+  const [reviews, setReviews] = useState(null);
 
   const handleFormToggle = (form) => {
     setVisibleForm((prev) => {
@@ -274,24 +266,61 @@ function ProductReviewSection({ product }) {
     });
   };
 
+  useEffect(() => {
+    const product_id = product?.product_id;
+    console.log("[product]", product);
+    const fetchReviews = async () => {
+      try {
+        const response = await getReviewsByProductId(product_id);
+        if (!response.ok) {
+          setReviews(null);
+          return;
+        }
+        const data = await response.json();
+        console.log("[fetchReviews] data", data);
+        setReviews(data);
+      } catch (err) {
+        console.warn("[fetchReviews]", err);
+      }
+    };
+    console.log("[product_id]", product_id);
+    if (!product_id) {
+      return;
+    }
+    fetchReviews();
+  }, [product]);
+
   return (
     <div className="">
       <h2>Customer Reviews</h2>
-      {review ? (
-        <div className="mt-5 flex gap-[20px]">
-          <div className="w-full p-5 rounded-md border border-neutral-300">
-            <ReviewSummary product={product} />
-          </div>
+      <div className="mt-5 flex flex-col gap-[20px]">
+        <div className="w-full p-5 rounded-md border border-neutral-300">
+          <ReviewSummary product={product} />
         </div>
-      ) : (
-        <FirstReview openForm={handleFormToggle} />
-      )}
-      {visibleForm && (
-        <>
-          {visibleForm === "review" && <ReviewForm product={product} />}
-          {visibleForm === "inquiry" && <InquiryForm />}
-        </>
-      )}
+        {reviews &&
+          reviews?.results?.length > 0 &&
+          reviews.results.map((review) => (
+            <div
+              key={`review-item-${review?.id}`}
+              className="w-full p-5 rounded-md border border-neutral-300"
+            >
+              <div className="flex gap-1 items-center">
+                <span className="font-medium">{parseFloat(review?.rating).toFixed(1)}</span>
+                <Rating
+                  readOnly
+                  value={review?.rating}
+                  style={{ maxWidth: 100 }}
+                ></Rating>
+              </div>
+              <div className="flex items-center gap-3 mt-3 text-sm">
+                <div className="font-bold">{review?.user?.username}</div>
+                <div className="text-neutral-500">{dayjs(review?.created_at).fromNow()}</div>
+              </div>
+              <div className="text-lg font-bold mt-3">{review?.title}</div>
+              <div className="text-neutral-700">{review?.comment}</div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
