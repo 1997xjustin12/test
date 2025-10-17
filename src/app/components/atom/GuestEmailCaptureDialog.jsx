@@ -77,7 +77,11 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
     setLoading(true);
 
     try {
-      await forage.setItem("checkout_info", {...initial_info, billing_email: email, shipping_email: email});
+      await forage.setItem("checkout_info", {
+        ...initial_info,
+        billing_email: email,
+        shipping_email: email,
+      });
       setInfoEmail(email);
       setToggle(false);
     } catch (err) {
@@ -131,16 +135,14 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
             >
               <div className="flex flex-col sm:flex-row w-full overflow-hidden">
                 <div className="w-full bg-neutral-300 flex items-center justify-center font-bold text-white relative">
-                  {/* {"<FeatureImage />"} */}
-                  
-                                <Image
-                                  src={`/images/outdoor-kitchen-email-capture.webp`}
-                                  title={`Outdoor-Kitchen-Image`}
-                                  alt={`Outdoor-Kitchen-Image`}
-                                  fill
-                                  className="object-cover"
-                                  sizes="(max-width: 768px) 100vw, 300px"
-                                />
+                  <Image
+                    src={`/images/outdoor-kitchen-email-capture.webp`}
+                    title={`Outdoor-Kitchen-Image`}
+                    alt={`Outdoor-Kitchen-Image`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
                 </div>
                 <div className="w-full p-3">
                   <h2>Don’t lose your cart</h2>
