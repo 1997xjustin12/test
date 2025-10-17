@@ -9,21 +9,25 @@ export default async function handler(req, res) {
     product,
     rating,
     title,
-    comment
+    comment,
+    id
    } = req.body;
 
-  if (!product || !rating || !title || !comment) {
-    return res.status(400).json({ error: "[product, rating, title, comment] Missing required fields" });
+  if (!id || !product || !rating || !title || !comment) {
+    return res.status(400).json({ error: "[id, product, rating, title, comment] Missing required fields" });
   }
 
   try {
-    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/1/update`;
+    const authHeader = req.headers.authorization;
+    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/${id}/update`;
 
+    console.log("[UPDATE REVIEW URL]", url);
     const response = await fetch(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
+        ...(authHeader ? { Authorization: authHeader } : {}),
       },
       body: JSON.stringify(req.body),
     });

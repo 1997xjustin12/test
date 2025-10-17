@@ -42,32 +42,32 @@ const TemporaryComponent = () => {
 
   const fetchUserCart = async () => {
     const response = await userCartGet();
-    console.log("[GET][CART][REPSPONSE]", response);
+    // console.log("[GET][CART][REPSPONSE]", response);
   };
 
   const createUserCart = async () => {
-    console.log("[CREATE][CART] LOCAL CART", cartObject);
+    // console.log("[CREATE][CART] LOCAL CART", cartObject);
     if (!cartObject) {
-      console.log("[CART OBJECT IS NULL]");
+      // console.log("[CART OBJECT IS NULL]");
       return;
     }
     const response = await userCartCreate({
       items: cartObject?.items,
       tracking_number: cartObject?.tracking_number,
     });
-    console.log("[CREATE][CART][REPSPONSE]", response);
+    // console.log("[CREATE][CART][REPSPONSE]", response);
   };
 
   const closeUserCart = async () => {
     const response = await userCartClose();
-    console.log("[CREATE][CLOSE][REPSPONSE]", response);
+    // console.log("[CREATE][CLOSE][REPSPONSE]", response);
   };
 
   const updateUserCart = async () => {
-    console.log("[UPDATE][CART] LOCAL CART", cartObject);
-    console.log("[UPDATE][CART] User", user);
+    // console.log("[UPDATE][CART] LOCAL CART", cartObject);
+    // console.log("[UPDATE][CART] User", user);
     if (!cartObject) {
-      console.log("[CART OBJECT IS NULL]");
+      // console.log("[CART OBJECT IS NULL]");
       return;
     }
     const user_profile = userProfileToCart(user);
@@ -77,7 +77,7 @@ const TemporaryComponent = () => {
       tracking_number: cartObject?.tracking_number,
       ...user_profile,
     });
-    console.log("[UPDATE][CART][REPSPONSE]", response);
+    // console.log("[UPDATE][CART][REPSPONSE]", response);
   };
 
   return (

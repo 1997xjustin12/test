@@ -18,7 +18,6 @@ export default async function handler(req, res) {
     const response = await fetch(url, {
       method: "GET",
       cache: "no-store",
-      "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
       headers: {
         "Content-Type": "application/json",
         'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,

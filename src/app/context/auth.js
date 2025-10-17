@@ -535,6 +535,22 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const userReviewUpdate = async (data) => {
+    try {
+      return await fetch("/api/reviews/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.warn("[userReviewUpdate] API error:", err);
+    }
+  };
+
+
   
 
   // ---- on mount, load localForage and then refresh once ----
@@ -604,6 +620,7 @@ export function AuthProvider({ children }) {
         myAccountLinks,
         changePassword,
         userReviewCreate,
+        userReviewUpdate,
         login,
         logout,
         updateProfile,

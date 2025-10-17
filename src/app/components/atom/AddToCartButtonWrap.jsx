@@ -2,7 +2,7 @@
 import React from "react";
 import { useCart } from "@/app/context/cart";
 function AddToCartButtonWrap({ product, children }) {
-  const { addToCart } = useCart();
+  const { addToCart, addToCartLoading } = useCart();
 
   const handleClick = () => {
     console.log("[AddToCartButtonWrap] product", product)
