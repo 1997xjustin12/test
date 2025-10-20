@@ -2,7 +2,7 @@
 import React from 'react'
 import CartComponent from "@/app/components/molecule/CartComponent"
 const CartPage = async() => {
-  return <div>CartPage</div>
+  return <CartComponent />
 }
 
 export default CartPage
