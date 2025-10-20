@@ -70,37 +70,48 @@ export const keys = {
 }
 
 
-// ✅ Safe server-side access
-export const redisGet = async (key) => {
-  try {
-    return await redis.get(key);
-  } catch (error) {
-    console.error("Redis GET error:", error);
-    return null;
-  }
-};
-
-export const redisSet = async (key, value) => {
-  try {
-    return await redis.set(key, value);
-  } catch (error) {
-    console.error("Redis SET error:", error);
-    return null;
-  }
-};
-
-export const redisMultiSet = async (obj) => {
-  try {
-    const pipeline = redis.pipeline();
-    Object.entries(obj).forEach(([key, value]) => {
-      pipeline.set(key, value);
+export const redisSet = async(key, value) => {
+  try{
+    const response = await fetch("/api/redis", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key, value }),
     });
-    return await pipeline.exec();
-  } catch (error) {
-    console.error("Redis MULTI SET error:", error);
-    return null;
+    return await response.json();
+  }catch(error){
+    console.log(`RedisSetError: ${error}`);
   }
-};
+}
+
+export const redisMultiSet = async(obj) => {
+  try{
+    const response = await fetch("/api/redis", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(obj),
+    });
+    return await response.json();
+  }catch(error){
+    console.log(`RedisMultiSetError: ${error}`);
+  }
+}
+
+export const redisGet = async(key) =>{
+  try {
+    const params = new URLSearchParams({"key":key});
+    const response = await fetch(`/api/redis?${params.toString()}`,{
+      cache:"no-store",
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`RedisGetError ${response.status}: ${errorData.error}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`RedisGetError: ${error}`);
+  }
+}
 
 export const updatePopularSearches = async(req, res) => {
   if (req.method === "POST") {
