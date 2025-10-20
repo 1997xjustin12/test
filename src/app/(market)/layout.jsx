@@ -75,6 +75,7 @@ const init = async () => {
     return await redis.mget(mgetKeys);
   } catch (err) {
     console.warn("[init]", err);
+    console.log("[init]", err);
     return null;
   }
 };
@@ -83,10 +84,13 @@ export default async function MarketLayout({ children }) {
   const deskHeadFootHeight = 656; //px
   const init_data = await init();
 
+  console.warn("[init_data]", init_data);
+  console.log("[init_data]", init_data);
+
   if (!init_data) {
     return (
       <html lang="en">
-        <body  className="flex items-center justify-center h-screen w-screen">
+        <body className="flex items-center justify-center h-screen w-screen">
           <div className="text-center">
             <h1>Network error</h1>
             <p>Your device may be offline. Try again.</p>
