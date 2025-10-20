@@ -15,7 +15,6 @@ import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
 import { sendAbandonedCart } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
-import { redisGet, redisSet } from "@/app/lib/redis";
 import { usePathname, useRouter } from "next/navigation";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
 import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog";

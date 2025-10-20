@@ -1,6 +1,7 @@
+'use server'
 import React from 'react'
 import CartComponent from "@/app/components/molecule/CartComponent"
-function CartPage() {
+const CartPage = async() => {
   return <div>CartPage</div>
 }
 
