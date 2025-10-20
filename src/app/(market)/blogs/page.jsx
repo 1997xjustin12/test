@@ -3,7 +3,6 @@ import { BASE_URL } from "@/app/lib/helpers";
 import he from "he";
 import Link from "next/link";
 // import Paginator from "@/app/components/atom/Paginator"
-export const dynamic = "force-dynamic";
 const Paginator = ({ current_page = 1, total_pages = 1 }) => {
   const btn_class =
     "border border-[#ccc] rounded shadow bg-white flex items-center justify-center w-[40px] h-[30px] text-xs";

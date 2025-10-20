@@ -80,6 +80,8 @@ const init = async () => {
   }
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function MarketLayout({ children }) {
   const deskHeadFootHeight = 656; //px
   const init_data = await init();
@@ -87,18 +89,18 @@ export default async function MarketLayout({ children }) {
   console.warn("[init_data]", init_data);
   console.log("[init_data]", init_data);
 
-  // if (!init_data) {
-  //   return (
-  //     <html lang="en">
-  //       <body className="flex items-center justify-center h-screen w-screen">
-  //         <div className="text-center">
-  //           <h1>Network error</h1>
-  //           <p>Your device may be offline. Try again.</p>
-  //         </div>
-  //       </body>
-  //     </html>
-  //   );
-  // }
+  if (!init_data) {
+    return (
+      <html lang="en">
+        <body className="flex items-center justify-center h-screen w-screen">
+          <div className="text-center">
+            <h1>Network error</h1>
+            <p>Your device may be offline. Try again.</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
 
   const [menu, redisLogo, color] = init_data;
 
