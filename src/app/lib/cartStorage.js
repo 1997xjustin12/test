@@ -2,13 +2,14 @@
 import localForage from "localforage";
 
 // Configure localForage (optional, but can specify a store name)
+if (typeof window !== "undefined") {
 localForage.config({
   driver: localForage.LOCALSTORAGE, 
   name: "solanaStore",
   storeName: "vairables",
   description: "variables for guest users",
 });
-
+}
 // Function to save cart items
 export const saveCart = async (cart) => {
   try {

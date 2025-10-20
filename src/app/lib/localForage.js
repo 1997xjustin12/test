@@ -1,12 +1,12 @@
 import localForage from "localforage";
-
+if (typeof window !== "undefined") {
 localForage.config({
   driver: localForage.LOCALSTORAGE,
   name: "solanaStore",
   storeName: "vairables",
   description: "variables for guest users",
 });
-
+}
 export const setItem = async (key, value) => {
   if (!key || !value) {
     console.error(`[LocalForage] setItem: key and value params required`);

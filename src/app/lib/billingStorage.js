@@ -1,12 +1,12 @@
 import localForage from "localforage";
-
-localForage.config({
-  driver: localForage.LOCALSTORAGE,
-  name: "solanaStore",
-  storeName: "vairables",
-  description: "variables for guest users",
-});
-
+if (typeof window !== "undefined") {
+  localForage.config({
+    driver: localForage.LOCALSTORAGE,
+    name: "solanaStore",
+    storeName: "vairables",
+    description: "variables for guest users",
+  });
+}
 export const set = async (billing_info) => {
   try {
     await localForage.setItem("billing_info", billing_info);
@@ -27,6 +27,3 @@ export const get = async () => {
     return {};
   }
 };
-
-
-
