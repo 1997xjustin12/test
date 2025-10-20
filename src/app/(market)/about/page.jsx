@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 
+export const dynamic = "force-dynamic";
+
 function About() {
     const brandName = "SolanaFireplaces";
     const contact = "(888) 575-9720";
