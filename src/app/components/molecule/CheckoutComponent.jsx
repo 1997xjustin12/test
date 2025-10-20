@@ -275,7 +275,7 @@ const CompletePaymentButton = ({ items }) => {
 //   );
 // };
 
-const OrderQuerySection = ({ tracking_number }) => {
+const OrderQuerySection = ({ reference_number }) => {
   return (
     <div className="my-10 border border-neutral-300 shadow p-5 rounded">
       <h2 className="text-center">Need help with your order?</h2>
@@ -312,9 +312,9 @@ const OrderQuerySection = ({ tracking_number }) => {
             <div className="text-neutral-500">Closed</div>
         </div>
       </div>
-      {tracking_number ? (
+      {reference_number ? (
         <h2 className="text-center">
-          Order #: <span className="text-theme-600">{tracking_number}</span>
+          REF #: <span className="text-theme-600">{reference_number}</span>
         </h2>
       ) : (
         <div className="h-[24px] w-full bg-neutral-200"></div>
@@ -1380,7 +1380,7 @@ function CheckoutComponent() {
                 <CompletePaymentButton items={cartItems} />
               </div>
               <OrderQuerySection
-                tracking_number={cartObject?.tracking_number}
+                reference_number={isLoggedIn ? "CI-"+cartObject?.cart_id: cartObject?.reference_number}
               />
             </div>
           </div>

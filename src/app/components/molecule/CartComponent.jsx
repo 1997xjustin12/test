@@ -12,9 +12,8 @@ import { ICRoundPhone } from "@/app/components/icons/lib";
 const TemporaryComponent = () => {
   const { user, userCartGet, userCartCreate, userCartClose, userCartUpdate } =
     useAuth();
-  const { cartItems, cartObject } = useCart();
+  const { cartItems, cartObject, guestCartToActive } = useCart();
 
-  if (!user) return;
 
   const userProfileToCart = (user = {}) => {
     return {
@@ -52,7 +51,6 @@ const TemporaryComponent = () => {
     }
     const response = await userCartCreate({
       items: cartObject?.items,
-      tracking_number: cartObject?.tracking_number,
     });
     // console.log("[CREATE][CART][REPSPONSE]", response);
   };
@@ -73,11 +71,24 @@ const TemporaryComponent = () => {
     const injected_items = (cartObject?.items || []).map(item=> ({...item, product_id: 3687, variant_data: {test:"test"}, custom_fields:{test:"test"}}))
     const response = await userCartUpdate({
       items: injected_items,
-      tracking_number: cartObject?.tracking_number,
       ...user_profile,
     });
     // console.log("[UPDATE][CART][REPSPONSE]", response);
   };
+
+  if (!user) return (
+    <div className="mb-10">
+      <h2>TEMPORARY COMPONENT</h2>
+      <p className="text-neutral-500 text-sm">Guest Cart Triggers</p>
+      <div className="mt-5 flex gap-[20px]">
+        <button
+          onClick={guestCartToActive}
+          className="text-white text-sm font-bold bg-indigo-600 hover:bg-indigo-700 rounded-[2px] py-1 px-4"
+        >
+          GUEST CART TO STATUS ACTIVE
+        </button>
+      </div>
+    </div>);
 
   return (
     <div className="mb-10">
@@ -107,6 +118,14 @@ const TemporaryComponent = () => {
           className="text-white text-sm font-bold bg-red-600 hover:bg-red-700 rounded-[2px] py-1 px-4"
         >
           CLOSE
+        </button>
+      </div>
+      <div className="mt-5 flex gap-[20px]">
+        <button
+          onClick={fetchUserCart}
+          className="text-white text-sm font-bold bg-indigo-600 hover:bg-indigo-700 rounded-[2px] py-1 px-4"
+        >
+          GUEST CART TO STATUS ACTIVE
         </button>
       </div>
     </div>
@@ -273,7 +292,7 @@ export default function CartPageComponent() {
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        {/* <TemporaryComponent /> */}
+        <TemporaryComponent />
         {loadingCartItems ? (
           <CartOnloadLoader />
         ) : (
@@ -313,11 +332,11 @@ export default function CartPageComponent() {
                       <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-8">
                         Shopping Cart
                       </h2>
-                      {cartObject?.tracking_number && (
+                      {cartObject?.reference_number && (
                         <h5 className="font-bold text-neutral-600 text-sm">
-                          ORDER #:{" "}
+                          REF #:{" "}
                           <span className="text-theme-600">
-                            {cartObject?.tracking_number}
+                            {isLoggedIn? "CI-"+cartObject?.cart_id : cartObject?.reference_number}
                           </span>
                         </h5>
                       )}

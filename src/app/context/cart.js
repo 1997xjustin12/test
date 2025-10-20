@@ -47,6 +47,20 @@ export const CartProvider = ({ children }) => {
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [abandonedCartUser, setAbandonedCartUser] = useState(null);
+
+  // for stale value
+  const cartRef = useRef(cart);
+  const userRef = useRef(abandonedCartUser);
+
+  const guestCartToActive = async () => {
+    if (!forage) {
+      console.log("[forage]", forage);
+    }
+    const guestCart = await forage.getItem("cart");
+    console.log("guestCart", guestCart);
+    await forage.setItem("cart", { ...guestCart, status: "active" });
+  };
 
   const notifyCartUpdate = (cartData = null) => {
     if (!cart_channel.current) return;
@@ -60,22 +74,43 @@ export const CartProvider = ({ children }) => {
   };
 
   const sendAbandonedCartBeacon = (cart) => {
-    if (!cart || !cart?.items || cart?.items?.length === 0) return;
-    const url = "/api/abandoned-carts/create";
-    const data = JSON.stringify(cart);
+    if (
+      typeof navigator === "undefined" || // prevent SSR crash
+      !cart ||
+      !Array.isArray(cart.items) ||
+      cart.items.length === 0
+    ) {
+      return;
+    }
 
-    navigator.sendBeacon(url, data);
+    const url = "/api/abandoned-carts/create";
+    const body = JSON.stringify(cart);
+
+    const blob = new Blob([body], { type: "application/json" });
+
+    console.log("SEND BEACON", { url, body });
+
+    navigator.sendBeacon(url, blob);
   };
 
   const createAbandonedCart = async (cart_obj, user_obj, trigger = "timed") => {
+    if(!loading && user) {
+      console.log("ABANDONED CART FOR GUEST ONLY");
+      return;
+    }
+
     if (!cart_obj && !cart_obj?.id) return;
-    if (!user_obj) return;
+
+    if (!user_obj?.billing_email || !user_obj?.shipping_email) return;
 
     const cart_items = cart_obj?.items ?? [];
 
     if (cart_items.length === 0) return;
 
-    if (cart_obj?.abandoned_cart_id) return;
+    if (cart_obj?.status === "saved") {
+      console.log("cart status is ", cart_obj?.status);
+      return;
+    }
 
     const updatedAt = new Date(cart_obj.updated_at).getTime();
 
@@ -85,55 +120,46 @@ export const CartProvider = ({ children }) => {
       ...cart_obj,
       abandoned_cart_id: cart_obj.id,
       items: mapOrderItems(cart_items),
-      billing_address: user_obj?.profile?.billing_address,
-      billing_city: user_obj?.profile?.billing_city,
-      billing_country: user_obj?.profile?.billing_country,
-      billing_email: user_obj?.email,
-      billing_first_name: user_obj?.first_name,
-      billing_last_name: user_obj?.last_name,
-      billing_province: user_obj?.profile?.billing_state,
-      billing_zip_code: user_obj?.profile?.billing_zip,
-      shipping_address: user_obj?.profile?.shipping_address,
-      shipping_city: user_obj?.profile?.shipping_city,
-      shipping_country: user_obj?.profile?.shipping_country,
-      shipping_email: user_obj?.email,
-      shipping_first_name: user_obj?.first_name,
-      shipping_last_name: user_obj?.last_name,
-      shipping_province: user_obj?.profile?.shipping_state,
-      shipping_zip_code: user_obj?.profile?.shipping_zip,
+      ...user_obj,
     };
 
     // console.log("TRIGGERED ABANDONED CART BUT THIS FEATURE IS TEMPORARY DISABLED");
-    // console.log("[createAbandonedCart]", sendCart);
+    console.log("[createAbandonedCart]", sendCart);
 
-    // if (trigger === "beacon") {
-    //   console.log("TRIGGERED ABANDONED CART BEACON", cart_obj);
-    //   await saveCart({ ...cart_obj, status: "abandoned" });
-    //   sendAbandonedCartBeacon(sendCart);
-    //   return;
-    // }
+    if (trigger === "beacon" && !isLoggedIn) {
+      console.log("TRIGGERED ABANDONED CART BEACON", sendCart);
+      await saveCart({ ...cart_obj, status: "saved" });
+      sendAbandonedCartBeacon(sendCart);
+      return;
+    }
 
-    // let response = null;
+    let response = null;
 
-    // if (trigger === "timed") {
-    //   console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
-    //   if (timedout) {
-    //     response = await sendAbandonedCart(sendCart);
-    //   }
-    // }
+    if (trigger === "timed" && !isLoggedIn) {
+      console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
+      if (timedout) {
+        response = await sendAbandonedCart(sendCart);
+      }
+    }
 
-    // if (trigger === "forced") {
-    //   console.log("TRIGGERED ABANDONED CART FORCED", response);
-    //   response = await sendAbandonedCart(sendCart);
-    // }
+    if (trigger === "forced") {
+      console.log("TRIGGERED ABANDONED CART FORCED", response);
+      redis_response = await fetch();
+      response = await sendAbandonedCart(sendCart);
+    }
 
-    // if (!response) return;
+    if (!response) return;
 
-    // const { success, data } = await response.json();
+    const { success, data } = await response.json();
 
-    // if (success) {
-    //   await saveCart({ ...cart, status: "abandoned" });
-    // }
+    if (success) {
+      await saveCart({ ...cart, status: "saved" });
+      const res = await fetch("/api/redis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `abandoned:${sendCart?.id}`, value: new Date().toISOString()}),
+      });
+    }
   };
 
   async function syncCartToCookie(items) {
@@ -225,7 +251,7 @@ export const CartProvider = ({ children }) => {
     const now = new Date().toISOString();
     return {
       id: createCartId(),
-      tracking_number: createOrderNumber(),
+      reference_number: createOrderNumber(),
       session_id: await getOrCreateSessionId(),
       user_agent: getUserAgent(),
       store_domain: store_domain,
@@ -259,7 +285,7 @@ export const CartProvider = ({ children }) => {
     if (toMerge.length === 0) {
       return {
         ...userCart,
-        tracking_number: userCart?.tracking_number ?? createOrderNumber(),
+        reference_number: userCart?.reference_number ?? createOrderNumber(),
       };
     }
 
@@ -270,16 +296,14 @@ export const CartProvider = ({ children }) => {
         ...userCart,
         items: [...(userCart.items ?? []), ...toMerge],
         updated_at: new Date().toISOString(),
-        tracking_number: userCart?.tracking_number ?? createOrderNumber(),
+        reference_number: userCart?.reference_number ?? createOrderNumber(),
       };
     } else {
       newCart = await createCartObj();
-      const user_profile = userProfileToCart(user);
       newCart = {
         ...newCart,
         items: [...toMerge],
-        ...user_profile,
-        tracking_number: createOrderNumber(),
+        reference_number: createOrderNumber(),
       };
       newCart = await userCartCreate(newCart);
     }
@@ -340,6 +364,7 @@ export const CartProvider = ({ children }) => {
     cartStorage,
     loading,
     user,
+    abandonedCartUser,
     getCart,
     syncCartToCookie,
     createAbandonedCart,
@@ -351,6 +376,7 @@ export const CartProvider = ({ children }) => {
     } else {
       await cartStorage.saveCart(newCart);
     }
+    setCart({ ...newCart });
   };
 
   const getOrCreateCart = async () => {
@@ -411,12 +437,14 @@ export const CartProvider = ({ children }) => {
         updated_at: new Date().toISOString(),
       });
 
-      if (newCart?.status === "abandoned" && !isLoggedIn) {
+      if (newCart?.status === "saved") {
         newCart = {
           ...newCart,
           status: "active",
-          id: createCartId(),
-          tracking_number: createOrderNumber(),
+          id: !isLoggedIn ? createCartId() : newCart?.id,
+          reference_number: !isLoggedIn
+            ? createOrderNumber()
+            : newCart?.reference_number,
         };
       }
 
@@ -460,14 +488,17 @@ export const CartProvider = ({ children }) => {
       updated_at: new Date().toISOString(),
     });
 
-    if (newCart?.status === "abandoned" && !isLoggedIn) {
+    if (newCart?.status === "saved") {
       newCart = {
         ...newCart,
         status: "active",
-        id: createCartId(),
-        tracking_number: createOrderNumber(),
+        id: !isLoggedIn ? createCartId() : newCart?.id,
+        reference_number: !isLoggedIn
+          ? createOrderNumber()
+          : newCart?.reference_number,
       };
     }
+
     setCart(newCart);
     if (newCart?.items.length === 0 && isLoggedIn) {
       await userCartClose();
@@ -491,12 +522,14 @@ export const CartProvider = ({ children }) => {
       updated_at: new Date().toISOString(),
     });
 
-    if (newCart?.status === "abandoned" && !isLoggedIn) {
+    if (newCart?.status === "saved") {
       newCart = {
         ...newCart,
         status: "active",
-        id: createCartId(),
-        tracking_number: createOrderNumber(),
+        id: !isLoggedIn ? createCartId() : newCart?.id,
+        reference_number: !isLoggedIn
+          ? createOrderNumber()
+          : newCart?.reference_number,
       };
     }
 
@@ -550,12 +583,14 @@ export const CartProvider = ({ children }) => {
         updated_at: new Date().toISOString(),
       });
 
-      if (newCart?.status === "abandoned" && !isLoggedIn) {
+      if (newCart?.status === "saved") {
         newCart = {
           ...newCart,
           status: "active",
-          id: createCartId(),
-          tracking_number: createOrderNumber(),
+          id: !isLoggedIn ? createCartId() : newCart?.id,
+          reference_number: !isLoggedIn
+            ? createOrderNumber()
+            : newCart?.reference_number,
         };
       }
 
@@ -597,6 +632,33 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const loadGuestInfo = async () => {
+    if (!forage) {
+      console.log("forage", forage);
+      return;
+    }
+    const info = await forage.getItem("checkout_info");
+    const tmp = {
+      billing_address: info?.billing_address || "NA",
+      billing_city: info?.billing_city || "NA",
+      billing_country: info?.billing_country || "NA",
+      billing_email: info?.billing_email || null,
+      billing_first_name: info?.billing_first_name || "NA",
+      billing_last_name: info?.billing_last_name || "NA",
+      billing_province: info?.billing_province || "NA",
+      billing_zip_code: info?.billing_zip_code || "NA",
+      shipping_address: info?.shipping_address || "NA",
+      shipping_city: info?.shipping_city || "NA",
+      shipping_country: info?.shipping_country || "NA",
+      shipping_email: info?.shipping_email || null,
+      shipping_first_name: info?.shipping_first_name || "NA",
+      shipping_last_name: info?.shipping_last_name || "NA",
+      shipping_province: info?.shipping_province || "NA",
+      shipping_zip_code: info?.shipping_zip_code || "NA",
+    };
+    setAbandonedCartUser(tmp);
+  };
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -619,8 +681,47 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     if (!cartStorage) return;
+
+    if (!loading && user) {
+      const { email, first_name, last_name, profile = {} } = user || {};
+
+      const {
+        billing_address = "NA",
+        billing_city = "NA",
+        billing_country = "NA",
+        billing_state = "NA",
+        billing_zip = "NA",
+        shipping_address = "NA",
+        shipping_city = "NA",
+        shipping_country = "NA",
+        shipping_state = "NA",
+        shipping_zip = "NA",
+      } = profile;
+
+      setAbandonedCartUser({
+        billing_address,
+        billing_city,
+        billing_country,
+        billing_email: email,
+        billing_first_name: first_name || "NA",
+        billing_last_name: last_name || "NA",
+        billing_province: billing_state,
+        billing_zip_code: billing_zip,
+        shipping_address,
+        shipping_city,
+        shipping_country,
+        shipping_email: email,
+        shipping_first_name: first_name || "NA",
+        shipping_last_name: last_name || "NA",
+        shipping_province: shipping_state,
+        shipping_zip_code: shipping_zip,
+      });
+    } else if (!loading && !user) {
+      loadGuestInfo();
+    }
+
     loadCart();
-  }, [cartStorage, loading, isLoggedIn, user]);
+  }, [cartStorage, loading, isLoggedIn, user, forage]);
 
   const cartItems = useMemo(() => {
     if (!cart) return [];
@@ -651,52 +752,82 @@ export const CartProvider = ({ children }) => {
     };
   }, [loadCart]);
 
-  const abandonedCartUser = useMemo(async () => {
-    if (forage && !loading) {
-      const info = await forage.getItem("checkout_info");
-
-      return isLoggedIn ? user : info;
-    }
-    return null;
-  }, [loading, isLoggedIn, user, forage]);
+  useEffect(() => {
+    cartRef.current = cart;
+    userRef.current = abandonedCartUser;
+  }, [cart, abandonedCartUser]);
 
   useEffect(() => {
     if (!cart || !abandonedCartUser) return;
 
-    const handleUnload = async () => {
-      // console.log("AbandonedCart Event Unload");
-      await createAbandonedCart(cart, abandonedCartUser, "beacon");
+    const handleUnload = () => {
+      createAbandonedCart(cartRef.current, userRef.current, "beacon");
     };
 
-    const handleVisibilityChange = async () => {
-      // console.log("AbandonedCart Event Visibility Hidden");
+    const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        await createAbandonedCart(cart, abandonedCartUser, "beacon");
+        createAbandonedCart(cartRef.current, userRef.current, "beacon");
       }
     };
 
-    const handleEvent = async () => {
-      // console.log("AbandonedCart Event click, keydown and scroll");
-      await createAbandonedCart(cart, abandonedCartUser, "timed");
+    const handleEvent = () => {
+      createAbandonedCart(cartRef.current, userRef.current, "timed");
     };
 
     const activityEvents = ["click", "keydown", "scroll"];
-
-    activityEvents.forEach((evt) => {
-      document.addEventListener(evt, handleEvent);
-    });
+    activityEvents.forEach((evt) =>
+      document.addEventListener(evt, handleEvent)
+    );
 
     window.addEventListener("beforeunload", handleUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      activityEvents.forEach((evt) => {
-        document.removeEventListener(evt, handleEvent);
-      });
+      activityEvents.forEach((evt) =>
+        document.removeEventListener(evt, handleEvent)
+      );
       window.removeEventListener("beforeunload", handleUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [cart, abandonedCartUser, createAbandonedCart]);
+
+  // useEffect(() => {
+  //   if (!cart || !abandonedCartUser) return;
+
+  //   const handleUnload = async () => {
+  //     // console.log("AbandonedCart Event Unload");
+  //     await createAbandonedCart(cart, abandonedCartUser, "beacon");
+  //   };
+
+  //   const handleVisibilityChange = async () => {
+  //     // console.log("AbandonedCart Event Visibility Hidden");
+  //     if (document.visibilityState === "hidden") {
+  //       await createAbandonedCart(cart, abandonedCartUser, "beacon");
+  //     }
+  //   };
+
+  //   const handleEvent = async () => {
+  //     // console.log("AbandonedCart Event click, keydown and scroll");
+  //     await createAbandonedCart(cart, abandonedCartUser, "timed");
+  //   };
+
+  //   const activityEvents = ["click", "keydown", "scroll"];
+
+  //   activityEvents.forEach((evt) => {
+  //     document.addEventListener(evt, handleEvent);
+  //   });
+
+  //   window.addEventListener("beforeunload", handleUnload);
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  //   return () => {
+  //     activityEvents.forEach((evt) => {
+  //       document.removeEventListener(evt, handleEvent);
+  //     });
+  //     window.removeEventListener("beforeunload", handleUnload);
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, [cart, abandonedCartUser, createAbandonedCart]);
 
   return (
     <CartContext.Provider
@@ -715,6 +846,9 @@ export const CartProvider = ({ children }) => {
         removeCartItem,
         loadCart,
         addToCartLoading,
+
+        // dev functions
+        guestCartToActive,
       }}
     >
       {children}
