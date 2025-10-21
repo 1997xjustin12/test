@@ -781,6 +781,7 @@ function CheckoutComponent() {
       alert(
         "Please Make Sure You Fillout Neccessary shipping information for us to recalculate your shipping total."
       );
+      return;
     }
 
     if (!instance) {
