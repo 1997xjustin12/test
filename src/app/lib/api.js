@@ -112,7 +112,7 @@ export const redisSet = async ({key, value}) => {
       return;
     }
 
-    return await fetch("/api/redis", {
+    return await fetch("/api/redis/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

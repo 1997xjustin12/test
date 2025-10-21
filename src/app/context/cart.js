@@ -13,7 +13,7 @@ import GuestBillingFormDialog from "@/app/components/atom/GuestBillingFormDialog
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
-import { sendAbandonedCart } from "@/app/lib/api";
+import { sendAbandonedCart, redisGet, redisSet } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
@@ -25,13 +25,13 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
-const ABANDONED_CART_SPAN = 5; // -> minuites
-
 export const CartProvider = ({ children }) => {
   const cart_channel = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
-  const ABANDON_TIMEOUT = ABANDONED_CART_SPAN * 60 * 1000;
+  const GUEST_ABANDON_TIMEOUT = 60 * 1000 * 5; // 5 minutes
+  const USER_ABANDON_TIMEOUT = 60 * 60 * 1000 * 24; // 24 hours
+
   const {
     loading,
     isLoggedIn,
@@ -93,11 +93,24 @@ export const CartProvider = ({ children }) => {
     navigator.sendBeacon(url, blob);
   };
 
-  const createAbandonedCart = async (cart_obj, user_obj, trigger = "timed") => {
-    if(!loading && user) {
-      console.log("ABANDONED CART FOR GUEST ONLY");
-      return;
+  const updateRedisAbandonedRecord = async (key, value) => {
+    const response = await redisSet({ key, value });
+    if (!response.ok) {
+      console.warn("[updateRedisAbandonedRecord]", { key, value });
     }
+  };
+
+  const getRedisAbandonedRecord = async (key) => {
+    const response = await redisGet(key);
+    if (!response.ok) {
+      console.warn("[getRedisAbandonedRecord]", key);
+    }
+    const val = await response.json();
+    return val;
+  };
+
+  const createAbandonedCart = async (cart_obj, user_obj, trigger = "timed") => {
+    if(loading) return;
 
     if (!cart_obj && !cart_obj?.id) return;
 
@@ -107,18 +120,20 @@ export const CartProvider = ({ children }) => {
 
     if (cart_items.length === 0) return;
 
-    if (cart_obj?.status === "saved") {
-      console.log("cart status is ", cart_obj?.status);
+    if (cart_obj?.is_abandoned) {
+      console.log("cart is_abandoned is ", cart_obj.is_abandoned);
       return;
     }
 
     const updatedAt = new Date(cart_obj.updated_at).getTime();
 
+    const ABANDON_TIMEOUT = isLoggedIn ? USER_ABANDON_TIMEOUT: GUEST_ABANDON_TIMEOUT;
+
     const timedout = Date.now() - updatedAt > ABANDON_TIMEOUT;
 
     const sendCart = {
       ...cart_obj,
-      abandoned_cart_id: cart_obj.id,
+      abandoned_cart_id: cart_obj?.cart_id,
       items: mapOrderItems(cart_items),
       ...user_obj,
     };
@@ -126,16 +141,22 @@ export const CartProvider = ({ children }) => {
     // console.log("TRIGGERED ABANDONED CART BUT THIS FEATURE IS TEMPORARY DISABLED");
     console.log("[createAbandonedCart]", sendCart);
 
+    const now = new Date().toISOString();
+
     if (trigger === "beacon" && !isLoggedIn) {
       console.log("TRIGGERED ABANDONED CART BEACON", sendCart);
-      await saveCart({ ...cart_obj, status: "saved" });
+      const newCart = { ...cart_obj, is_abandoned: now, updated_at: now };
+      const key = `abandoned:${newCart?.cart_id}`;
+      await updateRedisAbandonedRecord(key, newCart?.is_abandoned);
+      await saveCart(newCart);
+      setCart({ ...newCart });
       sendAbandonedCartBeacon(sendCart);
       return;
     }
 
     let response = null;
 
-    if (trigger === "timed" && !isLoggedIn) {
+    if (trigger === "timed") {
       console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
       if (timedout) {
         response = await sendAbandonedCart(sendCart);
@@ -144,7 +165,6 @@ export const CartProvider = ({ children }) => {
 
     if (trigger === "forced") {
       console.log("TRIGGERED ABANDONED CART FORCED", response);
-      redis_response = await fetch();
       response = await sendAbandonedCart(sendCart);
     }
 
@@ -153,12 +173,17 @@ export const CartProvider = ({ children }) => {
     const { success, data } = await response.json();
 
     if (success) {
-      await saveCart({ ...cart, status: "saved" });
-      const res = await fetch("/api/redis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: `abandoned:${sendCart?.id}`, value: new Date().toISOString()}),
-      });
+      const newCart = { ...cart, is_abandoned: now, updated_at: now };
+      const key = `abandoned:${newCart?.cart_id}`;
+      await updateRedisAbandonedRecord(key, newCart?.is_abandoned);
+      await saveCart(newCart);
+      setCart({ ...newCart });
+    }
+
+    if (data?.code === "DUPLICATE_CART_ID") {
+      const newCart = { ...cart };
+      const key = `abandoned:${newCart?.cart_id}`;
+      await updateRedisAbandonedRecord(key, newCart?.is_abandoned);
     }
   };
 
@@ -249,8 +274,10 @@ export const CartProvider = ({ children }) => {
 
   const createCartObj = async () => {
     const now = new Date().toISOString();
+    const id = createCartId();
     return {
-      id: createCartId(),
+      id: id,
+      cart_id: id,
       reference_number: createOrderNumber(),
       session_id: await getOrCreateSessionId(),
       user_agent: getUserAgent(),
@@ -259,6 +286,7 @@ export const CartProvider = ({ children }) => {
       created_at: now,
       updated_at: now,
       status: "active",
+      is_abandoned: null,
     };
   };
 
@@ -269,7 +297,7 @@ export const CartProvider = ({ children }) => {
 
     const guestCart = await getGuestCart();
 
-    const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged);
+    const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged).map(item=> ({...item, ...item?.custom_fields}));
 
     const getCart = await userCartGet();
     const userCart = getCart?.message
@@ -305,7 +333,8 @@ export const CartProvider = ({ children }) => {
         items: [...toMerge],
         reference_number: createOrderNumber(),
       };
-      newCart = await userCartCreate(newCart);
+      const user_profile = userProfileToCart(user);
+      newCart = await userCartCreate({ ...newCart, ...user_profile });
     }
 
     let saved = null;
@@ -327,11 +356,21 @@ export const CartProvider = ({ children }) => {
       });
     }
 
-    return newCart;
+    return {...newCart};
   };
 
   const getGuestCart = async () => {
-    return await cartStorage.getCart();
+    const guest_cart = await cartStorage.getCart();
+    if (!guest_cart) return null;
+    const is_abandoned = await getRedisAbandonedRecord(
+      `abandoned:${guest_cart?.id}`
+    );
+    const _cart = {
+      ...guest_cart,
+      cart_id: guest_cart?.id,
+      is_abandoned,
+    };
+    return _cart;
   };
 
   const getUserCart = async () => {
@@ -376,7 +415,6 @@ export const CartProvider = ({ children }) => {
     } else {
       await cartStorage.saveCart(newCart);
     }
-    setCart({ ...newCart });
   };
 
   const getOrCreateCart = async () => {
@@ -425,10 +463,35 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const updateAbandonedCartObj = async (newCart) => {
+    if (!loading && !isLoggedIn) {
+      const new_cart_id = createCartId();
+      return {
+        ...newCart,
+        is_abandoned: null,
+        id: new_cart_id,
+        cart_id: new_cart_id,
+        reference_number: !isLoggedIn
+          ? createOrderNumber()
+          : newCart?.reference_number,
+      };
+    } else if (!loading && isLoggedIn) {
+      // close old cart and create new Cart with the updated Items
+      const user_profile = userProfileToCart(user);
+      const { cart_id, id, ...sendCart } = newCart;
+      const newUserCart = await userCartCreate({
+        ...sendCart,
+        ...user_profile,
+      });
+      return newUserCart;
+    }
+  };
+
   const addToCart = async (item) => {
     setAddToCartLoading(true);
     try {
       const cartObj = await getOrCreateCart();
+      console.log("cartObj", cartObj);
       const cart_items = cartObj?.items || [];
       const injected_item = appendToMergeItems(cart_items, item);
       let newCart = await buildCartObject({
@@ -437,18 +500,10 @@ export const CartProvider = ({ children }) => {
         updated_at: new Date().toISOString(),
       });
 
-      if (newCart?.status === "saved") {
-        newCart = {
-          ...newCart,
-          status: "active",
-          id: !isLoggedIn ? createCartId() : newCart?.id,
-          reference_number: !isLoggedIn
-            ? createOrderNumber()
-            : newCart?.reference_number,
-        };
+      if (newCart?.is_abandoned) {
+        newCart = await updateAbandonedCartObj(newCart);
       }
 
-      setCart(newCart);
       if (cart_items.length === 0 && isLoggedIn) {
         const user_profile = userProfileToCart(user);
         await userCartCreate({ ...newCart, ...user_profile });
@@ -456,6 +511,9 @@ export const CartProvider = ({ children }) => {
         // update cart
         await saveCart(newCart);
       }
+
+      const assignCart = await getCart();
+      setCart({ ...assignCart });
 
       notifyCartUpdate();
       setAddToCartLoading(false);
@@ -488,23 +546,18 @@ export const CartProvider = ({ children }) => {
       updated_at: new Date().toISOString(),
     });
 
-    if (newCart?.status === "saved") {
-      newCart = {
-        ...newCart,
-        status: "active",
-        id: !isLoggedIn ? createCartId() : newCart?.id,
-        reference_number: !isLoggedIn
-          ? createOrderNumber()
-          : newCart?.reference_number,
-      };
+    if (newCart?.is_abandoned) {
+      newCart = await updateAbandonedCartObj(newCart);
     }
 
-    setCart(newCart);
     if (newCart?.items.length === 0 && isLoggedIn) {
       await userCartClose();
     } else {
       await saveCart(newCart);
     }
+
+    const assignCart = await getCart();
+    setCart({ ...assignCart });
     notifyCartUpdate();
   };
 
@@ -522,18 +575,13 @@ export const CartProvider = ({ children }) => {
       updated_at: new Date().toISOString(),
     });
 
-    if (newCart?.status === "saved") {
-      newCart = {
-        ...newCart,
-        status: "active",
-        id: !isLoggedIn ? createCartId() : newCart?.id,
-        reference_number: !isLoggedIn
-          ? createOrderNumber()
-          : newCart?.reference_number,
-      };
+    if (newCart?.is_abandoned) {
+      newCart = await updateAbandonedCartObj(newCart);
     }
 
-    setCart(newCart);
+    const assignCart = await getCart();
+    console.log("[inc] assignCart", assignCart)
+    setCart({ ...assignCart });
     await saveCart(newCart);
     notifyCartUpdate();
   };
@@ -583,18 +631,13 @@ export const CartProvider = ({ children }) => {
         updated_at: new Date().toISOString(),
       });
 
-      if (newCart?.status === "saved") {
-        newCart = {
-          ...newCart,
-          status: "active",
-          id: !isLoggedIn ? createCartId() : newCart?.id,
-          reference_number: !isLoggedIn
-            ? createOrderNumber()
-            : newCart?.reference_number,
-        };
+      if (newCart?.is_abandoned) {
+        newCart = await updateAbandonedCartObj(newCart);
       }
 
-      setCart(newCart);
+      const assignCart = await getCart();
+      console.log("[dec] assignCart", assignCart)
+      setCart({ ...assignCart });
       await saveCart(newCart);
       notifyCartUpdate();
     }
@@ -846,6 +889,7 @@ export const CartProvider = ({ children }) => {
         removeCartItem,
         loadCart,
         addToCartLoading,
+        abandonedCartUser,
 
         // dev functions
         guestCartToActive,

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { capitalizeFirstLetter, BASE_URL } from "@/app/lib/helpers";
 import { usePathname } from "next/navigation";
+import { redisGet } from "@/app/lib/api";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext(null);
@@ -192,16 +193,16 @@ export function AuthProvider({ children }) {
     return response.json();
   };
 
-  const userOrderCreate = async(order) => {
+  const userOrderCreate = async (order) => {
     try {
       console.log("[userOrderCreate]");
-      
+
       if (loading) return;
 
       const headers = {
         "Content-Type": "application/json",
       };
-      
+
       if (accessToken) {
         headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -213,9 +214,8 @@ export function AuthProvider({ children }) {
         headers,
         body: JSON.stringify(order),
       });
-
     } catch (err) {
-      console.error("[userCartCreate] error:", err);
+      console.error("[userOrderCreate] error:", err);
       return null;
     }
   };
@@ -240,7 +240,17 @@ export function AuthProvider({ children }) {
         return null;
       }
 
-      return response.json();
+      const cart = await response.json();
+
+      const key = `abandoned:${cart?.cart_id}`;
+      const redis_response = await redisGet(key);
+      if(!redis_response.ok){
+        console.warn("[userCartGet]")
+        return null;
+      }
+      const is_abandoned = await redis_response.json();
+      const items = cart?.items?.map(item=> ({...item, ...item?.custom_fields}));
+      return { ...cart, is_abandoned, items };
     } catch (err) {
       return err;
     }
@@ -285,6 +295,11 @@ export function AuthProvider({ children }) {
       return null;
     }
 
+    const sendCart = {
+      ...cart,
+      items: cart?.items?.map(item=> ({...item, product_id: item?.custom_fields?.product_id}))
+    }
+
     try {
       const bearer = `Bearer ${accessToken}`;
 
@@ -294,7 +309,7 @@ export function AuthProvider({ children }) {
           "Content-Type": "application/json",
           Authorization: bearer,
         },
-        body: JSON.stringify(cart),
+        body: JSON.stringify(sendCart),
       });
 
       if (!response.ok) {
@@ -549,9 +564,6 @@ export function AuthProvider({ children }) {
       console.warn("[userReviewUpdate] API error:", err);
     }
   };
-
-
-  
 
   // ---- on mount, load localForage and then refresh once ----
   useEffect(() => {
