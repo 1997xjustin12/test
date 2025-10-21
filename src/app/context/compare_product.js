@@ -36,8 +36,8 @@ export function CompareProductsProvider({ children }) {
   },[products])
 
   useEffect(() => {
-    console.log("[COMPARE PRODUCTS] ", products);
-    console.log("[COMPAREHANDLE] ", compareHandle);
+    // console.log("[COMPARE PRODUCTS] ", products);
+    // console.log("[COMPAREHANDLE] ", compareHandle);
     if (products.length === 0) {
       setOpenWidget(false);
     }

@@ -353,7 +353,7 @@ export const CartProvider = ({ children }) => {
     if (cartStorage && !loading) {
       setLoadingCartItems(true);
       const loadedCart = await getCart();
-      console.log("[RELOAD CART]", loadedCart);
+      // console.log("[RELOAD CART]", loadedCart);
       const items = loadedCart?.items || [];
       setCart(loadedCart);
       syncCartToCookie(items);

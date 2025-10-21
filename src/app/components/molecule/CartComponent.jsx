@@ -68,12 +68,12 @@ const TemporaryComponent = () => {
       return;
     }
     const user_profile = userProfileToCart(user);
-    const injected_items = (cartObject?.items || []).map(item=> ({...item, product_id: 3687, variant_data: {test:"test"}, custom_fields:{test:"test"}}))
+    const injected_items = (cartObject?.items || []).map(item=> ({...item}))
     const response = await userCartUpdate({
       items: injected_items,
       ...user_profile,
     });
-    // console.log("[UPDATE][CART][REPSPONSE]", response);
+    console.log("[UPDATE][CART][REPSPONSE]", response);
   };
 
   if (!user) return (
@@ -118,14 +118,6 @@ const TemporaryComponent = () => {
           className="text-white text-sm font-bold bg-red-600 hover:bg-red-700 rounded-[2px] py-1 px-4"
         >
           CLOSE
-        </button>
-      </div>
-      <div className="mt-5 flex gap-[20px]">
-        <button
-          onClick={fetchUserCart}
-          className="text-white text-sm font-bold bg-indigo-600 hover:bg-indigo-700 rounded-[2px] py-1 px-4"
-        >
-          GUEST CART TO STATUS ACTIVE
         </button>
       </div>
     </div>
@@ -292,7 +284,7 @@ export default function CartPageComponent() {
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        {/* <TemporaryComponent /> */}
+        <TemporaryComponent />
         {loadingCartItems ? (
           <CartOnloadLoader />
         ) : (

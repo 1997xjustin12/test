@@ -84,3 +84,42 @@ export const unsubscribe = async (email) => {
     console.warn("[unsubscribe] API error:", err);
   }
 };
+
+// redis
+export const redisGet = async (key) => {
+  try {
+    if (!key) {
+      console.warn("[key] Requied field missing.");
+      return;
+    }
+
+    return await fetch(`/api/redis/?key=${key}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (err) {
+    console.warn("[REDUS GET] API error:", err);
+  }
+};
+
+
+export const redisSet = async ({key, value}) => {
+  try {
+    if (!key || !value) {
+      console.warn("[key, value] Requied field missing.");
+      return;
+    }
+
+    return await fetch("/api/redis", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ key, value }),
+    });
+  } catch (err) {
+    console.warn("[REDIS SET] API error:", err);
+  }
+};

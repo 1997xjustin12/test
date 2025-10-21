@@ -339,7 +339,7 @@ export const SearchProvider = ({ children }) => {
           setLForage(module);
           // set initial recent serach value
           const recentLS = await module.getItem(recentSearchKey);
-          console.log("[recentLS]", recentLS);
+          // console.log("[recentLS]", recentLS);
           setRecentResults((prev) => {
             if (recentLS) {
               return Array.isArray(recentLS) ? recentLS : [];
@@ -374,7 +374,7 @@ export const SearchProvider = ({ children }) => {
   }, [pathname, searchParams]);
 
   useEffect(() => {
-    console.log("recentResults: ", recentResults);
+    // console.log("recentResults: ", recentResults);
   }, [recentResults]);
 
   const searchResults = useMemo(() => {
