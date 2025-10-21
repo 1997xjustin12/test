@@ -824,8 +824,7 @@ function CheckoutComponent() {
           clearCartItems();
           saveInformation(form?.save_information);
           setSuccessPayment(true);
-          alert("success");
-          // router.push(`${BASE_URL}/payment_success`);
+          router.push(`${BASE_URL}/payment_success`);
         } else {
           setSuccessPayment(false);
           alert("Something went wrong! Please try again.");
