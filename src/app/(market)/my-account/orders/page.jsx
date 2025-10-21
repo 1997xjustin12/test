@@ -583,7 +583,14 @@ export default function OrdersPage() {
                     </div>
                     <div className="flex flex-col gap-5 w-full">
                       <div className="flex justify-between gap-5">
-                        <div>{item?.title}</div>
+                        <div>
+                          <div>
+                            {item?.title}
+                          </div>
+                          <div className="text-neutral-700">
+                            x{item?.quantity}
+                          </div>
+                        </div>
                         <div className="text-right">
                           <div className="font-medium text-theme-600">
                             $
