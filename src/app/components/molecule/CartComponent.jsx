@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import CartListItem from "@/app/components/atom/CartListItem";
 import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
@@ -281,6 +281,20 @@ export default function CartPageComponent() {
     }
   }, [loading, isLoggedIn, user, cartItems]);
 
+  const ref_number = useMemo(()=>{
+    if(loading) return null;
+
+    if(isLoggedIn){
+      return cartObject?.cart_id ? "CI-"+cartObject?.cart_id: null;
+    }else{
+      return cartObject?.reference_number;
+    }
+  },[
+    loading,
+    isLoggedIn,
+    cartObject,
+  ]);
+
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -324,11 +338,11 @@ export default function CartPageComponent() {
                       <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-8">
                         Shopping Cart
                       </h2>
-                      {cartObject?.reference_number && (
+                      {ref_number && (
                         <h5 className="font-bold text-neutral-600 text-sm">
                           REF #:{" "}
                           <span className="text-theme-600">
-                            {isLoggedIn? "CI-"+cartObject?.cart_id : cartObject?.reference_number}
+                            {ref_number}
                           </span>
                         </h5>
                       )}

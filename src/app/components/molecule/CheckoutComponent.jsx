@@ -941,10 +941,20 @@ function CheckoutComponent() {
 
     initializeDropIn();
   }, [loading]);
+  
+  const ref_number = useMemo(()=>{
+    if(loading) return null;
 
-  // useEffect(()=>{
-  //   console.log("FORM", form);
-  // },[form])
+    if(isLoggedIn){
+      return cartObject?.cart_id ? "CI-"+cartObject?.cart_id :null;
+    }else{
+      return cartObject?.reference_number;
+    }
+  },[
+    loading,
+    isLoggedIn,
+    cartObject,
+  ]);
 
   return (
     <section className="bg-white">
@@ -1380,7 +1390,7 @@ function CheckoutComponent() {
                 <CompletePaymentButton items={cartItems} />
               </div>
               <OrderQuerySection
-                reference_number={isLoggedIn ? "CI-"+cartObject?.cart_id: cartObject?.reference_number}
+                reference_number={ref_number}
               />
             </div>
           </div>
