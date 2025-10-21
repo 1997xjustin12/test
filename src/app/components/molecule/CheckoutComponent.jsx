@@ -326,13 +326,15 @@ const OrderQuerySection = ({ reference_number }) => {
 const LogoutDropDown = () => {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { cart, createAbandonedCart } = useCart();
+  const { cartObject, createAbandonedCart, abandonedCartUser } = useCart();
   const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
-    const isLogout = await logout();
-    if (isLogout) {
-      createAbandonedCart(cart, user, "forced");
+    try{
+      await createAbandonedCart(cartObject, abandonedCartUser, "forced");
+      await logout();
+    }catch(err){
+      console.warn("[handleLogout] error", err)
     }
   };
   useEffect(() => {
