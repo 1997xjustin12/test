@@ -330,7 +330,7 @@ function ProductReviewSection({ product }) {
     <div className="">
       <h2>Customer Reviews</h2>
 
-      <div className="mt-5 flex flex-col gap-[20px]">
+      <div className="mt-5 flex flex-col gap-[5px]">
         {!reviews && (
           <div className="bg-yellow-100 py-1 px-2 border-l-[5px] border-yellow-300">
             <h4 className="text-yellow-800 font-bold">
