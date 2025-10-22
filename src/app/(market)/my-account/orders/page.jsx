@@ -319,15 +319,6 @@ export default function OrdersPage() {
     setReviewForm(null);
   };
 
-  const productIds = useMemo(() => {
-    if (orders?.length === 0) return null;
-    return [
-      ...new Set(
-        orders.flatMap((order) => order.items.map((item) => item.product_id))
-      ),
-    ];
-  }, [orders]);
-
   const mergedOrders = useMemo(() => {
     if (products.length === 0 || orders.length === 0) return null;
     const merged = orders.map((order) => ({
@@ -355,9 +346,21 @@ export default function OrdersPage() {
     return merged;
   }, [products, orders]);
 
+  // const productIds = useMemo(() => {
+  //   if (orders?.length === 0) return null;
+  //   return [
+  //     ...new Set(
+  //       orders.flatMap((order) => order.items.map((item) => item.product_id))
+  //     ),
+  //   ];
+  // }, [orders]);
+
   useEffect(() => {
     const getOrders = async () => {
       const _orders = await userOrdersGet();
+      if(_orders.length === 0){
+        setLoadingOrders(false);
+      }
       setOrders(_orders);
     };
 
@@ -367,15 +370,19 @@ export default function OrdersPage() {
   }, [loading, user]);
 
   useEffect(() => {
-    const fetchRelatedProducts = async () => {
+    const fetchRelatedProducts = async (productIds) => {
       try {
+        // if (productIds?.length === 0) {
+        //   setLoadingOrders(false);
+        //   return;
+        // }
+
         const response = await getProductsByIds(productIds);
         if (!response.ok) {
           setProducts(null);
           return;
         }
         const { data } = await response.json();
-        console.log("[products]", data);
         setProducts(data);
       } catch (err) {
         console.log("[fetchRelatedProducts]", err);
@@ -384,12 +391,16 @@ export default function OrdersPage() {
       }
     };
 
-    if (!productIds || productIds.length === 0) {
-      setLoadingOrders(false);
-      return;
-    }
-    fetchRelatedProducts();
-  }, [productIds]);
+    if (!orders || orders?.length === 0) return;
+
+    const productIds = [
+      ...new Set(
+        orders.flatMap((order) => order.items.map((item) => item.product_id))
+      ),
+    ];
+
+    fetchRelatedProducts(productIds);
+  }, [orders]);
 
   if (!isLoggedIn) return null;
 
@@ -408,6 +419,18 @@ export default function OrdersPage() {
           </Link>
         </span>
       </div>
+
+      {!loadingOrders && !mergedOrders && (
+        <div className="py-1 px-2 flex flex-col justify-center items-center">
+          <h4 className="text-neutral-800 font-bold">
+            No orders yet
+            {/* <span className="font-light italic">{"<Displays only if app failed to fetch reviews>"}</span> */}
+          </h4>
+          <p className="text-neutral-700">
+            You haven’t placed any orders so far.
+          </p>
+        </div>
+      )}
 
       {loadingOrders ? (
         <div className="h-[100px] flex items-center justify-center text-neutral-600">
@@ -647,17 +670,6 @@ export default function OrdersPage() {
                 </div>
               </div>
             ))}
-          {!mergedOrders && (
-            <div className="py-1 px-2 flex flex-col justify-center items-center">
-              <h4 className="text-neutral-800 font-bold">
-                No orders yet
-                {/* <span className="font-light italic">{"<Displays only if app failed to fetch reviews>"}</span> */}
-              </h4>
-              <p className="text-neutral-700">
-                You haven’t placed any orders so far.
-              </p>
-            </div>
-          )}
         </>
       )}
 
