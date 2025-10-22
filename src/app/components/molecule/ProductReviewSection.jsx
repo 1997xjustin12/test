@@ -172,17 +172,17 @@ const InquiryForm = ({ product_id }) => {
   return <div>Inquiry Form</div>;
 };
 
-const ReviewSummary = ({ product }) => {
-  const [reviewSummary, setReviewSummary] = useState({
-    overall_rating: 4.8,
-    by_star: [
-      { name: "lowest", star: 1, votes: 1 },
-      { name: "low", star: 2, votes: 0 },
-      { name: "mid", star: 3, votes: 2 },
-      { name: "high", star: 4, votes: 5 },
-      { name: "highest", star: 5, votes: 10 },
-    ],
-  });
+const ReviewSummary = ({ summary }) => {
+  // const [summary, setReviewSummary] = useState({
+  //   overall_rating: 4.8,
+  //   by_star: [
+  //     { name: "lowest", star: 1, votes: 1 },
+  //     { name: "low", star: 2, votes: 0 },
+  //     { name: "mid", star: 3, votes: 2 },
+  //     { name: "high", star: 4, votes: 5 },
+  //     { name: "highest", star: 5, votes: 10 },
+  //   ],
+  // });
 
   const calculatePercentage = (totalVotes, individualVotes) => {
     if (
@@ -199,28 +199,28 @@ const ReviewSummary = ({ product }) => {
   };
 
   const total_votes = useMemo(() => {
-    const by_star = reviewSummary?.by_star;
+    const by_star = summary?.by_star;
     return by_star.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.votes;
     }, 0);
-  }, [reviewSummary]);
+  }, [summary]);
 
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="w-full text-center">
         <div className="text-4xl font-bold">
-          {reviewSummary?.overall_rating}
+          {summary?.overall_rating}
         </div>
         <div className="flex w-full justify-center">
           <Rating readOnly value={4} style={{ maxWidth: 100 }}></Rating>
         </div>
         <div className="text-neutral-500 text-xs mt-1">
-          {total_votes} ratings
+          {total_votes === 1 ? `${total_votes} rating`:`${total_votes} ratings`}
         </div>
       </div>
       <div className="w-full">
-        {reviewSummary?.by_star?.length &&
-          reviewSummary?.by_star.map((item) => (
+        {summary?.by_star?.length &&
+          summary?.by_star.map((item) => (
             <div
               className="flex items-center gap-2"
               key={`review-summary-${item?.name}`}
@@ -290,6 +290,42 @@ function ProductReviewSection({ product }) {
     fetchReviews();
   }, [product]);
 
+  
+  
+  
+  const ratingSummary = useMemo(()=>{
+    if(!reviews?.results) return 0;
+    if(reviews.results.length === 0) return 0;
+
+    const star1 = reviews.results.filter(review=> review?.rating === 1);
+    const starCount1 = star1.length;
+    const star2 = reviews.results.filter(review=> review?.rating === 2);
+    const starCount2 = star2.length;
+    const star3 = reviews.results.filter(review=> review?.rating === 3);
+    const starCount3 = star3.length;
+    const star4 = reviews.results.filter(review=> review?.rating === 4);
+    const starCount4 = star4.length;
+    const star5 = reviews.results.filter(review=> review?.rating === 5);
+    const starCount5 = star5.length;
+
+
+    const overall_rating = ((5*starCount5)+(4*starCount4)+(3*starCount3)+(2*starCount2)+(1*starCount1))/(starCount5+starCount4+starCount3+starCount2+starCount1);
+    const summary = {
+      overall_rating: overall_rating.toFixed(1),
+      by_star: [
+        {name: "highest", star: 5, votes: starCount5, data: star5},
+        {name: "high", star: 4, votes: starCount4, data: star4},
+        {name: "mid", star: 3, votes: starCount3, data: star3},
+        {name: "low", star: 2, votes: starCount2, data: star2},
+        {name: "lowest", star: 1, votes: starCount1, data: star1},
+      ]
+    }
+
+    console.log("ratingSummary", summary);
+    return summary;
+
+  }, [reviews])
+
   return (
     <div className="">
       <h2>Customer Reviews</h2>
@@ -309,7 +345,7 @@ function ProductReviewSection({ product }) {
         {reviews && reviews?.results?.length > 0 && (
           <>
             <div className="w-full p-5 rounded-md border border-neutral-300">
-              <ReviewSummary product={product} />
+              <ReviewSummary summary={ratingSummary} />
             </div>
             {reviews.results.map((review) => (
               <div
