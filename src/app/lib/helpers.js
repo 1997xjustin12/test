@@ -445,3 +445,16 @@ export const exclude_brands = [
 
 //  varaible used to exclude products by collections from displaying on the app
 export const exclude_collections = ["Dimplex Fireplace Accessories"]
+
+export const isValidPassword = (password) => {
+  const hasWhitespace = /\s/;
+
+  if (password.length < 8) {
+    return { valid: false, message: "Password must be at least 8 characters long." };
+  }
+  if (hasWhitespace.test(password)) {
+    return { valid: false, message: "Password cannot contain spaces." };
+  }
+
+  return { valid: true, message: "Password is valid." };
+}

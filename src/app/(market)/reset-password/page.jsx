@@ -1,26 +1,22 @@
 import React from "react";
 
-import ForgotPassword from "@/app/components/form/ForgotPassword";
+import ResetPassword from "@/app/components/form/ResetPassword";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 
 export const metadata = {
-  title: "Forgot Password | Solana Fireplaces",
+  title: "Reset Password | Solana Fireplaces",
 };
 
-function ForgotPasswordPage() {
+function ResetPasswordPage() {
   return (
     <div className="container mx-auto">
       <div className="px-4 py-[50px]">
         <div className="flex justify-center">
           <div className="max-w-[400px] flex flex-col items-center">
-            <h2 className="font-extrabold mb-5">Forgot your password?</h2>
-            <p className="mb-5 text-sm font-medium text-neutral-600 text-center">
-              No worries. Enter your email address below and we’ll send you a
-              link to reset your password.
-            </p>
+            <h2 className="font-extrabold mb-5">Reset your password</h2>
             <div className="my-[20px] w-full">
-                <ForgotPassword />
+                <ResetPassword />
             </div>
             <Link
                 prefetch={false}
@@ -36,4 +32,4 @@ function ForgotPasswordPage() {
   );
 }
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;
