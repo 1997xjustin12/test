@@ -122,16 +122,16 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
 
   useEffect(() => {
     setToggle(!!product);
-    console.log("[product]",product)
+    console.log("[product]", product);
     if (product?.product_id)
       setForm((prev) => ({ ...prev, product: product?.product_id }));
   }, [product]);
 
   useEffect(() => {
-    console.log("[USER]", user)
+    console.log("[USER]", user);
     setForm((prev) => {
       return (
-        {...initForm} || {
+        { ...initForm } || {
           ...form,
           rating: 3,
           title: "",
@@ -259,13 +259,13 @@ const ReviewButton = ({ product, toggleForm }) => {
       const user_review = data?.results?.find(
         (item) => item?.user?.email === user?.email
       );
-      if(user_review){
+      if (user_review) {
         setUserReview({
           product: user_review?.product?.id,
           rating: user_review?.rating,
           title: user_review?.title,
           comment: user_review?.comment,
-          id: user_review?.id
+          id: user_review?.id,
         });
       }
     };
@@ -367,7 +367,6 @@ export default function OrdersPage() {
   }, [loading, user]);
 
   useEffect(() => {
-    console.log("productIds", productIds);
     const fetchRelatedProducts = async () => {
       try {
         const response = await getProductsByIds(productIds);
@@ -378,160 +377,21 @@ export default function OrdersPage() {
         const { data } = await response.json();
         console.log("[products]", data);
         setProducts(data);
-        setLoadingOrders(false);
       } catch (err) {
         console.log("[fetchRelatedProducts]", err);
+      } finally {
+        setLoadingOrders(false);
       }
     };
 
-    if (!productIds || productIds.length === 0) return;
+    if (!productIds || productIds.length === 0) {
+      setLoadingOrders(false);
+      return;
+    }
     fetchRelatedProducts();
   }, [productIds]);
 
   if (!isLoggedIn) return null;
-
-  if (loadingOrders)
-    return (
-      <div className="h-[100px] flex items-center justify-center text-neutral-600">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="40"
-          height="40"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="2" r="0" fill="currentColor">
-            <animate
-              attributeName="r"
-              begin="0"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(45 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.125s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(90 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.25s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(135 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.375s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(180 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.5s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(225 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.625s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(270 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.75s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-          <circle
-            cx="12"
-            cy="2"
-            r="0"
-            fill="currentColor"
-            transform="rotate(315 12 12)"
-          >
-            <animate
-              attributeName="r"
-              begin="0.875s"
-              calcMode="spline"
-              dur="1s"
-              keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-              repeatCount="indefinite"
-              values="0;2;0;0"
-            />
-          </circle>
-        </svg>
-      </div>
-    );
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -549,103 +409,257 @@ export default function OrdersPage() {
         </span>
       </div>
 
-      {mergedOrders &&
-        mergedOrders.map((order) => (
-          <div
-            key={`order-item-${order?.order_number}`}
-            className="bg-white w-full p-[20px] shadow-lg border rounded-lg"
+      {loadingOrders ? (
+        <div className="h-[100px] flex items-center justify-center text-neutral-600">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
           >
-            <div className="flex items-center gap-2">
-              <OrderStatusBadge status={order?.status} />
-              <div>
-                Order Number:{" "}
-                <span className="font-bold">{order?.order_number}</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-5 py-2">
-              {order?.items &&
-                order.items.map((item) => (
-                  <div
-                    key={`${order?.order_number}-item-${item.product_id}`}
-                    className="flex gap-5 border-t border-neutral-300 py-1"
-                  >
-                    <div className="relative w-[100px] h-[100px]">
-                      {item?.image && (
-                        <Image
-                          src={item.image}
-                          title={`${item?.title}`}
-                          alt={`${createSlug(item?.title)}-image`}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 768px) 100vw, 300px"
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-5 w-full">
-                      <div className="flex justify-between gap-5">
-                        <div>
-                          <div>
-                            {item?.title}
-                          </div>
-                          <div className="text-neutral-700">
-                            x{item?.quantity}
-                          </div>
+            <circle cx="12" cy="2" r="0" fill="currentColor">
+              <animate
+                attributeName="r"
+                begin="0"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(45 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.125s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(90 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.25s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(135 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.375s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(180 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.5s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(225 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.625s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(270 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.75s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+            <circle
+              cx="12"
+              cy="2"
+              r="0"
+              fill="currentColor"
+              transform="rotate(315 12 12)"
+            >
+              <animate
+                attributeName="r"
+                begin="0.875s"
+                calcMode="spline"
+                dur="1s"
+                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                repeatCount="indefinite"
+                values="0;2;0;0"
+              />
+            </circle>
+          </svg>
+        </div>
+      ) : (
+        <>
+          {mergedOrders &&
+            mergedOrders?.length > 0 &&
+            mergedOrders.map((order) => (
+              <div
+                key={`order-item-${order?.order_number}`}
+                className="bg-white w-full p-[20px] shadow-lg border rounded-lg"
+              >
+                <div className="flex items-center gap-2">
+                  <OrderStatusBadge status={order?.status} />
+                  <div>
+                    Order Number:{" "}
+                    <span className="font-bold">{order?.order_number}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-5 py-2">
+                  {order?.items &&
+                    order.items.map((item) => (
+                      <div
+                        key={`${order?.order_number}-item-${item.product_id}`}
+                        className="flex gap-5 border-t border-neutral-300 py-1"
+                      >
+                        <div className="relative w-[100px] h-[100px]">
+                          {item?.image && (
+                            <Image
+                              src={item.image}
+                              title={`${item?.title}`}
+                              alt={`${createSlug(item?.title)}-image`}
+                              fill
+                              className="object-contain"
+                              sizes="(max-width: 768px) 100vw, 300px"
+                            />
+                          )}
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium text-theme-600">
-                            $
-                            {formatPrice(
-                              parseFloat(item?.price) * item?.quantity
-                            )}
+                        <div className="flex flex-col gap-5 w-full">
+                          <div className="flex justify-between gap-5">
+                            <div>
+                              <div>{item?.title}</div>
+                              <div className="text-neutral-700">
+                                x{item?.quantity}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium text-theme-600">
+                                $
+                                {formatPrice(
+                                  parseFloat(item?.price) * item?.quantity
+                                )}
+                              </div>
+                              {item?.compare_at_price &&
+                              item?.compare_at_price !== "0" &&
+                              item?.compare_at_price > 0 ? (
+                                <div className="text-neutral-400 line-through">
+                                  $
+                                  {formatPrice(
+                                    item.compare_at_price * item?.quantity
+                                  )}
+                                </div>
+                              ) : null}
+                            </div>
                           </div>
-                          {item?.compare_at_price &&
-                          item?.compare_at_price !== "0" &&
-                          item?.compare_at_price > 0 ? (
-                            <div className="text-neutral-400 line-through">
-                              $
-                              {formatPrice(
-                                item.compare_at_price * item?.quantity
+                          <div className="flex">
+                            <div className="w-full flex justify-end">
+                              {order?.status === "delivered" && (
+                                <>
+                                  <ReviewButton
+                                    product={item?.product}
+                                    toggleForm={handleToggleForm}
+                                  />
+                                </>
+                              )}
+                              {["delivered", "cancelled", "refunded"].includes(
+                                order?.status
+                              ) && (
+                                <AddToCartButtonWrap product={item?.product}>
+                                  <button className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2">
+                                    <CartIcon />
+                                    Buy Again
+                                  </button>
+                                </AddToCartButtonWrap>
                               )}
                             </div>
-                          ) : null}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex">
-                        <div className="w-full flex justify-end">
-                          {order?.status === "delivered" && (
-                            <>
-                              <ReviewButton
-                                product={item?.product}
-                                toggleForm={handleToggleForm}
-                              />
-                            </>
-                          )}
-                          {["delivered", "cancelled", "refunded"].includes(
-                            order?.status
-                          ) && (
-                            <AddToCartButtonWrap product={item?.product}>
-                              <button className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2">
-                                <CartIcon />
-                                Buy Again
-                              </button>
-                            </AddToCartButtonWrap>
-                          )}
-                        </div>
-                      </div>
+                    ))}
+                </div>
+                <div className="border-t border-neutral-300 w-full flex pt-5 items-center justify-end">
+                  <div className="text-lg text-neutral-700 flex">
+                    <div>Order Total:</div>
+                    <div className="text-theme-600 font-bold min-w-[130px] text-right">
+                      ${formatPrice(order?.total_price)}
                     </div>
                   </div>
-                ))}
-            </div>
-            <div className="border-t border-neutral-300 w-full flex pt-5 items-center justify-end">
-              <div className="text-lg text-neutral-700 flex">
-                <div>Order Total:</div>
-                <div className="text-theme-600 font-bold min-w-[130px] text-right">
-                  ${formatPrice(order?.total_price)}
                 </div>
               </div>
+            ))}
+          {!mergedOrders && (
+            <div className="py-1 px-2 flex flex-col justify-center items-center">
+              <h4 className="text-neutral-800 font-bold">
+                No orders yet
+                {/* <span className="font-light italic">{"<Displays only if app failed to fetch reviews>"}</span> */}
+              </h4>
+              <p className="text-neutral-700">
+                You haven’t placed any orders so far.
+              </p>
             </div>
-          </div>
-        ))}
+          )}
+        </>
+      )}
 
       <ReviewForm
         product={reviewProduct}
