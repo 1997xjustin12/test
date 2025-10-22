@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
-
+import { isValidPassword } from "@/app/lib/helpers";
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -59,10 +59,12 @@ function RegisterForm() {
       return;
     }
 
-    if (form?.password.length < 7) {
+    const validatePassword = isValidPassword(form?.password)
+
+    if(!validatePassword?.valid){
       setMessage({
         type: "error",
-        text: "Password must be at least 7 characters long.",
+        text: validatePassword?.message,
       });
       return;
     }

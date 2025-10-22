@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/app/context/auth";
-
+import { isValidPassword } from "@/app/lib/helpers";
 
 
 const EyeClose = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.5c-3.8 0-7.2-2.1-8.8-5.5H1c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5h-2.2c-1.6 3.4-5 5.5-8.8 5.5"/></svg>;
@@ -23,8 +23,13 @@ export default function ChangePasswordPage() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("[CHANGEPASS] form", form);
+    // console.log("[CHANGEPASS] form", form);
 
+    const validatePassword = isValidPassword(form?.new_password);
+    if(!validatePassword?.valid){
+      setNotif({ status: "error", message: validatePassword?.message });
+      return;
+    }
     // check if password 1 and 2 are the same
     if (form?.new_password?.trim() !== form?.new_password2?.trim()) {
       setNotif({ status: "error", message: "New password doesn't match!" });
