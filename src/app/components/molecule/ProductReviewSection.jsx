@@ -5,8 +5,8 @@ import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { getReviewsByProductId } from "@/app/lib/api";
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 const FirstReview = ({ openForm }) => {
   return (
@@ -293,33 +293,63 @@ function ProductReviewSection({ product }) {
   return (
     <div className="">
       <h2>Customer Reviews</h2>
+
       <div className="mt-5 flex flex-col gap-[20px]">
-        <div className="w-full p-5 rounded-md border border-neutral-300">
-          <ReviewSummary product={product} />
-        </div>
-        {reviews &&
-          reviews?.results?.length > 0 &&
-          reviews.results.map((review) => (
-            <div
-              key={`review-item-${review?.id}`}
-              className="w-full p-5 rounded-md border border-neutral-300"
-            >
-              <div className="flex gap-1 items-center">
-                <span className="font-medium">{parseFloat(review?.rating).toFixed(1)}</span>
-                <Rating
-                  readOnly
-                  value={review?.rating}
-                  style={{ maxWidth: 100 }}
-                ></Rating>
-              </div>
-              <div className="flex items-center gap-3 mt-3 text-sm">
-                <div className="font-bold">{review?.user?.username}</div>
-                <div className="text-neutral-500">{dayjs(review?.created_at).fromNow()}</div>
-              </div>
-              <div className="text-lg font-bold mt-3">{review?.title}</div>
-              <div className="text-neutral-700">{review?.comment}</div>
+        {!reviews && (
+          <div className="bg-yellow-100 py-1 px-2 border-l-[5px] border-yellow-300">
+            <h4 className="text-yellow-800 font-bold">
+              Couldn’t load product reviews
+              {/* <span className="font-light italic">{"<Displays only if app failed to fetch reviews>"}</span> */}
+            </h4>
+            <p className="text-yellow-700">
+              Please refresh the page or try again later.
+            </p>
+          </div>
+        )}
+        {reviews && reviews?.results?.length > 0 && (
+          <>
+            <div className="w-full p-5 rounded-md border border-neutral-300">
+              <ReviewSummary product={product} />
             </div>
-          ))}
+            {reviews.results.map((review) => (
+              <div
+                key={`review-item-${review?.id}`}
+                className="w-full p-5 rounded-md border border-neutral-300"
+              >
+                <div className="flex gap-1 items-center">
+                  <span className="font-medium">
+                    {parseFloat(review?.rating).toFixed(1)}
+                  </span>
+                  <Rating
+                    readOnly
+                    value={review?.rating}
+                    style={{ maxWidth: 100 }}
+                  ></Rating>
+                </div>
+                <div className="flex items-center gap-3 mt-3 text-sm">
+                  <div className="font-bold">{review?.user?.username}</div>
+                  <div className="text-neutral-500">
+                    {dayjs(review?.created_at).fromNow()}
+                  </div>
+                </div>
+                <div className="text-lg font-bold mt-3">{review?.title}</div>
+                <div className="text-neutral-700">{review?.comment}</div>
+              </div>
+            ))}
+          </>
+        )}
+        {reviews && reviews?.results?.length === 0 && (
+          <div className="bg-neutral-200 py-1 px-2 border-l-[5px] border-neutral-300">
+            <h4 className="font-bold">
+              No reviews yet
+              {/* <span className="font-light italic">{"<Displays only if product has no reviews yet>"}</span> */}
+            </h4>
+            <p className="text-neutral-700">
+              This product hasn’t been reviewed yet. You can share your thoughts
+              after purchasing it.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
