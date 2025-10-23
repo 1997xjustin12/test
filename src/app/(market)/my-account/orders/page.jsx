@@ -9,6 +9,8 @@ import { BASE_URL, createSlug, formatPrice } from "@/app/lib/helpers";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import { CartIcon } from "@/app/components/icons/lib";
 import { Rating } from "@smastrom/react-rating";
+import { Eos3DotsLoading } from "@/app/components/icons/lib";
+
 
 const OrderStatusBadge = ({ status }) => {
   const badges = {
@@ -90,7 +92,6 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      console.log("[form]", form);
       let response;
       if (action === "update") {
         response = await userReviewUpdate(form);
@@ -98,12 +99,11 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
         response = await userReviewCreate(form);
       }
       const data = await response.json();
-      console.log("[response]", response);
-      console.log("[data]", data);
       if (!response.ok) {
         console.warn("[handleSubmit]", err);
         return;
       }
+      setToggle(false);
     } catch (err) {
       console.warn("[handleSubmit]", err);
     } finally {
@@ -122,13 +122,11 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
 
   useEffect(() => {
     setToggle(!!product);
-    console.log("[product]", product);
     if (product?.product_id)
       setForm((prev) => ({ ...prev, product: product?.product_id }));
   }, [product]);
 
   useEffect(() => {
-    console.log("[USER]", user);
     setForm((prev) => {
       return (
         { ...initForm } || {
@@ -222,6 +220,7 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
                   <div className="flex gap-5 items-center flex-col-reverse sm:flex-row">
                     <button
                       onClick={onClose}
+                      disabled={loading}
                       type="button"
                       className=" py-1 font-medium text-stone-700"
                     >
@@ -229,9 +228,21 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
                     </button>
                     <button
                       type="submit"
-                      className="text-[12px] sm:text-base px-10 py-2 bg-stone-600 hover:bg-stone-700 border-2 border-stone-600 hover:border-stone-700 text-white rounded"
+                      disabled={loading}
+                      className="px-10 py-2 border-2 font-bold bg-stone-600 hover:bg-stone-700 border-stone-600 hover:border-stone-700 text-white rounded  hover:shadow h-[44px] relative"
                     >
-                      Submit Review
+                      <div
+                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                          loading === true ? "visible" : "invisible"
+                        }`}
+                      >
+                        <Eos3DotsLoading width={70} height={70} />
+                      </div>
+                      <span
+                        className={loading === true ? "invisible" : "visible"}
+                      >
+                        Submit Review
+                      </span>
                     </button>
                   </div>
                 </form>
