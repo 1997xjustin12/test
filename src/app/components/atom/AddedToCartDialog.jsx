@@ -58,7 +58,8 @@ const YouMightAlsoLike = () => {
   return (
     <div>
       <h3>You Might Also Like</h3>
-      <div className="min-h-[366px]">
+      <div className="min-h-[366px] flex items-center justify-center text-neutral-700">
+        {products && Array.isArray(products) && products.length === 0 && (<Eos3DotsLoading width={100} height={100} />) }
         {products && Array.isArray(products) && products.length > 0 && (
           <YmalCarousel breakpoints={items_per_break_point}>
             {products.map((item, index) => (
