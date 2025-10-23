@@ -10,7 +10,7 @@ import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import { CartIcon } from "@/app/components/icons/lib";
 import { Rating } from "@smastrom/react-rating";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
-
+import { useCart } from "@/app/context/cart";
 
 const OrderStatusBadge = ({ status }) => {
   const badges = {
@@ -310,6 +310,7 @@ const ReviewButton = ({ product, toggleForm }) => {
 };
 
 export default function OrdersPage() {
+  const { addToCartLoading } = useCart();
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [products, setProducts] = useState([]);
@@ -662,9 +663,25 @@ export default function OrdersPage() {
                               order?.status
                             ) && (
                               <AddToCartButtonWrap product={item?.product}>
-                                <button className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2">
-                                  <CartIcon />
-                                  Buy Again
+                                <button
+                                  disabled={addToCartLoading}
+                                  className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2 relative"
+                                >
+                                  <div
+                                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                                      addToCartLoading === true ? "visible" : "invisible"
+                                    }`}
+                                  >
+                                    <Eos3DotsLoading width={70} height={70} />
+                                  </div>
+                                  <div
+                                    className={`flex items-center gap-3 ${
+                                      addToCartLoading === true ? "invisible" : "visible"
+                                    }`}
+                                  >
+                                    <CartIcon />
+                                    Buy Again
+                                  </div>
                                 </button>
                               </AddToCartButtonWrap>
                             )}
