@@ -412,7 +412,7 @@ export default function TuiNavbar({ logo, menu }) {
                                               href={`${BASE_URL}/${child?.url}`}
                                               className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${
                                                 child?.nav_type ===
-                                                "custom_page"
+                                                "custom_page" && !sublink?.collection_display
                                                   ? "line-through"
                                                   : ""
                                               }`}
