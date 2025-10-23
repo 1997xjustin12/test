@@ -382,30 +382,21 @@ export const mapOrderItems = (items) => {
 };
 
 export const BaseNavObj = {
-  Fireplaces: ["Shop Gas Fireplaces", "Shop Electric Fireplaces"],
+  Fireplaces: ["Gas Fireplaces", "Electric Fireplaces"],
   "Patio Heaters": [
-    "Shop Electric Patio Heaters",
-    "Shop Gas Patio Heaters",
-    "Shop Freestanding Patio Heaters",
+    "Electric Patio Heaters",
+    "Gas Patio Heaters",
+    "Freestanding Patio Heaters",
   ],
   "Built-In Grills": [
-    // "Shop Blaze Built-In Grills",
-    // "Shop Bull Built-In Grills",
-    // "Shop Eloquence Built-In Grills",
-    // "Shop Twin Eagles Built-an Grills",
     "Shop All Built In Grills"
   ],
   "Freestanding Grills": [
-    "Shop Blaze Freestanding Grills",
-    "Shop Bull Freestanding Grills",
-    "Shop Twin Eagles Freestanding Grills",
+    "Blaze Freestanding Grills",
+    "Bull Freestanding Grills",
+    "Twin Eagles Freestanding Grills",
   ],
-  "Freestanding Grills": [
-    "Shop Blaze Freestanding Grills",
-    "Shop Bull Freestanding Grills",
-    "Shop Twin Eagles Freestanding Grills",
-  ],
-  "Open Box": ["Shop Open Box"],
+  "Open Box": ["Shop All Open Box"],
 };
 
 export const BaseNavKeys = Object.keys(BaseNavObj);

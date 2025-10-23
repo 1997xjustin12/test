@@ -244,12 +244,15 @@ export function AuthProvider({ children }) {
 
       const key = `abandoned:${cart?.cart_id}`;
       const redis_response = await redisGet(key);
-      if(!redis_response.ok){
-        console.warn("[userCartGet]")
+      if (!redis_response.ok) {
+        console.warn("[userCartGet]");
         return null;
       }
       const is_abandoned = await redis_response.json();
-      const items = cart?.items?.map(item=> ({...item, ...item?.custom_fields}));
+      const items = cart?.items?.map((item) => ({
+        ...item,
+        ...item?.custom_fields,
+      }));
       return { ...cart, is_abandoned, items };
     } catch (err) {
       return err;
@@ -297,8 +300,11 @@ export function AuthProvider({ children }) {
 
     const sendCart = {
       ...cart,
-      items: cart?.items?.map(item=> ({...item, product_id: item?.custom_fields?.product_id}))
-    }
+      items: cart?.items?.map((item) => ({
+        ...item,
+        product_id: item?.custom_fields?.product_id,
+      })),
+    };
 
     try {
       const bearer = `Bearer ${accessToken}`;
@@ -396,51 +402,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ---- refresh token handler ----
-  // const refreshAccessToken = useCallback(async () => {
-  //   if (!forage) return;
-  //   if (pathname === "/logout") return;
-
-  //   try {
-  //     const now = Date.now();
-
-  //     // 🔹 check last refresh time in localforage
-  //     const lastRefresh = await forage.getItem("last_refresh");
-
-  //     if (lastRefresh && now - lastRefresh < REFRESH_INTERVAL) {
-  //       console.log("Skipping refresh, last done too recently");
-  //       return;
-  //     }
-
-  //     const refresh = await forage.getItem("refresh");
-  //     if (!refresh) {
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     const res = await fetch("/api/refresh", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ refresh }),
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error("Refresh failed");
-  //     }
-
-  //     const data = await res.json();
-  //     if (data.access) {
-  //       setIsLoggedIn(true);
-  //       setAccessToken(data.access);
-
-  //       // 🔹 save last refresh time
-  //       await forage.setItem("last_refresh", now);
-  //     }
-  //   } catch (err) {
-  //     console.error("Refresh error:", err);
-  //     logout();
-  //   }
-  // }, [forage, pathname]);
   const refreshAccessToken = useCallback(
     async (force = false) => {
       if (!forage) return;
@@ -449,10 +410,8 @@ export function AuthProvider({ children }) {
       try {
         const now = Date.now();
 
-        // ✅ Check last refresh
         const lastRefresh = await forage.getItem("last_refresh");
 
-        // ✅ Check existing access token
         const existingAccess = await forage.getItem("access");
 
         if (
@@ -606,6 +565,16 @@ export function AuthProvider({ children }) {
       await getUser();
     })();
   }, [accessToken]);
+
+  useEffect(() => {
+    refreshAccessToken(); // first check immediately
+
+    const interval = setInterval(() => {
+      refreshAccessToken();
+    }, 5 * 60 * 1000); // every 5 minutes
+
+    return () => clearInterval(interval);
+  }, [refreshAccessToken]);
 
   const fullName = useMemo(() => {
     if (!user) return "";
