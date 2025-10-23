@@ -219,15 +219,13 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
                       Signup
                     </Link>
 
-                    <Link
-                      prefetch={false}
+                    <button
                       disabled={loading}
-                      onClick={handleLinkRedirect}
-                      href={`${BASE_URL}/fireplaces`}
+                      onClick={()=> setToggle(false)}
                       className="mt-5 text-center px-3 py-2 border-2 font-medium border-stone-600 bg-stone-600 text-white rounded hover:bg-stone-700 hover:shadow h-[44px] relative"
                     >
                       Continue Shopping
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
