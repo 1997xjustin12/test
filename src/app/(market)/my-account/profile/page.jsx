@@ -60,7 +60,7 @@ export default function ProfilePage() {
         <div className="pt-[20px]">
           <form
             onSubmit={handleSubmit}
-            className="w-full bg-white p-6 space-y-4"
+            className="w-full bg-white p-0 md:p-6 space-y-4"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* First Name */}
@@ -108,7 +108,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex gap-[30px] pt-[20px]">
+            <div className="flex flex-col md:flex-row gap-[30px] pt-[20px]">
               <div className="w-full">
                 <h3 className="font-bold">Billing</h3>
                 <div className="pt-[20px] flex flex-col gap-4">
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
-              <div className="border"></div>
+              <div className="border hidden md:block"></div>
               <div className="w-full">
                 <h3 className="font-bold">Shipping</h3>
                 <div className="pt-[20px] flex flex-col gap-4">

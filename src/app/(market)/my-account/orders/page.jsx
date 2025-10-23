@@ -358,7 +358,7 @@ export default function OrdersPage() {
   useEffect(() => {
     const getOrders = async () => {
       const _orders = await userOrdersGet();
-      if(_orders.length === 0){
+      if (_orders.length === 0) {
         setLoadingOrders(false);
       }
       setOrders(_orders);
@@ -406,7 +406,7 @@ export default function OrdersPage() {
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <div className="bg-white w-full p-[20px] shadow-lg border rounded-lg flex justify-between">
+      <div className="bg-white w-full p-[20px] shadow-lg border rounded-lg flex flex-col md:flex-row justify-between">
         <h3>Orders Page</h3>
         <span className="font-semibold">
           Need Assistance? Call.{" "}
@@ -593,68 +593,70 @@ export default function OrdersPage() {
                     order.items.map((item) => (
                       <div
                         key={`${order?.order_number}-item-${item.product_id}`}
-                        className="flex gap-5 border-t border-neutral-300 py-1"
+                        className="flex flex-col  border-t border-neutral-300 py-1"
                       >
-                        <div className="relative w-[100px] h-[100px]">
-                          {item?.image && (
-                            <Image
-                              src={item.image}
-                              title={`${item?.title}`}
-                              alt={`${createSlug(item?.title)}-image`}
-                              fill
-                              className="object-contain"
-                              sizes="(max-width: 768px) 100vw, 300px"
-                            />
-                          )}
-                        </div>
-                        <div className="flex flex-col gap-5 w-full">
-                          <div className="flex justify-between gap-5">
-                            <div>
-                              <div>{item?.title}</div>
-                              <div className="text-neutral-700">
-                                x{item?.quantity}
+                        <div className="flex gap-5">
+                          <div className="relative w-[100px] h-[100px]">
+                            {item?.image && (
+                              <Image
+                                src={item.image}
+                                title={`${item?.title}`}
+                                alt={`${createSlug(item?.title)}-image`}
+                                fill
+                                className="object-contain"
+                                sizes="(max-width: 768px) 100vw, 300px"
+                              />
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-5 w-full">
+                            <div className="flex flex-col md:flex-row justify-between gap-5">
+                              <div>
+                                <div>{item?.title}</div>
+                                <div className="text-neutral-700">
+                                  x{item?.quantity}
+                                </div>
                               </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="font-medium text-theme-600">
-                                $
-                                {formatPrice(
-                                  parseFloat(item?.price) * item?.quantity
-                                )}
-                              </div>
-                              {item?.compare_at_price &&
-                              item?.compare_at_price !== "0" &&
-                              item?.compare_at_price > 0 ? (
-                                <div className="text-neutral-400 line-through">
+                              <div className="text-right">
+                                <div className="font-medium text-theme-600">
                                   $
                                   {formatPrice(
-                                    item.compare_at_price * item?.quantity
+                                    parseFloat(item?.price) * item?.quantity
                                   )}
                                 </div>
-                              ) : null}
+                                {item?.compare_at_price &&
+                                item?.compare_at_price !== "0" &&
+                                item?.compare_at_price > 0 ? (
+                                  <div className="text-neutral-400 line-through">
+                                    $
+                                    {formatPrice(
+                                      item.compare_at_price * item?.quantity
+                                    )}
+                                  </div>
+                                ) : null}
+                              </div>
                             </div>
                           </div>
-                          <div className="flex">
-                            <div className="w-full flex justify-end">
-                              {order?.status === "delivered" && (
-                                <>
-                                  <ReviewButton
-                                    product={item?.product}
-                                    toggleForm={handleToggleForm}
-                                  />
-                                </>
-                              )}
-                              {["delivered", "cancelled", "refunded"].includes(
-                                order?.status
-                              ) && (
-                                <AddToCartButtonWrap product={item?.product}>
-                                  <button className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2">
-                                    <CartIcon />
-                                    Buy Again
-                                  </button>
-                                </AddToCartButtonWrap>
-                              )}
-                            </div>
+                        </div>
+                        <div className="flex">
+                          <div className="w-full flex justify-end">
+                            {order?.status === "delivered" && (
+                              <>
+                                <ReviewButton
+                                  product={item?.product}
+                                  toggleForm={handleToggleForm}
+                                />
+                              </>
+                            )}
+                            {["delivered", "cancelled", "refunded"].includes(
+                              order?.status
+                            ) && (
+                              <AddToCartButtonWrap product={item?.product}>
+                                <button className="py-2 ml-3 px-4 bg-theme-600 hover:bg-theme-700 text-white rounded border-[3px] border-theme-600 hover:border-theme-700 flex items-center gap-2">
+                                  <CartIcon />
+                                  Buy Again
+                                </button>
+                              </AddToCartButtonWrap>
+                            )}
                           </div>
                         </div>
                       </div>

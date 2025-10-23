@@ -18,7 +18,7 @@ function MyAccountLinks() {
   };
 
   return (
-    <nav className="flex flex-col space-y-2">
+    <nav className="flex md:flex-col gap-1 flex-wrap w-full">
       {myAccountLinks.map(({ label, url, icon }) => {
         const isActive = pathname === new URL(url).pathname;
         return (
@@ -27,7 +27,7 @@ function MyAccountLinks() {
             key={url}
             href={url}
             onClick={handleLinkClick}
-            className={`flex items-center space-x-2 px-4 py-2 rounded shadow transition-colors border ${
+            className={`flex items-center h-space-x-2 p-2 md:px-4 md:py-2 rounded shadow transition-colors border ${
               isActive
                 ? "bg-theme-600 text-white"
                 : "text-gray-800 hover:bg-theme-400"
