@@ -18,6 +18,8 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
   const pathname = usePathname();
   const pathname_exclusion = [
     "/login",
+    "/forgot-password",
+    "/reset-password",
     "/cart",
     "/checkout",
     "/payment_success",
