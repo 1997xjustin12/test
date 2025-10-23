@@ -103,17 +103,17 @@ const footer = [
         name: "Clearance Sale",
         url: "clearance-sale",
       },
-      {
-        name: "Free Shipping",
-        url: "free-shipping",
-      },
-      {
-        name: "Free Accessories",
-        url: "free-accessories",
-      },
+      // {
+      //   name: "Free Shipping",
+      //   url: "free-shipping",
+      // },
+      // {
+      //   name: "Free Accessories",
+      //   url: "free-accessories",
+      // },
       {
         name: "Contractor Discount Program",
-        url: "contractor-discount-program",
+        url: "professional-program",
       },
     ],
   },
