@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { isValidPassword } from "@/app/lib/helpers";
+import { useRouter } from "next/navigation";
 
-function ResetPassword() {
+function ResetPassword({token, uid}) {
+  const router = useRouter();
   const _notif = {
     status: "",
     message: "",
@@ -41,10 +43,10 @@ function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch("/api/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ new_password: form?.password, token:"",  uidb64:"" }),
+        body: JSON.stringify({ new_password: form?.password, token:token,  uidb64:uid }),
       });
 
       const data = await res.json();
@@ -57,18 +59,18 @@ function ResetPassword() {
       } else {
         setNotif({
           status: "error",
-          message: data?.detail || "Something went wrong.",
+          message: data?.error?.new_password || "Something went wrong.",
         });
+        setLoading(false);
       }
     } catch (err) {
+      setLoading(false);
       setNotif({
         status: "error",
         message: "Network error, please try again.",
       });
       console.log("err", err);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const handleChange = (e) => {

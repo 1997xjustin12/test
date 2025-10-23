@@ -8,7 +8,8 @@ export const metadata = {
   title: "Reset Password | Solana Fireplaces",
 };
 
-function ResetPasswordPage() {
+function ResetPasswordPage({ params }) {
+  const { token, uid } = params;
   return (
     <div className="container mx-auto">
       <div className="px-4 py-[50px]">
@@ -16,7 +17,7 @@ function ResetPasswordPage() {
           <div className="max-w-[400px] flex flex-col items-center">
             <h2 className="font-extrabold mb-5">Reset your password</h2>
             <div className="my-[20px] w-full">
-                <ResetPassword />
+                <ResetPassword token={token} uid={uid}/>
             </div>
             <Link
                 prefetch={false}
