@@ -189,7 +189,7 @@ export default function Web() {
         <h1 className="uppercase text-lg font-bold">{es_index}</h1>
       </div>
       <InstantSearch indexName={es_index} searchClient={searchClient} routing>
-        <Configure hitsPerPage={15} />
+        <Configure hitsPerPage={30} />
         <div className="container">
           <div className="search-panel flex">
             <div className="search-panel__filters  pfd-filter-section">

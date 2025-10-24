@@ -19,6 +19,7 @@ const apiClient = API(
       index: ES_INDEX,
     },
     search_settings: {
+      hitsPerPage: 30,
       highlight_attributes: ["title"],
       snippet_attributes: ["description:200"],
       search_attributes: [
