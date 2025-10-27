@@ -20,7 +20,7 @@ import {
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
-import { BaseNavKeys, ES_INDEX } from "@/app/lib/helpers";
+import { BASE_URL, BaseNavKeys, ES_INDEX } from "@/app/lib/helpers";
 
 const es_index = ES_INDEX;
 
@@ -147,9 +147,23 @@ const Panel = ({ header, children }) => {
       >
         <h5 className="uppercase font-semibold">{header}</h5>
         {expanded ? (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13H5v-2h14z"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="M19 13H5v-2h14z" />
+          </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" />
+          </svg>
         )}
       </button>
       <div className={`${expanded ? "" : "hidden"}`}>{children}</div>
@@ -445,6 +459,81 @@ const Refresh = ({ search }) => {
   return null;
 };
 
+export function URLHandler() {
+  const { results, indexUiState, setUiState } = useInstantSearch();
+
+  function deleteParamsWithPrefix(prefix, params) {
+    const keysToDelete = [];
+    for (const [key] of params.entries()) {
+      if (key.startsWith(prefix)) {
+        keysToDelete.push(key);
+      }
+    }
+    keysToDelete.forEach((key) => params.delete(key));
+    return params;
+  }
+
+  function setParams(type, value, params) {
+    console.log("value", value);
+
+    if (type === "filter") {
+      const keys = Object.keys(value);
+      keys.forEach((v, i) => {
+        params.set(`filter:${v}`, value?.[v]);
+      });
+    }
+
+    if (type === "range") {
+      const keys = Object.keys(value);
+      keys.forEach((v, i) => {
+        params.set(`range:${v}`, value?.[v]);
+      });
+    }
+
+    if (type === "sort") {
+      const sort_val = value.replace(`${es_index}_`, "");
+      params.set(`sort`, sort_val);
+    }
+
+    return params;
+    // Trigger new search
+  }
+
+  useEffect(() => {
+    if (results) {
+      let url = new URL(window.location.href);
+      const { refinementList, sortBy, range } = indexUiState;
+      let params = url.searchParams;
+
+      if (refinementList) {
+        params = setParams("filter", refinementList, params);
+      }else {
+        params = deleteParamsWithPrefix("filter:", params);
+      }
+
+      if (range) {
+        params = setParams("range", range, params);
+      }else {
+        params = deleteParamsWithPrefix("range:", params);
+      }
+
+      if (sortBy) {
+        params = setParams("sort", sortBy, params);
+      }else {
+        params = deleteParamsWithPrefix("sort", params);
+      }
+
+      const stringParams = params.toString();
+      const newUrl = `${url.origin}${url.pathname}${
+        stringParams ? `?${stringParams}` : ""
+      }`;
+      window.history.pushState({}, "", newUrl);
+    }
+  }, [indexUiState, results]);
+
+  return null;
+}
+
 function ProductsSection({ category, search = "" }) {
   // search is assigned only on search page
   const [searchState, setSearchState] = useState({});
@@ -503,6 +592,7 @@ function ProductsSection({ category, search = "" }) {
             searchClient={searchClient}
             searchState={searchState}
           >
+            <URLHandler />
             <SearchBox className="hidden-main-search-input hidden" />
             <Refresh search={search} />
             {/* <HitsPerPage /> */}
