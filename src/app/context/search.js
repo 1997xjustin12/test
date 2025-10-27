@@ -290,6 +290,7 @@ export const SearchProvider = ({ children }) => {
   const redirectToSearchPage = async () => {
     // set recentSearch and popularSearch
     const recent = await getRecentSearch();
+    console.log("recent", recent);
     await setRecentSearch([
       { term: searchQuery, timestamp: Date.now() },
       ...recent,
@@ -300,7 +301,7 @@ export const SearchProvider = ({ children }) => {
 
   const getRecentSearch = async () => {
     try {
-      return await lForage.getItem(recentSearchKey);
+      return await lForage.getItem(recentSearchKey) || [];
     } catch (error) {
       console.log("[LocalForage] getRecentSearch error:", error);
       return null;
