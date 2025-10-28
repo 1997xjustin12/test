@@ -20,7 +20,12 @@ import {
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
-import { BASE_URL, BaseNavKeys, ES_INDEX } from "@/app/lib/helpers";
+import {
+  BASE_URL,
+  BaseNavKeys,
+  ES_INDEX,
+  getInitialUiStateFromUrl,
+} from "@/app/lib/helpers";
 
 const es_index = ES_INDEX;
 
@@ -260,7 +265,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
         <div className="search-panel flex pb-[50px]">
           <div className="search-panel__filters  pfd-filter-section">
             {/* <FilterWrapper page_details={page_details} /> */}
-            {page_details && page_details?.nav_type === "category" && (
+            {/* {page_details && page_details?.nav_type === "category" && (
               <DynamicWidgets facets={["*"]}>
                 {filters
                   .filter((item) =>
@@ -284,7 +289,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                     </div>
                   ))}
               </DynamicWidgets>
-            )}
+            )} */}
 
             {page_details && page_details?.nav_type === "brand" && (
               <DynamicWidgets facets={["*"]}>
@@ -474,10 +479,10 @@ export function URLHandler() {
   }
 
   function setParams(type, value, params) {
-    console.log("value", value);
 
     if (type === "filter") {
       const keys = Object.keys(value);
+      params = deleteParamsWithPrefix("filter:", params)
       keys.forEach((v, i) => {
         params.set(`filter:${v}`, value?.[v]);
       });
@@ -485,18 +490,18 @@ export function URLHandler() {
 
     if (type === "range") {
       const keys = Object.keys(value);
+      params = deleteParamsWithPrefix("range:", params)
       keys.forEach((v, i) => {
         params.set(`range:${v}`, value?.[v]);
       });
     }
 
-    if (type === "sort") {
+    if (type === "sort" && value) {
       const sort_val = value.replace(`${es_index}_`, "");
       params.set(`sort`, sort_val);
     }
 
     return params;
-    // Trigger new search
   }
 
   useEffect(() => {
@@ -504,22 +509,23 @@ export function URLHandler() {
       let url = new URL(window.location.href);
       const { refinementList, sortBy, range } = indexUiState;
       let params = url.searchParams;
+      console.log("indexUiState",indexUiState);
 
       if (refinementList) {
         params = setParams("filter", refinementList, params);
-      }else {
+      } else {
         params = deleteParamsWithPrefix("filter:", params);
       }
 
       if (range) {
         params = setParams("range", range, params);
-      }else {
+      } else {
         params = deleteParamsWithPrefix("range:", params);
       }
 
       if (sortBy) {
         params = setParams("sort", sortBy, params);
-      }else {
+      } else {
         params = deleteParamsWithPrefix("sort", params);
       }
 
@@ -536,7 +542,7 @@ export function URLHandler() {
 
 function ProductsSection({ category, search = "" }) {
   // search is assigned only on search page
-  const [searchState, setSearchState] = useState({});
+  const url = typeof window !== "undefined" ? window.location.href : null;
   const { flatCategories } = useSolanaCategories();
   const [pageDetails, setPageDetails] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -554,12 +560,10 @@ function ProductsSection({ category, search = "" }) {
           } else if (details?.nav_type === "brand") {
             result = `page_brand:${details?.origin_name}`;
           } else if (details?.nav_type === "custom_page") {
-            // result = `custom_page:${details?.origin_name}`;
             if (details?.name === "Search") {
               result = `custom_page:Search`;
             } else {
               const page_name = details?.name;
-              // TEMPORARY: extend value assignment
               if (BaseNavKeys.includes(page_name)) {
                 result = `custom_page:${page_name}`;
               } else {
@@ -578,6 +582,8 @@ function ProductsSection({ category, search = "" }) {
     }
   }, [category, flatCategories]);
 
+  const initialUiState = getInitialUiStateFromUrl(url);
+
   return (
     <>
       <div className={`container mx-auto ${firstLoad ? "" : "hidden"}`}>
@@ -590,7 +596,10 @@ function ProductsSection({ category, search = "" }) {
           <InstantSearch
             indexName={es_index}
             searchClient={searchClient}
-            searchState={searchState}
+            initialUiState={initialUiState}
+            future={{
+              preserveSharedStateOnUnmount: true,
+            }}
           >
             <URLHandler />
             <SearchBox className="hidden-main-search-input hidden" />
@@ -601,6 +610,37 @@ function ProductsSection({ category, search = "" }) {
             ) : (
               <Configure hitsPerPage={30} />
             )}
+            {/*  hack to make initialUiState work*/}
+            <SortBy
+              className="hidden"
+              items={[
+                { label: "Most Popular", value: `${es_index}_popular` },
+                { label: "Newest", value: `${es_index}_newest` },
+                { label: "Price: Low to High", value: `${es_index}_price_asc` },
+                {
+                  label: "Price: High to Low",
+                  value: `${es_index}_price_desc`,
+                },
+              ]}
+            />
+            <RefinementList attribute="brand" className="hidden" />
+            <RefinementList attribute="configuration_type" className="hidden" />
+            <RefinementList attribute="no_of_burners" className="hidden" />
+            <RangeInput attribute="price" className="hidden" />
+            <RefinementList attribute="grill_lights" className="hidden" />
+            <RefinementList attribute="size" className="hidden" />
+            <RefinementList
+              attribute="rear_infrared_burner"
+              className="hidden"
+            />
+            <RefinementList attribute="cut_out_width" className="hidden" />
+            <RefinementList attribute="cut_out_depth" className="hidden" />
+            <RefinementList attribute="cut_out_height" className="hidden" />
+            <RefinementList attribute="made_in_usa" className="hidden" />
+            <RefinementList attribute="material" className="hidden" />
+            <RefinementList attribute="thermometer" className="hidden" />
+            <RefinementList attribute="rotisserie_kit" className="hidden" />
+            <RefinementList attribute="gas_type" className="hidden" />
             <InnerUI
               category={category}
               page_details={pageDetails}

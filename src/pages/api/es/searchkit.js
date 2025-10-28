@@ -358,28 +358,14 @@ export default async function handler(req, res) {
 
       filter_query.push(...tmp_query);
     }
-    // console.log("[TEST NI] filter_value:", filter_value);
-
     // This will display no products for category links that are not known.
     if (
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-      // Menu Driven Item Display
-      // const menu_key = keys.dev_shopify_menu.value;
-      // const nav_obj = await redis.get(menu_key); 
-      // const base_nav_array = nav_obj ? nav_obj.map((item) => item?.name) : [];
-      // const isBaseNav = base_nav_array.includes(filter_value);
-      // const BaseNavItem = isBaseNav
-      //   ? nav_obj.find((item) => item?.name === filter_value)
-      //   : null;
-      // const value_array = isBaseNav ? BaseNavItem?.children.map(
-      //   (item) => item?.collection_display?.name
-      // ):null;
-      const value_array = BaseNavObj?.[filter_value] || null; // Collection Driven
+      const value_array = BaseNavObj?.[filter_value] || null; 
 
       if (value_array) {
-        console.log("[collection name array]", value_array);
         filter_query.push({
           terms: {
             "collections.name.keyword": value_array,
@@ -395,6 +381,7 @@ export default async function handler(req, res) {
     }
 
     const data = req.body;
+    console.log("body", data);
     let results = null;
 
     if (filter_query.length > 0) {

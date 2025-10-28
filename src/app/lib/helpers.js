@@ -369,7 +369,8 @@ export const updateMenuItemById = (tree, menuId, newItem) => {
 export const mapOrderItems = (items) => {
   return items.map((item) => {
     // return if already formatted
-    if(item?.product_link && item?.price && item?.quantity && item?.total) return {...item};
+    if (item?.product_link && item?.price && item?.quantity && item?.total)
+      return { ...item };
 
     return {
       product_id: item?.product_id,
@@ -388,9 +389,7 @@ export const BaseNavObj = {
     "Gas Patio Heaters",
     "Freestanding Patio Heaters",
   ],
-  "Built-In Grills": [
-    "Shop All Built In Grills"
-  ],
+  "Built-In Grills": ["Shop All Built In Grills"],
   "Freestanding Grills": [
     "Blaze Freestanding Grills",
     "Bull Freestanding Grills",
@@ -413,39 +412,75 @@ export const burnerBuckets = {
   "8 Burners": ["8", "8 Burners"],
 };
 
-
 export function capitalizeFirstLetter(str) {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function debounce(fn, delay=300) {
+export function debounce(fn, delay = 300) {
   let timer;
-  return function (...args) {   // accept args
+  return function (...args) {
+    // accept args
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), delay); // forward args
   };
 }
 
-
 //  varaible used to exclude products by brand from displaying on the app
-export const exclude_brands = [
-  "Cedar Creek Fireplaces",
-  "American Fire Glass",
-];
+export const exclude_brands = ["Cedar Creek Fireplaces", "American Fire Glass"];
 
 //  varaible used to exclude products by collections from displaying on the app
-export const exclude_collections = ["Dimplex Fireplace Accessories"]
+export const exclude_collections = ["Dimplex Fireplace Accessories"];
 
 export const isValidPassword = (password) => {
   const hasWhitespace = /\s/;
 
   if (password.length < 8) {
-    return { valid: false, message: "Password must be at least 8 characters long." };
+    return {
+      valid: false,
+      message: "Password must be at least 8 characters long.",
+    };
   }
   if (hasWhitespace.test(password)) {
     return { valid: false, message: "Password cannot contain spaces." };
   }
 
   return { valid: true, message: "Password is valid." };
-}
+};
+
+export const getInitialUiStateFromUrl = (url) => {
+  try {
+    const searchParams = new URL(url).searchParams;
+    const refinementList = {};
+    const range = {};
+    let sortBy = `${ES_INDEX}_popular`;
+
+    for (const [key, value] of searchParams.entries()) {
+      if (key.startsWith("filter:")) {
+        const attribute = key.replace("filter:", "");
+        refinementList[attribute] = value.split(",");
+      }
+      if (key.startsWith("range:")) {
+        const attribute = key.replace("range:", "");
+        range[attribute] = value;
+      }
+      if (key === "sort") {
+        sortBy = `${ES_INDEX}_${value}`;
+      }
+    }
+
+    const result = {
+      [ES_INDEX]: {
+        refinementList: Object.keys(refinementList).length
+          ? refinementList
+          : undefined,
+        range: Object.keys(range).length ? range : undefined,
+        sortBy:  sortBy || undefined,
+      },
+    };
+
+    return result;
+  } catch (err) {
+    console.warn("[getInitialUiStateFromUrl] error", err);
+  }
+};
