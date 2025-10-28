@@ -391,9 +391,10 @@ export const BaseNavObj = {
   ],
   "Built-In Grills": ["Shop All Built In Grills"],
   "Freestanding Grills": [
-    "Blaze Freestanding Grills",
-    "Bull Freestanding Grills",
-    "Twin Eagles Freestanding Grills",
+    // "Blaze Freestanding Grills",
+    // "Bull Freestanding Grills",
+    // "Twin Eagles Freestanding Grills",
+    "Shop All Freestanding Grills",
   ],
   "Open Box": ["Shop All Open Box"],
 };

@@ -95,7 +95,7 @@ export default async function GenericCategoryPage({ params }) {
   if (pageData?.is_base_nav) return <BaseNavPage page_details={pageData} />;
 
   return (
-    <div>
+    <div className="p-2 md:p-[20px]">
       <MobileLoader isLoading={!pageData} />
       <HeroNotice data={pageData} />
       <TuiHero data={pageData} />
