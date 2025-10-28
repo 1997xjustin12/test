@@ -14,7 +14,7 @@ export default function SearchPage(props) {
   const [tab, setTab] = useState("product");
   const { query } = searchParams;
   const { searchQuery, setSearch, searchResults, noResults } = useSearch();
-  console.log("[SEARCH RESULTS]", searchResults)
+  // console.log("[SEARCH RESULTS]", searchResults)
   useEffect(()=>{
     if(query){
       setSearch(query);

@@ -501,15 +501,19 @@ export function URLHandler() {
       params.set(`sort`, sort_val);
     }
 
+    if (type === "page" && value) {
+      params.set("page", value);
+    }
+
     return params;
   }
 
   useEffect(() => {
     if (results) {
       let url = new URL(window.location.href);
-      const { refinementList, sortBy, range } = indexUiState;
+      const { refinementList, sortBy, range, page } = indexUiState;
       let params = url.searchParams;
-      console.log("indexUiState",indexUiState);
+      // console.log("indexUiState",indexUiState);
 
       if (refinementList) {
         params = setParams("filter", refinementList, params);
@@ -529,10 +533,17 @@ export function URLHandler() {
         params = deleteParamsWithPrefix("sort", params);
       }
 
+      if (page) {
+        params = setParams("page", page, params);
+      } else {
+        params = deleteParamsWithPrefix("page", params);
+      }
+
       const stringParams = params.toString();
       const newUrl = `${url.origin}${url.pathname}${
         stringParams ? `?${stringParams}` : ""
       }`;
+      // console.log("newUrl", newUrl);
       window.history.pushState({}, "", newUrl);
     }
   }, [indexUiState, results]);
@@ -611,6 +622,7 @@ function ProductsSection({ category, search = "" }) {
               <Configure hitsPerPage={30} />
             )}
             {/*  hack to make initialUiState work*/}
+            <Pagination className="hidden"/>
             <SortBy
               className="hidden"
               items={[

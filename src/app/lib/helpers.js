@@ -454,6 +454,7 @@ export const getInitialUiStateFromUrl = (url) => {
     const refinementList = {};
     const range = {};
     let sortBy = `${ES_INDEX}_popular`;
+    let page = 1;
 
     for (const [key, value] of searchParams.entries()) {
       if (key.startsWith("filter:")) {
@@ -467,6 +468,9 @@ export const getInitialUiStateFromUrl = (url) => {
       if (key === "sort") {
         sortBy = `${ES_INDEX}_${value}`;
       }
+      if(key === "page"){
+        page = value;
+      }
     }
 
     const result = {
@@ -476,6 +480,7 @@ export const getInitialUiStateFromUrl = (url) => {
           : undefined,
         range: Object.keys(range).length ? range : undefined,
         sortBy:  sortBy || undefined,
+        page: page || 1,
       },
     };
 
