@@ -13,6 +13,7 @@ import HeroNotice from "@/app/components/atom/HeroNotice";
 import NewsLetter from "@/app/components/section/NewsLetter";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import BaseNavPage from "@/app/components/template/BaseNavItemPage";
+import Image from "next/image";
 
 const isShopify = true;
 
@@ -82,11 +83,40 @@ export async function generateMetadata({ params }) {
   };
 }
 
+const Hero = ({ data }) => {
+  const useBanner = data?.banner?.img?.src;
+  if (!useBanner) return;
+
+  return (
+    <div className={`w-full mx-auto flex flex-col md:flex-row`}>
+      <div className={`w-full md:w-full relative overflow-hidden`}>
+        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[414/77]">
+          {
+            <Image
+              src={useBanner}
+              alt={"Banner"}
+              className="w-full h-full object-contain"
+              fill
+              loading="eager"
+              priority={true}
+              quality={100}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
+          }
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
   const menuData = await redis.get(defaultMenuKey);
   const flatData = flattenNav(
-    menuData.map((i) => ({ ...i, is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name) }))
+    menuData.map((i) => ({
+      ...i,
+      is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
+    }))
   );
   const pageData = getPageData(slug, flatData);
 
@@ -95,41 +125,44 @@ export default async function GenericCategoryPage({ params }) {
   if (pageData?.is_base_nav) return <BaseNavPage page_details={pageData} />;
 
   return (
-    <div className="p-2 md:p-[20px]">
+    <div>
       <MobileLoader isLoading={!pageData} />
       <HeroNotice data={pageData} />
-      <TuiHero data={pageData} />
-      {isShopify ? (
-        <ShopifyProductsSection category={slug} />
-      ) : (
-        <ProductsSection category={slug} />
-      )}
-
-      {pageData?.collections &&
-        Array.isArray(pageData.collections) &&
-        pageData.collections.length > 0 && (
-          <div className="container mx-auto flex flex-col gap-[50px]">
-            {pageData.collections.map((collection) => (
-              <CollectionCarouselWrap
-                key={`collection-carousel-${collection?.mb_uid}`}
-                data={collection}
-              />
-            ))}
-          </div>
+      <Hero data={pageData} />
+      {/* <TuiHero data={pageData} /> */}
+      <div className="px-1 md:px-[20px]">
+        {isShopify ? (
+          <ShopifyProductsSection category={slug} />
+        ) : (
+          <ProductsSection category={slug} />
         )}
 
-      <Reviews />
-      {/* <CategoriesCarousel /> */}
+        {pageData?.collections &&
+          Array.isArray(pageData.collections) &&
+          pageData.collections.length > 0 && (
+            <div className="container mx-auto flex flex-col gap-[50px]">
+              {pageData.collections.map((collection) => (
+                <CollectionCarouselWrap
+                  key={`collection-carousel-${collection?.mb_uid}`}
+                  data={collection}
+                />
+              ))}
+            </div>
+          )}
 
-      <FeatureCategoriesSection items={feat_carousel_items} />
-        
-      {pageData?.faqs &&
-        pageData?.faqs?.visible &&
-        pageData?.faqs?.data &&
-        Array.isArray(pageData.faqs.data) &&
-        pageData.faqs.data.length > 0 && <Faq data={pageData.faqs.data} />}
+        <Reviews />
+        {/* <CategoriesCarousel /> */}
 
-      <NewsLetter />
+        <FeatureCategoriesSection items={feat_carousel_items} />
+
+        {pageData?.faqs &&
+          pageData?.faqs?.visible &&
+          pageData?.faqs?.data &&
+          Array.isArray(pageData.faqs.data) &&
+          pageData.faqs.data.length > 0 && <Faq data={pageData.faqs.data} />}
+
+        <NewsLetter />
+      </div>
     </div>
   );
 }
