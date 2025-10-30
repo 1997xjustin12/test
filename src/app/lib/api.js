@@ -4,14 +4,12 @@
 export const getProductsByIds = async (ids) => {
   try {
     if (!ids) {
-      console.warn("[ids] Requied field missing.");
       return;
     }
     const uniqueIds = [...new Set(ids)];
     const query = uniqueIds.map((id) => `product_ids=${id}`).join("&");
     return await fetch(`/api/es/products-by-ids?${query}`);
   } catch (err) {
-    console.warn("[unsubscribe] API error:", err);
   }
 };
 
@@ -24,14 +22,12 @@ export const getReviewsByProductId = async (product_id) => {
       },
     });
   } catch (err) {
-    console.warn("[productReviewList] API error:", err);
   }
 };
 
 export const sendAbandonedCart = async (cart) => {
   try {
     if (!cart) {
-      console.warn("[ABANDONED CART] No valid cart to send");
       return;
     }
 
@@ -43,14 +39,12 @@ export const sendAbandonedCart = async (cart) => {
       body: JSON.stringify(cart),
     });
   } catch (err) {
-    console.warn("[ABANDONED CART] API error:", err);
   }
 };
 
 export const subscribe = async (email) => {
   try {
     if (!email) {
-      console.warn("[email] Requied field missing.");
       return;
     }
 
@@ -62,14 +56,12 @@ export const subscribe = async (email) => {
       body: JSON.stringify({ email }),
     });
   } catch (err) {
-    console.warn("[subscribe] API error:", err);
   }
 };
 
 export const unsubscribe = async (email) => {
   try {
     if (!email) {
-      console.warn("[email] Requied field missing.");
       return;
     }
 
@@ -81,7 +73,6 @@ export const unsubscribe = async (email) => {
       body: JSON.stringify({ email }),
     });
   } catch (err) {
-    console.warn("[unsubscribe] API error:", err);
   }
 };
 
@@ -89,7 +80,6 @@ export const unsubscribe = async (email) => {
 export const redisGet = async (key) => {
   try {
     if (!key) {
-      console.warn("[key] Requied field missing.");
       return;
     }
 
@@ -100,7 +90,6 @@ export const redisGet = async (key) => {
       },
     });
   } catch (err) {
-    console.warn("[REDUS GET] API error:", err);
   }
 };
 
@@ -108,7 +97,6 @@ export const redisGet = async (key) => {
 export const redisSet = async ({key, value}) => {
   try {
     if (!key || !value) {
-      console.warn("[key, value] Requied field missing.");
       return;
     }
 
@@ -120,6 +108,5 @@ export const redisSet = async ({key, value}) => {
       body: JSON.stringify({ key, value }),
     });
   } catch (err) {
-    console.warn("[REDIS SET] API error:", err);
   }
 };

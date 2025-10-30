@@ -15,6 +15,7 @@ import { getOrCreateSessionId } from "@/app/lib/session";
 import { store_domain, mapOrderItems } from "@/app/lib/helpers";
 import { sendAbandonedCart, redisGet, redisSet } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
+import { useToast } from "@/app/context/toast";
 import { usePathname, useRouter } from "next/navigation";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
 import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog";
@@ -41,6 +42,7 @@ export const CartProvider = ({ children }) => {
     userCartUpdate,
     userCartClose,
   } = useAuth();
+  const { success, error, info } = useToast();
   const [cart, setCart] = useState(null);
   const [cartStorage, setCartStorage] = useState(null);
   const [forage, setForage] = useState(null);
@@ -55,10 +57,8 @@ export const CartProvider = ({ children }) => {
 
   const guestCartToActive = async () => {
     if (!forage) {
-      console.log("[forage]", forage);
     }
     const guestCart = await forage.getItem("cart");
-    console.log("guestCart", guestCart);
     await forage.setItem("cart", { ...guestCart, status: "active" });
   };
 
@@ -70,7 +70,6 @@ export const CartProvider = ({ children }) => {
       payload: cartData, // optional: send the updated cart
     });
 
-    console.log("[CartContext] Broadcasted CART_UPDATED");
   };
 
   const sendAbandonedCartBeacon = (cart) => {
@@ -88,7 +87,6 @@ export const CartProvider = ({ children }) => {
 
     const blob = new Blob([body], { type: "application/json" });
 
-    console.log("SEND BEACON", { url, body });
 
     navigator.sendBeacon(url, blob);
   };
@@ -96,14 +94,12 @@ export const CartProvider = ({ children }) => {
   const updateRedisAbandonedRecord = async (key, value) => {
     const response = await redisSet({ key, value });
     if (!response.ok) {
-      console.warn("[updateRedisAbandonedRecord]", { key, value });
     }
   };
 
   const getRedisAbandonedRecord = async (key) => {
     const response = await redisGet(key);
     if (!response.ok) {
-      console.warn("[getRedisAbandonedRecord]", key);
     }
     const val = await response.json();
     return val;
@@ -121,7 +117,6 @@ export const CartProvider = ({ children }) => {
     if (cart_items.length === 0) return;
 
     if (cart_obj?.is_abandoned) {
-      console.log("cart is_abandoned is ", cart_obj.is_abandoned);
       return;
     }
 
@@ -139,12 +134,10 @@ export const CartProvider = ({ children }) => {
     };
 
     // console.log("TRIGGERED ABANDONED CART BUT THIS FEATURE IS TEMPORARY DISABLED");
-    console.log("[createAbandonedCart]", sendCart);
 
     const now = new Date().toISOString();
 
     if (trigger === "beacon" && !isLoggedIn) {
-      console.log("TRIGGERED ABANDONED CART BEACON", sendCart);
       const newCart = { ...cart_obj, is_abandoned: now, updated_at: now };
       const key = `abandoned:${newCart?.cart_id}`;
       await updateRedisAbandonedRecord(key, newCart?.is_abandoned);
@@ -157,14 +150,12 @@ export const CartProvider = ({ children }) => {
     let response = null;
 
     if (trigger === "timed") {
-      console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
       if (timedout) {
         response = await sendAbandonedCart(sendCart);
       }
     }
 
     if (trigger === "forced") {
-      console.log("TRIGGERED ABANDONED CART FORCED", response);
       response = await sendAbandonedCart(sendCart);
     }
 
@@ -201,7 +192,6 @@ export const CartProvider = ({ children }) => {
       // const cart_check = JSON.parse(Cookies.get("cart") || "[]");
       // console.log("[Cookie check]", cart_check);
     } catch (error) {
-      console.log("[SYNC CART TO COOKIE]", error);
     }
   }
 
@@ -211,7 +201,6 @@ export const CartProvider = ({ children }) => {
     const items = cartObject?.items;
     syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
-    console.log("[buildCartObject]", data);
     const rebuild = {
       ...cartObject,
       sub_total: data?.sub_total,
@@ -220,7 +209,6 @@ export const CartProvider = ({ children }) => {
       total_price: data?.total_price,
     };
     // setCart(rebuild);
-    console.log("REBUILD", rebuild);
 
     return rebuild;
   };
@@ -423,9 +411,6 @@ export const CartProvider = ({ children }) => {
 
   const appendToMergeItems = (cart_items, new_item) => {
     if (!new_item || !new_item?.product_id || !new_item?.quantity) {
-      console.log(
-        "Invalid item passed to appendToMergeItems. Returning original cart."
-      );
       return cart_items;
     }
 
@@ -491,7 +476,6 @@ export const CartProvider = ({ children }) => {
     setAddToCartLoading(true);
     try {
       const cartObj = await getOrCreateCart();
-      console.log("cartObj", cartObj);
       const cart_items = cartObj?.items || [];
       const injected_item = appendToMergeItems(cart_items, item);
       let newCart = await buildCartObject({
@@ -518,12 +502,25 @@ export const CartProvider = ({ children }) => {
       notifyCartUpdate();
       setAddToCartLoading(false);
       setAddedToCart(item);
+
+      // Show success toast with action button
+      success('Added to cart!', {
+        action: {
+          label: 'View Cart',
+          onClick: () => router.push('/cart')
+        },
+        duration: 5000
+      });
+
       return {
         code: 200,
         status: "success",
         message: "Successfully added items to cart.",
       };
     } catch (error) {
+      // Show error toast
+      error('Failed to add item to cart. Please try again.');
+
       return {
         code: 500,
         status: "error",
@@ -559,6 +556,17 @@ export const CartProvider = ({ children }) => {
     const assignCart = await getCart();
     setCart({ ...assignCart });
     notifyCartUpdate();
+
+    // Show success toast with undo action
+    success('Item removed from cart', {
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          await addToCart(item);
+        }
+      },
+      duration: 5000
+    });
   };
 
   const increaseProductQuantity = async (item) => {
@@ -580,7 +588,6 @@ export const CartProvider = ({ children }) => {
     }
 
     const assignCart = await getCart();
-    console.log("[inc] assignCart", assignCart)
     setCart({ ...assignCart });
     await saveCart(newCart);
     notifyCartUpdate();
@@ -636,7 +643,6 @@ export const CartProvider = ({ children }) => {
       }
 
       const assignCart = await getCart();
-      console.log("[dec] assignCart", assignCart)
       setCart({ ...assignCart });
       await saveCart(newCart);
       notifyCartUpdate();
@@ -670,14 +676,12 @@ export const CartProvider = ({ children }) => {
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error("Frontend Fetch Error:", error);
       return { success: false, message: error.message };
     }
   };
 
   const loadGuestInfo = async () => {
     if (!forage) {
-      console.log("forage", forage);
       return;
     }
     const info = await forage.getItem("checkout_info");
@@ -779,7 +783,6 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   useEffect(() => {
-    console.log("[CART]", cart);
   }, [cart]);
 
   useEffect(() => {

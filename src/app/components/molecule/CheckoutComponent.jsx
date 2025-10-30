@@ -334,7 +334,6 @@ const LogoutDropDown = () => {
       await createAbandonedCart(cartObject, abandonedCartUser, "forced");
       await logout();
     }catch(err){
-      console.warn("[handleLogout] error", err)
     }
   };
   useEffect(() => {
@@ -553,7 +552,6 @@ function CheckoutComponent() {
         data: result.data || result.order || result,
       };
     } catch (error) {
-      console.error("Order creation failed:", error.message || error);
       return {
         success: false,
         message: error.message || "Unexpected error while creating order",
@@ -615,7 +613,6 @@ function CheckoutComponent() {
       status,
       ...toSave
     } = form;
-    console.log("[toSAVE]", toSave);
 
     if (isLoggedIn) {
       const data = {
@@ -791,7 +788,6 @@ function CheckoutComponent() {
 
     try {
       const { nonce } = await instance.requestPaymentMethod();
-      console.log("Generated Nonce:", nonce);
 
       if (!nonce) {
         alert("Error: No nonce received. Try again.");
@@ -841,7 +837,6 @@ function CheckoutComponent() {
   };
 
   useEffect(() => {
-    console.log("[FORMATTEDCART]", cartItems);
     if (cartItems && Array.isArray(cartItems) && cartItems.length > 0) {
       let newForm = { ...form, items: cartItems };
       setForm((prev) => ({ ...newForm }));
@@ -936,7 +931,6 @@ function CheckoutComponent() {
 
         setInstance(dropinInstance);
       } catch (error) {
-        console.log("[BRAINTREEINIT] ERROR", error);
         // alert("Payment UI failed to load.");
       }
     }

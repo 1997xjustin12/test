@@ -24,7 +24,6 @@ export default async function handler(req, res) {
         Object.entries(data).map(([key, value]) => [key, value ?? ""])
       );
     
-      console.log("Attempting to save:", sanitizedData);
     
       // Save to Redis (corrected)
       await redis.mset(sanitizedData);
@@ -32,7 +31,6 @@ export default async function handler(req, res) {
       // Read back to verify
       const storedValues = await redis.mget(...Object.keys(sanitizedData));
     
-      console.log("Saved values in Redis:", storedValues);
     
       res.json({
         success: true,
@@ -41,7 +39,6 @@ export default async function handler(req, res) {
         params: sanitizedData,
       });
     } catch (error) {
-      console.error("Redis Error:", error);
       res.status(500).json({ success: false, error: error.message });
     }
   } else if (req.method === "GET") {

@@ -106,7 +106,6 @@ export default function TuiNavbar({ logo, menu }) {
     });
   };
   useEffect(() => {
-    console.log("tui_navbar", menu);
     const injectedMenu = addLinksProperty(menu)
       .filter((i) => i.menu.visible === true)
       .sort((a, b) => a.menu.order - b.menu.order);

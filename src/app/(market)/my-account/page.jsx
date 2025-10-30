@@ -15,7 +15,6 @@ const Subscribe = () => {
       setLoading(true);
       await subscribe(user?.email);
     }catch(err){
-      console.warn("[handleSubscribe]", err)
     }finally{
       setLoading(false);
     }
@@ -65,7 +64,6 @@ const Unsubscribe = () => {
       setLoading(true);
       await unsubscribe(user?.email);
     }catch(err){
-      console.warn("[handleUnsubscribe]", err)
     }finally{
       setLoading(false);
     }

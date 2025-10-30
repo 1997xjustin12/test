@@ -28,7 +28,6 @@ function MenuUpdaterCreate({ open, close, onUpdate }) {
 
     if (menuList) {
       redisSet(menuListKey, [...menuList, newMenu]).then((response) => {
-        console.log("redisSetResponse", response);
         if (response.success) {
           setToggle(false);
           onUpdate();
@@ -36,7 +35,6 @@ function MenuUpdaterCreate({ open, close, onUpdate }) {
       });
     } else {
       redisSet(menuListKey, [newMenu]).then((response) => {
-        console.log("redisSetResponse", response);
         if (response.success) {
           setToggle(false);
           onUpdate();
@@ -64,7 +62,6 @@ function MenuUpdaterCreate({ open, close, onUpdate }) {
 
   const handleCreateConfirm = () => {
     redisGet(menuListKey).then((data) => {
-      console.log("menu_list from UE", data);
       setMenuList(data);
     });
     // throw error regex validation
@@ -87,7 +84,6 @@ function MenuUpdaterCreate({ open, close, onUpdate }) {
   useEffect(() => {
     if (open) {
       redisGet(menuListKey).then((data) => {
-        console.log("menu_list from UE", data);
         setMenuList(data);
         setToggle(true);
       });

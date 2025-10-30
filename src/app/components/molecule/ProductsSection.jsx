@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, use } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
 import SPProductCard from "@/app/components/atom/ProductCard";
+import ProductCardSkeleton from "@/app/components/atom/ProductCardSkeleton";
 import {
   InstantSearch,
   Hits,
@@ -430,11 +431,8 @@ const SkeletonLoader = () => {
         </div>
         <div className="search-panel__results pfd-product-section">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 30 }).map((_, index) => (
-              <div
-                key={`product-loader-card-${index}`}
-                className="bg-neutral-100 w-full h-[400px] rounded"
-              />
+            {Array.from({ length: 12 }).map((_, index) => (
+              <ProductCardSkeleton key={`product-loader-card-${index}`} />
             ))}
           </div>
           <div className="flex gap-[20px] mt-[20px]">

@@ -17,7 +17,6 @@ function FaqsUpdater() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (new_content) => {
-    console.log(new_content);
     setContent(new_content);
     setTabs(prev=>{
         return prev.map(i=> ({...i, content: i.key===tab? new_content: i.content}))
@@ -46,7 +45,6 @@ function FaqsUpdater() {
     .then((res) => {
         alert("Successfully updated!")
     })  
-    .catch(err => console.error("Error:", err))
     .finally(()=>{
         setIsLoading(false);
     });
@@ -66,7 +64,6 @@ function FaqsUpdater() {
   }, []);
 
   useEffect(()=>{
-    console.log("updated tabs", tabs)
   },[tabs])
 
   return (

@@ -42,19 +42,15 @@ function LogoUpdater({ logo }) {
 
   const handleInputChange = (e) => {
     const { value } = e.target;
-    console.log(value);
     setLogoInput(value);
 
     if (!isValidImageUrl(value)) {
-      console.log("❌ Invalid image URL format");
       setInputError("❌ Invalid image URL format");
     } else {
       imageExists(value, (exists) => {
         if (exists) {
-          console.log("✅ Image is valid and exists!");
           setInputError("");
         } else {
-          console.log("❌ Image does not exist or is broken");
           setInputError("❌ Image does not exist or is broken");
         }
       });
@@ -65,7 +61,6 @@ function LogoUpdater({ logo }) {
     fetch(`/api/redis?key=${redisKey}`)
       .then((res) => res.json())
       .then((data) => setCurrentLogo(data))
-      .catch((err) => console.error("Error fetching Redis data:", err));
   };
 
   const clear = () => {

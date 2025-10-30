@@ -47,9 +47,6 @@ function BigCommerceCategories() {
         }
 
         const _progress = (page / totalPages) * 100;
-        console.log(
-          `Fetched page ${page}/${totalPages}, progress: ${progress}`
-        );
         setProgress((prev) => _progress);
         page++;
 
@@ -57,7 +54,6 @@ function BigCommerceCategories() {
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         setError(error.message);
-        console.error("Fetch error:", error);
         break;
       }
     }
@@ -77,7 +73,6 @@ function BigCommerceCategories() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000); // Reset after 2s
     } catch (err) {
-      console.error("Failed to copy:", err);
     }
   };
 
@@ -108,7 +103,6 @@ function BigCommerceCategories() {
           }
         }
       });
-      console.log("categoryTree", tree);
       return tree;
     } else {
       return [];

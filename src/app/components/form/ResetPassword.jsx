@@ -69,7 +69,6 @@ function ResetPassword({token, uid}) {
         status: "error",
         message: "Network error, please try again.",
       });
-      console.log("err", err);
     } 
   };
 

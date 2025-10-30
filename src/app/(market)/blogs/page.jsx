@@ -145,7 +145,6 @@ export default async function Blogs({ searchParams }) {
 
   // Pagination info is in headers
   const totalPosts = res.headers.get("X-WP-Total");
-  console.log("[totalPosts]", totalPosts);
   const totalPages = res.headers.get("X-WP-TotalPages");
 
   // Fetch Featured Images
@@ -162,7 +161,6 @@ export default async function Blogs({ searchParams }) {
             featuredImage = media.source_url || DEFAULT_BLOG_IMAGE;
           }
         } catch (error) {
-          console.error("Error fetching media:", error);
         }
       }
       return { ...post, featuredImage };

@@ -335,12 +335,9 @@ function MenuUpdater() {
 
     if (action === "updateItem") {
       const { menu_id, item } = target;
-      console.log("updateItemmenu_id", menu_id);
-      console.log("updateItemitem", item);
 
       setMenu((prev) => {
         const updatedMenu = replaceMenuItem(prev, menu_id, item);
-        console.log("newMenu", updatedMenu);
         return [...updatedMenu];
       });
     }
@@ -396,7 +393,6 @@ function MenuUpdater() {
   };
 
   useEffect(() => {
-    console.log("menu", menu);
   }, [menu]);
 
   const tmpFnSetCatId = (i) => {

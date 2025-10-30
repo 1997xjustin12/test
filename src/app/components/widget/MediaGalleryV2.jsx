@@ -1,39 +1,37 @@
 // Shopify Structure Component
 
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback, memo } from "react";
 import Image from "next/image";
+import { useDebouncedCallback } from "use-debounce";
 
 const MediaGallery = ({ mediaItems }) => {
   const [activeIndex, setActiveIndex] = useState(0); // Track active media item
   const [activeItem, setActiveItem] = useState(null); // Track active media item
   const containerRef = useRef(null);
   const contentRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [contentWidth, setContentWidth] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [mobileGalleryOverflow, setMobileGalleryOverflow] = useState(false);
-  
+
+  const updateWidths = useCallback(() => {
+    const screenWidth = window.innerWidth;
+    setIsSmallScreen(screenWidth < 641); // Track if screen is below 640px
+
+    if (containerRef.current && contentRef.current) {
+      const containerW = containerRef.current.offsetWidth;
+      const contentW = contentRef.current.offsetWidth;
+      setMobileGalleryOverflow(containerW < contentW);
+    }
+  }, []);
+
+  const debouncedUpdateWidths = useDebouncedCallback(updateWidths, 250);
+
   useEffect(() => {
-    const updateWidths = () => {
-      const screenWidth = window.innerWidth;
-      setIsSmallScreen(screenWidth < 641); // Track if screen is below 640px
-
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-      if (contentRef.current) {
-        setContentWidth(contentRef.current.offsetWidth);
-      }
-
-      setMobileGalleryOverflow(containerRef.current.offsetWidth < contentRef.current.offsetWidth);
-    };
-
     updateWidths(); // Initial check
 
-    window.addEventListener("resize", updateWidths);
-    return () => window.removeEventListener("resize", updateWidths);
-  }, []);
+    window.addEventListener("resize", debouncedUpdateWidths);
+    return () => window.removeEventListener("resize", debouncedUpdateWidths);
+  }, [debouncedUpdateWidths, updateWidths]);
 
   useEffect(() => {
     if (mediaItems && mediaItems.length > 0) {
@@ -82,7 +80,7 @@ const MediaGallery = ({ mediaItems }) => {
               ))}
           </div>
         </div>
-        <div className="order-1 sm:order-2w-full h-full sm:w-[calc(100%-110px)] bg-white relative overflow-hidden border shadow">
+        <div className="order-1 sm:order-2 w-full h-full sm:w-[calc(100%-110px)] bg-white relative overflow-hidden border shadow">
           {activeItem && (
             <Image
               src={activeItem?.src}
@@ -98,4 +96,4 @@ const MediaGallery = ({ mediaItems }) => {
   );
 };
 
-export default MediaGallery;
+export default memo(MediaGallery);

@@ -39,17 +39,14 @@ function GuestBillingFormDialog({ open, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handleSubmit", formData);
     if(billingStorage){
         billingStorage.set(formData);
         onSave(formData);
     }else{
-        console.log("[BILLING STORAGE] NULL")
     }
   };
 
   useEffect(() => {
-    console.log("[OPEN]", open)
     if (open) {
       setToggle(true);
     } else {

@@ -94,9 +94,7 @@ export const SearchProvider = ({ children }) => {
       });
 
       const data = await res.json();
-      console.log("Response:", data);
     } catch (err) {
-      console.log("[ERROR] Add Popular Searches");
     }
   };
 
@@ -179,7 +177,6 @@ export const SearchProvider = ({ children }) => {
       setProductResultsCount(result_total_count);
       return data;
     } catch (err) {
-      console.error("[SHOPIFY SEARCH] Failed to fetch products:", err);
       return null;
     }
   };
@@ -283,14 +280,12 @@ export const SearchProvider = ({ children }) => {
         }
       });
     } catch (error) {
-      console.error(error);
     }
   };
 
   const redirectToSearchPage = async () => {
     // set recentSearch and popularSearch
     const recent = await getRecentSearch();
-    console.log("recent", recent);
     await setRecentSearch([
       { term: searchQuery, timestamp: Date.now() },
       ...recent,
@@ -303,7 +298,6 @@ export const SearchProvider = ({ children }) => {
     try {
       return await lForage.getItem(recentSearchKey) || [];
     } catch (error) {
-      console.log("[LocalForage] getRecentSearch error:", error);
       return null;
     }
   };
@@ -316,7 +310,6 @@ export const SearchProvider = ({ children }) => {
         new_value.map((item) => ({ ...item, term: item?.term?.toLowerCase() }))
       );
     } catch (error) {
-      console.log("[LocalForage] setRecentSearch error:", error);
     }
   };
 
@@ -350,7 +343,6 @@ export const SearchProvider = ({ children }) => {
           });
         })
         .catch((error) => {
-          console.error("Error loading localForage module:", error);
         });
     }
 
@@ -360,7 +352,6 @@ export const SearchProvider = ({ children }) => {
         .then((data) => {
           setPopularSearches(data);
         })
-        .catch((err) => console.error("Failed to fetch popular searches", err));
     };
 
     fetchPopularSearches();

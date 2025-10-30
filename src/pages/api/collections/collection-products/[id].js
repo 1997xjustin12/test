@@ -73,7 +73,6 @@ export default async function handler(req, res) {
         .json({ message: "Failed to fetch products", error: error.message });
     }
   } catch (error) {
-    console.error("Proxy Error:", error);
     return res
       .status(500)
       .json({ message: "Proxy request failed", error: error.message });

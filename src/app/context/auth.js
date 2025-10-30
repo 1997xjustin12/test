@@ -10,6 +10,7 @@ import {
 import { capitalizeFirstLetter, BASE_URL } from "@/app/lib/helpers";
 import { usePathname } from "next/navigation";
 import { redisGet } from "@/app/lib/api";
+import { useToast } from "@/app/context/toast";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext(null);
@@ -111,6 +112,7 @@ const accountBenefits = [
 export function AuthProvider({ children }) {
   const REFRESH_INTERVAL = 10 * 60 * 1000; // 10 minutes
   const pathname = usePathname();
+  const { success, error, info } = useToast();
   const [forage, setForage] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -130,9 +132,7 @@ export function AuthProvider({ children }) {
       );
       // Verify
       const cart_check = JSON.parse(Cookies.get("cart") || "[]");
-      console.log("[Cookie check]", cart_check);
     } catch (error) {
-      console.log("[SYNCCARTOCOOKIE]", error);
     }
   }
 
@@ -195,7 +195,6 @@ export function AuthProvider({ children }) {
 
   const userOrderCreate = async (order) => {
     try {
-      console.log("[userOrderCreate]");
 
       if (loading) return;
 
@@ -207,7 +206,6 @@ export function AuthProvider({ children }) {
         headers.Authorization = `Bearer ${accessToken}`;
       }
 
-      console.log("headers", headers);
 
       return await fetch("/api/orders/checkout", {
         method: "POST",
@@ -215,16 +213,13 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(order),
       });
     } catch (err) {
-      console.error("[userOrderCreate] error:", err);
       return null;
     }
   };
 
   const userCartGet = async () => {
-    console.log("[userCartGet]");
     if (loading) return;
     if (!user) {
-      console.log("[userCartGet][CANT GET CART] USER UNDEFINED");
     }
 
     try {
@@ -245,7 +240,6 @@ export function AuthProvider({ children }) {
       const key = `abandoned:${cart?.cart_id}`;
       const redis_response = await redisGet(key);
       if (!redis_response.ok) {
-        console.warn("[userCartGet]");
         return null;
       }
       const is_abandoned = await redis_response.json();
@@ -260,10 +254,8 @@ export function AuthProvider({ children }) {
   };
 
   const userCartCreate = async (cart = {}) => {
-    console.log("[userCartCreate]");
     if (loading) return;
     if (!user) {
-      console.log("[userCartCreate][CANT CREATE CART] USER UNDEFINED");
       return null;
     }
 
@@ -285,16 +277,13 @@ export function AuthProvider({ children }) {
 
       return await response.json();
     } catch (err) {
-      console.error("[userCartCreate] error:", err);
       return null;
     }
   };
 
   const userCartUpdate = async (cart = {}) => {
-    console.log("[userCartUpdate]");
     if (loading) return;
     if (!user) {
-      console.log("[userCartUpdate][CANT CREATE CART] USER UNDEFINED");
       return null;
     }
 
@@ -324,16 +313,13 @@ export function AuthProvider({ children }) {
 
       return await response.json();
     } catch (err) {
-      console.error("[userCartUpdate] error:", err);
       return null;
     }
   };
 
   const userCartClose = async (cart = {}) => {
-    console.log("[userCartClose]");
     if (loading) return;
     if (!user || !isLoggedIn) {
-      console.log("[userCartClose][CANT CLOSE CART] USER UNDEFINED");
       return null;
     }
 
@@ -348,21 +334,28 @@ export function AuthProvider({ children }) {
         },
       });
     } catch (err) {
-      console.error("[userCartClose] error:", err);
       return null;
     }
   };
 
   const login = async (data) => {
-    if (!data || !data.access || !data.refresh) return false; // fail early if missing
+    if (!data || !data.access || !data.refresh) {
+      error('Invalid login credentials');
+      return false; // fail early if missing
+    }
+
     setIsLoggedIn(true);
     setAccessToken(data.access);
 
     if (forage) {
       forage.setItem("refresh", data.refresh);
     } else {
-      console.log("REFRESH TO FORAGE ERROR");
     }
+
+    // Show welcome toast
+    success('Welcome back!', {
+      duration: 3000
+    });
 
     return true;
   };
@@ -376,7 +369,7 @@ export function AuthProvider({ children }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Logout failed:", errorData.error || response.statusText);
+        error('Logout failed. Please try again.');
         return false;
       }
 
@@ -385,20 +378,22 @@ export function AuthProvider({ children }) {
       setUser(null);
 
       if (forage) {
-        console.log("[CONTEXT][logout][forageRemoveItem]");
         await forage.removeItem("refresh");
         await forage.removeItem("last_refresh");
         await forage.removeItem("access");
       } else {
-        console.log("[CONTEXT][logout] forange is null", forage);
       }
 
-      console.log("Logged out successfully");
       syncCartToCookie([]);
       setIsLoggedIn(false);
+
+      // Show logout toast
+      info('You have been logged out', {
+        duration: 3000
+      });
+
       return response;
     } catch (err) {
-      console.error("Logout failed:", err);
     }
   };
 
@@ -420,7 +415,6 @@ export function AuthProvider({ children }) {
           now - lastRefresh < REFRESH_INTERVAL &&
           existingAccess
         ) {
-          console.log("Using existing access token, skipping refresh");
           setIsLoggedIn(true);
           setAccessToken(existingAccess);
           return;
@@ -452,7 +446,6 @@ export function AuthProvider({ children }) {
           await forage.setItem("last_refresh", now);
         }
       } catch (err) {
-        console.error("Refresh error:", err);
         logout();
       }
     },
@@ -470,7 +463,6 @@ export function AuthProvider({ children }) {
     });
 
     if (!res.ok) {
-      console.log("[ERROR] updateProfile");
       return res;
     }
 
@@ -505,7 +497,6 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(data),
       });
     } catch (err) {
-      console.warn("[userReviewCreate] API error:", err);
     }
   };
 
@@ -520,7 +511,6 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(data),
       });
     } catch (err) {
-      console.warn("[userReviewUpdate] API error:", err);
     }
   };
 
@@ -532,7 +522,6 @@ export function AuthProvider({ children }) {
           setForage(module.default || module); // ✅ use .default
         })
         .catch((error) => {
-          console.error("Error loading localForage module:", error);
         });
     }
   }, []);

@@ -71,7 +71,6 @@ export default function YouMayAlsoLike({ displayItems }) {
         // console.log("[YMAL formatted_data]", formatted_data);
         setProducts(formatted_data);
       } catch (err) {
-        console.error(err);
       }
     };
 

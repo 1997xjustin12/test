@@ -487,6 +487,5 @@ export const getInitialUiStateFromUrl = (url) => {
 
     return result;
   } catch (err) {
-    console.warn("[getInitialUiStateFromUrl] error", err);
   }
 };

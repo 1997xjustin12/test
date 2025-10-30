@@ -29,7 +29,6 @@ export const useAuth = () => {
       if (data.loginRedirect) {
         window.location.href = data.loginRedirect;
       } else {
-        console.error('Login failed', data);
       }
     } finally {
       setLoading(false);

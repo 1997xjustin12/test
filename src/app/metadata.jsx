@@ -19,7 +19,6 @@ export async function generateMetadata() {
       },
     };
   } catch (error) {
-    console.error("Failed to fetch favicon, using default:", error);
     return {
       title: title,
       description: description,

@@ -73,7 +73,6 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!forage) {
-      console.warn("[forage]", `value is ${forage}`);
       return;
     }
     setLoading(true);
@@ -87,7 +86,6 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
       setInfoEmail(email);
       setToggle(false);
     } catch (err) {
-      console.warn("[forage]", err);
     } finally {
       setLoading(false);
     }

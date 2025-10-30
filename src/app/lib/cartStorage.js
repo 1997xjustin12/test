@@ -15,7 +15,6 @@ export const saveCart = async (cart) => {
   try {
     await localForage.setItem("cart", cart);
   } catch (error) {
-    console.error("Error saving cart items:", error);
   }
 };
 
@@ -28,7 +27,6 @@ export const getCart = async () => {
 
     return cart;
   } catch (error) {
-    console.error("Error retrieving cart items:", error);
     // return [];
     return null;
   }
@@ -38,7 +36,6 @@ export const removeCart = async () => {
   try {
     await localForage.removeItem("cart");
   } catch (error) {
-    console.error(`Error removing cart`, error);
   }
 };
 

@@ -21,7 +21,6 @@ export default function FixedHeader() {
           setFavicon(data);
         }
       } catch (error) {
-        console.error("Error fetching favicon:", error);
       }
     };
 

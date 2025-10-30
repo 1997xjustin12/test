@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React, { useState, useEffect, useMemo } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
@@ -322,12 +321,9 @@ function MenuUpdater() {
 
     if (action === "updateItem") {
       const { menu_id, item } = target;
-      console.log("updateItemmenu_id", menu_id);
-      console.log("updateItemitem", item);
 
       setMenu((prev) => {
         const updatedMenu = replaceMenuItem(prev, menu_id, item);
-        console.log("newMenu", updatedMenu);
         return [...updatedMenu];
       });
     }

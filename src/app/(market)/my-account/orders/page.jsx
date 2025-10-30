@@ -100,12 +100,10 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
       }
       const data = await response.json();
       if (!response.ok) {
-        console.warn("[handleSubmit]", err);
         return;
       }
       setToggle(false);
     } catch (err) {
-      console.warn("[handleSubmit]", err);
     } finally {
       setLoading(false);
     }
@@ -354,7 +352,6 @@ export default function OrdersPage() {
         };
       }),
     }));
-    console.log("[merged]", merged);
     return merged;
   }, [products, orders]);
 
@@ -397,7 +394,6 @@ export default function OrdersPage() {
         const { data } = await response.json();
         setProducts(data);
       } catch (err) {
-        console.log("[fetchRelatedProducts]", err);
       } finally {
         setLoadingOrders(false);
       }

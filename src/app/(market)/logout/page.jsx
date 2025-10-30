@@ -12,18 +12,14 @@ export default function LogoutPage() {
   useEffect(() => {
     const logUserOut = async () => {
       try {
-        console.log("cartObject", cartObject);
-        console.log("abandonedCartUser", abandonedCartUser);
         const response2 = await createAbandonedCart(cartObject, abandonedCartUser, "forced");
         const response = await logout();
         if (!response.ok) {
-          console.log("[LogoutPage][error]");
           return;
         }
 
         router.push(`${BASE_URL}/login`);
       } catch (err) {
-        console.log("[LogoutPage][error]", err);
       }
     };
 

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useToast } from "@/app/context/toast";
 
 
 export default function CheckoutForm({ onChange }) {
+  const { success, error: showError } = useToast();
   const required_fields = [
     "billing_first_name",
     "billing_last_name",
@@ -70,10 +72,8 @@ export default function CheckoutForm({ onChange }) {
         throw new Error(result.message || "Failed to create order");
       }
 
-      console.log("Order created:", result.order);
       return result.order;
     } catch (error) {
-      console.error("Order creation failed:", error.message || error);
       throw error;
     }
   }
@@ -133,6 +133,7 @@ export default function CheckoutForm({ onChange }) {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      showError('Please fix the errors in the form');
       return;
     }
 
@@ -144,13 +145,15 @@ export default function CheckoutForm({ onChange }) {
         quantity: item.quantity,
         total: Number((item?.variants?.[0]?.price * item.quantity).toFixed(2)),
       }));
-      const newForm = form;
+      const newForm = { ...form };
       newForm["items"] = formattedItems;
-      const response = await createOrder(form);
+      const response = await createOrder(newForm);
       setForm(initialForm);
       setSameAsBilling(false);
+      success('Order placed successfully!');
     } catch (err) {
-      console.error("Submission failed", err);
+      console.error('Order creation failed:', err);
+      showError(err.message || 'Failed to place order. Please try again.');
     } finally {
       setSubmitting(false);
     }

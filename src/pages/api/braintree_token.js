@@ -7,10 +7,8 @@ export default async function handler(req, res) {
 
   try {
     const { clientToken } = await gateway.clientToken.generate({});
-    console.log({clientToken});
     res.status(200).json({ clientToken });
   } catch (error) {
-    console.log({error});
     res.status(500).json({ error: "Error generating client token" });
   }
 }

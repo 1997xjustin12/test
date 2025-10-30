@@ -467,7 +467,6 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
         setFetchStatus("success");
       } catch (error) {
         setFetchStatus("error");
-        console.error("Failed to fetch collection list:", error);
       }
     };
 
@@ -806,7 +805,6 @@ const ProductCollection = ({ menuItem, onChange }) => {
         const data = await response.json();
         setCollectionList(data);
       } catch (error) {
-        console.error("Failed to fetch collection list:", error);
       }
     };
 
@@ -1016,7 +1014,6 @@ const CategoryCollection = ({ menuItem, allCategories, onChange }) => {
 
   const handleAddCategoryCollection = () => {
     const selectedOptions = linkOptions.filter((i) => i?.is_selected);
-    console.log("[TEST] trigger handleAddCategoryCollection", selectedOptions);
     if (selectedOptions.length === 0) return;
     onChange({
       target: {
@@ -1385,7 +1382,6 @@ function EditMenuItem({ menu_id, images, feature_images }) {
 
   const handleCategoryCollectionChange = (e) => {
     const { name, value, id } = e.target;
-    console.log("[TEST] handleCategoryCollectionChange", e);
     if (name === "add-category-collection") {
       setMenuItem((prev) => {
         const cat_collections = prev?.cat_collections || [];
@@ -1393,7 +1389,6 @@ function EditMenuItem({ menu_id, images, feature_images }) {
       });
     }
     if (name === "collection-label-change") {
-      console.log("[TEST] collection-label-change", e);
       setMenuItem((prev) => {
         const cat_collections = prev?.cat_collections || [];
         const updated_collections = cat_collections.map((i) => ({
@@ -1461,7 +1456,6 @@ function EditMenuItem({ menu_id, images, feature_images }) {
   }
 
   useEffect(() => {
-    console.log("[TEST] menuItemChanged", menuItem);
   }, [menuItem]);
 
   return (

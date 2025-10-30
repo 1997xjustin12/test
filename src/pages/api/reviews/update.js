@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     const authHeader = req.headers.authorization;
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/reviews/${id}/update`;
 
-    console.log("[UPDATE REVIEW URL]", url);
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -47,7 +46,6 @@ export default async function handler(req, res) {
       data,
     });
   } catch (error) {
-    console.error("Proxy Error:", error);
     return res
       .status(500)
       .json({

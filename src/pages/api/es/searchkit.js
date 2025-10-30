@@ -381,7 +381,6 @@ export default async function handler(req, res) {
     }
 
     const data = req.body;
-    console.log("body", data);
     let results = null;
 
     if (filter_query.length > 0) {
@@ -396,7 +395,6 @@ export default async function handler(req, res) {
 
     res.status(200).json(results);
   } catch (err) {
-    console.error("Searchkit Error:", err);
     res.status(500).json({ error: "Searchkit failed", details: err.message });
   }
 }

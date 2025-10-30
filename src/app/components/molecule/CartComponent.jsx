@@ -73,7 +73,6 @@ const TemporaryComponent = () => {
       items: injected_items,
       ...user_profile,
     });
-    console.log("[UPDATE][CART][REPSPONSE]", response);
   };
 
   if (!user) return (

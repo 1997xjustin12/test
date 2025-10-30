@@ -1,8 +1,8 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import { memo } from "react";
 import { formatPrice, parseRatingCount } from "@/app/lib/helpers";
 import { ICRoundPhone } from "../icons/lib";
 import { useQuickView } from "@/app/context/quickview";
@@ -14,9 +14,9 @@ import FicDropDown from "@/app/components/atom/FicDropDown";
 import { useRouter } from 'next/navigation';
 
 
-const ProductCardPriceDisplay = ({ price_details }) => {
+const ProductCardPriceDisplay = memo(({ price_details }) => {
   if (!price_details) {
-    return;
+    return null;
   }
   if (
     price_details?.price > 0 &&
@@ -45,7 +45,8 @@ const ProductCardPriceDisplay = ({ price_details }) => {
       </div>
     );
   }
-};
+});
+ProductCardPriceDisplay.displayName = 'ProductCardPriceDisplay';
 
 const ProductCard = ({ hit, page_details   }) => {
   // console.log("[TEST] ProductCard hit", hit);
@@ -84,10 +85,15 @@ const ProductCard = ({ hit, page_details   }) => {
             Array.isArray(hit?.images) &&
             hit?.images?.length > 0 &&
             hit.images[0]?.src && (
-              <img
+              <Image
                 src={hit.images[0].src}
-                alt={hit.images[0].alt}
+                alt={hit.images[0].alt || hit.title || "Product image"}
+                width={230}
+                height={230}
                 className={`object-contain h-full opacity-100`}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 230px"
+                quality={75}
               />
             )}
 
@@ -99,17 +105,33 @@ const ProductCard = ({ hit, page_details   }) => {
                 ONSALE
               </div>
             )}
+
+          {/* Mobile-friendly quick view button */}
+          <button
+            onClick={(e) => handleQuickViewClick(e, hit)}
+            className="md:hidden absolute bottom-0 left-0 right-0 bg-theme-500 text-white text-sm py-3 px-4 flex items-center justify-center gap-2 active:bg-theme-600 transition-colors duration-200"
+            aria-label={`Quick view ${hit.title}`}
+          >
+            <Icon
+              icon="mi:shopping-cart-add"
+              className="text-lg"
+              aria-hidden="true"
+            />
+            <span className="font-semibold">QUICK VIEW</span>
+          </button>
+
+          {/* Desktop hover quick view */}
           <div
             onClick={(e) => handleQuickViewClick(e, hit)}
-            className="absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible"
+            className="hidden md:flex absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] items-center w-full justify-center gap-[5px] invisible group-hover:visible transition-all duration-200"
           >
             <div className="flex justify-center">
               <div className="font-semibold text-[0.775rem] inline-block text-center">
                 <Icon
                   icon="mi:shopping-cart-add"
                   className="text-lg font-thin inline-block mr-[5px]"
+                  aria-hidden="true"
                 />
-                {/* CUSTOMIZE TO PURCHASE */}
                 QUICK VIEW
               </div>
             </div>
@@ -160,4 +182,14 @@ const ProductCard = ({ hit, page_details   }) => {
   );
 };
 
-export default ProductCard;
+const MemoizedProductCard = memo(ProductCard, (prevProps, nextProps) => {
+  // Only re-render if the product ID or key data changes
+  return (
+    prevProps.hit?.id === nextProps.hit?.id &&
+    prevProps.hit?.updated_at === nextProps.hit?.updated_at &&
+    prevProps.page_details?.contact_number === nextProps.page_details?.contact_number
+  );
+});
+MemoizedProductCard.displayName = 'ProductCard';
+
+export default MemoizedProductCard;

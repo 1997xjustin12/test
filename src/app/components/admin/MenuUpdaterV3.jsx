@@ -130,7 +130,6 @@ const TreeItemWithEditLink = React.forwardRef(
       event.preventDefault();
       event.stopPropagation();
       const href = event?.target?.href;
-      console.log("[TEST href", event);
       if (href) {
         window.open(href, "_blank", "noopener,noreferrer");
       }
@@ -738,7 +737,6 @@ function MenuUpdaterV3() {
         setOriginMenu(merged);
       })
       .catch((err) => {
-        console.error("Error fetching categories or brands:", err);
       });
   }, []);
 

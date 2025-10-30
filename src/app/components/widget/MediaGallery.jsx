@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback, memo } from "react";
 import Image from "next/image";
+import { useDebouncedCallback } from "use-debounce";
 
 const MediaGallery = ({ mediaItems, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0); // Track active media item
@@ -12,41 +13,32 @@ const MediaGallery = ({ mediaItems, loading }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [mobileGalleryOverflow, setMobileGalleryOverflow] = useState(false);
   
-  useEffect(() => {
-    console.log("updateWidths");
-    const updateWidths = () => {
-      const screenWidth = window.innerWidth;
-      setIsSmallScreen(screenWidth < 641); // Track if screen is below 640px
+  const updateWidths = useCallback(() => {
+    const screenWidth = window.innerWidth;
+    setIsSmallScreen(screenWidth < 641); // Track if screen is below 640px
 
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-      if (contentRef.current) {
-        setContentWidth(contentRef.current.offsetWidth);
-      }
+    if (containerRef.current && contentRef.current) {
+      const containerW = containerRef.current.offsetWidth;
+      const contentW = contentRef.current.offsetWidth;
 
-      setMobileGalleryOverflow(containerRef.current.offsetWidth < contentRef.current.offsetWidth);
-    };
-
-    updateWidths(); // Initial check
-
-    window.addEventListener("resize", updateWidths);
-    return () => window.removeEventListener("resize", updateWidths);
+      setContainerWidth(containerW);
+      setContentWidth(contentW);
+      setMobileGalleryOverflow(containerW < contentW);
+    }
   }, []);
 
-  useEffect(() => {
-    console.log("isSmallScreen", isSmallScreen);
-    console.log("mobileGalleryOverflow", mobileGalleryOverflow);
-    console.log("containerWidth", containerWidth);
-    console.log("contentWidth", contentWidth);
-    
-  }, [isSmallScreen, mobileGalleryOverflow, containerWidth, contentWidth]);
+  const debouncedUpdateWidths = useDebouncedCallback(updateWidths, 250);
 
   useEffect(() => {
-    // console.log(mediaItems);
+    updateWidths(); // Initial check
+
+    window.addEventListener("resize", debouncedUpdateWidths);
+    return () => window.removeEventListener("resize", debouncedUpdateWidths);
+  }, [debouncedUpdateWidths, updateWidths]);
+
+  useEffect(() => {
     if (mediaItems && mediaItems.length > 0) {
       setActiveItem(mediaItems[activeIndex]);
-      // console.log("activeItem", mediaItems[activeIndex])
     }
   }, [mediaItems, activeIndex]);
 
@@ -107,4 +99,4 @@ const MediaGallery = ({ mediaItems, loading }) => {
   );
 };
 
-export default MediaGallery;
+export default memo(MediaGallery);

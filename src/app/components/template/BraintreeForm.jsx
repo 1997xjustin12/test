@@ -114,7 +114,6 @@ export default function BraintreeForm({cartTotal}) {
         data: result.data || result.order || result,
       };
     } catch (error) {
-      console.error("Order creation failed:", error.message || error);
       return {
         success: false,
         message: error.message || "Unexpected error while creating order",
@@ -130,7 +129,6 @@ export default function BraintreeForm({cartTotal}) {
 
     try {
       const { nonce } = await instance.requestPaymentMethod();
-      console.log("Generated Nonce:", nonce);
 
       if (!nonce) {
         alert("Error: No nonce received. Try again.");
@@ -165,7 +163,6 @@ export default function BraintreeForm({cartTotal}) {
                 Object.entries(checkoutForm?.data || {})
                   .filter(([key]) => key.startsWith("billing_"))
               );
-              console.log("billing_info after transaction");
               billingStorage.set(billing_info);              
             }
             router.push(`${BASE_URL}/payment_success`);
@@ -177,12 +174,10 @@ export default function BraintreeForm({cartTotal}) {
             Object.entries(checkoutForm?.data || {})
               .filter(([key]) => key.startsWith("billing_"))
           );
-          console.log("billing_info after transaction", billing_info);
           alert(`Payment failed: ${result.error}`);
         }
       // }
     } catch (error) {
-      console.error("Payment Error:", error);
       alert("Payment error. Try again.");
     }
   };

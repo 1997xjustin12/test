@@ -60,17 +60,12 @@ const ReviewForm = ({ product }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      console.log("[form]", form);
       const response = await userReviewCreate(form);
       const data = await response.json();
-      console.log("[response]", response);
-      console.log("[data]", data);
       if (!response.ok) {
-        console.warn("[handleSubmit]", err);
         return;
       }
     } catch (err) {
-      console.warn("[handleSubmit]", err);
     } finally {
       setLoading(false);
     }
@@ -268,7 +263,6 @@ function ProductReviewSection({ product }) {
 
   useEffect(() => {
     const product_id = product?.product_id;
-    console.log("[product]", product);
     const fetchReviews = async () => {
       try {
         const response = await getReviewsByProductId(product_id);
@@ -277,13 +271,10 @@ function ProductReviewSection({ product }) {
           return;
         }
         const data = await response.json();
-        console.log("[fetchReviews] data", data);
         setReviews(data);
       } catch (err) {
-        console.warn("[fetchReviews]", err);
       }
     };
-    console.log("[product_id]", product_id);
     if (!product_id) {
       return;
     }
@@ -321,7 +312,6 @@ function ProductReviewSection({ product }) {
       ]
     }
 
-    console.log("ratingSummary", summary);
     return summary;
 
   }, [reviews])

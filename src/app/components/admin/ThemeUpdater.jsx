@@ -108,7 +108,6 @@ function ThemeUpdater() {
       })
       .catch((error) => {
         setIsLoading(false);
-        console.log(`handleSaveThemeFNError:`, error)
       });
   };
 
@@ -119,7 +118,6 @@ function ThemeUpdater() {
         setActiveColor(color);
         setSelected(color);
       })
-      .catch((error) => console.log(`redisGetFNError(theme):`, error));
   }, []);
 
   return (

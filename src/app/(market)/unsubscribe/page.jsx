@@ -39,7 +39,6 @@ export default function SubscribePage() {
           } else {
             setStatus("error");
             setMessage("Failed to unsubscribe. Please try again later.");
-            console.warn("[unsubscribeEmail] !response.ok", err);
           }
           return;
         }
@@ -48,7 +47,6 @@ export default function SubscribePage() {
       } catch (err) {
         setStatus("error");
         setMessage("Failed to unsubscribe. Please try again later.");
-        console.warn("[unsubscribeEmail] error", err);
       }
     };
 

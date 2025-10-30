@@ -1,8 +1,10 @@
 "use client";
 import { SearchIcon } from "../icons/lib";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import { useDebouncedCallback } from "use-debounce";
 import cat_json from "../../data/category.json";
 import useFetchProducts from "@/app/hooks/useFetchProducts";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
@@ -90,10 +92,13 @@ const HomeSearch = () => {
     getSearchResults(search_string);
   };
 
+  // Debounced version of onSearchUpdate
+  const debouncedSearchUpdate = useDebouncedCallback(onSearchUpdate, 300);
+
   const handleSearch = (e) => {
     const { value } = e.target;
-    onSearchUpdate(value);
     setSearch(value);
+    debouncedSearchUpdate(value);
   };
 
   const getSearchResults = (query) => {
@@ -296,19 +301,22 @@ const HomeSearch = () => {
                             key={`product-result-${index}`}
                             href={`${BASE_URL}/product/${i.custom_url.url}`}>
                             <div className="flex items-center group hover:bg-stone-200 px-2 py-[5px]">
-                              <div className="w-[75px] h-[75px] overflow-hidden bg-white mr-[10px] flex items-center rounded">
+                              <div className="w-[75px] h-[75px] overflow-hidden bg-white mr-[10px] flex items-center rounded relative">
                                 {i?.images &&
                                   i.images.find(
                                     ({ is_thumbnail }) => is_thumbnail
                                   )?.url_thumbnail && (
-                                    <img
+                                    <Image
                                       src={
                                         i.images.find(
                                           ({ is_thumbnail }) => is_thumbnail
                                         )?.url_thumbnail
                                       }
                                       alt={`product:${i.name}`}
-                                      className="object-fit w-full"
+                                      fill
+                                      className="object-contain"
+                                      sizes="75px"
+                                      loading="lazy"
                                     />
                                   )}
                               </div>
@@ -382,4 +390,4 @@ const HomeSearch = () => {
   );
 };
 
-export default HomeSearch;
+export default memo(HomeSearch);

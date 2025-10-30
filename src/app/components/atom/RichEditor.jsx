@@ -137,7 +137,6 @@ const RichEditor = ({ content, onChange }) => {
 
     // update link
     try {
-      console.log("checkURL", url);
       editor
         .chain()
         .focus()

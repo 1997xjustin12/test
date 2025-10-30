@@ -79,7 +79,6 @@ export const redisSet = async(key, value) => {
     });
     return await response.json();
   }catch(error){
-    console.log(`RedisSetError: ${error}`);
   }
 }
 
@@ -92,7 +91,6 @@ export const redisMultiSet = async(obj) => {
     });
     return await response.json();
   }catch(error){
-    console.log(`RedisMultiSetError: ${error}`);
   }
 }
 

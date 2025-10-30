@@ -129,7 +129,6 @@ export default function HomePageShopOpenBox() {
         setProducts(products);
       })
       .catch((err) => {
-        console.error("Failed to fetch products:", err);
       });
   }, []);
 

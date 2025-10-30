@@ -2,7 +2,6 @@ import { filter_price_range } from "@/app/lib/helpers";
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
-  console.log(filter_price_range);
   const ESURL = "http://164.92.65.4:9200";
   // const ESShard = "bigcommerce_products";
   const ESShard = "bigcommerce_products_7";
@@ -152,7 +151,6 @@ export default async function handler(req, res) {
     if (body?.["brand_id:in"]) {
       const brands = body["brand_id:in"].split(",");
       const brandFilter = Array.isArray(brands) ? brands : [brands];
-      console.log("brandFilter", brandFilter);
       new_body.query.bool.filter.push({
         terms: { "brand.id": brandFilter.map(Number) },
       });

@@ -22,10 +22,8 @@ export default function CartListItem({ item, onItemCountUpdate }) {
     );
     if (userConfirmed) {
       // Proceed with the delete operation
-      console.log("Item deleted");
       removeCartItem(item);
     } else {
-      console.log("Delete operation canceled");
     }
   };
 

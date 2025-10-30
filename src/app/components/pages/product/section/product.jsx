@@ -123,14 +123,12 @@ const ProductSection = ({ product, loading }) => {
   useEffect(() => {
     redisGet([about, shipping_policy, return_policy, warranty])
       .then((response) => {
-        console.log("redisGetResponse", response);
         setPolicySection((prev) => {
           return prev.map((item, index) => {
             return { ...item, content: response[index] };
           });
         });
       })
-      .catch((err) => console.log("error", err));
   }, []);
 
   return (

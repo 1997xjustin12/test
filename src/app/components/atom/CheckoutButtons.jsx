@@ -61,7 +61,6 @@ export default function CheckoutButtons() {
 
             const paymentData = await paymentsClient.loadPaymentData(paymentDataRequest);
             const payload = await googlePaymentInstance.parseResponse(paymentData);
-            console.log("Google Pay nonce:", payload.nonce);
             // send payload.nonce to your server to create transaction
           },
         });

@@ -46,7 +46,6 @@ function LoginForm({successLogin = null}) {
     setLoading(false);
 
     if(!isLogin){
-      console.log("Login Error")
     }
 
     if(successLogin){
@@ -62,32 +61,47 @@ function LoginForm({successLogin = null}) {
       <p className="mb-5 text-sm font-medium text-neutral-600">
         Stay fired up with quick checkout, order history, and more.
       </p>
+
+      {error && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="bg-red-50 border border-red-200 text-red-800 p-3 rounded mb-4 text-sm"
+        >
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="username" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Username
+          <label htmlFor="username" className="text-xs font-bold block mb-1">
+            <span className="text-red-600" aria-label="required">*</span> Username
           </label>
           <input
+            id="username"
             placeholder="Username"
             name="username"
             value={form?.username || ""}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-required="true"
+            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-theme-500"
           />
         </div>
         <div>
-          <label htmlFor="password" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Password
+          <label htmlFor="password" className="text-xs font-bold block mb-1">
+            <span className="text-red-600" aria-label="required">*</span> Password
           </label>
           <input
+            id="password"
             type="password"
             name="password"
             placeholder="Password"
             value={form?.password || ""}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-required="true"
+            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-theme-500"
           />
         </div>
         <div className="flex items-center justify-between">

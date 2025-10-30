@@ -19,12 +19,23 @@ function FicDropDown({children, contact_number}) {
   }, []);
 
   if (isMobile) {
-    return (<Link href="tel:(888) 575-9720" prefetch={false}>{children}</Link>);
+    return (
+      <Link
+        href="tel:(888) 575-9720"
+        prefetch={false}
+        aria-label="Call us at (888) 575-9720"
+      >
+        {children}
+      </Link>
+    );
   }
 
   return (
         <Popover>
-          <PopoverButton className="block text-sm/6 font-semibold text-dark/50 focus:outline-none data-[active]:text-dark data-[hover]:text-dark data-[focus]:outline-1 data-[focus]:outline-white">
+          <PopoverButton
+            className="block text-sm/6 font-semibold text-dark/50 focus:outline-none data-[active]:text-dark data-[hover]:text-dark data-[focus]:outline-1 data-[focus]:outline-white"
+            aria-label="Open contact information"
+          >
             {children}
           </PopoverButton>
           <PopoverPanel
@@ -37,10 +48,24 @@ function FicDropDown({children, contact_number}) {
             </div>
             <div className="px-3 py-1">
               <div className="block rounded-lg p-1 transition hover:bg-white/30">
-                <Link href={`tel:${contact_number || "(888) 575-9720"}`} className="flex items-center gap-5 text-dark"><ICRoundPhone />{contact_number || "(888) 575-9720"}</Link>
+                <Link
+                  href={`tel:${contact_number || "(888) 575-9720"}`}
+                  className="flex items-center gap-5 text-dark"
+                  aria-label={`Call ${contact_number || "(888) 575-9720"}`}
+                >
+                  <ICRoundPhone aria-hidden="true" />
+                  {contact_number || "(888) 575-9720"}
+                </Link>
               </div>
               <div className="block rounded-lg p-1 transition hover:bg-white/30">
-                <Link href="mailto:info@OnSiteStorage.com" className="flex items-center gap-5 text-dark"><MDIEmailOutline />Email Us</Link>
+                <Link
+                  href="mailto:info@OnSiteStorage.com"
+                  className="flex items-center gap-5 text-dark"
+                  aria-label="Send us an email"
+                >
+                  <MDIEmailOutline aria-hidden="true" />
+                  Email Us
+                </Link>
               </div>
             </div>
             <div className="px-3 py-1 text-xs">

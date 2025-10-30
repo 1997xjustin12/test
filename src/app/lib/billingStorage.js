@@ -11,7 +11,6 @@ export const set = async (billing_info) => {
   try {
     await localForage.setItem("billing_info", billing_info);
   } catch (error) {
-    console.error("Error saving billing_info:", error);
   }
 };
 
@@ -23,7 +22,6 @@ export const get = async () => {
 
     return billing_info;
   } catch (error) {
-    console.error("Error retrieving billing_info:", error);
     return {};
   }
 };

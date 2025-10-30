@@ -13,7 +13,6 @@ export default function NewsLetter() {
       setLoading(true);
       await subscribe(email);
     } catch (err) {
-      console.warn(err);
     } finally {
       setLoading(false);
     }

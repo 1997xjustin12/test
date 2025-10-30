@@ -94,7 +94,6 @@ function MenuUpdaterBuilderItem({ item, itemList, onChange, search }) {
         newLocalItem.meta_description = value;
         break;
       default:
-        console.warn("Unknown trigger:", trigger);
     }
 
     onChange({

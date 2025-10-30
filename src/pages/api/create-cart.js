@@ -33,7 +33,6 @@ export default async function handler(req, res) {
       }
   
       const cartId = cartData.data.id;
-      console.log('cartid',cartId)
       // Step 2: Generate redirect URLs
       const redirectRes = await fetch(
         `${process.env.NEXT_PUBLIC_BC_STORE_API}/carts/${cartId}/redirect_urls`,
@@ -59,7 +58,6 @@ export default async function handler(req, res) {
         cart_url: redirectData.data.cart_url,
       });
     } catch (err) {
-      console.error('Cart creation failed:', err);
       res.status(500).json({ error: 'Internal server error' });
     }
   }

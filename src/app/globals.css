@@ -565,6 +565,11 @@ input[type="checkbox"].market:checked::before {
   scroll-margin-top: 75px; /* Adjusts the scroll position */
 }
 
+/* ===============================================
+   ANIMATIONS & KEYFRAMES
+   =============================================== */
+
+/* Loading Animations */
 @keyframes linear-loading {
   0% {
     background-position: 200% 0;
@@ -574,6 +579,34 @@ input[type="checkbox"].market:checked::before {
   }
 }
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes skeleton-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Fade Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -592,12 +625,151 @@ input[type="checkbox"].market:checked::before {
   }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale Animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* Slide Animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Utility Classes for Animations */
 .fade-in {
-  animation: fadeIn 0.3s ease-in-out forwards;
+  animation: fadeIn 300ms ease-in-out forwards;
 }
 
 .fade-out {
-  animation: fadeOut 0.3s ease-in-out forwards;
+  animation: fadeOut 300ms ease-in-out forwards;
+}
+
+.fade-in-up {
+  animation: fadeInUp 400ms ease-out forwards;
+}
+
+.fade-in-down {
+  animation: fadeInDown 400ms ease-out forwards;
+}
+
+.scale-in {
+  animation: scaleIn 200ms ease-out forwards;
+}
+
+.scale-out {
+  animation: scaleOut 200ms ease-in forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 300ms ease-out forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 300ms ease-out forwards;
+}
+
+.skeleton-wave {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.5s infinite;
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: transform 200ms ease-in-out, box-shadow 200ms ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.hover-scale {
+  transition: transform 200ms ease-in-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Focus Visible Styles for Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--theme-primary-500, #ff6b14);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* elastic product display styles */
@@ -748,11 +920,14 @@ label.ais-RefinementList-label .ais-RefinementList-labelText{
 
 label.ais-RefinementList-label .ais-RefinementList-count{
   font-size:10px;
-  padding: 1px 7px;
+  padding: 1px 0;
   background:#2e2e2e;
   color:white;
   border-radius:4px;
   margin-left:auto;
+  width: 32px;
+  text-align: center;
+  display: inline-block;
 }
 
 .ais-RefinementList-list{
@@ -830,8 +1005,42 @@ label.ais-RefinementList-label .ais-RefinementList-count{
 }
 
 .panel .ais-RefinementList{
-  max-height:240px;
-  overflow-y:auto;  
+  height: 240px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Custom scrollbar styling for refinement lists */
+.panel .ais-RefinementList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel .ais-RefinementList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.panel .ais-RefinementList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.panel .ais-RefinementList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* For Firefox */
+.panel .ais-RefinementList {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.facet-wrapper {
+  margin: 0 0 12px 0 !important;
+}
+
+.facet-wrapper .panel {
+  margin-bottom: 0;
 }
 
 .facet-wrapper:has(.ais-RefinementList--noRefinement) {
