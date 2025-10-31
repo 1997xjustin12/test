@@ -383,7 +383,11 @@ export const mapOrderItems = (items) => {
 };
 
 export const BaseNavObj = {
-  Fireplaces: ["Gas Fireplaces", "Electric Fireplaces"],
+  Fireplaces: [
+    "Shop All Outdoor Fireplaces"
+    // "Gas Fireplaces",
+    // "Electric Fireplaces"
+  ],
   "Patio Heaters": [
     "Electric Patio Heaters",
     "Gas Patio Heaters",

@@ -450,7 +450,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
   const [collectionList, setCollectionList] = useState([]);
   const [fetchStatus, setFetchStatus] = useState("initial");
 
-  const filter_types = ["Grills", "Fireplaces", "Firepits"];
+  const filter_types = ["Grills", "Fireplaces", "Firepits", "Patio-Heaters", "Open-box"];
 
   useEffect(() => {
     const fetchCollectionList = async () => {

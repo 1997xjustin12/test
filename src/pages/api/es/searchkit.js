@@ -225,6 +225,73 @@ const apiClient = API(
           field: "accentuate_data.bbq.seo_meta_fuel_type",
           type: "string",
         },
+        {
+          attribute: "collections",
+          field: "collections.name.keyword",
+          type: "string",
+        },
+        // additional Patio Heaters Filters
+        { 
+          attribute: "features_fuel_type",
+          field: "features.fuel_type.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_mounting_type",
+          field: "features.mounting_type.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_heating_elements",
+          field: "features.heating_elements.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_finish",
+          field: "features.finish.keyword",
+          type: "string",
+        },
+        // additional Fireplaces Filters
+        {
+          attribute: "features_width",
+          field: "features.width.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_height",
+          field: "features.height.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_depth",
+          field: "features.depth.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_vent_option",
+          field: "features.vent_option.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_recess_option",
+          field: "features.recess_option.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_valve_line_location",
+          field: "features.valve_line_location.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_color",
+          field: "features.color.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_model",
+          field: "features.model.keyword",
+          type: "string",
+        },
       ],
       filter_attributes: [
         {

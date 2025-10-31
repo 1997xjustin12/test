@@ -31,11 +31,109 @@ const es_index = ES_INDEX;
 
 const filters = [
   {
+    label: "Mounting Type",
+    attribute: "features_mounting_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Vent Option",
+    attribute: "features_vent_option",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Color",
+    attribute: "features_color",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Recess Option",
+    attribute: "features_recess_option",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Model",
+    attribute: "features_model",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Line Location",
+    attribute: "features_valve_line_location",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Height",
+    attribute: "features_height",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Width",
+    attribute: "features_width",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Depth",
+    attribute: "features_depth",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Fuel Type",
+    attribute: "features_fuel_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["patio-heaters"],
+  },
+  {
+    label: "Style",
+    attribute: "features_mounting_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["patio-heaters"],
+  },
+  {
+    label: "Heating Elements",
+    attribute: "features_heating_elements",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["patio-heaters"],
+  },
+  {
+    label: "Finish",
+    attribute: "features_finish",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["patio-heaters"],
+  },
+  {
+    label: "collections",
+    attribute: "collections",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["open-box", "Search"],
+  },
+  {
     label: "brand",
     attribute: "brand",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["grills", "fireplaces", "firepits", "Search"],
+    filter_type: ["grills", "fireplaces", "firepits", "patio-heaters", "open-box","Search"],
   },
   {
     label: "configuration",
@@ -56,7 +154,7 @@ const filters = [
     attribute: "price",
     searchable: false,
     type: "RangeInput",
-    filter_type: ["grills", "fireplaces", "firepits", "Search"],
+    filter_type: ["grills", "fireplaces", "firepits","patio-heaters","open-box", "Search"],
   },
   {
     label: "lights",
@@ -653,6 +751,9 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="thermometer" className="hidden" />
             <RefinementList attribute="rotisserie_kit" className="hidden" />
             <RefinementList attribute="gas_type" className="hidden" />
+            <RefinementList attribute="collections" className="hidden" />
+            <RefinementList attribute="features_fuel_type" className="hidden" />
+            <RefinementList attribute="features_mounting_type" className="hidden" />
             <InnerUI
               category={category}
               page_details={pageDetails}
