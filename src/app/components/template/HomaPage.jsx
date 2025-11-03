@@ -71,7 +71,7 @@ import NewsLetterSection from "@/app/components/section/NewsLetter";
 export default function HomePageWrapper({ data }) {
   return (
     <div>
-      <MobileLoader />
+      {/* <MobileLoader /> */}
       <TuiHero data={data} />
       <FeatureCategoriesSection />
       <ShopAllClearanceSection />

@@ -221,7 +221,7 @@ export default function HomePage({ params }) {
   return (
     // <HomePageWrapper data={page_data} />
     <>
-      <MobileLoader />
+      {/* <MobileLoader /> */}
       <Hero />
       {/* <HomeHero data={pageData} /> */}
       <div className="mt-10">
