@@ -253,6 +253,11 @@ const apiClient = API(
         },
         // additional Fireplaces Filters
         {
+          attribute: "features_inches",
+          field: "features.inches.keyword",
+          type: "string",
+        },
+        {
           attribute: "features_width",
           field: "features.width.keyword",
           type: "string",

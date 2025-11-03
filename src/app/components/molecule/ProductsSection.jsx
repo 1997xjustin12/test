@@ -31,6 +31,13 @@ const es_index = ES_INDEX;
 
 const filters = [
   {
+    label: "Inches",
+    attribute: "features_inches",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
     label: "Mounting Type",
     attribute: "features_mounting_type",
     searchable: false,
@@ -72,27 +79,27 @@ const filters = [
     type: "RefinementList",
     filter_type: ["fireplaces"],
   },
-  {
-    label: "Height",
-    attribute: "features_height",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Width",
-    attribute: "features_width",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Depth",
-    attribute: "features_depth",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
+  // {
+  //   label: "Height",
+  //   attribute: "features_height",
+  //   searchable: false,
+  //   type: "RefinementList",
+  //   filter_type: ["fireplaces"],
+  // },
+  // {
+  //   label: "Width",
+  //   attribute: "features_width",
+  //   searchable: false,
+  //   type: "RefinementList",
+  //   filter_type: ["fireplaces"],
+  // },
+  // {
+  //   label: "Depth",
+  //   attribute: "features_depth",
+  //   searchable: false,
+  //   type: "RefinementList",
+  //   filter_type: ["fireplaces"],
+  // },
   {
     label: "Fuel Type",
     attribute: "features_fuel_type",
