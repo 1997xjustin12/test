@@ -1,5 +1,6 @@
 import LoaderIcon from "../components/atom/LoaderIcon";
 export default function Loading() {
+  return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]">
       <div className="text-center">
