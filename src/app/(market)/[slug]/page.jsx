@@ -20,7 +20,7 @@ const isShopify = true;
 const feat_carousel_items = [
   {
     label: "Fireplaces",
-    img: "/images/home/categories/Fireplace.webp",
+    img: "/images/feature/Firepit.webp",
     url: `${BASE_URL}/fireplaces`,
   },
   {
@@ -30,12 +30,12 @@ const feat_carousel_items = [
   },
   {
     label: "Built-In Grills",
-    img: "/images/feature/built-in-grills.webp",
+    img: "/images/feature/Built-In Grill 2.webp",
     url: `${BASE_URL}/built-in-grills`,
   },
   {
     label: "Freestanding Grills",
-    img: "/images/feature/freestanding-grills.webp",
+    img: "/images/feature/Freestanding Grill 2.webp",
     url: `${BASE_URL}/freestanding-grills`,
   },
   {

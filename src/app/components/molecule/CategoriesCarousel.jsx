@@ -10,7 +10,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const items = [
   {
     label: "Fireplaces",
-    img: "/images/home/categories/Fireplace.webp",
+    img: "/images/feature/Firepit.webp",
     url: `${BASE_URL}/fireplaces`,
   },
   {
