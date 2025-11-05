@@ -123,3 +123,47 @@ export const redisSet = async ({key, value}) => {
     console.warn("[REDIS SET] API error:", err);
   }
 };
+
+// Token validation for store admin access
+export const validateToken = async (token) => {
+  try {
+    if (!token) {
+      console.warn("[TOKEN] Required field missing.");
+      return {
+        success: false,
+        error: "Token is required",
+      };
+    }
+
+    const response = await fetch("/api/stores/validate-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || "Token validation failed",
+      };
+    }
+
+    return {
+      success: true,
+      valid: data.valid,
+      storeId: data.store_id,
+      storeName: data.store_name,
+      storeDomain: data.store_domain,
+    };
+  } catch (err) {
+    console.warn("[TOKEN VALIDATION] API error:", err);
+    return {
+      success: false,
+      error: "Token validation failed due to network error",
+    };
+  }
+};

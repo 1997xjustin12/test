@@ -1,6 +1,5 @@
 import "@/app/globals.css";
-import Nav from "@/app/components/admin/NavBar";
-import SideNav from "@/app/components/admin/SideBar";
+import AdminContent from "@/app/components/admin/AdminContent";
 import { redis, keys } from "@/app/lib/redis";
 import { CategoriesProvider } from "@/app/context/category";
 
@@ -24,13 +23,11 @@ export default async function AdminLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={`antialiased ${MontserratFont.className} bg-slate-50`}>
+      <body className={`${MontserratFont.className}`}>
         <CategoriesProvider categories={menu}>
-          <Nav />
-          <div className="flex">
-            <SideNav />
-            <div className="mt-20 ml-64 w-full">{children}</div>
-          </div>
+          <AdminContent>
+            {children}
+          </AdminContent>
         </CategoriesProvider>
       </body>
     </html>
