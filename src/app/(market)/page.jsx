@@ -32,7 +32,7 @@ const feat_carousel_items = [
   },
   {
     label: "Built-In Grills",
-    img: "/images/feature/Built-In Grill 2.webp",
+    img: "/images/feature/Built-in Grill 2.webp",
     url: `${BASE_URL}/built-in-grills`,
   },
   {
