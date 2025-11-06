@@ -131,7 +131,7 @@ const TreeItemWithEditLink = React.forwardRef(
       event.stopPropagation();
       const href = event?.target?.href;
       if (href) {
-        window.open(href, "_self");
+        window.location.href = href;
       }
     };
 
