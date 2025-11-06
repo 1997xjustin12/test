@@ -111,7 +111,8 @@ const TreeItemWithEditLink = React.forwardRef(
       event.stopPropagation();
       const href = event?.target?.href;
       if (href) {
-        window.open(href, "_blank", "noopener,noreferrer");
+        // window.open(href, "_blank", "noopener,noreferrer");
+        window.location.href = href;
       }
     };
 
@@ -131,7 +132,7 @@ const TreeItemWithEditLink = React.forwardRef(
       event.stopPropagation();
       const href = event?.target?.href;
       if (href) {
-        window.location.href = href;
+        window.open(href, "_blank", "noopener,noreferrer");
       }
     };
 
@@ -686,8 +687,8 @@ function MenuUpdaterV3() {
     redisGet(menuKey).then((data) => {
       // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
 
-      if(!data) return;
-       
+      if (!data) return;
+
       const nav_data = mapTreeWithId([
         HomeNavItem,
         ...data.filter(({ name }) => !["Home", "Search"].includes(name)),
@@ -698,7 +699,7 @@ function MenuUpdaterV3() {
       setMenu(nav_data);
       setSearchList(flattenMenu(nav_data));
     });
-  }
+  };
 
   useEffect(() => {
     updateMenuList();
