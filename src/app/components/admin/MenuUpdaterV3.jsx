@@ -154,7 +154,7 @@ const TreeItemWithEditLink = React.forwardRef(
               prefetch={false}
               href={`${BASE_URL}/admin/menu-builder/edit/${item?.menu_id}`}
               className="text-blue-600"
-              onClick={handleEditItemClick}
+              // onClick={handleEditItemClick}
               title={`Edit Page New Tab`}
             >
               Edit
