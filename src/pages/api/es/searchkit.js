@@ -231,11 +231,11 @@ const apiClient = API(
           type: "string",
         },
         // additional Patio Heaters Filters
-        { 
-          attribute: "features_fuel_type",
-          field: "features.fuel_type.keyword",
-          type: "string",
-        },
+        // { 
+        //   attribute: "features_fuel_type",
+        //   field: "features.fuel_type.keyword",
+        //   type: "string",
+        // },
         {
           attribute: "features_mounting_type",
           field: "features.mounting_type.keyword",
@@ -295,6 +295,16 @@ const apiClient = API(
         {
           attribute: "features_model",
           field: "features.model.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_type",
+          field: "features.type.keyword",
+          type: "string",
+        },
+        {
+          attribute: "features_fuel_type",
+          field: "features.fuel_type.keyword",
           type: "string",
         },
       ],

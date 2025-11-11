@@ -31,6 +31,20 @@ const es_index = ES_INDEX;
 
 const filters = [
   {
+    label: "Fuel Type",
+    attribute: "features_fuel_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
+    label: "Type",
+    attribute: "features_type",
+    searchable: false,
+    type: "RefinementList",
+    filter_type: ["fireplaces"],
+  },
+  {
     label: "Inches",
     attribute: "features_inches",
     searchable: false,
@@ -429,6 +443,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                             <RefinementList
                               attribute={item?.attribute}
                               searchable={item?.searchable}
+                              showMore={true}
                             />
                           ) : (
                             <RangeInput attribute="price" />
@@ -455,6 +470,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                             <RefinementList
                               attribute={item?.attribute}
                               searchable={item?.searchable}
+                              showMore={true}
                             />
                           ) : (
                             <RangeInput attribute="price" />
@@ -761,6 +777,7 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="collections" className="hidden" />
             <RefinementList attribute="features_fuel_type" className="hidden" />
             <RefinementList attribute="features_mounting_type" className="hidden" />
+            <RefinementList attribute="features_type" className="hidden" />
             <InnerUI
               category={category}
               page_details={pageDetails}
