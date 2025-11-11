@@ -231,7 +231,7 @@ const apiClient = API(
           type: "string",
         },
         // additional Patio Heaters Filters
-        // { 
+        // {
         //   attribute: "features_fuel_type",
         //   field: "features.fuel_type.keyword",
         //   type: "string",
@@ -240,6 +240,20 @@ const apiClient = API(
           attribute: "features_mounting_type",
           field: "features.mounting_type.keyword",
           type: "string",
+          // remove empty string options
+          facetResponse: (aggregation) => {
+            const buckets = aggregation.buckets || {};
+            const result = Object.keys(buckets).reduce((acc, key) => {
+              const bucket = buckets[key];
+              const count = bucket?.doc_count ?? 0;
+              if (bucket?.key !== "" && count > 0) {
+                acc[bucket?.key] = count;
+              }
+
+              return acc;
+            }, {});
+            return result;
+          },
         },
         {
           attribute: "features_heating_elements",
@@ -291,6 +305,20 @@ const apiClient = API(
           attribute: "features_color",
           field: "features.color.keyword",
           type: "string",
+          // remove empty string options
+          facetResponse: (aggregation) => {
+            const buckets = aggregation.buckets || {};
+            const result = Object.keys(buckets).reduce((acc, key) => {
+              const bucket = buckets[key];
+              const count = bucket?.doc_count ?? 0;
+              if (bucket?.key !== "" && count > 0) {
+                acc[bucket?.key] = count;
+              }
+
+              return acc;
+            }, {});
+            return result;
+          },
         },
         {
           attribute: "features_model",
@@ -306,6 +334,20 @@ const apiClient = API(
           attribute: "features_fuel_type",
           field: "features.fuel_type.keyword",
           type: "string",
+          // remove Gas Valves string options
+          facetResponse: (aggregation) => {
+            const buckets = aggregation.buckets || {};
+            const result = Object.keys(buckets).reduce((acc, key) => {
+              const bucket = buckets[key];
+              const count = bucket?.doc_count ?? 0;
+              if (bucket?.key !== "Gas Valves" && count > 0) {
+                acc[bucket?.key] = count;
+              }
+
+              return acc;
+            }, {});
+            return result;
+          },
         },
       ],
       filter_attributes: [
@@ -445,7 +487,7 @@ export default async function handler(req, res) {
       filter_key === "custom_page" &&
       !["On Sale", "New Arrivals", "undefined", "Search"].includes(filter_value)
     ) {
-      const value_array = BaseNavObj?.[filter_value] || null; 
+      const value_array = BaseNavObj?.[filter_value] || null;
 
       if (value_array) {
         filter_query.push({
