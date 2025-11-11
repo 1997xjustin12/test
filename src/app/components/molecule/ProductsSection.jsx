@@ -31,7 +31,7 @@ const es_index = ES_INDEX;
 
 const filters = [
   {
-    label: "Fuel Type",
+    label: "Power Source",
     attribute: "features_fuel_type",
     searchable: false,
     type: "RefinementList",
