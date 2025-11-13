@@ -42,7 +42,7 @@ export default function SearchPage(props) {
             {searchResults &&
               searchResults.length > 0 &&
               searchResults
-                .filter((i) => !["popular", "recent"].includes(i.prop))
+                .filter((i) => !["popular", "recent", "suggestion"].includes(i.prop))
                 .map((i, idx) => (
                   <button onClick={()=>handleTabChange(i.prop)} key={`search-page-tab-${i.prop}`} className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${tab===i.prop?"border-theme-600":"text-stone-500"}`}>
                     {i.label} ({i.total})

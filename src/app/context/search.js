@@ -33,6 +33,7 @@ export const SearchProvider = ({ children }) => {
 
   const [productResults, setProductResult] = useState([]);
   const [productResultsCount, setProductResultsCount] = useState(0);
+  const [suggestionResults, setSuggestionResults] = useState([]);
 
   const [searchPageProductCount, setSearchPageProductCount] = useState(0);
 
@@ -99,7 +100,7 @@ export const SearchProvider = ({ children }) => {
       console.log("[ERROR] Add Popular Searches");
     }
   };
-
+  // original
   const fetchProducts = async (query_string) => {
     try {
       const trim_query = query_string.trim();
@@ -156,6 +157,35 @@ export const SearchProvider = ({ children }) => {
               },
             },
             size: 15,
+            suggest: {
+              did_you_mean: {
+                text: trim_query,
+                phrase: {
+                  field: "title",
+                  size: 1,
+                  confidence: 0.9,
+                  max_errors: 1.5,
+                  real_word_error_likelihood: 0.95,
+                  direct_generator: [
+                    {
+                      field: "title",
+                      suggest_mode: "always",
+                      min_word_length: 3,
+                    },
+                  ],
+                  collate: {
+                    query: {
+                      source: {
+                        multi_match: {
+                          query: "{{suggestion}}",
+                          fields: ["title", "brand", "collections.name"],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           }
         : {
             query: {
@@ -172,10 +202,14 @@ export const SearchProvider = ({ children }) => {
       if (!res.ok) throw new Error(`[SHOPIFY SEARCH] Failed: ${res.status}`);
 
       const data = await res.json();
+      console.log("data", data);
       const formatted_results = data?.hits?.hits?.map(({ _source }) => _source);
       const result_total_count = data?.hits?.total?.value;
-      // console.log("[MANUALQUERYRESULTCOUNT] ", result_total_count);
+      const dym = data?.suggest?.did_you_mean?.[0];
+      const suggest_options = dym?.options;
+      console.log("suggest_options", suggest_options);
       setProductResult(formatted_results);
+      setSuggestionResults(trim_query.length > 2? suggest_options:[]);
       setProductResultsCount(result_total_count);
       return data;
     } catch (err) {
@@ -183,6 +217,130 @@ export const SearchProvider = ({ children }) => {
       return null;
     }
   };
+
+  // new
+  // const fetchProducts = async (query_string) => {
+  //   const trim_query = query_string.trim();
+
+  //   // 1. Build the main Elasticsearch query object
+  //   const rawQuery = trim_query
+  //     ? {
+  //         query: {
+  //           bool: {
+  //             filter: [],
+  //             must: {
+  //               bool: {
+  //                 should: [
+  //                   // ... Your existing multi_match queries here ...
+  //                   {
+  //                     bool: {
+  //                       should: [
+  //                         {
+  //                           multi_match: {
+  //                             query: trim_query,
+  //                             fields: ["title^3", "brand^2", "description"],
+  //                             fuzziness: "AUTO:4,8",
+  //                           },
+  //                         },
+  //                         {
+  //                           multi_match: {
+  //                             query: trim_query,
+  //                             fields: ["title^1.5", "brand^1", "description"],
+  //                             type: "bool_prefix",
+  //                           },
+  //                         },
+  //                       ],
+  //                     },
+  //                   },
+  //                   {
+  //                     multi_match: {
+  //                       query: trim_query,
+  //                       type: "phrase",
+  //                       fields: ["title^6", "brand^4", "description"],
+  //                     },
+  //                   },
+  //                 ],
+  //               },
+  //             },
+  //             must_not: [
+  //               { terms: { "brand.keyword": exclude_brands } },
+  //               { terms: { "collections.name.keyword": exclude_collections } },
+  //             ],
+  //           },
+  //         },
+  //         size: 15,
+  //       }
+  //     : {
+  //         query: { match_all: {} },
+  //         size: 15,
+  //       };
+
+  //   // 2. 🛑 ADD THE SUGGESTER BLOCK HERE 🛑
+  //   if (trim_query) {
+  //     rawQuery.suggest = {
+  //       did_you_mean: {
+  //         // The key used to find the suggestion in the response
+  //         text: trim_query,
+  //         phrase: {
+  //           field: "title.suggest", // IMPORTANT: Use the shingle-analyzed field
+  //           size: 1,
+  //           confidence: 1.0,
+  //           collate: {
+  //             query: {
+  //               source: {
+  //                 multi_match: {
+  //                   query: "{{suggestion}}", // Template variable for the suggestion
+  //                   fields: ["title", "brand", "description"],
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     };
+  //   }
+  //   // ------------------------------------
+
+  //   try {
+  //     const res = await fetch("/api/es/shopify/search", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(rawQuery),
+  //     });
+
+  //     if (!res.ok) throw new Error(`[SHOPIFY SEARCH] Failed: ${res.status}`);
+
+  //     const data = await res.json();
+
+  //     // 3. 🛑 EXTRACT AND LOG THE SUGGESTION DATA 🛑
+  //     const suggestionData = data?.suggest?.did_you_mean?.[0]?.options?.[0];
+  //     const correctedPhrase = suggestionData?.text;
+  //     const totalHits = data?.hits?.total?.value;
+
+  //     if (
+  //       totalHits === 0 &&
+  //       correctedPhrase &&
+  //       correctedPhrase !== trim_query
+  //     ) {
+  //       console.log(
+  //         `Suggestion found for "${trim_query}": Did you mean **${correctedPhrase}**?`
+  //       );
+  //     } else {
+  //       console.log(`No correction needed or suggested for: ${trim_query}`);
+  //     }
+  //     // -----------------------------------------------
+
+  //     const formatted_results = data?.hits?.hits?.map(({ _source }) => _source);
+  //     // ... rest of your original success logic
+  //     setProductResult(formatted_results);
+  //     setProductResultsCount(totalHits);
+
+  //     return { data, correctedPhrase }; // Return the corrected phrase to use in your UI
+  //   } catch (err) {
+  //     console.error("[SHOPIFY SEARCH] Failed to fetch products:", err);
+  //     return null;
+  //   }
+  // };
 
   const getSectionData = (section) => {
     switch (section) {
@@ -301,7 +459,7 @@ export const SearchProvider = ({ children }) => {
 
   const getRecentSearch = async () => {
     try {
-      return await lForage.getItem(recentSearchKey) || [];
+      return (await lForage.getItem(recentSearchKey)) || [];
     } catch (error) {
       console.log("[LocalForage] getRecentSearch error:", error);
       return null;
@@ -382,6 +540,14 @@ export const SearchProvider = ({ children }) => {
     if (!loading) {
       const newSearchResults = [
         {
+          total: suggestionResults.length,
+          prop: "suggestion",
+          label: "Did you mean?",
+          visible: true,
+          data: suggestionResults,
+          showExpand: suggestionResults.length > 3,
+        },
+        {
           total: recentResults.length,
           prop: "recent",
           label: "Recent",
@@ -449,6 +615,7 @@ export const SearchProvider = ({ children }) => {
     popularResults,
     categoryResults,
     brandResults,
+    suggestionResults,
     loading,
     searchPageProductCount,
   ]);
