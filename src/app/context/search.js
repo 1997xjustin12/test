@@ -128,31 +128,69 @@ export const SearchProvider = ({ children }) => {
         },
       },
       size: SEARCH_RESULT_SIZE,
+      // suggest: {
+      //   did_you_mean: {
+      //     text: trimmedQuery,
+      //     phrase: {
+      //       field: "title",
+      //       size: 1,
+      //       confidence: 0.9,
+      //       max_errors: 1.5,
+      //       real_word_error_likelihood: 0.95,
+      //       direct_generator: [
+      //         {
+      //           field: "title",
+      //           suggest_mode: "always",
+      //           min_word_length: 3,
+      //         },
+      //       ],
+      //       collate: {
+      //         query: {
+      //           source: {
+      //             multi_match: {
+      //               query: "{{suggestion}}",
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
       suggest: {
         did_you_mean: {
           text: trimmedQuery,
           phrase: {
-            field: "title",
+            field: "title.suggest", // 1. **Target the shingle field**
             size: 1,
-            confidence: 0.9,
-            max_errors: 1.5,
-            real_word_error_likelihood: 0.95,
+            confidence: 0.5, // 2. **Low Confidence** (be less picky about suggested score)
+            max_errors: 5.0, // 3. **High Max Errors** (allow for heavy misspellings)
+            real_word_error_likelihood: 0.4, // 4. **Low Real Word Likelihood** (assume it's a mistake)
+            smoothing: {
+              stupid_backoff: {
+                discount_threshold: 0.1,
+              },
+            },
             direct_generator: [
               {
-                field: "title",
+                field: "title.suggest",
                 suggest_mode: "always",
-                min_word_length: 3,
+                min_word_length: 2,
               },
             ],
             collate: {
+              // 5. **Collation to confirm substring match**
               query: {
                 source: {
                   multi_match: {
                     query: "{{suggestion}}",
-                    fields: ["title", "brand", "collections.name"],
+                    type: "phrase", // Match the suggestion as a single phrase
+                    fields: [
+                      "title", // Search the full, standard-analyzed title field
+                    ],
                   },
                 },
               },
+              prune: true, // Only return suggestions that actually match a document's title
             },
           },
         },
@@ -179,7 +217,9 @@ export const SearchProvider = ({ children }) => {
       const suggest_options = dym?.options;
 
       setProductResult(formatted_results);
-      setSuggestionResults(trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options : []);
+      setSuggestionResults(
+        trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options : []
+      );
       setProductResultsCount(result_total_count);
       return data;
     } catch (err) {
@@ -197,25 +237,16 @@ export const SearchProvider = ({ children }) => {
 
   // Helper function to filter and format navigation items (categories/brands)
   const filterNavigationItems = (navType, query = "") => {
-    console.log("flatCategories", flatCategories);
-    console.log("flatCategories", flatCategories
-      .filter(({name})=> !["Search","Home"].includes(name))
-      .filter((item) => {
-          return item?.nav_type === "custom_page" && item?.collection_display;
-      })
-      .map((i) => ({
-        name: i?.name || i?.title,
-        url: i?.menu?.href || i?.url,
-      }))
-    );
     const items = flatCategories
-      .filter(({name})=> !["Search","Home"].includes(name))
+      .filter(({ name }) => !["Search", "Home"].includes(name))
       .filter((item) => {
-        if(navType === "custom_page"){
+        if (navType === "custom_page") {
           return item?.nav_type === navType && item?.collection_display;
-        }else if(navType === "brand"){
-          return item?.nav_type === navType && !exclude_brands.includes(item?.name);
-        }else{
+        } else if (navType === "brand") {
+          return (
+            item?.nav_type === navType && !exclude_brands.includes(item?.name)
+          );
+        } else {
           return item?.nav_type === navType;
         }
       })
@@ -247,7 +278,7 @@ export const SearchProvider = ({ children }) => {
       // Only update URL if we're on the search page
       if (pathname === "/search" && search_string) {
         router.replace(`${BASE_URL}/search?query=${search_string}`, {
-          scroll: false
+          scroll: false,
         });
       }
     }, 500);
@@ -388,7 +419,7 @@ export const SearchProvider = ({ children }) => {
       {
         total: suggestionResults.length,
         prop: "suggestion",
-        label: "Did you mean?",
+        label: "Did you mean",
         visible: true,
         data: suggestionResults,
         showExpand: suggestionResults.length > 3,

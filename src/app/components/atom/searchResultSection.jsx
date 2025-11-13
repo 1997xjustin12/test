@@ -20,7 +20,7 @@ const HoverContainer = ({ children, className = "" }) => (
 // Helper component for text-based items (recent, suggestion, popular)
 const SimpleTextItem = ({ text }) => (
   <HoverContainer>
-    <div className="text-[14px] group-hover:text-theme-600">{text}</div>
+    <div className="text-[14px] group-hover:text-theme-600 my-2">{text}</div>
   </HoverContainer>
 );
 
@@ -102,7 +102,7 @@ function SearchResultSection({ section, onOptionSelect }) {
           return {
             href: `${BASE_URL}/search?query=${item?.text}`,
             key: `suggestion-search-${index}`,
-            content: <SimpleTextItem text={item?.text} />,
+            content: <SimpleTextItem text={item?.text + "?"} />,
           };
         case "popular":
           return {
