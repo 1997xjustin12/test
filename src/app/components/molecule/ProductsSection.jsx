@@ -93,27 +93,6 @@ const filters = [
     type: "RefinementList",
     filter_type: ["fireplaces"],
   },
-  // {
-  //   label: "Height",
-  //   attribute: "features_height",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   filter_type: ["fireplaces"],
-  // },
-  // {
-  //   label: "Width",
-  //   attribute: "features_width",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   filter_type: ["fireplaces"],
-  // },
-  // {
-  //   label: "Depth",
-  //   attribute: "features_depth",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   filter_type: ["fireplaces"],
-  // },
   {
     label: "Fuel Type",
     attribute: "features_fuel_type",
@@ -756,16 +735,27 @@ function ProductsSection({ category, search = "" }) {
                 },
               ]}
             />
+            <RefinementList attribute="features_fuel_type" className="hidden" />
+            <RefinementList attribute="features_type" className="hidden" />
+            <RefinementList attribute="features_inches" className="hidden" />
+            <RefinementList attribute="features_mounting_type" className="hidden" />
+            <RefinementList attribute="features_vent_option" className="hidden" />
+            <RefinementList attribute="features_color" className="hidden" />
+            <RefinementList attribute="features_recess_option" className="hidden" />
+            <RefinementList attribute="features_model" className="hidden" />
+            <RefinementList attribute="features_valve_line_location" className="hidden" />
+            <RefinementList attribute="features_fuel_type" className="hidden" />
+            <RefinementList attribute="features_mounting_type" className="hidden" />
+            <RefinementList attribute="features_heating_elements" className="hidden" />
+            <RefinementList attribute="features_finish" className="hidden" />
+            <RefinementList attribute="collections" className="hidden" />
             <RefinementList attribute="brand" className="hidden" />
             <RefinementList attribute="configuration_type" className="hidden" />
             <RefinementList attribute="no_of_burners" className="hidden" />
             <RangeInput attribute="price" className="hidden" />
             <RefinementList attribute="grill_lights" className="hidden" />
             <RefinementList attribute="size" className="hidden" />
-            <RefinementList
-              attribute="rear_infrared_burner"
-              className="hidden"
-            />
+            <RefinementList attribute="rear_infrared_burner" className="hidden" />
             <RefinementList attribute="cut_out_width" className="hidden" />
             <RefinementList attribute="cut_out_depth" className="hidden" />
             <RefinementList attribute="cut_out_height" className="hidden" />
@@ -774,10 +764,6 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="thermometer" className="hidden" />
             <RefinementList attribute="rotisserie_kit" className="hidden" />
             <RefinementList attribute="gas_type" className="hidden" />
-            <RefinementList attribute="collections" className="hidden" />
-            <RefinementList attribute="features_fuel_type" className="hidden" />
-            <RefinementList attribute="features_mounting_type" className="hidden" />
-            <RefinementList attribute="features_type" className="hidden" />
             <InnerUI
               category={category}
               page_details={pageDetails}
