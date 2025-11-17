@@ -602,15 +602,14 @@ input[type="checkbox"].market:checked::before {
 
 /* elastic product display styles */
 
-.pfd-filter-section{
-  width:var(--pfd-filter-nav-width);
-  padding-right:10px;
+.pfd-filter-section {
+  width: var(--pfd-filter-nav-width);
+  padding-right: 10px;
 }
 
-.pfd-product-section{
-  width:calc(100% - var(--pfd-filter-nav-width));
+.pfd-product-section {
+  width: calc(100% - var(--pfd-filter-nav-width));
 }
-
 
 ol.ais-Hits-list {
   display: flex;
@@ -619,80 +618,87 @@ ol.ais-Hits-list {
 }
 
 li.ais-Hits-item {
-  width: calc((100% - (var(--pfd-product-grid-gap) * (var(--pfd-product-grid-cols) - 1))) / var(--pfd-product-grid-cols));
+  width: calc(
+    (100% - (var(--pfd-product-grid-gap) * (var(--pfd-product-grid-cols) - 1))) /
+      var(--pfd-product-grid-cols)
+  );
 }
 
-
-@media (max-width: 640px) {  /* sm */
+@media (max-width: 640px) {
+  /* sm */
   /* Small devices (e.g. tablets) */
-  :root{
-    --pfd-product-grid-cols:2;
+  :root {
+    --pfd-product-grid-cols: 2;
   }
 }
 
-@media (min-width:641px) and (max-width: 768px) {  /* md */
+@media (min-width: 641px) and (max-width: 768px) {
+  /* md */
   /* Medium devices (e.g. small laptops) */
-  :root{
-    --pfd-product-grid-cols:3;
+  :root {
+    --pfd-product-grid-cols: 3;
   }
 }
 
-@media (min-width: 1024px) { /* lg */
+@media (min-width: 1024px) {
+  /* lg */
   /* Large devices (e.g. desktops) */
-  :root{
-    --pfd-product-grid-cols:3;
+  :root {
+    --pfd-product-grid-cols: 3;
   }
 }
 
-@media (min-width: 1280px) { /* xl */
+@media (min-width: 1280px) {
+  /* xl */
   /* Extra large devices */
-  :root{
-    --pfd-product-grid-cols:4;
+  :root {
+    --pfd-product-grid-cols: 4;
   }
 }
 
-@media (min-width: 1536px) { /* 2xl */
+@media (min-width: 1536px) {
+  /* 2xl */
   /* 2x Extra large devices */
-  :root{
-    --pfd-product-grid-cols:4;
+  :root {
+    --pfd-product-grid-cols: 4;
   }
 }
 
 /* hide desktop filter sidebar display */
-@media (max-width:768px){
-  .pfd-filter-section{
-    display:none;
+@media (max-width: 768px) {
+  .pfd-filter-section {
+    display: none;
   }
-  .pfd-product-section{
-    width:100%;
+  .pfd-product-section {
+    width: 100%;
   }
 }
-.ais-Pagination{
-  margin-top:10px;
-  width:100%;
+.ais-Pagination {
+  margin-top: 10px;
+  width: 100%;
 }
 
-.ais-Pagination-list{
-  display:flex;
-  align-items:center;
-  gap:15px;
+.ais-Pagination-list {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.ais-Pagination-link{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:30px;
-  border-radius:4px;
+.ais-Pagination-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 30px;
+  border-radius: 4px;
   overflow: hidden;
-  background:white;
-  border:1px solid #ccc;
-  cursor:pointer;
+  background: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
 }
 
-.ais-Pagination-item--selected .ais-Pagination-link{
-  background:#ccc;
+.ais-Pagination-item--selected .ais-Pagination-link {
+  background: #ccc;
 }
 
 /* checkbox  */
@@ -734,104 +740,107 @@ input[type="checkbox"].ais-RefinementList-checkbox:checked::after {
   transform: rotate(45deg);
 }
 
-label.ais-RefinementList-label{
-  display:flex;
-  align-items:center;
-  gap:7px;
+label.ais-RefinementList-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
-
-label.ais-RefinementList-label .ais-RefinementList-labelText{
-  font-size:14px;
-  width:80%;
+label.ais-RefinementList-label .ais-RefinementList-labelText {
+  font-size: 14px;
+  width: 80%;
 }
 
-label.ais-RefinementList-label .ais-RefinementList-count{
-  font-size:10px;
-  padding: 1px 7px;
-  background:#2e2e2e;
-  color:white;
-  border-radius:4px;
-  margin-left:auto;
+label.ais-RefinementList-label .ais-RefinementList-count {
+  font-size: 10px;
+  padding: 1px 1px;
+  min-width: 26px;
+  background: #2e2e2e;
+  color: white;
+  border-radius: 4px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.ais-RefinementList-list{
-  display:flex;
+.ais-RefinementList-list {
+  display: flex;
   flex-direction: column;
-  gap:0px;
+  gap: 0px;
 }
 
-.ais-RefinementList-item{
-  padding:7px 20px 7px 5px;
+.ais-RefinementList-item {
+  padding: 7px 20px 7px 5px;
 }
 
-.ais-RefinementList-item:hover{
-  background:#ccc;
+.ais-RefinementList-item:hover {
+  background: #ccc;
 }
 
-.ais-SearchBox-form{
-  padding-right:10px;
+.ais-SearchBox-form {
+  padding-right: 10px;
 }
 
 .ais-RangeInput-form input,
-.ais-SearchBox-input{
+.ais-SearchBox-input {
   width: 100%;
   padding: 4px 8px;
   border: 1px solid #d1d5db; /* light gray */
-  border-radius: 0.25rem;     /* rounded corners */
+  border-radius: 0.25rem; /* rounded corners */
   font-size: 1rem;
   outline: none;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
-  margin-bottom:5px;
+  margin-bottom: 5px;
 }
 
 .ais-RangeInput-form input:focus,
-.ais-SearchBox-input:focus{
-  border-color: #3b82f6;      
+.ais-SearchBox-input:focus {
+  border-color: #3b82f6;
   box-shadow: 0 0 0 2px #bfdbfe;
 }
 
-.ais-RangeInput-form input{
+.ais-RangeInput-form input {
   font-size: 0.8rem;
 }
 
-.ais-RangeInput-submit{
+.ais-RangeInput-submit {
   padding: 4px;
   background-color: #2e2e2e;
   color: white;
   border: none;
-  border-radius: 0.25rem; 
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .ais-RangeInput-submit:hover {
-  background-color: #333333; 
+  background-color: #333333;
 }
-
 
 .ais-SearchBox-submit,
-.ais-SearchBox-reset{
-  display:none;
+.ais-SearchBox-reset {
+  display: none;
 }
 
-.ais-RangeInput-form{
-  display:flex;
-  gap:5px;
+.ais-RangeInput-form {
+  display: flex;
+  gap: 5px;
   align-items: center;
 }
 
-.ais-RangeInput-form input, .ais-SearchBox-input{
-  margin-bottom:0px;
+.ais-RangeInput-form input,
+.ais-SearchBox-input {
+  margin-bottom: 0px;
 }
 
-.ais-RangeInput button.ais-RangeInput-submit{
-  padding:3px 12px;
+.ais-RangeInput button.ais-RangeInput-submit {
+  padding: 3px 12px;
 }
 
-.panel .ais-RefinementList{
-  max-height:240px;
-  overflow-y:auto;  
+.panel .ais-RefinementList {
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 .facet-wrapper:has(.ais-RefinementList--noRefinement) {
@@ -839,7 +848,6 @@ label.ais-RefinementList-label .ais-RefinementList-count{
 }
 
 /* filter tags START */
-
 
 .ais-CurrentRefinements-list {
   list-style: none;
@@ -892,6 +900,5 @@ label.ais-RefinementList-label .ais-RefinementList-count{
 .ais-CurrentRefinements-delete:hover {
   color: #ff6b6b;
 }
-
 
 /* filter tags END */
