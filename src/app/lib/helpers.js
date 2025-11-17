@@ -5,8 +5,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
-// export const ES_INDEX = "solana_updated_product_index";
-export const ES_INDEX = "solana_suggest_v2"; // typo suggest feature
+export const ES_INDEX = "solana_updated_product_index";
 
 export function parseRatingCount(value) {
   if (typeof value === "string") {
@@ -385,7 +384,7 @@ export const mapOrderItems = (items) => {
 
 export const BaseNavObj = {
   Fireplaces: [
-    "Shop All Outdoor Fireplaces"
+    "Shop All Outdoor Fireplaces",
     // "Gas Fireplaces",
     // "Electric Fireplaces"
   ],
@@ -474,7 +473,7 @@ export const getInitialUiStateFromUrl = (url) => {
       if (key === "sort") {
         sortBy = `${ES_INDEX}_${value}`;
       }
-      if(key === "page"){
+      if (key === "page") {
         page = value;
       }
     }
@@ -485,7 +484,7 @@ export const getInitialUiStateFromUrl = (url) => {
           ? refinementList
           : undefined,
         range: Object.keys(range).length ? range : undefined,
-        sortBy:  sortBy || undefined,
+        sortBy: sortBy || undefined,
         page: page || 1,
       },
     };

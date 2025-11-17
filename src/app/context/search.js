@@ -128,43 +128,15 @@ export const SearchProvider = ({ children }) => {
         },
       },
       size: SEARCH_RESULT_SIZE,
-      // suggest: {
-      //   did_you_mean: {
-      //     text: trimmedQuery,
-      //     phrase: {
-      //       field: "title",
-      //       size: 1,
-      //       confidence: 0.9,
-      //       max_errors: 1.5,
-      //       real_word_error_likelihood: 0.95,
-      //       direct_generator: [
-      //         {
-      //           field: "title",
-      //           suggest_mode: "always",
-      //           min_word_length: 3,
-      //         },
-      //       ],
-      //       collate: {
-      //         query: {
-      //           source: {
-      //             multi_match: {
-      //               query: "{{suggestion}}",
-      //             },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
       suggest: {
         did_you_mean: {
           text: trimmedQuery,
           phrase: {
-            field: "title.suggest", // 1. **Target the shingle field**
+            field: "tags.text",
             size: 1,
-            confidence: 0.5, // 2. **Low Confidence** (be less picky about suggested score)
-            max_errors: 5.0, // 3. **High Max Errors** (allow for heavy misspellings)
-            real_word_error_likelihood: 0.4, // 4. **Low Real Word Likelihood** (assume it's a mistake)
+            confidence: 0.5,
+            max_errors: 5.0,
+            real_word_error_likelihood: 0.4,
             smoothing: {
               stupid_backoff: {
                 discount_threshold: 0.1,
@@ -172,7 +144,7 @@ export const SearchProvider = ({ children }) => {
             },
             direct_generator: [
               {
-                field: "title.suggest",
+                field: "tags.text",
                 suggest_mode: "always",
                 min_word_length: 2,
               },
@@ -185,12 +157,16 @@ export const SearchProvider = ({ children }) => {
                     query: "{{suggestion}}",
                     type: "phrase", // Match the suggestion as a single phrase
                     fields: [
-                      "title", // Search the full, standard-analyzed title field
+                      "tags.text", // Search the full, standard-analyzed title field
                     ],
                   },
                 },
               },
-              prune: true, // Only return suggestions that actually match a document's title
+              prune: true,
+            },
+            highlight: {
+              pre_tag: "!",
+              post_tag: "!",
             },
           },
         },
