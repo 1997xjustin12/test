@@ -5,7 +5,7 @@ import ProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import { useState, useEffect, use } from "react";
 import { useSearch } from "@/app/context/search";
-import NoSearchResultFound from "@/app/components/template/NoSearchResultFound"
+import NoSearchResultFound from "@/app/components/template/NoSearchResultFound";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
@@ -15,19 +15,22 @@ export default function SearchPage(props) {
   const { query } = searchParams;
   const { searchQuery, setSearch, searchResults, noResults } = useSearch();
   // console.log("[SEARCH RESULTS]", searchResults)
-  useEffect(()=>{
-    if(query){
+  useEffect(() => {
+    if (query) {
+      console.log("step1");
       setSearch(query);
     }
-  },[])
-  const handleTabChange= (tab) => {
+  }, []);
+
+  const handleTabChange = (tab) => {
     setTab(tab);
+  };
+
+  if (!query || noResults) {
+    console.log("step2");
+    return <NoSearchResultFound query={query} />;
   }
 
-  if(!query || noResults){
-    return <NoSearchResultFound query={query}/>
-  }
-    
   return (
     <div className="min-h-screen">
       <MobileLoader />
@@ -42,9 +45,17 @@ export default function SearchPage(props) {
             {searchResults &&
               searchResults.length > 0 &&
               searchResults
-                .filter((i) => !["popular", "recent", "suggestion"].includes(i.prop))
+                .filter(
+                  (i) => !["popular", "recent", "suggestion"].includes(i.prop)
+                )
                 .map((i, idx) => (
-                  <button onClick={()=>handleTabChange(i.prop)} key={`search-page-tab-${i.prop}`} className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${tab===i.prop?"border-theme-600":"text-stone-500"}`}>
+                  <button
+                    onClick={() => handleTabChange(i.prop)}
+                    key={`search-page-tab-${i.prop}`}
+                    className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${
+                      tab === i.prop ? "border-theme-600" : "text-stone-500"
+                    }`}
+                  >
                     {i.label} ({i.total})
                   </button>
                 ))}
@@ -52,54 +63,67 @@ export default function SearchPage(props) {
 
           {/* tab display contents*/}
 
-          {
-            // tab === "product" && <ProductsSection category={"search"} keyword={searchQuery} />
-            tab === "product" && <ProductsSection category={"search"} search={searchQuery} />
-          }
-          
-          
-          {
-            tab === "category" && <>
-              {
-              searchResults && searchResults.find(({prop})=> prop==="category") && <>
-                {
-                  searchResults.find(({prop})=> prop==="category").data.length > 0 ?
-                  searchResults.find(({prop})=> prop==="category").data.map(i=> 
-                    <Link key={`search-page-category-item-${i.url}`} href={`${BASE_URL}/${i.url}`}>
-                      <div className="hover:text-theme-600">{i.name}</div>
-                    </Link>
-                  )
-                  :
-                  <div className="h-[200px] flex items-center justify-center">
-                    <div className="text-lg md:text-2xl font-bold text-stone-500">Nothing to display</div>
-                  </div>
-                  
-                }
-              </>
-              }
-            </>
-          }
+          {tab === "product" && (
+            <ProductsSection category={"search"} search={searchQuery} />
+          )}
 
-          {
-            tab === "brand" && <>
-              {
-              searchResults && searchResults.find(({prop})=> prop==="brand") && <>
-                {
-                  searchResults.find(({prop})=> prop==="brand").data.length > 0 ?
-                  searchResults.find(({prop})=> prop==="brand").data.map(i=> 
-                    <Link key={`search-page-category-item-${i.url}`} href={`${BASE_URL}/${i.url}`}>
-                      <div className="hover:text-theme-600">{i.name}</div>
-                    </Link>)
-                  :
-                  <div className="h-[200px] flex items-center justify-center">
-                    <div className="text-lg md:text-2xl font-bold text-stone-500">Nothing to display</div>
-                  </div>
-                  
-                }
-              </>
-              }
+          {tab === "category" && (
+            <>
+              {searchResults &&
+                searchResults.find(({ prop }) => prop === "category") && (
+                  <>
+                    {searchResults.find(({ prop }) => prop === "category").data
+                      .length > 0 ? (
+                      searchResults
+                        .find(({ prop }) => prop === "category")
+                        .data.map((i) => (
+                          <Link
+                            key={`search-page-category-item-${i.url}`}
+                            href={`${BASE_URL}/${i.url}`}
+                          >
+                            <div className="hover:text-theme-600">{i.name}</div>
+                          </Link>
+                        ))
+                    ) : (
+                      <div className="h-[200px] flex items-center justify-center">
+                        <div className="text-lg md:text-2xl font-bold text-stone-500">
+                          Nothing to display
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
             </>
-          }
+          )}
+
+          {tab === "brand" && (
+            <>
+              {searchResults &&
+                searchResults.find(({ prop }) => prop === "brand") && (
+                  <>
+                    {searchResults.find(({ prop }) => prop === "brand").data
+                      .length > 0 ? (
+                      searchResults
+                        .find(({ prop }) => prop === "brand")
+                        .data.map((i) => (
+                          <Link
+                            key={`search-page-category-item-${i.url}`}
+                            href={`${BASE_URL}/${i.url}`}
+                          >
+                            <div className="hover:text-theme-600">{i.name}</div>
+                          </Link>
+                        ))
+                    ) : (
+                      <div className="h-[200px] flex items-center justify-center">
+                        <div className="text-lg md:text-2xl font-bold text-stone-500">
+                          Nothing to display
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+            </>
+          )}
         </div>
       </div>
     </div>

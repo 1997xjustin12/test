@@ -311,11 +311,50 @@ const QueryRulesBanner = () => {
   );
 };
 
+// Separate component to isolate product count updates from re-render cycles
+const ProductCountUpdater = () => {
+  const { results } = useInstantSearch();
+  const { setSearchPageProductCount } = useSearch();
+  const prevCountRef = useRef(null);
+  const updateCountRef = useRef(0);
+
+  useEffect(() => {
+    const count = results?.nbHits || 0;
+    updateCountRef.current++;
+
+    // console.log(
+    //   "[ProductCountUpdater] Update #",
+    //   updateCountRef.current,
+    //   "Count:",
+    //   count,
+    //   "Prev:",
+    //   prevCountRef.current
+    // );
+
+    // Only update if count actually changed
+    if (prevCountRef.current !== count) {
+      prevCountRef.current = count;
+      // console.log("[ProductCountUpdater] Setting count to:", count);
+      setSearchPageProductCount(count);
+    }
+
+    // Alert if too many updates
+    if (updateCountRef.current > 50) {
+      console.error(
+        "[ProductCountUpdater] TOO MANY UPDATES! Something is causing a loop."
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results?.nbHits]); // setSearchPageProductCount is stable from context
+
+  return null;
+};
+
 const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const { status, results } = useInstantSearch();
-  const { setSearchPageProductCount } = useSearch();
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
+  const hasLoadedResults = useRef(false);
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -332,18 +371,26 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
   useEffect(() => {
     const result = ["loading"].includes(loadHint);
-    setFirstLoad((prev) => {
-      return result;
-    });
+    setFirstLoad(result);
     onDataLoaded(result);
-  }, [loadHint]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadHint]); // onDataLoaded is stable from parent
 
+  // Track when we've actually received results
   useEffect(() => {
-    const count = results?.nbHits || 0;
-    setSearchPageProductCount(count);
+    if (results && results.nbHits !== undefined) {
+      hasLoadedResults.current = true;
+    }
   }, [results]);
 
-  if (!firstLoad && results?.nbHits === 0) {
+  // Only show "No Results" if we're done loading AND have received results AND count is 0
+  const shouldShowNoResults =
+    !firstLoad &&
+    hasLoadedResults.current &&
+    results?.nbHits === 0 &&
+    status !== "loading";
+
+  if (shouldShowNoResults) {
     return (
       <div className="container">
         <div className="flex items-center justify-between mb-5">
@@ -567,19 +614,56 @@ const SkeletonLoader = () => {
 
 const Refresh = ({ search }) => {
   const { refresh, setUiState } = useInstantSearch();
+  const prevSearchRef = useRef(null); // Start with null to allow initial load
+  const hasInitialized = useRef(false);
+
   useEffect(() => {
-    setUiState((prev) => {
-      const new_state = prev;
-      new_state[es_index]["query"] = search;
-      return new_state;
-    });
+    // On initial mount, always set the query (handles URL params on page load)
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      if (search) {
+        console.log("[Refresh] Initial load with query:", search);
+        prevSearchRef.current = search;
+        setUiState((prev) => ({
+          ...prev,
+          [es_index]: {
+            ...prev[es_index],
+            query: search,
+          },
+        }));
+        refresh();
+      }
+      return;
+    }
+
+    // After initial mount, only update if search actually changed
+    if (prevSearchRef.current === search) return;
+
+    console.log(
+      "[Refresh] Search changed from",
+      prevSearchRef.current,
+      "to",
+      search
+    );
+    prevSearchRef.current = search;
+
+    setUiState((prev) => ({
+      ...prev,
+      [es_index]: {
+        ...prev[es_index],
+        query: search,
+      },
+    }));
     refresh();
-  }, [search]);
+  }, [search, setUiState, refresh]);
+
   return null;
 };
 
 export function URLHandler() {
   const { results, indexUiState, setUiState } = useInstantSearch();
+  const isSearchPage =
+    typeof window !== "undefined" && window.location.pathname === "/search";
 
   function deleteParamsWithPrefix(prefix, params) {
     const keysToDelete = [];
@@ -622,11 +706,18 @@ export function URLHandler() {
   }
 
   useEffect(() => {
+    // Don't run URLHandler on /search page - let search context handle URL
+    if (isSearchPage) {
+      console.log(
+        "[URLHandler] Skipping - on /search page, search context handles URL"
+      );
+      return;
+    }
+
     if (results) {
       let url = new URL(window.location.href);
       const { refinementList, sortBy, range, page } = indexUiState;
       let params = url.searchParams;
-      // console.log("indexUiState",indexUiState);
 
       if (refinementList) {
         params = setParams("filter", refinementList, params);
@@ -656,10 +747,10 @@ export function URLHandler() {
       const newUrl = `${url.origin}${url.pathname}${
         stringParams ? `?${stringParams}` : ""
       }`;
-      // console.log("newUrl", newUrl);
+      // console.log("[URLHandler] Updating URL:", newUrl);
       window.history.pushState({}, "", newUrl);
     }
-  }, [indexUiState, results]);
+  }, [indexUiState, results, isSearchPage]);
 
   return null;
 }
@@ -677,31 +768,33 @@ function ProductsSection({ category, search = "" }) {
       const details = flatCategories.find(({ url }) => url === category);
       if (details) {
         setPageDetails(details);
-        setFilterString((prev) => {
-          let result = "";
-          if (details?.nav_type === "category") {
-            result = `page_category:${details?.origin_name}`;
-          } else if (details?.nav_type === "brand") {
-            result = `page_brand:${details?.origin_name}`;
-          } else if (details?.nav_type === "custom_page") {
-            if (details?.name === "Search") {
-              result = `custom_page:Search`;
+
+        // Calculate filter string
+        let result = "";
+        if (details?.nav_type === "category") {
+          result = `page_category:${details?.origin_name}`;
+        } else if (details?.nav_type === "brand") {
+          result = `page_brand:${details?.origin_name}`;
+        } else if (details?.nav_type === "custom_page") {
+          if (details?.name === "Search") {
+            result = `custom_page:Search`;
+          } else {
+            const page_name = details?.name;
+            if (BaseNavKeys.includes(page_name)) {
+              result = `custom_page:${page_name}`;
             } else {
-              const page_name = details?.name;
-              if (BaseNavKeys.includes(page_name)) {
-                result = `custom_page:${page_name}`;
-              } else {
-                result = `custom_page:${
-                  details?.collection_display?.name || "NA"
-                }`;
-              }
+              result = `custom_page:${
+                details?.collection_display?.name || "NA"
+              }`;
             }
           }
-          return result;
-        });
+        }
+
+        // Only update if value changed (prevents unnecessary re-renders)
+        setFilterString((prev) => (prev !== result ? result : prev));
       } else {
         setPageDetails(null);
-        setFilterString("");
+        setFilterString((prev) => (prev !== "" ? "" : prev));
       }
     }
   }, [category, flatCategories]);
@@ -726,6 +819,7 @@ function ProductsSection({ category, search = "" }) {
             }}
           >
             <URLHandler />
+            <ProductCountUpdater />
             <SearchBox className="hidden-main-search-input hidden" />
             <Refresh search={search} />
             {/* <HitsPerPage /> */}

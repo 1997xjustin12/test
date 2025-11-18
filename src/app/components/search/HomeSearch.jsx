@@ -129,7 +129,8 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   useEffect(() => {
     const mainActive = main && openSearch;
     setMainIsActive(mainActive);
-  }, [main, openSearch, setMainIsActive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [main, openSearch]); // setMainIsActive is stable from context
 
   // ---------------------------------------------------------------------------
   // EFFECT: Close on Scroll (non-main instances)

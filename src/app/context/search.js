@@ -82,6 +82,7 @@ export const SearchProvider = ({ children }) => {
   const abortControllerRef = useRef(null);
   const debounceTimeoutRef = useRef(null);
   const lastProcessedUrlQuery = useRef(null);
+  const currentSearchQuery = useRef("");
 
   // ---------------------------------------------------------------------------
   // HELPER: Build Elasticsearch Query
@@ -425,6 +426,14 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   const setSearch = useCallback(
     (search_string, shouldUpdateUrl = true) => {
+      // Guard: Prevent update if same value (prevents loops)
+      if (search_string === currentSearchQuery.current) {
+        return;
+      }
+
+      // Update ref to track current value
+      currentSearchQuery.current = search_string;
+
       // Update search query immediately for responsive UI
       setSearchQuery(search_string);
 
@@ -506,14 +515,15 @@ export const SearchProvider = ({ children }) => {
     if (
       pathname === "/search" &&
       urlQuery &&
-      urlQuery !== searchQuery &&
+      urlQuery !== currentSearchQuery.current &&
       urlQuery !== lastProcessedUrlQuery.current
     ) {
       lastProcessedUrlQuery.current = urlQuery;
       // Update state and fetch data without updating URL (since we're already responding to a URL change)
       setSearch(urlQuery, false);
     }
-  }, [pathname, searchParams, searchQuery, setSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams]); // Only pathname and searchParams - setSearch is stable
 
   // ---------------------------------------------------------------------------
   // EFFECT: Update noResults State
