@@ -13,11 +13,11 @@ export default function SearchPage(props) {
   const searchParams = use(props.searchParams);
   const [tab, setTab] = useState("product");
   const { query } = searchParams;
-  const { searchQuery, setSearch, searchResults, noResults } = useSearch();
+  const { loading, searchQuery, setSearch, searchResults, noResults } =
+    useSearch();
   // console.log("[SEARCH RESULTS]", searchResults)
   useEffect(() => {
     if (query) {
-      console.log("step1");
       setSearch(query);
     }
   }, []);
@@ -26,8 +26,7 @@ export default function SearchPage(props) {
     setTab(tab);
   };
 
-  if (!query || noResults) {
-    console.log("step2");
+  if ((!query || noResults) && !loading) {
     return <NoSearchResultFound query={query} />;
   }
 
@@ -36,29 +35,58 @@ export default function SearchPage(props) {
       <MobileLoader />
       <div className="container mx-auto px-2 sm:px-4 pt-4 flex items-center justify-between">
         <div className="flex flex-col gap-[10px] w-full pb-[100px]">
-          <div>
-            Results found for{" "}
-            <span className="font-bold text-theme-600">{searchQuery}</span>
-          </div>
+          {loading ? (
+            <div className="bg-neutral-200 w-full max-w-[200px] h-[24px] rounded"></div>
+          ) : (
+            <div>
+              Results found for{" "}
+              <span className="font-bold text-theme-600">{searchQuery}</span>
+            </div>
+          )}
           {/* tabs */}
           <div className="flex items-center justify-evenly w-full my-[10px]">
-            {searchResults &&
-              searchResults.length > 0 &&
-              searchResults
-                .filter(
-                  (i) => !["popular", "recent", "suggestion"].includes(i.prop)
-                )
-                .map((i, idx) => (
-                  <button
-                    onClick={() => handleTabChange(i.prop)}
-                    key={`search-page-tab-${i.prop}`}
-                    className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${
-                      tab === i.prop ? "border-theme-600" : "text-stone-500"
+            {loading ? (
+              <>
+                {[165, 180, 150].map((i, idx) => (
+                  <div
+                    key={`loader-tab-item-${idx}-${i}`}
+                    className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full flex justify-center items-center ${
+                      idx === 0 ? "border-neutral-300" : ""
                     }`}
                   >
-                    {i.label} ({i.total})
-                  </button>
+                    <div
+                      style={{
+                        width: "100%",
+                        maxWidth: `${i}px`,
+                        height: "36px",
+                      }}
+                      className="bg-neutral-200 rounded h-[28px] md:h-[36px]"
+                    ></div>
+                  </div>
                 ))}
+              </>
+            ) : (
+              <>
+                {searchResults &&
+                  searchResults.length > 0 &&
+                  searchResults
+                    .filter(
+                      (i) =>
+                        !["popular", "recent", "suggestion"].includes(i.prop)
+                    )
+                    .map((i, idx) => (
+                      <button
+                        onClick={() => handleTabChange(i.prop)}
+                        key={`search-page-tab-${i.prop}`}
+                        className={`text-xs p-1 sm:text-base font-medium border-b-4 w-full ${
+                          tab === i.prop ? "border-theme-600" : "text-stone-500"
+                        }`}
+                      >
+                        {i.label} ({i.total})
+                      </button>
+                    ))}
+              </>
+            )}
           </div>
 
           {/* tab display contents*/}

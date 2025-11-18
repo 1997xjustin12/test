@@ -55,7 +55,7 @@ export const SearchProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // ---------------------------------------------------------------------------
   // STATE - SEARCH RESULTS
@@ -307,7 +307,7 @@ export const SearchProvider = ({ children }) => {
           trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options || [] : []
         );
         setProductResultsCount(result_total_count || 0);
-
+        setLoading(false);
         return data;
       } catch (err) {
         // Don't log abort errors as they're expected when canceling
@@ -515,15 +515,14 @@ export const SearchProvider = ({ children }) => {
     if (
       pathname === "/search" &&
       urlQuery &&
-      urlQuery !== currentSearchQuery.current &&
+      urlQuery !== searchQuery &&
       urlQuery !== lastProcessedUrlQuery.current
     ) {
       lastProcessedUrlQuery.current = urlQuery;
       // Update state and fetch data without updating URL (since we're already responding to a URL change)
       setSearch(urlQuery, false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, searchParams]); // Only pathname and searchParams - setSearch is stable
+  }, [pathname, searchParams, searchQuery, setSearch]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Update noResults State
