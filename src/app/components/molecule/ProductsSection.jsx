@@ -133,7 +133,14 @@ const filters = [
     attribute: "brand",
     searchable: false,
     type: "RefinementList",
-    filter_type: ["grills", "fireplaces", "firepits", "patio-heaters", "open-box","Search"],
+    filter_type: [
+      "grills",
+      "fireplaces",
+      "firepits",
+      "patio-heaters",
+      "open-box",
+      "Search",
+    ],
   },
   {
     label: "configuration",
@@ -154,7 +161,14 @@ const filters = [
     attribute: "price",
     searchable: false,
     type: "RangeInput",
-    filter_type: ["grills", "fireplaces", "firepits","patio-heaters","open-box", "Search"],
+    filter_type: [
+      "grills",
+      "fireplaces",
+      "firepits",
+      "patio-heaters",
+      "open-box",
+      "Search",
+    ],
   },
   {
     label: "lights",
@@ -579,10 +593,9 @@ export function URLHandler() {
   }
 
   function setParams(type, value, params) {
-
     if (type === "filter") {
       const keys = Object.keys(value);
-      params = deleteParamsWithPrefix("filter:", params)
+      params = deleteParamsWithPrefix("filter:", params);
       keys.forEach((v, i) => {
         params.set(`filter:${v}`, value?.[v]);
       });
@@ -590,7 +603,7 @@ export function URLHandler() {
 
     if (type === "range") {
       const keys = Object.keys(value);
-      params = deleteParamsWithPrefix("range:", params)
+      params = deleteParamsWithPrefix("range:", params);
       keys.forEach((v, i) => {
         params.set(`range:${v}`, value?.[v]);
       });
@@ -722,7 +735,7 @@ function ProductsSection({ category, search = "" }) {
               <Configure hitsPerPage={30} />
             )}
             {/*  hack to make initialUiState work*/}
-            <Pagination className="hidden"/>
+            <Pagination className="hidden" />
             <SortBy
               className="hidden"
               items={[
@@ -738,15 +751,33 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="features_fuel_type" className="hidden" />
             <RefinementList attribute="features_type" className="hidden" />
             <RefinementList attribute="features_inches" className="hidden" />
-            <RefinementList attribute="features_mounting_type" className="hidden" />
-            <RefinementList attribute="features_vent_option" className="hidden" />
+            <RefinementList
+              attribute="features_mounting_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="features_vent_option"
+              className="hidden"
+            />
             <RefinementList attribute="features_color" className="hidden" />
-            <RefinementList attribute="features_recess_option" className="hidden" />
+            <RefinementList
+              attribute="features_recess_option"
+              className="hidden"
+            />
             <RefinementList attribute="features_model" className="hidden" />
-            <RefinementList attribute="features_valve_line_location" className="hidden" />
+            <RefinementList
+              attribute="features_valve_line_location"
+              className="hidden"
+            />
             <RefinementList attribute="features_fuel_type" className="hidden" />
-            <RefinementList attribute="features_mounting_type" className="hidden" />
-            <RefinementList attribute="features_heating_elements" className="hidden" />
+            <RefinementList
+              attribute="features_mounting_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="features_heating_elements"
+              className="hidden"
+            />
             <RefinementList attribute="features_finish" className="hidden" />
             <RefinementList attribute="collections" className="hidden" />
             <RefinementList attribute="brand" className="hidden" />
@@ -755,7 +786,10 @@ function ProductsSection({ category, search = "" }) {
             <RangeInput attribute="price" className="hidden" />
             <RefinementList attribute="grill_lights" className="hidden" />
             <RefinementList attribute="size" className="hidden" />
-            <RefinementList attribute="rear_infrared_burner" className="hidden" />
+            <RefinementList
+              attribute="rear_infrared_burner"
+              className="hidden"
+            />
             <RefinementList attribute="cut_out_width" className="hidden" />
             <RefinementList attribute="cut_out_depth" className="hidden" />
             <RefinementList attribute="cut_out_height" className="hidden" />

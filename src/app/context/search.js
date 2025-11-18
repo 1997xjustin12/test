@@ -19,6 +19,7 @@ import {
 const RECENT_SEARCH_KEY = "recent_searches";
 const SEARCH_RESULT_SIZE = 15;
 const MIN_SUGGESTION_LENGTH = 2;
+const DEBOUNCE_DELAY = 300; // milliseconds
 
 const SearchContext = createContext();
 export const useSearch = () => {
@@ -44,12 +45,22 @@ export const SearchProvider = ({ children }) => {
   const [lForage, setLForage] = useState(null);
   const oldSearchResults = useRef([]);
   const updateUrlTimeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const debounceTimeoutRef = useRef(null);
   const [recentResults, setRecentResults] = useState([]);
   const [categoryResults, setCategoryResults] = useState([]);
   const [brandResults, setBrandResults] = useState([]);
 
   const [popularSearches, setPopularSearches] = useState([]);
   const [popularResults, setPopularResults] = useState([]);
+
+  const updateURL = (query) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("query", query);
+    const newUrl = `/search?${params.toString()}`;
+    // console.log("newUrl", newUrl);
+    window.history.pushState(null, "", newUrl);
+  };
 
   const addPopularSearches = async (query) => {
     try {
@@ -176,12 +187,22 @@ export const SearchProvider = ({ children }) => {
 
   const fetchProducts = async (query_string) => {
     try {
+      // Cancel previous fetch if it exists
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new AbortController for this fetch
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       const trim_query = query_string.trim();
       const rawQuery = buildSearchQuery(trim_query);
       const res = await fetch("/api/es/shopify/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rawQuery),
+        signal: abortController.signal,
       });
 
       if (!res.ok) throw new Error(`[SHOPIFY SEARCH] Failed: ${res.status}`);
@@ -199,6 +220,10 @@ export const SearchProvider = ({ children }) => {
       setProductResultsCount(result_total_count);
       return data;
     } catch (err) {
+      // Don't log abort errors as they're expected when canceling
+      if (err.name === "AbortError") {
+        return null;
+      }
       console.error("[SHOPIFY SEARCH] Failed to fetch products:", err);
       return null;
     }
@@ -240,51 +265,61 @@ export const SearchProvider = ({ children }) => {
       .sort(sortAlphabetically);
   };
 
-  const setSearch = (search_string) => {
+  const handleQuery = (search_string) => {
+    // Update search query immediately for responsive UI
     setSearchQuery(search_string);
-    fetchProducts(search_string);
-    getSearchResults(search_string);
 
-    // Debounced URL update - only update after user stops typing for 500ms
-    if (updateUrlTimeoutRef.current) {
-      clearTimeout(updateUrlTimeoutRef.current);
+    // Clear previous debounce timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
 
-    updateUrlTimeoutRef.current = setTimeout(() => {
-      // Only update URL if we're on the search page
-      if (pathname === "/search" && search_string) {
-        router.replace(`${BASE_URL}/search?query=${search_string}`, {
-          scroll: false,
-        });
-      }
-    }, 500);
+    // Debounce the fetch calls to prevent excessive API calls
+    debounceTimeoutRef.current = setTimeout(() => {
+      fetchProducts(search_string);
+      getSearchResults(search_string);
+    }, DEBOUNCE_DELAY);
+  };
+
+  const setSearch = (search_string, shouldUpdateUrl = true) => {
+    if (pathname === "/search" && shouldUpdateUrl) {
+      updateURL(search_string);
+    }
+
+    handleQuery(search_string);
   };
 
   const getSearchResults = async (query) => {
     try {
       const recentLS = await getRecentSearch();
       const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
-
       const results =
         query === ""
           ? recent
           : recent
               .filter((i) => i.term.toLowerCase().includes(query.toLowerCase()))
               .sort((a, b) => b.timestamp - a.timestamp);
-
       const popular_searches = popularSearches
         .filter((item) =>
           item?.term?.toLowerCase()?.includes(query?.toLowerCase())
         )
         .sort((a, b) => b.score - a.score)
         .map((item) => item?.term);
-
+      const category_searches = filterNavigationItems("custom_page", query);
+      const brand_searches = filterNavigationItems("brand", query);
       setRecentResults(results);
       setPopularResults(popular_searches);
-      setCategoryResults(filterNavigationItems("custom_page", query));
-      setBrandResults(filterNavigationItems("brand", query));
+      setCategoryResults(category_searches);
+      setBrandResults(brand_searches);
+      return {
+        recent: results,
+        popular: popular_searches,
+        category: category_searches,
+        brand: brand_searches,
+      };
     } catch (error) {
       console.error(error);
+      return null;
     }
   };
 
@@ -367,16 +402,24 @@ export const SearchProvider = ({ children }) => {
   // set url query string on the input if location =/search
   useEffect(() => {
     const urlQuery = searchParams.get("query");
-    if (pathname === "/search" && urlQuery) {
-      setSearch(urlQuery);
+    if (pathname === "/search" && urlQuery && urlQuery !== searchQuery) {
+      // Update state and fetch data without updating URL
+      // (since we're already responding to a URL change)
+      setSearch(urlQuery, false);
     }
   }, [pathname, searchParams]);
 
-  // Cleanup timeout on unmount
+  // Cleanup timeouts and abort ongoing fetch on unmount
   useEffect(() => {
     return () => {
       if (updateUrlTimeoutRef.current) {
         clearTimeout(updateUrlTimeoutRef.current);
+      }
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);
