@@ -202,14 +202,46 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // HELPER: Filter Navigation Items
   // ---------------------------------------------------------------------------
+  // const filterNavigationItems = useCallback(
+  //   (navType, query = "", suggestion = "") => {
+  //     const items = flatCategories
+  //       .filter(({ name }) => !["Search", "Home"].includes(name))
+  //       .filter((item) => {
+  //         if (navType === "custom_page") {
+  //           return item?.nav_type === navType && item?.collection_display;
+  //         } else if (navType === "brand") {
+  //           return (
+  //             item?.nav_type === navType && !exclude_brands.includes(item?.name)
+  //           );
+  //         } else {
+  //           return item?.nav_type === navType;
+  //         }
+  //       })
+  //       .map((i) => ({
+  //         name: i?.name || i?.title,
+  //         url: i?.menu?.href || i?.url,
+  //       }));
+
+  //     if (query === "") {
+  //       return items.sort(sortAlphabetically);
+  //     }
+
+  //     return items
+  //       .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
+  //       .sort(sortAlphabetically);
+  //   },
+  //   [flatCategories, sortAlphabetically]
+  // );
   const filterNavigationItems = useCallback(
-    (navType, query = "") => {
+    (navType, query = "", suggestion = "") => {
+      // Step 1: Filter based on navType and exclude base items
       const items = flatCategories
         .filter(({ name }) => !["Search", "Home"].includes(name))
         .filter((item) => {
           if (navType === "custom_page") {
             return item?.nav_type === navType && item?.collection_display;
           } else if (navType === "brand") {
+            // Assuming exclude_brands is defined in the scope
             return (
               item?.nav_type === navType && !exclude_brands.includes(item?.name)
             );
@@ -217,18 +249,48 @@ export const SearchProvider = ({ children }) => {
             return item?.nav_type === navType;
           }
         })
+        // Step 2: Map to the final structure
         .map((i) => ({
           name: i?.name || i?.title,
           url: i?.menu?.href || i?.url,
         }));
 
-      if (query === "") {
+      // --- New Search Logic ---
+
+      // Combine query and suggestion, then split into unique, non-empty, lowercased words
+      const rawSearchString = `${query} ${suggestion}`;
+      const searchWords = new Set(
+        rawSearchString
+          .toLowerCase()
+          // Use a regex to split by non-word characters (spaces, hyphens, etc.)
+          .split(/\W+/)
+          .filter((word) => word.length > 0)
+      );
+
+      // If there are no words to search for, return the items sorted
+      if (searchWords.size === 0) {
+        // Assuming sortAlphabetically is defined in the scope
         return items.sort(sortAlphabetically);
       }
 
-      return items
-        .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
+      // Filter items based on word intersection
+      const result = items
+        .filter((item) => {
+          const itemName = item.name || ""; // Use empty string if name is null/undefined
+
+          // Get the words from the item's name (tokenized and lowercased)
+          const itemNameWords = itemName
+            .toLowerCase()
+            .split(/\W+/)
+            .filter((word) => word.length > 0);
+
+          // Check if any word in itemNameWords is present in searchWords
+          return itemNameWords.some((itemNameWord) =>
+            searchWords.has(itemNameWord)
+          );
+        })
         .sort(sortAlphabetically);
+      return result;
     },
     [flatCategories, sortAlphabetically]
   );
@@ -308,6 +370,7 @@ export const SearchProvider = ({ children }) => {
         );
         setProductResultsCount(result_total_count || 0);
         setLoading(false);
+        getSearchResults(trim_query, suggest_options?.[0].text || "");
         return data;
       } catch (err) {
         // Don't log abort errors as they're expected when canceling
@@ -378,7 +441,7 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
   // ---------------------------------------------------------------------------
   const getSearchResults = useCallback(
-    async (query) => {
+    async (query, suggest) => {
       try {
         const recentLS = await getRecentSearch();
         const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
@@ -399,8 +462,12 @@ export const SearchProvider = ({ children }) => {
           .sort((a, b) => b.score - a.score)
           .map((item) => item?.term);
 
-        const category_searches = filterNavigationItems("custom_page", query);
-        const brand_searches = filterNavigationItems("brand", query);
+        const category_searches = filterNavigationItems(
+          "custom_page",
+          query,
+          suggest
+        );
+        const brand_searches = filterNavigationItems("brand", query, suggest);
 
         setRecentResults(results);
         setPopularResults(popular_searches);
@@ -451,7 +518,7 @@ export const SearchProvider = ({ children }) => {
         }
 
         fetchProducts(search_string);
-        getSearchResults(search_string);
+        // getSearchResults(search_string);
       }, DEBOUNCE_DELAY);
     },
     [pathname, updateURL, fetchProducts, getSearchResults]
