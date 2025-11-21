@@ -14,6 +14,7 @@ import {
   BASE_URL,
   exclude_brands,
   exclude_collections,
+  createSlug,
 } from "@/app/lib/helpers";
 
 // ============================================================================
@@ -96,6 +97,14 @@ export const SearchProvider = ({ children }) => {
     }
 
     return {
+      aggs: {
+        brands_facet: {
+          terms: {
+            field: "brand.keyword",
+            size: 1000, // Adjust this number for the maximum number of brands to show
+          },
+        },
+      },
       query: {
         bool: {
           filter: [],
@@ -103,18 +112,25 @@ export const SearchProvider = ({ children }) => {
             bool: {
               should: [
                 {
+                  multi_match: {
+                    query: "trimmedQuery",
+                    fields: ["variants.sku^10"],
+                    type: "phrase",
+                  },
+                },
+                {
                   bool: {
                     should: [
                       {
                         multi_match: {
-                          query: trimmedQuery,
+                          query: trimmedQuery, // Placeholder for actual query text
                           fields: ["title^3", "brand^2", "description"],
                           fuzziness: "AUTO:4,8",
                         },
                       },
                       {
                         multi_match: {
-                          query: trimmedQuery,
+                          query: trimmedQuery, // Placeholder for actual query text
                           fields: ["title^1.5", "brand^1", "description"],
                           type: "bool_prefix",
                         },
@@ -124,7 +140,7 @@ export const SearchProvider = ({ children }) => {
                 },
                 {
                   multi_match: {
-                    query: trimmedQuery,
+                    query: trimmedQuery, // Placeholder for actual query text
                     type: "phrase",
                     fields: ["title^6", "brand^4", "description"],
                   },
@@ -135,24 +151,24 @@ export const SearchProvider = ({ children }) => {
           must_not: [
             {
               terms: {
-                "brand.keyword": exclude_brands,
+                "brand.keyword": ["exclude_brands"], // Placeholder for actual array
               },
             },
             {
               terms: {
-                "collections.name.keyword": exclude_collections,
+                "collections.name.keyword": ["exclude_collections"], // Placeholder for actual array
               },
             },
           ],
         },
       },
-      size: SEARCH_RESULT_SIZE,
+      size: 10, // Placeholder for SEARCH_RESULT_SIZE
       suggest: {
         did_you_mean: {
-          text: trimmedQuery,
+          text: trimmedQuery, // Placeholder for actual query text
           phrase: {
-            field: "tags.text",
-            size: 1,
+            field: "suggest_combined",
+            size: 3,
             confidence: 0.5,
             max_errors: 5.0,
             real_word_error_likelihood: 0.4,
@@ -163,7 +179,7 @@ export const SearchProvider = ({ children }) => {
             },
             direct_generator: [
               {
-                field: "tags.text",
+                field: "suggest_combined",
                 suggest_mode: "always",
                 min_word_length: 2,
               },
@@ -174,7 +190,7 @@ export const SearchProvider = ({ children }) => {
                   multi_match: {
                     query: "{{suggestion}}",
                     type: "phrase",
-                    fields: ["tags.text"],
+                    fields: ["suggest_combined"],
                   },
                 },
               },
@@ -202,46 +218,14 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // HELPER: Filter Navigation Items
   // ---------------------------------------------------------------------------
-  // const filterNavigationItems = useCallback(
-  //   (navType, query = "", suggestion = "") => {
-  //     const items = flatCategories
-  //       .filter(({ name }) => !["Search", "Home"].includes(name))
-  //       .filter((item) => {
-  //         if (navType === "custom_page") {
-  //           return item?.nav_type === navType && item?.collection_display;
-  //         } else if (navType === "brand") {
-  //           return (
-  //             item?.nav_type === navType && !exclude_brands.includes(item?.name)
-  //           );
-  //         } else {
-  //           return item?.nav_type === navType;
-  //         }
-  //       })
-  //       .map((i) => ({
-  //         name: i?.name || i?.title,
-  //         url: i?.menu?.href || i?.url,
-  //       }));
-
-  //     if (query === "") {
-  //       return items.sort(sortAlphabetically);
-  //     }
-
-  //     return items
-  //       .filter((i) => i.name.toLowerCase().includes(query.toLowerCase()))
-  //       .sort(sortAlphabetically);
-  //   },
-  //   [flatCategories, sortAlphabetically]
-  // );
   const filterNavigationItems = useCallback(
     (navType, query = "", suggestion = "") => {
-      // Step 1: Filter based on navType and exclude base items
       const items = flatCategories
         .filter(({ name }) => !["Search", "Home"].includes(name))
         .filter((item) => {
           if (navType === "custom_page") {
             return item?.nav_type === navType && item?.collection_display;
           } else if (navType === "brand") {
-            // Assuming exclude_brands is defined in the scope
             return (
               item?.nav_type === navType && !exclude_brands.includes(item?.name)
             );
@@ -249,42 +233,32 @@ export const SearchProvider = ({ children }) => {
             return item?.nav_type === navType;
           }
         })
-        // Step 2: Map to the final structure
         .map((i) => ({
           name: i?.name || i?.title,
           url: i?.menu?.href || i?.url,
         }));
 
-      // --- New Search Logic ---
-
-      // Combine query and suggestion, then split into unique, non-empty, lowercased words
       const rawSearchString = `${query} ${suggestion}`;
       const searchWords = new Set(
         rawSearchString
           .toLowerCase()
-          // Use a regex to split by non-word characters (spaces, hyphens, etc.)
           .split(/\W+/)
           .filter((word) => word.length > 0)
       );
 
-      // If there are no words to search for, return the items sorted
       if (searchWords.size === 0) {
-        // Assuming sortAlphabetically is defined in the scope
         return items.sort(sortAlphabetically);
       }
 
-      // Filter items based on word intersection
       const result = items
         .filter((item) => {
-          const itemName = item.name || ""; // Use empty string if name is null/undefined
+          const itemName = item.name || "";
 
-          // Get the words from the item's name (tokenized and lowercased)
           const itemNameWords = itemName
             .toLowerCase()
             .split(/\W+/)
             .filter((word) => word.length > 0);
 
-          // Check if any word in itemNameWords is present in searchWords
           return itemNameWords.some((itemNameWord) =>
             searchWords.has(itemNameWord)
           );
@@ -360,9 +334,12 @@ export const SearchProvider = ({ children }) => {
         const formatted_results = data?.hits?.hits?.map(
           ({ _source }) => _source
         );
+
+        console.log("data", data);
         const result_total_count = data?.hits?.total?.value;
         const dym = data?.suggest?.did_you_mean?.[0];
         const suggest_options = dym?.options;
+        const aggs_brands = data?.aggregations?.brands_facet?.buckets || [];
 
         setProductResults(formatted_results || []);
         setSuggestionResults(
@@ -370,7 +347,11 @@ export const SearchProvider = ({ children }) => {
         );
         setProductResultsCount(result_total_count || 0);
         setLoading(false);
-        getSearchResults(trim_query, suggest_options?.[0].text || "");
+        getSearchResults(
+          trim_query,
+          suggest_options?.[0].text || "",
+          aggs_brands
+        );
         return data;
       } catch (err) {
         // Don't log abort errors as they're expected when canceling
@@ -441,7 +422,7 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
   // ---------------------------------------------------------------------------
   const getSearchResults = useCallback(
-    async (query, suggest) => {
+    async (query, suggest, brands = []) => {
       try {
         const recentLS = await getRecentSearch();
         const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
@@ -467,12 +448,27 @@ export const SearchProvider = ({ children }) => {
           query,
           suggest
         );
-        const brand_searches = filterNavigationItems("brand", query, suggest);
+        const brand_searches = filterNavigationItems("brand", query, suggest); // results are based on query and suggestions
+        const brand_searches2_raw = [
+          // 1. Combine the existing results and the new brand items
+          ...brand_searches,
+          ...(brands || []).map((item) => ({
+            name: item?.key,
+            url: createSlug(item?.key),
+          })),
+        ];
 
-        setRecentResults(results);
+        // 2. Correctly convert the array of objects into an array of [key, value] pairs
+        const uniqueBrandsMap = new Map(
+          brand_searches2_raw.map((item) => [item.name, item])
+        );
+
+        // 3. Extract the unique values back into the final array
+        const final_brand_searches = Array.from(uniqueBrandsMap.values());
+
         setPopularResults(popular_searches);
         setCategoryResults(category_searches);
-        setBrandResults(brand_searches);
+        setBrandResults(final_brand_searches.sort(sortAlphabetically));
 
         return {
           recent: results,

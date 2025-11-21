@@ -5,7 +5,8 @@ export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
-export const ES_INDEX = "solana_updated_product_index";
+// export const ES_INDEX = "solana_updated_product_index";
+export const ES_INDEX = "solana_suggest_v2";
 
 export function parseRatingCount(value) {
   if (typeof value === "string") {
