@@ -70,9 +70,8 @@ export default function SearchPage(props) {
                 {searchResults &&
                   searchResults.length > 0 &&
                   searchResults
-                    .filter(
-                      (i) =>
-                        !["popular", "recent", "suggestion"].includes(i.prop)
+                    .filter((i) =>
+                      ["product", "category", "brand"].includes(i.prop)
                     )
                     .map((i, idx) => (
                       <button

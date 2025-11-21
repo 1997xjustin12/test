@@ -68,6 +68,7 @@ export const SearchProvider = ({ children }) => {
   const [popularResults, setPopularResults] = useState([]);
   const [categoryResults, setCategoryResults] = useState([]);
   const [brandResults, setBrandResults] = useState([]);
+  const [collectionsResults, setCollectionsResults] = useState([]);
 
   // ---------------------------------------------------------------------------
   // STATE - DATA SOURCES
@@ -101,7 +102,13 @@ export const SearchProvider = ({ children }) => {
         brands_facet: {
           terms: {
             field: "brand.keyword",
-            size: 1000, // Adjust this number for the maximum number of brands to show
+            size: 1000,
+          },
+        },
+        collections_facet: {
+          terms: {
+            field: "collections.name.keyword",
+            size: 1000,
           },
         },
       },
@@ -151,12 +158,12 @@ export const SearchProvider = ({ children }) => {
           must_not: [
             {
               terms: {
-                "brand.keyword": ["exclude_brands"], // Placeholder for actual array
+                "brand.keyword": exclude_brands, // Placeholder for actual array
               },
             },
             {
               terms: {
-                "collections.name.keyword": ["exclude_collections"], // Placeholder for actual array
+                "collections.name.keyword": exclude_collections, // Placeholder for actual array
               },
             },
           ],
@@ -168,7 +175,7 @@ export const SearchProvider = ({ children }) => {
           text: trimmedQuery, // Placeholder for actual query text
           phrase: {
             field: "suggest_combined",
-            size: 3,
+            size: 1,
             confidence: 0.5,
             max_errors: 5.0,
             real_word_error_likelihood: 0.4,
@@ -340,7 +347,15 @@ export const SearchProvider = ({ children }) => {
         const dym = data?.suggest?.did_you_mean?.[0];
         const suggest_options = dym?.options;
         const aggs_brands = data?.aggregations?.brands_facet?.buckets || [];
+        const aggs_collections = (
+          data?.aggregations?.collections_facet?.buckets || []
+        ).map((item) => {
+          const url = `search?query=${trim_query}&filter%3Acollections=${item?.key}`;
+          return { name: item?.key, url };
+        });
 
+        console.log("aggs_collection", aggs_collections);
+        setCollectionsResults(aggs_collections);
         setProductResults(formatted_results || []);
         setSuggestionResults(
           trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options || [] : []
@@ -594,9 +609,10 @@ export const SearchProvider = ({ children }) => {
     const hasNoResults =
       productResults?.length === 0 &&
       categoryResults.length === 0 &&
-      brandResults.length === 0;
+      brandResults.length === 0 &&
+      collectionsResults.length;
     setNoResults(hasNoResults);
-  }, [productResults, categoryResults, brandResults]);
+  }, [productResults, categoryResults, brandResults, collectionsResults]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Cleanup on Unmount
@@ -665,6 +681,14 @@ export const SearchProvider = ({ children }) => {
         data: brandResults,
         showExpand: brandResults.length > 0,
       },
+      {
+        total: collectionsResults.length,
+        prop: "collections",
+        label: "Collections",
+        visible: true,
+        data: collectionsResults,
+        showExpand: collectionsResults.length > 0,
+      },
     ];
 
     if (!loading) {
@@ -679,6 +703,7 @@ export const SearchProvider = ({ children }) => {
     productResults,
     categoryResults,
     brandResults,
+    collectionsResults,
     searchPageProductCount,
     productResultsCount,
     loading,

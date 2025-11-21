@@ -707,12 +707,12 @@ export function URLHandler() {
 
   useEffect(() => {
     // Don't run URLHandler on /search page - let search context handle URL
-    if (isSearchPage) {
-      console.log(
-        "[URLHandler] Skipping - on /search page, search context handles URL"
-      );
-      return;
-    }
+    // if (isSearchPage) {
+    //   console.log(
+    //     "[URLHandler] Skipping - on /search page, search context handles URL"
+    //   );
+    //   return;
+    // }
 
     if (results) {
       let url = new URL(window.location.href);

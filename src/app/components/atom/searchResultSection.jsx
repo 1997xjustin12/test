@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import { useSolanaCategories } from "@/app/context/category";
 
@@ -66,6 +66,7 @@ const ProductItem = ({ product, label }) => (
 );
 
 function SearchResultSection({ section, onOptionSelect }) {
+  const pathname = usePathname();
   const router = useRouter();
   const { getProductUrl } = useSolanaCategories();
   const [expanded, setExpanded] = useState(false);
@@ -82,7 +83,13 @@ function SearchResultSection({ section, onOptionSelect }) {
     if (linkElement) {
       const href = linkElement.getAttribute("href");
       onOptionSelect();
-      router.push(href);
+      console.log("pathname", pathname);
+      // router.push(href);
+      if (pathname === "/search") {
+        window.location.href = href;
+      } else {
+        router.push(href);
+      }
     }
   };
 
@@ -126,6 +133,12 @@ function SearchResultSection({ section, onOptionSelect }) {
           return {
             href: `${BASE_URL}/${item.url}`,
             key: `brand-result-${item.url}`,
+            content: <LabeledTextItem text={item.name} label={label} />,
+          };
+        case "collections":
+          return {
+            href: `${BASE_URL}/${item.url}`,
+            key: `collections-result-${item.url}`,
             content: <LabeledTextItem text={item.name} label={label} />,
           };
         default:
