@@ -99,6 +99,12 @@ function SearchResultSection({ section, onOptionSelect }) {
     // Configuration for each section type
     const getItemConfig = () => {
       switch (prop) {
+        case "skus":
+          return {
+            href: `${BASE_URL}/search?query=${item?.text}`,
+            key: `sku-search-${index}`,
+            content: <SimpleTextItem text={item?.text} />,
+          };
         case "recent":
           return {
             href: `${BASE_URL}/search?query=${item?.term}`,

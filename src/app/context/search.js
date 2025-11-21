@@ -69,6 +69,7 @@ export const SearchProvider = ({ children }) => {
   const [categoryResults, setCategoryResults] = useState([]);
   const [brandResults, setBrandResults] = useState([]);
   const [collectionsResults, setCollectionsResults] = useState([]);
+  const [skusResults, setSkusResults] = useState([]);
 
   // ---------------------------------------------------------------------------
   // STATE - DATA SOURCES
@@ -209,6 +210,18 @@ export const SearchProvider = ({ children }) => {
             },
           },
         },
+        sku_autocomplete: {
+          prefix: trimmedQuery, // The input string from the user (e.g., "AB-12")
+          completion: {
+            field: "variants.sku_suggest",
+            size: 3,
+            skip_duplicates: true,
+            fuzzy: {
+              fuzziness: "AUTO",
+              min_length: 2,
+            },
+          },
+        },
       },
     };
   }, []);
@@ -342,10 +355,12 @@ export const SearchProvider = ({ children }) => {
           ({ _source }) => _source
         );
 
-        console.log("data", data);
+        // console.log("data", data);
         const result_total_count = data?.hits?.total?.value;
         const dym = data?.suggest?.did_you_mean?.[0];
+        const sku_ac = data?.suggest?.sku_autocomplete?.[0];
         const suggest_options = dym?.options;
+        const sku_ac_options = sku_ac?.options || [];
         const aggs_brands = data?.aggregations?.brands_facet?.buckets || [];
         const aggs_collections = (
           data?.aggregations?.collections_facet?.buckets || []
@@ -354,7 +369,9 @@ export const SearchProvider = ({ children }) => {
           return { name: item?.key, url };
         });
 
-        console.log("aggs_collection", aggs_collections);
+        console.log("sku_ac_options", sku_ac_options);
+
+        setSkusResults(trim_query.length > 2 ? sku_ac_options || [] : []);
         setCollectionsResults(aggs_collections);
         setProductResults(formatted_results || []);
         setSuggestionResults(
@@ -610,9 +627,16 @@ export const SearchProvider = ({ children }) => {
       productResults?.length === 0 &&
       categoryResults.length === 0 &&
       brandResults.length === 0 &&
-      collectionsResults.length;
+      collectionsResults.length === 0 &&
+      skusResults.length === 0;
     setNoResults(hasNoResults);
-  }, [productResults, categoryResults, brandResults, collectionsResults]);
+  }, [
+    productResults,
+    categoryResults,
+    brandResults,
+    collectionsResults,
+    skusResults,
+  ]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Cleanup on Unmount
@@ -633,6 +657,14 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   const searchResults = useMemo(() => {
     const newSearchResults = [
+      {
+        total: skusResults.length,
+        prop: "skus",
+        label: "SKU",
+        visible: true,
+        data: skusResults,
+        showExpand: skusResults.length > 0,
+      },
       {
         total: suggestionResults?.length || 0,
         prop: "suggestion",
@@ -704,6 +736,7 @@ export const SearchProvider = ({ children }) => {
     categoryResults,
     brandResults,
     collectionsResults,
+    skusResults,
     searchPageProductCount,
     productResultsCount,
     loading,
