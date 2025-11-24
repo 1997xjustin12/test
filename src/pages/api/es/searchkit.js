@@ -1,6 +1,5 @@
 // pages/api/es/searchkit.js
 import API from "@searchkit/api";
-import { redis, keys } from "../../../app/lib/redis";
 
 import {
   BaseNavKeys,
@@ -9,377 +8,386 @@ import {
   ES_INDEX,
   exclude_brands,
   exclude_collections,
+  main_products,
 } from "../../../app/lib/helpers";
 
-const apiClient = API(
-  {
-    connection: {
-      host: "https://solanafireplaces.com/es",
-      apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
-      index: ES_INDEX,
+const mainItemsScriptSort = {
+  _script: {
+    type: "number",
+    script: {
+      source: `
+                // Access the main products list passed via params
+                def main_collections = params.main_products;
+                // Access the product's collections. IMPORTANT: Use the correct keyword field
+                def product_collections = doc['collections.name.keyword'];
+
+                // If the product document has any of the main collections, return 0
+                for (collection in product_collections) {
+                    if (main_collections.contains(collection)) {
+                        return 0; // Top Priority
+                    }
+                }
+                return 1; // Lower Priority
+            `,
+      params: {
+        main_products: main_products, // Pass the JS array here
+      },
     },
-    search_settings: {
-      hitsPerPage: 30,
-      highlight_attributes: ["title"],
-      snippet_attributes: ["description:200"],
-      search_attributes: [
-        { field: "title", weight: 3 },
-        { field: "tags", weight: 2 },
-        { field: "brand", weight: 2 },
-        { field: "handle", weight: 1 },
-        { field: "description", weight: 1 },
-      ],
-      result_attributes: [
-        "product_id",
-        "handle",
-        "title",
-        "body_html",
-        "brand",
-        "product_category",
-        "product_type",
-        "tags",
-        "published",
-        "options",
-        "variants",
-        "images",
-        "seo",
-        "google_shopping",
-        "custom_metafields",
-        "ratings",
-        "features",
-        "recommendations",
-        "region_pricing",
-        "accentuate_data",
-        "status",
-        "collections",
-        "uploaded_at",
-        "created_at",
-        "updated_at",
-      ],
-      facet_attributes: [
-        {
-          attribute: "product_category",
-          field: "product_category.category_name.keyword",
-          type: "string",
-        },
-        { attribute: "brand", field: "brand.keyword", type: "string" },
-        {
-          attribute: "configuration_type",
-          field: "accentuate_data.bbq.configuration_type", // informational only
-          type: "string",
+    order: "asc", // Sort ascending so 0 (main items) comes first
+  },
+};
 
-          facetQuery: () => ({
-            // We don’t rely on ES aggregations here
+const apiClient = API({
+  connection: {
+    host: "https://solanafireplaces.com/es",
+    apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
+    index: ES_INDEX,
+  },
+  search_settings: {
+    hitsPerPage: 30,
+    // highlight_attributes: ["title"],
+    // snippet_attributes: ["description:200"],
+    search_attributes: ["title"],
+    result_attributes: [
+      "product_id",
+      "handle",
+      "title",
+      "body_html",
+      "brand",
+      "product_category",
+      "product_type",
+      "tags",
+      "published",
+      "options",
+      "variants",
+      "images",
+      "seo",
+      "google_shopping",
+      "custom_metafields",
+      "ratings",
+      "features",
+      "recommendations",
+      "region_pricing",
+      "accentuate_data",
+      "status",
+      "collections",
+      "uploaded_at",
+      "created_at",
+      "updated_at",
+    ],
+    facet_attributes: [
+      {
+        attribute: "product_category",
+        field: "product_category.category_name.keyword",
+        type: "string",
+      },
+      { attribute: "brand", field: "brand.keyword", type: "string" },
+      {
+        attribute: "configuration_type",
+        field: "accentuate_data.bbq.configuration_type", // informational only
+        type: "string",
+
+        facetQuery: () => ({
+          // We don’t rely on ES aggregations here
+          filters: {
             filters: {
-              filters: {
-                "Built-In": {
-                  match_phrase: {
-                    tags: "built in",
-                  },
-                },
-                Freestanding: {
-                  match_phrase: {
-                    tags: "freestanding",
-                  },
-                },
-              },
-            },
-          }),
-
-          facetResponse: (aggregation) => {
-            const buckets = aggregation.buckets || {};
-            return Object.keys(buckets).reduce((acc, key) => {
-              const count = buckets[key]?.doc_count ?? 0;
-              if (count > 0) {
-                acc[key] = count; // only include non-zero
-              }
-              return acc;
-            }, {});
-          },
-
-          filterQuery: (field, value) => {
-            if (value === "Built-In") {
-              return {
+              "Built-In": {
                 match_phrase: {
                   tags: "built in",
                 },
-              };
-            }
-            if (value === "Freestanding") {
-              return {
+              },
+              Freestanding: {
                 match_phrase: {
                   tags: "freestanding",
                 },
-              };
+              },
+            },
+          },
+        }),
+
+        facetResponse: (aggregation) => {
+          const buckets = aggregation.buckets || {};
+          return Object.keys(buckets).reduce((acc, key) => {
+            const count = buckets[key]?.doc_count ?? 0;
+            if (count > 0) {
+              acc[key] = count; // only include non-zero
             }
-            return {};
-          },
+            return acc;
+          }, {});
         },
 
-        {
-          attribute: "no_of_burners",
-          field: "accentuate_data.bbq.number_of_main_burners",
-          type: "string",
-
-          // Define normalized buckets
-          facetQuery: () => {
+        filterQuery: (field, value) => {
+          if (value === "Built-In") {
             return {
-              filters: {
-                filters: Object.fromEntries(
-                  Object.entries(burnerBuckets).map(([label, values]) => [
-                    label,
-                    {
-                      terms: {
-                        "accentuate_data.bbq.number_of_main_burners": values,
-                      },
-                    },
-                  ])
-                ),
+              match_phrase: {
+                tags: "built in",
               },
             };
-          },
-
-          // Map ES response to facet values & hide zero counts
-          facetResponse: (aggregation) => {
-            const buckets = aggregation.buckets || {};
-            return Object.keys(buckets).reduce((acc, key) => {
-              const count = buckets[key]?.doc_count ?? 0;
-              if (count > 0) {
-                acc[key] = count; // only include non-zero
-              }
-              return acc;
-            }, {});
-          },
-
-          // Build filter query when user selects a value
-          filterQuery: (field, value) => {
+          }
+          if (value === "Freestanding") {
             return {
-              terms: {
-                "accentuate_data.bbq.number_of_main_burners":
-                  burnerBuckets[value] || [],
+              match_phrase: {
+                tags: "freestanding",
               },
             };
-          },
-        },
-
-        { attribute: "price", field: "variants.price", type: "numeric" },
-        {
-          attribute: "grill_lights",
-          field: "accentuate_data.bbq.grill_lights",
-          type: "string",
-        },
-        {
-          attribute: "size",
-          field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions",
-          type: "string",
-        },
-        //
-
-        {
-          attribute: "rear_infrared_burner",
-          field: "accentuate_data.bbq.rear_infrared_burner",
-          type: "string",
-        },
-
-        {
-          attribute: "cut_out_width",
-          field: "accentuate_data.bbq.storage_specs_cutout_width",
-          type: "string",
-        },
-
-        {
-          attribute: "cut_out_depth",
-          field: "accentuate_data.bbq.storage_specs_cutout_depth",
-          type: "string",
-        },
-
-        {
-          attribute: "cut_out_height",
-          field: "accentuate_data.bbq.storage_specs_cutout_height",
-          type: "string",
-        },
-
-        //
-        {
-          attribute: "made_in_usa",
-          field: "accentuate_data.bbq.seo_meta_made_in_usa",
-          type: "string",
-        },
-        {
-          attribute: "material",
-          field: "accentuate_data.bbq.seo_meta_material",
-          type: "string",
-        },
-        {
-          attribute: "thermometer",
-          field: "accentuate_data.bbq.thermometer",
-          type: "string",
-        },
-        {
-          attribute: "rotisserie_kit",
-          field: "accentuate_data.bbq.rotisserie_kit",
-          type: "string",
-        },
-        {
-          attribute: "gas_type",
-          field: "accentuate_data.bbq.seo_meta_fuel_type",
-          type: "string",
-        },
-        {
-          attribute: "collections",
-          field: "collections.name.keyword",
-          type: "string",
-        },
-        // additional Patio Heaters Filters
-        // {
-        //   attribute: "features_fuel_type",
-        //   field: "features.fuel_type.keyword",
-        //   type: "string",
-        // },
-        {
-          attribute: "features_mounting_type",
-          field: "features.mounting_type.keyword",
-          type: "string",
-          // remove empty string options
-          facetResponse: (aggregation) => {
-            const buckets = aggregation.buckets || {};
-            const result = Object.keys(buckets).reduce((acc, key) => {
-              const bucket = buckets[key];
-              const count = bucket?.doc_count ?? 0;
-              if (bucket?.key !== "" && count > 0) {
-                acc[bucket?.key] = count;
-              }
-
-              return acc;
-            }, {});
-            return result;
-          },
-        },
-        {
-          attribute: "features_heating_elements",
-          field: "features.heating_elements.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_finish",
-          field: "features.finish.keyword",
-          type: "string",
-        },
-        // additional Fireplaces Filters
-        {
-          attribute: "features_inches",
-          field: "features.inches.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_width",
-          field: "features.width.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_height",
-          field: "features.height.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_depth",
-          field: "features.depth.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_vent_option",
-          field: "features.vent_option.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_recess_option",
-          field: "features.recess_option.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_valve_line_location",
-          field: "features.valve_line_location.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_color",
-          field: "features.color.keyword",
-          type: "string",
-          // remove empty string options
-          facetResponse: (aggregation) => {
-            const buckets = aggregation.buckets || {};
-            const result = Object.keys(buckets).reduce((acc, key) => {
-              const bucket = buckets[key];
-              const count = bucket?.doc_count ?? 0;
-              if (bucket?.key !== "" && count > 0) {
-                acc[bucket?.key] = count;
-              }
-
-              return acc;
-            }, {});
-            return result;
-          },
-        },
-        {
-          attribute: "features_model",
-          field: "features.model.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_type",
-          field: "features.type.keyword",
-          type: "string",
-        },
-        {
-          attribute: "features_fuel_type",
-          field: "features.fuel_type.keyword",
-          type: "string",
-          // remove Gas Valves string options
-          facetResponse: (aggregation) => {
-            const buckets = aggregation.buckets || {};
-            const result = Object.keys(buckets).reduce((acc, key) => {
-              const bucket = buckets[key];
-              const count = bucket?.doc_count ?? 0;
-              if (bucket?.key !== "Gas Valves" && count > 0) {
-                acc[bucket?.key] = count;
-              }
-
-              return acc;
-            }, {});
-            return result;
-          },
-        },
-      ],
-      filter_attributes: [
-        {
-          attribute: "page_category",
-          field: "product_category.category_name.keyword",
-          type: "string",
-        },
-      ],
-      sorting: {
-        _popular: {
-          field: "_score",
-          order: "desc",
-        },
-        _newest: {
-          field: "created_at",
-          order: "desc",
-        },
-        _price_desc: {
-          field: "variants.price",
-          order: "desc",
-        },
-        _price_asc: {
-          field: "variants.price",
-          order: "asc",
+          }
+          return {};
         },
       },
-      defaultSorting: "popular", // 👈 applies default sorting
+
+      {
+        attribute: "no_of_burners",
+        field: "accentuate_data.bbq.number_of_main_burners",
+        type: "string",
+
+        // Define normalized buckets
+        facetQuery: () => {
+          return {
+            filters: {
+              filters: Object.fromEntries(
+                Object.entries(burnerBuckets).map(([label, values]) => [
+                  label,
+                  {
+                    terms: {
+                      "accentuate_data.bbq.number_of_main_burners": values,
+                    },
+                  },
+                ])
+              ),
+            },
+          };
+        },
+
+        // Map ES response to facet values & hide zero counts
+        facetResponse: (aggregation) => {
+          const buckets = aggregation.buckets || {};
+          return Object.keys(buckets).reduce((acc, key) => {
+            const count = buckets[key]?.doc_count ?? 0;
+            if (count > 0) {
+              acc[key] = count; // only include non-zero
+            }
+            return acc;
+          }, {});
+        },
+
+        // Build filter query when user selects a value
+        filterQuery: (field, value) => {
+          return {
+            terms: {
+              "accentuate_data.bbq.number_of_main_burners":
+                burnerBuckets[value] || [],
+            },
+          };
+        },
+      },
+
+      { attribute: "price", field: "variants.price", type: "numeric" },
+      {
+        attribute: "grill_lights",
+        field: "accentuate_data.bbq.grill_lights",
+        type: "string",
+      },
+      {
+        attribute: "size",
+        field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions",
+        type: "string",
+      },
+
+      {
+        attribute: "rear_infrared_burner",
+        field: "accentuate_data.bbq.rear_infrared_burner",
+        type: "string",
+      },
+
+      {
+        attribute: "cut_out_width",
+        field: "accentuate_data.bbq.storage_specs_cutout_width",
+        type: "string",
+      },
+
+      {
+        attribute: "cut_out_depth",
+        field: "accentuate_data.bbq.storage_specs_cutout_depth",
+        type: "string",
+      },
+
+      {
+        attribute: "cut_out_height",
+        field: "accentuate_data.bbq.storage_specs_cutout_height",
+        type: "string",
+      },
+
+      {
+        attribute: "made_in_usa",
+        field: "accentuate_data.bbq.seo_meta_made_in_usa",
+        type: "string",
+      },
+      {
+        attribute: "material",
+        field: "accentuate_data.bbq.seo_meta_material",
+        type: "string",
+      },
+      {
+        attribute: "thermometer",
+        field: "accentuate_data.bbq.thermometer",
+        type: "string",
+      },
+      {
+        attribute: "rotisserie_kit",
+        field: "accentuate_data.bbq.rotisserie_kit",
+        type: "string",
+      },
+      {
+        attribute: "gas_type",
+        field: "accentuate_data.bbq.seo_meta_fuel_type",
+        type: "string",
+      },
+      {
+        attribute: "collections",
+        field: "collections.name.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_mounting_type",
+        field: "features.mounting_type.keyword",
+        type: "string",
+        facetResponse: (aggregation) => {
+          const buckets = aggregation.buckets || {};
+          const result = Object.keys(buckets).reduce((acc, key) => {
+            const bucket = buckets[key];
+            const count = bucket?.doc_count ?? 0;
+            if (bucket?.key !== "" && count > 0) {
+              acc[bucket?.key] = count;
+            }
+
+            return acc;
+          }, {});
+          return result;
+        },
+      },
+      {
+        attribute: "features_heating_elements",
+        field: "features.heating_elements.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_finish",
+        field: "features.finish.keyword",
+        type: "string",
+      },
+      // additional Fireplaces Filters
+      {
+        attribute: "features_inches",
+        field: "features.inches.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_width",
+        field: "features.width.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_height",
+        field: "features.height.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_depth",
+        field: "features.depth.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_vent_option",
+        field: "features.vent_option.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_recess_option",
+        field: "features.recess_option.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_valve_line_location",
+        field: "features.valve_line_location.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_color",
+        field: "features.color.keyword",
+        type: "string",
+        // remove empty string options
+        facetResponse: (aggregation) => {
+          const buckets = aggregation.buckets || {};
+          const result = Object.keys(buckets).reduce((acc, key) => {
+            const bucket = buckets[key];
+            const count = bucket?.doc_count ?? 0;
+            if (bucket?.key !== "" && count > 0) {
+              acc[bucket?.key] = count;
+            }
+
+            return acc;
+          }, {});
+          return result;
+        },
+      },
+      {
+        attribute: "features_model",
+        field: "features.model.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_type",
+        field: "features.type.keyword",
+        type: "string",
+      },
+      {
+        attribute: "features_fuel_type",
+        field: "features.fuel_type.keyword",
+        type: "string",
+        // remove Gas Valves string options
+        facetResponse: (aggregation) => {
+          const buckets = aggregation.buckets || {};
+          const result = Object.keys(buckets).reduce((acc, key) => {
+            const bucket = buckets[key];
+            const count = bucket?.doc_count ?? 0;
+            if (bucket?.key !== "Gas Valves" && count > 0) {
+              acc[bucket?.key] = count;
+            }
+
+            return acc;
+          }, {});
+          return result;
+        },
+      },
+    ],
+    filter_attributes: [
+      {
+        attribute: "page_category",
+        field: "product_category.category_name.keyword",
+        type: "string",
+      },
+    ],
+    sorting: {
+      _popular: {
+        field: "_score",
+        order: "asc",
+      },
+      _newest: {
+        field: "created_at",
+        order: "desc",
+      },
+      _price_desc: {
+        field: "variants.price",
+        order: "desc",
+      },
+      _price_asc: {
+        field: "variants.price",
+        order: "asc",
+      },
     },
-  }
-  // { debug: true }
-);
+    defaultSorting: "popular", // 👈 applies default sorting
+  },
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -505,14 +513,33 @@ export default async function handler(req, res) {
     }
 
     const data = req.body;
-    console.log("body", data);
     let results = null;
 
     if (filter_query.length > 0) {
       // create the filter option
       filter_option = {
+        hooks: {
+          beforeSearch: async (searchRequests) => {
+            return searchRequests.map((sr) => {
+              const sort = sr.body.sort;
+              const isPopular = !!sort?.["_score"];
+              return {
+                ...sr,
+                body: {
+                  ...sr.body,
+                  sort: isPopular
+                    ? [
+                        mainItemsScriptSort, // Primary Sort
+                      ]
+                    : sort,
+                },
+              };
+            });
+          },
+        },
         getBaseFilters: () => filter_query,
       };
+      // 💡 Pass the transformer function in the options object
       results = await apiClient.handleRequest(data, filter_option);
     } else {
       results = await apiClient.handleRequest(data);

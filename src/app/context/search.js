@@ -15,6 +15,7 @@ import {
   exclude_brands,
   exclude_collections,
   createSlug,
+  main_products,
 } from "@/app/lib/helpers";
 
 // ============================================================================
@@ -90,6 +91,142 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // HELPER: Build Elasticsearch Query
   // ---------------------------------------------------------------------------
+  // const buildSearchQuery = useCallback((trimmedQuery) => {
+  //   if (!trimmedQuery) {
+  //     return {
+  //       query: { match_all: {} },
+  //       size: SEARCH_RESULT_SIZE,
+  //     };
+  //   }
+
+  //   return {
+  //     aggs: {
+  //       brands_facet: {
+  //         terms: {
+  //           field: "brand.keyword",
+  //           size: 1000,
+  //         },
+  //       },
+  //       collections_facet: {
+  //         terms: {
+  //           field: "collections.name.keyword",
+  //           size: 1000,
+  //         },
+  //       },
+  //     },
+  //     query: {
+  //       bool: {
+  //         filter: [],
+  //         must: {
+  //           bool: {
+  //             should: [
+  //               {
+  //                 multi_match: {
+  //                   query: "trimmedQuery",
+  //                   fields: ["variants.sku^10"],
+  //                   type: "phrase",
+  //                 },
+  //               },
+  //               {
+  //                 bool: {
+  //                   should: [
+  //                     {
+  //                       multi_match: {
+  //                         query: trimmedQuery, // Placeholder for actual query text
+  //                         fields: ["title^3", "brand^2", "description"],
+  //                         fuzziness: "AUTO:4,8",
+  //                       },
+  //                     },
+  //                     {
+  //                       multi_match: {
+  //                         query: trimmedQuery, // Placeholder for actual query text
+  //                         fields: ["title^1.5", "brand^1", "description"],
+  //                         type: "bool_prefix",
+  //                       },
+  //                     },
+  //                   ],
+  //                 },
+  //               },
+  //               {
+  //                 multi_match: {
+  //                   query: trimmedQuery, // Placeholder for actual query text
+  //                   type: "phrase",
+  //                   fields: ["title^6", "brand^4", "description"],
+  //                 },
+  //               },
+  //             ],
+  //           },
+  //         },
+  //         must_not: [
+  //           {
+  //             terms: {
+  //               "brand.keyword": exclude_brands, // Placeholder for actual array
+  //             },
+  //           },
+  //           {
+  //             terms: {
+  //               "collections.name.keyword": exclude_collections, // Placeholder for actual array
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //     size: 10, // Placeholder for SEARCH_RESULT_SIZE
+  //     suggest: {
+  //       did_you_mean: {
+  //         text: trimmedQuery, // Placeholder for actual query text
+  //         phrase: {
+  //           field: "suggest_combined",
+  //           size: 1,
+  //           confidence: 0.5,
+  //           max_errors: 5.0,
+  //           real_word_error_likelihood: 0.4,
+  //           smoothing: {
+  //             stupid_backoff: {
+  //               discount_threshold: 0.1,
+  //             },
+  //           },
+  //           direct_generator: [
+  //             {
+  //               field: "suggest_combined",
+  //               suggest_mode: "always",
+  //               min_word_length: 2,
+  //             },
+  //           ],
+  //           collate: {
+  //             query: {
+  //               source: {
+  //                 multi_match: {
+  //                   query: "{{suggestion}}",
+  //                   type: "phrase",
+  //                   fields: ["suggest_combined"],
+  //                 },
+  //               },
+  //             },
+  //             prune: true,
+  //           },
+  //           highlight: {
+  //             pre_tag: "!",
+  //             post_tag: "!",
+  //           },
+  //         },
+  //       },
+  //       sku_autocomplete: {
+  //         prefix: trimmedQuery, // The input string from the user (e.g., "AB-12")
+  //         completion: {
+  //           field: "variants.sku_suggest",
+  //           size: 3,
+  //           skip_duplicates: true,
+  //           fuzzy: {
+  //             fuzziness: "AUTO",
+  //             min_length: 2,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   };
+  // }, []);
+
   const buildSearchQuery = useCallback((trimmedQuery) => {
     if (!trimmedQuery) {
       return {
@@ -113,6 +250,34 @@ export const SearchProvider = ({ children }) => {
           },
         },
       },
+
+      sort: [
+        {
+          _script: {
+            type: "number",
+            script: {
+              source: `
+              def main_collections = params.main_products;
+              def product_collections = doc['collections.name.keyword'];
+
+              for (collection in product_collections) {
+                if (main_collections.contains(collection)) {
+                  return 0; // Top Priority (will be sorted first by "asc")
+                }
+              }
+
+              return 1; // Lower Priority (will be sorted after 0)
+            `,
+              params: {
+                main_products: main_products,
+              },
+            },
+            order: "asc",
+          },
+        },
+        { _score: "desc" },
+      ],
+
       query: {
         bool: {
           filter: [],
@@ -121,7 +286,7 @@ export const SearchProvider = ({ children }) => {
               should: [
                 {
                   multi_match: {
-                    query: "trimmedQuery",
+                    query: trimmedQuery, // Using the variable directly
                     fields: ["variants.sku^10"],
                     type: "phrase",
                   },
@@ -131,15 +296,15 @@ export const SearchProvider = ({ children }) => {
                     should: [
                       {
                         multi_match: {
-                          query: trimmedQuery, // Placeholder for actual query text
-                          fields: ["title^3", "brand^2", "description"],
+                          query: trimmedQuery, // Using the variable directly
+                          fields: ["title"],
                           fuzziness: "AUTO:4,8",
                         },
                       },
                       {
                         multi_match: {
-                          query: trimmedQuery, // Placeholder for actual query text
-                          fields: ["title^1.5", "brand^1", "description"],
+                          query: trimmedQuery, // Using the variable directly
+                          fields: ["title"],
                           type: "bool_prefix",
                         },
                       },
@@ -148,9 +313,9 @@ export const SearchProvider = ({ children }) => {
                 },
                 {
                   multi_match: {
-                    query: trimmedQuery, // Placeholder for actual query text
+                    query: trimmedQuery, // Using the variable directly
                     type: "phrase",
-                    fields: ["title^6", "brand^4", "description"],
+                    fields: ["title"],
                   },
                 },
               ],
@@ -173,7 +338,7 @@ export const SearchProvider = ({ children }) => {
       size: 10, // Placeholder for SEARCH_RESULT_SIZE
       suggest: {
         did_you_mean: {
-          text: trimmedQuery, // Placeholder for actual query text
+          text: trimmedQuery, // Using the variable directly
           phrase: {
             field: "suggest_combined",
             size: 1,
@@ -211,7 +376,7 @@ export const SearchProvider = ({ children }) => {
           },
         },
         sku_autocomplete: {
-          prefix: trimmedQuery, // The input string from the user (e.g., "AB-12")
+          prefix: trimmedQuery, // Using the variable directly
           completion: {
             field: "variants.sku_suggest",
             size: 3,
@@ -224,7 +389,7 @@ export const SearchProvider = ({ children }) => {
         },
       },
     };
-  }, []);
+  }, []); // Assuming SEARCH_RESULT_SIZE, exclude_brands, and exclude_collections are passed via closure or are global
 
   // ---------------------------------------------------------------------------
   // HELPER: Sort Alphabetically
@@ -480,27 +645,16 @@ export const SearchProvider = ({ children }) => {
           query,
           suggest
         );
-        const brand_searches = filterNavigationItems("brand", query, suggest); // results are based on query and suggestions
-        const brand_searches2_raw = [
-          // 1. Combine the existing results and the new brand items
-          ...brand_searches,
-          ...(brands || []).map((item) => ({
-            name: item?.key,
-            url: createSlug(item?.key),
-          })),
-        ];
-
-        // 2. Correctly convert the array of objects into an array of [key, value] pairs
-        const uniqueBrandsMap = new Map(
-          brand_searches2_raw.map((item) => [item.name, item])
-        );
-
-        // 3. Extract the unique values back into the final array
-        const final_brand_searches = Array.from(uniqueBrandsMap.values());
+        // const brand_searches = filterNavigationItems("brand", query, suggest); // results are based on query and suggestions
+        const brand_searches = (brands || []).map((item) => ({
+          name: item?.key,
+          url: createSlug(item?.key),
+        }));
+        console.log("brand_searches from es", brand_searches);
 
         setPopularResults(popular_searches);
         setCategoryResults(category_searches);
-        setBrandResults(final_brand_searches.sort(sortAlphabetically));
+        setBrandResults(brand_searches);
 
         return {
           recent: results,

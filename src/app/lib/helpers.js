@@ -385,23 +385,14 @@ export const mapOrderItems = (items) => {
 };
 
 export const BaseNavObj = {
-  Fireplaces: [
-    "Shop All Outdoor Fireplaces",
-    // "Gas Fireplaces",
-    // "Electric Fireplaces"
-  ],
+  Fireplaces: ["Shop All Outdoor Fireplaces"],
   "Patio Heaters": [
     "Electric Patio Heaters",
     "Gas Patio Heaters",
     "Freestanding Patio Heaters",
   ],
   "Built-In Grills": ["Shop All Built In Grills"],
-  "Freestanding Grills": [
-    // "Blaze Freestanding Grills",
-    // "Bull Freestanding Grills",
-    // "Twin Eagles Freestanding Grills",
-    "Shop All Freestanding Grills",
-  ],
+  "Freestanding Grills": ["Shop All Freestanding Grills"],
   "Open Box": ["Shop All Open Box"],
 };
 
@@ -438,6 +429,44 @@ export const exclude_brands = ["Cedar Creek Fireplaces", "American Fire Glass"];
 
 //  varaible used to exclude products by collections from displaying on the app
 export const exclude_collections = ["Dimplex Fireplace Accessories"];
+
+//  varaible used to sort products up using the collections defined in this array
+export const main_products = [
+  "Bull Grills",
+  "Blaze Grills",
+  "American Outdoor Grill (BBQ Grills)",
+  "Bonfire Grills",
+  "Delta Heat Grills",
+  "Sunstone Grills",
+  "RCS Grills",
+  "Napoleon Grills", // Newly Created Collection
+  "Summerset Grills",
+  "Twin Eagles Grills",
+  "TEC Grills",
+  "Lion Grills",
+  "Le Griddle Grills",
+  "Broilmaster Grills",
+  "PGS Grills", // Newly Created Collection
+  "MHP Grills",
+  "TrueFlame Grills",
+  "Sole Gourmet Grills",
+  "Fire Magic BBQ Grills",
+  "Primo Grills",
+  "Infratech Grills",
+  "Bromic Heaters",
+  "Sunglo Gas Patio Heaters",
+  "Sunpak Heaters",
+  "OCI Grills",
+  "PGL Fire Pit Burners",
+  "Brand-Man BBQ Grills",
+  "Eloquence Grills",
+  "Grandeur Grills",
+  "Dimplex Fireplaces",
+  "Athena Fire Pit Burners",
+  "Athena Fire Pit Tables",
+  "Best Sellers for WPPO",
+  "American Fyre Designs Fireplaces",
+];
 
 export const isValidPassword = (password) => {
   const hasWhitespace = /\s/;
