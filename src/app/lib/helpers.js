@@ -465,7 +465,7 @@ export const main_products = [
   "Athena Fire Pit Burners",
   "Athena Fire Pit Tables",
   "Best Sellers for WPPO",
-  "American Fyre Designs Fireplaces",
+  // "American Fyre Designs Fireplaces",
 ];
 
 export const isValidPassword = (password) => {

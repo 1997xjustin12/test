@@ -275,7 +275,7 @@ export const SearchProvider = ({ children }) => {
             order: "asc",
           },
         },
-        { _score: "desc" },
+        { updated_at: "desc" },
       ],
 
       query: {

@@ -529,7 +529,7 @@ export default async function handler(req, res) {
                   ...sr.body,
                   sort: isPopular
                     ? [
-                        mainItemsScriptSort, // Primary Sort
+                        mainItemsScriptSort, // Sort Logic for main products 1st
                       ]
                     : sort,
                 },
