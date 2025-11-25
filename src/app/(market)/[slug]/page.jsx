@@ -14,6 +14,7 @@ import NewsLetter from "@/app/components/section/NewsLetter";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import BaseNavPage from "@/app/components/template/BaseNavItemPage";
 import Image from "next/image";
+import { STORE_NAME } from "@/app/lib/store_constants";
 
 const isShopify = true;
 
@@ -75,11 +76,10 @@ export async function generateMetadata({ params }) {
 
   return {
     title:
-      pageData.meta_title ||
-      "Solana Fireplaces | Stylish Indoor & Outdoor Heating",
+      pageData.meta_title || `${STORE_NAME} | Stylish Indoor & Outdoor Heating`,
     description:
       pageData.meta_description ||
-      "Transform your home with Solana Fireplaces! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!",
+      `Transform your home with ${STORE_NAME}! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!`,
   };
 }
 

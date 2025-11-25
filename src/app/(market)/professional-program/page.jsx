@@ -1,22 +1,21 @@
-import React from "react";
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
-import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
+import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
+
 function ReturnPolicy() {
-  const brandName = "SolanaFireplaces";
-  const brandSite = "SolanaFireplaces,com";
-  const contact = "(888) 575-9720";
-  const email = "info@solanafireplaces.com";
+  const brandName = STORE_NAME2;
+  const contact = STORE_CONTACT;
   return (
     <div className="w-full p-5">
       <div className="max-w-4xl mx-auto px-10 py-10 text-gray-800 rounded shadow-lg border border-neutral-200">
         <h1 className="text-3xl font-bold mb-6">
-          SolanaFireplaces Contractor Program
+          {brandName} Contractor Program
         </h1>
         <ul className="space-y-5">
           <li>
             <p className="mb-3">
-              The <span className="font-bold">{brandName} Contractor Program</span> is an exclusive discount program created specifically for licensed
+              The{" "}
+              <span className="font-bold">{brandName} Contractor Program</span>{" "}
+              is an exclusive discount program created specifically for licensed
               contractors who design and install outdoor kitchens. As a member,
               you’ll unlock special pricing on our entire product line—from
               grills and refrigerators to ovens, cabinets, and more. Plus,
@@ -25,7 +24,9 @@ function ReturnPolicy() {
             </p>
 
             <p className="mb-3">
-              Getting started is easy: just complete the online application on our website. Once approved, you’ll immediately begin enjoying the perks of membership.
+              Getting started is easy: just complete the online application on
+              our website. Once approved, you’ll immediately begin enjoying the
+              perks of membership.
             </p>
             <h3>Program Benefits Include:</h3>
             <ul className="list-disc pl-6 space-y-2 mb-3">
@@ -61,12 +62,27 @@ function ReturnPolicy() {
             </ul>
           </li>
           <p>
-            If you’re a licensed contractor installing outdoor kitchens, this program is designed to help you save money, access expert resources, and grow your business. Apply today and start taking advantage of everything the <span className="font-bold">{brandName} Contractor Program</span> has to offer!
+            If you’re a licensed contractor installing outdoor kitchens, this
+            program is designed to help you save money, access expert resources,
+            and grow your business. Apply today and start taking advantage of
+            everything the{" "}
+            <span className="font-bold">{brandName} Contractor Program</span>{" "}
+            has to offer!
           </p>
         </ul>
         <div className="flex flex-col gap-[15px] py-5 justify-center items-center">
           {/* <h3>To sign up, please fill out the form below.</h3> */}
-          <h3>Call <Link prefetch={false} href={`tel:${contact}`} className="text-theme-600 hover:underline">{contact}</Link>  for assistance!</h3>
+          <h3>
+            Call{" "}
+            <Link
+              prefetch={false}
+              href={`tel:${contact}`}
+              className="text-theme-600 hover:underline"
+            >
+              {contact}
+            </Link>{" "}
+            for assistance!
+          </h3>
         </div>
         {/* <div className="aspect-1 bg-neutral-200 flex items-center justify-center">
           <div className="text-neutral-500 text-2xl font-bold">{"Insert Form Here"}</div>

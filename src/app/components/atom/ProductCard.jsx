@@ -10,9 +10,8 @@ import { useSolanaCategories } from "@/app/context/category";
 
 import FicDropDown from "@/app/components/atom/FicDropDown";
 
-
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from "next/navigation";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const ProductCardPriceDisplay = ({ price_details }) => {
   if (!price_details) {
@@ -47,11 +46,11 @@ const ProductCardPriceDisplay = ({ price_details }) => {
   }
 };
 
-const ProductCard = ({ hit, page_details   }) => {
+const ProductCard = ({ hit, page_details }) => {
   // console.log("[TEST] ProductCard hit", hit);
   const router = useRouter();
   const { viewItem } = useQuickView();
-  const { isPriceVisible, getProductUrl} = useSolanaCategories();
+  const { isPriceVisible, getProductUrl } = useSolanaCategories();
 
   const handleQuickViewClick = (e, item) => {
     e.stopPropagation();
@@ -59,16 +58,15 @@ const ProductCard = ({ hit, page_details   }) => {
     viewItem(item);
   };
 
-  
   const handleProductItemClick = (e) => {
-    const card = e.target.closest('.product-card-wrap');
+    const card = e.target.closest(".product-card-wrap");
     if (!card) return;
 
-    const href = card.getAttribute('data-href');
+    const href = card.getAttribute("data-href");
     if (href) {
       router.push(href);
     }
-  }
+  };
 
   return (
     <div
@@ -150,7 +148,7 @@ const ProductCard = ({ hit, page_details   }) => {
               )}
               <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
                 <ICRoundPhone width={16} height={16} />{" "}
-                <div>{page_details?.contact_number || "(888) 575-9720"}</div>
+                <div>{page_details?.contact_number || STORE_CONTACT}</div>
               </div>
             </div>
           </FicDropDown>

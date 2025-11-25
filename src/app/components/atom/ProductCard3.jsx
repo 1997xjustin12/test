@@ -3,8 +3,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { formatPrice } from "@/app/lib/helpers";
-import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
 import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
 import BrandDisplay from "@/app/components/atom/ProductCardBrandDisplay";
@@ -13,8 +11,9 @@ import { ICRoundPhone } from "../icons/lib";
 import { useQuickView } from "@/app/context/quickview";
 import { useSolanaCategories } from "@/app/context/category";
 import FicDropDown from "@/app/components/atom/FicDropDown";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { BASE_URL } from "@/app/lib/helpers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ product }) => {
   const { price_hidden_categories } = useSolanaCategories();
   console.log("price_hidden_categories", price_hidden_categories);
@@ -180,7 +179,7 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           <FicDropDown>
-          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+            <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
               {price_hidden_categories.some((id) =>
                 product?.categories.some((cat) => cat.id === id)
               ) ? (
@@ -188,14 +187,12 @@ const ProductCard = ({ product }) => {
               ) : (
                 <>Found It Cheaper? </>
               )}
-            <div
-              className="hover:underline flex items-center gap-[3px] cursor-pointer"
-            >
-              <ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div>
+              <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
+                <ICRoundPhone width={16} height={16} />{" "}
+                <div>{STORE_CONTACT}</div>
+              </div>
             </div>
-          </div>
           </FicDropDown>
-
         </div>
       </div>
     </Link>

@@ -9,7 +9,9 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { PhoneIcon } from "@heroicons/react/24/outline";
-const contact_number = "(888) 575-9720";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+
+const contact_number = STORE_CONTACT;
 function CallWrapper({ children }) {
   const [open, setOpen] = useState(false);
 

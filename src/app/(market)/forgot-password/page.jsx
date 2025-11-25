@@ -3,9 +3,9 @@ import React from "react";
 import ForgotPassword from "@/app/components/form/ForgotPassword";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-
+import { STORE_NAME } from "@/app/lib/store_constants";
 export const metadata = {
-  title: "Forgot Password | Solana Fireplaces",
+  title: `Forgot Password | ${STORE_NAME}`,
 };
 
 function ForgotPasswordPage() {
@@ -20,14 +20,14 @@ function ForgotPasswordPage() {
               link to reset your password.
             </p>
             <div className="my-[20px] w-full">
-                <ForgotPassword />
+              <ForgotPassword />
             </div>
             <Link
-                prefetch={false}
-                href={`${BASE_URL}/login`}
-                className="text-theme-600 hover:underline block text-sm font-bold"
+              prefetch={false}
+              href={`${BASE_URL}/login`}
+              className="text-theme-600 hover:underline block text-sm font-bold"
             >
-                Back to Login
+              Back to Login
             </Link>
           </div>
         </div>

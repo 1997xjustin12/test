@@ -1,12 +1,8 @@
-import React from "react";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
+import { STORE_NAME2 } from "@/app/lib/store_constants";
 function ReturnPolicy() {
-  const brandName = "SolanaFireplaces";
-  const brandSite = "SolanaFireplaces,com";
-  const contact = "(888) 575-9720";
-  const email = "info@solanafireplaces.com";
+  const brandName = STORE_NAME2;
   return (
     <div className="w-full p-5">
       <div className="max-w-4xl mx-auto px-10 py-10 text-gray-800 rounded shadow-lg border border-neutral-200">

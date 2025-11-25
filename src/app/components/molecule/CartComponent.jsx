@@ -8,12 +8,12 @@ import Link from "next/link";
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
 import { ICRoundPhone } from "@/app/components/icons/lib";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const TemporaryComponent = () => {
   const { user, userCartGet, userCartCreate, userCartClose, userCartUpdate } =
     useAuth();
   const { cartItems, cartObject, guestCartToActive } = useCart();
-
 
   const userProfileToCart = (user = {}) => {
     return {
@@ -68,7 +68,9 @@ const TemporaryComponent = () => {
       return;
     }
     const user_profile = userProfileToCart(user);
-    const injected_items = (cartObject?.items || []).map(item=> ({...item}))
+    const injected_items = (cartObject?.items || []).map((item) => ({
+      ...item,
+    }));
     const response = await userCartUpdate({
       items: injected_items,
       ...user_profile,
@@ -76,19 +78,21 @@ const TemporaryComponent = () => {
     console.log("[UPDATE][CART][REPSPONSE]", response);
   };
 
-  if (!user) return (
-    <div className="mb-10">
-      <h2>TEMPORARY COMPONENT</h2>
-      <p className="text-neutral-500 text-sm">Guest Cart Triggers</p>
-      <div className="mt-5 flex gap-[20px]">
-        <button
-          onClick={guestCartToActive}
-          className="text-white text-sm font-bold bg-indigo-600 hover:bg-indigo-700 rounded-[2px] py-1 px-4"
-        >
-          GUEST CART TO STATUS ACTIVE
-        </button>
+  if (!user)
+    return (
+      <div className="mb-10">
+        <h2>TEMPORARY COMPONENT</h2>
+        <p className="text-neutral-500 text-sm">Guest Cart Triggers</p>
+        <div className="mt-5 flex gap-[20px]">
+          <button
+            onClick={guestCartToActive}
+            className="text-white text-sm font-bold bg-indigo-600 hover:bg-indigo-700 rounded-[2px] py-1 px-4"
+          >
+            GUEST CART TO STATUS ACTIVE
+          </button>
+        </div>
       </div>
-    </div>);
+    );
 
   return (
     <div className="mb-10">
@@ -140,7 +144,7 @@ const ShoppingAssistanceSection = () => {
       <div className="flex items-center gap-[10px] justify-center">
         <Link
           prefetch={false}
-          href={`tel: (888) 575-9720`}
+          href={`tel:${STORE_CONTACT}`}
           className="flex items-center gap-[5px] text-theme-600 text-sm font-bold"
         >
           {" "}
@@ -268,7 +272,10 @@ export default function CartPageComponent() {
         );
 
         data = {
-          items: cartItems.map(item =>({...item, product_id: item?.custom_fields?.product_id})),
+          items: cartItems.map((item) => ({
+            ...item,
+            product_id: item?.custom_fields?.product_id,
+          })),
           ...(allFilled ? shipping_details : {}),
         };
       } else {
@@ -281,19 +288,15 @@ export default function CartPageComponent() {
     }
   }, [loading, isLoggedIn, user, cartItems]);
 
-  const ref_number = useMemo(()=>{
-    if(loading) return null;
+  const ref_number = useMemo(() => {
+    if (loading) return null;
 
-    if(isLoggedIn){
-      return cartObject?.cart_id ? "CI-"+cartObject?.cart_id: null;
-    }else{
+    if (isLoggedIn) {
+      return cartObject?.cart_id ? "CI-" + cartObject?.cart_id : null;
+    } else {
       return cartObject?.reference_number;
     }
-  },[
-    loading,
-    isLoggedIn,
-    cartObject,
-  ]);
+  }, [loading, isLoggedIn, cartObject]);
 
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-[20px]">
@@ -341,9 +344,7 @@ export default function CartPageComponent() {
                       {ref_number && (
                         <h5 className="font-bold text-neutral-600 text-sm">
                           REF #:{" "}
-                          <span className="text-theme-600">
-                            {ref_number}
-                          </span>
+                          <span className="text-theme-600">{ref_number}</span>
                         </h5>
                       )}
                     </div>
@@ -353,7 +354,9 @@ export default function CartPageComponent() {
                 <div className="mt-4 sm:mt-8 gap-2 lg:flex lg:items-start xl:gap-4">
                   <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
                     <div className="space-y-2">
-                      {cartObject && cartObject?.items && cartObject.items.length > 0 ? (
+                      {cartObject &&
+                      cartObject?.items &&
+                      cartObject.items.length > 0 ? (
                         cartObject.items.map((item, idx) => (
                           <CartListItem
                             key={`cart-list-item-${idx}-${item?.id}`}

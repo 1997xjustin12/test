@@ -15,6 +15,7 @@ import PartsAndAccessoriesSection from "@/app/components/section/HomePagePartsAn
 import FrequentlyAskedSection from "@/app/components/section/HomePageFrequentlyAsked";
 import NewsLetterSection from "@/app/components/section/NewsLetter";
 import { BASE_URL, getPageData } from "@/app/lib/helpers";
+import { STORE_NAME, STORE_CONTACT } from "@/app/lib/store_constants";
 import { keys, redisGet } from "@/app/lib/redis";
 const defaultMenuKey = keys.dev_shopify_menu.value;
 const slug = "";
@@ -112,12 +113,12 @@ const sac_contents_2 = [
 
 const about_content = {
   image: "/images/banner/fireplace-banner.webp",
-  contact: "(888) 575-9720",
+  contact: STORE_CONTACT,
   content: {
-    title: "About Solana Fireplaces",
+    title: `About ${STORE_NAME}`,
     par: [
-      "At Solana Fireplaces, we believe that the heart of a home extends beyond its walls. We specialize in creating exceptional outdoor living experiences through our expertly curated selection of high-quality fireplaces, fire pits, and related accessories. We are committed to providing you with products and the knowledge and support you need to transform your outdoor space into a warm, inviting haven.",
-      "Beyond fireplaces, Solana also caters to outdoor living enthusiasts by offering a wide range of outdoor kitchen products. Our selection includes top-of-the-line grills, BBQ islands, and accessories to create the ultimate outdoor cooking and entertainment area. With Solana Fireplaces, you can rely on our expertise and dedication to quality, knowing that you are choosing a partner committed to enhancing your home and lifestyle with the best in both indoor and outdoor heating and cooking solutions.",
+      `At ${STORE_NAME}, we believe that the heart of a home extends beyond its walls. We specialize in creating exceptional outdoor living experiences through our expertly curated selection of high-quality fireplaces, fire pits, and related accessories. We are committed to providing you with products and the knowledge and support you need to transform your outdoor space into a warm, inviting haven.`,
+      `Beyond fireplaces, Solana also caters to outdoor living enthusiasts by offering a wide range of outdoor kitchen products. Our selection includes top-of-the-line grills, BBQ islands, and accessories to create the ultimate outdoor cooking and entertainment area. With ${STORE_NAME}, you can rely on our expertise and dedication to quality, knowing that you are choosing a partner committed to enhancing your home and lifestyle with the best in both indoor and outdoor heating and cooking solutions.`,
     ],
   },
 };
@@ -160,7 +161,6 @@ const faqs = [
   },
 ];
 
-
 const Hero = () => {
   const useBanner = "/images/banner/home-banner-202509.webp";
   return (
@@ -184,8 +184,6 @@ const Hero = () => {
     </div>
   );
 };
-
-
 
 // import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage({ params }) {

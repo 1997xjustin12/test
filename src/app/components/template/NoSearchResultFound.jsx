@@ -2,10 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ICRoundPhone } from "../icons/lib";
-import {useSolanaCategories} from "@/app/context/category"
+import { useSolanaCategories } from "@/app/context/category";
 import YouMayAlsoLike from "../molecule/YouMayAlsoLike";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 function NoSearchResultFound({ query }) {
-  const {solana_categories} = useSolanaCategories();
+  const { solana_categories } = useSolanaCategories();
   return (
     <div className="container mx-auto min-h-screen">
       {/* row1 */}
@@ -26,12 +27,12 @@ function NoSearchResultFound({ query }) {
             Call For Inquiries and Best Pricing!
           </div>
           <Link
-            href="tel:(888)%20575-9720"
+            href={`tel:${STORE_CONTACT}`}
             prefetch={false}
             className="flex items-center gap-[10px] font-bold text-theme-400 text-sm md:text-base"
           >
             <ICRoundPhone />
-            <div>(888) 575-9720</div>
+            <div>{STORE_CONTACT}</div>
           </Link>
         </div>
       </div>
@@ -47,15 +48,14 @@ function NoSearchResultFound({ query }) {
               className="flex items-center gap-[20px] hover:shadow rounded-md overflow-hidden border hover:border-theme-500 xl:w-[calc(25%-15px)] lg:w-[calc(33.3%-15px)] sm:w-[calc(50%-15px)] w-full"
             >
               <div className="relative w-[70px] h-[70px] min-w-[70px] min-h-[70px] bg-stone-100 border-stone-300 border-r">
-                {
-                  i?.banner?.img?.src && 
+                {i?.banner?.img?.src && (
                   <Image
                     src={i?.banner?.img?.src}
                     alt={i?.banner?.img?.alt}
                     objectFit="contain"
                     fill
                   />
-                }
+                )}
               </div>
               <div className="font-semibold text-stone-600">{i.name}</div>
             </Link>

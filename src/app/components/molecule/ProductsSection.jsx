@@ -26,6 +26,7 @@ import {
   ES_INDEX,
   getInitialUiStateFromUrl,
 } from "@/app/lib/helpers";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const es_index = ES_INDEX;
 
@@ -523,7 +524,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
             <div className="relative lg:w-[240px] h-[360px]">
               <Link
-                href={`tel:${page_details?.contact_number || "(888) 575-9720"}`}
+                href={`tel:${page_details?.contact_number || STORE_CONTACT}`}
                 prefetch={false}
                 className=""
               >

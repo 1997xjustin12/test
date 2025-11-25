@@ -1,106 +1,109 @@
 import { Redis } from "@upstash/redis";
+import { STORE_REDIS_PREFIX } from "@/app/lib/store_constants";
 
 export const redis = new Redis({
   url: process.env.NEXT_UPSTASH_REDIS_REST_URL,
   token: process.env.NEXT_UPSTASH_REDIS_REST_TOKEN,
 });
 
+const brand_prefix = STORE_REDIS_PREFIX;
 
 export const keys = {
-  menu_lists:{
+  menu_lists: {
     description: "used to retreive list of menu keys for bigcommerce.",
-    value: "solana_menu_list",
+    value: `${brand_prefix}_menu_list`,
   },
-  menu_list_shopify:{
+  menu_list_shopify: {
     description: "used to retreive list of menu keys for shopify structure.",
-    value: "solana_shopify_menu_list",
+    value: `${brand_prefix}_shopify_menu_list`,
   },
-  default_menu:{
-    description:"default menu for bigcommerce product",
-    value:"menu-vwmuqu8jz",
+  default_menu: {
+    description: "default menu for bigcommerce product",
+    value: "menu-vwmuqu8jz",
   },
-  default_shopify_menu:{
-    description:"default menu for shopify product",
-    value:"menu-7pajm2g8w",
+  default_shopify_menu: {
+    description: "default menu for shopify product",
+    value: "menu-7pajm2g8w",
   },
-  dev_shopify_menu:{
-    description:"menu for development environment",
+  dev_shopify_menu: {
+    description: "menu for development environment",
     value: "menu-5q8vn2rcy",
   },
-  dev_shopify_menu_v2:{
-    description:"menu for development environment v2",
-    value:"menu-2r175z2fj",
+  dev_shopify_menu_v2: {
+    description: "menu for development environment v2",
+    value: "menu-2r175z2fj",
   },
-  active_menu:{
-    description: "used to retreive the key of the active or currently used menu (bigcommerce).",
-    value: "solana_active_menu",
+  active_menu: {
+    description:
+      "used to retreive the key of the active or currently used menu (bigcommerce).",
+    value: `${brand_prefix}_active_menu`,
   },
-  active_shopify_menu:{
-    description: "used to retreive the key of the active or currently used menu (shopify).",
-    value: "solana_shopify_active_menu",
+  active_shopify_menu: {
+    description:
+      "used to retreive the key of the active or currently used menu (shopify).",
+    value: `${brand_prefix}_shopify_active_menu`,
   },
-  logo:{
+  logo: {
     description: "used to retreive image_url of the logo",
-    value: "admin_solana_market_logo"
+    value: `admin_${brand_prefix}_market_logo`,
   },
-  favicon:{
+  favicon: {
     description: "used to retreive image_url of the favicon",
-    value: "solana_favicon"
+    value: `${brand_prefix}_favicon`,
   },
-  theme:{
+  theme: {
     description: "used to retreive theme color",
-    value: "solana_theme"
+    value: `${brand_prefix}_theme`,
   },
-  faqs_about_solana:{
-    description: "section faqs about solana on single product page",
-    value: "solana_faqs_about_solana"
+  faqs_about_brand: {
+    description: "section faqs about brand on single product page",
+    value: `${brand_prefix}_faqs_about_${brand_prefix}`,
   },
-  faqs_shipping_policy:{
+  faqs_shipping_policy: {
     description: "section faqs shipping policy on single product page",
-    value: "solana_faqs_shipping_policy"
+    value: `${brand_prefix}_faqs_shipping_policy`,
   },
-  faqs_return_policy:{
+  faqs_return_policy: {
     description: "section faqs return policy on single product page",
-    value: "solana_faqs_return_policy"
+    value: `${brand_prefix}_faqs_return_policy`,
   },
-  faqs_warranty:{
+  faqs_warranty: {
     description: "section faqs warranty on single product page",
-    value: "solana_faqs_warranty"
-  }
-}
+    value: `${brand_prefix}_faqs_warranty`,
+  },
+};
 
-
-export const redisSet = async(key, value) => {
-  try{
+export const redisSet = async (key, value) => {
+  try {
     const response = await fetch("/api/redis", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key, value }),
     });
     return await response.json();
-  }catch(error){
+  } catch (error) {
     console.log(`RedisSetError: ${error}`);
   }
-}
+};
 
-export const redisMultiSet = async(obj) => {
-  try{
+export const redisMultiSet = async (obj) => {
+  try {
     const response = await fetch("/api/redis", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(obj),
     });
     return await response.json();
-  }catch(error){
+  } catch (error) {
     console.log(`RedisMultiSetError: ${error}`);
   }
-}
+};
 
-export const redisGet = async(key) =>{
+export const redisGet = async (key) => {
   try {
-    const params = new URLSearchParams({"key":key});
-    const response = await fetch(`/api/redis?${params.toString()}`,{
-      cache:"no-store",
+    const params = new URLSearchParams({ key: key });
+    const response = await fetch(`/api/redis?${params.toString()}`, {
+      cache: "no-store",
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -111,9 +114,9 @@ export const redisGet = async(key) =>{
   } catch (error) {
     throw new Error(`RedisGetError: ${error}`);
   }
-}
+};
 
-export const updatePopularSearches = async(req, res) => {
+export const updatePopularSearches = async (req, res) => {
   if (req.method === "POST") {
     const { term } = req.body;
     if (!term) return res.status(400).json({ error: "Search term required" });
@@ -125,4 +128,4 @@ export const updatePopularSearches = async(req, res) => {
   }
 
   return res.status(405).json({ error: "Method not allowed" });
-}
+};

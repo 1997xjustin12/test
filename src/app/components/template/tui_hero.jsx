@@ -1,9 +1,6 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
-import Link from "next/link";
 import Image from "next/image";
-// import RenderBanner from "@/app/components/atom/RenderBanner";
-
-const default_contact = "(888) 575-9720";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+const default_contact = STORE_CONTACT;
 
 export default function Hero({ data }) {
   // console.log("tui_hero data", data);

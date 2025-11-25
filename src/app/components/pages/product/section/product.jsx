@@ -1,10 +1,8 @@
 "use client";
-import Link from "next/link";
 import ProductMetaTabs from "@/app/components/product/meta/Tabs";
 import MediaGallery from "@/app/components/widget/MediaGallery";
 import ProductToCart from "@/app/components/widget/ProductToCart";
 import useFetchProductMetaFields from "@/app/hooks/useFetchProductMetaFields";
-import ProductOption from "@/app/components/atom/productOption";
 import CategoryChips from "@/app/components/atom/SingleProductCategoryChips";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 import BreadCrumbs from "@/app/components/atom/SingleProductBreadCrumbs";
@@ -12,9 +10,9 @@ import parse from "html-react-parser";
 import { useState, useEffect } from "react";
 import { keys, redisGet } from "@/app/lib/redis";
 import { MingcuteUpLine, MingcuteDownLine } from "@/app/components/icons/lib";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import { STORE_NAME } from "@/app/lib/store_constants";
 
-const about = keys.faqs_about_solana.value;
+const about = keys.faqs_about_brand.value;
 const shipping_policy = keys.faqs_shipping_policy.value;
 const return_policy = keys.faqs_return_policy.value;
 const warranty = keys.faqs_warranty.value;
@@ -27,7 +25,7 @@ const ProductSection = ({ product, loading }) => {
   const [policy_section, setPolicySection] = useState([
     {
       key: about,
-      label: "About Solana Fireplaces",
+      label: `About ${STORE_NAME}`,
       content: "",
       expanded: false,
     },
@@ -211,23 +209,32 @@ const ProductSection = ({ product, loading }) => {
                 {i.content && (
                   <div className="relative">
                     <div
-                      className={`text-sm flex flex-col gap-[10px] py-[10px] ${ i.key !== warranty ? i.expanded ? "" : "!line-clamp-2": "" }`}
+                      className={`text-sm flex flex-col gap-[10px] py-[10px] ${
+                        i.key !== warranty
+                          ? i.expanded
+                            ? ""
+                            : "!line-clamp-2"
+                          : ""
+                      }`}
                     >
                       {parse(i.content)}
                     </div>
                     <div className="bg-zinc-100 w-full h-3 absolute left-0 bottom-0"></div>
                   </div>
                 )}
-                {
-                  i.key !== warranty && 
+                {i.key !== warranty && (
                   <button
                     className="text-sm font-semibold text-blue-400 flex items-center"
                     onClick={() => handleExpandFAQsSection(i.key)}
                   >
-                    {i.expanded ? <MingcuteUpLine width={18} height={18}/> : <MingcuteDownLine width={18} height={18}/>}
+                    {i.expanded ? (
+                      <MingcuteUpLine width={18} height={18} />
+                    ) : (
+                      <MingcuteDownLine width={18} height={18} />
+                    )}
                     {i.expanded ? "See Less" : "See More"}
                   </button>
-                }
+                )}
               </div>
             ))}
           </div>

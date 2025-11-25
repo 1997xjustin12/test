@@ -31,7 +31,7 @@ import {
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Link from "next/link";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // const defaultMenuKey = keys.default_shopify_menu.value;
 const defaultMenuKey = keys.dev_shopify_menu.value;
@@ -450,7 +450,13 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
   const [collectionList, setCollectionList] = useState([]);
   const [fetchStatus, setFetchStatus] = useState("initial");
 
-  const filter_types = ["Grills", "Fireplaces", "Firepits", "Patio-Heaters", "Open-box"];
+  const filter_types = [
+    "Grills",
+    "Fireplaces",
+    "Firepits",
+    "Patio-Heaters",
+    "Open-box",
+  ];
 
   useEffect(() => {
     const fetchCollectionList = async () => {
@@ -474,8 +480,6 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
     fetchCollectionList();
   }, []);
 
-
-  
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-1">
@@ -547,24 +551,59 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
       Product Display Collection
       <div className="text-sm italic text-neutral-600">Select a collection</div>
       <div className="flex gap-[10px] relative min-h-[26px] flex-wrap">
-        {
-          fetchStatus === "fetching" && <div className="absolute">Loading...</div>
-        }
-        {
-          fetchStatus === "error" && <div className="absolute">Error Fetching Collections...</div>
-        }
-        {
-          fetchStatus === "success" && collectionList.map((item,index) => <button key={`collection-option-${item?.id}-${item?.slug}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.collection_display?.id === item?.id? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"collection-display", value: item}})}>{item?.name}</button>)
-        }    
+        {fetchStatus === "fetching" && (
+          <div className="absolute">Loading...</div>
+        )}
+        {fetchStatus === "error" && (
+          <div className="absolute">Error Fetching Collections...</div>
+        )}
+        {fetchStatus === "success" &&
+          collectionList.map((item, index) => (
+            <button
+              key={`collection-option-${item?.id}-${item?.slug}`}
+              className={`rounded-full bg-indigo-100 border px-5 ${
+                menuItem?.collection_display?.id === item?.id
+                  ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold"
+                  : ""
+              }`}
+              onClick={() =>
+                onChange({
+                  target: { name: "collection-display", value: item },
+                })
+              }
+            >
+              {item?.name}
+            </button>
+          ))}
       </div>
       <div className="border-t border-gray-300 my-4"></div>
-
       Product Display Filter
-      <div className="text-sm italic text-neutral-600">Select a filter type</div>
+      <div className="text-sm italic text-neutral-600">
+        Select a filter type
+      </div>
       <div className="flex gap-[10px] relative min-h-[26px]">
-        {
-          filter_types.map((item, index)=> <button key={`filter-type-option-${item.replaceAll(" ","-").toLowerCase()}-${index}`} className={`rounded-full bg-indigo-100 border px-5 ${menuItem?.filter_type === item.replaceAll(" ","-").toLowerCase() ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold":"" }`} onClick={()=> onChange({target:{name:"filter-type", value: item.replaceAll(" ","-").toLowerCase()}})}>{item}</button>)
-        }
+        {filter_types.map((item, index) => (
+          <button
+            key={`filter-type-option-${item
+              .replaceAll(" ", "-")
+              .toLowerCase()}-${index}`}
+            className={`rounded-full bg-indigo-100 border px-5 ${
+              menuItem?.filter_type === item.replaceAll(" ", "-").toLowerCase()
+                ? "bg-indigo-500 shadow border-indigo-500 text-white font-bold"
+                : ""
+            }`}
+            onClick={() =>
+              onChange({
+                target: {
+                  name: "filter-type",
+                  value: item.replaceAll(" ", "-").toLowerCase(),
+                },
+              })
+            }
+          >
+            {item}
+          </button>
+        ))}
       </div>
       <div></div>
       <div className="border-t border-gray-300 my-4"></div>
@@ -579,7 +618,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
           className="max-w-[255px] text-neutral-900 w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         />
         <span className="italic text-sm text-neutral-600">
-          Leaving this blank will apply <strong>(888) 575-9720</strong>
+          Leaving this blank will apply <strong>{STORE_CONTACT}</strong>
         </span>
       </div>
     </div>
@@ -653,7 +692,12 @@ const FeatNav = ({ menuItem, onChange }) => {
               key={`feat-nav-rep-${nav_item?.slug}-${index}`}
             >
               <div className="flex w-full justify-center">
-               <button onClick={() => handleOptionClick(nav_item)} className="rounded-full bg-slate-700 text-white uppercase text-xs py-1 px-3">remove</button>
+                <button
+                  onClick={() => handleOptionClick(nav_item)}
+                  className="rounded-full bg-slate-700 text-white uppercase text-xs py-1 px-3"
+                >
+                  remove
+                </button>
               </div>
               <div className="aspect-1 bg-white relative">
                 {nav_item?.feature_image && (

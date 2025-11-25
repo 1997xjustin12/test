@@ -16,6 +16,7 @@ import {
 } from "@/app/components/icons/lib";
 import { useCart } from "@/app/context/cart";
 import { useSolanaCategories } from "@/app/context/category";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 function ProductQuickView({ data, product_link, onClose }) {
@@ -35,8 +36,7 @@ function ProductQuickView({ data, product_link, onClose }) {
     if (data) {
       // console.log("data", data);
       const thumbnail =
-        data?.images?.find(({ position }) => position===1)?.src ??
-        null;
+        data?.images?.find(({ position }) => position === 1)?.src ?? null;
 
       setImage(thumbnail);
       setToggle(true);
@@ -51,7 +51,7 @@ function ProductQuickView({ data, product_link, onClose }) {
 
   const handleAddToCart = async (item) => {
     // console.log("[TEST] QV handleAddToCart item", item)
-    const response = await addToCart({...item, quantity: quantity});
+    const response = await addToCart({ ...item, quantity: quantity });
     const { code, message } = response;
     if (code === 200) {
       handleClose();
@@ -90,12 +90,15 @@ function ProductQuickView({ data, product_link, onClose }) {
                 <div className="flex flex-col lg:flex-row relative">
                   <div className="top-[10px] left-0 absolute z-[1]">
                     {/* <OnsaleTag categories={data.categories} /> */}
-                    {
-                      data?.variants && Array.isArray(data.variants) && data.variants.length > 0 && data.variants?.[0]?.price < data.variants?.[0]?.compare_at_price &&   
-                      <div className="absolute bottom-[60px] left-0 rounded-r-full bg-theme-500 text-white text-[12px] font-bold py-[7px] px-[15px]">
-                        ONSALE
-                      </div>
-                    }
+                    {data?.variants &&
+                      Array.isArray(data.variants) &&
+                      data.variants.length > 0 &&
+                      data.variants?.[0]?.price <
+                        data.variants?.[0]?.compare_at_price && (
+                        <div className="absolute bottom-[60px] left-0 rounded-r-full bg-theme-500 text-white text-[12px] font-bold py-[7px] px-[15px]">
+                          ONSALE
+                        </div>
+                      )}
                   </div>
                   <div className="w-full lg:w-[40%] p-[5px] flex flex-col gap-[10px] pb-5">
                     <div className="aspect-w-2 aspect-h-1 lg:aspect-w-1 lg:aspect-h-1 relative rounded-md overflow-hidden">
@@ -138,11 +141,11 @@ function ProductQuickView({ data, product_link, onClose }) {
                       </button>
                     </div>
                     <Link
-                      href={`tel:(888) 575-9720`}
+                      href={`tel:${STORE_CONTACT}`}
                       className="border text-xs p-2 flex flex-col items-center border-stone-600 hover:border-theme-600 hover:bg-theme-600 hover:text-white transition-a;; duration-300 cursor-pointer text-stone-600 font-semibold"
                     >
                       <div>Exclusive Saving Just One Call Away!</div>
-                      <div>Experts Standing By (888) 575-9720</div>
+                      <div>Experts Standing By {STORE_CONTACT}</div>
                     </Link>
                   </div>
                   <div className="w-full lg:w-[60%] p-[10px]">
@@ -182,30 +185,38 @@ function ProductQuickView({ data, product_link, onClose }) {
                           </div>
                         )} */}
 
-                        
-                        {
-                        !isPriceVisible(data?.product_category, data?.brand)
-                        ? (
+                        {!isPriceVisible(
+                          data?.product_category,
+                          data?.brand
+                        ) ? (
                           <div className="font-medium text-[14px] text-stone-700">
                             Contact us for pricing.
                           </div>
                         ) : data?.variants?.[0]?.compare_at_price &&
-                        data?.variants?.[0]?.price &&
-                          data?.variants?.[0]?.compare_at_price > data?.variants?.[0]?.price ? (
+                          data?.variants?.[0]?.price &&
+                          data?.variants?.[0]?.compare_at_price >
+                            data?.variants?.[0]?.price ? (
                           <>
                             <div className="text-xs font-semibold">Price</div>
                             <div>
                               <div className="flex gap-[10px] items-center">
                                 <div className="font-semibold text-base md:text-lg text-theme-600">
-                                  {"$"+formatPrice(data?.variants?.[0]?.price)}
+                                  {"$" +
+                                    formatPrice(data?.variants?.[0]?.price)}
                                 </div>
                                 <small className="text-stone-500 line-through">
-                                  {"$"+formatPrice(data?.variants?.[0]?.compare_at_price)}
+                                  {"$" +
+                                    formatPrice(
+                                      data?.variants?.[0]?.compare_at_price
+                                    )}
                                 </small>
                               </div>
                               <div className="text-theme-600 font-medium">
                                 Save $
-                                {formatPrice(data?.variants?.[0]?.compare_at_price - data?.variants?.[0]?.price)}
+                                {formatPrice(
+                                  data?.variants?.[0]?.compare_at_price -
+                                    data?.variants?.[0]?.price
+                                )}
                               </div>
                             </div>
                           </>
@@ -220,10 +231,10 @@ function ProductQuickView({ data, product_link, onClose }) {
                         <div className="text-sm text-black">
                           Call for Open Box Availability{" "}
                           <Link
-                            href={`tel:(888) 575-9720`}
+                            href={`tel:${STORE_CONTACT}`}
                             className="font-semibold text-theme-600 hover:text-theme-500"
                           >
-                            (888) 575-9720
+                            {STORE_CONTACT}
                           </Link>
                         </div>
                       </div>
@@ -243,7 +254,7 @@ function ProductQuickView({ data, product_link, onClose }) {
 
                         <Link
                           className="text-[10px] text-blue-600 font-semibold"
-                          href={product_link || '#'}
+                          href={product_link || "#"}
                           onClick={handleViewProductClick}
                         >
                           Read More

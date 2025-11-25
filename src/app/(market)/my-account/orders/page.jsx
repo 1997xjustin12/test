@@ -11,6 +11,7 @@ import { CartIcon } from "@/app/components/icons/lib";
 import { Rating } from "@smastrom/react-rating";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
 import { useCart } from "@/app/context/cart";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const OrderStatusBadge = ({ status }) => {
   const badges = {
@@ -424,10 +425,10 @@ export default function OrdersPage() {
           Need Assistance? Call.{" "}
           <Link
             prefetch={false}
-            href={"tel:(888) 575-9720"}
+            href={`tel:${STORE_CONTACT}`}
             className="underline text-theme-600 hover:text-theme-700"
           >
-            (888) 575-9720
+            {STORE_CONTACT}
           </Link>
         </span>
       </div>
@@ -669,14 +670,18 @@ export default function OrdersPage() {
                                 >
                                   <div
                                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-                                      addToCartLoading === true ? "visible" : "invisible"
+                                      addToCartLoading === true
+                                        ? "visible"
+                                        : "invisible"
                                     }`}
                                   >
                                     <Eos3DotsLoading width={70} height={70} />
                                   </div>
                                   <div
                                     className={`flex items-center gap-3 ${
-                                      addToCartLoading === true ? "invisible" : "visible"
+                                      addToCartLoading === true
+                                        ? "invisible"
+                                        : "visible"
                                     }`}
                                   >
                                     <CartIcon />

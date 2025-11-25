@@ -19,8 +19,12 @@ import {
   formatPrice,
   createSlug,
   debounce,
-  store_domain,
 } from "@/app/lib/helpers";
+import {
+  STORE_EMAIL,
+  STORE_DOMAIN,
+  STORE_CONTACT,
+} from "@/app/lib/store_constants";
 // variables
 const initialForm = {
   status: null,
@@ -283,17 +287,15 @@ const OrderQuerySection = ({ reference_number }) => {
         <div className="text-center">
           <span className="font-bold">Call </span>{" "}
           <span className="text-theme-600 font-bold">
-            <Link prefetch={false} href={`tel:(888) 575-9720`}>
-              (888) 575-9720
+            <Link prefetch={false} href={`tel:${STORE_CONTACT}`}>
+              {STORE_CONTACT}
             </Link>
           </span>
         </div>
         <div className="text-center">
           <span className="font-bold">Email </span>{" "}
           <span className="text-theme-600 font-bold">
-            <a href={`mailto:info@solanafireplaces.com`}>
-              info@solanafireplaces.com
-            </a>
+            <a href={`mailto:${STORE_EMAIL}`}>{STORE_EMAIL}</a>
           </span>
         </div>
         {/* <div className="text-center">
@@ -305,11 +307,11 @@ const OrderQuerySection = ({ reference_number }) => {
           5:00pm PST &#9679; Sat and Sun: Closed
         </div> */}
         <div className="flex flex-col justify-center items-center mt-1 bg-neutral-100 border border-neutral-200 px-10 py-1 rounded-sm">
-            <div className="font-bold text-lg">Sales & Support</div>
-            <div className="text-neutral-700 font-semibold mt-1">Mon-Fri</div>
-            <div className="text-neutral-500">5:00am - 5:00pm PST</div>
-            <div className="text-neutral-700 font-semibold">Sat and Sun</div>
-            <div className="text-neutral-500">Closed</div>
+          <div className="font-bold text-lg">Sales & Support</div>
+          <div className="text-neutral-700 font-semibold mt-1">Mon-Fri</div>
+          <div className="text-neutral-500">5:00am - 5:00pm PST</div>
+          <div className="text-neutral-700 font-semibold">Sat and Sun</div>
+          <div className="text-neutral-500">Closed</div>
         </div>
       </div>
       {reference_number ? (
@@ -330,11 +332,11 @@ const LogoutDropDown = () => {
   const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
-    try{
+    try {
       await createAbandonedCart(cartObject, abandonedCartUser, "forced");
       await logout();
-    }catch(err){
-      console.warn("[handleLogout] error", err)
+    } catch (err) {
+      console.warn("[handleLogout] error", err);
     }
   };
   useEffect(() => {
@@ -813,7 +815,7 @@ function CheckoutComponent() {
         orders["status"] = "paid";
         orders["payment_status"] = true;
         orders["payment_details"] = result?.transaction?.id;
-        orders["store_domain"] = store_domain;
+        orders["store_domain"] = STORE_DOMAIN;
         orders["items"] = mapOrderItems(cartItems);
         // console.log("[OrderData]", orders);
         const order_response = await createOrder(orders);
@@ -943,20 +945,16 @@ function CheckoutComponent() {
 
     initializeDropIn();
   }, [loading]);
-  
-  const ref_number = useMemo(()=>{
-    if(loading) return null;
 
-    if(isLoggedIn){
-      return cartObject?.cart_id ? "CI-"+cartObject?.cart_id :null;
-    }else{
+  const ref_number = useMemo(() => {
+    if (loading) return null;
+
+    if (isLoggedIn) {
+      return cartObject?.cart_id ? "CI-" + cartObject?.cart_id : null;
+    } else {
       return cartObject?.reference_number;
     }
-  },[
-    loading,
-    isLoggedIn,
-    cartObject,
-  ]);
+  }, [loading, isLoggedIn, cartObject]);
 
   return (
     <section className="bg-white">
@@ -1391,9 +1389,7 @@ function CheckoutComponent() {
               <div className="md:hidden">
                 <CompletePaymentButton items={cartItems} />
               </div>
-              <OrderQuerySection
-                reference_number={ref_number}
-              />
+              <OrderQuerySection reference_number={ref_number} />
             </div>
           </div>
         </div>

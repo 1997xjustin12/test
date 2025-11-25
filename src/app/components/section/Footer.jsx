@@ -8,6 +8,8 @@ import {
 } from "../icons/lib";
 import { BASE_URL } from "@/app/lib/helpers";
 
+import { STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_constants";
+
 const footer = [
   {
     name: "Customer Support",
@@ -123,7 +125,7 @@ const footer = [
     child: [
       {
         name: "Facebook",
-        url: "https://www.facebook.com/profile.php?id=61576364267085",
+        url: STORE_FACEBOOK,
       },
       // {
       //   name: "Instagram",
@@ -135,7 +137,7 @@ const footer = [
       // },
       {
         name: "Pinterest",
-        url: "https://www.pinterest.com/solanafireplaces/",
+        url: STORE_PINTEREST,
       },
     ],
   },
@@ -174,7 +176,11 @@ export default function Footer() {
                         key={`footer-section-${idx}-item-${idx1}`}
                         className="font-light"
                       >
-                        <div className={`text-xs md:text-base cursor-pointer w-[auto] inline-block ${i1?.url ? "text-white":"text-red-600"}`}>
+                        <div
+                          className={`text-xs md:text-base cursor-pointer w-[auto] inline-block ${
+                            i1?.url ? "text-white" : "text-red-600"
+                          }`}
+                        >
                           {i1?.name}
                         </div>
                       </Link>
@@ -183,23 +189,41 @@ export default function Footer() {
                 ) : (
                   <div className="mt-[20px] flex gap-[8px]">
                     {i.child.map((i1, idx1) => (
-                      <div
+                      <Link
+                        prefetch={false}
+                        href={i1?.url}
                         key={`footer-section-${idx}-item-${idx1}`}
                         className="cursor-pointer"
                       >
                         {i1.name === "Facebook" && (
-                          <FacebookIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
+                          <FacebookIcon
+                            color={`${i1?.url ? "white" : "red"}`}
+                            width={48}
+                            height={48}
+                          />
                         )}
                         {i1.name === "Instagram" && (
-                          <InstagramIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
+                          <InstagramIcon
+                            color={`${i1?.url ? "white" : "red"}`}
+                            width={48}
+                            height={48}
+                          />
                         )}
                         {i1.name === "Youtube" && (
-                          <YoutubeIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
+                          <YoutubeIcon
+                            color={`${i1?.url ? "white" : "red"}`}
+                            width={48}
+                            height={48}
+                          />
                         )}
                         {i1.name === "Pinterest" && (
-                          <PinterestIcon color={`${i1?.url ? "white":"red"}`} width={48} height={48} />
+                          <PinterestIcon
+                            color={`${i1?.url ? "white" : "red"}`}
+                            width={48}
+                            height={48}
+                          />
                         )}
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}

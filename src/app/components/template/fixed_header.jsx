@@ -7,6 +7,7 @@ import CartButton from "@/app/components/atom/CartButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearch } from "@/app/context/search";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 export default function FixedHeader() {
   const { mainIsActive } = useSearch();
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +16,7 @@ export default function FixedHeader() {
   useEffect(() => {
     const fetchFavicon = async () => {
       try {
-        const response = await fetch("/api/favicon",{cache:"no-store"});
+        const response = await fetch("/api/favicon", { cache: "no-store" });
         const data = await response.json();
         if (data) {
           setFavicon(data);
@@ -108,11 +109,11 @@ export default function FixedHeader() {
                       CALL FOR BEST PRICING!
                     </div>
                     <Link
-                      href="tel:(888)%20575-9720"
+                      href={`tel:${STORE_CONTACT}`}
                       prefetch={false}
                       className="font-bold text-theme-400 hover:text-theme-300"
                     >
-                      (888) 575-9720
+                      {STORE_CONTACT}
                     </Link>
                   </div>
                 </div>

@@ -5,20 +5,16 @@ import { Rating } from "@smastrom/react-rating";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import FicDropDown from "@/app/components/atom/FicDropDown";
 import Link from "next/link";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
-import ProductCard from "@/app/components/atom/ProductCardV2";
-import Image from "next/image";
 import {
   InstantSearch,
   SearchBox,
   Hits,
-  Highlight,
   RefinementList,
   Pagination,
   Stats,
-  Snippet,
   CurrentRefinements,
-  HierarchicalMenu,
   Configure,
   DynamicWidgets,
   RangeInput,
@@ -77,7 +73,6 @@ const JsonViewer = ({ hit }) => {
 
 const SPProductCard = ({ hit }) => {
   return (
-    
     <Link
       prefetch={false}
       href={`/dev/shopify_solana_product/${hit.handle}`}
@@ -88,16 +83,17 @@ const SPProductCard = ({ hit }) => {
         <div
           className={`w-full flex items-center justify-center h-[230px] overflow-hidden relative bg-white`}
         >
-          {
-            hit?.images && Array.isArray(hit?.images) && hit?.images?.length > 0 && hit.images[0]?.src && <img
-              src={hit.images[0].src}
-              alt={hit.images[0].alt}
-              className={`object-contain h-full opacity-100`}
-            />
-          }
-          <div
-            className="absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible"
-          >
+          {hit?.images &&
+            Array.isArray(hit?.images) &&
+            hit?.images?.length > 0 &&
+            hit.images[0]?.src && (
+              <img
+                src={hit.images[0].src}
+                alt={hit.images[0].alt}
+                className={`object-contain h-full opacity-100`}
+              />
+            )}
+          <div className="absolute bottom-0 left-0 bg-theme-500 text-white text-[12px] py-[5px] md:py-[7px] md:px-[15px] flex items-center w-full justify-center gap-[5px] invisible group-hover:visible">
             <div className="flex justify-center">
               <div className="font-semibold text-[0.775rem] inline-block text-center">
                 <Icon
@@ -128,9 +124,7 @@ const SPProductCard = ({ hit }) => {
               ({hit.ratings.rating_count}){/* (id:{product.id}) */}
             </div>
           </div>
-          <div className="mt-3">
-            {hit.brand}
-          </div>
+          <div className="mt-3">{hit.brand}</div>
           <div className="mt-3">
             <div>
               <div>Price: {hit.variants[0].price}</div>
@@ -138,15 +132,13 @@ const SPProductCard = ({ hit }) => {
             </div>
           </div>
           <FicDropDown>
-          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
-            <div
-              className="hover:underline flex items-center gap-[3px] cursor-pointer"
-            >
-              <ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div>
+            <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+              <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
+                <ICRoundPhone width={16} height={16} />{" "}
+                <div>{STORE_CONTACT}</div>
+              </div>
             </div>
-          </div>
           </FicDropDown>
-
         </div>
       </div>
     </Link>

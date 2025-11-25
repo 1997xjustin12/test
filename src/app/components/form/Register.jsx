@@ -5,6 +5,8 @@ import { useState } from "react";
 import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
+import { STORE_NAME2 } from "@/app/lib/store_constants";
+
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -59,9 +61,9 @@ function RegisterForm() {
       return;
     }
 
-    const validatePassword = isValidPassword(form?.password)
+    const validatePassword = isValidPassword(form?.password);
 
-    if(!validatePassword?.valid){
+    if (!validatePassword?.valid) {
       setMessage({
         type: "error",
         text: validatePassword?.message,
@@ -211,7 +213,7 @@ function RegisterForm() {
             <span className="text-red-600" aria-hidden="true">
               *
             </span>{" "}
-            By checking this box, I agree to SolanaFireplaces'{" "}
+            By checking this box, I agree to {STORE_NAME2}'{" "}
             <Link prefetch={false} href={`#`} className="underline">
               Terms and Conditions
             </Link>
@@ -255,7 +257,7 @@ function RegisterForm() {
           href={`${BASE_URL}/professional-program`}
           className="text-sm underline"
         >
-          SolanaFireplaces Professional Program
+          {STORE_NAME2} Professional Program
         </Link>{" "}
         for benefits and rewards.
       </p>

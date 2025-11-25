@@ -3,10 +3,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import { useState, useEffect } from "react";
 import FicDropDown from "@/app/components/atom/FicDropDown";
-import {
-  createSlug,
-  formatPrice,
-} from "@/app/lib/helpers";
+import { createSlug, formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
 import { useCart } from "@/app/context/cart";
 import {
@@ -19,18 +16,19 @@ import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
-
-
 const OnsaleTag = ({ price_details }) => {
-  if (price_details?.compare_at_price && price_details?.compare_at_price && price_details?.compare_at_price > price_details?.compare_at_price) {
+  if (
+    price_details?.compare_at_price &&
+    price_details?.compare_at_price &&
+    price_details?.compare_at_price > price_details?.compare_at_price
+  ) {
     return (
       <div className="py-[2px] px-[10px] text-white bg-theme-500 w-fit rounded-r-full text-xs md:text-base font-semibold">
         ON SALE
       </div>
     );
   }
-}
-
+};
 
 const ProductToCart = ({ product, loading }) => {
   const { isPriceVisible } = useSolanaCategories();
@@ -97,7 +95,7 @@ const ProductToCart = ({ product, loading }) => {
 
   const handleAddToCart = async (item) => {
     setATCLoading(true);
-    const response = await addToCart({...item, quantity: quantity});
+    const response = await addToCart({ ...item, quantity: quantity });
     setATCLoading(false);
   };
 
@@ -107,14 +105,12 @@ const ProductToCart = ({ product, loading }) => {
   };
 
   function parseRatingCount(value) {
-    if (typeof value === 'string') {
-      value = value.replace(/[^\d]/g, '');
+    if (typeof value === "string") {
+      value = value.replace(/[^\d]/g, "");
     }
     const count = parseInt(value, 10);
     return isNaN(count) ? 0 : count;
   }
-
-
 
   return (
     <div className="flex flex-col gap-[10px] w-full relative">
@@ -147,13 +143,17 @@ const ProductToCart = ({ product, loading }) => {
         Ships Within 1 to 2 Business Days
       </div>
 
-      {
-        !isPriceVisible(productData?.product_category, productData?.brand)   ?
+      {!isPriceVisible(productData?.product_category, productData?.brand) ? (
         // display no price
-        <div className="font-medium text-[14px] text-stone-700">Contact us for pricing.</div>:<>
+        <div className="font-medium text-[14px] text-stone-700">
+          Contact us for pricing.
+        </div>
+      ) : (
+        <>
           <div className="flex items-center gap-[20px]">
             {productData?.variants?.[0]?.price > 0 &&
-            productData?.variants?.[0]?.compare_at_price > productData?.variants?.[0]?.price ? (
+            productData?.variants?.[0]?.compare_at_price >
+              productData?.variants?.[0]?.price ? (
               <div className="flex flex-col gap-[0px]">
                 <div className="flex gap-[10px]">
                   <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
@@ -165,7 +165,10 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
                 <div className="text-black">
                   Save $
-                  {formatPrice(productData?.variants?.[0]?.compare_at_price - productData?.variants?.[0]?.price)}
+                  {formatPrice(
+                    productData?.variants?.[0]?.compare_at_price -
+                      productData?.variants?.[0]?.price
+                  )}
                 </div>
               </div>
             ) : (
@@ -266,35 +269,9 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               </div>
             </button>
-            
-            {/* <FicDropDown>
-            <div className="bg-pallete-green text-white rounded-full py-[5px] px-[50px] flex flex-col items-center justify-center">
-              <div className="text-2xl">Call to Order</div>
-              <div
-                className="hover:underline flex gap-[3px]"
-              >
-                <ICRoundPhone width={20} height={20} /> (888) 575-9720
-              </div>
-            </div>
-            </FicDropDown> */}
           </div>
         </>
-      }
-      {/* <FicDropDown>
-      <div className="text-blue-500 text-sm my-[5px] flex items-center gap-[7px]">
-        {
-          !isPriceVisible(productData?.product_category, productData?.brand)  ?
-          <>Call for Price{" "}</>
-          :
-          <>Found It Cheaper?{" "}</>
-        }
-        <div
-          className="hover:underline flex gap-[3px]"
-        >
-          <ICRoundPhone width={20} height={20} /> (888) 575-9720
-        </div>
-      </div>
-      </FicDropDown> */}
+      )}
       <div className="flex  flex-col md:flex-row md:items-center gap-[10px] md:gap-[25px]">
         <div className="flex items-center font-bold gap-[8px]">
           <div>

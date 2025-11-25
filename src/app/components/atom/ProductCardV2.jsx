@@ -3,18 +3,17 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { formatPrice } from "@/app/lib/helpers";
-import { useRouter } from "next/navigation";
 import LoaderIcon from "../atom/LoaderIcon";
 import OnsaleTag from "@/app/components/atom/productCardOnsaleTag";
 import BrandDisplay from "@/app/components/atom/ProductCardBrandDisplay";
 import PriceDisplay from "@/app/components/atom/ProductCardPriceDisplay";
 import { ICRoundPhone } from "../icons/lib";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 // import { useQuickView } from "@/app/context/quickview";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ProductCard = ({ hit }) => {
-//   const { viewItem } = useQuickView();
-// console.log("hitCardV2 hits as hit", hit)
+  //   const { viewItem } = useQuickView();
+  // console.log("hitCardV2 hits as hit", hit)
   const [thumbnail, setThumbnail] = useState(null);
   useEffect(() => {
     if (hit) {
@@ -94,7 +93,10 @@ const ProductCard = ({ hit }) => {
           </div>
         </div>
         <div className="flex flex-col px-[15px] pt-[5px] border-t">
-          <div className="text-sm line-clamp-2 font-semibold text-stone-700" title={hit.name}>
+          <div
+            className="text-sm line-clamp-2 font-semibold text-stone-700"
+            title={hit.name}
+          >
             {hit.name}
           </div>
           <div className={`flex items-center gap-[5px]`}>
@@ -109,10 +111,10 @@ const ProductCard = ({ hit }) => {
             </div>
           </div>
           <div className="mt-3">
-            <BrandDisplay product={hit}/>
+            <BrandDisplay product={hit} />
           </div>
           <div className="mt-3">
-            <PriceDisplay product={hit}/>
+            <PriceDisplay product={hit} />
           </div>
           <div className="flex  h-[48px] items-center">
             <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
@@ -168,7 +170,7 @@ const ProductCard = ({ hit }) => {
               onClick={triggerCall}
               className="hover:underline flex items-center gap-[3px] cursor-pointer"
             >
-              <ICRoundPhone width={16} height={16} /> <div>(888) 575-9720</div>
+              <ICRoundPhone width={16} height={16} /> <div>{STORE_CONTACT}</div>
             </div>
           </div>
         </div>

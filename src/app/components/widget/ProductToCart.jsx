@@ -2,13 +2,8 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import { useState, useEffect } from "react";
-import { bc_categories as bccat_json } from "../../lib/category-helpers";
 import FicDropDown from "@/app/components/atom/FicDropDown";
-import {
-  createSlug,
-  formatPrice,
-  getCategoryNameById,
-} from "@/app/lib/helpers";
+import { BASE_URL, createSlug, formatPrice } from "@/app/lib/helpers";
 import OnsaleTag from "@/app/components/atom/SingleProductOnsaleTag";
 import Link from "next/link";
 import { useCart } from "@/app/context/cart";
@@ -17,10 +12,9 @@ import {
   AkarIconsShippingV1,
   Eos3DotsLoading,
 } from "../icons/lib";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 import { useSolanaCategories } from "@/app/context/category";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const ProductToCart = ({ product, loading }) => {
   const { price_hidden_categories } = useSolanaCategories();
@@ -89,7 +83,7 @@ const ProductToCart = ({ product, loading }) => {
 
   const handleAddToCart = async (item) => {
     setATCLoading(true);
-    const response = await addToCart({...item, quantity:quantity});
+    const response = await addToCart({ ...item, quantity: quantity });
     setATCLoading(false);
   };
 
@@ -127,10 +121,15 @@ const ProductToCart = ({ product, loading }) => {
         Ships Within 1 to 2 Business Days
       </div>
 
-      {
-        price_hidden_categories.some(id => productData?.categories.some(cat => cat.id === id)) ?
+      {price_hidden_categories.some((id) =>
+        productData?.categories.some((cat) => cat.id === id)
+      ) ? (
         // display no price
-        <div className="font-medium text-[14px] text-stone-700">Contact us for pricing.</div>:<>
+        <div className="font-medium text-[14px] text-stone-700">
+          Contact us for pricing.
+        </div>
+      ) : (
+        <>
           <div className="flex items-center gap-[20px]">
             {productData.sale_price > 0 &&
             productData.price > productData.sale_price ? (
@@ -250,21 +249,20 @@ const ProductToCart = ({ product, loading }) => {
             </button>
           </div>
         </>
-      }
+      )}
       <FicDropDown>
-      <div className="text-blue-500 text-sm my-[5px] flex items-center gap-[7px]">
-        {
-          price_hidden_categories.some(id => productData?.categories.some(cat => cat.id === id)) ?
-          <>Call for Price{" "}</>
-          :
-          <>Found It Cheaper?{" "}</>
-        }
-        <div
-          className="hover:underline flex gap-[3px]"
-        >
-          <ICRoundPhone width={20} height={20} /> (888) 575-9720
+        <div className="text-blue-500 text-sm my-[5px] flex items-center gap-[7px]">
+          {price_hidden_categories.some((id) =>
+            productData?.categories.some((cat) => cat.id === id)
+          ) ? (
+            <>Call for Price </>
+          ) : (
+            <>Found It Cheaper? </>
+          )}
+          <div className="hover:underline flex gap-[3px]">
+            <ICRoundPhone width={20} height={20} /> {STORE_CONTACT}
+          </div>
         </div>
-      </div>
       </FicDropDown>
       <div className="flex  flex-col md:flex-row md:items-center gap-[10px] md:gap-[25px]">
         <div className="flex items-center font-bold gap-[8px]">

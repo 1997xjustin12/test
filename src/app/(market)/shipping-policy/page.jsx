@@ -1,12 +1,9 @@
-import React from "react";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
+import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
 function ReturnPolicy() {
-  const brandName = "SolanaFireplaces";
-  const brandSite = "SolanaFireplaces,com";
-  const contact = "(888) 575-9720";
-  const email = "info@solanafireplaces.com";
+  const brandName = STORE_NAME2;
+  const contact = STORE_CONTACT;
   return (
     <div className="w-full p-5">
       <div className="max-w-4xl mx-auto px-10 py-10 text-gray-800 rounded shadow-lg border border-neutral-200">
@@ -37,7 +34,8 @@ function ReturnPolicy() {
                 days after payment is received.
               </li>
               <li>
-                Customer is responsible for return/restocking fee of orders made by mistake. Contact us to know more about the return policy.
+                Customer is responsible for return/restocking fee of orders made
+                by mistake. Contact us to know more about the return policy.
               </li>
               <li>
                 Delivery times may vary depending on your location and the
@@ -61,7 +59,11 @@ function ReturnPolicy() {
             If you need any further assistance with your shipping policy or have
             any other questions, don't hesitate to reach out to our customer
             service team at{" "}
-            <Link prefetch={false} href={`tel:${contact}`} className="hover:underline text-blue-600">
+            <Link
+              prefetch={false}
+              href={`tel:${contact}`}
+              className="hover:underline text-blue-600"
+            >
               {contact}
             </Link>
           </p>
