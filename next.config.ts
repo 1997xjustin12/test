@@ -15,7 +15,7 @@ const connectDomains = [
   "https://loyal-sloth-59774.upstash.io",
   "https://api.iconify.design", // icons
   "https://r2.leadsy.ai", // Required for the new script
-  "https://wvbknd.leadsy.ai", 
+  "https://wvbknd.leadsy.ai",
   "https://api.iconify.design",
   "https://tag.trovo-tag.com",
   "https://api.zippopotam.us",
@@ -24,6 +24,8 @@ const connectDomains = [
   "https://origin-analytics-sand.sandbox.braintree-api.com",
   "https://assets.braintreegateway.com",
   "https://www.paypal.com",
+  "https://www.google.com", // reCAPTCHA
+  "https://www.gstatic.com", // reCAPTCHA
   // "http://164.92.65.4", // Assuming 9200 is unnecessary and you need the IP
 ];
 
@@ -34,7 +36,9 @@ const styleSrcDomains = [
 
 const frameSrcDomains = [
   "https://tag.trovo-tag.com",
-  "https://assets.braintreegateway.com"
+  "https://assets.braintreegateway.com",
+  "https://www.google.com", // reCAPTCHA
+  "https://www.gstatic.com" // reCAPTCHA frames
 ]
 
 module.exports = {
@@ -47,7 +51,7 @@ module.exports = {
     const CSP = `
       default-src 'self';
       
-      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com;
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com https://www.google.com https://www.gstatic.com;
       
       style-src 'self' 'unsafe-inline' ${styleSrcDomains.join(" ")};
       
