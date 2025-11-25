@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
@@ -32,6 +33,8 @@ function RegisterForm() {
   const { accountBenefits } = useAuth();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const recaptchaRef = useRef(null);
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -50,8 +53,21 @@ function RegisterForm() {
     return regex.test(username);
   };
 
+  const handleRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate reCAPTCHA
+    if (!recaptchaToken) {
+      setMessage({
+        type: "error",
+        text: "Please complete the reCAPTCHA verification.",
+      });
+      return;
+    }
 
     if (!isValidUsername(form?.username)) {
       setMessage({
@@ -83,7 +99,7 @@ function RegisterForm() {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, recaptchaToken }),
     });
 
     const data = await res.json();
@@ -91,12 +107,21 @@ function RegisterForm() {
 
     if (res.ok) {
       setMessage({ type: "success", text: "Registration successful!" });
+      // Reset reCAPTCHA
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
       window.location.href = "/login?success=1";
     } else {
       setMessage({
         type: "error",
         text: data?.error || data?.title || "Registration failed.",
       });
+      // Reset reCAPTCHA on error
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+        setRecaptchaToken(null);
+      }
     }
   };
 
@@ -226,6 +251,14 @@ function RegisterForm() {
               Privacy Policy
             </Link>
           </label>
+        </div>
+
+        <div className="flex justify-center">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+            onChange={handleRecaptchaChange}
+          />
         </div>
 
         <button

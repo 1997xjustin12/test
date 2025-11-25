@@ -41,6 +41,7 @@
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-google-recaptcha": "^3.1.0",
     "react-html-parser": "^2.0.2",
     "react-instantsearch": "^7.15.5",
     "react-rating": "^2.0.5",
