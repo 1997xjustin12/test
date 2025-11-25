@@ -51,7 +51,7 @@ module.exports = {
     const CSP = `
       default-src 'self';
       
-      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com https://www.google.com https://www.gstatic.com;
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com https://www.google.com https://www.gstatic.com https://static.cloudflareinsights.com;
       
       style-src 'self' 'unsafe-inline' ${styleSrcDomains.join(" ")};
       
