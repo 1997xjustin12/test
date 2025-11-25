@@ -22,6 +22,7 @@ import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
+import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 
 import Script from "next/script";
 
@@ -116,37 +117,41 @@ export default async function MarketLayout({ children }) {
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
-        <AuthProvider>
-          <FreeShippingBanner />
-          <ExtrasHeader />
-          <CategoriesProvider
-            categories={menu.map((i) => ({
-              ...i,
-              is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
-            }))}
-          >
-            <CartProvider>
-              <CompareProductsProvider>
-                <SearchProvider>
-                  <SessionWrapper>
-                    <TuiNavBar logo={redisLogo} menu={menu} />
-                    <FixedHeader />
-                    <QuickViewProvider>
-                      <div
-                        style={{
-                          minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,
-                        }}
-                        className={`flex flex-col`}
-                      >
-                        {children}
-                      </div>
-                    </QuickViewProvider>
-                  </SessionWrapper>
-                </SearchProvider>
-              </CompareProductsProvider>
-            </CartProvider>
-          </CategoriesProvider>
-        </AuthProvider>
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        >
+          <AuthProvider>
+            <FreeShippingBanner />
+            <ExtrasHeader />
+            <CategoriesProvider
+              categories={menu.map((i) => ({
+                ...i,
+                is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
+              }))}
+            >
+              <CartProvider>
+                <CompareProductsProvider>
+                  <SearchProvider>
+                    <SessionWrapper>
+                      <TuiNavBar logo={redisLogo} menu={menu} />
+                      <FixedHeader />
+                      <QuickViewProvider>
+                        <div
+                          style={{
+                            minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,
+                          }}
+                          className={`flex flex-col`}
+                        >
+                          {children}
+                        </div>
+                      </QuickViewProvider>
+                    </SessionWrapper>
+                  </SearchProvider>
+                </CompareProductsProvider>
+              </CartProvider>
+            </CategoriesProvider>
+          </AuthProvider>
+        </GoogleReCaptchaProvider>
         <Footer />
       </body>
     </html>
