@@ -3,11 +3,10 @@ import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Rating } from "@smastrom/react-rating";
-import {useSolanaCategories} from "@/app/context/category";
+import { useSolanaCategories } from "@/app/context/category";
 import { parseRatingCount } from "@/app/lib/helpers";
 
 function PriceDisplay({ price, compare_at_price }) {
-
   const display_price = useMemo(() => {
     return Math.floor(price); // extract the dollar part
   }, [price]);
@@ -18,8 +17,13 @@ function PriceDisplay({ price, compare_at_price }) {
   }, [price]);
 
   const display_regular_price = useMemo(() => {
-    if(compare_at_price && compare_at_price !== "" && compare_at_price !== 0 && compare_at_price !== "0"){
-      return compare_at_price.toFixed(2)
+    if (
+      compare_at_price &&
+      compare_at_price !== "" &&
+      compare_at_price !== 0 &&
+      compare_at_price !== "0"
+    ) {
+      return compare_at_price.toFixed(2);
     }
     return null;
   }, [compare_at_price]);
@@ -31,14 +35,16 @@ function PriceDisplay({ price, compare_at_price }) {
       ${display_price}
       <sup className="text-xs">{display_cents}</sup>
       {display_regular_price ? (
-        <sup className="text-xs ml-2 line-through font-normal">${display_regular_price}</sup>
+        <sup className="text-xs ml-2 line-through font-normal">
+          ${display_regular_price}
+        </sup>
       ) : null}
     </div>
   );
 }
 
 function CompareProductCard({ is_active = false, product }) {
-  const {getProductUrl} = useSolanaCategories();
+  const { getProductUrl } = useSolanaCategories();
   const product_image = useMemo(() => {
     if (product && product?.images) {
       const img =
@@ -64,7 +70,10 @@ function CompareProductCard({ is_active = false, product }) {
         </div>
       </div>
       <Link prefetch={false} href={getProductUrl(product)}>
-        <h4 className="text-xs font-normal line-clamp-3 text-left hover:underline" title={product?.title}>
+        <h4
+          className="text-xs font-normal line-clamp-3 text-left hover:underline"
+          title={product?.title}
+        >
           {product?.title}
         </h4>
       </Link>
@@ -81,12 +90,25 @@ function CompareProductCard({ is_active = false, product }) {
         compare_at_price={product?.variants?.[0]?.compare_at_price}
       />
 
-      <div className="w-full flex justify-center items-center mt-3">{
-        is_active  ?
-        <button className="py-1 px-3 bg-theme-700 text-white rounded upper font-normal uppercase" title={product?.title}>Active Product</button>
-        :
-        <Link prefetch={false} href={getProductUrl(product)}  title={product?.title} className="py-1 px-3 text-theme-700 text-white rounded upper font-normal uppercase border-2 border-theme-700 bg-theme-100">View</Link>
-        }</div>
+      <div className="w-full flex justify-center items-center mt-3">
+        {is_active ? (
+          <button
+            className="py-1 px-3 bg-theme-700 text-white rounded upper font-normal uppercase text-xs border-2 border-theme-700 md:text-base"
+            title={product?.title}
+          >
+            Active Product
+          </button>
+        ) : (
+          <Link
+            prefetch={false}
+            href={getProductUrl(product)}
+            title={product?.title}
+            className="py-1 px-3 text-theme-700 text-white rounded upper font-normal uppercase border-2 border-theme-700 bg-theme-100 text-xs md:text-base"
+          >
+            View
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

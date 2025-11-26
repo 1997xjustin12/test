@@ -374,11 +374,11 @@ export default function Product({ params }) {
               <ProductReviewSection product={product} />
             </div>
           </div>
-          {product && product?.sp_similar_products && product?.handle && (
+          {product && product?.sp_product_options && product?.handle && (
             <div className="p-4">
               <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
                 <CompareProductsTable
-                  similar_products={product.sp_similar_products}
+                  similar_products={product.sp_product_options}
                   product={product}
                 />
               </div>

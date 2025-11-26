@@ -57,7 +57,7 @@ export default async function handler(req, res) {
           "bbq.openbox_related_product",
           "bbq.shopnew_related_product",
           "bbq.selection_related_product",
-          "frequently.fbi_related_product",
+          // "frequently.fbi_related_product",
           "bbq.product_option_related_product",
         ];
 
