@@ -55,10 +55,10 @@ export const CartProvider = ({ children }) => {
 
   const guestCartToActive = async () => {
     if (!forage) {
-      console.log("[forage]", forage);
+      // console.log("[forage]", forage);
     }
     const guestCart = await forage.getItem("cart");
-    console.log("guestCart", guestCart);
+    // console.log("guestCart", guestCart);
     await forage.setItem("cart", { ...guestCart, status: "active" });
   };
 
@@ -70,7 +70,7 @@ export const CartProvider = ({ children }) => {
       payload: cartData, // optional: send the updated cart
     });
 
-    console.log("[CartContext] Broadcasted CART_UPDATED");
+    // console.log("[CartContext] Broadcasted CART_UPDATED");
   };
 
   const sendAbandonedCartBeacon = (cart) => {
@@ -88,7 +88,7 @@ export const CartProvider = ({ children }) => {
 
     const blob = new Blob([body], { type: "application/json" });
 
-    console.log("SEND BEACON", { url, body });
+    // console.log("SEND BEACON", { url, body });
 
     navigator.sendBeacon(url, blob);
   };
@@ -110,7 +110,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const createAbandonedCart = async (cart_obj, user_obj, trigger = "timed") => {
-    if(loading) return;
+    if (loading) return;
 
     if (!cart_obj && !cart_obj?.id) return;
 
@@ -121,13 +121,15 @@ export const CartProvider = ({ children }) => {
     if (cart_items.length === 0) return;
 
     if (cart_obj?.is_abandoned) {
-      console.log("cart is_abandoned is ", cart_obj.is_abandoned);
+      // console.log("cart is_abandoned is ", cart_obj.is_abandoned);
       return;
     }
 
     const updatedAt = new Date(cart_obj.updated_at).getTime();
 
-    const ABANDON_TIMEOUT = isLoggedIn ? USER_ABANDON_TIMEOUT: GUEST_ABANDON_TIMEOUT;
+    const ABANDON_TIMEOUT = isLoggedIn
+      ? USER_ABANDON_TIMEOUT
+      : GUEST_ABANDON_TIMEOUT;
 
     const timedout = Date.now() - updatedAt > ABANDON_TIMEOUT;
 
@@ -139,12 +141,12 @@ export const CartProvider = ({ children }) => {
     };
 
     // console.log("TRIGGERED ABANDONED CART BUT THIS FEATURE IS TEMPORARY DISABLED");
-    console.log("[createAbandonedCart]", sendCart);
+    // console.log("[createAbandonedCart]", sendCart);
 
     const now = new Date().toISOString();
 
     if (trigger === "beacon" && !isLoggedIn) {
-      console.log("TRIGGERED ABANDONED CART BEACON", sendCart);
+      // console.log("TRIGGERED ABANDONED CART BEACON", sendCart);
       const newCart = { ...cart_obj, is_abandoned: now, updated_at: now };
       const key = `abandoned:${newCart?.cart_id}`;
       await updateRedisAbandonedRecord(key, newCart?.is_abandoned);
@@ -157,14 +159,14 @@ export const CartProvider = ({ children }) => {
     let response = null;
 
     if (trigger === "timed") {
-      console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
+      // console.log("TRIGGERED ABANDONED CART TIMED [timedout]", timedout);
       if (timedout) {
         response = await sendAbandonedCart(sendCart);
       }
     }
 
     if (trigger === "forced") {
-      console.log("TRIGGERED ABANDONED CART FORCED", response);
+      // console.log("TRIGGERED ABANDONED CART FORCED", response);
       response = await sendAbandonedCart(sendCart);
     }
 
@@ -211,7 +213,7 @@ export const CartProvider = ({ children }) => {
     const items = cartObject?.items;
     syncCartToCookie(items);
     const { data } = await fetchOrderTotal({ items });
-    console.log("[buildCartObject]", data);
+    // console.log("[buildCartObject]", data);
     const rebuild = {
       ...cartObject,
       sub_total: data?.sub_total,
@@ -220,7 +222,7 @@ export const CartProvider = ({ children }) => {
       total_price: data?.total_price,
     };
     // setCart(rebuild);
-    console.log("REBUILD", rebuild);
+    // console.log("REBUILD", rebuild);
 
     return rebuild;
   };
@@ -297,7 +299,9 @@ export const CartProvider = ({ children }) => {
 
     const guestCart = await getGuestCart();
 
-    const toMerge = (guestCart?.items ?? []).filter((i) => !i?.merged).map(item=> ({...item, ...item?.custom_fields}));
+    const toMerge = (guestCart?.items ?? [])
+      .filter((i) => !i?.merged)
+      .map((item) => ({ ...item, ...item?.custom_fields }));
 
     const getCart = await userCartGet();
     const userCart = getCart?.message
@@ -356,7 +360,7 @@ export const CartProvider = ({ children }) => {
       });
     }
 
-    return {...newCart};
+    return { ...newCart };
   };
 
   const getGuestCart = async () => {
@@ -491,7 +495,7 @@ export const CartProvider = ({ children }) => {
     setAddToCartLoading(true);
     try {
       const cartObj = await getOrCreateCart();
-      console.log("cartObj", cartObj);
+      // console.log("cartObj", cartObj);
       const cart_items = cartObj?.items || [];
       const injected_item = appendToMergeItems(cart_items, item);
       let newCart = await buildCartObject({
@@ -580,7 +584,7 @@ export const CartProvider = ({ children }) => {
     }
 
     const assignCart = await getCart();
-    console.log("[inc] assignCart", assignCart)
+    // console.log("[inc] assignCart", assignCart)
     setCart({ ...assignCart });
     await saveCart(newCart);
     notifyCartUpdate();
@@ -636,7 +640,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const assignCart = await getCart();
-      console.log("[dec] assignCart", assignCart)
+      // console.log("[dec] assignCart", assignCart)
       setCart({ ...assignCart });
       await saveCart(newCart);
       notifyCartUpdate();
@@ -677,7 +681,7 @@ export const CartProvider = ({ children }) => {
 
   const loadGuestInfo = async () => {
     if (!forage) {
-      console.log("forage", forage);
+      // console.log("forage", forage);
       return;
     }
     const info = await forage.getItem("checkout_info");
@@ -778,9 +782,9 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((total, item) => total + (item.quantity || 0), 0);
   }, [cartItems]);
 
-  useEffect(() => {
-    console.log("[CART]", cart);
-  }, [cart]);
+  // useEffect(() => {
+  //   console.log("[CART]", cart);
+  // }, [cart]);
 
   useEffect(() => {
     cart_channel.current = new BroadcastChannel("cart_channel");
