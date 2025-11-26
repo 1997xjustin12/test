@@ -9,6 +9,7 @@ import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
 
 const shopify_structure = true;
 import Link from "next/link";
+import Image from "next/image";
 import MediaGallery from "@/app/components/widget/MediaGalleryV2";
 import ProductToCart from "@/app/components/widget/ProductToCartV2";
 import ProductMetaTabs from "@/app/components/product/meta/Tabs";
@@ -16,8 +17,8 @@ import { createSlug, formatPrice } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
-import CompareProductsTable from "@/app/components/molecule/CompareProductsTable"
-import ProductReviewSection from "@/app/components/molecule/ProductReviewSection"
+import CompareProductsTable from "@/app/components/molecule/CompareProductsTable";
+import ProductReviewSection from "@/app/components/molecule/ProductReviewSection";
 
 const BreadCrumbs = ({ slug, product_path }) => {
   const { getNameBySlug } = useSolanaCategories();
@@ -78,65 +79,61 @@ const ProductOptions = ({ product, slug }) => {
     return;
   }
 
+  const accentuate_data = product.accentuate_data;
+
   return (
     <div className="flex flex-col gap-[20px]">
       {/* Gas type */}
-      {product.accentuate_data?.[0]?.["bbq.option_related_product"] && (
+      {accentuate_data?.["bbq.option_related_product"] && (
         <ProductOptionItem
           slug={slug}
-          title={product.accentuate_data?.[0]?.["bbq.option_title"]}
-          options={product.accentuate_data?.[0]?.["bbq.option_type"]}
-          urls={product.accentuate_data?.[0]?.["bbq.option_related_product"]}
+          title={accentuate_data?.["bbq.option_title"]}
+          options={accentuate_data?.["bbq.option_type"]}
+          urls={accentuate_data?.["bbq.option_related_product"]}
           current_url={product.handle}
           product_options={product.sp_product_options}
         />
       )}
       {/* Configuration */}
-      {product.accentuate_data?.[0]?.["bbq.configuration_product"] && (
+      {accentuate_data?.["bbq.configuration_product"] && (
         <ProductOptionItem
           slug={slug}
-          title={
-            product.accentuate_data?.[0]?.["bbq.configuration_heading_title"]
-          }
-          options={product.accentuate_data?.[0]?.["bbq.configuration_type"]}
-          urls={product.accentuate_data?.[0]?.["bbq.configuration_product"]}
+          title={accentuate_data?.["bbq.configuration_heading_title"]}
+          options={accentuate_data?.["bbq.configuration_type"]}
+          urls={accentuate_data?.["bbq.configuration_product"]}
           current_url={product.handle}
           product_options={product.sp_product_options}
         />
       )}
       {/* Product Size */}
-      {product.accentuate_data?.[0]?.["bbq.related_product"] && (
+      {accentuate_data?.["bbq.related_product"] && (
         <ProductOptionItem
           slug={slug}
-          title={product.accentuate_data?.[0]?.["bbq.size_heading_title"]}
-          options={product.accentuate_data?.[0]?.["size_title"]}
-          urls={product.accentuate_data?.[0]?.["bbq.related_product"]}
+          title={accentuate_data?.["bbq.size_heading_title"]}
+          options={accentuate_data?.["size_title"]}
+          urls={accentuate_data?.["bbq.related_product"]}
           current_url={product.handle}
           product_options={product.sp_product_options}
         />
       )}
       {/* Product Option */}
-      {product.accentuate_data?.[0]?.["bbq.product_option_related_product"] && (
+      {accentuate_data?.["bbq.product_option_related_product"] && (
         <ProductOptionItem
           slug={slug}
-          title={
-            product.accentuate_data?.[0]?.["bbq.product_option_heading_title"]
-          }
-          options={product.accentuate_data?.[0]?.["bbq.product_option_name"]}
-          urls={
-            product.accentuate_data?.[0]?.["bbq.product_option_related_product"]
-          }
+          title={accentuate_data?.["bbq.product_option_heading_title"]}
+          options={accentuate_data?.["bbq.product_option_name"]}
+          urls={accentuate_data?.["bbq.product_option_related_product"]}
           current_url={product.handle}
           product_options={product.sp_product_options}
         />
       )}
       {/* Hinge */}
-      {product.accentuate_data?.[0]?.["bbq.hinge_related_product"] && (
+      {accentuate_data?.["bbq.hinge_related_product"] && (
         <ProductOptionItem
           slug={slug}
-          title={product.accentuate_data?.[0]?.["hinge_heading_title"]}
-          options={product.accentuate_data?.[0]?.["hinge_selection"]}
-          urls={product.accentuate_data?.[0]?.["bbq.hinge_related_product"]}
+          title={accentuate_data?.["hinge_heading_title"]}
+          options={accentuate_data?.["hinge_selection"]}
+          urls={accentuate_data?.["bbq.hinge_related_product"]}
           current_url={product.handle}
           product_options={product.sp_product_options}
         />
@@ -145,19 +142,31 @@ const ProductOptions = ({ product, slug }) => {
   );
 };
 
-const UpsellPriceDisplay = ({ product_price, other_product_price }) => {
+const UpsellPriceDisplay = ({
+  product_price,
+  other_product_price,
+  isSelected,
+}) => {
   if (product_price > other_product_price) {
     return (
-      <div className="text-green-500 font-semibold">{`Save $${formatPrice(
-        product_price - other_product_price
-      )}`}</div>
+      <div
+        className={`font-semibold ${
+          isSelected ? "text-green-200" : "text-green-600"
+        }`}
+      >
+        {`Save $${formatPrice(product_price - other_product_price)}`}
+      </div>
     );
   }
   if (product_price < other_product_price) {
     return (
-      <div className="text-red-500 font-semibold">{`Add $${formatPrice(
-        other_product_price - product_price
-      )}`}</div>
+      <div
+        className={`font-semibold ${
+          isSelected ? "text-red-200" : "text-red-600"
+        }`}
+      >
+        {`Add $${formatPrice(other_product_price - product_price)}`}
+      </div>
     );
   }
   if (product_price === other_product_price) {
@@ -179,31 +188,51 @@ const ProductOptionItem = ({
   const [localCurrentUrl, setLocalCurrentUrl] = useState(null);
   const [localProductOptions, setLocalProductOptions] = useState(null);
   const [localSlug, setLocalSlug] = useState(null);
+  const [image, setImage] = useState(null);
+  const extractOptions = (options) => {
+    if (typeof options === "string") {
+      return JSON.parse(options);
+    } else if (
+      Array.isArray(options) ||
+      (typeof options === "object" && options !== null)
+    ) {
+      return options;
+    } else {
+      console.error("Options is an unexpected data type:", options);
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (title) {
       setLocalTitle(title);
     }
     if (options) {
-      setLocalOptions(JSON.parse(options));
+      setLocalOptions(extractOptions(options));
     }
     if (urls) {
-      setLocalUrls(JSON.parse(urls));
+      setLocalUrls(extractOptions(urls));
     }
     if (current_url) {
       setLocalCurrentUrl(current_url);
+      // setLocalCurrentUrl(extractOptions(current_url));
     }
     if (product_options) {
       setLocalProductOptions(product_options);
+      // setLocalProductOptions(extractOptions(product_options));
     }
     if (slug) {
       setLocalSlug(slug);
+      // setLocalSlug(extractOptions(slug));
     }
   }, [title, options, urls, current_url, slug]);
 
   return (
     <div>
-      <div className="font-medium text-sm mb-[10px]">{localTitle}</div>
-      <div className="flex flex-wrap gap-[5px]">
+      <div className="font-semibold text-base mb-[12px] text-neutral-800">
+        {localTitle}
+      </div>
+      <div className="flex flex-wrap gap-[10px]">
         {localOptions &&
           Array.isArray(localOptions) &&
           localOptions.map((item, index) => (
@@ -211,31 +240,62 @@ const ProductOptionItem = ({
               prefetch={false}
               href={`/${localSlug}/product/${localUrls[index]}`}
               key={`${createSlug(title)}-option-${index}`}
-              className={`px-3 py-1 rounded border flex flex-col items-center justify-center transition-colors duration-200 ${
+              className={`group relative flex items-center gap-1 p-0 transition-all duration-300 border rounded-lg overflow-hidden ${
                 localUrls[index] === localCurrentUrl
-                  ? "font-semibold text-theme-800 border-theme-500 bg-theme-50"
-                  : "bg-white border-neutral-300 hover:border-neutral-400 hover:bg-neutral-50"
+                  ? "bg-theme-500 text-white shadow-lg shadow-theme-500/30 border-theme-500 border-2"
+                  : "bg-white border-2 border-neutral-200 hover:border-theme-400 hover:shadow-md"
               }`}
             >
-              <div className="w-full flex justify-center">{item}</div>
-              <div className="w-full flex justify-end text-xs">
+              {/* Image Container */}
+              <div
+                className={`flex-shrink-0 w-[50px] bg-white h-[50px] overflow-hidden relative p-1`}
+              >
+                {localProductOptions &&
+                  Array.isArray(localProductOptions) &&
+                  localProductOptions.find(
+                    ({ handle }) => handle === localUrls[index]
+                  )?.images?.[0]?.src && (
+                    <Image
+                      src={
+                        localProductOptions.find(
+                          ({ handle }) => handle === localUrls[index]
+                        )?.images?.[0]?.src
+                      }
+                      alt={item}
+                      width={50}
+                      height={50}
+                      className="object-contain w-full h-full"
+                    />
+                  )}
+              </div>
+
+              {/* Content Container */}
+              <div className="flex flex-col gap-1 min-w-0 flex-1 px-2">
+                <div
+                  className={`font-semibold text-sm ${
+                    localUrls[index] === localCurrentUrl
+                      ? "text-white"
+                      : "text-neutral-800 group-hover:text-theme-600"
+                  }`}
+                >
+                  {item}
+                </div>
                 {localProductOptions && Array.isArray(localProductOptions) && (
-                  <>
-                    {
-                      <UpsellPriceDisplay
-                        product_price={
-                          localProductOptions.find(
-                            ({ handle }) => handle === localCurrentUrl
-                          )?.variants?.[0]?.price
-                        }
-                        other_product_price={
-                          localProductOptions.find(
-                            ({ handle }) => handle === localUrls[index]
-                          )?.variants?.[0]?.price
-                        }
-                      />
-                    }
-                  </>
+                  <div className="text-xs font-medium">
+                    <UpsellPriceDisplay
+                      product_price={
+                        localProductOptions.find(
+                          ({ handle }) => handle === localCurrentUrl
+                        )?.variants?.[0]?.price
+                      }
+                      other_product_price={
+                        localProductOptions.find(
+                          ({ handle }) => handle === localUrls[index]
+                        )?.variants?.[0]?.price
+                      }
+                      isSelected={localUrls[index] === localCurrentUrl}
+                    />
+                  </div>
                 )}
               </div>
             </Link>
@@ -308,20 +368,22 @@ export default function Product({ params }) {
               <ProductMetaTabs product={product} />
             </div>
           </div>
-          
+
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
               <ProductReviewSection product={product} />
             </div>
           </div>
-          {
-            product && product?.sp_similar_products && product?.handle && 
-          <div className="p-4">
-            <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
-              <CompareProductsTable similar_products={product.sp_similar_products} product={product}/>
+          {product && product?.sp_similar_products && product?.handle && (
+            <div className="p-4">
+              <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
+                <CompareProductsTable
+                  similar_products={product.sp_similar_products}
+                  product={product}
+                />
+              </div>
             </div>
-          </div>
-          }
+          )}
           <FaqSection />
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">

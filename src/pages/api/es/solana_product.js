@@ -46,27 +46,24 @@ export default async function handler(req, res) {
       // elasticsearch result restructured to bigcommerce response object
       const product = data?.hits?.hits.map((i) => i._source);
 
-
-      if (product?.[0] && product[0].accentuate_data?.[0]) {
-        // send request to get product options data
-        const accentuate_data = product[0].accentuate_data[0];
-        // console.log("accentuate_data",accentuate_data)
+      const accentuate_data = product[0].accentuate_data || null;
+      if (product?.[0] && accentuate_data) {
+        // console.log("accentuate_data", accentuate_data);
         const keys = [
           "bbq.related_product",
           "bbq.configuration_product",
           "bbq.hinge_related_product",
-          "bbq.option_related_product",
           "bbq.option_related_product",
           "bbq.openbox_related_product",
           "bbq.shopnew_related_product",
           "bbq.selection_related_product",
           "frequently.fbi_related_product",
           "bbq.product_option_related_product",
-          "bbq.configuration_product",
         ];
 
         // Flatten all handles from the accentuate_data fields
         const mergedProducts = mergeRelatedProducts(accentuate_data, keys);
+        console.log("mergedProducts", mergedProducts);
 
         const secondFetchConfig = {
           ...fetchConfig,
@@ -91,87 +88,87 @@ export default async function handler(req, res) {
 
         // send request to get similar options data
         // compare table keys
-        const table_keys = [
-          "bbq.seo_meta_brand",
-          "bbq.seo_meta_series",
-          "bbq.seo_meta_material",
-          "bbq.seo_meta_fuel_type",
-          "bbq.seo_meta_made_in_usa",
-          "bbq.seo_meta_manufacturer",
-          "bbq.seo_meta_total_grill_area",
-          "bbq.seo_meta_main_grilling_area",
-          "bbq.seo_meta_cook_grid_dimensions",
-          "bbq.seo_meta_secondary_grilling_area",
-          "bbq.seo_meta_manufacturer",
-        ];
+        // const table_keys = [
+        //   "bbq.seo_meta_brand",
+        //   "bbq.seo_meta_series",
+        //   "bbq.seo_meta_material",
+        //   "bbq.seo_meta_fuel_type",
+        //   "bbq.seo_meta_made_in_usa",
+        //   "bbq.seo_meta_manufacturer",
+        //   "bbq.seo_meta_total_grill_area",
+        //   "bbq.seo_meta_main_grilling_area",
+        //   "bbq.seo_meta_cook_grid_dimensions",
+        //   "bbq.seo_meta_secondary_grilling_area",
+        //   "bbq.seo_meta_manufacturer",
+        // ];
 
-        const has_possible_similars = !areAllKeysEmpty(
-          accentuate_data,
-          table_keys
-        );
+        // const has_possible_similars = !areAllKeysEmpty(
+        //   accentuate_data,
+        //   table_keys
+        // );
 
-        if (has_possible_similars) {
-          const comparable_tags = [
-            "27-33 Inches",
-            "304 Stainless Steel",
-            "4 Burners",
-            "Analog",
-            // "BLZ4BICV",
-            "Built In",
-            "Built In Gas Grills",
-            "Depth 0-26 Inches",
-            // "Free Accessories",
-            // "Gas Grills",
-            "Height 0-26 Inches",
-            "Internal and External Lights",
-            "Internal Lights",
-            "Liquid Propane Gas",
-            "Optional Rotisserie",
-            // "Top Deals",
-            "Width 27-33 Inches",
-            "With Rear Infrared Burner",
-            "Basic Package (2-3 items)",
-          ];
+        // if (has_possible_similars) {
+        //   const comparable_tags = [
+        //     "27-33 Inches",
+        //     "304 Stainless Steel",
+        //     "4 Burners",
+        //     "Analog",
+        //     // "BLZ4BICV",
+        //     "Built In",
+        //     "Built In Gas Grills",
+        //     "Depth 0-26 Inches",
+        //     // "Free Accessories",
+        //     // "Gas Grills",
+        //     "Height 0-26 Inches",
+        //     "Internal and External Lights",
+        //     "Internal Lights",
+        //     "Liquid Propane Gas",
+        //     "Optional Rotisserie",
+        //     // "Top Deals",
+        //     "Width 27-33 Inches",
+        //     "With Rear Infrared Burner",
+        //     "Basic Package (2-3 items)",
+        //   ];
 
-          const product_tags_string = product?.[0]?.tags || ""; // e.g., "Built In,Gas Grills,Random Tag"
-          const product_tags = product_tags_string
-            .split(",")
-            .map((tag) => tag.trim());
+        //   const product_tags_string = product?.[0]?.tags || ""; // e.g., "Built In,Gas Grills,Random Tag"
+        //   const product_tags = product_tags_string
+        //     .split(",")
+        //     .map((tag) => tag.trim());
 
-          // Get matching tags
-          const matching_tags = product_tags.filter((tag) =>
-            comparable_tags.includes(tag)
-          );
+        //   // Get matching tags
+        //   const matching_tags = product_tags.filter((tag) =>
+        //     comparable_tags.includes(tag)
+        //   );
 
-          if (matching_tags && matching_tags.length > 0) {
-            const similarProductFetchConfig = {
-              ...fetchConfig,
-              body: JSON.stringify({
-                query: {
-                  bool: {
-                    must: matching_tags.map((item) => ({
-                      match_phrase: { tags: item },
-                    })),
-                  },
-                },
-              }),
-            };
-            const similar_products_response = await fetch(
-              API_URL,
-              similarProductFetchConfig
-            );
-            const similar_products_json =
-              await similar_products_response.json();
-            similar_products = similar_products_json?.hits?.hits.map(
-              (i) => i._source
-            );
-          }
-        }
+        //   if (matching_tags && matching_tags.length > 0) {
+        //     const similarProductFetchConfig = {
+        //       ...fetchConfig,
+        //       body: JSON.stringify({
+        //         query: {
+        //           bool: {
+        //             must: matching_tags.map((item) => ({
+        //               match_phrase: { tags: item },
+        //             })),
+        //           },
+        //         },
+        //       }),
+        //     };
+        //     const similar_products_response = await fetch(
+        //       API_URL,
+        //       similarProductFetchConfig
+        //     );
+        //     const similar_products_json =
+        //       await similar_products_response.json();
+        //     similar_products = similar_products_json?.hits?.hits.map(
+        //       (i) => i._source
+        //     );
+        //   }
+        // }
       }
 
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
-        product[0]["sp_similar_products"] = similar_products;
+        // product[0]["sp_similar_products"] = similar_products;
       }
 
       const bc_formated_data = {
@@ -191,12 +188,38 @@ function mergeRelatedProducts(data, keys) {
   const merged = [];
 
   keys.forEach((key) => {
-    // Use lodash-style get or implement your own to handle nested keys like "bbq.related_product"
-    const value = data[key] ? JSON.parse(data[key]) : [];
+    // 1. Get the value for the current key
+    const rawValue = data[key];
+    let value = [];
+
+    // 2. Check the raw value's type before proceeding
+    if (rawValue === null || rawValue === undefined) {
+      // If null or undefined, skip or set to empty array
+      value = [];
+    } else if (Array.isArray(rawValue)) {
+      // If it's already an array, use it directly
+      value = rawValue;
+    } else if (typeof rawValue === "string") {
+      // If it's a string, attempt to parse it
+      try {
+        value = JSON.parse(rawValue);
+      } catch (e) {
+        console.error(`Error parsing JSON for key "${key}":`, e);
+        // On error, treat as empty or handle as required
+        value = [];
+      }
+    } else {
+      // For any other non-string, non-null, non-array value (e.g., number or object)
+      // This is defensive coding; assuming related products should be an array.
+      value = [];
+    }
+
+    // 3. Ensure the final result is an array before spreading
     if (Array.isArray(value)) {
       merged.push(...value);
     }
   });
 
-  return merged;
+  // 4. Optionally, you might want to deduplicate the results
+  return [...new Set(merged)];
 }
