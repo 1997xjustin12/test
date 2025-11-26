@@ -12,6 +12,7 @@ import AuthButtons from "@/app/components/molecule/AuthButtons";
 // context
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
+import { useGoogleReCaptcha } from "@/app/context/recaptcha";
 // helpers
 import {
   BASE_URL,
@@ -507,6 +508,8 @@ function CheckoutComponent() {
   // auth
   const { isLoggedIn, user, loading, updateProfile, userOrderCreate } =
     useAuth();
+  // recaptcha
+  const { executeRecaptcha } = useGoogleReCaptcha();
   // login modal
   const [openLogin, setOpenLogin] = useState(false);
 
@@ -779,6 +782,20 @@ function CheckoutComponent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate reCAPTCHA v3
+    if (!executeRecaptcha) {
+      alert("reCAPTCHA not available. Please try again.");
+      return;
+    }
+
+    let recaptchaToken;
+    try {
+      recaptchaToken = await executeRecaptcha("checkout");
+    } catch (error) {
+      alert("reCAPTCHA verification failed. Please try again.");
+      return;
+    }
+
     if (!cartTotal?.allowPay) {
       alert(
         "Please Make Sure You Fillout Neccessary shipping information for us to recalculate your shipping total."
@@ -805,7 +822,7 @@ function CheckoutComponent() {
       const response = await fetch("/api/braintree_checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nonce, amount: `${total_amount}` }),
+        body: JSON.stringify({ nonce, amount: `${total_amount}`, recaptchaToken }),
       });
 
       const result = await response.json();

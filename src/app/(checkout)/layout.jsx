@@ -12,6 +12,7 @@ import {
 import Footer from "@/app/components/section/Footer";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
+import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 import { generateMetadata } from "@/app/metadata";
 import { CartIcon } from "@/app/components/icons/lib";
 
@@ -106,12 +107,16 @@ export default async function CheckoutLayout({ children }) {
       <body
         className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
-        <AuthProvider>
-          <CartProvider>
-            <Header logo={redisLogo} />
-            <div className="flex flex-col min-h-screen">{children}</div>
-          </CartProvider>
-        </AuthProvider>
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        >
+          <AuthProvider>
+            <CartProvider>
+              <Header logo={redisLogo} />
+              <div className="flex flex-col min-h-screen">{children}</div>
+            </CartProvider>
+          </AuthProvider>
+        </GoogleReCaptchaProvider>
         <Footer />
       </body>
     </html>
