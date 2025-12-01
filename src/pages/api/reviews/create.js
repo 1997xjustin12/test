@@ -5,15 +5,14 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { 
-    product,
-    rating,
-    title,
-    comment
-   } = req.body;
+  const { product, rating, title, comment } = req.body;
 
   if (!product || !rating || !title || !comment) {
-    return res.status(400).json({ error: "[product, rating, title, comment] Missing required fields" });
+    return res
+      .status(400)
+      .json({
+        error: "[product, rating, title, comment] Missing required fields",
+      });
   }
 
   try {
@@ -41,17 +40,15 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     return res.status(response.status).json({
-      success: response.ok,
+      success: response?.ok,
       data,
     });
   } catch (error) {
     console.error("Proxy Error:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Proxy request failed",
-        error: error.message,
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Proxy request failed",
+      error: error.message,
+    });
   }
 }

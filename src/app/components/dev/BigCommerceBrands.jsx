@@ -32,7 +32,7 @@ function BigCommerceCategories() {
           }
         );
 
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        if (!response?.ok) throw new Error(`Error: ${response.status}`);
 
         const data = await response.json();
 
@@ -75,8 +75,7 @@ function BigCommerceCategories() {
   return (
     <CardWrap>
       <div className="p-3 flex items-center gap-[10px] justify-between">
-        
-      <div className="flex items-center gap-[10px]">
+        <div className="flex items-center gap-[10px]">
           <Button
             disabled={loading}
             loading={loading}
@@ -141,8 +140,7 @@ function BigCommerceCategories() {
           ></div>
         </div>
       </div>
-      {
-        showResults && 
+      {showResults && (
         <div className="p-1">
           <div className="bg-neutral-100 border border-neutral-300 p-2 rounded relative">
             <button
@@ -167,7 +165,7 @@ function BigCommerceCategories() {
             </pre>
           </div>
         </div>
-      } 
+      )}
     </CardWrap>
   );
 }

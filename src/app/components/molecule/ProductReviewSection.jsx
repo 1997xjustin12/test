@@ -65,7 +65,7 @@ const ReviewForm = ({ product }) => {
       const data = await response.json();
       console.log("[response]", response);
       console.log("[data]", data);
-      if (!response.ok) {
+      if (!response?.ok) {
         console.warn("[handleSubmit]", err);
         return;
       }
@@ -208,14 +208,14 @@ const ReviewSummary = ({ summary }) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="w-full text-center">
-        <div className="text-4xl font-bold">
-          {summary?.overall_rating}
-        </div>
+        <div className="text-4xl font-bold">{summary?.overall_rating}</div>
         <div className="flex w-full justify-center">
           <Rating readOnly value={4} style={{ maxWidth: 100 }}></Rating>
         </div>
         <div className="text-neutral-500 text-xs mt-1">
-          {total_votes === 1 ? `${total_votes} rating`:`${total_votes} ratings`}
+          {total_votes === 1
+            ? `${total_votes} rating`
+            : `${total_votes} ratings`}
         </div>
       </div>
       <div className="w-full">
@@ -272,7 +272,7 @@ function ProductReviewSection({ product }) {
     const fetchReviews = async () => {
       try {
         const response = await getReviewsByProductId(product_id);
-        if (!response.ok) {
+        if (!response?.ok) {
           setReviews(null);
           return;
         }
@@ -290,41 +290,42 @@ function ProductReviewSection({ product }) {
     fetchReviews();
   }, [product]);
 
-  
-  
-  
-  const ratingSummary = useMemo(()=>{
-    if(!reviews?.results) return 0;
-    if(reviews.results.length === 0) return 0;
+  const ratingSummary = useMemo(() => {
+    if (!reviews?.results) return 0;
+    if (reviews.results.length === 0) return 0;
 
-    const star1 = reviews.results.filter(review=> review?.rating === 1);
+    const star1 = reviews.results.filter((review) => review?.rating === 1);
     const starCount1 = star1.length;
-    const star2 = reviews.results.filter(review=> review?.rating === 2);
+    const star2 = reviews.results.filter((review) => review?.rating === 2);
     const starCount2 = star2.length;
-    const star3 = reviews.results.filter(review=> review?.rating === 3);
+    const star3 = reviews.results.filter((review) => review?.rating === 3);
     const starCount3 = star3.length;
-    const star4 = reviews.results.filter(review=> review?.rating === 4);
+    const star4 = reviews.results.filter((review) => review?.rating === 4);
     const starCount4 = star4.length;
-    const star5 = reviews.results.filter(review=> review?.rating === 5);
+    const star5 = reviews.results.filter((review) => review?.rating === 5);
     const starCount5 = star5.length;
 
-
-    const overall_rating = ((5*starCount5)+(4*starCount4)+(3*starCount3)+(2*starCount2)+(1*starCount1))/(starCount5+starCount4+starCount3+starCount2+starCount1);
+    const overall_rating =
+      (5 * starCount5 +
+        4 * starCount4 +
+        3 * starCount3 +
+        2 * starCount2 +
+        1 * starCount1) /
+      (starCount5 + starCount4 + starCount3 + starCount2 + starCount1);
     const summary = {
       overall_rating: overall_rating.toFixed(1),
       by_star: [
-        {name: "highest", star: 5, votes: starCount5, data: star5},
-        {name: "high", star: 4, votes: starCount4, data: star4},
-        {name: "mid", star: 3, votes: starCount3, data: star3},
-        {name: "low", star: 2, votes: starCount2, data: star2},
-        {name: "lowest", star: 1, votes: starCount1, data: star1},
-      ]
-    }
+        { name: "highest", star: 5, votes: starCount5, data: star5 },
+        { name: "high", star: 4, votes: starCount4, data: star4 },
+        { name: "mid", star: 3, votes: starCount3, data: star3 },
+        { name: "low", star: 2, votes: starCount2, data: star2 },
+        { name: "lowest", star: 1, votes: starCount1, data: star1 },
+      ],
+    };
 
     console.log("ratingSummary", summary);
     return summary;
-
-  }, [reviews])
+  }, [reviews]);
 
   return (
     <div className="">

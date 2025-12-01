@@ -157,7 +157,7 @@ export function AuthProvider({ children }) {
         },
       });
 
-      if (!response.ok) {
+      if (!response?.ok) {
         setUser(null);
         setLoading(false);
         return;
@@ -185,7 +185,7 @@ export function AuthProvider({ children }) {
       headers,
     });
 
-    if (!response.ok) {
+    if (!response?.ok) {
       // Throw readable error instead of silent fail
       throw new Error(`Failed to fetch orders: ${response.status}`);
     }
@@ -244,7 +244,7 @@ export function AuthProvider({ children }) {
 
       const key = `abandoned:${cart?.cart_id}`;
       const redis_response = await redisGet(key);
-      if (!redis_response.ok) {
+      if (!redis_response?.ok) {
         console.warn("[userCartGet]");
         return null;
       }
@@ -279,7 +279,7 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(cart),
       });
 
-      if (!response.ok) {
+      if (!response?.ok) {
         return null;
       }
 
@@ -318,7 +318,7 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(sendCart),
       });
 
-      if (!response.ok) {
+      if (!response?.ok) {
         return null;
       }
 
@@ -374,7 +374,7 @@ export function AuthProvider({ children }) {
         credentials: "include", // ensures cookies are sent
       });
 
-      if (!response.ok) {
+      if (!response?.ok) {
         const errorData = await response.json();
         console.error("Logout failed:", errorData.error || response.statusText);
         return false;

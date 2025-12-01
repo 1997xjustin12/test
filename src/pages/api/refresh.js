@@ -16,14 +16,14 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
+        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
       },
       body: JSON.stringify({ refresh }),
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return res.status(response.status).json(data);
     }
 

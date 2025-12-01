@@ -95,14 +95,14 @@ export const CartProvider = ({ children }) => {
 
   const updateRedisAbandonedRecord = async (key, value) => {
     const response = await redisSet({ key, value });
-    if (!response.ok) {
+    if (!response?.ok) {
       console.warn("[updateRedisAbandonedRecord]", { key, value });
     }
   };
 
   const getRedisAbandonedRecord = async (key) => {
     const response = await redisGet(key);
-    if (!response.ok) {
+    if (!response?.ok) {
       console.warn("[getRedisAbandonedRecord]", key);
     }
     const val = await response.json();

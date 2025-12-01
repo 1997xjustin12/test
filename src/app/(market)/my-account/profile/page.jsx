@@ -5,7 +5,7 @@ export default function ProfilePage() {
   const { isLoggedIn, user, updateProfile } = useAuth();
 
   const [form, setForm] = useState(user || {});
-  const [notif, setNotif] = useState({message:"", status:"success"});
+  const [notif, setNotif] = useState({ message: "", status: "success" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,20 +30,22 @@ export default function ProfilePage() {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-    const response = await updateProfile(form);
+    try {
+      const response = await updateProfile(form);
 
-    if(!response.ok){
-        setNotif({message: "Not Saved! Something went wrong.", status:"error"})
+      if (!response?.ok) {
+        setNotif({
+          message: "Not Saved! Something went wrong.",
+          status: "error",
+        });
         return;
-    }
+      }
 
-    setNotif({message: "Successfully Updated.", status:"success"})
-
-    }catch(err){
-        setNotif({message: err, status: "error"})
+      setNotif({ message: "Successfully Updated.", status: "success" });
+    } catch (err) {
+      setNotif({ message: err, status: "error" });
     }
   };
 
@@ -244,8 +246,12 @@ export default function ProfilePage() {
 
             {/* Buttons */}
             <div className="flex justify-between items-end gap-3 pt-4">
-              <div className={`${notif?.status === "error"? "text-red-700":"text-green-700"}`}>
-                { notif?.message }
+              <div
+                className={`${
+                  notif?.status === "error" ? "text-red-700" : "text-green-700"
+                }`}
+              >
+                {notif?.message}
               </div>
               <button
                 type="submit"

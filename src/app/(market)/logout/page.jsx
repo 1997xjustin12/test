@@ -14,9 +14,13 @@ export default function LogoutPage() {
       try {
         console.log("cartObject", cartObject);
         console.log("abandonedCartUser", abandonedCartUser);
-        const response2 = await createAbandonedCart(cartObject, abandonedCartUser, "forced");
+        const response2 = await createAbandonedCart(
+          cartObject,
+          abandonedCartUser,
+          "forced"
+        );
         const response = await logout();
-        if (!response.ok) {
+        if (!response?.ok) {
           console.log("[LogoutPage][error]");
           return;
         }

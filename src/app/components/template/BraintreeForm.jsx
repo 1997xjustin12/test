@@ -4,12 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import dropin from "braintree-web-drop-in";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/cart";
-import { BASE_URL, getSum, mapOrderItems, store_domain } from "@/app/lib/helpers";
+import {
+  BASE_URL,
+  getSum,
+  mapOrderItems,
+  store_domain,
+} from "@/app/lib/helpers";
 import CheckoutForm from "@/app/components/atom/CheckoutForm";
 
-export default function BraintreeForm({cartTotal}) {
+export default function BraintreeForm({ cartTotal }) {
   const router = useRouter();
-  const { cartItems, clearCartItems} = useCart();
+  const { cartItems, clearCartItems } = useCart();
   const [billingStorage, setBillingStorage] = useState(null);
 
   const [checkoutForm, setCheckoutForm] = useState({});
@@ -71,7 +76,6 @@ export default function BraintreeForm({cartTotal}) {
     initializeDropIn();
   }, []);
 
-  
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -102,7 +106,7 @@ export default function BraintreeForm({cartTotal}) {
         ? await response.json()
         : { success: false, message: "Invalid JSON response from server" };
 
-      if (!response.ok || result.success === false) {
+      if (!response?.ok || result.success === false) {
         return {
           success: false,
           message: result.message || "Failed to create order",
@@ -137,49 +141,51 @@ export default function BraintreeForm({cartTotal}) {
         return;
       }
 
-        const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
-        const response = await fetch("/api/braintree_checkout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nonce, amount: `${total_amount}` }),
-        });
+      const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
+      const response = await fetch("/api/braintree_checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nonce, amount: `${total_amount}` }),
+      });
 
-        const result = await response.json();
-        if (result.success) {
-          const orders = checkoutForm?.data;
-          orders["status"] = "paid";
-          orders["payment_method"] = "braintree";
-          orders["payment_status"] = true;
-          orders["payment_details"] = result?.transaction?.id;
-          orders["store_domain"] = store_domain;
-          orders["items"] = mapOrderItems(cartItems);
+      const result = await response.json();
+      if (result.success) {
+        const orders = checkoutForm?.data;
+        orders["status"] = "paid";
+        orders["payment_method"] = "braintree";
+        orders["payment_status"] = true;
+        orders["payment_details"] = result?.transaction?.id;
+        orders["store_domain"] = store_domain;
+        orders["items"] = mapOrderItems(cartItems);
 
-          const order_response = await createOrder(orders);
+        const order_response = await createOrder(orders);
 
-          if (order_response.success) {
-            instance.teardown();
-            setInstance(null);
-            clearCartItems();
-            if(billingStorage){
-              const billing_info = Object.fromEntries(
-                Object.entries(checkoutForm?.data || {})
-                  .filter(([key]) => key.startsWith("billing_"))
-              );
-              console.log("billing_info after transaction");
-              billingStorage.set(billing_info);              
-            }
-            router.push(`${BASE_URL}/payment_success`);
-          } else {
-            alert("Something went wrong! Please try again.");
+        if (order_response.success) {
+          instance.teardown();
+          setInstance(null);
+          clearCartItems();
+          if (billingStorage) {
+            const billing_info = Object.fromEntries(
+              Object.entries(checkoutForm?.data || {}).filter(([key]) =>
+                key.startsWith("billing_")
+              )
+            );
+            console.log("billing_info after transaction");
+            billingStorage.set(billing_info);
           }
+          router.push(`${BASE_URL}/payment_success`);
         } else {
-          const billing_info = Object.fromEntries(
-            Object.entries(checkoutForm?.data || {})
-              .filter(([key]) => key.startsWith("billing_"))
-          );
-          console.log("billing_info after transaction", billing_info);
-          alert(`Payment failed: ${result.error}`);
+          alert("Something went wrong! Please try again.");
         }
+      } else {
+        const billing_info = Object.fromEntries(
+          Object.entries(checkoutForm?.data || {}).filter(([key]) =>
+            key.startsWith("billing_")
+          )
+        );
+        console.log("billing_info after transaction", billing_info);
+        alert(`Payment failed: ${result.error}`);
+      }
       // }
     } catch (error) {
       console.error("Payment Error:", error);

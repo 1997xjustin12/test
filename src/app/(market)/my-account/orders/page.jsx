@@ -100,7 +100,7 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
         response = await userReviewCreate(form);
       }
       const data = await response.json();
-      if (!response.ok) {
+      if (!response?.ok) {
         console.warn("[handleSubmit]", err);
         return;
       }
@@ -263,7 +263,7 @@ const ReviewButton = ({ product, toggleForm }) => {
     const product_id = product?.product_id;
     const fetchReviews = async () => {
       const response = await getReviewsByProductId(product_id);
-      if (!response.ok) {
+      if (!response?.ok) {
         setUserReview(null);
         return;
       }
@@ -391,7 +391,7 @@ export default function OrdersPage() {
         // }
 
         const response = await getProductsByIds(productIds);
-        if (!response.ok) {
+        if (!response?.ok) {
           setProducts(null);
           return;
         }

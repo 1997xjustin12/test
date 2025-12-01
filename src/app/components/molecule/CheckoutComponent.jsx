@@ -546,7 +546,7 @@ function CheckoutComponent() {
         ? await response.json()
         : { success: false, message: "Invalid JSON response from server" };
 
-      if (!response.ok || result.success === false) {
+      if (!response?.ok || result.success === false) {
         return {
           success: false,
           message: result.message || "Failed to create order",
@@ -574,7 +574,7 @@ function CheckoutComponent() {
   const zipQuery = async (zip) => {
     try {
       const response = await fetch(`https://api.zippopotam.us/us/${zip}`);
-      if (!response.ok) {
+      if (!response?.ok) {
         return { error: "Invalid Zip Code" };
       }
 
@@ -822,7 +822,11 @@ function CheckoutComponent() {
       const response = await fetch("/api/braintree_checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nonce, amount: `${total_amount}`, recaptchaToken }),
+        body: JSON.stringify({
+          nonce,
+          amount: `${total_amount}`,
+          recaptchaToken,
+        }),
       });
 
       const result = await response.json();

@@ -104,8 +104,7 @@ export const redisGet = async (key) => {
   }
 };
 
-
-export const redisSet = async ({key, value}) => {
+export const redisSet = async ({ key, value }) => {
   try {
     if (!key || !value) {
       console.warn("[key, value] Requied field missing.");
@@ -145,7 +144,7 @@ export const validateToken = async (token) => {
 
     const data = await response.json();
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return {
         success: false,
         error: data.error || "Token validation failed",

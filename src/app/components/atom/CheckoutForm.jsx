@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-
 export default function CheckoutForm({ onChange }) {
   const required_fields = [
     "billing_first_name",
@@ -50,7 +49,6 @@ export default function CheckoutForm({ onChange }) {
   const [sameAsBilling, setSameAsBilling] = useState(false);
   const [billingStorage, setBillingStorage] = useState(null);
 
-
   async function createOrder(orderData) {
     try {
       const response = await fetch("/api/orders/checkout", {
@@ -66,7 +64,7 @@ export default function CheckoutForm({ onChange }) {
         ? await response.json()
         : { message: "Invalid JSON response from server" };
 
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error(result.message || "Failed to create order");
       }
 
@@ -85,7 +83,7 @@ export default function CheckoutForm({ onChange }) {
       ...form,
       [name]: type === "checkbox" ? checked : value,
     };
-    setForm({...newForm});
+    setForm({ ...newForm });
   };
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -201,32 +199,32 @@ export default function CheckoutForm({ onChange }) {
     });
 
     const newErrors = validate();
-    setErrors({...newErrors});
+    setErrors({ ...newErrors });
   }, [form, sameAsBilling]);
 
   // useEffect(() => {
   //   console.log("[TEST] errors: ", errors)
   // }, [errors]);
-  
-    useEffect(() => {
-      if (typeof window === "undefined") return;
-  
-      let mounted = true;
-  
-      import("@/app/lib/billingStorage").then(async (module) => {
-        if (!mounted) return;
-        const billing_info = await module.get();
-        // console.log("billing_info", billing_info);
-        if(billing_info && Object.keys(billing_info)?.length > 0){
-          setForm(prev=>({...prev,...billing_info}))
-        }
-        setBillingStorage(module);
-      });
-  
-      return () => {
-        mounted = false;
-      };
-    }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let mounted = true;
+
+    import("@/app/lib/billingStorage").then(async (module) => {
+      if (!mounted) return;
+      const billing_info = await module.get();
+      // console.log("billing_info", billing_info);
+      if (billing_info && Object.keys(billing_info)?.length > 0) {
+        setForm((prev) => ({ ...prev, ...billing_info }));
+      }
+      setBillingStorage(module);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -273,12 +271,9 @@ export default function CheckoutForm({ onChange }) {
                     </svg>
                   </span>
                 )}
-                {
-                  field === "billing_province" ? 
-                  "State"
-                  :
-                  field.replace("billing_", "").replaceAll("_", " ")
-                }
+                {field === "billing_province"
+                  ? "State"
+                  : field.replace("billing_", "").replaceAll("_", " ")}
               </label>
               <input
                 id={field}
@@ -349,13 +344,10 @@ export default function CheckoutForm({ onChange }) {
                     </svg>
                   </span>
                 )}
-                
-                {
-                  field === "shipping_province" ? 
-                  "Shipping State"
-                  :
-                  field.replace("billing_", "").replaceAll("_", " ")
-                }
+
+                {field === "shipping_province"
+                  ? "Shipping State"
+                  : field.replace("billing_", "").replaceAll("_", " ")}
               </label>
               <input
                 id={field}

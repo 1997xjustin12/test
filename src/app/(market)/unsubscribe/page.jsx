@@ -39,7 +39,7 @@ export default function SubscribePage() {
           } else {
             setStatus("error");
             setMessage("Failed to unsubscribe. Please try again later.");
-            console.warn("[unsubscribeEmail] !response.ok", err);
+            console.warn("[unsubscribeEmail] !response?.ok", err);
           }
           return;
         }

@@ -39,7 +39,7 @@ export default function SubscribePage() {
           } else {
             setStatus("error");
             setMessage("Failed to subscribe. Please try again later.");
-            console.warn("[subscribeEmail] !response.ok", err);
+            console.warn("[subscribeEmail] !response?.ok", err);
           }
           return;
         }

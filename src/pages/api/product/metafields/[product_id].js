@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       },
     });
 
-    if (!response.ok) {
+    if (!response?.ok) {
       throw new Error(
         `Error fetching product metafields: ${response.statusText}`
       );

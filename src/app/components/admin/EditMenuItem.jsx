@@ -464,7 +464,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
         setFetchStatus("fetching");
         const response = await fetch("/api/collections/collection-list");
 
-        if (!response.ok) {
+        if (!response?.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
@@ -843,7 +843,7 @@ const ProductCollection = ({ menuItem, onChange }) => {
       try {
         const response = await fetch("/api/collections/collection-list");
 
-        if (!response.ok) {
+        if (!response?.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 

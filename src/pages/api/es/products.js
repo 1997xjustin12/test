@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     try {
       // res.status(200).json(fetchConfig);
       const response = await fetch(API_URL, fetchConfig);
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error(`Error fetching products: ${response}`);
       }
       const data = await response.json();
@@ -199,7 +199,7 @@ export default async function handler(req, res) {
     try {
       const response = await fetch(API_URL, fetchConfig);
 
-      // if (!response.ok) {
+      // if (!response?.ok) {
       //   throw new Error(`Error fetching products: ${response}`);
       // }
       const data = await response.json();

@@ -204,11 +204,22 @@ const ProductOptionItem = ({
   };
 
   useEffect(() => {
+    // console.log("options", options);
+
     if (title) {
       setLocalTitle(title);
     }
     if (options) {
       setLocalOptions(extractOptions(options));
+    } else {
+      const sku_options = [];
+      urls.forEach((v, i) => {
+        const option =
+          product_options.find((item) => item.handle === v)?.variants?.[0]
+            ?.sku || "NA";
+        sku_options.push(option);
+      });
+      setLocalOptions(extractOptions(sku_options));
     }
     if (urls) {
       setLocalUrls(extractOptions(urls));

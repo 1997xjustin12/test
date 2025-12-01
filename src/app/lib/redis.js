@@ -105,7 +105,7 @@ export const redisGet = async (key) => {
     const response = await fetch(`/api/redis?${params.toString()}`, {
       cache: "no-store",
     });
-    if (!response.ok) {
+    if (!response?.ok) {
       const errorData = await response.json();
       throw new Error(`RedisGetError ${response.status}: ${errorData.error}`);
     }
