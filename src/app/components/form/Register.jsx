@@ -7,6 +7,7 @@ import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
+
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -114,28 +115,31 @@ function RegisterForm() {
       setMessage({ type: "success", text: "Registration successful!" });
       window.location.href = "/login?success=1";
     } else {
-      // Handle different error response structures
+      // Handle field-specific errors (e.g., {email: ["This field must be unique."]})
       let errorMessage = "Registration failed.";
 
-      if (typeof data?.error === "string") {
+      if (data?.email) {
+        const emailError = Array.isArray(data.email)
+          ? data.email[0]
+          : data.email;
+        if (emailError.toLowerCase().includes("unique")) {
+          errorMessage = "Email is already been used, please try another.";
+        } else {
+          errorMessage = emailError;
+        }
+      } else if (data?.username) {
+        const usernameError = Array.isArray(data.username)
+          ? data.username[0]
+          : data.username;
+        if (usernameError.toLowerCase().includes("unique")) {
+          errorMessage = "Username is already taken, please choose another.";
+        } else {
+          errorMessage = usernameError;
+        }
+      } else if (data?.error) {
         errorMessage = data.error;
       } else if (data?.title) {
         errorMessage = data.title;
-      } else if (data?.error && typeof data.error === "object") {
-        // Handle backend validation errors (email, username, etc.)
-        const errors = Object.values(data.error).flat();
-        errorMessage = errors.join(", ");
-      } else if (typeof data === "object") {
-        // Handle direct field errors from backend
-        const errors = Object.entries(data)
-          .filter(([key]) => !["error", "title"].includes(key))
-          .map(([key, value]) =>
-            Array.isArray(value) ? value.join(", ") : value
-          )
-          .filter(Boolean);
-        if (errors.length > 0) {
-          errorMessage = errors.join(", ");
-        }
       }
 
       setMessage({
@@ -258,7 +262,7 @@ function RegisterForm() {
             <span className="text-red-600" aria-hidden="true">
               *
             </span>{" "}
-            By checking this box, I agree to {STORE_NAME2}'s{" "}
+            By checking this box, I agree to {STORE_NAME2}'{" "}
             <Link prefetch={false} href={`#`} className="underline">
               Terms and Conditions
             </Link>
