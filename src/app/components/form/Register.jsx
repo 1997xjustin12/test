@@ -7,7 +7,6 @@ import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
-
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -115,9 +114,33 @@ function RegisterForm() {
       setMessage({ type: "success", text: "Registration successful!" });
       window.location.href = "/login?success=1";
     } else {
+      // Handle different error response structures
+      let errorMessage = "Registration failed.";
+
+      if (typeof data?.error === "string") {
+        errorMessage = data.error;
+      } else if (data?.title) {
+        errorMessage = data.title;
+      } else if (data?.error && typeof data.error === "object") {
+        // Handle backend validation errors (email, username, etc.)
+        const errors = Object.values(data.error).flat();
+        errorMessage = errors.join(", ");
+      } else if (typeof data === "object") {
+        // Handle direct field errors from backend
+        const errors = Object.entries(data)
+          .filter(([key]) => !["error", "title"].includes(key))
+          .map(([key, value]) =>
+            Array.isArray(value) ? value.join(", ") : value
+          )
+          .filter(Boolean);
+        if (errors.length > 0) {
+          errorMessage = errors.join(", ");
+        }
+      }
+
       setMessage({
         type: "error",
-        text: data?.error || data?.title || "Registration failed.",
+        text: errorMessage,
       });
     }
   };
@@ -235,7 +258,7 @@ function RegisterForm() {
             <span className="text-red-600" aria-hidden="true">
               *
             </span>{" "}
-            By checking this box, I agree to {STORE_NAME2}'{" "}
+            By checking this box, I agree to {STORE_NAME2}'s{" "}
             <Link prefetch={false} href={`#`} className="underline">
               Terms and Conditions
             </Link>
