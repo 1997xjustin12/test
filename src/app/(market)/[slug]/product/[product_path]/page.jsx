@@ -1,6 +1,6 @@
 "use client";
 import ProductSection from "@/app/components/pages/product/section/product";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 // import useFetchProducts from "@/app/hooks/useFetchProducts";
 import useESFetchProduct from "@/app/hooks/useESFetchProduct";
 import useESFetchProductShopify from "@/app/hooks/useESFetchProductShopify";
@@ -316,99 +316,174 @@ const ProductOptionItem = ({
   );
 };
 
-const FrequentlyBoughtItem = ({ product }) => {
+const FrequentlyBoughtItem = ({ product, onChange }) => {
   const [checked, setChecked] = useState(true);
   const handleCheckboxChange = (event) => {
     const newChecked = event.target.checked;
     setChecked(newChecked);
-    // Call the optional onChange handler passed from the parent
-    // if (onChange) {
-    //   onChange(newChecked);
-    // }
+    onChange({ id: product?.product_id, checked: newChecked });
   };
+
+  useEffect(() => {
+    setChecked(product?.isSelected);
+  }, [product]);
+
+  const image_thumb = useMemo(() => {
+    if (!product || !product?.images) return null;
+
+    return product.images.find((image) => image.position == "1")?.src || null;
+  }, [product]);
+
   return (
-    <div>
-      <label
-        htmlFor={product?.id}
-        className={`
-        flex items-center px-2 py-1 cursor-pointer transition-colors duration-200
-        ${
+    <label
+      htmlFor={product?.product_id}
+      className={`flex items-center gap-2 py-1.5 px-2 rounded cursor-pointer transition-all text-sm border ${
+        checked
+          ? "bg-neutral-50 border-neutral-300"
+          : "bg-white border-neutral-200 hover:bg-neutral-50"
+      }`}
+    >
+      {/* Checkbox */}
+      <div
+        className={`flex-shrink-0 w-3.5 h-3.5 rounded border flex items-center justify-center ${
           checked
-            ? "border-blue-500 bg-blue-50 shadow-md"
-            : "border-gray-200 hover:border-gray-300"
-        }
-      `}
+            ? "bg-neutral-700 border-neutral-700"
+            : "border-neutral-400 bg-white"
+        }`}
       >
-        <div
-          className={`
-          w-4 h-4 rounded-full border-2 flex items-center justify-center mr-4
-          ${checked ? "bg-blue-500 border-blue-500" : "border-gray-400"}
-        `}
-        >
-          {checked && (
-            <svg
-              className="w-3 h-3 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+        {checked && (
+          <svg
+            className="w-2.5 h-2.5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        )}
+      </div>
+
+      {/* Image */}
+      {image_thumb && (
+        <div className="flex-shrink-0 w-8 h-8">
+          <img
+            src={image_thumb}
+            alt={product?.title}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      )}
+
+      {/* Product Info */}
+      <div className="flex-grow min-w-0">
+        <div className="text-xs text-neutral-700 line-clamp-1 leading-tight">
+          {product?.thisProduct ? (
+            <>
+              <span className="font-bold">THIS ITEM: </span> {product?.title}
+            </>
+          ) : (
+            product?.title
           )}
         </div>
-        {/* 1. The Image */}
-        {/*  */}
-        {/* <img
-          src={imageUrl}
-          alt={`${label} icon`}
-          className="w-12 h-12 object-cover rounded mr-4"
-        /> */}
-
-        <div className="flex-grow">
-          {/* 2. The Label/Text */}
-          <div className="text-xs font-medium text-gray-800 line-clamp-1">
-            {product?.title}
-          </div>
-          <div className="text-sm">
-            ${formatPrice(product?.variants?.[0].price)}
-          </div>
+        <div className="text-xs font-medium text-neutral-900 mt-0.5">
+          ${formatPrice(product?.variants?.[0].price)}
         </div>
+      </div>
 
-        {/* 3. The Hidden/Actual Checkbox Input */}
-        <input
-          type="checkbox"
-          id={product?.id}
-          checked={checked}
-          onChange={handleCheckboxChange}
-          // Visually hide the default browser checkbox
-          className="absolute h-0 w-0 opacity-0"
-        />
-      </label>
-    </div>
+      {/* Hidden Input */}
+      <input
+        type="checkbox"
+        id={product?.product_id}
+        checked={checked}
+        onChange={handleCheckboxChange}
+        className="sr-only"
+      />
+    </label>
   );
 };
 
-const FrequentlyBoughtSection = ({ products }) => {
+const FrequentlyBoughtSection = ({ products, product }) => {
   const [fbwProducts, setFbwProducts] = useState(null);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+
+  const handleCheckboxChange = (data) => {
+    const { id, checked } = data;
+    setFbwProducts((prev) => {
+      if (!id || !prev) return prev;
+      const newProducts = prev.map((item) => ({
+        ...item,
+        isSelected: item?.product_id === id ? checked : item?.isSelected,
+      }));
+      return newProducts;
+    });
+    setUpdateTrigger((prev) => prev + 1);
+  };
+
   useEffect(() => {
-    setFbwProducts(products);
-  }, [products]);
+    if (!products) return;
+    const tmp_products = [product, ...products].map((item) => ({
+      ...item,
+      isSelected: true,
+      thisProduct: item?.product_id == product?.product_id,
+    }));
+    setFbwProducts(tmp_products);
+  }, [products, product]);
+
+  const total_price = useMemo(() => {
+    if (!fbwProducts) return `$${formatPrice("0.00")}`;
+
+    const total = fbwProducts
+      .filter((item) => item?.isSelected)
+      .map((item) => parseFloat(item.variants?.[0]?.price) || 0)
+      .reduce((sum, price) => sum + price, 0);
+
+    return `$${formatPrice(total.toFixed(2))}`;
+  }, [fbwProducts, updateTrigger]);
+
+  const hasSelectedItems = useMemo(() => {
+    return fbwProducts?.some((item) => item?.isSelected) || false;
+  }, [fbwProducts, updateTrigger]);
+
+  const selectedCount = useMemo(() => {
+    return fbwProducts?.filter((item) => item?.isSelected).length || 0;
+  }, [fbwProducts, updateTrigger]);
+
+  if (!fbwProducts || fbwProducts.length === 0) return null;
+
   return (
-    <div>
-      <div className="font-semibold text-neutral-800">
+    <div className="mt-6 p-3 bg-neutral-50 rounded border border-neutral-200">
+      <h3 className="text-sm font-semibold text-neutral-700 mb-2">
         Frequently Bought Together
+      </h3>
+      <div className="space-y-1.5">
+        {fbwProducts.map((product) => (
+          <FrequentlyBoughtItem
+            key={`fbw-item-${product?.product_id}`}
+            product={product}
+            onChange={handleCheckboxChange}
+          />
+        ))}
       </div>
-      <div>
-        {fbwProducts &&
-          fbwProducts.map((product, index) => (
-            <FrequentlyBoughtItem key={`fbw-item-${index}`} product={product} />
-          ))}
+      <div className="mt-3 pt-2 border-t border-neutral-200 flex items-center justify-between text-sm">
+        <span className="text-neutral-600">Total:</span>
+        <span className="font-semibold text-neutral-900">{total_price}</span>
       </div>
+      <button
+        disabled={!hasSelectedItems}
+        className={`mt-2 w-full py-2 px-3 text-xs font-medium rounded transition-all ${
+          hasSelectedItems
+            ? "bg-neutral-800 hover:bg-neutral-900 text-white cursor-pointer"
+            : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+        }`}
+      >
+        Add {selectedCount > 0 ? `${selectedCount} ` : ""}selected item
+        {selectedCount !== 1 ? "s" : ""} to cart
+      </button>
     </div>
   );
 };
@@ -464,6 +539,7 @@ export default function Product({ params }) {
                   </div>
                   <FrequentlyBoughtSection
                     products={product?.fbw_products || []}
+                    product={product}
                   />
                 </div>
               </div>
