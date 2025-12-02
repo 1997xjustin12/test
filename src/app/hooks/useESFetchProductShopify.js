@@ -13,8 +13,7 @@ export default function useESFetchProductsShopify(initialParams = {}) {
     if (!handle || handle.trim() === "") {
       throw new Error("handle needed.");
     }
-    const url = `/api/es/solana_product`; // Replace with your API endpoint
-
+    const url = `/api/es/solana_product`;
     const fetchConfig = {
       method: "POST",
       signal,
@@ -23,24 +22,25 @@ export default function useESFetchProductsShopify(initialParams = {}) {
 
     try {
       const res = await fetch(url, fetchConfig);
-      
+
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
       const data = await res.json();
-      setProduct(data?.data);
+      const product = data?.data;
+      setProduct(product);
       setLoading(false);
       setNoResult(data.data.length === 0);
     } catch (err) {
       if (err.name !== "AbortError") {
         setLoading(false);
-        setError(err.message); // Handle only non-abort errors
+        setError(err.message);
       }
     }
   };
 
   useEffect(() => {
-    const controller = new AbortController(); // Create a controller for this fetch
+    const controller = new AbortController();
     const { signal } = controller;
 
     // Define the function to perform the fetch
@@ -54,7 +54,6 @@ export default function useESFetchProductsShopify(initialParams = {}) {
       controller.abort(); // Cleanup: Abort ongoing request on unmount or dependency change
     };
   }, []);
-
 
   return {
     product,

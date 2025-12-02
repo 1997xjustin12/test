@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     try {
       let product_options = null;
-      let similar_products = null;
+      let fbw_products = null; // frequently bought with products
       const response = await fetch(API_URL, fetchConfig);
 
       const data = await response.json();
@@ -57,13 +57,13 @@ export default async function handler(req, res) {
           "bbq.openbox_related_product",
           "bbq.shopnew_related_product",
           "bbq.selection_related_product",
-          // "frequently.fbi_related_product",
           "bbq.product_option_related_product",
+          "frequently.fbi_related_product",
         ];
 
         // Flatten all handles from the accentuate_data fields
         const mergedProducts = mergeRelatedProducts(accentuate_data, keys);
-        console.log("mergedProducts", mergedProducts);
+        // console.log("mergedProducts", mergedProducts);
 
         const secondFetchConfig = {
           ...fetchConfig,
@@ -81,9 +81,25 @@ export default async function handler(req, res) {
           API_URL,
           secondFetchConfig
         );
+
         const product_options_json = await product_options_response.json();
-        product_options = product_options_json?.hits?.hits.map(
-          (i) => i._source
+
+        const relative_products = (product_options_json?.hits?.hits || []).map(
+          (i) => ({ ...i._source })
+        );
+
+        const fbw =
+          product[0]?.accentuate_data?.["frequently.fbi_related_product"] || [];
+        const has_fbw = Array.isArray(fbw) && fbw.length > 0;
+
+        if (has_fbw) {
+          fbw_products = relative_products.filter((item) =>
+            fbw.includes(item?.handle)
+          );
+        }
+
+        product_options = relative_products.filter(
+          (item) => !fbw.includes(item?.handle)
         );
 
         // send request to get similar options data
@@ -168,7 +184,7 @@ export default async function handler(req, res) {
 
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
-        // product[0]["sp_similar_products"] = similar_products;
+        product[0]["fbw_products"] = fbw_products;
       }
 
       const bc_formated_data = {

@@ -316,6 +316,103 @@ const ProductOptionItem = ({
   );
 };
 
+const FrequentlyBoughtItem = ({ product }) => {
+  const [checked, setChecked] = useState(true);
+  const handleCheckboxChange = (event) => {
+    const newChecked = event.target.checked;
+    setChecked(newChecked);
+    // Call the optional onChange handler passed from the parent
+    // if (onChange) {
+    //   onChange(newChecked);
+    // }
+  };
+  return (
+    <div>
+      <label
+        htmlFor={product?.id}
+        className={`
+        flex items-center px-2 py-1 cursor-pointer transition-colors duration-200
+        ${
+          checked
+            ? "border-blue-500 bg-blue-50 shadow-md"
+            : "border-gray-200 hover:border-gray-300"
+        }
+      `}
+      >
+        <div
+          className={`
+          w-4 h-4 rounded-full border-2 flex items-center justify-center mr-4
+          ${checked ? "bg-blue-500 border-blue-500" : "border-gray-400"}
+        `}
+        >
+          {checked && (
+            <svg
+              className="w-3 h-3 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          )}
+        </div>
+        {/* 1. The Image */}
+        {/*  */}
+        {/* <img
+          src={imageUrl}
+          alt={`${label} icon`}
+          className="w-12 h-12 object-cover rounded mr-4"
+        /> */}
+
+        <div className="flex-grow">
+          {/* 2. The Label/Text */}
+          <div className="text-xs font-medium text-gray-800 line-clamp-1">
+            {product?.title}
+          </div>
+          <div className="text-sm">
+            ${formatPrice(product?.variants?.[0].price)}
+          </div>
+        </div>
+
+        {/* 3. The Hidden/Actual Checkbox Input */}
+        <input
+          type="checkbox"
+          id={product?.id}
+          checked={checked}
+          onChange={handleCheckboxChange}
+          // Visually hide the default browser checkbox
+          className="absolute h-0 w-0 opacity-0"
+        />
+      </label>
+    </div>
+  );
+};
+
+const FrequentlyBoughtSection = ({ products }) => {
+  const [fbwProducts, setFbwProducts] = useState(null);
+  useEffect(() => {
+    setFbwProducts(products);
+  }, [products]);
+  return (
+    <div>
+      <div className="font-semibold text-neutral-800">
+        Frequently Bought Together
+      </div>
+      <div>
+        {fbwProducts &&
+          fbwProducts.map((product, index) => (
+            <FrequentlyBoughtItem key={`fbw-item-${index}`} product={product} />
+          ))}
+      </div>
+    </div>
+  );
+};
+
 export default function Product({ params }) {
   const { slug, product_path } = React.use(params);
   const { getProductCategories } = useSolanaCategories();
@@ -361,7 +458,14 @@ export default function Product({ params }) {
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto flex flex-col lg:flex-row gap-[0px] lg:gap-[40px] py-[20px]">
               <div className="w-full relative">
-                <MediaGallery mediaItems={product?.images} />
+                <div className="sm:sticky sm:top-[60px]">
+                  <div className="w-full px-[5px] mb-0 sm:mb-8 aspect-w-5 aspect-h-4 sm:aspect-h-5 lg:aspect-h-4">
+                    <MediaGallery mediaItems={product?.images} />
+                  </div>
+                  <FrequentlyBoughtSection
+                    products={product?.fbw_products || []}
+                  />
+                </div>
               </div>
               <div className="w-full">
                 <ProductToCart product={product} loading={loading} />
