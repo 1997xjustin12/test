@@ -140,9 +140,49 @@ export default async function handler(req, res) {
         );
       }
 
+      const spec_keys = [
+        { key: "bbq.overall_dimensions", label: "Dimension (WxDxH)" },
+        { key: "bbq.product_weight", label: "Product Weight" },
+        { key: "bbq.number_of_main_burners", label: "Number Of Main Burners" },
+        { key: "bbq.total_surface_btu", label: "Total Surface BTUs" },
+        { key: "bbq.single_burner_btus", label: "Single Burner BTUs" },
+        { key: "bbq.grill_lights", label: "Grill Lights" },
+        { key: "bbq.rear_infrared_burner", label: "Rear Infrared Burner" },
+        { key: "bbq.rotisserie_kit", label: "Rotisserie Kit" },
+        { key: "bbq.thermometer", label: "Thermometer" },
+        { key: "bbq.seo_meta_brand", label: "Brand" },
+        { key: "bbq.seo_meta_manufacturer", label: "Manufacturer" },
+        { key: "bbq.seo_meta_material", label: "Material" },
+        { key: "bbq.seo_meta_fuel_type", label: "Fuel Type" },
+        {
+          key: "bbq.seo_meta_manufacturer_part_number",
+          label: "Manufacturer Part Number",
+        },
+        { key: "bbq.seo_meta_made_in_usa", label: "Made In USA" },
+        {
+          key: "bbq.seo_meta_cooking_grid_dimensions",
+          label: "Cooking Grid Dimensions",
+        },
+        { key: "bbq.seo_meta_main_grilling_area", label: "Main Grilling Area" },
+        {
+          key: "bbq.seo_meta_secondary_grilling_area",
+          label: "Secondary Grilling Area",
+        },
+        { key: "bbq.seo_meta_total_grill_area", label: "Total Grill Area" },
+      ];
+
+      let specs;
+
+      specs = spec_keys.map((item) => ({
+        ...item,
+        value: accentuate_data?.[item?.key] || "",
+      }));
+
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
         product[0]["fbw_products"] = fbw_products;
+        const specsIsEmpty = specs.every((item) => item.value === "");
+        product[0]["product_specs"] = specsIsEmpty ? null : specs;
       }
 
       const bc_formated_data = {
