@@ -12,7 +12,8 @@ const normalizeSpecValue = (key, value) => {
         .replace("burner", "")} burner/s`;
       break;
     case "bbq.product_weight":
-      const unit = " lbs";
+    case "bbq.shipping_weight":
+      const unit = " lbs.";
 
       let formattedWeight;
 
@@ -37,22 +38,21 @@ const normalizeSpecValue = (key, value) => {
   return result;
 };
 
-const Specifications = ({ specs }) => {
-  if (!specs) return;
-  console.log("specs", specs);
+const ListDisplay = ({ data }) => {
+  if (!data) return;
   return (
     <div className="grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_3fr] gap-y-1 text-sm">
-      {specs &&
-        Array.isArray(specs) &&
-        specs.map((item, index) => (
+      {data &&
+        Array.isArray(data) &&
+        data.map((item, index) => (
           <div
             key={`spec-item-${index}`}
             className="contents border-b py-2 transition duration-150 group"
           >
-            <div className="font-semibold text-neutral-800 group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
-              {item?.label}
+            <div className="text-xs sm:text-base font-bold text-neutral-800 group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
+              {item?.label}:
             </div>
-            <div className="pl-5 text-theme-700 group-hover:underline group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
+            <div className="text-xs sm:text-base  sm:pl-5 font-semibold text-theme-700 group-hover:underline group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
               {normalizeSpecValue(item?.key, item?.value)}
             </div>
           </div>
@@ -123,7 +123,7 @@ const ProductMetaTabs = ({ product }) => {
       hasData: !!(product?.description || product?.body_html),
     },
     {
-      name: "Specification",
+      name: "Specifications",
       content: "",
       hasData: !!(
         product?.product_specs &&
@@ -140,6 +140,15 @@ const ProductMetaTabs = ({ product }) => {
         product.product_manuals.length > 0
       ),
     },
+    {
+      name: "Shipping Information",
+      content: "",
+      hasData: !!(
+        product?.product_shipping_info &&
+        Array.isArray(product.product_shipping_info) &&
+        product.product_shipping_info.length > 0
+      ),
+    },
   ];
 
   const tabs = allTabs.filter((tab) => tab.hasData);
@@ -147,7 +156,7 @@ const ProductMetaTabs = ({ product }) => {
   const [tab, setTab] = useState(tabs[0]?.name || "Product Descriptions");
   const [openAccordions, setOpenAccordions] = useState({
     "Product Descriptions": true,
-    Specification: false,
+    Specifications: false,
     "Guides & Installations": false,
   });
 
@@ -181,11 +190,14 @@ const ProductMetaTabs = ({ product }) => {
                 }}
               ></div>
             )}
-            {v.name === "Specification" && (
-              <Specifications specs={product?.product_specs} />
+            {v.name === "Specifications" && (
+              <ListDisplay data={product?.product_specs} />
             )}
             {v.name === "Guides & Installations" && (
               <Guides guides={product?.product_manuals} />
+            )}
+            {v.name === "Shipping Information" && (
+              <ListDisplay data={product?.product_shipping_info} />
             )}
           </AccordionSection>
         ))}
@@ -217,13 +229,17 @@ const ProductMetaTabs = ({ product }) => {
               }}
             ></div>
           )}
-          {/* specifications display */}
-          {tab === "Specification" && (
-            <Specifications specs={product?.product_specs} />
+          {/* ListDisplay display */}
+          {tab === "Specifications" && (
+            <ListDisplay data={product?.product_specs} />
           )}
           {/* guides display */}
           {tab === "Guides & Installations" && (
             <Guides guides={product?.product_manuals} />
+          )}
+          {/* shipping info display */}
+          {tab === "Shipping Information" && (
+            <ListDisplay data={product?.product_shipping_info} />
           )}
         </div>
       </div>

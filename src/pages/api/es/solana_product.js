@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
     try {
       let product_options = null;
-      let fbw_products = null; // frequently bought with products
+      let fbw_products = null;
       const response = await fetch(API_URL, fetchConfig);
 
       const data = await response.json();
@@ -53,23 +53,28 @@ export default async function handler(req, res) {
 
       const accentuate_data = product[0].accentuate_data || null;
       if (product?.[0] && accentuate_data) {
-        // console.log("accentuate_data", accentuate_data);
         const keys = [
           "bbq.related_product",
           "bbq.configuration_product",
           "bbq.hinge_related_product",
           "bbq.option_related_product",
-          "bbq.openbox_related_product",
+          // "bbq.openbox_related_product",
           "bbq.shopnew_related_product",
           "bbq.selection_related_product",
           "bbq.product_option_related_product",
           "frequently.fbi_related_product",
         ];
 
+        const fbt_handles = product?.[0]?.["frequently_bought"]?.map(
+          ({ handle }) => handle
+        );
         // Flatten all handles from the accentuate_data fields
-        const mergedProducts = mergeRelatedProducts(accentuate_data, keys);
-        // console.log("mergedProducts", mergedProducts);
-
+        const mergedProducts = [
+          ...new Set([
+            ...mergeRelatedProducts(accentuate_data, keys),
+            ...fbt_handles,
+          ]),
+        ];
         const secondFetchConfig = {
           ...fetchConfig,
           body: JSON.stringify({
@@ -125,8 +130,7 @@ export default async function handler(req, res) {
           (i) => ({ ...i._source })
         );
 
-        const fbw =
-          product[0]?.accentuate_data?.["frequently.fbi_related_product"] || [];
+        const fbw = fbt_handles || [];
         const has_fbw = Array.isArray(fbw) && fbw.length > 0;
 
         if (has_fbw) {
@@ -140,8 +144,8 @@ export default async function handler(req, res) {
         );
       }
 
+      // map specs
       let specs;
-
       const spec_keys = [
         { key: "bbq.overall_dimensions", label: "Dimension (WxDxH)" },
         { key: "bbq.product_weight", label: "Product Weight" },
@@ -178,21 +182,45 @@ export default async function handler(req, res) {
         value: accentuate_data?.[item?.key] || "",
       }));
 
-      let manuals;
+      // map manuals
+      let manuals = null;
       const manual_labels = accentuate_data?.["bbq.file_name"];
       const manual_links = accentuate_data?.["bbq.upload_file"];
-      manuals = manual_links.map((item, index) => ({
-        label: manual_labels?.[index] || "",
-        value: item || "",
-      }));
+
+      if (manual_links && Array.isArray(manual_links)) {
+        manuals = manual_links.map((item, index) => ({
+          label: manual_labels?.[index] || "",
+          value: item || "",
+        }));
+      }
+
+      // map shipping info
+      let shipping_info = [
+        {
+          key: "bbq.shipping_weight",
+          label: "Shipping Weight",
+          value: accentuate_data?.["bbq.shipping_weight"] || "",
+        },
+        {
+          key: "bbq.shipping_dimensions",
+          label: "Shipping Dimensions (WxDxH)",
+          value: accentuate_data?.["bbq.shipping_dimensions"] || "",
+        },
+      ];
+
+      shipping_info = shipping_info.filter(({ value }) => value !== "");
+
+      if (shipping_info.length === 0) {
+        shipping_info = null;
+      }
 
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
         product[0]["fbw_products"] = fbw_products;
         const specsIsEmpty = specs.every((item) => item.value === "");
         product[0]["product_specs"] = specsIsEmpty ? null : specs;
-        const manualsIsEmpty = manuals.every((item) => item.value === "");
-        product[0]["product_manuals"] = manualsIsEmpty ? null : manuals;
+        product[0]["product_manuals"] = manuals || null;
+        product[0]["product_shipping_info"] = shipping_info || null;
       }
 
       const bc_formated_data = {

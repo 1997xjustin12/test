@@ -113,134 +113,153 @@ const ProductToCart = ({ product, loading }) => {
   }
 
   return (
-    <div className="flex flex-col gap-[10px] w-full relative">
-      <div className="relative">
+    <div className="flex flex-col gap-4 w-full relative">
+      {/* <div className="relative">
         {product && <OnsaleTag price_details={productData?.variants?.[0]} />}
-      </div>
-      <div className="">
-        <div className="font-bold text-sm md:text-lg">{productData?.title}</div>
-        <div className="text-stone-400 text-xs md:text-sm uppercase">
+      </div> */}
+      <div className="space-y-1">
+        <div className="font-bold text-lg md:text-2xl text-stone-900 leading-tight">
+          {productData?.title}
+        </div>
+        <div className="text-stone-500 text-sm md:text-base uppercase">
           <Link
             prefetch={false}
             href="#"
+            className="hover:text-stone-700 transition-colors"
             // href={createBrandUrl(productData?.brand?.name)}
           >
             {productData?.brand + " "}
           </Link>
-          &#9679; SKU: {productData?.variants?.[0]?.sku}
+          <span className="text-stone-400">&#9679;</span> SKU:{" "}
+          <span className="font-medium">{productData?.variants?.[0]?.sku}</span>
         </div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <Rating
           value={parseRatingCount(productData?.ratings?.rating_count)}
-          style={{ maxWidth: 100 }}
+          style={{ maxWidth: 110 }}
           readOnly
         ></Rating>
         {/* <div>({productData?.reviews_count})</div> */}
       </div>
-      <div className="text-sm md:text-base flex items-center gap-[8px] text-stone-500">
+      <div className="text-sm md:text-base flex items-center gap-2 text-stone-600 font-medium">
         <AkarIconsShippingV1 width={24} height={24} />
-        Ships Within 1 to 2 Business Days
+        <span>Ships Within 1 to 2 Business Days</span>
       </div>
 
       {!isPriceVisible(productData?.product_category, productData?.brand) ? (
         // display no price
-        <div className="font-medium text-[14px] text-stone-700">
+        <div className="font-semibold text-base md:text-lg text-stone-700 py-2">
           Contact us for pricing.
         </div>
       ) : (
         <>
-          <div className="flex items-center gap-[20px]">
-            {productData?.variants?.[0]?.price > 0 &&
-            productData?.variants?.[0]?.compare_at_price >
-              productData?.variants?.[0]?.price ? (
-              <div className="flex flex-col gap-[0px]">
-                <div className="flex gap-[10px]">
-                  <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
-                    ${formatPrice(productData?.variants?.[0]?.price)}
+          <div className="space-y-3">
+            {/* Price Section */}
+            <div>
+              {productData?.variants?.[0]?.price > 0 &&
+              productData?.variants?.[0]?.compare_at_price >
+                productData?.variants?.[0]?.price ? (
+                <div className="flex flex-col gap-1">
+                  <div className="flex gap-3 items-center flex-wrap">
+                    <div className="text-3xl md:text-4xl font-extrabold text-pallete-green">
+                      ${formatPrice(productData?.variants?.[0]?.price)}
+                    </div>
+                    <div className="text-base md:text-lg font-semibold text-stone-400 line-through">
+                      $
+                      {formatPrice(
+                        productData?.variants?.[0]?.compare_at_price
+                      )}
+                    </div>
                   </div>
-                  <small className="text-sm md:text-base font-semibold text-stone-400 line-through">
-                    ${formatPrice(productData?.variants?.[0]?.compare_at_price)}
-                  </small>
+                  <div className="text-base md:text-lg font-bold text-red-600">
+                    Save $
+                    {formatPrice(
+                      productData?.variants?.[0]?.compare_at_price -
+                        productData?.variants?.[0]?.price
+                    )}
+                    {}
+                  </div>
                 </div>
-                <div className="text-black">
-                  Save $
-                  {formatPrice(
-                    productData?.variants?.[0]?.compare_at_price -
-                      productData?.variants?.[0]?.price
-                  )}
+              ) : (
+                <div className="text-3xl md:text-4xl font-extrabold text-pallete-green">
+                  ${formatPrice(productData?.variants?.[0]?.price)}
                 </div>
+              )}
+            </div>
+
+            {/* QTY Section */}
+            <div className="flex items-center gap-3">
+              <div className="font-bold text-base md:text-lg text-stone-700">
+                QTY
               </div>
-            ) : (
-              <div className="text-2xl md:text-3xl font-extrabold text-pallete-green">
-                ${formatPrice(productData?.variants?.[0]?.price)}
+              <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => handleQuantityButtons("dec")}
+                  type="button"
+                  id="decrement-button"
+                  data-input-counter-decrement="counter-input"
+                  className="inline-flex h-9 w-9 items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors"
+                >
+                  <svg
+                    className="h-3 w-3 text-gray-700"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 2"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 1h16"
+                    />
+                  </svg>
+                </button>
+                <input
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  readOnly
+                  min={1}
+                  type="text"
+                  id="counter-input"
+                  data-input-counter
+                  className="w-12 h-9 border-0 bg-transparent text-center text-base font-semibold text-gray-900 focus:outline-none focus:ring-0"
+                  placeholder=""
+                  required
+                />
+                <button
+                  onClick={() => handleQuantityButtons("inc")}
+                  type="button"
+                  id="increment-button"
+                  data-input-counter-increment="counter-input"
+                  className="inline-flex h-9 w-9 items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors"
+                >
+                  <svg
+                    className="h-3 w-3 text-gray-700"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 18"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 1v16M1 9h16"
+                    />
+                  </svg>
+                </button>
               </div>
-            )}
-            <div className="font-bold">QTY</div>
-            <div className="flex items-center">
-              <button
-                onClick={() => handleQuantityButtons("dec")}
-                type="button"
-                id="decrement-button"
-                data-input-counter-decrement="counter-input"
-                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-              >
-                <svg
-                  className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 2"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 1h16"
-                  />
-                </svg>
-              </button>
-              <input
-                value={quantity}
-                onChange={handleQuantityChange}
-                readOnly
-                min={1}
-                type="text"
-                id="counter-input"
-                data-input-counter
-                className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
-                placeholder=""
-                required
-              />
-              <button
-                onClick={() => handleQuantityButtons("inc")}
-                type="button"
-                id="increment-button"
-                data-input-counter-increment="counter-input"
-                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-              >
-                <svg
-                  className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
-          <div className="font-bold text-white flex gap-[10px]">
+
+          {/* Add to Cart Button */}
+          <div className="font-bold text-white">
             <button
-              className={`bg-pallete-green rounded-full py-[5px] px-[20px] ${
+              className={`w-full md:w-auto bg-pallete-green hover:bg-green-700 transition-colors rounded-full py-3 px-8 shadow-md hover:shadow-lg ${
                 ATCLoading
                   ? "pointer-events-none relative"
                   : "pointer-events-auto"
@@ -254,30 +273,30 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               )}
               <div
-                className={`flex items-center gap-[5px] ${
+                className={`flex items-center justify-center gap-2 ${
                   ATCLoading ? "opacity-0" : "opacity-100"
                 }`}
               >
-                <div>
-                  <Icon
-                    icon="ph:shopping-cart-simple-bold"
-                    className="text-[22px]"
-                  />
-                </div>
-                <div className="font-bold uppercase text-sm md:text-base">
+                <Icon
+                  icon="ph:shopping-cart-simple-bold"
+                  className="text-xl md:text-2xl"
+                />
+                <span className="font-bold uppercase text-base md:text-lg tracking-wide">
                   add to cart
-                </div>
+                </span>
               </div>
             </button>
           </div>
         </>
       )}
-      <div className="flex  flex-col md:flex-row md:items-center gap-[10px] md:gap-[25px]">
-        <div className="flex items-center font-bold gap-[8px]">
+
+      {/* Features Section */}
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5 pt-4 border-t border-stone-200">
+        <div className="flex items-center font-semibold gap-2">
           <div>
             <Icon
               icon="lucide:circle-check-big"
-              className={`${
+              className={`text-xl ${
                 productData?.is_free_shipping
                   ? "text-pallete-green"
                   : "text-stone-400"
@@ -285,12 +304,14 @@ const ProductToCart = ({ product, loading }) => {
             />
           </div>
           <div
-            className={`text-xs md:text-sm ${
-              productData?.is_free_shipping ? "" : "line-through text-stone-400"
+            className={`text-sm md:text-base ${
+              productData?.is_free_shipping
+                ? "text-stone-700"
+                : "line-through text-stone-400"
             }`}
           >
             <span
-              className={`${
+              className={`font-bold ${
                 productData?.is_free_shipping
                   ? "text-pallete-green"
                   : "text-stone-400"
@@ -301,14 +322,16 @@ const ProductToCart = ({ product, loading }) => {
             Shipping
           </div>
         </div>
-        <div className="flex items-center font-bold gap-[8px]">
+        <div className="flex items-center font-semibold gap-2">
           <div>
             <Icon
               icon="lucide:circle-check-big"
-              className="text-pallete-green"
+              className="text-pallete-green text-xl"
             />
           </div>
-          <div className="text-xs md:text-sm">Quick Ship Available</div>
+          <div className="text-sm md:text-base text-stone-700">
+            Quick Ship Available
+          </div>
         </div>
         {/* <div className="py-[5px] px-[15px] md:py-[6.5px] md:px-[25px] w-fit gap-[5px] flex items-center rounded-full bg-pallete-lightgray">
           <div>

@@ -569,10 +569,14 @@ export default function Product({ params }) {
                   <div className="w-full px-[5px] mb-0 sm:mb-8 aspect-w-5 aspect-h-4 sm:aspect-h-5 lg:aspect-h-4">
                     <MediaGallery mediaItems={product?.images} />
                   </div>
-                  <FrequentlyBoughtSection
-                    products={product?.fbw_products || []}
-                    product={product}
-                  />
+                  {product?.fbw_products &&
+                    Array.isArray(product?.fbw_products) &&
+                    product?.fbw_products.length > 0 && (
+                      <FrequentlyBoughtSection
+                        products={product?.fbw_products || []}
+                        product={product}
+                      />
+                    )}
                 </div>
               </div>
               <div className="w-full">
