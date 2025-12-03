@@ -59,7 +59,9 @@ const YouMightAlsoLike = () => {
     <div>
       <h3>You Might Also Like</h3>
       <div className="min-h-[366px] flex items-center justify-center text-neutral-700">
-        {products && Array.isArray(products) && products.length === 0 && (<Eos3DotsLoading width={100} height={100} />) }
+        {products && Array.isArray(products) && products.length === 0 && (
+          <Eos3DotsLoading width={100} height={100} />
+        )}
         {products && Array.isArray(products) && products.length > 0 && (
           <YmalCarousel breakpoints={items_per_break_point}>
             {products.map((item, index) => (
@@ -174,18 +176,30 @@ function AddedToCartDialog({ data, onClose }) {
   const router = useRouter();
   const [toggle, setToggle] = useState(true);
   const [image, setImage] = useState(null);
-
+  const [items, setItems] = useState([]);
   useEffect(() => {
     if (data) {
-      const thumbnail =
-        data?.images?.find(({ position }) => position === 1)?.src ??
-        null;
-      setImage(thumbnail);
+      if (Array.isArray(data)) {
+        setItems(data);
+      } else {
+        setItems([data]);
+      }
       setToggle(true);
     } else {
       setToggle(false);
     }
   }, [data]);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     const thumbnail =
+  //       data?.images?.find(({ position }) => position === 1)?.src ?? null;
+  //     setImage(thumbnail);
+  //     setToggle(true);
+  //   } else {
+  //     setToggle(false);
+  //   }
+  // }, [data]);
 
   const handleClose = () => {
     setToggle(false);
@@ -236,71 +250,81 @@ function AddedToCartDialog({ data, onClose }) {
                 </div>
               </div>
               <div className="flex bg-white border-y border-neutral-300 shadow-inner px-[15px] py-[15px] gap-[10px]">
-                <Link
-                  prefetch={false}
-                  href={`${BASE_URL}/${createSlug(
-                    data?.brand
-                  )}/product/${data?.handle}`}
-                >
-                  <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
-                    {image && (
-                      <Image
-                        src={image}
-                        title={data?.title}
-                        alt={data?.title}
-                        className="w-full h-full"
-                        objectFit="contain"
-                        fill
-                      />
-                    )}
-                  </div>
-                </Link>
                 <div
-                  className={`w-[calc(100%-100px)] text-stone-700 flex gap-[10px] ${
+                  className={`w-full text-stone-700 flex gap-[10px] ${
                     data ? "flex-col" : "justify-center items-center h-[100px]"
                   }`}
                 >
-                  {data ? (
-                    <>
-                      <Link
-                        prefetch={false}
-                        href={`${BASE_URL}/${createSlug(
-                          data?.brand
-                        )}/product/${data?.handle}`}
+                  {items ? (
+                    items.map((item) => (
+                      <div
+                        key={`added-item-key-${item?.product_id}`}
+                        className="flex gap-5"
                       >
-                        <div className="font-bold hover:underline">
-                          {data?.title}
-                        </div>
-                      </Link>
-
-                      <div className="flex gap-[20px] items-center">
-                        <div className="font-extrabold text-theme-600 text-right">{`$${formatPrice(
-                          data?.quantity *
-                            data?.variants?.[0]?.price
-                        )}`}</div>
-                        <div className="font-medium text-neutral-700">{`($${formatPrice(
-                          data?.variants?.[0]?.price
-                        )}x${data?.quantity})`}</div>
-                      </div>
-                      <div className="flex justify-between items-center gap-[10px]">
                         <Link
-                          onClick={handleGoToCartClick}
-                          href={cartPageUrl}
-                          className="border border-theme-600 py-2 px-4 text-white bg-theme-600 hover:bg-theme-500 font-medium w-full text-center"
+                          prefetch={false}
+                          href={`${BASE_URL}/${createSlug(
+                            item?.brand
+                          )}/product/${item?.handle}`}
                         >
-                          Go to Cart
+                          <div className="w-[100px] h-[100px] relative rounded-md overflow-hidden">
+                            {item?.images &&
+                              item.images.find((f) => f.position == 1) && (
+                                <Image
+                                  src={
+                                    item.images.find((f) => f.position == 1).src
+                                  }
+                                  title={item?.title}
+                                  alt={item?.title}
+                                  className="w-full h-full"
+                                  objectFit="contain"
+                                  fill
+                                />
+                              )}
+                          </div>
                         </Link>
-                        <button
-                          onClick={handleClose}
-                          className="border border-theme-700 text-theme-700 py-2 px-4 hover:bg-theme-50 bg-white font-medium w-full"
-                        >
-                          Continue Shopping
-                        </button>
+                        <div className="w-[calc(100%-100px)]">
+                          <Link
+                            prefetch={false}
+                            href={`${BASE_URL}/${createSlug(
+                              item?.brand
+                            )}/product/${item?.handle}`}
+                          >
+                            <div className="font-bold hover:underline">
+                              {item?.title}
+                            </div>
+                          </Link>
+
+                          <div className="flex gap-[20px] items-center">
+                            <div className="font-extrabold text-theme-600 text-right">{`$${formatPrice(
+                              item?.quantity * item?.variants?.[0]?.price
+                            )}`}</div>
+                            <div className="font-medium text-neutral-700">{`($${formatPrice(
+                              item?.variants?.[0]?.price
+                            )}x${item?.quantity})`}</div>
+                          </div>
+                        </div>
                       </div>
-                    </>
+                    ))
                   ) : (
                     <Eos3DotsLoading />
                   )}
+
+                  <div className="flex justify-between items-center gap-[10px] w-full">
+                    <Link
+                      onClick={handleGoToCartClick}
+                      href={cartPageUrl}
+                      className="border border-theme-600 py-2 px-4 text-white bg-theme-600 hover:bg-theme-500 font-medium w-full text-center"
+                    >
+                      Go to Cart
+                    </Link>
+                    <button
+                      onClick={handleClose}
+                      className="border border-theme-700 text-theme-700 py-2 px-4 hover:bg-theme-50 bg-white font-medium w-full"
+                    >
+                      Continue Shopping
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-center">

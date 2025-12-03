@@ -1,8 +1,6 @@
 "use client";
 import ProductSection from "@/app/components/pages/product/section/product";
 import React, { useState, useEffect, useMemo } from "react";
-// import useFetchProducts from "@/app/hooks/useFetchProducts";
-import useESFetchProduct from "@/app/hooks/useESFetchProduct";
 import useESFetchProductShopify from "@/app/hooks/useESFetchProductShopify";
 import { notFound } from "next/navigation";
 import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
@@ -15,10 +13,12 @@ import ProductToCart from "@/app/components/widget/ProductToCartV2";
 import ProductMetaTabs from "@/app/components/product/meta/Tabs";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
+import { useCart } from "@/app/context/cart";
 import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 import CompareProductsTable from "@/app/components/molecule/CompareProductsTable";
 import ProductReviewSection from "@/app/components/molecule/ProductReviewSection";
+import { Eos3DotsLoading } from "@/app/components/icons/lib";
 
 const BreadCrumbs = ({ slug, product_path }) => {
   const { getNameBySlug } = useSolanaCategories();
@@ -408,8 +408,22 @@ const FrequentlyBoughtItem = ({ product, onChange }) => {
 };
 
 const FrequentlyBoughtSection = ({ products, product }) => {
+  const { addItemsToCart, addToCartLoading } = useCart();
   const [fbwProducts, setFbwProducts] = useState(null);
   const [updateTrigger, setUpdateTrigger] = useState(0);
+
+  const handleAddSelectionToCart = async () => {
+    console.log("selectedItems", selectedItems);
+    try {
+      if (selectedCount === 0) return;
+      const result = await addItemsToCart(selectedItems);
+      if (result.status === "success") {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log("[handleAddSelectionToCart]", error);
+    }
+  };
 
   const handleCheckboxChange = (data) => {
     const { id, checked } = data;
@@ -453,6 +467,14 @@ const FrequentlyBoughtSection = ({ products, product }) => {
     return fbwProducts?.filter((item) => item?.isSelected).length || 0;
   }, [fbwProducts, updateTrigger]);
 
+  const selectedItems = useMemo(() => {
+    return (
+      fbwProducts
+        ?.filter((item) => item?.isSelected)
+        .map((item) => ({ ...item, quantity: 1 })) || null
+    );
+  }, [fbwProducts, updateTrigger]);
+
   if (!fbwProducts || fbwProducts.length === 0) return null;
 
   return (
@@ -475,14 +497,24 @@ const FrequentlyBoughtSection = ({ products, product }) => {
       </div>
       <button
         disabled={!hasSelectedItems}
-        className={`mt-2 w-full py-2 px-3 text-xs font-medium rounded transition-all ${
+        onClick={handleAddSelectionToCart}
+        className={`relative mt-2 w-full h-[32px] text-xs font-medium rounded transition-all ${
           hasSelectedItems
             ? "bg-neutral-800 hover:bg-neutral-900 text-white cursor-pointer"
             : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
         }`}
       >
-        Add {selectedCount > 0 ? `${selectedCount} ` : ""}selected item
-        {selectedCount !== 1 ? "s" : ""} to cart
+        <div className={addToCartLoading === true ? "hidden" : "block"}>
+          Add {selectedCount > 0 ? `${selectedCount} ` : ""}selected item
+          {selectedCount !== 1 ? "s" : ""} to cart
+        </div>
+        <div
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
+            addToCartLoading === true ? "visible" : "invisible"
+          }`}
+        >
+          <Eos3DotsLoading width={50} height={50} />
+        </div>
       </button>
     </div>
   );

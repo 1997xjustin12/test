@@ -467,6 +467,56 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const appendMultipleToMergeItems = (cart_items, new_items) => {
+    if (!Array.isArray(new_items) || new_items.length === 0) {
+      console.log(
+        "Invalid items array passed to appendMultipleToMergeItems. Returning original cart."
+      );
+      return cart_items;
+    }
+
+    let updatedCart = [...cart_items];
+
+    new_items.forEach((new_item) => {
+      if (!new_item || !new_item?.product_id || !new_item?.quantity) {
+        console.log("Skipping invalid item:", new_item);
+        return;
+      }
+
+      const existingItemIndex = updatedCart.findIndex(
+        (item) => item.product_id === new_item.product_id
+      );
+
+      if (existingItemIndex > -1) {
+        updatedCart[existingItemIndex].quantity += new_item.quantity;
+        updatedCart[existingItemIndex].custom_fields.quantity +=
+          new_item.quantity;
+      } else {
+        const product_object = {
+          product_id: new_item?.product_id,
+          quantity: new_item?.quantity,
+          handle: new_item?.handle,
+          brand: new_item?.brand,
+          title: new_item?.title,
+          product_title: new_item?.title,
+          product_link: `${store_domain}/${createSlug(
+            new_item?.brand
+          )}/product/${new_item?.handle}`,
+          images: new_item?.images,
+          ratings: new_item?.ratings,
+          variants: new_item?.variants,
+        };
+        updatedCart.push({
+          ...product_object,
+          variant_data: new_item?.variants?.[0],
+          custom_fields: product_object,
+        });
+      }
+    });
+
+    return updatedCart;
+  };
+
   const updateAbandonedCartObj = async (newCart) => {
     if (!loading && !isLoggedIn) {
       const new_cart_id = createCartId();
@@ -532,6 +582,60 @@ export const CartProvider = ({ children }) => {
         code: 500,
         status: "error",
         message: "Error added items to cart.",
+      };
+    }
+  };
+
+  const addItemsToCart = async (items) => {
+    setAddToCartLoading(true);
+    try {
+      if (!Array.isArray(items) || items.length === 0) {
+        setAddToCartLoading(false);
+        return {
+          code: 400,
+          status: "error",
+          message: "Invalid items array. Must be a non-empty array.",
+        };
+      }
+
+      const cartObj = await getOrCreateCart();
+      const cart_items = cartObj?.items || [];
+      const injected_items = appendMultipleToMergeItems(cart_items, items);
+      let newCart = await buildCartObject({
+        ...cartObj,
+        items: injected_items,
+        updated_at: new Date().toISOString(),
+      });
+
+      if (newCart?.is_abandoned) {
+        newCart = await updateAbandonedCartObj(newCart);
+      }
+
+      if (cart_items.length === 0 && isLoggedIn) {
+        const user_profile = userProfileToCart(user);
+        await userCartCreate({ ...newCart, ...user_profile });
+      } else {
+        // update cart
+        await saveCart(newCart);
+      }
+
+      const assignCart = await getCart();
+      setCart({ ...assignCart });
+
+      notifyCartUpdate();
+      setAddToCartLoading(false);
+      setAddedToCart(items);
+      return {
+        code: 200,
+        status: "success",
+        message: `Successfully added ${items.length} items to cart.`,
+      };
+    } catch (error) {
+      setAddToCartLoading(false);
+      return {
+        code: 500,
+        status: "error",
+        message: "Error adding items to cart.",
       };
     }
   };
@@ -884,6 +988,7 @@ export const CartProvider = ({ children }) => {
         cartItemsCount,
         loadingCartItems,
         addToCart,
+        addItemsToCart,
         clearCartItems,
         createAbandonedCart,
         decreaseProductQuantity,

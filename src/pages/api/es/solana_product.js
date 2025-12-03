@@ -1,4 +1,9 @@
-import { areAllKeysEmpty, ES_INDEX } from "../../../app/lib/helpers";
+import {
+  areAllKeysEmpty,
+  ES_INDEX,
+  exclude_brands,
+  exclude_collections,
+} from "../../../app/lib/helpers";
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
@@ -70,8 +75,40 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             size: 100,
             query: {
-              terms: {
-                "handle.keyword": mergedProducts,
+              bool: {
+                filter: [
+                  {
+                    terms: {
+                      "handle.keyword": mergedProducts,
+                    },
+                  },
+                  {
+                    term: {
+                      published: true,
+                    },
+                  },
+                  {
+                    bool: {
+                      must_not: [
+                        {
+                          terms: {
+                            "brand.keyword": exclude_brands,
+                          },
+                        },
+                        {
+                          terms: {
+                            "collections.name.keyword": exclude_collections,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    exists: {
+                      field: "brand.keyword",
+                    },
+                  },
+                ],
               },
             },
           }),
