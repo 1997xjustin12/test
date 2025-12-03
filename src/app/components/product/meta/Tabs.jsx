@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 const normalizeSpecValue = (key, value) => {
   let result = value;
@@ -60,7 +61,59 @@ const Specifications = ({ specs }) => {
   );
 };
 
-const Guides = ({ guide }) => {};
+const Guides = ({ guides }) => {
+  if (!guides) return;
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-stone-800">Manufacturer's Manual</h3>
+      <div className="flex flex-wrap gap-3">
+        {guides &&
+          guides.map((item, index) => (
+            <Link
+              key={`manual-item-${index}`}
+              prefetch={false}
+              href={item?.value || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-md text-center hover:shadow-md p-3 bg-theme-800 text-white text-xs font-semibold break-words max-w-[250px] line-clamp-2"
+              title={item?.label}
+            >
+              {item?.label}
+            </Link>
+          ))}
+      </div>
+    </div>
+  );
+};
+
+const AccordionSection = ({ title, isOpen, onToggle, children }) => {
+  return (
+    <div className="border-b border-stone-200">
+      <button
+        onClick={onToggle}
+        className="w-full flex justify-between items-center py-4 px-4 text-left bg-stone-50 hover:bg-stone-100 transition-colors"
+      >
+        <span className="font-semibold text-stone-800 text-sm">{title}</span>
+        <svg
+          className={`w-5 h-5 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      {isOpen && <div className="p-4 bg-white text-sm">{children}</div>}
+    </div>
+  );
+};
 
 const ProductMetaTabs = ({ product }) => {
   const allTabs = [
@@ -80,48 +133,99 @@ const ProductMetaTabs = ({ product }) => {
     },
     {
       name: "Guides & Installations",
-      content: "<div style='font-weight:bold'>Guides & Installations</div>",
-      hasData: true, // Always show this tab
+      content: "",
+      hasData: !!(
+        product?.product_manuals &&
+        Array.isArray(product.product_manuals) &&
+        product.product_manuals.length > 0
+      ),
     },
   ];
 
   const tabs = allTabs.filter((tab) => tab.hasData);
 
   const [tab, setTab] = useState(tabs[0]?.name || "Product Descriptions");
+  const [openAccordions, setOpenAccordions] = useState({
+    "Product Descriptions": true,
+    Specification: false,
+    "Guides & Installations": false,
+  });
 
   const handleTabChange = (tab) => {
     setTab((prev) => tab);
   };
 
+  const toggleAccordion = (name) => {
+    setOpenAccordions((prev) => ({
+      ...prev,
+      [name]: !prev[name],
+    }));
+  };
+
   return (
     <div>
-      <div className="flex">
+      {/* Mobile Accordion Layout */}
+      <div className="block md:hidden">
         {tabs.map((v, i) => (
-          <button
-            onClick={() => handleTabChange(v.name)}
-            key={`meta-tab-${i}`}
-            className={`py-[3px] px-[7px] md:py-[7px] md:px-[15px] text-[14px] md:text-[16px] rounded-tl-lg rounded-tr-lg ${
-              tab === v.name
-                ? "bg-theme-500 text-white font-bold"
-                : "bg-stone-100 text-stone-500"
-            }`}
+          <AccordionSection
+            key={`accordion-${i}`}
+            title={v.name}
+            isOpen={openAccordions[v.name]}
+            onToggle={() => toggleAccordion(v.name)}
           >
-            {v.name}
-          </button>
+            {v.name === "Product Descriptions" && (
+              <div
+                className="product_description_content"
+                dangerouslySetInnerHTML={{
+                  __html: v.content,
+                }}
+              ></div>
+            )}
+            {v.name === "Specification" && (
+              <Specifications specs={product?.product_specs} />
+            )}
+            {v.name === "Guides & Installations" && (
+              <Guides guides={product?.product_manuals} />
+            )}
+          </AccordionSection>
         ))}
       </div>
-      <div className="border p-[20px] text-[14px] md:text-[16px]">
-        {tab !== "Specification" && (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: tabs.filter((i) => i.name === tab)[0]?.content,
-            }}
-          ></div>
-        )}
-        {/* specifications display */}
-        {tab === "Specification" && (
-          <Specifications specs={product?.product_specs} />
-        )}
+
+      {/* Desktop Tabs Layout */}
+      <div className="hidden md:block">
+        <div className="flex">
+          {tabs.map((v, i) => (
+            <button
+              onClick={() => handleTabChange(v.name)}
+              key={`meta-tab-${i}`}
+              className={`py-[3px] px-[7px] md:py-[7px] md:px-[15px] text-[14px] md:text-[16px] rounded-tl-lg rounded-tr-lg ${
+                tab === v.name
+                  ? "bg-theme-500 text-white font-bold"
+                  : "bg-stone-100 text-stone-500"
+              }`}
+            >
+              {v.name}
+            </button>
+          ))}
+        </div>
+        <div className="border p-[20px] text-[14px] md:text-[16px]">
+          {tab === "Product Descriptions" && (
+            <div
+              className="product_description_content"
+              dangerouslySetInnerHTML={{
+                __html: tabs.filter((i) => i.name === tab)[0]?.content,
+              }}
+            ></div>
+          )}
+          {/* specifications display */}
+          {tab === "Specification" && (
+            <Specifications specs={product?.product_specs} />
+          )}
+          {/* guides display */}
+          {tab === "Guides & Installations" && (
+            <Guides guides={product?.product_manuals} />
+          )}
+        </div>
       </div>
     </div>
   );

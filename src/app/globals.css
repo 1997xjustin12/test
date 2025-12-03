@@ -902,3 +902,7 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 }
 
 /* filter tags END */
+
+.product_description_content p {
+  margin-bottom: 20px;
+}

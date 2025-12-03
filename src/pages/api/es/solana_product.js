@@ -140,6 +140,8 @@ export default async function handler(req, res) {
         );
       }
 
+      let specs;
+
       const spec_keys = [
         { key: "bbq.overall_dimensions", label: "Dimension (WxDxH)" },
         { key: "bbq.product_weight", label: "Product Weight" },
@@ -171,11 +173,17 @@ export default async function handler(req, res) {
         { key: "bbq.seo_meta_total_grill_area", label: "Total Grill Area" },
       ];
 
-      let specs;
-
       specs = spec_keys.map((item) => ({
         ...item,
         value: accentuate_data?.[item?.key] || "",
+      }));
+
+      let manuals;
+      const manual_labels = accentuate_data?.["bbq.file_name"];
+      const manual_links = accentuate_data?.["bbq.upload_file"];
+      manuals = manual_links.map((item, index) => ({
+        label: manual_labels?.[index] || "",
+        value: item || "",
       }));
 
       if (product.length > 0) {
@@ -183,6 +191,8 @@ export default async function handler(req, res) {
         product[0]["fbw_products"] = fbw_products;
         const specsIsEmpty = specs.every((item) => item.value === "");
         product[0]["product_specs"] = specsIsEmpty ? null : specs;
+        const manualsIsEmpty = manuals.every((item) => item.value === "");
+        product[0]["product_manuals"] = manualsIsEmpty ? null : manuals;
       }
 
       const bc_formated_data = {
