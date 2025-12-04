@@ -68,6 +68,12 @@ const ProductCard = ({ hit, page_details }) => {
     }
   };
 
+  if (!hit?.published) {
+    return (
+      <div className="product-card-wrap flex w-full h-full bg-stone-100 overflow-hidden rounded-md border duration-500 pb-[8px] hover:border-stone-200 group"></div>
+    );
+  }
+
   return (
     <div
       data-href={`${getProductUrl(hit)}`}

@@ -1,5 +1,4 @@
 import {
-  areAllKeysEmpty,
   ES_INDEX,
   exclude_brands,
   exclude_collections,
@@ -7,10 +6,9 @@ import {
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
-  const ESURL = "http://164.92.65.4:9200";
+  const ESURL = process.env.NEXT_ES_URL;
   const ESShard = ES_INDEX;
-  const ESApiKey =
-    "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
+  const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
   const fetchConfig = {
     method: req.method,
@@ -58,21 +56,21 @@ export default async function handler(req, res) {
           "bbq.configuration_product",
           "bbq.hinge_related_product",
           "bbq.option_related_product",
-          // "bbq.openbox_related_product",
+          "bbq.openbox_related_product",
           "bbq.shopnew_related_product",
           "bbq.selection_related_product",
           "bbq.product_option_related_product",
           "frequently.fbi_related_product",
         ];
 
-        const fbt_handles = product?.[0]?.["frequently_bought"]?.map(
-          ({ handle }) => handle
-        );
+        // const fbt_handles = product?.[0]?.["frequently_bought"]?.map(
+        //   ({ handle }) => handle
+        // );
         // Flatten all handles from the accentuate_data fields
         const mergedProducts = [
           ...new Set([
             ...mergeRelatedProducts(accentuate_data, keys),
-            ...fbt_handles,
+            // ...fbt_handles,
           ]),
         ];
         const secondFetchConfig = {
@@ -87,11 +85,11 @@ export default async function handler(req, res) {
                       "handle.keyword": mergedProducts,
                     },
                   },
-                  {
-                    term: {
-                      published: true,
-                    },
-                  },
+                  // {
+                  //   term: {
+                  //     published: true,
+                  //   },
+                  // },
                   {
                     bool: {
                       must_not: [
@@ -130,7 +128,7 @@ export default async function handler(req, res) {
           (i) => ({ ...i._source })
         );
 
-        const fbw = fbt_handles || [];
+        const fbw = accentuate_data?.["frequently.fbi_related_product"] || [];
         const has_fbw = Array.isArray(fbw) && fbw.length > 0;
 
         if (has_fbw) {
@@ -216,7 +214,9 @@ export default async function handler(req, res) {
 
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
-        product[0]["fbw_products"] = fbw_products;
+        const fbt_bundle = product?.[0]?.frequently_bought_together || null;
+        product[0]["fbt_bundle"] = fbt_bundle;
+        product[0]["fbt_carousel"] = fbw_products;
         const specsIsEmpty = specs.every((item) => item.value === "");
         product[0]["product_specs"] = specsIsEmpty ? null : specs;
         product[0]["product_manuals"] = manuals || null;

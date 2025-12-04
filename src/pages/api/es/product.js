@@ -1,9 +1,8 @@
 //  this hook is used for searching products
 export default async function handler(req, res) {
-  const ESURL = "http://164.92.65.4:9200";
+  const ESURL = process.env.NEXT_ES_URL;
   const ESShard = "bigcommerce_products_7";
-  const ESApiKey =
-    "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
+  const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
   const fetchConfig = {
     method: req.method,

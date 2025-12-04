@@ -39,8 +39,8 @@ const mainItemsScriptSort = {
 
 const apiClient = API({
   connection: {
-    host: "https://solanafireplaces.com/es",
-    apiKey: "eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==",
+    host: process.env.NEXT_ES_URL,
+    apiKey: process.env.NEXT_ES_API_KEY,
     index: ES_INDEX,
   },
   search_settings: {

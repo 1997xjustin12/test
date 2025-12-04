@@ -18,6 +18,8 @@ import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
 import YouMayAlsoLike from "@/app/components/molecule/YouMayAlsoLike";
 import CompareProductsTable from "@/app/components/molecule/CompareProductsTable";
 import ProductReviewSection from "@/app/components/molecule/ProductReviewSection";
+import ProductCard from "@/app/components/atom/ProductCard";
+import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
 
 const BreadCrumbs = ({ slug, product_path }) => {
@@ -407,7 +409,7 @@ const FrequentlyBoughtItem = ({ product, onChange }) => {
   );
 };
 
-const FrequentlyBoughtSection = ({ products, product }) => {
+const FrequentlyBoughtBundle = ({ products, product }) => {
   const { addItemsToCart, addToCartLoading } = useCart();
   const [fbwProducts, setFbwProducts] = useState(null);
   const [updateTrigger, setUpdateTrigger] = useState(0);
@@ -483,9 +485,9 @@ const FrequentlyBoughtSection = ({ products, product }) => {
         Frequently Bought Together
       </h3>
       <div className="space-y-1.5">
-        {fbwProducts.map((product) => (
+        {fbwProducts.map((product, index) => (
           <FrequentlyBoughtItem
-            key={`fbw-item-${product?.product_id}`}
+            key={`fbw-item-${index}`}
             product={product}
             onChange={handleCheckboxChange}
           />
@@ -520,10 +522,137 @@ const FrequentlyBoughtSection = ({ products, product }) => {
   );
 };
 
+const FBTSection = ({ products }) => {
+  if (!products || !Array.isArray(products) || products.length === 0) return;
+  const displayItems = 4;
+  return (
+    <div className="p-4">
+      <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          Frequently Bought Together
+        </h3>
+        <div className="mt-6 gap-4 sm:mt-8 flex flex-wrap">
+          {products && Array.isArray(products) && products.length > 0
+            ? products.map((item, idx) => (
+                <div
+                  key={`product-card-wrapper-${idx}`}
+                  className={`space-y-6 overflow-hidden ${
+                    displayItems === 4 &&
+                    "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
+                  } ${
+                    (displayItems === undefined || displayItems === 3) &&
+                    "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
+                  }`}
+                >
+                  <ProductCard key={`product-card-${item}`} hit={item} />
+                </div>
+              ))
+            : makeArray(displayItems ?? 3).map((item, idx) => (
+                <div
+                  key={`product-card-${idx}`}
+                  className={`space-y-6 overflow-hidden ${
+                    displayItems === 4 &&
+                    "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
+                  } ${
+                    (displayItems === undefined || displayItems === 3) &&
+                    "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
+                  }`}
+                >
+                  <ProductCardLoader />
+                </div>
+              ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const makeArray = (n) => {
+  return Array.from({ length: n }, (_, i) => i);
+};
+
+const RecentViewedProducts = ({ recents }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const displayItems = 4;
+  useEffect(() => {
+    if (!recents || !Array.isArray(recents) || recents.length < 1) return;
+    const getProducts = async () => {
+      const raw = await fetch(
+        `/api/es/products-by-ids?${recents
+          .map((item) => `product_ids=${item}`)
+          .join("&")}`
+      );
+
+      const response = await raw.json();
+
+      if (response?.data) {
+        setProducts(response.data);
+      }
+      setLoading(false);
+    };
+
+    getProducts();
+  }, [recents]);
+
+  if (!recents || !Array.isArray(recents) || recents.length < 1) {
+    return; // dont display the component
+  }
+
+  if (products.length === 0 && !loading) {
+    return <div>NO DATA</div>;
+  }
+
+  return (
+    <div className="p-4">
+      <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          Recently Viewed
+        </h3>
+        <div className="mt-6 gap-4 sm:mt-8 flex flex-wrap">
+          {!loading &&
+          products &&
+          Array.isArray(products) &&
+          products.length > 0
+            ? products.map((item, idx) => (
+                <div
+                  key={`product-card-wrapper-${idx}`}
+                  className={`space-y-6 overflow-hidden ${
+                    displayItems === 4 &&
+                    "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
+                  } ${
+                    (displayItems === undefined || displayItems === 3) &&
+                    "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
+                  }`}
+                >
+                  <ProductCard key={`product-card-${item}`} hit={item} />
+                </div>
+              ))
+            : makeArray(displayItems ?? 3).map((item, idx) => (
+                <div
+                  key={`product-card-${idx}`}
+                  className={`space-y-6 overflow-hidden ${
+                    displayItems === 4 &&
+                    "w-[calc(50%-10px)] md:w-[calc(33%-10px)] lg:w-[calc(25%-12px)]"
+                  } ${
+                    (displayItems === undefined || displayItems === 3) &&
+                    "w-[calc(50%-10px)] lg:w-[calc(33%-10px)]"
+                  }`}
+                >
+                  <ProductCardLoader />
+                </div>
+              ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Product({ params }) {
   const { slug, product_path } = React.use(params);
-  const { getProductCategories } = useSolanaCategories();
   const [product, setProduct] = useState(null);
+  const [forage, setForage] = useState(null);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const {
     product: fetchedProduct,
     loading,
@@ -531,6 +660,23 @@ export default function Product({ params }) {
   } = useESFetchProductShopify({
     handle: product_path,
   });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let mounted = true;
+
+    import("@/app/lib/localForage").then(async (module) => {
+      if (!mounted) return;
+      const recent_products = (await module.getItem("recentProducts")) || [];
+      setRecentlyViewed(recent_products);
+      setForage(module);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -543,6 +689,12 @@ export default function Product({ params }) {
 
     if (fetchedProduct && fetchedProduct.length > 0) {
       setProduct(fetchedProduct[0]);
+      if (fetchedProduct[0]?.published) {
+        const new_recents = [
+          ...new Set([fetchedProduct[0]?.product_id, ...recentlyViewed]),
+        ];
+        forage.setItem("recentProducts", new_recents.slice(0, 5));
+      }
     }
   }, [loading, fetchedProduct, error]);
 
@@ -569,11 +721,11 @@ export default function Product({ params }) {
                   <div className="w-full px-[5px] mb-0 sm:mb-8 aspect-w-5 aspect-h-4 sm:aspect-h-5 lg:aspect-h-4">
                     <MediaGallery mediaItems={product?.images} />
                   </div>
-                  {product?.fbw_products &&
-                    Array.isArray(product?.fbw_products) &&
-                    product?.fbw_products.length > 0 && (
-                      <FrequentlyBoughtSection
-                        products={product?.fbw_products || []}
+                  {product?.fbt_bundle &&
+                    Array.isArray(product?.fbt_bundle) &&
+                    product?.fbt_bundle.length > 0 && (
+                      <FrequentlyBoughtBundle
+                        products={product?.fbt_bundle || []}
                         product={product}
                       />
                     )}
@@ -612,11 +764,17 @@ export default function Product({ params }) {
             </div>
           )}
           <FaqSection />
+          <FBTSection products={product?.fbt_carousel} />
           <div className="p-4">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto">
               <YouMayAlsoLike displayItems={4} />
             </div>
           </div>
+          <RecentViewedProducts
+            recents={(recentlyViewed || []).filter(
+              (item) => item !== product?.product_id
+            )}
+          />
         </div>
       ) : (
         <ProductSection product={product} loading={loading} />

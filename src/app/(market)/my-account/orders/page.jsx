@@ -398,7 +398,7 @@ export default function OrdersPage() {
         const { data } = await response.json();
         setProducts(data);
       } catch (err) {
-        console.log("[fetchRelatedProducts]", err);
+        // console.log("[fetchRelatedProducts]", err);
       } finally {
         setLoadingOrders(false);
       }

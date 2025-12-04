@@ -13,17 +13,14 @@ export default async function handler(req, res) {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/collections/collection-products/${id}`;
     const key = `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`;
 
-    const response = await fetch(
-      url,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'X-Store-Domain': process.env.NEXT_PUBLIC_STORE_DOMAIN,
-          Authorization: key,
-        },
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
+        Authorization: key,
+      },
+    });
 
     // Check if response is JSON
     const contentType = response.headers.get("content-type");
@@ -39,18 +36,17 @@ export default async function handler(req, res) {
     // return res.status(response.status).json(data);
 
     // fetch collection data
-    const ESURL = "http://164.92.65.4:9200";
+    const ESURL = process.env.NEXT_ES_URL;
     const ESShard = ES_INDEX;
-    const ESApiKey =
-      "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
+    const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
     const es_query = {
-        query: {
-          terms: {
-            "handle.keyword": raw_collection.map(item=> item?.handle),
-          },
+      query: {
+        terms: {
+          "handle.keyword": raw_collection.map((item) => item?.handle),
         },
-      };
+      },
+    };
     const fetchConfig = {
       method: "POST",
       cache: "no-store",
@@ -66,7 +62,7 @@ export default async function handler(req, res) {
       const response = await fetch(`${ESURL}/${ESShard}/_search`, fetchConfig);
       const data = await response.json();
       // res.status(200).json({query: es_query, data:data}); for dev check
-      res.status(200).json(data?.hits?.hits?.map(item=> item?._source));
+      res.status(200).json(data?.hits?.hits?.map((item) => item?._source));
     } catch (error) {
       res
         .status(500)

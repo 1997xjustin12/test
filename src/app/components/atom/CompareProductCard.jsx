@@ -23,7 +23,6 @@ function PriceDisplay({ price, compare_at_price }) {
       compare_at_price !== 0 &&
       compare_at_price !== "0"
     ) {
-      console.log(`compare_at_price`, compare_at_price);
       return parseFloat(compare_at_price)?.toFixed(2);
     }
     return null;

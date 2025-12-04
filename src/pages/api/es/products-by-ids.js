@@ -1,11 +1,10 @@
-import { areAllKeysEmpty, ES_INDEX } from "../../../app/lib/helpers";
+import { ES_INDEX } from "../../../app/lib/helpers";
 
 //  this hook is used for searching products
 export default async function handler(req, res) {
-  const ESURL = "http://164.92.65.4:9200";
+  const ESURL = process.env.NEXT_ES_URL;
   const ESShard = ES_INDEX;
-  const ESApiKey =
-    "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
+  const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
   const fetchConfig = {
     method: "POST",
@@ -21,17 +20,17 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     const API_URL = `${BASE_API_URL}`;
-    let {product_ids} = req.query;
+    let { product_ids } = req.query;
 
-    if(!Array.isArray(product_ids)){
-        product_ids = [product_ids];
+    if (!Array.isArray(product_ids)) {
+      product_ids = [product_ids];
     }
 
     const new_body = {
       size: 100,
       query: {
         terms: {
-          "product_id": product_ids,
+          product_id: product_ids,
         },
       },
     };

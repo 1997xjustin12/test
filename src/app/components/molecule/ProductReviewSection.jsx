@@ -268,7 +268,7 @@ function ProductReviewSection({ product }) {
 
   useEffect(() => {
     const product_id = product?.product_id;
-    console.log("[product]", product);
+    // console.log("[product]", product);
     const fetchReviews = async () => {
       try {
         const response = await getReviewsByProductId(product_id);
@@ -277,7 +277,7 @@ function ProductReviewSection({ product }) {
           return;
         }
         const data = await response.json();
-        console.log("[fetchReviews] data", data);
+        // console.log("[fetchReviews] data", data);
         setReviews(data);
       } catch (err) {
         console.warn("[fetchReviews]", err);
