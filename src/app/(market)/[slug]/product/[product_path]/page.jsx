@@ -614,7 +614,7 @@ const RecentViewedProducts = ({ recents }) => {
           products &&
           Array.isArray(products) &&
           products.length > 0
-            ? products.map((item, idx) => (
+            ? products.slice(0, 4).map((item, idx) => (
                 <div
                   key={`product-card-wrapper-${idx}`}
                   className={`space-y-6 overflow-hidden ${
@@ -689,6 +689,8 @@ export default function Product({ params }) {
 
     if (fetchedProduct && fetchedProduct.length > 0) {
       setProduct(fetchedProduct[0]);
+      console.log("[product]", fetchedProduct[0]);
+
       if (fetchedProduct[0]?.published) {
         const new_recents = [
           ...new Set([fetchedProduct[0]?.product_id, ...recentlyViewed]),
@@ -772,7 +774,7 @@ export default function Product({ params }) {
           </div>
           <RecentViewedProducts
             recents={(recentlyViewed || []).filter(
-              (item) => item !== product?.product_id
+              (item) => item != product?.product_id
             )}
           />
         </div>

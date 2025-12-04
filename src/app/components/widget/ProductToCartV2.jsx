@@ -11,10 +11,8 @@ import {
   AkarIconsShippingV1,
   Eos3DotsLoading,
 } from "../icons/lib";
-
+import { BASE_URL } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 const OnsaleTag = ({ price_details }) => {
   if (
@@ -28,6 +26,55 @@ const OnsaleTag = ({ price_details }) => {
       </div>
     );
   }
+};
+
+const OpenBoxItemLink = ({ product, compare_price }) => {
+  if (!product || !compare_price) return;
+  const product_price = product?.variants?.[0]?.price || 0;
+  const savings = compare_price - product_price;
+  const savings_percentage = ((savings / compare_price) * 100).toFixed(0);
+  return (
+    <Link
+      href={`${BASE_URL}/${createSlug(product?.brand)}/product/${
+        product?.handle
+      }`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="py-2 px-5 border-[transparent] hover:bg-stone-800 group hover:border-neutral-300 transition-all border-b border-stone-400"
+    >
+      <div className="line-clamp-1 text-xs font-bold text-stone-700 text-center group-hover:text-white group-hover:font-medium">
+        {product?.title}
+      </div>
+      <div className="text-green-700 font-bold text-center text-xs group-hover:text-green-400 group-hover:font-medium">
+        {`Open Box: From $${formatPrice(product_price)} Save $${formatPrice(
+          savings
+        )}(${savings_percentage}%)`}
+      </div>
+    </Link>
+  );
+};
+
+const OpenBoxSection = ({ products, product_price }) => {
+  if (!products || !Array.isArray(products) || products.length === 0) return;
+
+  return (
+    <div className="bg-neutral-100 px-3 py-4 mt-4 shadow-xl border">
+      <div className="px-3  flex items-center justify-center">
+        <h4 className="font-bold text-green-800 underline">
+          Save Big - <span className="text-stone-800">Shop Open Box</span>
+        </h4>
+      </div>
+      <div className="flex flex-col w-full mt-2">
+        {products.map((product, index) => (
+          <OpenBoxItemLink
+            key={`open-box-offers-${index}`}
+            product={product}
+            compare_price={product_price}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 const ProductToCart = ({ product, loading }) => {
@@ -146,7 +193,6 @@ const ProductToCart = ({ product, loading }) => {
         <AkarIconsShippingV1 width={24} height={24} />
         <span>Ships Within 1 to 2 Business Days</span>
       </div>
-
       {!isPriceVisible(productData?.product_category, productData?.brand) ? (
         // display no price
         <div className="font-semibold text-base md:text-lg text-stone-700 py-2">
@@ -289,9 +335,8 @@ const ProductToCart = ({ product, loading }) => {
           </div>
         </>
       )}
-
       {/* Features Section */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5 pt-4 border-t border-stone-200">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5 pt-4 ">
         <div className="flex items-center font-semibold gap-2">
           <div>
             <Icon
@@ -344,6 +389,12 @@ const ProductToCart = ({ product, loading }) => {
             Learn More
           </div>
         </div> */}
+      </div>
+      <div className="border-t border-stone-200">
+        <OpenBoxSection
+          products={productData?.open_box}
+          product_price={productData?.variants?.[0]?.price}
+        />
       </div>
     </div>
   );

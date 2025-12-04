@@ -43,6 +43,7 @@ export default async function handler(req, res) {
     try {
       let product_options = null;
       let fbw_products = null;
+      let ob_products = null;
       const response = await fetch(API_URL, fetchConfig);
 
       const data = await response.json();
@@ -128,8 +129,13 @@ export default async function handler(req, res) {
           (i) => ({ ...i._source })
         );
 
+        // map fbt_products
         const fbw = accentuate_data?.["frequently.fbi_related_product"] || [];
         const has_fbw = Array.isArray(fbw) && fbw.length > 0;
+
+        // map open_box
+        const ob = accentuate_data?.["bbq.openbox_related_product"] || [];
+        const has_ob = Array.isArray(ob) && ob.length > 0;
 
         if (has_fbw) {
           fbw_products = relative_products.filter((item) =>
@@ -137,8 +143,14 @@ export default async function handler(req, res) {
           );
         }
 
+        if (has_ob) {
+          ob_products = relative_products.filter((item) =>
+            ob.includes(item?.handle)
+          );
+        }
+
         product_options = relative_products.filter(
-          (item) => !fbw.includes(item?.handle)
+          (item) => ![...fbw, ...ob].includes(item?.handle)
         );
       }
 
@@ -217,6 +229,7 @@ export default async function handler(req, res) {
         const fbt_bundle = product?.[0]?.frequently_bought_together || null;
         product[0]["fbt_bundle"] = fbt_bundle;
         product[0]["fbt_carousel"] = fbw_products;
+        product[0]["open_box"] = ob_products;
         const specsIsEmpty = specs.every((item) => item.value === "");
         product[0]["product_specs"] = specsIsEmpty ? null : specs;
         product[0]["product_manuals"] = manuals || null;

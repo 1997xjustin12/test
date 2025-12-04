@@ -268,7 +268,6 @@ function ProductReviewSection({ product }) {
 
   useEffect(() => {
     const product_id = product?.product_id;
-    // console.log("[product]", product);
     const fetchReviews = async () => {
       try {
         const response = await getReviewsByProductId(product_id);
