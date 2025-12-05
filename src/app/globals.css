@@ -906,3 +906,9 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 .product_description_content p {
   margin-bottom: 20px;
 }
+
+/* Disable ProductOptionItem links when gallery fullscreen is active */
+body.gallery-fullscreen-active .product-option-item-link {
+  z-index: -10 !important;
+  pointer-events: none !important;
+}

@@ -118,7 +118,7 @@ const ProductToCart = ({ product, loading }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full relative">
+    <div className="flex flex-col gap-4 w-full relative -z-20">
       {/* <div className="relative">
         {product && <OnsaleTag price_details={productData?.variants?.[0]} />}
       </div> */}

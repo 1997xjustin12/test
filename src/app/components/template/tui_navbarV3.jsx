@@ -115,7 +115,7 @@ export default function TuiNavbar({ logo, menu }) {
       return;
     }
 
-    if(menu_item?.name === "Current Deals"){
+    if (menu_item?.name === "Current Deals") {
       window.location.href = `${BASE_URL}/brand/eloquence`;
       return;
     }
@@ -186,7 +186,7 @@ export default function TuiNavbar({ logo, menu }) {
   return (
     <>
       <div className="relative shadow">
-        <Disclosure as="nav" className="bg-white z-[9999]">
+        <Disclosure as="nav" className="bg-white z-[500]">
           <div className="shadow border-b ">
             <div className="mx-auto container px-2 pt-[10px]">
               <div className="relative flex h-16 items-center justify-between">
@@ -394,7 +394,8 @@ export default function TuiNavbar({ logo, menu }) {
                                       href={`${BASE_URL}/${sublink?.url}`}
                                       onClick={handleLinkClick}
                                       className={`text-base font-semibold text-neutral-800 hover:underline hover:text-theme-800 ${
-                                        (sublink?.nav_type === "custom_page" && !sublink?.collection_display)
+                                        sublink?.nav_type === "custom_page" &&
+                                        !sublink?.collection_display
                                           ? "line-through"
                                           : ""
                                       }`}
@@ -412,7 +413,8 @@ export default function TuiNavbar({ logo, menu }) {
                                               href={`${BASE_URL}/${child?.url}`}
                                               className={`text-sm font-normal  text-neutral-800 hover:underline hover:text-theme-800 ${
                                                 child?.nav_type ===
-                                                "custom_page" && !sublink?.collection_display
+                                                  "custom_page" &&
+                                                !sublink?.collection_display
                                                   ? "line-through"
                                                   : ""
                                               }`}
@@ -524,14 +526,14 @@ export default function TuiNavbar({ logo, menu }) {
       <Dialog
         open={mobileMenuDialog}
         onClose={setMobileMenuDialog}
-        className="relative z-10"
+        className="relative"
       >
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in lg:hidden"
         />
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="fixed inset-0 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center text-center lg:items-center lg:p-0">
             <DialogPanel
               transition

@@ -154,7 +154,7 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   // RENDER
   // ---------------------------------------------------------------------------
   return (
-    <div className="flex w-full relative z-10" ref={searchRef}>
+    <div className="flex w-full relative" ref={searchRef}>
       {/* Search Input */}
       <input
         type="search"

@@ -86,7 +86,7 @@ const ProductOptions = ({ product, slug }) => {
   const accentuate_data = product.accentuate_data;
 
   return (
-    <div className="flex flex-col gap-[20px]">
+    <div className="flex flex-col gap-[10px]">
       {/* Gas type */}
       {accentuate_data?.["bbq.option_related_product"] && (
         <ProductOptionItem
@@ -244,7 +244,7 @@ const ProductOptionItem = ({
 
   return (
     <div>
-      <div className="font-semibold text-base mb-[12px] text-neutral-800">
+      <div className="font-semibold text-base text-neutral-800">
         {localTitle}
       </div>
       <div className="flex flex-wrap gap-[10px]">
@@ -255,7 +255,7 @@ const ProductOptionItem = ({
               prefetch={false}
               href={`/${localSlug}/product/${localUrls[index]}`}
               key={`${createSlug(title)}-option-${index}`}
-              className={`group relative flex items-center gap-1 p-0 transition-all duration-300 border rounded-lg overflow-hidden ${
+              className={`product-option-item-link group relative flex items-center gap-1 p-0 transition-all  duration-300 border rounded-lg overflow-hidden ${
                 localUrls[index] === localCurrentUrl
                   ? "bg-theme-500 text-white shadow-lg shadow-theme-500/30 border-theme-500 border-2"
                   : "bg-white border-2 border-neutral-200 hover:border-theme-400 hover:shadow-md"
@@ -764,7 +764,7 @@ export default function Product({ params }) {
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto flex flex-col lg:flex-row gap-[0px] lg:gap-[40px] py-[20px]">
               <div className="w-full relative">
                 <div className="sm:sticky sm:top-[60px]">
-                  <div className="w-full px-[5px] mb-0 sm:mb-8 aspect-w-5 aspect-h-4 sm:aspect-h-5 lg:aspect-h-4">
+                  <div className="w-full px-[5px] mb-0 sm:mb-8 sm:aspect-h-5 lg:aspect-h-4">
                     <MediaGallery mediaItems={product?.images} />
                   </div>
                   {product?.fbt_bundle &&
@@ -779,7 +779,7 @@ export default function Product({ params }) {
               </div>
               <div className="w-full">
                 <ProductToCart product={product} loading={loading} />
-                <div className="py-[10px] flex flex-col gap-[15px]">
+                <div className="py-[10px] flex flex-col gap-[15px] ">
                   <ProductOptions product={product} slug={slug} />
                   {product?.product_category && (
                     <CategoryChips categories={product.product_category} />
