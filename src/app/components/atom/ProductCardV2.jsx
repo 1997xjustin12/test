@@ -116,53 +116,9 @@ const ProductCard = ({ hit }) => {
           <div className="mt-3">
             <PriceDisplay product={hit} />
           </div>
-          <div className="flex  h-[48px] items-center">
-            <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]">
-              {
-                // product.is_free_shipping && (
-                // <div className="flex text-[0.7rem] sm:text-base items-center font-bold gap-[3px]">
-                //   <div>
-                //     <Icon
-                //       icon="lucide:circle-check-big"
-                //       className={`${
-                //         product.is_free_shipping
-                //           ? "text-pallete-green"
-                //           : "text-pallete-gray"
-                //       }`}
-                //     />
-                //   </div>
-                //   <div
-                //     className={`text-[0.7rem] sm:text-[0.875rem] relative ${
-                //       product.is_free_shipping
-                //         ? "text-black"
-                //         : "text-pallete-gray line-through"
-                //     }`}>
-                //     <span
-                //       className={`${
-                //         product.is_free_shipping
-                //           ? "text-pallete-green"
-                //           : "text-pallete-gray"
-                //       }`}>
-                //       FREE
-                //     </span>{" "}
-                //     Shipping
-                //   </div>
-                // </div>
-                // )
-              }
-              {/* {product?.custom_fields?.quick_ship && ( */}
-              {/* <div className="flex text-[0.7rem] sm:text-base items-center font-bold gap-[3px]">
-                <div>
-                  <Icon
-                    icon="lucide:circle-check-big"
-                    className="text-pallete-green"
-                  />
-                </div>
-                <div className="text-[0.7rem] sm:text-[0.875rem]">Quick Ship Available</div>
-              </div> */}
-              {/* )} */}
-            </div>
-          </div>
+          {/* <div className="flex  h-[48px] items-center">
+            <div className=" flex-wrap flex flex-col md:flex-row md:items-center justify-between gap-[5px]"></div>
+          </div> */}
 
           <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
             Found It Cheaper?{" "}

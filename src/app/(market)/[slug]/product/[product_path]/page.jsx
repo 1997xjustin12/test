@@ -11,7 +11,7 @@ import Image from "next/image";
 import MediaGallery from "@/app/components/widget/MediaGalleryV2";
 import ProductToCart from "@/app/components/widget/ProductToCartV2";
 import ProductMetaTabs from "@/app/components/product/meta/Tabs";
-import { createSlug, formatPrice } from "@/app/lib/helpers";
+import { BASE_URL, createSlug, formatPrice } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 import { useCart } from "@/app/context/cart";
 import FaqSection from "@/app/components/molecule/SingleProductFaqSection";
@@ -21,6 +21,8 @@ import ProductReviewSection from "@/app/components/molecule/ProductReviewSection
 import ProductCard from "@/app/components/atom/ProductCard";
 import ProductCardLoader from "@/app/components/atom/ProductCardLoader";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+import AddToCartWidget from "@/app/components/widget/AddToCartWidget";
 
 const BreadCrumbs = ({ slug, product_path }) => {
   const { getNameBySlug } = useSolanaCategories();
@@ -648,6 +650,48 @@ const RecentViewedProducts = ({ recents }) => {
   );
 };
 
+const DiscountLinksSection = () => {
+  const links = [
+    { hidden: false, url: `tel:${STORE_CONTACT}`, label: "Phone Discounts" },
+    { hidden: false, url: `${BASE_URL}/package-deals`, label: "Package Deals" },
+    { hidden: false, url: `${BASE_URL}/open-box`, label: "Open Box" },
+    { hidden: false, url: `${BASE_URL}/close-out-deals`, label: "Close Out" },
+    { hidden: false, url: ``, label: "Scratch + Dent" },
+    {
+      hidden: false,
+      url: ``,
+      label: "Low Monthly Payments",
+    },
+    {
+      hidden: false,
+      url: ``,
+      label: "Free Accessory Bundle",
+    },
+  ];
+  return (
+    <div className="p-3 bg-neutral-100 border shadow-lg">
+      <div className="text-center font-bold bg-green-700 text-white">
+        DISCOUNTS
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 mt-1">
+        {links
+          .filter((item) => !item.hidden)
+          .map((link, index) => (
+            <Link
+              key={`discount-section-link-item-${index}`}
+              href={`${link.url || "#"}`}
+              className="flex gap-2 items-center group"
+            >
+              <div className="group-hover:text-theme-800">&#8226;</div>
+              <div className="text-sm text-stone-700 hover:text-theme-900 transition-all font-bold group-hover:underline">
+                {link.label}
+              </div>
+            </Link>
+          ))}
+      </div>
+    </div>
+  );
+};
 export default function Product({ params }) {
   const { slug, product_path } = React.use(params);
   const [product, setProduct] = useState(null);
@@ -735,11 +779,16 @@ export default function Product({ params }) {
               </div>
               <div className="w-full">
                 <ProductToCart product={product} loading={loading} />
-                <div className="py-[30px] flex flex-col gap-[15px]">
+                <div className="py-[10px] flex flex-col gap-[15px]">
                   <ProductOptions product={product} slug={slug} />
                   {product?.product_category && (
                     <CategoryChips categories={product.product_category} />
                   )}
+                </div>
+                <DiscountLinksSection />
+                <div className="mt-5">
+                  {/* QTY Section and Add to Cart Button */}
+                  <AddToCartWidget product={product} />
                 </div>
               </div>
             </div>

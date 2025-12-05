@@ -2,15 +2,9 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";
 import { useState, useEffect } from "react";
-import FicDropDown from "@/app/components/atom/FicDropDown";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
 import Link from "next/link";
-import { useCart } from "@/app/context/cart";
-import {
-  ICRoundPhone,
-  AkarIconsShippingV1,
-  Eos3DotsLoading,
-} from "../icons/lib";
+import { ICRoundPhone, AkarIconsShippingV1 } from "../icons/lib";
 import { BASE_URL } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 
@@ -58,11 +52,9 @@ const OpenBoxSection = ({ products, product_price }) => {
   if (!products || !Array.isArray(products) || products.length === 0) return;
 
   return (
-    <div className="bg-neutral-100 px-3 py-4 mt-4 shadow-xl border">
-      <div className="px-3  flex items-center justify-center">
-        <h4 className="font-bold text-green-800 underline">
-          Save Big - <span className="text-stone-800">Shop Open Box</span>
-        </h4>
+    <div className="bg-neutral-100 px-3 py-3 shadow-xl border">
+      <div className="font-bold bg-green-800 text-white underline px-3  flex items-center justify-center uppercase">
+        Save Big - Shop Open Box
       </div>
       <div className="flex flex-col w-full mt-2">
         {products.map((product, index) => (
@@ -79,9 +71,6 @@ const OpenBoxSection = ({ products, product_price }) => {
 
 const ProductToCart = ({ product, loading }) => {
   const { isPriceVisible } = useSolanaCategories();
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const [ATCLoading, setATCLoading] = useState(false);
   const [filteredCategoryIds, setFilteredCategoryIds] = useState([]);
 
   useEffect(() => {
@@ -100,31 +89,6 @@ const ProductToCart = ({ product, loading }) => {
     // }
   }, [product]);
 
-  const handleQuantityChange = (e) => {
-    const { value } = e.target;
-    setQuantity((prev) => {
-      if (value === "") {
-        return 0;
-      } else {
-        return parseInt(value);
-      }
-    });
-  };
-
-  const handleQuantityButtons = (direction) => {
-    setQuantity((prev) => {
-      let newQuantity = typeof prev === "number" ? prev : 0;
-      if (direction === "inc") {
-        newQuantity = newQuantity + 1;
-      } else if (direction === "dec") {
-        if (newQuantity > 1) {
-          newQuantity = newQuantity - 1;
-        }
-      }
-      return newQuantity;
-    });
-  };
-
   const [productData, setProductData] = useState(product);
   useEffect(() => {
     // console.log("product data", product);
@@ -138,12 +102,6 @@ const ProductToCart = ({ product, loading }) => {
 
   const handleHeartToggle = (e) => {
     setProductData((prev) => ({ ...prev, like: !prev.like }));
-  };
-
-  const handleAddToCart = async (item) => {
-    setATCLoading(true);
-    const response = await addToCart({ ...item, quantity: quantity });
-    setATCLoading(false);
   };
 
   const createBrandUrl = (brandName) => {
@@ -218,13 +176,19 @@ const ProductToCart = ({ product, loading }) => {
                       )}
                     </div>
                   </div>
-                  <div className="text-base md:text-lg font-bold text-red-600">
-                    Save $
-                    {formatPrice(
-                      productData?.variants?.[0]?.compare_at_price -
-                        productData?.variants?.[0]?.price
+                  <div className="flex items-center gap-1">
+                    <div className="text-base md:text-lg font-bold text-red-600">
+                      Save $
+                      {formatPrice(
+                        productData?.variants?.[0]?.compare_at_price -
+                          productData?.variants?.[0]?.price
+                      )}
+                    </div>
+                    {productData?.is_free_shipping && (
+                      <div className="text-base md:text-lg font-bold text-green-700">
+                        + Free Shipping
+                      </div>
                     )}
-                    {}
                   </div>
                 </div>
               ) : (
@@ -233,169 +197,13 @@ const ProductToCart = ({ product, loading }) => {
                 </div>
               )}
             </div>
-
-            {/* QTY Section */}
-            <div className="flex items-center gap-3">
-              <div className="font-bold text-base md:text-lg text-stone-700">
-                QTY
-              </div>
-              <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => handleQuantityButtons("dec")}
-                  type="button"
-                  id="decrement-button"
-                  data-input-counter-decrement="counter-input"
-                  className="inline-flex h-9 w-9 items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors"
-                >
-                  <svg
-                    className="h-3 w-3 text-gray-700"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 2"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 1h16"
-                    />
-                  </svg>
-                </button>
-                <input
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  readOnly
-                  min={1}
-                  type="text"
-                  id="counter-input"
-                  data-input-counter
-                  className="w-12 h-9 border-0 bg-transparent text-center text-base font-semibold text-gray-900 focus:outline-none focus:ring-0"
-                  placeholder=""
-                  required
-                />
-                <button
-                  onClick={() => handleQuantityButtons("inc")}
-                  type="button"
-                  id="increment-button"
-                  data-input-counter-increment="counter-input"
-                  className="inline-flex h-9 w-9 items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors"
-                >
-                  <svg
-                    className="h-3 w-3 text-gray-700"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Add to Cart Button */}
-          <div className="font-bold text-white">
-            <button
-              className={`w-full md:w-auto bg-pallete-green hover:bg-green-700 transition-colors rounded-full py-3 px-8 shadow-md hover:shadow-lg ${
-                ATCLoading
-                  ? "pointer-events-none relative"
-                  : "pointer-events-auto"
-              }`}
-              onClick={() => handleAddToCart(productData)}
-              disabled={ATCLoading}
-            >
-              {ATCLoading && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Eos3DotsLoading width={48} height={48} />
-                </div>
-              )}
-              <div
-                className={`flex items-center justify-center gap-2 ${
-                  ATCLoading ? "opacity-0" : "opacity-100"
-                }`}
-              >
-                <Icon
-                  icon="ph:shopping-cart-simple-bold"
-                  className="text-xl md:text-2xl"
-                />
-                <span className="font-bold uppercase text-base md:text-lg tracking-wide">
-                  add to cart
-                </span>
-              </div>
-            </button>
           </div>
         </>
       )}
-      {/* Features Section */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5 pt-4 ">
-        <div className="flex items-center font-semibold gap-2">
-          <div>
-            <Icon
-              icon="lucide:circle-check-big"
-              className={`text-xl ${
-                productData?.is_free_shipping
-                  ? "text-pallete-green"
-                  : "text-stone-400"
-              }`}
-            />
-          </div>
-          <div
-            className={`text-sm md:text-base ${
-              productData?.is_free_shipping
-                ? "text-stone-700"
-                : "line-through text-stone-400"
-            }`}
-          >
-            <span
-              className={`font-bold ${
-                productData?.is_free_shipping
-                  ? "text-pallete-green"
-                  : "text-stone-400"
-              }`}
-            >
-              FREE
-            </span>{" "}
-            Shipping
-          </div>
-        </div>
-        <div className="flex items-center font-semibold gap-2">
-          <div>
-            <Icon
-              icon="lucide:circle-check-big"
-              className="text-pallete-green text-xl"
-            />
-          </div>
-          <div className="text-sm md:text-base text-stone-700">
-            Quick Ship Available
-          </div>
-        </div>
-        {/* <div className="py-[5px] px-[15px] md:py-[6.5px] md:px-[25px] w-fit gap-[5px] flex items-center rounded-full bg-pallete-lightgray">
-          <div>
-            <Icon
-              icon="material-symbols:info-outline"
-              className="text-pallete-dark text-[18px]"
-            />
-          </div>
-          <div className="text-xs md:text-sm text-pallete-dark font-semibold">
-            Learn More
-          </div>
-        </div> */}
-      </div>
-      <div className="border-t border-stone-200">
-        <OpenBoxSection
-          products={productData?.open_box}
-          product_price={productData?.variants?.[0]?.price}
-        />
-      </div>
+      <OpenBoxSection
+        products={productData?.open_box}
+        product_price={productData?.variants?.[0]?.price}
+      />
     </div>
   );
 };
