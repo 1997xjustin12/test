@@ -4,9 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Rating } from "@smastrom/react-rating";
 import { useSolanaCategories } from "@/app/context/category";
-import { parseRatingCount } from "@/app/lib/helpers";
+import { formatPrice, parseRatingCount } from "@/app/lib/helpers";
 
 function PriceDisplay({ price, compare_at_price }) {
+  const locale = "en-US";
+  const options = {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  };
   const display_price = useMemo(() => {
     return Math.floor(price); // extract the dollar part
   }, [price]);
@@ -32,7 +38,7 @@ function PriceDisplay({ price, compare_at_price }) {
 
   return (
     <div className="text-lg font-medium text-left">
-      ${display_price}
+      {display_price.toLocaleString(locale, options)}
       <sup className="text-xs">{display_cents}</sup>
       {display_regular_price ? (
         <sup className="text-xs ml-2 line-through font-normal">

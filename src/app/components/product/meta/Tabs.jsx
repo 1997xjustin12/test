@@ -44,19 +44,21 @@ const ListDisplay = ({ data }) => {
     <div className="grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_3fr] gap-y-1 text-sm">
       {data &&
         Array.isArray(data) &&
-        data.map((item, index) => (
-          <div
-            key={`spec-item-${index}`}
-            className="contents border-b py-2 transition duration-150 group"
-          >
-            <div className="text-xs sm:text-base font-bold text-neutral-800 group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
-              {item?.label}:
+        data
+          .filter(({ value }) => value !== "")
+          .map((item, index) => (
+            <div
+              key={`spec-item-${index}`}
+              className="contents border-b py-2 transition duration-150 group"
+            >
+              <div className="text-xs sm:text-base font-bold text-neutral-800 group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
+                {item?.label}:
+              </div>
+              <div className="text-xs sm:text-base  sm:pl-5 font-semibold text-theme-700 group-hover:underline group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
+                {normalizeSpecValue(item?.key, item?.value)}
+              </div>
             </div>
-            <div className="text-xs sm:text-base  sm:pl-5 font-semibold text-theme-700 group-hover:underline group-hover:bg-theme-100 group-hover:border-theme-100 border-[transparent] py-1 border-b">
-              {normalizeSpecValue(item?.key, item?.value)}
-            </div>
-          </div>
-        ))}
+          ))}
     </div>
   );
 };
