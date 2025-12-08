@@ -7,7 +7,7 @@ import { validateToken } from '@/app/lib/api';
  * Custom hook for token validation
  * Validates the token from URL parameters on mount
  * If no token is provided, allows access (optional validation mode)
- * 
+ *
  * @returns {Object} { loading, error, isValid, storeData }
  */
 export const useTokenValidation = () => {
@@ -17,13 +17,22 @@ export const useTokenValidation = () => {
   const [storeData, setStoreData] = useState(null);
 
   useEffect(() => {
+    // Ensure we're on the client side before running validation
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const validateAccessToken = async () => {
+      console.log('[TOKEN VALIDATION] Starting validation...');
       try {
         // Get token from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
 
+        console.log('[TOKEN VALIDATION] Token from URL:', token ? 'present' : 'missing');
+
         if (!token) {
+          console.log('[TOKEN VALIDATION] No token provided');
           setError('No authentication token provided');
           setIsValid(false);
           setLoading(false);
@@ -31,9 +40,12 @@ export const useTokenValidation = () => {
         }
 
         // Validate token with backend
+        console.log('[TOKEN VALIDATION] Calling validateToken API...');
         const result = await validateToken(token);
+        console.log('[TOKEN VALIDATION] API result:', result);
 
         if (result.success && result.valid) {
+          console.log('[TOKEN VALIDATION] Token is valid');
           setIsValid(true);
           setStoreData({
             storeId: result.storeId,
@@ -49,6 +61,7 @@ export const useTokenValidation = () => {
             sessionStorage.setItem('storeDomain', result.storeDomain || '');
           }
         } else {
+          console.log('[TOKEN VALIDATION] Token is invalid:', result.error);
           setError(result.error || 'Invalid or expired token');
           setIsValid(false);
         }
@@ -57,6 +70,7 @@ export const useTokenValidation = () => {
         setError('Failed to validate token');
         setIsValid(false);
       } finally {
+        console.log('[TOKEN VALIDATION] Validation complete, setting loading to false');
         setLoading(false);
       }
     };
