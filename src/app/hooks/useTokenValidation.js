@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { validateToken } from '@/app/lib/api';
+import { useState, useEffect } from "react";
+import { validateToken } from "@/app/lib/api";
 
 /**
  * Custom hook for token validation
@@ -17,35 +17,39 @@ export const useTokenValidation = () => {
   const [storeData, setStoreData] = useState(null);
 
   useEffect(() => {
+    console.log("STEP1");
     // Ensure we're on the client side before running validation
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return;
     }
 
     const validateAccessToken = async () => {
-      console.log('[TOKEN VALIDATION] Starting validation...');
+      console.log("[TOKEN VALIDATION] Starting validation...");
       try {
         // Get token from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
+        const token = urlParams.get("token");
 
-        console.log('[TOKEN VALIDATION] Token from URL:', token ? 'present' : 'missing');
+        console.log(
+          "[TOKEN VALIDATION] Token from URL:",
+          token ? "present" : "missing"
+        );
 
         if (!token) {
-          console.log('[TOKEN VALIDATION] No token provided');
-          setError('No authentication token provided');
+          console.log("[TOKEN VALIDATION] No token provided");
+          setError("No authentication token provided");
           setIsValid(false);
           setLoading(false);
           return;
         }
 
         // Validate token with backend
-        console.log('[TOKEN VALIDATION] Calling validateToken API...');
+        console.log("[TOKEN VALIDATION] Calling validateToken API...");
         const result = await validateToken(token);
-        console.log('[TOKEN VALIDATION] API result:', result);
+        console.log("[TOKEN VALIDATION] API result:", result);
 
         if (result.success && result.valid) {
-          console.log('[TOKEN VALIDATION] Token is valid');
+          console.log("[TOKEN VALIDATION] Token is valid");
           setIsValid(true);
           setStoreData({
             storeId: result.storeId,
@@ -55,22 +59,24 @@ export const useTokenValidation = () => {
           setError(null);
 
           // Store data in sessionStorage for later use
-          if (typeof window !== 'undefined') {
-            sessionStorage.setItem('storeId', result.storeId);
-            sessionStorage.setItem('storeName', result.storeName || '');
-            sessionStorage.setItem('storeDomain', result.storeDomain || '');
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("storeId", result.storeId);
+            sessionStorage.setItem("storeName", result.storeName || "");
+            sessionStorage.setItem("storeDomain", result.storeDomain || "");
           }
         } else {
-          console.log('[TOKEN VALIDATION] Token is invalid:', result.error);
-          setError(result.error || 'Invalid or expired token');
+          console.log("[TOKEN VALIDATION] Token is invalid:", result.error);
+          setError(result.error || "Invalid or expired token");
           setIsValid(false);
         }
       } catch (err) {
-        console.error('[TOKEN VALIDATION] Hook error:', err);
-        setError('Failed to validate token');
+        console.error("[TOKEN VALIDATION] Hook error:", err);
+        setError("Failed to validate token");
         setIsValid(false);
       } finally {
-        console.log('[TOKEN VALIDATION] Validation complete, setting loading to false');
+        console.log(
+          "[TOKEN VALIDATION] Validation complete, setting loading to false"
+        );
         setLoading(false);
       }
     };
