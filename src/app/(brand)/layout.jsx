@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import "@smastrom/react-rating/style.css";
 import Nav from "@/app/components/brand/Nav";
 import Footer from "@/app/components/brand/Footer";
 

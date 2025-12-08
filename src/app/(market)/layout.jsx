@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import "@smastrom/react-rating/style.css";
 import { redis, keys, redisGet } from "@/app/lib/redis";
 import {
   Inter,

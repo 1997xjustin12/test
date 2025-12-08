@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 /* Star ratingcomponent */
-@import "@smastrom/react-rating/style.css";
 
 @layer base {
   h1 {

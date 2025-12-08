@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import "@smastrom/react-rating/style.css";
 import AdminContent from "@/app/components/admin/AdminContent";
 import { redis, keys } from "@/app/lib/redis";
 import { CategoriesProvider } from "@/app/context/category";
