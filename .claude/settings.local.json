@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(node scripts/test-sitemap.js:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

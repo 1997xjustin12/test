@@ -7,7 +7,6 @@ const CategoriesContext = createContext([]);
 export function CategoriesProvider({ categories, children }) {
   const pathName = usePathname();
 
-
   /**
    * Recursively flattens a nested category tree into a single-level array.
    *
@@ -106,19 +105,20 @@ export function CategoriesProvider({ categories, children }) {
   };
 
   const getProductUrls = (product_category, product_brand, handle) => {
-    if (!product_category || !product_brand || !handle) return [];
+    if (!product_brand || !handle) return [];
 
+    const tmp_category = product_category || [];
     const valid_categories = flatCategories.filter(
       ({ name }) => !["Home", "Search"].includes(name)
     );
 
     const product_categories_brand = [
       ...new Set([
-        ...product_category.map(({ category_name }) => category_name),
+        ...tmp_category.map(({ category_name }) => category_name),
         product_brand,
       ]),
     ].filter(Boolean);
-    
+
     const valid_product_categories = valid_categories.filter(
       ({ origin_name }) => product_categories_brand.includes(origin_name)
     );
@@ -138,10 +138,12 @@ export function CategoriesProvider({ categories, children }) {
 
     const pathname = pathName;
     const product_urls = getProductUrls(
-      hit.product_category,
-      hit.brand,
-      hit.handle
+      hit?.product_category,
+      hit?.brand,
+      hit?.handle
     );
+
+    console.log("product_urls", product_urls);
 
     if (product_urls.length === 0) {
       // console.log("[Product Url Error] product urls length is 0", hit?.handle);
@@ -160,8 +162,8 @@ export function CategoriesProvider({ categories, children }) {
   };
 
   const getNameBySlug = (slug) => {
-    return flatCategories.find(({url})=> slug === url)?.name || "";
-  }
+    return flatCategories.find(({ url }) => slug === url)?.name || "";
+  };
 
   const solana_categories = useMemo(() => {
     return categories.map((item) => ({ ...item }));

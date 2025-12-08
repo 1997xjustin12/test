@@ -42,6 +42,7 @@ export default async function handler(req, res) {
 
     try {
       let product_options = null;
+      let fbt_bundle = null;
       let fbw_products = null;
       let ob_products = null;
       const response = await fetch(API_URL, fetchConfig);
@@ -64,14 +65,14 @@ export default async function handler(req, res) {
           "frequently.fbi_related_product",
         ];
 
-        // const fbt_handles = product?.[0]?.["frequently_bought"]?.map(
-        //   ({ handle }) => handle
-        // );
+        const fbt_handles = product?.[0]?.["frequently_bought"]?.map(
+          ({ handle }) => handle
+        );
         // Flatten all handles from the accentuate_data fields
         const mergedProducts = [
           ...new Set([
             ...mergeRelatedProducts(accentuate_data, keys),
-            // ...fbt_handles,
+            ...fbt_handles,
           ]),
         ];
         const secondFetchConfig = {
@@ -86,11 +87,6 @@ export default async function handler(req, res) {
                       "handle.keyword": mergedProducts,
                     },
                   },
-                  // {
-                  //   term: {
-                  //     published: true,
-                  //   },
-                  // },
                   {
                     bool: {
                       must_not: [
@@ -130,12 +126,22 @@ export default async function handler(req, res) {
         );
 
         // map fbt_products
+        const fbtb = fbt_handles || [];
+        const has_fbtb = Array.isArray(fbtb) && fbtb.length > 0;
+
+        // map fbt_products
         const fbw = accentuate_data?.["frequently.fbi_related_product"] || [];
         const has_fbw = Array.isArray(fbw) && fbw.length > 0;
 
         // map open_box
         const ob = accentuate_data?.["bbq.openbox_related_product"] || [];
         const has_ob = Array.isArray(ob) && ob.length > 0;
+
+        if (has_fbtb) {
+          fbt_bundle = relative_products.filter((item) =>
+            fbtb.includes(item?.handle)
+          );
+        }
 
         if (has_fbw) {
           fbw_products = relative_products.filter((item) =>
@@ -150,7 +156,7 @@ export default async function handler(req, res) {
         }
 
         product_options = relative_products.filter(
-          (item) => ![...fbw, ...ob].includes(item?.handle)
+          (item) => ![...fbtb, ...fbw, ...ob].includes(item?.handle)
         );
       }
 
@@ -226,7 +232,6 @@ export default async function handler(req, res) {
 
       if (product.length > 0) {
         product[0]["sp_product_options"] = product_options;
-        const fbt_bundle = product?.[0]?.frequently_bought_together || null;
         product[0]["fbt_bundle"] = fbt_bundle;
         product[0]["fbt_carousel"] = fbw_products;
         product[0]["open_box"] = ob_products;

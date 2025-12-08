@@ -2,13 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createSlug, findParentByUrl } from "@/app/lib/helpers";
 import { useOutsideClick } from "@/app/lib/outsideClick";
-import {
-  Disclosure,
-  DisclosureButton,
-  Dialog,
-  DialogPanel,
-  DialogBackdrop,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,6 +37,7 @@ export default function TuiNavbar({ logo, menu }) {
   const [navigation, setNavigation] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
   const [expandedMenu, setExpandedMenu] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   // menu dropdown
   const closeDropdown = useCallback((e) => {
@@ -174,6 +169,10 @@ export default function TuiNavbar({ logo, menu }) {
   };
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     // console.log("[TEST MENU] menu", menu);
     const injectedMenu = addLinksProperty(menu)
       .filter((i) => i?.nav_visibility === true)
@@ -186,39 +185,36 @@ export default function TuiNavbar({ logo, menu }) {
   return (
     <>
       <div className="relative shadow">
-        <Disclosure as="nav" className="bg-white z-[500]">
+        <nav className="bg-white z-[500]">
           <div className="shadow border-b ">
             <div className="mx-auto container px-2 pt-[10px]">
               <div className="relative flex h-16 items-center justify-between">
                 <div className="flex items-center lg:hidden">
                   {/* Mobile menu button*/}
-                  <DisclosureButton
+                  <button
                     onClick={() => setMobileMenuDialog(true)}
                     className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-800 hover:border-gray-700 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white "
+                    aria-label="Open main menu"
                   >
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
                     <Bars3Icon aria-hidden="true" className="block size-6" />
-                  </DisclosureButton>
+                  </button>
                 </div>
                 <div className="flex items-center justify-center flex-1 sm:flex-initial sm:items-stretch sm:justify-start">
                   {/** flex-1 sm:items-stretch sm:justify-start */}
                   <div className="flex items-center relative w-[88px] aspect-2">
                     <div className="absolute top-0 left-0 md:left-[5px] w-[100px] xl:w-[200px]">
-                      {
-                        <Link href={BASE_URL}>
-                          <Image
-                            alt="Logo"
-                            src={logo ?? "/Logo.webp"}
-                            // src={"/images/logo/solana-brand-logo.webp"}
-                            className="w-full h-full object-cover"
-                            width={500}
-                            height={500}
-                            // loading="eager"
-                            // priority={false}
-                          />
-                        </Link>
-                      }
+                      <Link href={BASE_URL}>
+                        <Image
+                          alt="Logo"
+                          src={logo || "/Logo.webp"}
+                          className="w-full h-full object-cover"
+                          width={500}
+                          height={500}
+                          suppressHydrationWarning
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -261,13 +257,16 @@ export default function TuiNavbar({ logo, menu }) {
                       <div
                         key={`parent-nav-${index}`}
                         className={`group py-[5px] px-[10px] rounded-tl-md rounded-tr-md flex gap-[8px] items-center ${
-                          i.url === ParentSlug ? "bg-theme-600 text-white" : ""
+                          isMounted && i.url === ParentSlug
+                            ? "bg-theme-600 text-white"
+                            : ""
                         }
                         ${i.url === expandedMenu?.url ? "bg-white" : ""}`}
+                        suppressHydrationWarning
                       >
                         <button
                           className={`flex items-center gap-[8px] ${
-                            i.url === ParentSlug
+                            isMounted && i.url === ParentSlug
                               ? "font-semibold"
                               : "font-semibold"
                           }`}
@@ -277,10 +276,10 @@ export default function TuiNavbar({ logo, menu }) {
                           {i.name.toLowerCase() !== "home" && (
                             <div
                               className={`text-xs flex items-center gap-[20px]${
-                                i.url === ParentSlug
+                                isMounted && i.url === ParentSlug
                                   ? "font-semibold  text-white"
                                   : "font-semibold text-neutral-800"
-                              } 
+                              }
                         ${
                           i.url === expandedMenu?.url && i.url !== ParentSlug
                             ? "text-theme-700"
@@ -520,7 +519,7 @@ export default function TuiNavbar({ logo, menu }) {
           <div className="w-full lg:hidden">
             <HomeSearchMobile controlled_height={false} main={true} />
           </div>
-        </Disclosure>
+        </nav>
       </div>
 
       <Dialog

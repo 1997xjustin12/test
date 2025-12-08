@@ -43,7 +43,7 @@ const ProductImage = ({ product }) => {
   return (
     <Image
       src={primaryImage.src}
-      alt={`product:${product.name}`}
+      alt={`product:${product?.title}`}
       className="object-contain w-full"
       fill
     />
@@ -58,7 +58,7 @@ const ProductItem = ({ product, label }) => (
     </div>
     <div className="w-full">
       <div className="text-[14px] group-hover:text-theme-600">
-        {product.title}
+        {product?.title}
       </div>
       <div className="text-[10px] text-gray-500 font-normal">{label}</div>
     </div>
@@ -126,7 +126,7 @@ function SearchResultSection({ section, onOptionSelect }) {
         case "product":
           return {
             href: getProductUrl(item),
-            key: `product-result-${item?.handle}`,
+            key: `product-result-${item?.handle}-${index}`,
             content: <ProductItem product={item} label={label} />,
           };
         case "category":
