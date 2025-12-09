@@ -257,24 +257,40 @@ export const SearchProvider = ({ children }) => {
             type: "number",
             script: {
               source: `
-              def main_collections = params.main_products;
-              def product_collections = doc['collections.name.keyword'];
+              // Check for 100% exact title match (case-insensitive)
+              def searchQuery = params.search_query.toLowerCase();
+              def hasExactMatch = false;
 
-              for (collection in product_collections) {
-                if (main_collections.contains(collection)) {
-                  return 0; // Top Priority (will be sorted first by "asc")
+              if (doc.containsKey('title.keyword') && doc['title.keyword'].size() > 0) {
+                def title = doc['title.keyword'].value.toLowerCase();
+                if (title.equals(searchQuery)) {
+                  return 0; // This IS the exact match - show it first
                 }
               }
 
-              return 1; // Lower Priority (will be sorted after 0)
+              // For all other products (no exact match for this doc)
+              // Check if ANY product has exact match by checking main collections
+              def main_collections = params.main_products;
+              def product_collections = doc['collections.name.keyword'];
+
+              // If this product is a main product
+              for (collection in product_collections) {
+                if (main_collections.contains(collection)) {
+                  return 1; // Main product - second priority
+                }
+              }
+
+              return 2; // Non-main product - third priority
             `,
               params: {
+                search_query: trimmedQuery,
                 main_products: main_products,
               },
             },
             order: "asc",
           },
         },
+        "_score",
         { updated_at: "desc" },
       ],
 

@@ -1,6 +1,7 @@
 "use client";
 import { SearchIcon } from "../icons/lib";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import SearchSection from "@/app/components/atom/searchResultSection";
 import { useSearch } from "@/app/context/search";
 
@@ -24,6 +25,7 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   // ---------------------------------------------------------------------------
   // CONTEXT & REFS
   // ---------------------------------------------------------------------------
+  const pathname = usePathname();
   const {
     getRecentSearch,
     setRecentSearch,
@@ -41,6 +43,7 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   // STATE
   // ---------------------------------------------------------------------------
   const [openSearch, setOpenSearch] = useState(false);
+  const isSearchPage = pathname === "/search";
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Search Input
@@ -181,10 +184,10 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
       </button>
 
       {/* Dropdown Results */}
-      {openSearch && (
+      {openSearch && !isSearchPage && (
         <div
           id="search-dropdown"
-          className="absolute left-0 top-full w-full z-50"
+          className="absolute left-0 top-full w-full z-50 shadow-2xl"
           role="listbox"
           aria-label="Search results"
         >

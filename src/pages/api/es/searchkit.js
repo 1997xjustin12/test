@@ -11,6 +11,45 @@ import {
   main_products,
 } from "../../../app/lib/helpers";
 
+const createSortScriptWithQuery = (searchQuery) => ({
+  _script: {
+    type: "number",
+    script: {
+      source: `
+        // Check for 100% exact title match (case-insensitive)
+        def searchQuery = params.search_query.toLowerCase();
+        def hasExactMatch = false;
+
+        if (doc.containsKey('title.keyword') && doc['title.keyword'].size() > 0) {
+          def title = doc['title.keyword'].value.toLowerCase();
+          if (title.equals(searchQuery)) {
+            return 0; // This IS the exact match - show it first
+          }
+        }
+
+        // For all other products (no exact match for this doc)
+        // Check if ANY product has exact match by checking main collections
+        def main_collections = params.main_products;
+        def product_collections = doc['collections.name.keyword'];
+
+        // If this product is a main product
+        for (collection in product_collections) {
+          if (main_collections.contains(collection)) {
+            return 1; // Main product - second priority
+          }
+        }
+
+        return 2; // Non-main product - third priority
+      `,
+      params: {
+        search_query: searchQuery,
+        main_products: main_products,
+      },
+    },
+    order: "asc",
+  },
+});
+
 const mainItemsScriptSort = {
   _script: {
     type: "number",
@@ -526,6 +565,10 @@ export default async function handler(req, res) {
               const query = sr.body.query;
               const searchQuery = sr.body.query?.bool?.must?.[0]?.multi_match?.query || "";
 
+              console.log("[Searchkit API] Search Query:", searchQuery);
+              console.log("[Searchkit API] isPopular:", isPopular);
+              console.log("[Searchkit API] Original Query:", JSON.stringify(query, null, 2));
+
               // Replace the default query with our custom search logic to match context/search.js
               let customQuery = query;
               if (searchQuery) {
@@ -583,7 +626,8 @@ export default async function handler(req, res) {
                   query: customQuery,
                   sort: isPopular
                     ? [
-                        mainItemsScriptSort, // Sort Logic for main products 1st
+                        createSortScriptWithQuery(searchQuery), // Check exact match, then main products
+                        "_score", // Then by relevance
                         { updated_at: "desc" }, // Then by updated_at
                       ]
                     : sort,
