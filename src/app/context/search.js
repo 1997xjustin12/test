@@ -22,7 +22,7 @@ import {
 // CONSTANTS
 // ============================================================================
 const RECENT_SEARCH_KEY = "recent_searches";
-const SEARCH_RESULT_SIZE = 15;
+const SEARCH_RESULT_SIZE = 100;
 const MIN_SUGGESTION_LENGTH = 2;
 const DEBOUNCE_DELAY = 400; // milliseconds
 
@@ -335,7 +335,7 @@ export const SearchProvider = ({ children }) => {
           ],
         },
       },
-      size: 10, // Placeholder for SEARCH_RESULT_SIZE
+      size: SEARCH_RESULT_SIZE,
       suggest: {
         did_you_mean: {
           text: trimmedQuery, // Using the variable directly
@@ -546,7 +546,7 @@ export const SearchProvider = ({ children }) => {
         setLoading(false);
         getSearchResults(
           trim_query,
-          suggest_options?.[0].text || "",
+          suggest_options?.[0]?.text || "",
           aggs_brands
         );
         return data;

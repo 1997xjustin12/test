@@ -8,7 +8,6 @@ import { useSolanaCategories } from "@/app/context/category";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const COLLAPSED_LIMIT = 3;
-const EXPANDED_LIMIT = 10;
 
 // Helper component for hover container
 const HoverContainer = ({ children, className = "" }) => (
@@ -73,8 +72,7 @@ function SearchResultSection({ section, onOptionSelect }) {
 
   const sectionData = useMemo(() => {
     if (!section?.data) return [];
-    const limit = expanded ? EXPANDED_LIMIT : COLLAPSED_LIMIT;
-    return section.data.slice(0, limit);
+    return expanded ? section.data : section.data.slice(0, COLLAPSED_LIMIT);
   }, [section?.data, expanded]);
 
   const handleOptionClick = (e) => {
@@ -171,12 +169,34 @@ function SearchResultSection({ section, onOptionSelect }) {
     return null;
   }
 
+  // Determine if section should show expand/collapse button
+  const canExpand = section?.data?.length > COLLAPSED_LIMIT;
+  const shouldShowButton =
+    canExpand &&
+    ["product", "category", "brand", "collections"].includes(section?.prop);
+
   return (
     <div>
       <div className="bg-stone-200 font-bold text-sm py-1 px-3">
         {section.label}
       </div>
-      <div className="w-full">{sectionData.map(renderItem)}</div>
+      <div
+        className={`w-full ${
+          expanded ? "max-h-[60vh] overflow-y-auto" : ""
+        }`}
+      >
+        {sectionData.map(renderItem)}
+      </div>
+      {shouldShowButton && (
+        <div className="px-2 py-2">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-sm text-theme-600 hover:text-theme-700 font-medium underline"
+          >
+            {expanded ? "See Less" : "See All"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

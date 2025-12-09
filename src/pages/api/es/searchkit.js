@@ -523,13 +523,68 @@ export default async function handler(req, res) {
             return searchRequests.map((sr) => {
               const sort = sr.body.sort;
               const isPopular = !!sort?.["_score"];
+              const query = sr.body.query;
+              const searchQuery = sr.body.query?.bool?.must?.[0]?.multi_match?.query || "";
+
+              // Replace the default query with our custom search logic to match context/search.js
+              let customQuery = query;
+              if (searchQuery) {
+                customQuery = {
+                  bool: {
+                    ...query.bool,
+                    must: {
+                      bool: {
+                        should: [
+                          {
+                            multi_match: {
+                              query: searchQuery,
+                              fields: ["variants.sku^10"],
+                              type: "phrase",
+                            },
+                          },
+                          {
+                            bool: {
+                              should: [
+                                {
+                                  multi_match: {
+                                    query: searchQuery,
+                                    fields: ["title"],
+                                    fuzziness: "AUTO:4,8",
+                                  },
+                                },
+                                {
+                                  multi_match: {
+                                    query: searchQuery,
+                                    fields: ["title"],
+                                    type: "bool_prefix",
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            multi_match: {
+                              query: searchQuery,
+                              type: "phrase",
+                              fields: ["title"],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                };
+              }
+
               return {
                 ...sr,
                 body: {
                   ...sr.body,
+                  query: customQuery,
                   sort: isPopular
                     ? [
                         mainItemsScriptSort, // Sort Logic for main products 1st
+                        { updated_at: "desc" }, // Then by updated_at
                       ]
                     : sort,
                 },
