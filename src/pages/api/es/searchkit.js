@@ -9,6 +9,7 @@ import {
   exclude_brands,
   exclude_collections,
   main_products,
+  shouldApplyMainProductSort,
 } from "../../../app/lib/helpers";
 
 const createSortScriptWithQuery = (searchQuery) => ({
@@ -559,15 +560,70 @@ export default async function handler(req, res) {
       filter_option = {
         hooks: {
           beforeSearch: async (searchRequests) => {
+            console.log("=== [Full Request Debug] ===");
+            console.log("Number of search requests:", searchRequests.length);
+            searchRequests.forEach((req, idx) => {
+              console.log(`\nRequest ${idx}:`);
+              console.log("- Params:", JSON.stringify(req.params, null, 2));
+              console.log("- Body keys:", Object.keys(req.body));
+              console.log("- Query keys:", req.body.query ? Object.keys(req.body.query) : "no query");
+            });
+            console.log("============================\n");
+
             return searchRequests.map((sr) => {
               const sort = sr.body.sort;
               const isPopular = !!sort?.["_score"];
               const query = sr.body.query;
-              const searchQuery = sr.body.query?.bool?.must?.[0]?.multi_match?.query || "";
 
-              console.log("[Searchkit API] Search Query:", searchQuery);
-              console.log("[Searchkit API] isPopular:", isPopular);
-              console.log("[Searchkit API] Original Query:", JSON.stringify(query, null, 2));
+              // Extract search query from Searchkit's structure
+              let searchQuery = "";
+
+              // Helper function to recursively search for query in nested structures
+              const extractQuery = (obj) => {
+                if (!obj || typeof obj !== 'object') return null;
+
+                // Check if current object has multi_match.query
+                if (obj.multi_match?.query) {
+                  return obj.multi_match.query;
+                }
+
+                // Recursively search in arrays
+                if (Array.isArray(obj)) {
+                  for (const item of obj) {
+                    const found = extractQuery(item);
+                    if (found) return found;
+                  }
+                }
+
+                // Recursively search in objects
+                for (const key in obj) {
+                  if (obj.hasOwnProperty(key)) {
+                    const found = extractQuery(obj[key]);
+                    if (found) return found;
+                  }
+                }
+
+                return null;
+              };
+
+              searchQuery = extractQuery(sr.body.query) || "";
+
+              // Also check for query string in the params
+              if (!searchQuery && sr.params?.query) {
+                searchQuery = sr.params.query;
+              }
+
+              // Check if main product sorting should be applied
+              const applyMainProductSort = shouldApplyMainProductSort(searchQuery);
+
+              console.log("=== [Searchkit API Debug] ===");
+              console.log("Search Query:", searchQuery);
+              console.log("Request Params:", sr.params);
+              console.log("Query structure:", JSON.stringify(sr.body.query, null, 2));
+              console.log("Apply Main Product Sort:", applyMainProductSort);
+              console.log("isPopular:", isPopular);
+              console.log("Sort being applied:", isPopular ? "Popular sort (with custom logic)" : "Other sort");
+              console.log("============================");
 
               // Replace the default query with our custom search logic to match context/search.js
               let customQuery = query;
@@ -625,11 +681,18 @@ export default async function handler(req, res) {
                   ...sr.body,
                   query: customQuery,
                   sort: isPopular
-                    ? [
-                        createSortScriptWithQuery(searchQuery), // Check exact match, then main products
-                        "_score", // Then by relevance
-                        { updated_at: "desc" }, // Then by updated_at
-                      ]
+                    ? applyMainProductSort
+                      ? [
+                          // Apply main product priority when keyword matches
+                          mainItemsScriptSort,
+                          { updated_at: "desc" },
+                          "_score",
+                        ]
+                      : [
+                          // Regular relevance sorting for other searches
+                          "_score",
+                          { updated_at: "desc" },
+                        ]
                     : sort,
                 },
               };

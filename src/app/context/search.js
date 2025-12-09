@@ -16,6 +16,7 @@ import {
   exclude_collections,
   createSlug,
   main_products,
+  shouldApplyMainProductSort,
 } from "@/app/lib/helpers";
 
 // ============================================================================
@@ -235,6 +236,9 @@ export const SearchProvider = ({ children }) => {
       };
     }
 
+    // Check if main product sorting should be applied
+    const applyMainProductSort = shouldApplyMainProductSort(trimmedQuery);
+
     return {
       aggs: {
         brands_facet: {
@@ -251,52 +255,50 @@ export const SearchProvider = ({ children }) => {
         },
       },
 
-      sort: [
-        {
-          _script: {
-            type: "number",
-            script: {
-              source: `
-              // Check for 100% exact title match (case-insensitive)
-              def searchQuery = params.search_query.toLowerCase();
-              def hasExactMatch = false;
+      sort: applyMainProductSort
+        ? [
+            // Apply main product priority when keyword matches
+            {
+              _script: {
+                type: "number",
+                script: {
+                  source: `
+                  def main_collections = params.main_products;
+                  def product_collections = doc['collections.name.keyword'];
 
-              if (doc.containsKey('title.keyword') && doc['title.keyword'].size() > 0) {
-                def title = doc['title.keyword'].value.toLowerCase();
-                if (title.equals(searchQuery)) {
-                  return 0; // This IS the exact match - show it first
-                }
-              }
+                  for (collection in product_collections) {
+                    if (main_collections.contains(collection)) {
+                      return 0; // Main product - top priority
+                    }
+                  }
 
-              // For all other products (no exact match for this doc)
-              // Check if ANY product has exact match by checking main collections
-              def main_collections = params.main_products;
-              def product_collections = doc['collections.name.keyword'];
-
-              // If this product is a main product
-              for (collection in product_collections) {
-                if (main_collections.contains(collection)) {
-                  return 1; // Main product - second priority
-                }
-              }
-
-              return 2; // Non-main product - third priority
-            `,
-              params: {
-                search_query: trimmedQuery,
-                main_products: main_products,
+                  return 1; // Non-main product - lower priority
+                `,
+                  params: {
+                    main_products: main_products,
+                  },
+                },
+                order: "asc",
               },
             },
-            order: "asc",
-          },
-        },
-        "_score",
-        { updated_at: "desc" },
-      ],
+            { updated_at: "desc" },
+            "_score",
+          ]
+        : [
+            // Regular relevance sorting for other searches
+            "_score",
+            { updated_at: "desc" },
+          ],
 
       query: {
         bool: {
-          filter: [],
+          filter: [
+            {
+              term: {
+                published: true,
+              },
+            },
+          ],
           must: {
             bool: {
               should: [
@@ -666,7 +668,6 @@ export const SearchProvider = ({ children }) => {
           name: item?.key,
           url: createSlug(item?.key),
         }));
-        console.log("brand_searches from es", brand_searches);
 
         setPopularResults(popular_searches);
         setCategoryResults(category_searches);

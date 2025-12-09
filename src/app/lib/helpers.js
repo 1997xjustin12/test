@@ -9,6 +9,26 @@ export const ES_INDEX = "solana_updated_product_index";
 // export const ES_INDEX = "solana_suggest_v2"; // did_you_mean
 // export const ES_INDEX = "solana_suggest_v3"; // autocomplete sku
 
+// Keywords that trigger main product priority sorting
+export const MAIN_PRODUCT_KEYWORDS = [
+  "blaze",
+  "bull",
+  "twin",
+  "twin eagles",
+  "eloquence",
+  "napoleon",
+  "fire magic",
+];
+
+// Helper to check if search query exactly matches any main product keywords
+export const shouldApplyMainProductSort = (query) => {
+  if (!query) return false;
+  const lowerQuery = query.toLowerCase().trim();
+  return MAIN_PRODUCT_KEYWORDS.some((keyword) =>
+    lowerQuery === keyword.toLowerCase()
+  );
+};
+
 export function parseRatingCount(value) {
   if (typeof value === "string") {
     value = value.replace(/[^\d]/g, "");

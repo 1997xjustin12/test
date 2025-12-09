@@ -143,8 +143,6 @@ export function CategoriesProvider({ categories, children }) {
       hit?.handle
     );
 
-    console.log("product_urls", product_urls);
-
     if (product_urls.length === 0) {
       // console.log("[Product Url Error] product urls length is 0", hit?.handle);
       return "#";
