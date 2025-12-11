@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { keys, redisGet } from "@/app/lib/redis";
 import parse from "html-react-parser";
-import { STORE_CONTACT, STORE_NAME } from "@/app/lib/store_constants";
+import {
+  STORE_CONTACT,
+  STORE_NAME,
+  STORE_REDIS_PREFIX,
+} from "@/app/lib/store_constants";
 
 import { MingcuteUpLine, MingcuteDownLine } from "@/app/components/icons/lib";
 import Link from "next/link";
 
-const about = keys.faqs_about_solana.value;
+const about = keys?.[`faqs_about_${STORE_REDIS_PREFIX}`]?.value;
 const shipping_policy = keys.faqs_shipping_policy.value;
 const return_policy = keys.faqs_return_policy.value;
 const warranty = keys.faqs_warranty.value;
