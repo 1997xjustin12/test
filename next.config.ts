@@ -1,4 +1,5 @@
-// next.config.js
+// next.config.ts
+import type { NextConfig } from 'next';
 
 // 1. Define all necessary external hostnames once
 const imageDomains = [
@@ -41,10 +42,16 @@ const frameSrcDomains = [
   "https://www.gstatic.com" // reCAPTCHA frames
 ]
 
-module.exports = {
+const config: NextConfig = {
   // Required: Next.js Image component configuration
   images: {
-    domains: imageDomains,
+    remotePatterns: [
+      { protocol: 'https', hostname: 'cdn11.bigcommerce.com' },
+      { protocol: 'https', hostname: 'onsite-cdn.sfo3.cdn.digitaloceanspaces.com' },
+      { protocol: 'https', hostname: 'bbq-spaces.sfo3.digitaloceanspaces.com' },
+      { protocol: 'https', hostname: 'cdn.shopify.com' },
+      { protocol: 'https', hostname: 'bbq-spaces.sfo3.cdn.digitaloceanspaces.com' },
+    ],
   },
 
   async headers() {
@@ -54,9 +61,9 @@ module.exports = {
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://r2.leadsy.ai https://tag.trovo-tag.com https://www.google.com https://www.gstatic.com https://static.cloudflareinsights.com;
       
       style-src 'self' 'unsafe-inline' ${styleSrcDomains.join(" ")};
-      
-      img-src 'self' data: blob: ${imageDomains.join(" ")}; 
-      
+
+      img-src 'self' data: blob: ${imageDomains.map(d => `https://${d}`).join(" ")};
+
       connect-src 'self' ${connectDomains.join(" ")}; 
 
       frame-src 'self' ${frameSrcDomains.join(" ")}; 
@@ -76,3 +83,5 @@ module.exports = {
     ];
   },
 };
+
+export default config;

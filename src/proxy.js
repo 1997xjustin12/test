@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 
-// const block_links = []; // "/cart", "/checkout"
-
-export function middleware(request) {
+export function proxy(request) {
   const { pathname } = request.nextUrl;
   const cart = JSON.parse(request.cookies.get("cart")?.value || "[]");
   const isLoggedIn = request.cookies.get("isLoggedIn")?.value === "true";
@@ -11,12 +9,12 @@ export function middleware(request) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // ✅ Already logged in → block auth routes
-  if (isLoggedIn && ["/login", "/register", "/reset-password","/forgot-password"].includes(pathname)) {
+  // Already logged in → block auth routes
+  if (isLoggedIn && ["/login", "/register", "/reset-password", "/forgot-password"].includes(pathname)) {
     return NextResponse.redirect(new URL("/my-account", request.url));
   }
 
-  // ✅ Not logged in → block private routes
+  // Not logged in → block private routes
   if (!isLoggedIn && (pathname.startsWith("/my-account") || pathname.startsWith("/logout"))) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -24,6 +22,14 @@ export function middleware(request) {
   return NextResponse.next();
 }
 
-// export const config = {
-//   matcher: block_links,
-// };
+export const config = {
+  matcher: [
+    "/checkout",
+    "/login",
+    "/register",
+    "/reset-password",
+    "/forgot-password",
+    "/my-account/:path*",
+    "/logout/:path*"
+  ],
+};
