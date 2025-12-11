@@ -10,9 +10,9 @@ import parse from "html-react-parser";
 import { useState, useEffect } from "react";
 import { keys, redisGet } from "@/app/lib/redis";
 import { MingcuteUpLine, MingcuteDownLine } from "@/app/components/icons/lib";
-import { STORE_NAME } from "@/app/lib/store_constants";
+import { STORE_NAME, STORE_REDIS_PREFIX } from "@/app/lib/store_constants";
 
-const about = keys?.[`faqs_about_${STORE_REDIS_PREFIX}`].value;
+const about = keys.faqs_about_brand.value;
 const shipping_policy = keys.faqs_shipping_policy.value;
 const return_policy = keys.faqs_return_policy.value;
 const warranty = keys.faqs_warranty.value;
