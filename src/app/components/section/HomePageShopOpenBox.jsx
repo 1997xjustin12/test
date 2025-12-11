@@ -86,17 +86,7 @@ export default function HomePageShopOpenBox() {
     viewItem(item, productCategory);
   };
 
-  // fetch data
   useEffect(() => {
-    // const rawQuery = {
-    //   size: 10,
-    //   query: {
-    //     match_phrase: {
-    //       tags: "Blaze Open Box",
-    //     },
-    //   },
-    // };
-
     const rawQuery = {
       size: 10,
       query: {
@@ -106,11 +96,25 @@ export default function HomePageShopOpenBox() {
               tags: "Blaze Open Box",
             },
           },
-          must_not: {
-            term: {
-              product_id: 1099,
+          filter: [
+            {
+              term: {
+                published: true,
+              },
             },
-          },
+          ],
+          must_not: [
+            {
+              terms: {
+                "brand.keyword": exclude_brands, // Placeholder for actual array
+              },
+            },
+            {
+              terms: {
+                "collections.name.keyword": exclude_collections, // Placeholder for actual array
+              },
+            },
+          ],
         },
       },
     };

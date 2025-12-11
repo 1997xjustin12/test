@@ -1,4 +1,8 @@
-import { ES_INDEX } from "../../../../app/lib/helpers";
+import {
+  ES_INDEX,
+  exclude_brands,
+  exclude_collections,
+} from "../../../../app/lib/helpers";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -36,14 +40,38 @@ export default async function handler(req, res) {
     // return res.status(response.status).json(data);
 
     // fetch collection data
-    const ESURL = process.env.NEXT_ES_URL;
+    const ESURL = "http://164.92.65.4:9200";
     const ESShard = ES_INDEX;
-    const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
+    const ESApiKey =
+      "apiKey eHgtQWI1VUI0Nm1Xbl9IdGNfRG46bFZqUjQtMzJRN3kzdllmVjVDemNHdw==";
 
     const es_query = {
       query: {
-        terms: {
-          "handle.keyword": raw_collection.map((item) => item?.handle),
+        bool: {
+          filter: [
+            {
+              terms: {
+                "handle.keyword": raw_collection.map((item) => item?.handle),
+              },
+            },
+            {
+              term: {
+                published: true,
+              },
+            },
+          ],
+          must_not: [
+            {
+              terms: {
+                "brand.keyword": exclude_brands, // Placeholder for actual array
+              },
+            },
+            {
+              terms: {
+                "collections.name.keyword": exclude_collections, // Placeholder for actual array
+              },
+            },
+          ],
         },
       },
     };

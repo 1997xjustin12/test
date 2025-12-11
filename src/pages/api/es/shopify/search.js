@@ -25,7 +25,29 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(`${ESURL}/${ESShard}/_search`, fetchConfig);
     const data = await response.json();
-    res.status(200).json(data);
+
+    const products = data?.hits?.hits || [];
+    const mapped_data = {
+      ...data,
+      hits: {
+        ...data?.hits,
+        hits: products.map(({ _source }) => ({
+          _source: {
+            title: _source?.title,
+            images: _source?.images,
+            product_id: _source?.product_id,
+            variants: _source?.variants,
+            brand: _source?.brand,
+            handle: _source?.handle,
+            published: _source?.published,
+            product_category: _source?.product_category,
+            ratings: _source?.ratings,
+          },
+        })),
+      },
+    };
+    res.status(200).json(mapped_data);
+    // res.status(200).json(data);
   } catch (error) {
     res
       .status(500)
