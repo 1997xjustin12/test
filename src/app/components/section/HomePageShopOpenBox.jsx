@@ -10,61 +10,14 @@ import SectionHeader from "../atom/SectionHeader";
 import { Rating } from "@smastrom/react-rating";
 import ItemPrice from "@/app/components/atom/openBoxItemPrice";
 import Image from "next/image";
-import { BASE_URL, createSlug } from "@/app/lib/helpers";
+import {
+  BASE_URL,
+  createSlug,
+  exclude_brands,
+  exclude_collections,
+} from "@/app/lib/helpers";
 import { useQuickView } from "@/app/context/quickview";
 import ProductCard from "@/app/components/atom/ProductCard";
-// const products = [
-//   {
-//     img: "/images/home/open-box/open-boxes-image-1.webp",
-//     name: "Open Box Blaze Premium - LTE 32-Inch 4-Burner Built-In Grill",
-//     brand: "Blaze Outdoor Products",
-//     sale_price: 1849,
-//     original_price: 2874.99,
-//     free_shipping: true,
-//     ratings: 5,
-//     reviews: 2,
-//   },
-//   {
-//     img: "/images/home/open-box/open-boxes-image-2.webp",
-//     name: "Blaze Infraorange Sear Burner BLZ-IR (New)",
-//     brand: "Blaze Outdoor Products",
-//     sale_price: 99.99,
-//     original_price: 109.99,
-//     free_shipping: true,
-//     ratings: 0,
-//     reviews: 0,
-//   },
-//   {
-//     img: "/images/home/open-box/open-boxes-image-3.webp",
-//     name: "Blaze Double Side Burner Model BLZ-SB2LTE-OB (Open Box)",
-//     brand: "Blaze Outdoor Products",
-//     sale_price: 699.99,
-//     original_price: 999.99,
-//     free_shipping: true,
-//     ratings: 0,
-//     reviews: 0,
-//   },
-//   {
-//     img: "/images/home/open-box/open-boxes-image-4.webp",
-//     name: "Frame Only BLZ-AD32 Open Box (New)",
-//     brand: "Blaze Outdoor Products",
-//     sale_price: 69.99,
-//     original_price: 69.99,
-//     free_shipping: false,
-//     ratings: 0,
-//     reviews: 0,
-//   },
-//   {
-//     img: "/images/home/open-box/open-boxes-image-5.webp",
-//     name: "Blaze IR Burner BLZ-IR Open Box",
-//     brand: "Blaze Outdoor Products",
-//     sale_price: 79.99,
-//     original_price: 109.99,
-//     free_shipping: true,
-//     ratings: 0,
-//     reviews: 0,
-//   },
-// ];
 const carousel_breakpoints = [
   { minWidth: 0, value: 1 },
   { minWidth: 768, value: 2 },
