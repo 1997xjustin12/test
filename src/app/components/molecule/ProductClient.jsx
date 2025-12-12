@@ -33,18 +33,50 @@ const BreadCrumbs = ({ slug, product_title }) => {
 
   return (
     <div className="flex items-center gap-[10px]">
-      <Link prefetch={false} href={`/`} className="hover:underline">
+      <Link
+        prefetch={false}
+        href={`/`}
+        className="hover:underline hover:text-theme-600 transition-all"
+      >
         Home
       </Link>
-      /
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m11 9l3 3l-3 3"
+        />
+      </svg>
       <Link
         prefetch={false}
         href={`/${slug}`}
-        className="hover:underline whitespace-nowrap"
+        className="hover:underline hover:text-theme-600 transition-all whitespace-nowrap"
       >
         {getNameBySlug(slug)}
       </Link>
-      <span>/</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m11 9l3 3l-3 3"
+        />
+      </svg>
       <div title={product_title} className="underline line-clamp-1">
         {product_title}
       </div>
@@ -854,7 +886,33 @@ export default function ProductClient({ params }) {
           {/* {product && <JsonViewer product={product} loading={loading} />} */}
           <div className="p-2 bg-stone-700">
             <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto flex flex-col gap-[10px]">
-              <div className="text-neutral-100">
+              <Link
+                prefetch={false}
+                href="#"
+                className="text-neutral-100 flex items-center justify-center gap-2 text-sm hover:text-theme-400 hover:underline transition-all"
+              >
+                Shop up to 50% off Grills, Furniture & More
+                <svg
+                  className="h-5 w-5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 12H5m14 0-4 4m4-4-4-4"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </div>
+          <div className="p-2 bg-white">
+            <div className="container max-w-7xl px-[0px] sm:px-[20px] mx-auto flex flex-col gap-[10px]">
+              <div className="text-stone-800">
                 <BreadCrumbs slug={slug} product_title={product?.title} />
               </div>
             </div>
