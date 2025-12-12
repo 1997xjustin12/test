@@ -26,6 +26,7 @@ const RECENT_SEARCH_KEY = "recent_searches";
 const SEARCH_RESULT_SIZE = 100;
 const MIN_SUGGESTION_LENGTH = 2;
 const DEBOUNCE_DELAY = 400; // milliseconds
+const HIDDEN_COLLECTIONS = ["American Outdoor Grill"];
 
 // ============================================================================
 // CONTEXT
@@ -314,14 +315,14 @@ export const SearchProvider = ({ children }) => {
                     should: [
                       {
                         multi_match: {
-                          query: trimmedQuery, // Using the variable directly
+                          query: trimmedQuery,
                           fields: ["title"],
-                          fuzziness: "AUTO:4,8",
+                          fuzziness: "AUTO:4,8", // Back to original
                         },
                       },
                       {
                         multi_match: {
-                          query: trimmedQuery, // Using the variable directly
+                          query: trimmedQuery,
                           fields: ["title"],
                           type: "bool_prefix",
                         },
@@ -564,10 +565,14 @@ export const SearchProvider = ({ children }) => {
 
         if (!query || query.trim() === "") {
           // No query: show top 10 most popular
-          console.log("📊 popularSearches (no query):", popularSearches.length, popularSearches.slice(0, 3));
+          console.log(
+            "📊 popularSearches (no query):",
+            popularSearches.length,
+            popularSearches.slice(0, 3)
+          );
 
           popular_searches = (popularSearches || [])
-            .filter((item) => item && typeof item === 'object' && item.term)
+            .filter((item) => item && typeof item === "object" && item.term)
             .sort((a, b) => (b.score || 0) - (a.score || 0))
             .slice(0, 10)
             .map((item) => item.term);
@@ -584,11 +589,11 @@ export const SearchProvider = ({ children }) => {
           popular_searches = (popularSearches || [])
             .filter((item) => {
               // Defensive check: ensure item has a term property that's a string
-              if (!item || typeof item !== 'object') {
+              if (!item || typeof item !== "object") {
                 console.warn("Invalid item in popularSearches:", item);
                 return false;
               }
-              if (!item.term || typeof item.term !== 'string') {
+              if (!item.term || typeof item.term !== "string") {
                 console.warn("Invalid term in popularSearches item:", item);
                 return false;
               }
@@ -632,9 +637,6 @@ export const SearchProvider = ({ children }) => {
           name: item?.key,
           url: createSlug(item?.key),
         }));
-
-        console.log("🔍 getSearchResults - query:", query);
-        console.log("🔍 popular_searches filtered:", popular_searches);
 
         setPopularResults(popular_searches);
         setCategoryResults(category_searches);
@@ -702,10 +704,18 @@ export const SearchProvider = ({ children }) => {
           return { name: item?.key, url };
         });
 
-        console.log("sku_ac_options", sku_ac_options);
+        console.log("🔎 fetchProducts results:", {
+          query: trim_query,
+          productsCount: formatted_results?.length,
+          brandsCount: aggs_brands?.length,
+          collectionsCount: aggs_collections?.length,
+          skusCount: sku_ac_options?.length,
+        });
 
         setSkusResults(trim_query.length > 2 ? sku_ac_options || [] : []);
-        setCollectionsResults(aggs_collections);
+        setCollectionsResults(
+          aggs_collections.filter((i) => !HIDDEN_COLLECTIONS.includes(i.name))
+        );
         setProductResults(formatted_results || []);
         setSuggestionResults(
           trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options || [] : []
