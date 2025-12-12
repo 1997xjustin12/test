@@ -49,9 +49,9 @@ const BreadCrumbs = ({ slug, product_title }) => {
         <path
           fill="none"
           stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
           d="m11 9l3 3l-3 3"
         />
       </svg>
@@ -71,9 +71,9 @@ const BreadCrumbs = ({ slug, product_title }) => {
         <path
           fill="none"
           stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
           d="m11 9l3 3l-3 3"
         />
       </svg>
@@ -268,6 +268,15 @@ const ProductOptionItem = ({
     }
   };
 
+  const formatOptionLabel = (label) => {
+    const labels = {
+      NG: "Natural Gas",
+      LP: "Liquid Propane",
+    };
+
+    return labels?.[label] || label;
+  };
+
   useEffect(() => {
     // console.log("options", options);
 
@@ -308,23 +317,31 @@ const ProductOptionItem = ({
       <div className="font-semibold text-base text-neutral-800">
         {localTitle}
       </div>
-      <div className="flex flex-wrap gap-[10px]">
+      <div className="mt-1 grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
         {localOptions &&
           Array.isArray(localOptions) &&
           localOptions.map((item, index) => (
             <Link
               prefetch={false}
               href={`/${localSlug}/product/${localUrls[index]}`}
+              title={item}
               key={`${createSlug(title)}-option-${index}`}
-              className={`product-option-item-link group relative flex items-center gap-1 p-0 transition-all  duration-300 border rounded-lg overflow-hidden ${
+              className={`product-option-item-link group relative flex items-center gap-1 p-0 transition-all duration-300 border rounded-lg overflow-hidden ${
                 localUrls[index] === localCurrentUrl
-                  ? "bg-theme-500 text-white shadow-lg shadow-theme-500/30 border-theme-500 border-2"
-                  : "bg-white border-2 border-neutral-200 hover:border-theme-400 hover:shadow-md"
+                  ? "bg-theme-600 text-white shadow-xs shadow-theme-500/30 border-theme-600 border-2"
+                  : "bg-white border-2 border-neutral-300 hover:border-theme-600 hover:shadow-md"
               }`}
             >
+              {/* Active Check Icon */}
+              {localUrls[index] === localCurrentUrl && (
+                <div className="absolute top-1 right-1 z-10 w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                  <Icon icon="mdi:check" className="text-theme-600 text-sm" />
+                </div>
+              )}
+
               {/* Image Container */}
               <div
-                className={`flex-shrink-0 w-[50px] bg-white h-[50px] overflow-hidden relative p-1`}
+                className={`flex-shrink-0 w-[60px] bg-white h-[60px] overflow-hidden relative p-1`}
               >
                 {localProductOptions &&
                   Array.isArray(localProductOptions) &&
@@ -338,8 +355,8 @@ const ProductOptionItem = ({
                         )?.images?.[0]?.src
                       }
                       alt={item}
-                      width={50}
-                      height={50}
+                      width={60}
+                      height={60}
                       className="object-contain w-full h-full"
                     />
                   )}
@@ -348,16 +365,16 @@ const ProductOptionItem = ({
               {/* Content Container */}
               <div className="flex flex-col gap-1 min-w-0 flex-1 px-2">
                 <div
-                  className={`font-semibold text-sm ${
+                  className={`font-semibold text-xs line-clamp-2 ${
                     localUrls[index] === localCurrentUrl
                       ? "text-white"
                       : "text-neutral-800 group-hover:text-theme-600"
                   }`}
                 >
-                  {item}
+                  {formatOptionLabel(item)}
                 </div>
                 {localProductOptions && Array.isArray(localProductOptions) && (
-                  <div className="text-xs font-medium">
+                  <div className="text-xs">
                     <UpsellPriceDisplay
                       product_price={
                         localProductOptions.find(
