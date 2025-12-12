@@ -505,6 +505,156 @@ export const SearchProvider = ({ children }) => {
   );
 
   // ---------------------------------------------------------------------------
+  // API: Get Recent Searches
+  // ---------------------------------------------------------------------------
+  const getRecentSearch = useCallback(async () => {
+    try {
+      if (!lForage) return [];
+      return (await lForage.getItem(RECENT_SEARCH_KEY)) || [];
+    } catch (error) {
+      console.error("[LocalForage] getRecentSearch error:", error);
+      return [];
+    }
+  }, [lForage]);
+
+  // ---------------------------------------------------------------------------
+  // API: Set Recent Searches
+  // ---------------------------------------------------------------------------
+  const setRecentSearch = useCallback(
+    async (value) => {
+      try {
+        if (!lForage) return;
+        const new_value = dedupeRecents(value);
+        await lForage.setItem(
+          RECENT_SEARCH_KEY,
+          new_value.map((item) => ({
+            ...item,
+            term: item?.term?.toLowerCase(),
+          }))
+        );
+      } catch (error) {
+        console.error("[LocalForage] setRecentSearch error:", error);
+      }
+    },
+    [lForage, dedupeRecents]
+  );
+
+  // ---------------------------------------------------------------------------
+  // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
+  // ---------------------------------------------------------------------------
+  const getSearchResults = useCallback(
+    async (query, suggest, brands = []) => {
+      try {
+        const recentLS = await getRecentSearch();
+        const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
+
+        const results =
+          query === ""
+            ? recent
+            : recent
+                .filter((i) =>
+                  i.term.toLowerCase().includes(query.toLowerCase())
+                )
+                .sort((a, b) => b.timestamp - a.timestamp);
+
+        // Popular searches logic:
+        // - Show top 10 when query is empty
+        // - Filter and prioritize by relevance when user is typing
+        let popular_searches = [];
+
+        if (!query || query.trim() === "") {
+          // No query: show top 10 most popular
+          console.log("📊 popularSearches (no query):", popularSearches.length, popularSearches.slice(0, 3));
+
+          popular_searches = (popularSearches || [])
+            .filter((item) => item && typeof item === 'object' && item.term)
+            .sort((a, b) => (b.score || 0) - (a.score || 0))
+            .slice(0, 10)
+            .map((item) => item.term);
+        } else {
+          // Has query: filter by relevance and sort
+          const queryLower = query.toLowerCase().trim();
+
+          console.log(
+            "🔍 popularSearches in getSearchResults:",
+            popularSearches.length,
+            popularSearches.slice(0, 3)
+          );
+
+          popular_searches = (popularSearches || [])
+            .filter((item) => {
+              // Defensive check: ensure item has a term property that's a string
+              if (!item || typeof item !== 'object') {
+                console.warn("Invalid item in popularSearches:", item);
+                return false;
+              }
+              if (!item.term || typeof item.term !== 'string') {
+                console.warn("Invalid term in popularSearches item:", item);
+                return false;
+              }
+              const termLower = item.term.toLowerCase();
+              return termLower.includes(queryLower);
+            })
+            .map((item) => {
+              const termLower = item?.term?.toLowerCase() || "";
+              // Prioritize: starts with query > contains query
+              const startsWithQuery = termLower.startsWith(queryLower);
+              const matchIndex = termLower.indexOf(queryLower);
+
+              return {
+                ...item,
+                startsWithQuery,
+                matchIndex,
+              };
+            })
+            .sort((a, b) => {
+              // First: higher score (popularity) - most important!
+              const scoreDiff = (b.score || 0) - (a.score || 0);
+              if (scoreDiff !== 0) return scoreDiff;
+
+              // Second: prioritize starts-with matches
+              if (a.startsWithQuery && !b.startsWithQuery) return -1;
+              if (!a.startsWithQuery && b.startsWithQuery) return 1;
+
+              // Third: earlier match position
+              return a.matchIndex - b.matchIndex;
+            })
+            .slice(0, 10)
+            .map((item) => item?.term);
+        }
+
+        const category_searches = filterNavigationItems(
+          "custom_page",
+          query,
+          suggest
+        );
+        const brand_searches = (brands || []).map((item) => ({
+          name: item?.key,
+          url: createSlug(item?.key),
+        }));
+
+        console.log("🔍 getSearchResults - query:", query);
+        console.log("🔍 popular_searches filtered:", popular_searches);
+
+        setPopularResults(popular_searches);
+        setCategoryResults(category_searches);
+        setBrandResults(brand_searches);
+
+        return {
+          recent: results,
+          popular: popular_searches,
+          category: category_searches,
+          brand: brand_searches,
+        };
+      } catch (error) {
+        console.error("[ERROR] getSearchResults:", error);
+        return null;
+      }
+    },
+    [getRecentSearch, popularSearches, filterNavigationItems]
+  );
+
+  // ---------------------------------------------------------------------------
   // API: Fetch Products from Elasticsearch
   // ---------------------------------------------------------------------------
   const fetchProducts = useCallback(
@@ -577,7 +727,7 @@ export const SearchProvider = ({ children }) => {
         return null;
       }
     },
-    [buildSearchQuery]
+    [buildSearchQuery, getSearchResults]
   );
 
   // ---------------------------------------------------------------------------
@@ -597,95 +747,6 @@ export const SearchProvider = ({ children }) => {
       console.error("[ERROR] Add Popular Searches:", err);
     }
   }, []);
-
-  // ---------------------------------------------------------------------------
-  // API: Get Recent Searches
-  // ---------------------------------------------------------------------------
-  const getRecentSearch = useCallback(async () => {
-    try {
-      if (!lForage) return [];
-      return (await lForage.getItem(RECENT_SEARCH_KEY)) || [];
-    } catch (error) {
-      console.error("[LocalForage] getRecentSearch error:", error);
-      return [];
-    }
-  }, [lForage]);
-
-  // ---------------------------------------------------------------------------
-  // API: Set Recent Searches
-  // ---------------------------------------------------------------------------
-  const setRecentSearch = useCallback(
-    async (value) => {
-      try {
-        if (!lForage) return;
-        const new_value = dedupeRecents(value);
-        await lForage.setItem(
-          RECENT_SEARCH_KEY,
-          new_value.map((item) => ({
-            ...item,
-            term: item?.term?.toLowerCase(),
-          }))
-        );
-      } catch (error) {
-        console.error("[LocalForage] setRecentSearch error:", error);
-      }
-    },
-    [lForage, dedupeRecents]
-  );
-
-  // ---------------------------------------------------------------------------
-  // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
-  // ---------------------------------------------------------------------------
-  const getSearchResults = useCallback(
-    async (query, suggest, brands = []) => {
-      try {
-        const recentLS = await getRecentSearch();
-        const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
-
-        const results =
-          query === ""
-            ? recent
-            : recent
-                .filter((i) =>
-                  i.term.toLowerCase().includes(query.toLowerCase())
-                )
-                .sort((a, b) => b.timestamp - a.timestamp);
-
-        const popular_searches = popularSearches
-          .filter((item) =>
-            item?.term?.toLowerCase()?.includes(query?.toLowerCase())
-          )
-          .sort((a, b) => b.score - a.score)
-          .map((item) => item?.term);
-
-        const category_searches = filterNavigationItems(
-          "custom_page",
-          query,
-          suggest
-        );
-        // const brand_searches = filterNavigationItems("brand", query, suggest); // results are based on query and suggestions
-        const brand_searches = (brands || []).map((item) => ({
-          name: item?.key,
-          url: createSlug(item?.key),
-        }));
-
-        setPopularResults(popular_searches);
-        setCategoryResults(category_searches);
-        setBrandResults(brand_searches);
-
-        return {
-          recent: results,
-          popular: popular_searches,
-          category: category_searches,
-          brand: brand_searches,
-        };
-      } catch (error) {
-        console.error("[ERROR] getSearchResults:", error);
-        return null;
-      }
-    },
-    [getRecentSearch, popularSearches, filterNavigationItems]
-  );
 
   // ---------------------------------------------------------------------------
   // FUNCTION: Set Search with Debounce
@@ -760,9 +821,25 @@ export const SearchProvider = ({ children }) => {
 
     const fetchPopularSearches = async () => {
       try {
-        const res = await fetch("/api/popular_searches");
+        // Fetch top 100 popular searches for better filtering (NO query filter on initial load)
+        const res = await fetch("/api/popular_searches?limit=100");
         const data = await res.json();
+        console.log("📊 Popular searches fetched:", data?.length, data);
+
+        if (!data || data.length === 0) {
+          console.warn("⚠️ No popular searches returned from API");
+          return;
+        }
+
         setPopularSearches(data);
+
+        // Initialize popular results on mount (top 10)
+        const popular = data
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10)
+          .map((item) => item?.term);
+        console.log("📊 Popular results initialized:", popular);
+        setPopularResults(popular);
       } catch (err) {
         console.error("Failed to fetch popular searches", err);
       }
@@ -770,6 +847,21 @@ export const SearchProvider = ({ children }) => {
 
     fetchPopularSearches();
   }, []);
+
+  // ---------------------------------------------------------------------------
+  // EFFECT: Update popular results when popularSearches loads
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (popularSearches.length > 0 && searchQuery === "") {
+      // Re-run getSearchResults when popularSearches is loaded for empty query
+      const initPopular = popularSearches
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10)
+        .map((item) => item?.term);
+      setPopularResults(initPopular);
+      console.log("🔄 Popular results synced after load:", initPopular);
+    }
+  }, [popularSearches, searchQuery]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Sync URL Query with Search State (on /search page)
@@ -898,7 +990,16 @@ export const SearchProvider = ({ children }) => {
       oldSearchResults.current = newSearchResults;
     }
 
-    return loading ? oldSearchResults.current : newSearchResults;
+    const finalResults = loading ? oldSearchResults.current : newSearchResults;
+    console.log(
+      "📋 searchResults memo:",
+      finalResults.map((s) => ({
+        prop: s.prop,
+        dataLength: s.data?.length,
+      }))
+    );
+
+    return finalResults;
   }, [
     suggestionResults,
     recentResults,
