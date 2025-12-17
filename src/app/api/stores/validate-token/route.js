@@ -12,6 +12,15 @@ export async function POST(request) {
       );
     }
 
+    // Bypass validation in development environment
+    if (process.env.NODE_ENV === "development") {
+      console.log("[TOKEN VALIDATION] Development mode - bypassing validation");
+      return NextResponse.json({
+        valid: true,
+        message: "Development mode - token validation bypassed",
+      });
+    }
+
     // Get backend URL from environment variable
     const backendUrl =
       process.env.NEXT_SOLANA_BACKEND_URL || "http://localhost:8000";

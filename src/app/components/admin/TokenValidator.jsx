@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTokenValidation } from '@/app/hooks/useTokenValidation';
+import StoreContext from '@/app/contexts/StoreContext';
 
 /**
  * TokenValidator Component
@@ -88,13 +89,10 @@ export default function TokenValidator({
     );
   }
 
-  // Valid state - render children with storeData (or without if direct access)
+  // Valid state - render children with storeData via context
   return (
-    <div data-store-id={storeData?.storeId}>
-      {React.isValidElement(children) 
-        ? React.cloneElement(children, { storeData }) 
-        : children
-      }
-    </div>
+    <StoreContext.Provider value={storeData}>
+      {children}
+    </StoreContext.Provider>
   );
 }

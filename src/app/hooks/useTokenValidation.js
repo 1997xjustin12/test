@@ -36,6 +36,22 @@ export const useTokenValidation = () => {
         );
 
         if (!token) {
+          // In development mode, bypass token validation
+          if (process.env.NODE_ENV === "development") {
+            console.log(
+              "[TOKEN VALIDATION] Development mode - bypassing token validation"
+            );
+            setIsValid(true);
+            setStoreData({
+              storeId: "dev-store",
+              storeName: "Development Store",
+              storeDomain: "localhost",
+            });
+            setError(null);
+            setLoading(false);
+            return;
+          }
+
           console.log("[TOKEN VALIDATION] No token provided");
           setError("No authentication token provided");
           setIsValid(false);
