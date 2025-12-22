@@ -157,6 +157,14 @@ const apiClient = API({
                   },
                 },
               },
+              Promotions: {
+                wildcard: {
+                  "collections.name.keyword": {
+                    value: "*promotion*",
+                    case_insensitive: true, // Added this
+                  },
+                },
+              },
             },
           },
         }),
@@ -206,6 +214,14 @@ const apiClient = API({
               wildcard: {
                 "collections.name.keyword": {
                   value: "*package deal*",
+                  case_insensitive: true,
+                },
+              },
+            },
+            Promotions: {
+              wildcard: {
+                "collections.name.keyword": {
+                  value: "*promotion*",
                   case_insensitive: true,
                 },
               },
