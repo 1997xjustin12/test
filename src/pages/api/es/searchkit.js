@@ -172,7 +172,12 @@ const apiClient = API({
         facetResponse: (aggregation) => {
           const buckets = aggregation.buckets || {};
           // Sort logic: Ensure they always appear in a specific order
-          const order = ["Top Rated", "Clearance/Open Box", "Package Deals"];
+          const order = [
+            "Top Rated",
+            "Clearance/Open Box",
+            "Package Deals",
+            "Promotions",
+          ];
 
           return order.reduce((acc, key) => {
             const count = buckets[key]?.doc_count ?? 0;
