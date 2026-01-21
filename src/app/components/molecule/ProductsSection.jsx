@@ -415,15 +415,15 @@ const filters = [
 ];
 
 // generate refinementlist html for url-based filters
-console.log(
-  filters
-    .filter(({ attribute }) => attribute !== "price")
-    .map(
-      ({ attribute }) =>
-        `<RefinementList attribute="${attribute}" className="hidden" />`,
-    )
-    .join("\n"),
-);
+// console.log(
+//   filters
+//     .filter(({ attribute }) => attribute !== "price")
+//     .map(
+//       ({ attribute }) =>
+//         `<RefinementList attribute="${attribute}" className="hidden" />`,
+//     )
+//     .join("\n"),
+// );
 
 const searchClient = Client({
   url: `/api/es/searchkit/`,
