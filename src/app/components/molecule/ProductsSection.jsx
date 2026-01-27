@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
 import SPProductCard from "@/app/components/atom/ProductCard";
@@ -25,7 +25,7 @@ import {
   ES_INDEX,
   getInitialUiStateFromUrl,
 } from "@/app/lib/helpers";
-import { filters } from "@/app/lib/filter-helper";
+import { filters, filtersOrder } from "@/app/lib/filter-helper";
 
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 
@@ -39,12 +39,13 @@ const Panel = ({ header, children }) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="panel border border-gray-200 shadow p-2">
+    // border-gray-200 shadow border
+    <div className="panel p-2">
       <button
         onClick={() => setExpanded((prev) => !prev)}
         className="w-full flex items-center gap-[20px] justify-between"
       >
-        <h5 className="uppercase font-semibold">{header}</h5>
+        <h5 className=" font-semibold text-[14px] text-stone-800">{header}</h5>
         {expanded ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -172,6 +173,25 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
     results?.nbHits === 0 &&
     status !== "loading";
 
+  const sortFacetItems = (items) => {
+    const filter_type = page_details?.filter_type;
+    if (!filter_type) return items;
+
+    // 1. Get the order for this specific page
+    const activeFilterOrder = filtersOrder?.[filter_type] || [];
+
+    // 2. Sort the widgets based on your configuration
+    return items.sort((a, b) => {
+      const indexA = activeFilterOrder.indexOf(a.attribute);
+      const indexB = activeFilterOrder.indexOf(b.attribute);
+
+      const posA = indexA === -1 ? Infinity : indexA;
+      const posB = indexB === -1 ? Infinity : indexB;
+
+      return posA - posB;
+    });
+  };
+
   if (shouldShowNoResults) {
     return (
       <div className="container">
@@ -209,7 +229,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               page_details?.nav_type === "custom_page" &&
               page_details?.nav_type !== "brand" &&
               page_details?.name !== "Search" && (
-                <DynamicWidgets facets={["*"]}>
+                <DynamicWidgets facets={filtersOrder["*"]}>
                   {filters
                     .filter((item) =>
                       item?.filter_type.includes(page_details?.filter_type),
@@ -229,14 +249,14 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                                   {...(item?.transform
                                     ? { transformItems: item.transform }
                                     : {})}
-                                  showMore={true}
+                                  showMore={item?.collapse ?? true}
                                 />
                               ) : (
                                 <RefinementList
                                   attribute={item?.attribute}
                                   searchable={item?.searchable}
                                   classNames={{ labelText: "stars" }}
-                                  showMore={false}
+                                  showMore={item?.collapse || false}
                                 />
                               )}
                             </>
@@ -266,14 +286,14 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                               <RefinementList
                                 attribute={item?.attribute}
                                 searchable={item?.searchable}
-                                showMore={true}
+                                showMore={item?.collapse || true}
                               />
                             ) : (
                               <RefinementList
                                 attribute={item?.attribute}
                                 searchable={item?.searchable}
                                 classNames={{ labelText: "stars" }}
-                                showMore={false}
+                                showMore={item?.collapse || true}
                               />
                             )}
                           </>
@@ -608,6 +628,7 @@ function ProductsSection({ category, search = "" }) {
               ]}
             />
             {/* Refinement List Hack for URL-Based Filter */}
+            <RefinementList attribute="ref_depth" className="hidden" />
             <RefinementList attribute="ways_to_shop" className="hidden" />
             <RefinementList attribute="ratings" className="hidden" />
             <RefinementList attribute="brand" className="hidden" />
@@ -667,7 +688,6 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="ref_hinge" className="hidden" />
             <RefinementList attribute="ref_storage_type" className="hidden" />
             <RefinementList attribute="ref_width" className="hidden" />
-            <RefinementList attribute="ref_depth" className="hidden" />
             <RefinementList attribute="ref_height" className="hidden" />
             <RefinementList attribute="size" className="hidden" />
             <RefinementList attribute="width" className="hidden" />
