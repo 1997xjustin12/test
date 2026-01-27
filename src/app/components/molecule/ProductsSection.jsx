@@ -25,7 +25,7 @@ import {
   ES_INDEX,
   getInitialUiStateFromUrl,
 } from "@/app/lib/helpers";
-import { filters, filtersOrder } from "@/app/lib/filter-helper";
+import { filters } from "@/app/lib/filter-helper";
 
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 
@@ -36,6 +36,42 @@ const searchClient = Client({
 });
 
 const Panel = ({ header, children }) => {
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    // border-gray-200 shadow border
+    <div className="panel p-2">
+      {/* <button
+        onClick={() => setExpanded((prev) => !prev)}
+        className="w-full flex items-center gap-[20px] justify-between"
+      >
+        <h5 className=" font-semibold text-[14px] text-stone-800">{header}</h5>
+        {expanded ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="M19 13H5v-2h14z" />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" />
+          </svg>
+        )}
+      </button> */}
+      <div className={`${expanded ? "" : "hidden"}`}>{children}</div>
+    </div>
+  );
+};
+
+const FilterGroup = ({ header, children }) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
@@ -173,25 +209,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
     results?.nbHits === 0 &&
     status !== "loading";
 
-  const sortFacetItems = (items) => {
-    const filter_type = page_details?.filter_type;
-    if (!filter_type) return items;
-
-    // 1. Get the order for this specific page
-    const activeFilterOrder = filtersOrder?.[filter_type] || [];
-
-    // 2. Sort the widgets based on your configuration
-    return items.sort((a, b) => {
-      const indexA = activeFilterOrder.indexOf(a.attribute);
-      const indexB = activeFilterOrder.indexOf(b.attribute);
-
-      const posA = indexA === -1 ? Infinity : indexA;
-      const posB = indexB === -1 ? Infinity : indexB;
-
-      return posA - posB;
-    });
-  };
-
   if (shouldShowNoResults) {
     return (
       <div className="container">
@@ -229,18 +246,22 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               page_details?.nav_type === "custom_page" &&
               page_details?.nav_type !== "brand" &&
               page_details?.name !== "Search" && (
-                <DynamicWidgets facets={filtersOrder["*"]}>
+                <DynamicWidgets facets={["*"]}>
                   {filters
                     .filter((item) =>
                       item?.filter_type.includes(page_details?.filter_type),
+                    )
+                    .filter(
+                      (item) =>
+                        !["price", "price_groups"].includes(item?.attribute),
                     )
                     .map((item) => (
                       <div
                         key={`filter-item-${item?.attribute}`}
                         className={`facet-wrapper my-1 facet_${item?.attribute}`}
                       >
-                        <Panel header={item?.label}>
-                          {item?.attribute && item?.attribute !== "price" ? (
+                        <FilterGroup header={item?.label}>
+                          {item?.attribute && (
                             <>
                               {item?.attribute !== "ratings" ? (
                                 <RefinementList
@@ -260,12 +281,25 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                                 />
                               )}
                             </>
-                          ) : (
-                            <RangeInput attribute="price" />
                           )}
-                        </Panel>
+                        </FilterGroup>
                       </div>
                     ))}
+
+                  <div>
+                    <FilterGroup header={"Price"}>
+                      <RefinementList
+                        attribute={"price_groups"}
+                        searchable={false}
+                        showMore={false}
+                      />
+                    </FilterGroup>
+                  </div>
+                  <div>
+                    <Panel>
+                      <RangeInput attribute="price" />
+                    </Panel>
+                  </div>
                 </DynamicWidgets>
               )}
 
@@ -557,20 +591,20 @@ function ProductsSection({ category, search = "" }) {
         // Calculate filter string
         let result = "";
         if (details?.nav_type === "category") {
-          result = `page_category:${details?.origin_name}`;
+          result = `page_category:${details?.origin_name}${":" + details.filter_type}`;
         } else if (details?.nav_type === "brand") {
-          result = `page_brand:${details?.origin_name}`;
+          result = `page_brand:${details?.origin_name}${":" + details.filter_type}`;
         } else if (details?.nav_type === "custom_page") {
           if (details?.name === "Search") {
-            result = `custom_page:Search`;
+            result = `custom_page:Search:Search`;
           } else {
             const page_name = details?.name;
             if (BaseNavKeys.includes(page_name)) {
-              result = `custom_page:${page_name}`;
+              result = `custom_page:${page_name}:${details.filter_type}`;
             } else {
               result = `custom_page:${
                 details?.collection_display?.name || "NA"
-              }`;
+              }:${details.filter_type}`;
             }
           }
         }
