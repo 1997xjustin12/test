@@ -115,6 +115,11 @@ export const filters = [
                 tags: ["New Arrivals"],
               },
             },
+            "Free Shipping": {
+              terms: {
+                tags: ["Free Shipping"],
+              },
+            },
           },
         },
       }),
@@ -127,6 +132,7 @@ export const filters = [
           "Package Deals",
           "Promotions",
           "New Arrivals",
+          "Free Shipping",
         ];
         return order.reduce((acc, key) => {
           const count = buckets[key]?.doc_count ?? 0;
@@ -182,6 +188,11 @@ export const filters = [
           "New Arrivals": {
             terms: {
               tags: ["New Arrivals"],
+            },
+          },
+          "Free Shipping": {
+            terms: {
+              tags: ["Free Shipping"],
             },
           },
         };
@@ -420,31 +431,66 @@ export const filters = [
           );
         });
     },
+    // runtime_mapping: {
+    //   capacity_group: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //             def validCapacity = ${JSON.stringify(
+    //               capacityBucketKeys.map((k) => k.toLowerCase()),
+    //             )};
+    //             if (params['_source']['tags'] != null) {
+    //               for (def tag : params['_source']['tags']) {
+    //                 if (tag == null) continue;
+
+    //                 if (validCapacity.contains(tag.toLowerCase())) {
+    //                   emit(tag);
+    //                   return;
+    //                 }
+    //               }
+    //             }
+    //           `,
+    //     },
+    //   },
+    // },
     runtime_mapping: {
-      capacity_group: {
+      ref_total_capacity: {
         type: "keyword",
         script: {
           source: `
-                def validCapacity = ${JSON.stringify(
-                  capacityBucketKeys.map((k) => k.toLowerCase()),
-                )};
-                if (params['_source']['tags'] != null) {
-                  for (def tag : params['_source']['tags']) {
-                    if (tag == null) continue;
-                    
-                    if (validCapacity.contains(tag.toLowerCase())) {
-                      emit(tag);
-                      return; 
-                    }
-                  }
-                }
-              `,
+      if (params['_source']['accentuate_data'] == null || 
+          params['_source']['accentuate_data']['bbq.bbq.ref_specs_total_capacity'] == null) {
+        return;
+      }
+
+      String rawValue = params['_source']['accentuate_data']['bbq.bbq.ref_specs_total_capacity'];
+      
+      double capacity = 0;
+      try {
+        // Remove "Inches" and whitespace to parse the number
+        String cleanValue = rawValue.toLowerCase().trim();
+        capacity = Double.parseDouble(cleanValue);
+      } catch (Exception e) {
+        return; 
+      }
+
+      // Logic mapping to refDimensionGroupBuckets
+      if (capacity >= 1 && capacity <= 3) {
+        emit("1-3 Cu. Ft.");
+      } else if (capacity >= 4 && capacity <= 6) {
+        emit("4-6 Cu. Ft.");
+      } else if (capacity >= 7 && capacity <= 10) {
+        emit("7-10 Cu. Ft.");
+      } else if (capacity > 10) {
+        emit("11 Cu. Ft. +");
+      }
+    `,
         },
       },
     },
     facet_attribute: {
       attribute: "capacity",
-      field: "capacity_group",
+      field: "ref_total_capacity",
       type: "string",
     },
     collapse: false,
@@ -485,31 +531,37 @@ export const filters = [
     attribute: "ref_vent",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: {
-      ref_vent: {
-        type: "keyword",
-        script: {
-          source: `
-          def validVent = ${JSON.stringify(
-            refVentBucketKeys.map((k) => k.toLowerCase()),
-          )};
-          if (params['_source']['tags'] != null) {
-            for (def tag : params['_source']['tags']) {
-              if (tag == null) continue;
+    // runtime_mapping: {
+    //   ref_vent: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //       def validVent = ${JSON.stringify(
+    //         refVentBucketKeys.map((k) => k.toLowerCase()),
+    //       )};
+    //       if (params['_source']['tags'] != null) {
+    //         for (def tag : params['_source']['tags']) {
+    //           if (tag == null) continue;
 
-              if (validVent.contains(tag.toLowerCase())) {
-                emit(tag);
-                return;
-              }
-            }
-          }
-        `,
-        },
-      },
-    },
+    //           if (validVent.contains(tag.toLowerCase())) {
+    //             emit(tag);
+    //             return;
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_vent",
+    //   field: "ref_vent",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_vent",
-      field: "ref_vent",
+      field: "accentuate_data.bbq.ref_specs_vent_type",
       type: "string",
     },
     collapse: false,
@@ -654,46 +706,52 @@ export const filters = [
     attribute: "ref_mounting_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: {
-      ref_mounting_type: {
-        type: "keyword",
-        script: {
-          source: `
-      def tagsList = params['_source']['tags'];
-      def titleText = params['_source']['title'];
+    // runtime_mapping: {
+    //   ref_mounting_type: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //   def tagsList = params['_source']['tags'];
+    //   def titleText = params['_source']['title'];
 
-      def normalizedTitle = titleText != null ? titleText.toLowerCase() : "";
+    //   def normalizedTitle = titleText != null ? titleText.toLowerCase() : "";
 
-      boolean isFreestanding = false;
-      if (tagsList != null && tagsList.contains("Freestanding")) {
-          isFreestanding = true;
-      } else if (normalizedTitle.contains("freestanding")) {
-          isFreestanding = true;
-      }
+    //   boolean isFreestanding = false;
+    //   if (tagsList != null && tagsList.contains("Freestanding")) {
+    //       isFreestanding = true;
+    //   } else if (normalizedTitle.contains("freestanding")) {
+    //       isFreestanding = true;
+    //   }
 
-      if (isFreestanding) {
-          emit("Freestanding");
-          return;
-      }
+    //   if (isFreestanding) {
+    //       emit("Freestanding");
+    //       return;
+    //   }
 
-      boolean isBuiltIn = false;
-      if (tagsList != null && tagsList.contains("Built In")) {
-          isBuiltIn = true;
-      } else if (normalizedTitle.contains("built-in") || normalizedTitle.contains("built in")) {
-          isBuiltIn = true;
-      }
+    //   boolean isBuiltIn = false;
+    //   if (tagsList != null && tagsList.contains("Built In")) {
+    //       isBuiltIn = true;
+    //   } else if (normalizedTitle.contains("built-in") || normalizedTitle.contains("built in")) {
+    //       isBuiltIn = true;
+    //   }
 
-      if (isBuiltIn) {
-          emit("Built-In");
-          return;
-      }
-    `,
-        },
-      },
-    },
+    //   if (isBuiltIn) {
+    //       emit("Built-In");
+    //       return;
+    //   }
+    // `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_mounting_type",
+    //   field: "ref_mounting_type",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_mounting_type",
-      field: "ref_mounting_type",
+      field: "accentuate_data.bbq.ref_specs_mount_type",
       type: "string",
     },
     collapse: false,
@@ -727,31 +785,37 @@ export const filters = [
         label: refOutdoorCertBuckets[item.value],
       }));
     },
-    runtime_mapping: {
-      ref_outdoor_certification: {
-        type: "keyword",
-        script: {
-          source: `
-          def validOutdoorCert = ${JSON.stringify(
-            refOutdoorCertBucketKeys.map((k) => k.toLowerCase()),
-          )};
-          if (params['_source']['tags'] != null) {
-            for (def tag : params['_source']['tags']) {
-              if (tag == null) continue;
+    // runtime_mapping: {
+    //   ref_outdoor_certification: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //       def validOutdoorCert = ${JSON.stringify(
+    //         refOutdoorCertBucketKeys.map((k) => k.toLowerCase()),
+    //       )};
+    //       if (params['_source']['tags'] != null) {
+    //         for (def tag : params['_source']['tags']) {
+    //           if (tag == null) continue;
 
-              if (validOutdoorCert.contains(tag.toLowerCase())) {
-                emit(tag);
-                return;
-              }
-            }
-          }
-        `,
-        },
-      },
-    },
+    //           if (validOutdoorCert.contains(tag.toLowerCase())) {
+    //             emit(tag);
+    //             return;
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_outdoor_certification",
+    //   field: "ref_outdoor_certification",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_outdoor_certification",
-      field: "ref_outdoor_certification",
+      field: "accentuate_data.bbq.ref_specs_outdoor_certification",
       type: "string",
     },
     collapse: false,
@@ -761,31 +825,37 @@ export const filters = [
     attribute: "ref_hinge",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: {
-      ref_hinge: {
-        type: "keyword",
-        script: {
-          source: `
-          def validHinge = ${JSON.stringify(
-            refHingeBucketKeys.map((k) => k.toLowerCase()),
-          )};
-          if (params['_source']['tags'] != null) {
-            for (def tag : params['_source']['tags']) {
-              if (tag == null) continue;
+    // runtime_mapping: {
+    //   ref_hinge: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //       def validHinge = ${JSON.stringify(
+    //         refHingeBucketKeys.map((k) => k.toLowerCase()),
+    //       )};
+    //       if (params['_source']['tags'] != null) {
+    //         for (def tag : params['_source']['tags']) {
+    //           if (tag == null) continue;
 
-              if (validHinge.contains(tag.toLowerCase())) {
-                emit(tag);
-                return;
-              }
-            }
-          }
-        `,
-        },
-      },
-    },
+    //           if (validHinge.contains(tag.toLowerCase())) {
+    //             emit(tag);
+    //             return;
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_hinge",
+    //   field: "ref_hinge",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_hinge",
-      field: "ref_hinge",
+      field: "accentuate_data.bbq.ref_specs_hinge_type",
       type: "string",
     },
     collapse: false,
@@ -938,31 +1008,37 @@ export const filters = [
     attribute: "ref_class",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: {
-      ref_class: {
-        type: "keyword",
-        script: {
-          source: `
-          def validClass = ${JSON.stringify(
-            refClassBucketKeys.map((k) => k.toLowerCase()),
-          )};
-          if (params['_source']['tags'] != null) {
-            for (def tag : params['_source']['tags']) {
-              if (tag == null) continue;
+    // runtime_mapping: {
+    //   ref_class: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //       def validClass = ${JSON.stringify(
+    //         refClassBucketKeys.map((k) => k.toLowerCase()),
+    //       )};
+    //       if (params['_source']['tags'] != null) {
+    //         for (def tag : params['_source']['tags']) {
+    //           if (tag == null) continue;
 
-              if (validClass.contains(tag.toLowerCase())) {
-                emit(tag);
-                return;
-              }
-            }
-          }
-        `,
-        },
-      },
-    },
+    //           if (validClass.contains(tag.toLowerCase())) {
+    //             emit(tag);
+    //             return;
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_class",
+    //   field: "ref_class",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_class",
-      field: "ref_class",
+      field: "accentuate_data.bbq.ref_specs_class",
       type: "string",
     },
     collapse: false,
@@ -1093,31 +1169,37 @@ export const filters = [
     attribute: "ref_no_of_zones",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: {
-      ref_no_of_zones: {
-        type: "keyword",
-        script: {
-          source: `
-          def validNoOfZones = ${JSON.stringify(
-            refNoOfZonesBucketKeys.map((k) => k.toLowerCase()),
-          )};
-          if (params['_source']['tags'] != null) {
-            for (def tag : params['_source']['tags']) {
-              if (tag == null) continue;
+    // runtime_mapping: {
+    //   ref_no_of_zones: {
+    //     type: "keyword",
+    //     script: {
+    //       source: `
+    //       def validNoOfZones = ${JSON.stringify(
+    //         refNoOfZonesBucketKeys.map((k) => k.toLowerCase()),
+    //       )};
+    //       if (params['_source']['tags'] != null) {
+    //         for (def tag : params['_source']['tags']) {
+    //           if (tag == null) continue;
 
-              if (validNoOfZones.contains(tag.toLowerCase())) {
-                emit(tag);
-                return;
-              }
-            }
-          }
-        `,
-        },
-      },
-    },
+    //           if (validNoOfZones.contains(tag.toLowerCase())) {
+    //             emit(tag);
+    //             return;
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     },
+    //   },
+    // },
+    // facet_attribute: {
+    //   attribute: "ref_no_of_zones",
+    //   field: "ref_no_of_zones",
+    //   type: "string",
+    // },
+    runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_no_of_zones",
-      field: "ref_no_of_zones",
+      field: "accentuate_data.bbq.ref_specs_zones",
       type: "string",
     },
     collapse: false,
