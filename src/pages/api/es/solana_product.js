@@ -263,10 +263,17 @@ export default async function handler(req, res) {
         ...accentuateSpecLabels
       ];
 
-      specs = spec_keys.map((item) => ({
-        ...item,
-        value: accentuate_data?.[item?.key] || "",
-      }));
+      specs = spec_keys.map((item) => {
+        let val = accentuate_data?.[item?.key] || "";
+        if(item?.transform){
+          val = item.transform(val);
+        }      
+        
+        return {
+          ...item,
+          value: val,
+        }
+      });
 
       // map manuals
       let manuals = null;

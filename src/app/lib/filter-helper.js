@@ -776,7 +776,7 @@ export const getActiveRuntimeMappings = (type) => {
 };
 
 export const accentuateSpecLabels = filters
-  .map((item)=>({label: item?.label, key: item?.accentuate_prop || "NA", type: item.cluster}))
+  .map((item)=>({label: item?.label, key: item?.accentuate_prop || "NA", type: item.cluster, transform: item.transformSpecs}))
   .filter(item=> item?.key !== "NA")
   .sort((a,b)=> a.label.localeCompare(b.label));
 

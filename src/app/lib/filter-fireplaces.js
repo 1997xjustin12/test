@@ -1,39 +1,40 @@
-import {
-  // Bucket keys
-  capacityBucketKeys,
-  refDailyIceBucketKeys,
-  refDimensionGroupBucketKeys,
-  // Buckets
-  capacityBuckets,
-  refDimensionGroupBuckets,
-  refOutdoorCertBuckets,
-} from "@/app/lib/helpers";
-
+import { decimalToFraction } from "@/app/lib/helpers";
 
 const yesNo = ["Yes", "No"]; // used for transform sort
 
+const formatSimpleSize = (value) => {
+  return decimalToFraction(value) + " Inches";
+};
+
+function formatSimpleSizeFilter(items) {
+  return items.map((item) => ({
+    ...item,
+    label: decimalToFraction(item.value) + " Inches",
+  }));
+}
+
 export const fireplacesFilters = [
   {
-    label:"Installation Type",
+    label: "Installation Type",
     attribute: "frplc_mount_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_mount_type",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_mount_type",
       field: "accentuate_data.bbq.frplc_spec_mount_type",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_mount_type",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_mount_type",
+    cluster: "fireplaces",
   },
   {
-    label:"Fuel Type",
+    label: "Fuel Type",
     attribute: "frplc_fuel_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:{
+    runtime_mapping: {
       fuel_type_split: {
         type: "keyword",
         script: {
@@ -58,186 +59,208 @@ export const fireplacesFilters = [
         },
       },
     },
-    facet_attribute:{
-      attribute:"frplc_fuel_type",
+    facet_attribute: {
+      attribute: "frplc_fuel_type",
       field: "fuel_type_split",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_fuel_type",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_fuel_type",
+    cluster: "fireplaces",
   },
   {
-    label:"Vent Type",
+    label: "Vent Type",
     attribute: "frplc_vent_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_vent_type",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_vent_type",
       field: "accentuate_data.bbq.frplc_spec_vent_type",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_vent_type",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_vent_type",
+    cluster: "fireplaces",
   },
   {
-    label:"Fireplace Type",
+    label: "Fireplace Type",
     attribute: "frplc_view_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_view_type",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_view_type",
       field: "accentuate_data.bbq.frplc_spec_view_type",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_view_type",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_view_type",
+    cluster: "fireplaces",
   },
   {
-    label:"Firebox Width",
+    label: "Firebox Width",
     attribute: "frplc_firebox_width",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_firebox_width",
+    runtime_mapping: null,
+    transformSpecs: formatSimpleSize,
+    transform: formatSimpleSizeFilter,
+    facet_attribute: {
+      attribute: "frplc_firebox_width",
       field: "accentuate_data.bbq.frplc_spec_firebox_width",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_firebox_width",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_firebox_width",
+    cluster: "fireplaces",
   },
   {
-    label:"Adjustable Thermostat",
+    label: "Adjustable Thermostat",
     attribute: "frplc_adj_thermostat",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_adj_thermostat",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_adj_thermostat",
       field: "accentuate_data.bbq.frplc_spec_adj_thermostat",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_adj_thermostat",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_adj_thermostat",
+    cluster: "fireplaces",
   },
   {
-    label:"Fireplace Style",
+    label: "Fireplace Style",
     attribute: "frplc_style",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_style",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_style",
       field: "accentuate_data.bbq.frplc_spec_style",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_style",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_style",
+    cluster: "fireplaces",
   },
   {
-    label:"Finish",
-    attribute: "frplc_finish",
+    label: "Finish",
+    attribute: "frplc_color",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_finish",
-      field: "accentuate_data.bbq.frplc_spec_finish",
-      type: "string"
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_color",
+      field: "accentuate_data.bbq.frplc_spec_color",
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_finish",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_color",
+    cluster: "fireplaces",
   },
   {
-    label:"Viewing Area",
+    label: "Viewing Area",
     attribute: "frplc_view_area",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_view_area",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_view_area",
       field: "accentuate_data.bbq.frplc_spec_view_area",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_view_area",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_view_area",
+    cluster: "fireplaces",
   },
   {
-    label:"Ember Bed Depth",
+    label: "Ember Bed Depth",
     attribute: "frplc_ember_bed_depth",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_ember_bed_depth",
+    runtime_mapping: null,
+    transformSpecs: formatSimpleSize,
+    transform: formatSimpleSizeFilter,
+    facet_attribute: {
+      attribute: "frplc_ember_bed_depth",
       field: "accentuate_data.bbq.frplc_spec_ember_bed_depth",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_ember_bed_depth",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_ember_bed_depth",
+    cluster: "fireplaces",
   },
   {
-    label:"Framing Dimension",
+    label: "Framing Dimension",
     attribute: "frplc_frame_dimension",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_frame_dimension",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_frame_dimension",
       field: "accentuate_data.bbq.frplc_spec_frame_dimension",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_frame_dimension",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_frame_dimension",
+    cluster: "fireplaces",
   },
   {
-    label:"Surround Dimension",
+    label: "Surround Dimension",
     attribute: "frplc_sur_dimension",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_sur_dimension",
+    transformSpecs: formatSimpleSize,
+    transform: formatSimpleSizeFilter,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_sur_dimension",
       field: "accentuate_data.bbq.frplc_spec_sur_dimension",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_sur_dimension",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_sur_dimension",
+    cluster: "fireplaces",
   },
   {
-    label:"Surround Width Range",
-    attribute: "frplc_style",
+    label: "Surround Width Range",
+    attribute: "frplc_sur_width_range",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_style",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_sur_width_range",
       field: "accentuate_data.bbq.frplc_spec_sur_wid_range",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_sur_wid_range",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_sur_wid_range",
+    cluster: "fireplaces",
   },
   {
-    label:"Size Range",
+    label: "Size",
+    attribute: "frplc_size",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    transformSpecs: formatSimpleSize,
+    facet_attribute: {
+      attribute: "frplc_size",
+      field: "accentuate_data.bbq.frplc_spec_size",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.frplc_spec_size",
+    cluster: "fireplaces",
+  },
+  {
+    label: "Size Range",
     attribute: "frplc_size_range",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:{
+    runtime_mapping: {
       frplc_size_range: {
         type: "keyword",
         script: {
@@ -278,133 +301,133 @@ export const fireplacesFilters = [
         },
       },
     },
-    facet_attribute:{
-      attribute:"frplc_size_range",
+    facet_attribute: {
+      attribute: "frplc_size_range",
       field: "frplc_size_range",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_size",
-    cluster: "fireplaces"
+    // accentuate_prop:"bbq.frplc_spec_size",
+    cluster: "fireplaces",
   },
   {
-    label:"Heating Area",
-    attribute: "frplc_style",
+    label: "Heating Area",
+    attribute: "frplc_heating_area",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_style",
+    transformSpecs: (value) => {
+      return value + " Sq. Ft.";
+    },
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_heating_area",
       field: "accentuate_data.bbq.frplc_spec_heat_area",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_heat_area",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_heat_area",
+    cluster: "fireplaces",
   },
   {
-    label:"Item Type",
+    label: "Item Type",
     attribute: "frplc_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_type",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_type",
       field: "accentuate_data.bbq.frplc_spec_type",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_type",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_type",
+    cluster: "fireplaces",
   },
   {
-    label:"Color",
+    label: "Color",
     attribute: "frplc_color",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_color",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_color",
       field: "accentuate_data.bbq.frplc_spec_color",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_color",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_color",
+    cluster: "fireplaces",
   },
   {
-    label:"Material",
+    label: "Material",
     attribute: "frplc_material",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_material",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_material",
       field: "accentuate_data.bbq.frplc_spec_material",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_material",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_material",
+    cluster: "fireplaces",
   },
   {
-    label:"Line Location",
+    label: "Line Location",
     attribute: "frplc_line_loc",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_line_loc",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_line_loc",
       field: "accentuate_data.bbq.frplc_spec_line_loc",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_line_loc",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_line_loc",
+    cluster: "fireplaces",
   },
   {
-    label:"Recess Option",
+    label: "Recess Option",
     attribute: "frplc_recess_option",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_recess_option",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_recess_option",
       field: "accentuate_data.bbq.frplc_spec_recess_option",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_recess_option",
-    cluster: "fireplaces"
+    accentuate_prop: "bbq.frplc_spec_recess_option",
+    cluster: "fireplaces",
   },
   // bbq.frplc_spec_model
   {
-    label:"Collection",
+    label: "Collection",
     attribute: "frplc_model",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping:null,
-    facet_attribute:{
-      attribute:"frplc_model",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "frplc_model",
       field: "accentuate_data.bbq.frplc_spec_model",
-      type: "string"
+      type: "string",
     },
     collapse: false,
-    accentuate_prop:"bbq.frplc_spec_model",
-    cluster: "fireplaces"
-  }
+    accentuate_prop: "bbq.frplc_spec_model",
+    cluster: "fireplaces",
+  },
 ];
 
-
 export const fireplacesFilterTypes = {
-  "fireplaces": [
+  fireplaces: [
     "ways_to_shop",
     "frplc_type",
-    "frplc_material",
     "frplc_mount_type",
     "frplc_fuel_type",
     "frplc_vent_type",
-    "frplc_color",
     "frplc_view_type",
     "frplc_firebox_width",
     "price_groups",
@@ -412,15 +435,17 @@ export const fireplacesFilterTypes = {
     "frplc_adj_thermostat",
     "brands",
     "frplc_style",
-    "frplc_finish",
+    "frplc_color",
     "frplc_view_area",
     "frplc_ember_bed_depth",
     "frplc_frame_dimension",
     "frplc_sur_dimension",
-    "frplc_sur_wid_range",
-    "frplc_line_loc",
-    "frplc_recess_option",
-    "frplc_model",
+    // "frplc_sur_wid_range",
+    // "frplc_line_loc",
+    // "frplc_recess_option",
+    // "frplc_model",
+    // "frplc_material",
+
   ],
   // "gas-fireplaces": [
   //   "ways_to_shop",
