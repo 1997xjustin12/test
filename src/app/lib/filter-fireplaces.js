@@ -25,6 +25,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_mount_type",
+    cluster: "fireplaces"
   },
   {
     label:"Fuel Type",
@@ -62,6 +64,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_fuel_type",
+    cluster: "fireplaces"
   },
   {
     label:"Vent Type",
@@ -75,6 +79,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_vent_type",
+    cluster: "fireplaces"
   },
   {
     label:"Fireplace Type",
@@ -88,6 +94,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_view_type",
+    cluster: "fireplaces"
   },
   {
     label:"Firebox Width",
@@ -101,6 +109,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_firebox_width",
+    cluster: "fireplaces"
   },
   {
     label:"Adjustable Thermostat",
@@ -114,6 +124,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_adj_thermostat",
+    cluster: "fireplaces"
   },
   {
     label:"Fireplace Style",
@@ -127,6 +139,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_style",
+    cluster: "fireplaces"
   },
   {
     label:"Finish",
@@ -140,6 +154,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_finish",
+    cluster: "fireplaces"
   },
   {
     label:"Viewing Area",
@@ -153,6 +169,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_view_area",
+    cluster: "fireplaces"
   },
   {
     label:"Ember Bed Depth",
@@ -166,6 +184,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_ember_bed_depth",
+    cluster: "fireplaces"
   },
   {
     label:"Framing Dimension",
@@ -179,6 +199,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_frame_dimension",
+    cluster: "fireplaces"
   },
   {
     label:"Surround Dimension",
@@ -192,6 +214,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_sur_dimension",
+    cluster: "fireplaces"
   },
   {
     label:"Surround Width Range",
@@ -205,6 +229,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_sur_wid_range",
+    cluster: "fireplaces"
   },
   {
     label:"Size Range",
@@ -258,6 +284,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_size",
+    cluster: "fireplaces"
   },
   {
     label:"Heating Area",
@@ -271,6 +299,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_heat_area",
+    cluster: "fireplaces"
   },
   {
     label:"Item Type",
@@ -284,6 +314,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_type",
+    cluster: "fireplaces"
   },
   {
     label:"Color",
@@ -297,6 +329,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_color",
+    cluster: "fireplaces"
   },
   {
     label:"Material",
@@ -310,6 +344,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_material",
+    cluster: "fireplaces"
   },
   {
     label:"Line Location",
@@ -323,6 +359,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_line_loc",
+    cluster: "fireplaces"
   },
   {
     label:"Recess Option",
@@ -336,6 +374,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_recess_option",
+    cluster: "fireplaces"
   },
   // bbq.frplc_spec_model
   {
@@ -350,6 +390,8 @@ export const fireplacesFilters = [
       type: "string"
     },
     collapse: false,
+    accentuate_prop:"bbq.frplc_spec_model",
+    cluster: "fireplaces"
   }
 ];
 
@@ -421,4 +463,4 @@ export const fireplacesFilterTypes = {
   // ]
 };
 
-console.log("fireplacesFilters", fireplacesFilters.map(item=> ({label: item.label, attribute: item.attribute, property: item.facet_attribute.field})))
+// console.log("fireplacesFilters", fireplacesFilters.map(item=> ({label: item.label, attribute: item.attribute, property: item.facet_attribute.field})))
