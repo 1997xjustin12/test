@@ -13,16 +13,47 @@ function formatSimpleSizeFilter(items) {
   }));
 }
 
+function formatHeatingAreaFilter(items) {
+  return items.map((item) => ({
+    ...item,
+    label: decimalToFraction(item.value) + " Sq. Ft.",
+  }));
+}
+
 export const fireplacesFilters = [
   {
     label: "Installation Type",
     attribute: "frplc_mount_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      frplc_mount_type: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.frplc_spec_mount_type'] != null) {
+              def val = data['bbq.frplc_spec_mount_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "frplc_mount_type",
-      field: "accentuate_data.bbq.frplc_spec_mount_type",
+      field: "frplc_mount_type",
       type: "string",
     },
     collapse: false,
@@ -88,10 +119,34 @@ export const fireplacesFilters = [
     attribute: "frplc_view_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      frplc_view_type: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.frplc_spec_view_type'] != null) {
+              def val = data['bbq.frplc_spec_view_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "frplc_view_type",
-      field: "accentuate_data.bbq.frplc_spec_view_type",
+      field: "frplc_view_type",
       type: "string",
     },
     collapse: false,
@@ -229,14 +284,57 @@ export const fireplacesFilters = [
     attribute: "frplc_sur_width_range",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      frplc_sur_width_range: {
+        type: "keyword",
+        script: {
+          source: `
+        def data = params['_source']['accentuate_data'];
+        if (data == null) return;
+        
+        // Use .get() to handle keys with dots safely
+        def rawValue = data.get('bbq.frplc_spec_sur_dimension');
+        if (rawValue == null) return;
+
+        try {
+          // Ensure we are working with a string
+          String strValue = rawValue.toString();
+          String cleanValue = /[^0-9.]/.matcher(strValue).replaceAll("");
+          
+          if (cleanValue.length() == 0) return;
+
+          double sur_width = Double.parseDouble(cleanValue);
+
+          if (sur_width <= 30) {
+            emit("0 - 30 Inches");
+          } else if (sur_width <= 40) {
+            emit("30 - 40 Inches");
+          } else if (sur_width < 50) {
+            emit("40 - 50 Inches");
+          } else if (sur_width < 60) {
+            emit("50 - 60 Inches");
+          } else if (sur_width < 70) {
+            emit("60 - 70 Inches");
+          } else if (sur_width < 80) {
+            emit("70 - 80 Inches");
+          } else {
+            emit("80 Inches And Up");
+          }
+        } catch (Exception e) {
+          // Optional: emit("DEBUG: " + e.getMessage()); 
+          return;
+        }
+      `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "frplc_sur_width_range",
-      field: "accentuate_data.bbq.frplc_spec_sur_wid_range",
+      field: "frplc_sur_width_range",
       type: "string",
     },
     collapse: false,
-    accentuate_prop: "bbq.frplc_spec_sur_wid_range",
+    // accentuate_prop: "bbq.frplc_spec_sur_wid_range",
     cluster: "fireplaces",
   },
   {
@@ -260,44 +358,63 @@ export const fireplacesFilters = [
     attribute: "frplc_size_range",
     searchable: false,
     type: "RefinementList",
+    transform: function(items){
+      const sortKeys = [
+        "0 - 30 Inches",
+        "30 - 40 Inches",
+        "40 - 50 Inches",
+        "50 - 60 Inches",
+        "60 - 70 Inches",
+        "70 - 80 Inches",
+        "80 Inches And Up",
+      ];
+      return items
+        .sort((a, b) => {
+          return (
+            sortKeys.indexOf(a.value) - sortKeys.indexOf(b.value)
+          );
+        });
+    },
     runtime_mapping: {
       frplc_size_range: {
         type: "keyword",
         script: {
           source: `
-          if (params['_source']['accentuate_data'] == null || 
-              params['_source']['accentuate_data']['bbq.frplc_spec_size'] == null) {
-            return;
-          }
-    
-          String rawValue = params['_source']['accentuate_data']['bbq.frplc_spec_size'];
-          
-          double width = 0;
-          try {
-            // Remove "Inches" and whitespace to parse the number
-            String cleanValue = rawValue.toLowerCase().replace('"',"").replace("inches", "").trim();
-            width = Double.parseDouble(cleanValue);
-          } catch (Exception e) {
-            return; 
-          }
-    
-          // Logic mapping to refDimensionGroupBuckets
-          if (width < 30) {
-            emit("0 - 29 Inches");
-          } else if (width >= 30 && width <= 39) {
-            emit("30 - 39 Inches");
-          } else if (width >= 40 && width <= 49) {
-            emit("40 - 49 Inches");
-          } else if (width >= 50 && width <= 59) {
-            emit("50 - 59 Inches");
-          } else if (width >= 60 && width <= 69) {
-            emit("60 - 69 Inches");
-          } else if (width >= 70 && width <= 79) {
-            emit("70 - 79 Inches");
-          } else if (width > 80) {
-            emit("80 Inches And Up");
-          }
-        `,
+            // 1. Safely grab the data. Using _source is okay for nested Accentuate data, 
+            // but we must check every level.
+            def data = params['_source']['accentuate_data'];
+            if (data == null || !(data instanceof Map)) return;
+            
+            def rawValue = data.get('bbq.frplc_spec_size');
+            if (rawValue == null) return;
+            
+            double width = 0;
+            try {
+              // 2. Force to string first to handle both Numbers and Strings safely
+              String strValue = rawValue.toString().toLowerCase();
+              String cleanValue = strValue.replace('"', "").replace("inches", "").trim();
+              width = Double.parseDouble(cleanValue);
+            } catch (Exception e) {
+              return; // Skip documents with unparseable values
+            }
+      
+            // 3. Logic mapping (ensure no gaps)
+            if (width <= 30) {
+              emit("0 - 30 Inches");
+            } else if (width <= 40) {
+              emit("30 - 40 Inches");
+            } else if (width <= 50) {
+              emit("40 - 50 Inches");
+            } else if (width <= 60) {
+              emit("50 - 60 Inches");
+            } else if (width <= 70) {
+              emit("60 - 70 Inches");
+            } else if (width <= 80) {
+              emit("70 - 80 Inches");
+            } else {
+              emit("80 Inches And Up");
+            }
+          `,
         },
       },
     },
@@ -311,13 +428,114 @@ export const fireplacesFilters = [
     cluster: "fireplaces",
   },
   {
+    label: "BTUs",
+    attribute: "frplc_btus",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    transform: function (items) {
+      return items.map((item) => {
+        return {
+          ...item,
+          label: Number(item.value),
+        };
+      });
+    },
+    runtime_mapping: {
+      frplc_btus: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.frplc_spec_btus'] != null) {
+              def val = data['bbq.frplc_spec_btus'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "frplc_btus",
+      field: "frplc_btus",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.frplc_spec_btus",
+    cluster: "fireplaces",
+  },
+  {
+    label: "BTU Range",
+    attribute: "frplc_btu_range",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      frplc_btu_range: {
+        type: "keyword",
+        script: {
+          source: `
+        def data = params['_source']['accentuate_data'];
+        if (data == null) return;
+        
+        // Use .get() to handle keys with dots safely
+        def rawValue = data.get('bbq.frplc_spec_btus');
+        if (rawValue == null) return;
+
+        try {
+          // Ensure we are working with a string
+          String strValue = rawValue.toString();
+          String cleanValue = /[^0-9.]/.matcher(strValue).replaceAll("");
+          
+          if (cleanValue.length() == 0) return;
+
+          double btus = Double.parseDouble(cleanValue);
+
+          if (btus < 40000) {
+            emit("30,000 - 40,000");
+          } else if (btus < 60000) {
+            emit("50,000 - 60,000");
+          } else if (btus < 80000) {
+            emit("70,000 - 80,000");
+          } else {
+            emit("80,000 And Up");
+          }
+        } catch (Exception e) {
+          // Optional: emit("DEBUG: " + e.getMessage()); 
+          return;
+        }
+      `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "frplc_btu_range",
+      field: "frplc_btu_range",
+      type: "string",
+    },
+    collapse: false,
+    // accentuate_prop:"bbq.frplc_spec_btus",
+    cluster: "fireplaces",
+  },
+  {
     label: "Heating Area",
     attribute: "frplc_heating_area",
     searchable: false,
     type: "RefinementList",
-    transformSpecs: (value) => {
+    transformSpecs: function (value) {
       return value + " Sq. Ft.";
     },
+    transform: formatHeatingAreaFilter,
     runtime_mapping: null,
     facet_attribute: {
       attribute: "frplc_heating_area",
@@ -419,10 +637,49 @@ export const fireplacesFilters = [
     accentuate_prop: "bbq.frplc_spec_model",
     cluster: "fireplaces",
   },
+  {
+    label: "Voltage",
+    attribute: "frplc_voltage",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      frplc_voltage: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.frplc_spec_voltage'] != null) {
+              def val = data['bbq.frplc_spec_voltage'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "frplc_voltage",
+      field: "frplc_voltage",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.frplc_spec_voltage",
+    cluster: "fireplaces",
+  },
 ];
 
-export const fireplacesFilterTypes = {
-  fireplaces: [
+
+const commonFilters = [
     "ways_to_shop",
     "frplc_type",
     "frplc_mount_type",
@@ -440,52 +697,47 @@ export const fireplacesFilterTypes = {
     "frplc_ember_bed_depth",
     "frplc_frame_dimension",
     "frplc_sur_dimension",
+    "frplc_sur_width_range",
     // "frplc_sur_wid_range",
     // "frplc_line_loc",
     // "frplc_recess_option",
     // "frplc_model",
     // "frplc_material",
+  ];
 
+export const fireplacesFilterTypes = {
+  fireplaces: commonFilters,
+  "gas-fireplaces": [
+    "ways_to_shop",
+    "frplc_type",
+    "frplc_view_type",
+    "frplc_mount_type",
+    "brands",
+    "price_groups",
+    "price",
+    "frplc_firebox_width",
+    "frplc_model",
+    "frplc_btu_range",
+    "frplc_btus",
+    "frplc_style",
+    "frplc_color",
+    // surround range
+    "frplc_sur_width_range",
+    "frplc_vent_type",
   ],
-  // "gas-fireplaces": [
-  //   "ways_to_shop",
-  //   "frplc_type",
-  //   "frplc_color",
-  //   "brands",
-  //   "price_groups",
-  //   "price",
-  // ],
-  // "electric-fireplaces": [
-  //   "ways_to_shop",
-  //   "frplc_type",
-  //   "frplc_mount_type",
-  //   "frplc_size_range",
-  //   "frplc_color",
-  //   "brands",
-  //   "price_groups",
-  //   "price",
-  // ],
-  // "shop-all-fireplaces": [
-  //   "ways_to_shop",
-  //   "frplc_type",
-  //   "frplc_mount_type",
-  //   "frplc_fuel_type",
-  //   "frplc_vent_type",
-  //   "frplc_color",
-  //   "frplc_view_type",
-  //   "frplc_firebox_width",
-  //   "price_groups",
-  //   "price",
-  //   "frplc_adj_thermostat",
-  //   "brands",
-  //   "frplc_style",
-  //   "frplc_finish",
-  //   "frplc_view_area",
-  //   "frplc_ember_bed_depth",
-  //   "frplc_frame_dimension",
-  //   "frplc_sur_dimension",
-  //   "frplc_sur_wid_range",
-  // ]
+  "electric-fireplaces": [
+    "ways_to_shop",
+    "frplc_mount_type",
+    "frplc_size_range",
+    "frplc_heating_area",
+    // "frplc_type",
+    // "frplc_btus",
+    "frplc_voltage",
+    "brands",
+    "price_groups",
+    "price",
+  ],
+  "shop-all-fireplaces": commonFilters
 };
 
 // console.log("fireplacesFilters", fireplacesFilters.map(item=> ({label: item.label, attribute: item.attribute, property: item.facet_attribute.field})))

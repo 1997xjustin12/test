@@ -785,3 +785,5 @@ console.log("accentuateSpecLabels (REFRIGERATORS): ",accentuateSpecLabels.filter
 console.log("accentuateSpecLabels (FIREPLACES): ",accentuateSpecLabels.filter(({type})=> type === "fireplaces"));
 console.log("accentuateSpecLabels (PATIO HEATERS): ",accentuateSpecLabels.filter(({type})=> type === "patio heaters"));
 console.log("accentuateSpecLabels (GRILLS): ",accentuateSpecLabels.filter(({type})=> type === "grills"));
+
+// console.log("TO PASTE IN PRODUCTSSECTION", filters.map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join(""))
