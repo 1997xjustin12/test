@@ -615,7 +615,10 @@ function ProductsSection({ category, search = "" }) {
         }
 
         console.log("filterString", result);
-        console.log("page collection", details?.collection_display?.name || "NA");
+        console.log(
+          "page collection",
+          details?.collection_display?.name || "NA",
+        );
 
         // Only update if value changed (prevents unnecessary re-renders)
         setFilterString((prev) => (prev !== result ? result : prev));
@@ -670,13 +673,13 @@ function ProductsSection({ category, search = "" }) {
                 },
               ]}
             />
+            <RangeInput attribute="price" className="hidden"/>
             {/* Refinement List Hack for URL-Based Filter */}
             <RefinementList attribute="ways_to_shop" className="hidden" />
             <RefinementList attribute="ratings" className="hidden" />
             <RefinementList attribute="brands" className="hidden" />
             <RefinementList attribute="product_category" className="hidden" />
             <RefinementList attribute="price_groups" className="hidden" />
-            <RefinementList attribute="price" className="hidden" />
             <RefinementList attribute="material" className="hidden" />
             <RefinementList attribute="ref_is_commercial" className="hidden" />
             <RefinementList attribute="ref_color" className="hidden" />
@@ -693,19 +696,40 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="ref_drain_type" className="hidden" />
             <RefinementList attribute="ref_hinge" className="hidden" />
             <RefinementList attribute="ref_ice_cube_type" className="hidden" />
-            <RefinementList attribute="ref_ice_daily_output" className="hidden" />
-            <RefinementList attribute="ref_ice_daily_output_group_1" className="hidden" />
-            <RefinementList attribute="ref_ice_storage_capacity_raw" className="hidden" />
-            <RefinementList attribute="ref_ice_storage_capacity" className="hidden" />
+            <RefinementList
+              attribute="ref_ice_daily_output"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="ref_ice_daily_output_group_1"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="ref_ice_storage_capacity_raw"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="ref_ice_storage_capacity"
+              className="hidden"
+            />
             <RefinementList attribute="ref_glass_door" className="hidden" />
             <RefinementList attribute="ref_max_keg_size" className="hidden" />
             <RefinementList attribute="ref_mounting_type" className="hidden" />
             <RefinementList attribute="ref_no_of_taps" className="hidden" />
-            <RefinementList attribute="ref_outdoor_certification" className="hidden" />
+            <RefinementList
+              attribute="ref_outdoor_certification"
+              className="hidden"
+            />
             <RefinementList attribute="ref_capacity" className="hidden" />
-            <RefinementList attribute="ref_capacity_group_1" className="hidden" />
+            <RefinementList
+              attribute="ref_capacity_group_1"
+              className="hidden"
+            />
             <RefinementList attribute="ref_vent" className="hidden" />
-            <RefinementList attribute="ref_wine_bottle_capacity" className="hidden" />
+            <RefinementList
+              attribute="ref_wine_bottle_capacity"
+              className="hidden"
+            />
             <RefinementList attribute="ref_with_lock" className="hidden" />
             <RefinementList attribute="ref_no_of_zones" className="hidden" />
             <RefinementList attribute="ref_outdoor_rated" className="hidden" />
@@ -714,15 +738,33 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="frplc_fuel_type" className="hidden" />
             <RefinementList attribute="frplc_vent_type" className="hidden" />
             <RefinementList attribute="frplc_view_type" className="hidden" />
-            <RefinementList attribute="frplc_firebox_width" className="hidden" />
-            <RefinementList attribute="frplc_adj_thermostat" className="hidden" />
+            <RefinementList
+              attribute="frplc_firebox_width"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="frplc_adj_thermostat"
+              className="hidden"
+            />
             <RefinementList attribute="frplc_style" className="hidden" />
             <RefinementList attribute="frplc_color" className="hidden" />
             <RefinementList attribute="frplc_view_area" className="hidden" />
-            <RefinementList attribute="frplc_ember_bed_depth" className="hidden" />
-            <RefinementList attribute="frplc_frame_dimension" className="hidden" />
-            <RefinementList attribute="frplc_sur_dimension" className="hidden" />
-            <RefinementList attribute="frplc_sur_width_range" className="hidden" />
+            <RefinementList
+              attribute="frplc_ember_bed_depth"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="frplc_frame_dimension"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="frplc_sur_dimension"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="frplc_sur_width_range"
+              className="hidden"
+            />
             <RefinementList attribute="frplc_size" className="hidden" />
             <RefinementList attribute="frplc_size_range" className="hidden" />
             <RefinementList attribute="frplc_btus" className="hidden" />
@@ -732,42 +774,61 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="frplc_color" className="hidden" />
             <RefinementList attribute="frplc_material" className="hidden" />
             <RefinementList attribute="frplc_line_loc" className="hidden" />
-            <RefinementList attribute="frplc_recess_option" className="hidden" />
+            <RefinementList
+              attribute="frplc_recess_option"
+              className="hidden"
+            />
             <RefinementList attribute="frplc_model" className="hidden" />
             <RefinementList attribute="frplc_voltage" className="hidden" />
-            <RefinementList attribute="frplc_mount_type" className="hidden" />
-            <RefinementList attribute="frplc_fuel_type" className="hidden" />
-            <RefinementList attribute="frplc_vent_type" className="hidden" />
-            <RefinementList attribute="frplc_view_type" className="hidden" />
-            <RefinementList attribute="frplc_firebox_width" className="hidden" />
-            <RefinementList attribute="frplc_adj_thermostat" className="hidden" />
-            <RefinementList attribute="frplc_style" className="hidden" />
-            <RefinementList attribute="frplc_finish" className="hidden" />
-            <RefinementList attribute="frplc_view_area" className="hidden" />
-            <RefinementList attribute="frplc_ember_bed_depth" className="hidden" />
-            <RefinementList attribute="frplc_frame_dimension" className="hidden" />
-            <RefinementList attribute="frplc_sur_dimension" className="hidden" />
-            <RefinementList attribute="frplc_style" className="hidden" />
-            <RefinementList attribute="frplc_size_range" className="hidden" />
-            <RefinementList attribute="frplc_style" className="hidden" />
-            <RefinementList attribute="frplc_type" className="hidden" />
-            <RefinementList attribute="frplc_color" className="hidden" />
-            <RefinementList attribute="frplc_material" className="hidden" />
-            <RefinementList attribute="frplc_line_loc" className="hidden" />
-            <RefinementList attribute="frplc_recess_option" className="hidden" />
-            <RefinementList attribute="frplc_model" className="hidden" />
+            <RefinementList attribute="heater_fuel_type" className="hidden" />
+            <RefinementList attribute="heater_mount_type" className="hidden" />
+            <RefinementList attribute="heater_series" className="hidden" />
+            <RefinementList attribute="heater_decor" className="hidden" />
+            <RefinementList attribute="heater_finish" className="hidden" />
+            <RefinementList attribute="heater_watts" className="hidden" />
+            <RefinementList attribute="heater_grade" className="hidden" />
+            <RefinementList
+              attribute="heater_marine_grade"
+              className="hidden"
+            />
+            <RefinementList attribute="heater_features" className="hidden" />
+            <RefinementList attribute="heater_btu" className="hidden" />
+            <RefinementList attribute="heater_btu_range" className="hidden" />
+            <RefinementList attribute="heater_heat_area" className="hidden" />
+            <RefinementList attribute="heater_voltage" className="hidden" />
+            <RefinementList attribute="heater_size" className="hidden" />
+            <RefinementList attribute="heater_type" className="hidden" />
+            <RefinementList attribute="heater_elements" className="hidden" />
             <RefinementList attribute="features_fuel_type" className="hidden" />
             <RefinementList attribute="features_type" className="hidden" />
             <RefinementList attribute="features_inches" className="hidden" />
-            <RefinementList attribute="features_mounting_type" className="hidden" />
-            <RefinementList attribute="features_vent_option" className="hidden" />
+            <RefinementList
+              attribute="features_mounting_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="features_vent_option"
+              className="hidden"
+            />
             <RefinementList attribute="features_color" className="hidden" />
-            <RefinementList attribute="features_recess_option" className="hidden" />
+            <RefinementList
+              attribute="features_recess_option"
+              className="hidden"
+            />
             <RefinementList attribute="features_model" className="hidden" />
-            <RefinementList attribute="features_valve_line_location" className="hidden" />
+            <RefinementList
+              attribute="features_valve_line_location"
+              className="hidden"
+            />
             <RefinementList attribute="features_fuel_type" className="hidden" />
-            <RefinementList attribute="features_mounting_type" className="hidden" />
-            <RefinementList attribute="features_heating_elements" className="hidden" />
+            <RefinementList
+              attribute="features_mounting_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="features_heating_elements"
+              className="hidden"
+            />
             <RefinementList attribute="features_finish" className="hidden" />
             <RefinementList attribute="collections" className="hidden" />
             <RefinementList attribute="configuration_type" className="hidden" />
@@ -777,19 +838,33 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="width" className="hidden" />
             <RefinementList attribute="depth" className="hidden" />
             <RefinementList attribute="height" className="hidden" />
-            <RefinementList attribute="rear_infrared_burner" className="hidden" />
+            <RefinementList
+              attribute="rear_infrared_burner"
+              className="hidden"
+            />
             <RefinementList attribute="cut_out_width" className="hidden" />
             <RefinementList attribute="cut_out_depth" className="hidden" />
             <RefinementList attribute="cut_out_height" className="hidden" />
             <RefinementList attribute="made_in_usa" className="hidden" />
-            <RefinementList attribute="storage_mounting_type" className="hidden" />
-            <RefinementList attribute="storage_no_of_drawers" className="hidden" />
-            <RefinementList attribute="storage_no_of_doors" className="hidden" />
-            <RefinementList attribute="storage_orientation" className="hidden" />
+            <RefinementList
+              attribute="storage_mounting_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_no_of_drawers"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_no_of_doors"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_orientation"
+              className="hidden"
+            />
             <RefinementList attribute="thermometer" className="hidden" />
             <RefinementList attribute="rotisserie_kit" className="hidden" />
             <RefinementList attribute="gas_type" className="hidden" />
-
             <InnerUI
               category={category}
               page_details={pageDetails}

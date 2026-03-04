@@ -1,51 +1,19 @@
 import {
-  // etc
-  BaseNavObj,
-  ES_INDEX,
   STAR_FILTERS,
-  exclude_brands,
-  exclude_collections,
-  main_products,
-  shouldApplyMainProductSort,
   formatToInches,
-  // Bucket keys
-  capacityBucketKeys,
-  depthBucketKeys,
-  heightBucketKeys,
-  refClassBucketKeys,
-  refConfigBucketKeys,
-  refDailyIceBucketKeys,
-  refDimensionGroupBucketKeys,
-  refDrainTypeBucketKeys,
-  refGlassDoorBucketKeys,
-  refHingeBucketKeys,
-  refNoOfZonesBucketKeys,
-  refOutdoorCertBucketKeys,
-  refVentBucketKeys,
-  sizeBucketKeys,
-  widthBucketKeys,
-  // Buckets
-  capacityBuckets,
   depthBuckets,
   heightBuckets,
-  refClassBuckets,
-  refConfigBuckets,
-  refDailyIceBuckets,
-  refDimensionGroupBuckets,
-  refDrainTypeBuckets,
-  refHingeBuckets,
-  refGlassDoorBuckets,
-  refNoOfZonesBuckets,
-  refOutdoorCertBuckets,
-  refVentBuckets,
   sizeBuckets,
   widthBuckets,
 } from "@/app/lib/helpers";
 import COLLECTIONS_BY_CATEGORY from "@/app/data/collections_by_category";
 import { refFilters, refFilterTypes } from "./filter-refrigerators";
 import { fireplacesFilters, fireplacesFilterTypes } from "./filter-fireplaces";
-import { patioHeaterFilters,patioHeatersFilterTypes } from "./filter-patio-heaters";
-
+import {
+  patioHeaterFilters,
+  patioHeatersFilterTypes,
+} from "./filter-patio-heaters";
+import { grillsFilters, grillsFilterTypes } from "./filter-grills";
 
 export const priceBuckets = {
   "Under $500": { gte: 0, lt: 500 },
@@ -142,7 +110,7 @@ export const filters = [
           "Promotions",
           "New Arrivals",
           "Free Shipping",
-          "In Stock & Quick Shipping"
+          "In Stock & Quick Shipping",
         ];
         return order.reduce((acc, key) => {
           const count = buckets[key]?.doc_count ?? 0;
@@ -354,7 +322,7 @@ export const filters = [
   },
   {
     label: "Price Groups",
-    attribute: "price_groups", // 
+    attribute: "price_groups", //
     searchable: false,
     type: "RefinementList",
     transform: function (items) {
@@ -440,295 +408,7 @@ export const filters = [
   ...refFilters,
   ...fireplacesFilters,
   ...patioHeaterFilters,
-
-  // ######
-  
-  
-  
-  
-  {
-    label: "Power Source",
-    attribute: "features_fuel_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Type",
-    attribute: "features_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Inches",
-    attribute: "features_inches",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Mounting Type",
-    attribute: "features_mounting_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Vent Option",
-    attribute: "features_vent_option",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Color",
-    attribute: "features_color",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Recess Option",
-    attribute: "features_recess_option",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Model",
-    attribute: "features_model",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Line Location",
-    attribute: "features_valve_line_location",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["fireplaces"],
-  },
-  {
-    label: "Fuel Type",
-    attribute: "features_fuel_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["patio-heaters"],
-  },
-  {
-    label: "Style",
-    attribute: "features_mounting_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["patio-heaters"],
-  },
-  {
-    label: "Heating Elements",
-    attribute: "features_heating_elements",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["patio-heaters"],
-  },
-  {
-    label: "Finish",
-    attribute: "features_finish",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["patio-heaters"],
-  },
-  {
-    label: "Collections",
-    attribute: "collections",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["open-box", "Search"],
-  },
-  {
-    label: "Configuration",
-    attribute: "configuration_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Number of burners",
-    attribute: "no_of_burners",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Lights",
-    attribute: "grill_lights",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Size",
-    attribute: "size",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: sizeBuckets[item.value],
-      }));
-    },
-  },
-  {
-    label: "Width",
-    attribute: "width",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: widthBuckets[item.value],
-      }));
-    },
-  },
-  {
-    label: "Depth",
-    attribute: "depth",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: depthBuckets[item.value],
-      }));
-    },
-  },
-  {
-    label: "Height",
-    attribute: "height",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: heightBuckets[item.value],
-      }));
-    },
-  },
-  {
-    label: "Rear Infrared Burner",
-    attribute: "rear_infrared_burner",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Cut-Out Width",
-    attribute: "cut_out_width",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills", "storage"],
-    transform: formatToInches,
-  },
-  {
-    label: "Cut-Out Depth",
-    attribute: "cut_out_depth",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills", "storage"],
-    transform: formatToInches,
-  },
-  {
-    label: "Cut-Out Height",
-    attribute: "cut_out_height",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills", "storage"],
-    transform: formatToInches,
-  },
-  {
-    label: "Made In USA",
-    attribute: "made_in_usa",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills", "fireplaces", "firepits"],
-  },
-  {
-    label: "Mounting Type",
-    attribute: "storage_mounting_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["storage"],
-  },
-  {
-    label: "No. of Drawers",
-    attribute: "storage_no_of_drawers",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["storage"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: `${parseInt(item.value)} Drawers`,
-      }));
-    },
-  },
-  {
-    label: "No. of Doors",
-    attribute: "storage_no_of_doors",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["storage"],
-    transform: function (items) {
-      return items.map((item) => ({
-        ...item,
-        label: `${parseInt(item.value)} Doors`,
-      }));
-    },
-  },
-  {
-    label: "Orientation",
-    attribute: "storage_orientation",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["storage"],
-  },
-  // {
-  //   label: "Material",
-  //   attribute: "material",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   filter_type: [
-  //     "grills",
-  //     "refrigerators",
-  //     "storage",
-  //     "compact-refrigerators",
-  //   ],
-  //   collapse: false,
-  // },
-  {
-    label: "Thermometer",
-    attribute: "thermometer",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Rotisserie Kit",
-    attribute: "rotisserie_kit",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
-  {
-    label: "Gas Type",
-    attribute: "gas_type",
-    searchable: false,
-    type: "RefinementList",
-    filter_type: ["grills"],
-  },
+  ...grillsFilters,
 ];
 
 /**
@@ -741,6 +421,7 @@ export const filter_types = {
   ...refFilterTypes,
   ...fireplacesFilterTypes,
   ...patioHeatersFilterTypes,
+  ...grillsFilterTypes,
   default: [
     "ways_to_shop",
     "brands",
@@ -771,19 +452,36 @@ export const getActiveRuntimeMappings = (type) => {
       // Merge the current object (e.g., { ref_width: {...} }) into the accumulator
       return { ...acc, ...current };
     }, {});
-    
+
   return runtimeMappings;
 };
 
 export const accentuateSpecLabels = filters
-  .map((item)=>({label: item?.label, key: item?.accentuate_prop || "NA", type: item.cluster, transform: item.transformSpecs}))
-  .filter(item=> item?.key !== "NA")
-  .sort((a,b)=> a.label.localeCompare(b.label));
+  .map((item) => ({
+    label: item?.label,
+    key: item?.accentuate_prop || "NA",
+    type: item.cluster,
+    transform: item.transformSpecs,
+  }))
+  .filter((item) => item?.key !== "NA")
+  .sort((a, b) => a.label.localeCompare(b.label));
 
-console.log("accentuateSpecLabels (ALL): ",accentuateSpecLabels);
-console.log("accentuateSpecLabels (REFRIGERATORS): ",accentuateSpecLabels.filter(({type})=> type === "refrigerators"));
-console.log("accentuateSpecLabels (FIREPLACES): ",accentuateSpecLabels.filter(({type})=> type === "fireplaces"));
-console.log("accentuateSpecLabels (PATIO HEATERS): ",accentuateSpecLabels.filter(({type})=> type === "patio heaters"));
-console.log("accentuateSpecLabels (GRILLS): ",accentuateSpecLabels.filter(({type})=> type === "grills"));
-
-// console.log("TO PASTE IN PRODUCTSSECTION", filters.map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join(""))
+console.log("accentuateSpecLabels (ALL): ", accentuateSpecLabels);
+console.log(
+  "accentuateSpecLabels (REFRIGERATORS): ",
+  accentuateSpecLabels.filter(({ type }) => type === "refrigerators"),
+);
+console.log(
+  "accentuateSpecLabels (FIREPLACES): ",
+  accentuateSpecLabels.filter(({ type }) => type === "fireplaces"),
+);
+console.log(
+  "accentuateSpecLabels (PATIO HEATERS): ",
+  accentuateSpecLabels.filter(({ type }) => type === "patio heaters"),
+);
+console.log(
+  "accentuateSpecLabels (GRILLS): ",
+  accentuateSpecLabels.filter(({ type }) => type === "grills"),
+);
+// const refinementListHtml = filters.filter(item=> item.attribute !== "price").map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join("");
+// console.log("TO PASTE IN PRODUCTSSECTION", refinementListHtml)

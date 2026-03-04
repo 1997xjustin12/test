@@ -1,8 +1,12 @@
+import {decimalToFraction} from "../lib/helpers";
 const yesNo = ["Yes", "No"]; // used for transform sort
 
-const formatSimpleSize = (value) => {
-  return value ? decimalToFraction(value) + " Inches": "";
-};
+function formatSimpleSizeFilter(items) {
+  return items.map((item) => ({
+    ...item,
+    label: decimalToFraction(item.value) + " Inches",
+  }));
+}
 
 function formatValueToNumber(items) {
   return items.map((item) => ({
@@ -267,14 +271,6 @@ export const patioHeaterFilters = [
         }
       })
     },
-    // transform:function (items){
-    //   return items.map(function(item){
-    //     return {
-    //       ...item,
-    //       label: Math.round(item.value).toLocaleString('en-US')
-    //     }
-    //   })
-    // },
     runtime_mapping: null,
     facet_attribute: {
       attribute: "heater_btu",
@@ -283,6 +279,58 @@ export const patioHeaterFilters = [
     },
     collapse: false,
     accentuate_prop: "bbq.heater_specs_btu",
+    cluster: "patio heaters",
+  },
+  {
+    label: "BTU Range",
+    attribute: "heater_btu_range",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      heater_btu_range: {
+        type: "keyword",
+        script: {
+          source: `
+        def data = params['_source']['accentuate_data'];
+        if (data == null) return;
+        
+        // Use .get() to handle keys with dots safely
+        def rawValue = data.get('bbq.heater_specs_btu');
+        if (rawValue == null) return;
+
+        try {
+          // Ensure we are working with a string
+          String strValue = rawValue.toString();
+          String cleanValue = /[^0-9.]/.matcher(strValue).replaceAll("");
+          
+          if (cleanValue.length() == 0) return;
+
+          double btus = Double.parseDouble(cleanValue);
+
+          if (btus < 40000) {
+            emit("30,000 - 40,000");
+          } else if (btus < 60000) {
+            emit("50,000 - 60,000");
+          } else if (btus < 80000) {
+            emit("70,000 - 80,000");
+          } else {
+            emit("80,000 And Up");
+          }
+        } catch (Exception e) {
+          // Optional: emit("DEBUG: " + e.getMessage()); 
+          return;
+        }
+      `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "heater_btu_range",
+      field: "heater_btu_range",
+      type: "string",
+    },
+    collapse: false,
+    // accentuate_prop: "bbq.heater_specs_btu",
     cluster: "patio heaters",
   },
   {
@@ -301,7 +349,7 @@ export const patioHeaterFilters = [
     runtime_mapping: null,
     facet_attribute: {
       attribute: "heater_heat_area",
-      field: "accentuate_data.bbq.heater_specs_btu",
+      field: "accentuate_data.bbq.heater_specs_heat_area",
       type: "string",
     },
     collapse: false,
@@ -313,10 +361,34 @@ export const patioHeaterFilters = [
     attribute: "heater_voltage",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      heater_voltage: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.heater_specs_volts'] != null) {
+              def val = data['bbq.heater_specs_volts'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "heater_voltage",
-      field: "accentuate_data.bbq.heater_specs_volts",
+      field: "heater_voltage",
       type: "string",
     },
     collapse: false,
@@ -329,6 +401,7 @@ export const patioHeaterFilters = [
     searchable: false,
     type: "RefinementList",
     runtime_mapping: null,
+    transform: formatSimpleSizeFilter,
     facet_attribute: {
       attribute: "heater_size",
       field: "accentuate_data.bbq.heater_specs_size",
@@ -343,10 +416,34 @@ export const patioHeaterFilters = [
     attribute: "heater_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      heater_type: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.heater_specs_type'] != null) {
+              def val = data['bbq.heater_specs_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "heater_type",
-      field: "accentuate_data.bbq.heater_specs_type",
+      field: "heater_type",
       type: "string",
     },
     collapse: false,
@@ -375,25 +472,51 @@ export const patioHeaterFilters = [
 export const patioHeatersFilterTypes = {
   "patio-heaters": [
     "ways_to_shop",
+    "heater_type",
     "heater_fuel_type",
     "heater_mount_type",
+    "brands",
     "heater_series",
     "heater_decor",
+    "price_groups",
+    "price",
+    "heater_voltage",
     "heater_finish",
     "heater_watts",
     "heater_grade",
     "heater_marine_grade",
     "heater_features",
-    "heater_btu",
+    "heater_btu_range",
     "heater_heat_area",
-    "heater_voltage",
-    "heater_size",
-    "heater_type",
-    "heater_elements",
+    // "heater_size",
+    // "heater_elements",
+  ],
+  "gas-patio-heaters": [
+    "ways_to_shop",
+    "heater_fuel_type",
+    "heater_mount_type",
     "brands",
+    "heater_voltage",
+    "heater_finish",
     "price_groups",
     "price",
+    "heater_grade",
+    "heater_features",
+    "heater_btu_range",
   ],
+  "electric-patio-heaters":[
+    "ways_to_shop",
+    "heater_mount_type",
+    "brands",
+    "heater_voltage",
+    "heater_finish",
+    "heater_watts",
+    "price_groups",
+    "price",
+    "heater_grade",
+    "heater_features",
+    "heater_btu_range",
+  ]
 };
 
 // console.log("patioHeaterFilters", patioHeaterFilters.map(item=> ({label: item.label, attribute: item.attribute, property: item.facet_attribute.field})))
