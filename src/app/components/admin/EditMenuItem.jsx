@@ -452,6 +452,10 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
 
   const filter_types = [
     "Grills",
+    "Built-In-Grills",
+    "Built-In-Grills-x-Brands",
+    "Freestanding-Grills",
+    "Freestanding-Grills-x-Brands",
     "Fireplaces",
     "Gas-Fireplaces",
     "Electric-Fireplaces",
