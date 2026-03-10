@@ -403,7 +403,7 @@ export const grillsFilters = [
       field: "grill_fuel_type",
       type: "string",
     },
-    collapse: false,
+    collapse: true,
     accentuate_prop: "bbq.seo_meta_fuel_type",
     cluster: "grills",
   },
