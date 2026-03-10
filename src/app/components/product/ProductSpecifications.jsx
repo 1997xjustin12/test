@@ -1,41 +1,43 @@
 "use client";
 import { useState } from "react";
 
-const normalizeSpecValue = (key, value) => {
-  let result = value;
-  switch (key) {
-    case "bbq.number_of_main_burners":
-      result = `${value
-        ?.toLowerCase()
-        ?.replace("burners", "")
-        .replace("burner", "")} burner/s`;
-      break;
-    case "bbq.product_weight":
-    case "bbq.shipping_weight":
-      const unit = " lbs.";
+// const normalizeSpecValue = (key, value) => {
+//   let result = value;
+//   switch (key) {
+//     case "bbq.number_of_main_burners":
+//       if(value){
+//         result = `${String(value)
+//           ?.toLowerCase()
+//           ?.replace("burners", "")
+//           .replace("burner", "")} burner/s`;
+//       }
+//       break;
+//     case "bbq.product_weight":
+//     case "bbq.shipping_weight":
+//       const unit = " lbs.";
 
-      let formattedWeight;
+//       let formattedWeight;
 
-      if (value % 1 !== 0) {
-        // If the number has a fractional part (e.g., 490.5)
-        formattedWeight = new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2, // Force two decimal places
-          maximumFractionDigits: 2,
-        }).format(value);
-      } else {
-        // If the number is an integer (e.g., 490.0)
-        formattedWeight = new Intl.NumberFormat("en-US", {
-          maximumFractionDigits: 0, // No decimal places
-        }).format(value);
-      }
-      result = formattedWeight + unit;
-      break;
-    default:
-      result = value;
-      break;
-  }
-  return result;
-};
+//       if (value % 1 !== 0) {
+//         // If the number has a fractional part (e.g., 490.5)
+//         formattedWeight = new Intl.NumberFormat("en-US", {
+//           minimumFractionDigits: 2, // Force two decimal places
+//           maximumFractionDigits: 2,
+//         }).format(value);
+//       } else {
+//         // If the number is an integer (e.g., 490.0)
+//         formattedWeight = new Intl.NumberFormat("en-US", {
+//           maximumFractionDigits: 0, // No decimal places
+//         }).format(value);
+//       }
+//       result = formattedWeight + unit;
+//       break;
+//     default:
+//       result = value;
+//       break;
+//   }
+//   return result;
+// };
 
 const ProductSpecifications = ({ product }) => {
   const specs = product?.product_specs;
@@ -67,7 +69,7 @@ const ProductSpecifications = ({ product }) => {
               {item?.label}
             </td>
             <td className="text-xs sm:text-sm font-semibold text-theme-600 py-3 px-3 align-top group-hover:text-theme-700 group-hover:bg-neutral-100">
-              {normalizeSpecValue(item?.key, item?.value)}
+              {item?.value}
             </td>
           </tr>
         ))}

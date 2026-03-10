@@ -736,29 +736,39 @@ export const formatToInches = (items) => {
 
 
 export const decimalToFraction = (decimal) => {
-  // Handle whole numbers immediately
-  if (decimal % 1 === 0) return Number(decimal).toString();
+  if (decimal === null || decimal === undefined) return "";
+  
+  // 1. Handle whole numbers immediately
+  if (decimal % 1 === 0) return decimal.toString();
 
   const wholeNumber = Math.floor(decimal);
-  const fractionalPart = (decimal - wholeNumber).toFixed(10); // Fix precision issues
   
-  // Determine the denominator based on decimal length
-  const precision = fractionalPart.toString().split('.')[1].length;
-  let numerator = Math.round((decimal - wholeNumber) * Math.pow(10, precision));
-  let denominator = Math.pow(10, precision);
+  // 2. Work only with the fractional part
+  let fractionalPart = decimal - wholeNumber;
+  
+  // 3. Use a fixed precision (e.g., 10^8) to avoid floating point errors
+  // instead of trying to count string length
+  const precision = 100000000; 
+  let numerator = Math.round(fractionalPart * precision);
+  let denominator = precision;
 
-  // Greatest Common Divisor function
-  const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+  // 4. Greatest Common Divisor function (Iterative is safer for JS)
+  const gcd = (a, b) => {
+    while (b) {
+      a %= b;
+      [a, b] = [b, a];
+    }
+    return a;
+  };
+
   const commonDivisor = gcd(numerator, denominator);
 
-  // Simplify numerator and denominator
+  // 5. Simplify
   numerator /= commonDivisor;
   denominator /= commonDivisor;
 
-  // Return formatted string
-  if (wholeNumber === 0) {
-    return `${numerator}/${denominator}`;
-  } else {
-    return `${wholeNumber} ${numerator}/${denominator}`;
-  }
+  // 6. Return formatted string
+  return wholeNumber === 0 
+    ? `${numerator}/${denominator}` 
+    : `${wholeNumber} ${numerator}/${denominator}`;
 }
