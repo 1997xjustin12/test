@@ -1,133 +1,26 @@
-import { decimalToFraction } from "../lib/helpers";
+import { 
+  decimalToFraction,
+  transformNumber,
+  transformFilterNumber,
+  transformNumberBurners,
+  transformFilterNumberBurners,
+  transformNumberDoors,
+  transformFilterNumberDoors,
+  transformNumberSize,
+  transformFilterNumberSize,
+  transformNumberDrawers,
+  transformFilterNumberDrawers,
+  transformNumberRacks,
+  transformFilterNumberRacks,
+  transformDimension,
+  transformFilterDimensions,
+  transformWeight,
+  transformFilterWeight,
+  transformGrillArea,
+  transformFilterGrillArea
+} from "../lib/helpers";
 
 const yesNo = ["Yes", "No"]; // used for transform sort
-
-
-const transformNumber = (value) => {
-  if(!value) return "";
-  return Number(value)
-}
-
-const transformFilterNumber = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumber(item.value),
-  }));
-}
-
-const transformNumberBurners = (value) => {
-  if(!value) return "";
-  return Number(value) + "-Burner"
-}
-
-const transformFilterNumberBurners = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumberBurners(item.value),
-  }));
-}
-
-const transformNumberDoors = (value) => {
-  if(!value) return "";
-  return Number(value) + "-Door"
-}
-
-const transformFilterNumberDoors = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumberDoors(item.value),
-  }));
-}
-
-const transformNumberSize = (value) => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + " Inches"
-}
-
-const transformFilterNumberSize = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumberSize(item.value),
-  }));
-}
-
-
-const transformNumberDrawers = (value) => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + "-Drawer"
-}
-
-const transformFilterNumberDrawers = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumberDrawers(item.value),
-  }));
-}
-
-const transformNumberRacks = (value) => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + "-Rack"
-}
-
-const transformFilterNumberRacks = (items) => {
-  return items.map((item) => ({
-    ...item,
-    label: transformNumberRacks(item.value),
-  }));
-}
-
-
-
-
-
-export const transformDimension = (value) => {
-  if (!value) return "";
-
-  const suf = ["Inches W", "Inches D", "Inches H"];
-
-  return String(value)
-    .split("x")
-    .map((part, index) => {
-      const trimmed = part.trim();
-      
-      // Handle cases where there might be an extra 'x' or empty space
-      if (trimmed === "") return "";
-
-      const fraction = decimalToFraction(trimmed);
-      
-      // Only attach a suffix if we have one defined for this index
-      const label = suf[index] ? ` ${suf[index]}` : "";
-      
-      return `${fraction}${label}`;
-    })
-    .filter(part => part !== "") // Remove empty segments
-    .join(" x ");
-}
-
-const transformFilterDimensions = (items) => {
-  return items.map((item)=>({
-    ...item,
-    label: transformDimension(item.value)
-  }))
-}
-
-const transformWeight = (value) => {
-  if(!value) return "";
-  return `${Number(value)} lbs`;
-}
-
-const transformFilterWeight = (items) => {
-  return items.map(item=>({...item, label: transformWeight(item?.value)}))
-} 
-
-const transformGrillArea = (value) => {
-  if(!value) return "";
-  return `${Number(value)} Sq. Inches`;
-}
-
-const transformFilterGrillArea = (items) => {
-  return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
-} 
 
 export const grillsFilters = [
   {
@@ -510,7 +403,7 @@ export const grillsFilters = [
       field: "grill_fuel_type",
       type: "string",
     },
-    collapse: false,
+    collapse: true,
     accentuate_prop: "bbq.seo_meta_fuel_type",
     cluster: "grills",
   },
