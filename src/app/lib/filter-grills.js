@@ -2,25 +2,479 @@ import { decimalToFraction } from "../lib/helpers";
 
 const yesNo = ["Yes", "No"]; // used for transform sort
 
-const formatSimpleSize = (value) => {
-  return value ? decimalToFraction(value) + " Inches" : "";
-};
 
-function formatSimpleSizeFilter(items) {
+const transformNumber = (value) => {
+  if(!value) return "";
+  return Number(value)
+}
+
+const transformFilterNumber = (items) => {
   return items.map((item) => ({
     ...item,
-    label: decimalToFraction(item.value) + " Inches",
+    label: transformNumber(item.value),
   }));
 }
 
-function formatValueToNumber(items) {
+const transformNumberBurners = (value) => {
+  if(!value) return "";
+  return Number(value) + "-Burner"
+}
+
+const transformFilterNumberBurners = (items) => {
   return items.map((item) => ({
     ...item,
-    label: Number(item.value),
+    label: transformNumberBurners(item.value),
   }));
 }
+
+const transformNumberDoors = (value) => {
+  if(!value) return "";
+  return Number(value) + "-Door"
+}
+
+const transformFilterNumberDoors = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberDoors(item.value),
+  }));
+}
+
+const transformNumberSize = (value) => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + " Inches"
+}
+
+const transformFilterNumberSize = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberSize(item.value),
+  }));
+}
+
+
+const transformNumberDrawers = (value) => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + "-Drawer"
+}
+
+const transformFilterNumberDrawers = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberDrawers(item.value),
+  }));
+}
+
+const transformNumberRacks = (value) => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + "-Rack"
+}
+
+const transformFilterNumberRacks = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberRacks(item.value),
+  }));
+}
+
+
+
+
+
+export const transformDimension = (value) => {
+  if (!value) return "";
+
+  const suf = ["Inches W", "Inches D", "Inches H"];
+
+  return String(value)
+    .split("x")
+    .map((part, index) => {
+      const trimmed = part.trim();
+      
+      // Handle cases where there might be an extra 'x' or empty space
+      if (trimmed === "") return "";
+
+      const fraction = decimalToFraction(trimmed);
+      
+      // Only attach a suffix if we have one defined for this index
+      const label = suf[index] ? ` ${suf[index]}` : "";
+      
+      return `${fraction}${label}`;
+    })
+    .filter(part => part !== "") // Remove empty segments
+    .join(" x ");
+}
+
+const transformFilterDimensions = (items) => {
+  return items.map((item)=>({
+    ...item,
+    label: transformDimension(item.value)
+  }))
+}
+
+const transformWeight = (value) => {
+  if(!value) return "";
+  return `${Number(value)} lbs`;
+}
+
+const transformFilterWeight = (items) => {
+  return items.map(item=>({...item, label: transformWeight(item?.value)}))
+} 
+
+const transformGrillArea = (value) => {
+  if(!value) return "";
+  return `${Number(value)} Sq. Inches`;
+}
+
+const transformFilterGrillArea = (items) => {
+  return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
+} 
 
 export const grillsFilters = [
+  {
+    label: "Overall Dimensions",
+    attribute: "grill_overall_dimensions",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformDimension,
+    transform: transformFilterDimensions,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_overall_dimensions",
+      field: "accentuate_data.bbq.overall_dimensions",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.overall_dimensions",
+    cluster: "grills",
+  },
+  {
+    label: "Cutout Dimensions",
+    attribute: "grill_cutout_dimensions",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformDimension,
+    transform: transformFilterDimensions,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_cutout_dimensions",
+      field: "accentuate_data.bbq.cutout_dimensions",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.cutout_dimensions",
+    cluster: "grills",
+  },
+  {
+    label: "Cooking Grill Dimensions",
+    attribute: "grill_cooking_grid_dimensions",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformDimension,
+    transform: transformFilterDimensions,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_cooking_grid_dimensions",
+      field: "accentuate_data.bbq.seo_meta_cooking_grid_dimensions",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.seo_meta_cooking_grid_dimensions",
+    cluster: "grills",
+  },
+  {
+    label: "Shipping Dimensions",
+    attribute: "grill_shipping_dimensions",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformDimension,
+    transform: transformFilterDimensions,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_shipping_dimensions",
+      field: "accentuate_data.bbq.shipping_dimensions",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.shipping_dimensions",
+    cluster: "grills",
+  },
+  {
+    label: "Shipping Weight",
+    attribute: "grill_shipping_weight",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformWeight,
+    transform: transformFilterWeight,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_shipping_weight",
+      field: "accentuate_data.bbq.shipping_weight",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.shipping_weight",
+    cluster: "grills",
+  },
+  {
+    label: "Product Weight",
+    attribute: "grill_product_weight",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformWeight,
+    transform: transformFilterWeight,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_product_weight",
+      field: "accentuate_data.bbq.product_weight",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.product_weight",
+    cluster: "grills",
+  },
+  {
+    label: "Main Grill Area",
+    attribute: "grill_main_grill_area",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformGrillArea,
+    transform: transformFilterGrillArea,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_main_grill_area",
+      field: "accentuate_data.bbq.seo_meta_main_grilling_area",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.seo_meta_main_grilling_area",
+    cluster: "grills",
+  },
+  {
+    label: "Secondary Grill Area",
+    attribute: "grill_second_grill_area",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformGrillArea,
+    transform: transformFilterGrillArea,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_second_grill_area",
+      field: "accentuate_data.bbq.seo_meta_secondary_grilling_area",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.seo_meta_secondary_grilling_area",
+    cluster: "grills",
+  },
+  {
+    label: "Total Grill Area",
+    attribute: "grill_total_grill_area",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformGrillArea,
+    transform: transformFilterGrillArea,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_total_grill_area",
+      field: "accentuate_data.bbq.seo_meta_total_grill_area",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.seo_meta_total_grill_area",
+    cluster: "grills",
+  },
+  {
+    label: "Number of Main Burners",
+    attribute: "grill_main_burner",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberBurners,
+    transform: transformFilterNumberBurners,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_main_burner",
+      field: "accentuate_data.bbq.number_of_main_burners",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.number_of_main_burners",
+    cluster: "grills",
+  },
+  {
+    label: "Total Surface BTU",
+    attribute: "grill_total_surface_btu",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumber,
+    transform: transformFilterNumber,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_total_surface_btu",
+      field: "accentuate_data.bbq.total_surface_btu",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.total_surface_btu",
+    cluster: "grills",
+  },
+  {
+    label: "Single Burner BTU",
+    attribute: "grill_single_burner_btus",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumber,
+    transform: transformFilterNumber,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_single_burner_btus",
+      field: "accentuate_data.bbq.single_burner_btus",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.single_burner_btus",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Number of Doors",
+    attribute: "grill_storage_no_of_doors",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberDoors,
+    transform: transformFilterNumberDoors,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_no_of_doors",
+      field: "accentuate_data.bbq.storage_specs_number_of_doors",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_number_of_doors",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Cutout Width",
+    attribute: "grill_storage_cutout_width",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_cutout_width",
+      field: "accentuate_data.bbq.storage_specs_cutout_width",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.storage_specs_cutout_width",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Cutout Depth",
+    attribute: "grill_storage_cutout_depth",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_cutout_depth",
+      field: "accentuate_data.bbq.storage_specs_cutout_depth",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.storage_specs_cutout_depth",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Cutout Height",
+    attribute: "grill_storage_cutout_height",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_cutout_height",
+      field: "accentuate_data.bbq.storage_specs_cutout_height",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.storage_specs_cutout_height",
+    cluster: "grills",
+  },
+  {
+    label: "Side Burners",
+    attribute: "grill_sideburner_burners",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberBurners,
+    transform: transformFilterNumberBurners,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_sideburner_burners",
+      field: "accentuate_data.bbq.side_burner_specs_number_of_burners",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.side_burner_specs_number_of_burners",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Drawers",
+    attribute: "grill_storage_drawers",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberDrawers,
+    transform: transformFilterNumberDrawers,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_drawers",
+      field: "accentuate_data.bbq.storage_specs_number_of_drawers",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_number_of_drawers",
+    cluster: "grills",
+  },
+  {
+    label: "External Material",
+    attribute: "grill_material",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      grill_material: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.seo_meta_material'] != null) {
+              def val = data['bbq.seo_meta_material'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "grill_material",
+      field: "grill_material",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.seo_meta_material",
+    cluster: "grills",
+  },
   {
     label: "Fuel Type",
     attribute: "grill_fuel_type",
@@ -61,13 +515,219 @@ export const grillsFilters = [
     cluster: "grills",
   },
   {
+    label: "Series",
+    attribute: "grill_series",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      grill_series: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.seo_meta_series'] != null) {
+              def val = data['bbq.seo_meta_series'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "grill_series",
+      field: "grill_series",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.seo_meta_series",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Cofiguration",
+    attribute: "grill_storage_config",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_config",
+      field: "accentuate_data.bbq.storage_specs_mounting_type",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_mounting_type",
+    cluster: "grills",
+  },
+  {
+    label: "Grill Light",
+    attribute: "grill_lights",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_lights",
+      field: "accentuate_data.bbq.grill_lights",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.grill_lights",
+    cluster: "grills",
+  },
+  {
+    label: "Rear Infrared Burner",
+    attribute: "grill_rear_infra_burner",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_rear_infra_burner",
+      field: "accentuate_data.bbq.rear_infrared_burner",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.rear_infrared_burner",
+    cluster: "grills",
+  },
+  {
+    label: "Rear Infrared Burner BTU",
+    attribute: "grill_rear_infra_burner_btu",
+    searchable: false,
+    type: "RefinementList",
+    transform:transformFilterNumber,
+    transformSpecs: transformNumber,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_rear_infra_burner_btu",
+      field: "accentuate_data.bbq.rear_infrared_burner_btu",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.rear_infrared_burner_btu",
+    cluster: "grills",
+  },
+  {
+    label: "Rotisserie Kit",
+    attribute: "grill_rotisserie_kit",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_rotisserie_kit",
+      field: "accentuate_data.bbq.rotisserie_kit",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.rotisserie_kit",
+    cluster: "grills",
+  }, 
+  {
+    label: "Thermometer",
+    attribute: "grill_thermometer",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_thermometer",
+      field: "accentuate_data.bbq.thermometer",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.thermometer",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Type",
+    attribute: "grill_storage_type",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_type",
+      field: "accentuate_data.bbq.brand_storage_specs_type",
+      type: "string",
+    },
+    collapse: true,
+    accentuate_prop: "bbq.brand_storage_specs_type",
+    cluster: "grills",
+  },
+  {
+    label: "Storage Orientation",
+    attribute: "grill_storage_orientation",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_storage_orientation",
+      field: "accentuate_data.bbq.storage_specs_orientation",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_orientation",
+    cluster: "grills",
+  },
+  {
+    label: "Side Burner Type",
+    attribute: "grill_sideburner_type",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_sideburner_type",
+      field: "accentuate_data.bbq.side_burner_specification_type",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.side_burner_specification_type",
+    cluster: "grills",
+  },
+  {
+    label: "Side Burner Configuration",
+    attribute: "grill_sideburner_config",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_sideburner_config",
+      field: "accentuate_data.bbq.side_burner_specs_configuration",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.side_burner_specs_configuration",
+    cluster: "grills",
+  },
+  {
+    label: "Side Burner Fuel Type",
+    attribute: "grill_sideburner_fuel_type",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_sideburner_fuel_type",
+      field: "accentuate_data.bbq.side_burner_specification_gas_type",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.side_burner_specification_gas_type",
+    cluster: "grills",
+  },
+  {
     label: "Size",
     attribute: "grill_size",
     searchable: false,
     type: "RefinementList",
     runtime_mapping: null,
-    transformSpecs: formatSimpleSize,
-    transform: formatSimpleSizeFilter,
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
     facet_attribute: {
       attribute: "grill_size",
       field: "accentuate_data.bbq.grill_specs_size",
@@ -260,8 +920,8 @@ export const grillsFilters = [
     attribute: "grill_width",
     searchable: false,
     type: "RefinementList",
-    transformSpecs: formatSimpleSize,
-    transform: formatSimpleSizeFilter,
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
     runtime_mapping: null,
     facet_attribute: {
       attribute: "grill_width",
@@ -276,8 +936,8 @@ export const grillsFilters = [
     attribute: "grill_height",
     searchable: false,
     type: "RefinementList",
-    transformSpecs: formatSimpleSize,
-    transform: formatSimpleSizeFilter,
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
     runtime_mapping: null,
     facet_attribute: {
       attribute: "grill_height",
@@ -292,8 +952,8 @@ export const grillsFilters = [
     attribute: "grill_depth",
     searchable: false,
     type: "RefinementList",
-    transformSpecs: formatSimpleSize,
-    transform: formatSimpleSizeFilter,
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
     runtime_mapping: null,
     facet_attribute: {
       attribute: "grill_depth",
@@ -303,83 +963,160 @@ export const grillsFilters = [
     accentuate_prop: "bbq.grill_specs_cutout_depth",
     cluster: "grills",
   },
-  // {
-  //   label: "Cutout Depth",
-  //   attribute: "ref_depth_group_1",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   transform: function (items) {
-  //     const sortKeys = [
-  //       "Under 14 Inches",
-  //       "14 Inches - 22 Inches",
-  //       "22 Inches - 24 Inches",
-  //       "24 Inches And Up",
-  //     ];
-  //     return items.sort((a, b) => {
-  //       // 2. Sort based on the index in our desiredOrder array
-  //       return sortKeys.indexOf(a.value) - sortKeys.indexOf(b.value);
-  //     });
-  //   },
-  //   runtime_mapping: {
-  //     ref_depth_group_1: {
-  //       type: "keyword",
-  //       script: {
-  //         source: `
-  //           // 1. Check for null at the top level
-  // if (params['_source']['accentuate_data'] == null) return;
-  
-  // def rawValue = params['_source']['accentuate_data']['bbq.ref_specs_cutout_depth'];
-  
-  // // 2. Check for null or empty string
-  // if (rawValue == null || rawValue.toString().trim().isEmpty()) return;
-  
-  // double depth;
-  // try {
-  //     // 3. Manual cleaning (No Regex)
-  //     String str = rawValue.toString().toLowerCase()
-  //                  .replace('"', '')
-  //                  .replace('inches', '')
-  //                  .replace('in', '')
-  //                  .trim();
-      
-  //     // 4. Final check: if after cleaning it's empty, stop
-  //     if (str.isEmpty()) return;
-      
-  //     depth = Double.parseDouble(str);
-  // } catch (Exception e) {
-  //     // This catches cases like "N/A" or "TBD"
-  //     return; 
-  // }
-  
-  // // 5. Logic mapping (Clean Waterfall)
-  // if (depth < 14) {
-  //     emit("Under 14 Inches");
-  // } else if (depth <= 22) {
-  //     emit("14 Inches - 22 Inches");
-  // } else if (depth <= 24) {
-  //     emit("22 Inches - 24 Inches");
-  // } else {
-  //     emit("24 Inches And Up");
-  // }
-  //         `,
-  //       },
-  //     },
-  //   },
-  //   facet_attribute: {
-  //     attribute: "ref_depth_group_1",
-  //     field: "ref_depth_group_1",
-  //     type: "string",
-  //   },
-  //   collapse: false,
-  //   cluster: "grills",
-  // },
+  // bbq.grill_specs_kamado_width
+  {
+    label: "Kamado Width",
+    attribute: "grill_kamado_width",
+    searchable: false,
+    type: "RefinementList",
+    transformSpecs: transformNumberSize,
+    transform: transformFilterNumberSize,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_kamado_width",
+      field: "accentuate_data.bbq.grill_specs_kamado_width",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_kamado_width ",
+    cluster: "grills",
+  },
+  // bbq.grill_specs_side_shelves
+  {
+    label: "Side Shelves",
+    attribute: "grill_side_shelve",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_side_shelve",
+      field: "accentuate_data.bbq.grill_specs_side_shelves",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_side_shelves ",
+    cluster: "grills",
+  },
+  // bbq.grill_specs_mount_type
+  {
+    label: "Configuration",
+    attribute: "grill_configuration",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: {
+      grill_configuration: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.grill_specs_mount_type'] != null) {
+              def val = data['bbq.grill_specs_mount_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
+    facet_attribute: {
+      attribute: "grill_configuration",
+      field: "grill_configuration",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_mount_type",
+    cluster: "grills",
+  },
+  // bbq.grill_specs_color
+  {
+    label: "Primary Color",
+    attribute: "grill_primary_color",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_primary_color",
+      field: "accentuate_data.bbq.grill_specs_color",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_color",
+    cluster: "grills",
+  },
+  // bbq.grill_specs_on_wheels
+  {
+    label: "On Wheels",
+    attribute: "grill_on_wheel",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_on_wheel",
+      field: "accentuate_data.bbq.grill_specs_on_wheels",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_on_wheels",
+    cluster: "grills",
+  },
+  // bbq.grill_specs_no_of_racks
+  {
+    label: "Number Of Racks",
+    attribute: "grill_no_of_racks",
+    searchable: false,
+    type: "RefinementList",
+    transform: transformFilterNumberRacks,
+    transformSpec: transformNumberRacks,
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "grill_no_of_racks",
+      field: "accentuate_data.bbq.grill_specs_no_of_racks",
+      type: "string",
+    },
+    accentuate_prop: "bbq.grill_specs_no_of_racks",
+    cluster: "grills",
+  },
 ];
 
-export const builtInGrillFilterType = [
-  "ways_to_shop",
-  "brands",
+const allGrillFilters = [
+  "grill_overall_dimensions",
+  "grill_cutout_dimensions",
+  "grill_cooking_grid_dimensions",
+  "grill_shipping_dimensions",
+  "grill_shipping_weight",
+  "grill_product_weight",
+  "grill_main_grill_area",
+  "grill_second_grill_area",
+  "grill_total_grill_area",
+  "grill_main_burner",
+  "grill_total_surface_btu",
+  "grill_single_burner_btus",
+  "grill_storage_no_of_doors",
+  "grill_storage_cutout_width",
+  "grill_storage_cutout_depth",
+  "grill_storage_cutout_height",
+  "grill_sideburner_burners",
+  "grill_storage_drawers",
+  "grill_material",
+  "grill_series",
+  "grill_storage_config",
+  "grill_lights",
+  "grill_rear_infra_burner",
+  "grill_rear_infra_burner_btu",
+  "grill_rotisserie_kit",
+  "grill_thermometer",
+  "grill_storage_type",
+  "grill_storage_orientation",
+  "grill_sideburner_type",
+  "grill_sideburner_config",
+  "grill_sideburner_fuel_type",
   "grill_fuel_type",
-  "grill_size", // temp
+  "grill_size",
   "grill_size_range",
   "grill_item_type",
   "grill_class",
@@ -388,18 +1125,63 @@ export const builtInGrillFilterType = [
   "grill_controller",
   "grill_width",
   "grill_depth",
-  "grill_height"
+  "grill_height",
+  "grill_kamado_width",
+  "grill_configuration",
+  "grill_primary_color",
+  "grill_on_wheel",
+  "grill_no_of_racks",
 ];
+
+export const builtInGrillFilterType = [
+  "ways_to_shop",
+  "brands",
+  "grill_fuel_type",
+  "grill_item_type",
+  "grill_class",
+  "grill_size_range", // pellet
+  "grill_kamado_width", // kamado
+  "grill_material", // kamado
+  "grill_configuration",
+  "price_groups",
+  "price",
+  "grill_controller",
+  "grill_width",
+  "grill_depth",
+  "grill_height",
+  "grill_main_burner",
+  "grill_lights",
+  "grill_no_of_racks", // smokers
+];
+
 export const freestandingGrillFilterType = [
   "ways_to_shop",
   "brands",
+  "grill_configuration",
+  "grill_fuel_type",
+  "grill_size_range",
+  "grill_item_type",
+  "grill_class",
+  "grill_kamado_width", // kamado
+  "grill_material", // kamado
+  "grill_side_shelve",
   "price_groups",
   "price",
+  "grill_main_burner",
+  "grill_controller",
+  "grill_sideburner_type",
+  "grill_primary_color",
+  "grill_on_wheel",
 ];
+
 export const grillsCommonFilterType = [
   ...new Set([...builtInGrillFilterType, ...freestandingGrillFilterType]),
 ];
 
 export const grillsFilterTypes = {
   "built-in-grills": builtInGrillFilterType,
+  "built-in-grills-x-brands": builtInGrillFilterType.filter(item=> item !== "brands"),
+  "freestanding-grills": freestandingGrillFilterType,
+  "freestanding-grills-x-brands": freestandingGrillFilterType.filter(item=> item !== "brands")
 };
+
