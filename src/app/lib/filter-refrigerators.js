@@ -1,13 +1,7 @@
 import {
-  // Bucket keys
-  capacityBucketKeys,
-  refDailyIceBucketKeys,
-  refDimensionGroupBucketKeys,
-  // Buckets
-  capacityBuckets,
-  refDimensionGroupBuckets,
   refOutdoorCertBuckets,
-  decimalToFraction
+  decimalToFraction,
+  transformFilterNumberSize, transformNumberSize
 } from "@/app/lib/helpers";
 
 
@@ -76,18 +70,8 @@ export const refFilters = [
     accentuate_prop: "bbq.ref_specs_cutout_depth",
     searchable: false,
     type: "RefinementList",
-    transform: function (items) {
-      return items
-        .map((item) => {
-          const match = item.value.match(/[0-9]*\.?[0-9]+/);
-          const decimal = match ? parseFloat(match[0]) : "";
-          const fraction = decimalToFraction(decimal);
-            return{
-              ...item,
-              label: `${fraction} Inches`,
-            }
-        })
-    },
+    transform: transformFilterNumberSize,
+    transformSpecs: transformNumberSize, 
     runtime_mapping:null,
     facet_attribute: {
       attribute: "ref_depth",
@@ -176,18 +160,8 @@ if (depth < 14) {
     accentuate_prop: "bbq.ref_specs_cutout_height",
     searchable: false,
     type: "RefinementList",
-    transform: function (items) {
-      return items
-        .map((item) => {
-          const match = item.value.match(/[0-9]*\.?[0-9]+/);
-          const decimal = match ? parseFloat(match[0]) : "";
-          const fraction = decimalToFraction(decimal);
-            return{
-              ...item,
-              label: `${fraction} Inches`,
-            }
-        })
-    },
+    transform: transformFilterNumberSize,
+    transformSpecs: transformNumberSize, 
     runtime_mapping:null,
     facet_attribute: {
       attribute: "ref_height",
@@ -385,18 +359,8 @@ if (height < 10) {
     accentuate_prop: "bbq.ref_specs_cutout_width",
     searchable: false,
     type: "RefinementList",
-    transform: function (items) {
-      return items
-        .map((item) => {
-          const match = item.value.match(/[0-9]*\.?[0-9]+/);
-          const decimal = match ? parseFloat(match[0]) : "";
-          const fraction = decimalToFraction(decimal);
-          return {
-          ...item,
-          label: `${fraction} Inches`,
-        }
-        })
-    },
+    transform: transformFilterNumberSize,
+    transformSpecs: transformNumberSize, 
     runtime_mapping: null,
     facet_attribute: {
       attribute: "ref_width",
@@ -554,40 +518,6 @@ if (width < 14) {
     collapse: false,
     cluster:"refrigerators"
   },
-  // {
-  //   label: "Ice Produced Daily (FROM TAGS)", // #
-  //   attribute: "ref_ice_daily_output_old",
-  //   searchable: false,
-  //   type: "RefinementList",
-  //   runtime_mapping: {
-  //     ref_ice_daily_output_old: {
-  //       type: "keyword",
-  //       script: {
-  //         source: `
-  //             def validDIO = ${JSON.stringify(
-  //               refDailyIceBucketKeys.map((k) => k.toLowerCase()),
-  //             )};
-  //             if (params['_source']['tags'] != null) {
-  //               for (def tag : params['_source']['tags']) {
-  //                 if (tag == null) continue;
-    
-  //                 if (validDIO.contains(tag.toLowerCase())) {
-  //                   emit(tag);
-  //                   return;
-  //                 }
-  //               }
-  //             }
-  //           `,
-  //       },
-  //     },
-  //   },
-  //   facet_attribute: {
-  //     attribute: "ref_ice_daily_output_old",
-  //     field: "ref_ice_daily_output_old",
-  //     type: "string",
-  //   },
-  //   collapse: false,
-  // },
   {
     label: "Ice Produced Daily", // #
     attribute: "ref_ice_daily_output_group_1",
@@ -806,6 +736,10 @@ if (produce < 11) {
           ...item,
           label: `${item.value} Cu. Ft.`,
         }))
+    },
+    transformSpecs: function (value){
+      if(!value) return "";
+      return value +" Cu. Ft.";
     },
     facet_attribute: {
       attribute: "ref_capacity",

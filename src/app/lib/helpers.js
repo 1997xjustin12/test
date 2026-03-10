@@ -772,3 +772,126 @@ export const decimalToFraction = (decimal) => {
     ? `${numerator}/${denominator}` 
     : `${wholeNumber} ${numerator}/${denominator}`;
 }
+
+
+export const transformNumber = (value) => {
+  if(!value) return "";
+  return Number(value)
+}
+
+export const transformFilterNumber = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumber(item.value),
+  }));
+}
+
+export const transformNumberBurners = (value) => {
+  if(!value) return "";
+  return Number(value) + "-Burner"
+}
+
+export const transformFilterNumberBurners = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberBurners(item.value),
+  }));
+}
+
+export const transformNumberDoors = (value) => {
+  if(!value) return "";
+  return Number(value) + "-Door"
+}
+
+export const transformFilterNumberDoors = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberDoors(item.value),
+  }));
+}
+
+export const transformNumberSize = (value="") => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + " Inches"
+}
+
+export const transformFilterNumberSize = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberSize(item.value),
+  }));
+}
+
+
+export const transformNumberDrawers = (value) => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + "-Drawer"
+}
+
+export const transformFilterNumberDrawers = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberDrawers(item.value),
+  }));
+}
+
+export const transformNumberRacks = (value) => {
+  if(!value) return "";
+  return decimalToFraction(Number(value)) + "-Rack"
+}
+
+export const transformFilterNumberRacks = (items) => {
+  return items.map((item) => ({
+    ...item,
+    label: transformNumberRacks(item.value),
+  }));
+}
+
+export const transformDimension = (value) => {
+  if (!value) return "";
+
+  const suf = ["Inches W", "Inches D", "Inches H"];
+
+  return String(value)
+    .split("x")
+    .map((part, index) => {
+      const trimmed = part.trim();
+      
+      // Handle cases where there might be an extra 'x' or empty space
+      if (trimmed === "") return "";
+
+      const fraction = decimalToFraction(trimmed);
+      
+      // Only attach a suffix if we have one defined for this index
+      const label = suf[index] ? ` ${suf[index]}` : "";
+      
+      return `${fraction}${label}`;
+    })
+    .filter(part => part !== "") // Remove empty segments
+    .join(" x ");
+}
+
+export const transformFilterDimensions = (items) => {
+  return items.map((item)=>({
+    ...item,
+    label: transformDimension(item.value)
+  }))
+}
+
+export const transformWeight = (value) => {
+  if(!value) return "";
+  return `${Number(value)} lbs`;
+}
+
+export const transformFilterWeight = (items) => {
+  return items.map(item=>({...item, label: transformWeight(item?.value)}))
+} 
+
+export const transformGrillArea = (value) => {
+  if(!value) return "";
+  return `${Number(value)} Sq. Inches`;
+}
+
+export const transformFilterGrillArea = (items) => {
+  return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
+} 
