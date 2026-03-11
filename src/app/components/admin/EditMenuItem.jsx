@@ -472,6 +472,15 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
     "Outdoor-Kegerators",
     "Outdoor-Compact-Freezers",
     "Storage",
+    "Access-Doors",
+    "Storage-Drawers",
+    "Door-and-Drawer-Combos",
+    "Storage-Pantries",
+    "Trash-Bins",
+    "Ice-Bins-and-Storage",
+    "Propane-Tank-Bins",
+    "Paper-Towel-Bins",
+    "Warming-Drawers",
     "Open-box",
   ];
 
