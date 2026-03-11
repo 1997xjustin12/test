@@ -972,6 +972,7 @@ export const grillsFilters = [
       type: "string",
     },
     accentuate_prop: "bbq.grill_specs_no_of_racks",
+    collapse: false,
     cluster: "grills",
   },
 ];

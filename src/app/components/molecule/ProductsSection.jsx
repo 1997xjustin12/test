@@ -673,7 +673,7 @@ function ProductsSection({ category, search = "" }) {
                 },
               ]}
             />
-            <RangeInput attribute="price" className="hidden"/>
+            <RangeInput attribute="price" className="hidden" />
             {/* Refinement List Hack for URL-Based Filter */}
             <RefinementList attribute="ways_to_shop" className="hidden" />
             <RefinementList attribute="ratings" className="hidden" />
@@ -799,55 +799,136 @@ function ProductsSection({ category, search = "" }) {
             <RefinementList attribute="heater_size" className="hidden" />
             <RefinementList attribute="heater_type" className="hidden" />
             <RefinementList attribute="heater_elements" className="hidden" />
-            <RefinementList attribute="features_fuel_type" className="hidden" />
-            <RefinementList attribute="features_type" className="hidden" />
-            <RefinementList attribute="features_inches" className="hidden" />
             <RefinementList
-              attribute="features_mounting_type"
+              attribute="grill_overall_dimensions"
               className="hidden"
             />
             <RefinementList
-              attribute="features_vent_option"
-              className="hidden"
-            />
-            <RefinementList attribute="features_color" className="hidden" />
-            <RefinementList
-              attribute="features_recess_option"
-              className="hidden"
-            />
-            <RefinementList attribute="features_model" className="hidden" />
-            <RefinementList
-              attribute="features_valve_line_location"
-              className="hidden"
-            />
-            <RefinementList attribute="features_fuel_type" className="hidden" />
-            <RefinementList
-              attribute="features_mounting_type"
+              attribute="grill_cutout_dimensions"
               className="hidden"
             />
             <RefinementList
-              attribute="features_heating_elements"
+              attribute="grill_cooking_grid_dimensions"
               className="hidden"
             />
-            <RefinementList attribute="features_finish" className="hidden" />
-            <RefinementList attribute="collections" className="hidden" />
-            <RefinementList attribute="configuration_type" className="hidden" />
-            <RefinementList attribute="no_of_burners" className="hidden" />
+            <RefinementList
+              attribute="grill_shipping_dimensions"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_shipping_weight"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_product_weight"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_main_grill_area"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_second_grill_area"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_total_grill_area"
+              className="hidden"
+            />
+            <RefinementList attribute="grill_main_burner" className="hidden" />
+            <RefinementList
+              attribute="grill_total_surface_btu"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_single_burner_btus"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_storage_no_of_doors"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_storage_cutout_width"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_storage_cutout_depth"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_storage_cutout_height"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_sideburner_burners"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_storage_drawers"
+              className="hidden"
+            />
+            <RefinementList attribute="grill_material" className="hidden" />
+            <RefinementList attribute="grill_fuel_type" className="hidden" />
+            <RefinementList attribute="grill_series" className="hidden" />
+            <RefinementList
+              attribute="grill_storage_config"
+              className="hidden"
+            />
             <RefinementList attribute="grill_lights" className="hidden" />
-            <RefinementList attribute="size" className="hidden" />
-            <RefinementList attribute="width" className="hidden" />
-            <RefinementList attribute="depth" className="hidden" />
-            <RefinementList attribute="height" className="hidden" />
             <RefinementList
-              attribute="rear_infrared_burner"
+              attribute="grill_rear_infra_burner"
               className="hidden"
             />
-            <RefinementList attribute="cut_out_width" className="hidden" />
-            <RefinementList attribute="cut_out_depth" className="hidden" />
-            <RefinementList attribute="cut_out_height" className="hidden" />
-            <RefinementList attribute="made_in_usa" className="hidden" />
             <RefinementList
-              attribute="storage_mounting_type"
+              attribute="grill_rear_infra_burner_btu"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_rotisserie_kit"
+              className="hidden"
+            />
+            <RefinementList attribute="grill_thermometer" className="hidden" />
+            <RefinementList attribute="grill_storage_type" className="hidden" />
+            <RefinementList
+              attribute="grill_storage_orientation"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_sideburner_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_sideburner_config"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_sideburner_fuel_type"
+              className="hidden"
+            />
+            <RefinementList attribute="grill_size" className="hidden" />
+            <RefinementList attribute="grill_size_range" className="hidden" />
+            <RefinementList attribute="grill_item_type" className="hidden" />
+            <RefinementList attribute="grill_class" className="hidden" />
+            <RefinementList attribute="grill_controller" className="hidden" />
+            <RefinementList attribute="grill_width" className="hidden" />
+            <RefinementList attribute="grill_height" className="hidden" />
+            <RefinementList attribute="grill_depth" className="hidden" />
+            <RefinementList attribute="grill_kamado_width" className="hidden" />
+            <RefinementList attribute="grill_side_shelve" className="hidden" />
+            <RefinementList
+              attribute="grill_configuration"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="grill_primary_color"
+              className="hidden"
+            />
+            <RefinementList attribute="grill_on_wheel" className="hidden" />
+            <RefinementList attribute="grill_no_of_racks" className="hidden" />
+            <RefinementList attribute="storage_type" className="hidden" />
+            <RefinementList
+              attribute="storage_no_of_doors"
               className="hidden"
             />
             <RefinementList
@@ -855,16 +936,37 @@ function ProductsSection({ category, search = "" }) {
               className="hidden"
             />
             <RefinementList
-              attribute="storage_no_of_doors"
+              attribute="storage_mounting_type"
               className="hidden"
             />
             <RefinementList
               attribute="storage_orientation"
               className="hidden"
             />
-            <RefinementList attribute="thermometer" className="hidden" />
-            <RefinementList attribute="rotisserie_kit" className="hidden" />
-            <RefinementList attribute="gas_type" className="hidden" />
+            <RefinementList attribute="storage_material" className="hidden" />
+            <RefinementList attribute="storage_series" className="hidden" />
+            <RefinementList
+              attribute="storage_sink_center_type"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_sink_center_configuration"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_cutout_width"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_cutout_height"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_cutout_depth"
+              className="hidden"
+            />
+            <RefinementList attribute="storage_class" className="hidden" />
+            <RefinementList attribute="storage_hinge_type" className="hidden" />
             <InnerUI
               category={category}
               page_details={pageDetails}
