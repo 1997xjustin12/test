@@ -459,37 +459,57 @@ export const getActiveRuntimeMappings = (type) => {
   return runtimeMappings;
 };
 
-export const accentuateSpecLabels = filters
-  .map((item) => ({
-    label: item?.label,
-    key: item?.accentuate_prop || "NA",
-    type: item.cluster,
-    transform: item.transformSpecs,
-  }))
-  .filter((item) => item?.key !== "NA")
-  .sort((a, b) => a.label.localeCompare(b.label));
+// export const accentuateSpecLabels = filters
+//   .map((item) => ({
+//     label: item?.label,
+//     key: item?.accentuate_prop || "NA",
+//     type: item.cluster,
+//     transform: item.transformSpecs,
+//   }))
+//   .filter((item) => item?.key !== "NA")
+//   .sort((a, b) => a.label.localeCompare(b.label));
 
-console.log("accentuateSpecLabels (ALL): ", accentuateSpecLabels);
-console.log(
-  "accentuateSpecLabels (REFRIGERATORS): ",
-  accentuateSpecLabels.filter(({ type }) => type === "refrigerators"),
-);
-console.log(
-  "accentuateSpecLabels (FIREPLACES): ",
-  accentuateSpecLabels.filter(({ type }) => type === "fireplaces"),
-);
-console.log(
-  "accentuateSpecLabels (PATIO HEATERS): ",
-  accentuateSpecLabels.filter(({ type }) => type === "patio heaters"),
-);
-console.log(
-  "accentuateSpecLabels (GRILLS): ",
-  accentuateSpecLabels.filter(({ type }) => type === "grills"),
-);
-console.log(
-  "accentuateSpecLabels STORAGE): ",
-  accentuateSpecLabels.filter(({ type }) => type === "storage"),
-);
+  export const accentuateSpecLabels = Array.from(
+  filters
+    .reduce((map, item) => {
+      const key = item?.accentuate_prop || "NA";
+      
+      // Only add to the map if it's not "NA" and hasn't been added yet
+      if (key !== "NA" && !map.has(key)) {
+        map.set(key, {
+          label: item?.label,
+          key: key,
+          type: item.cluster,
+          transform: item.transformSpecs,
+        });
+      }
+      return map;
+    }, new Map())
+    .values()
+)
+.sort((a, b) => a.label.localeCompare(b.label));
+
+// console.log("accentuateSpecLabels (ALL): ", accentuateSpecLabels);
+// console.log(
+//   "accentuateSpecLabels (REFRIGERATORS): ",
+//   accentuateSpecLabels.filter(({ type }) => type === "refrigerators"),
+// );
+// console.log(
+//   "accentuateSpecLabels (FIREPLACES): ",
+//   accentuateSpecLabels.filter(({ type }) => type === "fireplaces"),
+// );
+// console.log(
+//   "accentuateSpecLabels (PATIO HEATERS): ",
+//   accentuateSpecLabels.filter(({ type }) => type === "patio heaters"),
+// );
+// console.log(
+//   "accentuateSpecLabels (GRILLS): ",
+//   accentuateSpecLabels.filter(({ type }) => type === "grills"),
+// );
+// console.log(
+//   "accentuateSpecLabels STORAGE): ",
+//   accentuateSpecLabels.filter(({ type }) => type === "storage"),
+// );
 
 
 // const refinementListHtml = filters.filter(item=> item.attribute !== "price").map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join("");

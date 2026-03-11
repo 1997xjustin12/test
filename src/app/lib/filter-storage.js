@@ -1,16 +1,10 @@
 import {
-  transformNumber,
-  transformFilterNumber,
   transformNumberDoors,
   transformFilterNumberDoors,
   transformNumberSize,
   transformFilterNumberSize,
   transformNumberDrawers,
   transformFilterNumberDrawers,
-  transformNumberRacks,
-  transformFilterNumberRacks,
-  transformDimension,
-  transformFilterDimensions,
 } from "../lib/helpers";
 
 const yesNo = ["Yes", "No"]; // used for transform sort
@@ -23,10 +17,34 @@ export const storageFilters = [
     attribute: "storage_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      storage_type: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.brand_storage_specs_type'] != null) {
+              def val = data['bbq.brand_storage_specs_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "storage_type",
-      field: "accentuate_data.bbq.brand_storage_specs_type",
+      field: "storage_type",
       type: "string",
     },
     collapse: true,
@@ -78,10 +96,34 @@ export const storageFilters = [
     attribute: "storage_mounting_type",
     searchable: false,
     type: "RefinementList",
-    runtime_mapping: null,
+    runtime_mapping: {
+      storage_mounting_type: {
+        type: "keyword",
+        script: {
+          source: `
+            def data = params['_source']['accentuate_data'];
+            if (data != null && data['bbq.storage_specs_mounting_type'] != null) {
+              def val = data['bbq.storage_specs_mounting_type'];
+              if (val != null) {
+                if (val instanceof String && val.contains('/')) {
+                  // Split the string and emit each piece as an individual token
+                  String[] parts = /\\//.split(val);
+                  for (String part : parts) {
+                    emit(part.trim());
+                  }
+                } else {
+                  // It's already a single value or an array, just emit it
+                  emit(val.toString());
+                }
+              }
+            }
+          `,
+        },
+      },
+    },
     facet_attribute: {
       attribute: "storage_mounting_type",
-      field: "accentuate_data.bbq.storage_specs_mounting_type",
+      field: "storage_mounting_type",
       type: "string",
     },
     collapse: false,
@@ -232,42 +274,148 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_cutout_depth",
     cluster: "storage",
   },
-  
-  // "bbq.sink_bars_center_cutout_width": stringToFloat(item?.["bbq.sink_bars_center_cutout_width"]),
-  // "bbq.sink_bars_center_cutout_height": stringToFloat(item?.["bbq.sink_bars_center_cutout_height"]),
-  // "bbq.sink_bars_center_cutout_depth": stringToFloat(item?.["bbq.sink_bars_center_cutout_depth"]),
-
-
-  // "bbq.ref_specs_cutout_width": stringToFloat(item?.["bbq.ref_specs_cutout_width"]),
-  // "bbq.ref_specs_cutout_height": stringToFloat(item?.["bbq.ref_specs_cutout_height"]),
-  // "bbq.ref_specs_cutout_depth": stringToFloat(item?.["bbq.ref_specs_cutout_depth"]),
-  
   // "Class", NOT ACTUALLY STATED
+  {
+    label: "Class",
+    attribute: "storage_class",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "storage_class",
+      field: "accentuate_data.bbq.storage_specs_class",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_class",
+    cluster: "storage",
+  },
   // "Hinge Type", NOT ACTUALLY STATED
-  // "Option", ??
+  {
+    label: "Hinge Type",
+    attribute: "storage_hinge_type",
+    searchable: false,
+    type: "RefinementList",
+    runtime_mapping: null,
+    facet_attribute: {
+      attribute: "storage_hinge_type",
+      field: "accentuate_data.bbq.storage_specs_hinge_type",
+      type: "string",
+    },
+    collapse: false,
+    accentuate_prop: "bbq.storage_specs_hinge_type",
+    cluster: "storage",
+  },
 ];
 
 const allFilterAttributes = [
   ...new Set(storageFilters.map(({ attribute }) => attribute)),
 ];
-console.log("allStorageFilters", allFilterAttributes);
 
 const storageFilterStructure = [
   "ways_to_shop",
   "brands",
+  "price_groups",
+  "price",
   "storage_type",
+  "storage_no_of_doors",
+  "storage_no_of_drawers",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const accessDoorsFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_mounting_type",
+  "storage_orientation",
+  "storage_class",
+  "storage_material",
+  "storage_hinge_type", 
+];
+
+const storageDrawersFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_drawers",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const doorDrawerCombosFilterStructure = [
+  "ways_to_shop",
+  "brands",
   "price_groups",
   "price",
   "storage_no_of_doors",
   "storage_no_of_drawers",
   "storage_mounting_type",
   "storage_orientation",
-  "storage_material",
-  "storage_series",
+];
+
+const storagePantriesFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const trashBinsFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_no_of_drawers",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const iceBinsStorageFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_mounting_type",
+];
+
+const propaneTankBinsFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const warmingDrawersFilterStructure = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_mounting_type",
+  "storage_orientation",
 ];
 
 export const storageFilterTypes = {
-  storage: allFilterAttributes,
+  storage: storageFilterStructure,
+  "access-doors":  accessDoorsFilterStructure,
+  "storage-drawers": storageDrawersFilterStructure,
+  "door-and-drawer-combos": doorDrawerCombosFilterStructure,
+  "storage-pantries": storagePantriesFilterStructure,
+  "trash-bins": trashBinsFilterStructure,
+  "ice-bins-and-storage": iceBinsStorageFilterStructure,
+  "propane-tank-bins": propaneTankBinsFilterStructure,
+  "spice-racks":[],
+  "warming-drawers":warmingDrawersFilterStructure
 };
-
-
