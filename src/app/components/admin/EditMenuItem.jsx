@@ -481,6 +481,7 @@ const Settings = ({ menuItem, onChange, feature_images }) => {
     "Propane-Tank-Bins",
     "Paper-Towel-Bins",
     "Warming-Drawers",
+    "Spice-Racks",
     "Open-box",
   ];
 
