@@ -7,6 +7,7 @@ import {
   widthBuckets,
 } from "@/app/lib/helpers";
 import COLLECTIONS_BY_CATEGORY from "@/app/data/collections_by_category";
+import { storageFilters, storageFilterTypes } from "./filter-storage";
 import { refFilters, refFilterTypes } from "./filter-refrigerators";
 import { fireplacesFilters, fireplacesFilterTypes } from "./filter-fireplaces";
 import {
@@ -409,7 +410,8 @@ export const filters = [
   ...fireplacesFilters,
   ...patioHeaterFilters,
   ...grillsFilters,
-];
+  ...storageFilters,
+];  
 
 /**
  * filter_types
@@ -422,6 +424,7 @@ export const filter_types = {
   ...fireplacesFilterTypes,
   ...patioHeatersFilterTypes,
   ...grillsFilterTypes,
+  ...storageFilterTypes,
   default: [
     "ways_to_shop",
     "brands",
@@ -483,5 +486,11 @@ console.log(
   "accentuateSpecLabels (GRILLS): ",
   accentuateSpecLabels.filter(({ type }) => type === "grills"),
 );
+console.log(
+  "accentuateSpecLabels STORAGE): ",
+  accentuateSpecLabels.filter(({ type }) => type === "storage"),
+);
+
+
 // const refinementListHtml = filters.filter(item=> item.attribute !== "price").map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join("");
 // console.log("TO PASTE IN PRODUCTSSECTION", refinementListHtml)
