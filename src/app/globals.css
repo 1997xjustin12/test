@@ -856,6 +856,9 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 }
 
 /* filter tags START */
+.ais-RefinementList-showMore--disabled{
+  display:none;
+}
 
 .ais-CurrentRefinements-list {
   list-style: none;
