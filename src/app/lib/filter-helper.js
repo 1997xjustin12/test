@@ -1,11 +1,4 @@
-import {
-  STAR_FILTERS,
-  formatToInches,
-  depthBuckets,
-  heightBuckets,
-  sizeBuckets,
-  widthBuckets,
-} from "@/app/lib/helpers";
+import { STAR_FILTERS } from "@/app/lib/helpers";
 import COLLECTIONS_BY_CATEGORY from "@/app/data/collections_by_category";
 import { storageFilters, storageFilterTypes } from "./filter-storage";
 import { refFilters, refFilterTypes } from "./filter-refrigerators";
@@ -411,7 +404,7 @@ export const filters = [
   ...patioHeaterFilters,
   ...grillsFilters,
   ...storageFilters,
-];  
+];
 
 /**
  * filter_types
@@ -440,9 +433,6 @@ export const getActiveFacets = (type) => {
   const finalFacets = typeFacets
     .map((attr) => filters.find((item) => item.attribute === attr))
     .filter(Boolean);
-  // console.log("--------------------------------")
-  // console.log(type.toUpperCase());
-  // console.log("facets", finalFacets);
   return finalFacets;
 };
 
@@ -452,28 +442,16 @@ export const getActiveRuntimeMappings = (type) => {
     .map(({ runtime_mapping }) => runtime_mapping)
     .filter(Boolean)
     .reduce((acc, current) => {
-      // Merge the current object (e.g., { ref_width: {...} }) into the accumulator
       return { ...acc, ...current };
     }, {});
 
   return runtimeMappings;
 };
 
-// export const accentuateSpecLabels = filters
-//   .map((item) => ({
-//     label: item?.label,
-//     key: item?.accentuate_prop || "NA",
-//     type: item.cluster,
-//     transform: item.transformSpecs,
-//   }))
-//   .filter((item) => item?.key !== "NA")
-//   .sort((a, b) => a.label.localeCompare(b.label));
-
-  export const accentuateSpecLabels = Array.from(
+export const accentuateSpecLabels = Array.from(
   filters
     .reduce((map, item) => {
       const key = item?.accentuate_prop || "NA";
-      
       // Only add to the map if it's not "NA" and hasn't been added yet
       if (key !== "NA" && !map.has(key)) {
         map.set(key, {
@@ -485,9 +463,8 @@ export const getActiveRuntimeMappings = (type) => {
       }
       return map;
     }, new Map())
-    .values()
-)
-.sort((a, b) => a.label.localeCompare(b.label));
+    .values(),
+).sort((a, b) => a.label.localeCompare(b.label));
 
 // console.log("accentuateSpecLabels (ALL): ", accentuateSpecLabels);
 // console.log(
@@ -510,7 +487,6 @@ export const getActiveRuntimeMappings = (type) => {
 //   "accentuateSpecLabels STORAGE): ",
 //   accentuateSpecLabels.filter(({ type }) => type === "storage"),
 // );
-
 
 // const refinementListHtml = filters.filter(item=> item.attribute !== "price").map(item=> `<RefinementList attribute="${item?.attribute}" className="hidden" />`).join("");
 // console.log("TO PASTE IN PRODUCTSSECTION", refinementListHtml)

@@ -1,5 +1,4 @@
 import { 
-  decimalToFraction,
   transformNumber,
   transformFilterNumber,
   transformNumberBurners,
@@ -20,7 +19,6 @@ import {
   transformFilterGrillArea
 } from "../lib/helpers";
 
-const yesNo = ["Yes", "No"]; // used for transform sort
 
 export const grillsFilters = [
   {
@@ -1078,4 +1076,3 @@ export const grillsFilterTypes = {
   "freestanding-grills": freestandingGrillFilterType,
   "freestanding-grills-x-brands": freestandingGrillFilterType.filter(item=> item !== "brands")
 };
-
