@@ -4,17 +4,12 @@ import Link from "next/link";
 // COMPONENTS
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
-import NewsLetterSection from "@/app/components/section/NewsLetter";
-import FAQsSection from "@/app/components/atom/FAQs";
-import BlogsSection from "@/app/components/section/HomeBlogs";
-
 import CarouselWrap from "@/app/components/atom/CarouselWrap";
 import { Rating } from "@smastrom/react-rating";
 import { parseRatingCount } from "@/app/lib/helpers";
 // HELPERS
-import { keys, redis } from "@/app/lib/redis";
+import { keys } from "@/app/lib/redis";
 import { BASE_URL, createSlug } from "@/app/lib/helpers";
-import openBoxItemPrice from "@/app/components/atom/openBoxItemPrice";
 // CONSTANTS
 const pathname = "solana-bbq-grills";
 const shopUrl = `${BASE_URL}/eloquence`;
