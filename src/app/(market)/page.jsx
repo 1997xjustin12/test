@@ -5,46 +5,17 @@ import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCa
 import { BASE_URL } from "@/app/lib/helpers";
 import { STORE_NAME, STORE_CONTACT } from "@/app/lib/store_constants";
 
-// Lazy-load below-fold sections to reduce initial JS bundle
-const ShopAllClearanceSection = dynamic(() => import("@/app/components/section/HomePageShopAllClearance"));
-const ShopOpenBoxSection = dynamic(() => import("@/app/components/section/HomePageShopOpenBox"));
-const AboutProductSection = dynamic(() => import("@/app/components/section/HomePageAboutProduct"));
-const ReviewsSection = dynamic(() => import("@/app/components/section/HomePageReviews"));
-const GuidesAndInspirationSection = dynamic(() => import("@/app/components/section/HomePageGuidesAndInspiration"));
-const NewsLetterSection = dynamic(() => import("@/app/components/section/NewsLetter"));
+import NewHero from "@/app/components/home-section/NewHero";
+import BrandsStrip from "@/app/components/home-section/BrandsStrip";
+import Category from "@/app/components/home-section/Category";
+import Products from "@/app/components/home-section/Products";
+import Why from "@/app/components/home-section/Why";
+import Promo from "@/app/components/home-section/Promo";
+import Reviews from "@/app/components/home-section/Reviews";
+import Blogs from "@/app/components/home-section/Blogs";
+import Cta from "@/app/components/home-section/Cta";
+import NewsLetter from "@/app/components/home-section/NewsLetter";
 
-const feat_carousel_items = [
-  {
-    label: "Fireplaces",
-    img: "/images/feature/Firepit.webp",
-    url: `${BASE_URL}/fireplaces`,
-  },
-  {
-    label: "Patio Heaters",
-    img: "/images/feature/patio-heaters-1.webp",
-    url: `${BASE_URL}/patio-heaters`,
-  },
-  {
-    label: "Built-In Grills",
-    img: "/images/feature/Built-in Grill 2.webp",
-    url: `${BASE_URL}/built-in-grills`,
-  },
-  {
-    label: "Freestanding Grills",
-    img: "/images/feature/Freestanding Grill 2.webp",
-    url: `${BASE_URL}/freestanding-grills`,
-  },
-  {
-    label: "Open Box",
-    img: "/images/feature/open-box.webp",
-    url: `${BASE_URL}/open-box`,
-  },
-  {
-    label: "Current Deals",
-    img: "/images/home/categories/clearance.webp",
-    url: `${BASE_URL}/brand/eloquence`,
-  },
-];
 
 const sac_contents_2 = [
   {
@@ -87,59 +58,20 @@ const about_content = {
   },
 };
 
-const Hero = () => {
-  return (
-    <div className="w-full mx-auto">
-      {/* Mobile banner — priority preloads this image in <head> */}
-      <div className="block sm:hidden relative aspect-[2/1]">
-        <Image
-          src="/images/banner/solana-home-hero-mobile.webp"
-          alt="Banner"
-          fill
-          className="object-cover"
-          priority={true}
-          sizes="100vw"
-          quality={85}
-        />
-      </div>
-      {/* Desktop banner — priority preloads this image in <head> */}
-      <div className="hidden sm:block relative aspect-[414/77]">
-        <Image
-          src="/images/banner/home-banner-202509.webp"
-          alt="Banner"
-          fill
-          className="object-cover"
-          priority={true}
-          sizes="100vw"
-          quality={85}
-        />
-      </div>
-    </div>
-  );
-};
 
-// import HomePageWrapper from "@/app/components/template/HomaPage";
 export default function HomePage() {
   return (
-    // <HomePageWrapper data={page_data} />
     <>
-      {/* <MobileLoader /> */}
-      <Hero />
-      {/* <HomeHero data={pageData} /> */}
-      <div className="mt-10">
-        <FeatureCategoriesSection items={feat_carousel_items} />
-      </div>
-
-      {/* <ShopAllClearanceSection contents={sac_contents} /> */}
-      <ShopAllClearanceSection contents={sac_contents_2} />
-      <ShopOpenBoxSection />
-      <AboutProductSection data={about_content} />
-      <ReviewsSection />
-      {/* <ShopCategorySection /> */}
-      <GuidesAndInspirationSection />
-      {/* <PartsAndAccessoriesSection /> */}
-      {/* <FrequentlyAskedSection faqs={faqs}/> */}
-      <NewsLetterSection />
+      <NewHero />
+      <BrandsStrip />
+      <Category />
+      <Products />
+      <Why />
+      <Promo />
+      <Reviews />
+      <Blogs />
+      <Cta />
+      <NewsLetter />
     </>
   );
 }

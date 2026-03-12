@@ -13,7 +13,7 @@ import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
 import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
 import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
-import Footer from "@/app/components/section/Footer";
+// import Footer from "@/app/components/section/Footer";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
@@ -24,6 +24,10 @@ import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
+
+// NEW IMPLEMENTATION IMPORTS
+import NavBar from "@/app/components/home-section/NavBar";
+import Footer from "@/app/components/home-section/Footer";
 
 import Script from "next/script";
 
@@ -115,14 +119,12 @@ export default async function MarketLayout({ children }) {
         /> */}
       </head>
       <body
-        className={`antialiased ${InterFont.className} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
+        className={`antialiased ${InterFont.variable} ${libreBaskerville.variable} ${playfair.variable} ${playfair_display.variable} ${playfair_display_sc.variable} theme-${color}`}
       >
         <GoogleReCaptchaProvider
           reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
         >
           <AuthProvider>
-            <FreeShippingBanner />
-            <ExtrasHeader />
             <CategoriesProvider
               categories={menu.map((i) => ({
                 ...i,
@@ -133,9 +135,12 @@ export default async function MarketLayout({ children }) {
                 <CompareProductsProvider>
                   <SearchProvider>
                     <SessionWrapper>
-                      <TuiNavBar logo={redisLogo} menu={menu} />
-                      <FixedHeader />
                       <QuickViewProvider>
+                        {/* <FreeShippingBanner />
+                        <ExtrasHeader />
+                        <TuiNavBar logo={redisLogo} menu={menu} />
+                        <FixedHeader /> */}
+                        <NavBar />
                         <div
                           style={{
                             minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,
@@ -144,6 +149,7 @@ export default async function MarketLayout({ children }) {
                         >
                           {children}
                         </div>
+                        <Footer />
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
@@ -152,7 +158,6 @@ export default async function MarketLayout({ children }) {
             </CategoriesProvider>
           </AuthProvider>
         </GoogleReCaptchaProvider>
-        <Footer />
       </body>
     </html>
   );
