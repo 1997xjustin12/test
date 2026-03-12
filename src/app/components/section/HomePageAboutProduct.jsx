@@ -23,7 +23,7 @@ export default function HomePageAboutProduct({data, textColor="text-black", bgCo
                 alt={data?.content?.title}
                 className="w-full h-full object-cover"
                 fill
-                sizes="100vw"
+                sizes="(max-width: 1280px) 100vw, 40vw"
                 loading="lazy"
                 priority={false}
               />
@@ -74,7 +74,7 @@ export default function HomePageAboutProduct({data, textColor="text-black", bgCo
                 alt={data?.content?.title}
                 className="w-full h-full object-cover"
                 fill
-                sizes="100vw"
+                sizes="(max-width: 1280px) 100vw, 40vw"
                 loading="lazy"
                 priority={false}
               />

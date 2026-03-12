@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,7 +17,7 @@ export default function HomePageShopAllClearance({contents}) {
                 alt={item.image.alt}
                 className="w-full h-full min-h-[200px] object-cover"
                 fill
-                sizes="100vw"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <h2 className="text-center text-xl md:text-3xl font-semibold">
