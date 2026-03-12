@@ -1,3 +1,4 @@
+import Image from "next/image";
 import dynamic from "next/dynamic";
 // home page section import in order
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
@@ -89,21 +90,29 @@ const about_content = {
 const Hero = () => {
   return (
     <div className="w-full mx-auto">
-      {/* aspect-[2/1] for mobile banner, aspect-[414/77] for desktop */}
-      <div className="w-full relative aspect-[2/1] sm:aspect-[414/77]">
-        <picture>
-          <source
-            media="(max-width: 639px)"
-            srcSet="/images/banner/solana-home-hero-mobile.webp"
-          />
-          <img
-            src="/images/banner/home-banner-202509.webp"
-            alt="Banner"
-            className="w-full h-full object-cover"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </picture>
+      {/* Mobile banner — priority preloads this image in <head> */}
+      <div className="block sm:hidden relative aspect-[2/1]">
+        <Image
+          src="/images/banner/solana-home-hero-mobile.webp"
+          alt="Banner"
+          fill
+          className="object-cover"
+          priority={true}
+          sizes="100vw"
+          quality={85}
+        />
+      </div>
+      {/* Desktop banner — priority preloads this image in <head> */}
+      <div className="hidden sm:block relative aspect-[414/77]">
+        <Image
+          src="/images/banner/home-banner-202509.webp"
+          alt="Banner"
+          fill
+          className="object-cover"
+          priority={true}
+          sizes="100vw"
+          quality={85}
+        />
       </div>
     </div>
   );

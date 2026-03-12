@@ -31,7 +31,7 @@ export default function HomePageFeatureCategories({items}) {
                 className="w-full h-full object-contain"
                 width={500}
                 height={500}
-                sizes="140px"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
               />
             </div>
             <div
