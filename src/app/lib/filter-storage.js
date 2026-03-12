@@ -7,11 +7,8 @@ import {
   transformFilterNumberDrawers,
 } from "../lib/helpers";
 
-const yesNo = ["Yes", "No"]; // used for transform sort
 
 export const storageFilters = [
-  // "Type",
-  // "bbq.brand_storage_specs_type"
   {
     label: "Type",
     attribute: "storage_type",
@@ -51,8 +48,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.brand_storage_specs_type",
     cluster: "storage",
   },
-  // "Number Of Doors",
-  // "bbq.storage_specs_number_of_doors"
   {
     label: "Number Of Doors",
     attribute: "storage_no_of_doors",
@@ -70,8 +65,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_number_of_doors",
     cluster: "storage",
   },
-  // "Number Of Drawers",
-  // "bbq.storage_specs_number_of_drawers"
   {
     label: "Number Of Drawers",
     attribute: "storage_no_of_drawers",
@@ -89,8 +82,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_number_of_drawers",
     cluster: "storage",
   },
-  // "Mounting Type",
-  // "bbq.storage_specs_mounting_type"
   {
     label: "Mounting Type",
     attribute: "storage_mounting_type",
@@ -130,8 +121,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_mounting_type",
     cluster: "storage",
   },
-  // "Orientation",
-  // "bbq.storage_specs_orientation"
   {
     label: "Orientation",
     attribute: "storage_orientation",
@@ -147,8 +136,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_orientation",
     cluster: "storage",
   },
-  // "Material",
-  // "bbq.seo_meta_material"
   {
     label: "Material",
     attribute: "storage_material",
@@ -164,10 +151,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.seo_meta_material",
     cluster: "storage",
   },
-
-  // ADDITIONALS NOT FOUND IN OKO
-  // Series
-  // "bbq.seo_meta_series": capitalizeWords(item?.["bbq.seo_meta_series"]),
   {
     label: "Series",
     attribute: "storage_series",
@@ -183,8 +166,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.seo_meta_series",
     cluster: "storage",
   },
-  // Sink Bar Center Type
-  // "bbq.sink_bars_center_type"
   {
     label: "Sink Bar Center Type",
     attribute: "storage_sink_center_type",
@@ -200,8 +181,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.sink_bars_center_type",
     cluster: "storage",
   },
-  // Sink Bar Center Configuration
-  // "bbq.sink_bars_center_configuration": capitalizeWords(item?.["bbq.sink_bars_center_configuration"]),
   {
     label: "Sink Bar Center Configuration",
     attribute: "storage_sink_center_configuration",
@@ -217,8 +196,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.sink_bars_center_configuration",
     cluster: "storage",
   },
-  // Storage Cutout Width
-  // "bbq.storage_specs_cutout_width"
   {
     label: "Storage Cutout Width",
     attribute: "storage_cutout_width",
@@ -236,8 +213,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_cutout_width",
     cluster: "storage",
   },
-  // Storage Cutout Height
-  // "bbq.storage_specs_cutout_height"
   {
     label: "Storage Cutout Height",
     attribute: "storage_cutout_height",
@@ -255,8 +230,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_cutout_height",
     cluster: "storage",
   },
-  // Storage Cutout Depth
-  // "bbq.storage_specs_cutout_depth"
   {
     label: "Storage Cutout Depth",
     attribute: "storage_cutout_depth",
@@ -274,7 +247,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_cutout_depth",
     cluster: "storage",
   },
-  // "Class", NOT ACTUALLY STATED
   {
     label: "Class",
     attribute: "storage_class",
@@ -290,7 +262,6 @@ export const storageFilters = [
     accentuate_prop: "bbq.storage_specs_class",
     cluster: "storage",
   },
-  // "Hinge Type", NOT ACTUALLY STATED
   {
     label: "Hinge Type",
     attribute: "storage_hinge_type",
@@ -347,38 +318,6 @@ const storageDrawersFilterStructure = [
   "storage_orientation",
 ];
 
-const doorDrawerCombosFilterStructure = [
-  "ways_to_shop",
-  "brands",
-  "price_groups",
-  "price",
-  "storage_no_of_doors",
-  "storage_no_of_drawers",
-  "storage_mounting_type",
-  "storage_orientation",
-];
-
-const storagePantriesFilterStructure = [
-  "ways_to_shop",
-  "brands",
-  "price_groups",
-  "price",
-  "storage_no_of_doors",
-  "storage_mounting_type",
-  "storage_orientation",
-];
-
-const trashBinsFilterStructure = [
-  "ways_to_shop",
-  "brands",
-  "price_groups",
-  "price",
-  "storage_no_of_doors",
-  "storage_no_of_drawers",
-  "storage_mounting_type",
-  "storage_orientation",
-];
-
 const iceBinsStorageFilterStructure = [
   "ways_to_shop",
   "brands",
@@ -387,7 +326,18 @@ const iceBinsStorageFilterStructure = [
   "storage_mounting_type",
 ];
 
-const propaneTankBinsFilterStructure = [
+const COMMON_STRUCTURE_1 = [
+  "ways_to_shop",
+  "brands",
+  "price_groups",
+  "price",
+  "storage_no_of_doors",
+  "storage_no_of_drawers",
+  "storage_mounting_type",
+  "storage_orientation",
+];
+
+const COMMON_STRUCTURE_2 = [
   "ways_to_shop",
   "brands",
   "price_groups",
@@ -397,15 +347,12 @@ const propaneTankBinsFilterStructure = [
   "storage_orientation",
 ];
 
-const warmingDrawersFilterStructure = [
-  "ways_to_shop",
-  "brands",
-  "price_groups",
-  "price",
-  "storage_no_of_doors",
-  "storage_mounting_type",
-  "storage_orientation",
-];
+const doorDrawerCombosFilterStructure = COMMON_STRUCTURE_1;
+const trashBinsFilterStructure = COMMON_STRUCTURE_1;
+
+const storagePantriesFilterStructure = COMMON_STRUCTURE_2;
+const propaneTankBinsFilterStructure = COMMON_STRUCTURE_2;
+const warmingDrawersFilterStructure = COMMON_STRUCTURE_2;
 
 export const storageFilterTypes = {
   storage: storageFilterStructure,
@@ -416,6 +363,6 @@ export const storageFilterTypes = {
   "trash-bins": trashBinsFilterStructure,
   "ice-bins-and-storage": iceBinsStorageFilterStructure,
   "propane-tank-bins": propaneTankBinsFilterStructure,
-  "spice-racks":[],
+  "spice-racks":[], // no filters display (2 items only)
   "warming-drawers":warmingDrawersFilterStructure
 };

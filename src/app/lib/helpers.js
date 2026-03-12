@@ -8,9 +8,9 @@ export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
-export const ES_INDEX = "solana_updated_product_index";
 // export const ES_INDEX = "solana_suggest_v2"; // did_you_mean
 // export const ES_INDEX = "solana_suggest_v3"; // autocomplete sku
+export const ES_INDEX = "solana_updated_product_index";
 
 // Keywords that trigger main product priority sorting
 export const MAIN_PRODUCT_KEYWORDS = [
@@ -57,7 +57,6 @@ export function getSum(array, prop) {
 
 export const onsale_category_ids = [294, 360, 361, 362, 363, 364, 365];
 export const filter_price_range = [
-  // { label: "Request A Quote", min: 0, max: 0 },
   { label: "$1 - $99", min: 1, max: 99 },
   { label: "$100 - $499", min: 100, max: 499 },
   { label: "$500 - $999", min: 500, max: 999 },

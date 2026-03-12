@@ -1,7 +1,8 @@
 import {
   refOutdoorCertBuckets,
   decimalToFraction,
-  transformFilterNumberSize, transformNumberSize
+  transformFilterNumberSize,
+  transformNumberSize
 } from "@/app/lib/helpers";
 
 
@@ -967,15 +968,11 @@ export const refFilterTypes = {
     "ways_to_shop",
     "brands",
     "ref_type",
-    // "ref_capacity", // for demo
     "ref_capacity_group_1",
     "ref_is_commercial",
     "ref_width",
-    // "ref_width_tmp", // for demo
-    // "ref_width_group_1", // for demo
     "price_groups",
     "price",
-    // "ref_depth", // exta
     "ref_height",
     "ref_outdoor_certification",
     "ref_color"
@@ -989,16 +986,13 @@ export const refFilterTypes = {
     "ref_vent",
     "price_groups",
     "price",
-    // "ref_width", // for checking
     "ref_width_group_1",
-    // "ref_height", // for checking
     "ref_height_group_1",
     "material",
     "ref_mounting_type",
     "ref_with_lock",
     "ref_outdoor_certification",
     "ref_hinge",
-    // "ref_depth", // for checking
     "ref_depth_group_1",
   ],
   "outdoor-beverage-refrigerators": [
@@ -1010,12 +1004,8 @@ export const refFilterTypes = {
     "ref_with_lock",
     "price_groups",
     "price",
-    // "ref_width",
     "ref_width_group_1",
-    // "ref_height",
-    // "ref_height_group_1", // for demo
     "ref_height_group_2",
-    // "ref_depth",
     "ref_depth_group_1",
     "ref_hinge",
     "ref_outdoor_certification",
@@ -1031,14 +1021,9 @@ export const refFilterTypes = {
     "ref_mounting_type",
     "price_groups",
     "price",
-    // "ref_ice_daily_output_old", // for demo
-    // "ref_ice_daily_output", // for demo
     "ref_ice_daily_output_group_1",
-    // "ref_width",
-    // "ref_height",
     "ref_outdoor_certification",
     "ref_hinge",
-    // "ref_depth",
   ],
   "outdoor-wine-coolers": [
     "ref_mounting_type",
@@ -1051,11 +1036,8 @@ export const refFilterTypes = {
     "price",
     "ref_with_lock",
     "ref_width",
-    // "ref_width_group_1",
     "ref_depth",
-    // "ref_depth_group_1",
     "ref_height",
-    // "ref_height_group_1",
   ],
   "outdoor-kegerators": [
     "ways_to_shop",
@@ -1089,6 +1071,3 @@ export const refFilterTypes = {
     "ref_height"
   ]
 };
-
-// console.log("refFilters", refFilters.map(item=> ({label: item.label, attribute: item.attribute, property: item.facet_attribute.field})))
-
