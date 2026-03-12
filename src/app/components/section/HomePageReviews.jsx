@@ -88,8 +88,8 @@ export default function HomePageReviews() {
                             src={i.img}
                             alt={`${i.name}-image`}
                             className="w-full h-full object-cover"
-                            width={200}
-                            height={200}
+                            width={60}
+                            height={60}
                           />
                         }
                       </div>

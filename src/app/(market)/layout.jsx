@@ -64,8 +64,7 @@ const playfair_display_sc = Playfair_Display_SC({
   display: "swap",
   variable: "--font-playfair-display-sc",
 });
-// add playfair_display font
-// add
+
 export const metadata = await generateMetadata();
 
 const init = async () => {
