@@ -894,3 +894,10 @@ export const transformGrillArea = (value) => {
 export const transformFilterGrillArea = (items) => {
   return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
 } 
+
+export const transformYesNo = (items) => {
+  const sortKeys = ["Yes", "No"];
+  return items.sort((a, b) => {
+    return sortKeys.indexOf(a.value) - sortKeys.indexOf(b.value);
+  });
+};
