@@ -463,12 +463,12 @@ const Refresh = ({ search }) => {
     // After initial mount, only update if search actually changed
     if (prevSearchRef.current === search) return;
 
-    console.log(
-      "[Refresh] Search changed from",
-      prevSearchRef.current,
-      "to",
-      search,
-    );
+    // console.log(
+    //   "[Refresh] Search changed from",
+    //   prevSearchRef.current,
+    //   "to",
+    //   search,
+    // );
     prevSearchRef.current = search;
 
     setUiState((prev) => ({
@@ -614,11 +614,11 @@ function ProductsSection({ category, search = "" }) {
           }
         }
 
-        console.log("filterString", result);
-        console.log(
-          "page collection",
-          details?.collection_display?.name || "NA",
-        );
+        // console.log("filterString", result);
+        // console.log(
+        //   "page collection",
+        //   details?.collection_display?.name || "NA",
+        // );
 
         // Only update if value changed (prevents unnecessary re-renders)
         setFilterString((prev) => (prev !== result ? result : prev));
@@ -958,15 +958,55 @@ function ProductsSection({ category, search = "" }) {
               className="hidden"
             />
             <RefinementList
+              attribute="storage_cutout_width_range"
+              className="hidden"
+            />
+            <RefinementList
               attribute="storage_cutout_height"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_cutout_height_range"
               className="hidden"
             />
             <RefinementList
               attribute="storage_cutout_depth"
               className="hidden"
             />
+            <RefinementList
+              attribute="storage_cutout_depth_range"
+              className="hidden"
+            />
             <RefinementList attribute="storage_class" className="hidden" />
             <RefinementList attribute="storage_hinge_type" className="hidden" />
+            <RefinementList attribute="storage_width" className="hidden" />
+            <RefinementList
+              attribute="storage_configuration"
+              className="hidden"
+            />
+            <RefinementList attribute="storage_collection" className="hidden" />
+            <RefinementList
+              attribute="storage_door_drawer_combo"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_includes_paper_towel_holder"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_includes_tank_holder"
+              className="hidden"
+            />
+            <RefinementList
+              attribute="storage_includes_trash_bin"
+              className="hidden"
+            />
+            <RefinementList attribute="storage_color" className="hidden" />
+            <RefinementList attribute="storage_style" className="hidden" />
+            <RefinementList
+              attribute="storage_extra_features"
+              className="hidden"
+            />
             <InnerUI
               category={category}
               page_details={pageDetails}
