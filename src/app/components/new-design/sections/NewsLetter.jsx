@@ -5,11 +5,16 @@ export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [done,  setDone]  = useState(false);
 
-  const submit = () => {
-    if (!email.includes("@")) return;
-    setDone(true);
-    setEmail("");
-    setTimeout(() => setDone(false), 3000);
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      await subscribe(email);
+      setDone(true);
+      setEmail("");
+      setTimeout(() => setDone(false), 3000);
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   return (

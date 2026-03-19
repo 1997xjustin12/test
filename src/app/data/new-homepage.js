@@ -61,12 +61,33 @@ export const REVIEWS = [
 ];
 
 export const BLOG_POSTS = [
-  { tag: "Inspiration Guide", title: "Modern Fireplace Design Ideas for 2025",          readTime: "8 min read", date: "Jan 2025",
-    img: "https://solanafireplaces.com/_next/image?url=%2Fimages%2Fhome%2Fblogs%2Ffireplace-ideas.webp&w=800&q=75" },
-  { tag: "Buying Guide",      title: "How to Choose the Perfect Fireplace TV Stand",    readTime: "6 min read", date: "Dec 2024",
-    img: "https://solanafireplaces.com/_next/image?url=%2Fimages%2Fhome%2Fblogs%2Ffireplace-tv-stand.webp&w=800&q=75" },
-  { tag: "Buying Guide",      title: "Types of Fireplaces & Mantels: A Complete Guide", readTime: "10 min read", date: "Nov 2024",
-    img: "https://solanafireplaces.com/_next/image?url=%2Fimages%2Fhome%2Fblogs%2Ftypes-of-fireplaces.webp&w=800&q=75" },
+  {
+    tag: "Inspiration Guide",
+    title: "Modern Fireplace Design Ideas for 2025",
+    readTime: "8 min read",
+    date: "Jan 2025",
+    url: "/blogs/fireplace-ideas",
+    img: "/images/home/blogs/fireplace-ideas.webp",
+    content: "Explore the most popular fireplace design styles and features to help you choose the perfect one for your home.",
+  },
+  {
+    tag: "Buying Guide",
+    title: "How to Choose a Fireplace TV Stand",
+    readTime: "6 min read",
+    date: "Dec 2024",
+    url: `/blogs/fireplace-tv-stand-guide`,
+    img: "/images/home/blogs/fireplace-tv-stand.webp",
+    content:"Learn how to choose a fireplace TV stand, where to place it and make it fit seamlessly into your current decor.",
+  },
+  {
+    tag: "Buying Guide",
+    title: "Types of Fireplaces & Mantels: A Complete Guide",
+    readTime: "10 min read",
+    date: "Nov 2024",
+    url: `/blogs/types-of-fireplace-mantels-a-complete-guide`,
+    img: "/images/home/blogs/types-of-fireplaces.webp",
+    content:"Ready for a new fireplace? We show you types of fireplaces, based on fuel. Plus, what you need to know about mantels.",
+  },
 ];
 
 export const FOOTER_COLS = [

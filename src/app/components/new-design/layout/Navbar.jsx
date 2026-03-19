@@ -1,9 +1,14 @@
 "use client"
-import React, { useState, useEffect, useRef } from "react";
-import { NAV_LINKS, SEARCH_SUGGESTIONS, TRENDING, PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import Link from "next/link";
+import { SEARCH_SUGGESTIONS, TRENDING, PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import { SearchIcon, PhoneIcon, CartIcon } from "@/app/components/new-design/ui/Icons";
 
+import { useSolanaCategories } from "@/app/context/category";
+
 export default function Navbar() {
+  const { solana_categories: solana_menu_object } = useSolanaCategories();
+  console.log("solana_menu_object", solana_menu_object)
   const [scrolled,  setScrolled]  = useState(false);
   const [query,     setQuery]     = useState("");
   const [showDrop,  setShowDrop]  = useState(false);
@@ -28,6 +33,11 @@ export default function Navbar() {
 
   const handleSearch = () => { if (query.trim()) alert("Searching: " + query); };
 
+  const NAV_LINKS = useMemo(()=>{
+    return solana_menu_object
+    .filter(({name})=> !["Search", "Home", "Brands", "Current Deals"].includes(name))
+    // .filter(({}))
+  },[solana_menu_object])
   return (
     <nav className={`
       sticky top-0 z-40
@@ -43,14 +53,14 @@ export default function Navbar() {
         <div className="flex items-center h-16 gap-4">
 
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-red-700 flex items-center justify-center text-lg">
               🔥
             </div>
             <span className="font-serif font-bold text-xl text-charcoal dark:text-white hidden sm:block">
               Solana Fireplaces
             </span>
-          </a>
+          </Link>
 
           {/* Search — hidden on mobile, visible md+ */}
           <div ref={searchRef} className="relative flex-1 max-w-2xl mx-auto hidden md:block">
@@ -164,11 +174,11 @@ export default function Navbar() {
 
         {/* ── Row 2: Nav Links — desktop only ── */}
         <div className="hidden lg:flex items-center h-10 gap-0.5 border-t border-stone-100 dark:border-stone-800">
-          {NAV_LINKS.map(({ label, children }) => (
-            <div key={label} className="relative group flex items-center">
-              <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-medium text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire transition-all duration-150 flex items-center gap-0.5">
-                {label} <span className="text-[10px] opacity-60">▾</span>
-              </a>
+          {NAV_LINKS.map(({ name, children, id, url }) => (
+            <div key={`desktop-nav-item-${id}`} className="relative group flex items-center">
+              <Link href={`/${url}`} prefetch={false} className="px-3 py-1.5 rounded-md text-[13px] font-medium text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire transition-all duration-150 flex items-center gap-0.5">
+                {name} <span className="text-[10px] opacity-60">▾</span>
+              </Link>
               <div className="
                 absolute top-[calc(100%+4px)] left-0
                 bg-white dark:bg-stone-900
@@ -179,14 +189,14 @@ export default function Navbar() {
                 transition-all duration-200 z-30
               ">
                 {children.map(c => (
-                  <a key={c} href="#" className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
-                    {c}
+                  <a key={`desktop-child-nav-item-${c.id}`} href="#" className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
+                    {c.name}
                   </a>
                 ))}
               </div>
             </div>
           ))}
-          <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</a>
+          {/* <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</a> */}
           <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Current Deals 🔥</a>
         </div>
 
@@ -203,12 +213,12 @@ export default function Navbar() {
                 onKeyDown={e => e.key === "Enter" && handleSearch()}
               />
             </div>
-            {NAV_LINKS.map(({ label }) => (
-              <a key={label} href="#" className="px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors">
-                {label}
-              </a>
+            {NAV_LINKS.map(({ name, url, id }) => (
+              <Link key={`mobile-nav-item-${id}`} href={`/${url}`} prefetch={false} className="px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors">
+                {name}
+              </Link>
             ))}
-            <a href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Open Box</a>
+            {/* <a href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Open Box</a> */}
             <a href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Current Deals 🔥</a>
             <a href={PHONE_HREF} className="mt-2 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white">
               <span className="text-fire"><PhoneIcon /></span> {PHONE}

@@ -13,6 +13,8 @@ import FixedHeader from "@/app/components/template/fixed_header";
 // import TuiNavBar from "@/app/components/template/tui_navbar"; // uncomment for bigcommerce structure
 import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
 import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
+import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
+
 // import Footer from "@/app/components/section/Footer";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
@@ -22,7 +24,6 @@ import { CategoriesProvider } from "@/app/context/category";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
-import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 
 // NEW IMPLEMENTATION IMPORTS
@@ -137,10 +138,6 @@ export default async function MarketLayout({ children }) {
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        {/* <FreeShippingBanner />
-                        <ExtrasHeader />
-                        <TuiNavBar logo={redisLogo} menu={menu} />
-                        <FixedHeader /> */}
                         <Topbar />
                         <Navbar />
                         <div
