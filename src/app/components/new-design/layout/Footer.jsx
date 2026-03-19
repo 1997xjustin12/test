@@ -27,7 +27,7 @@ export default function Footer() {
             <div className="flex gap-2">
               {SOCIALS.map(s => (
                 <a key={s.label} href={s.href} className="
-                  w-8 h-8 rounded-lg bg-white/8 flex items-center justify-center
+                  w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center
                   text-white/50 font-serif font-bold text-sm
                   hover:bg-fire hover:text-white transition-all duration-200
                 ">
@@ -63,7 +63,7 @@ export default function Footer() {
             <p className="text-white/30 text-[11px] mb-1.5">We Accept:</p>
             <div className="flex gap-1.5 flex-wrap justify-center sm:justify-end">
               {PAYMENT_METHODS.map(m => (
-                <span key={m} className="bg-white/9 rounded px-2 py-1 text-[11px] text-white/45">{m}</span>
+                <span key={m} className="bg-white/10 rounded px-2 py-1 text-[11px] text-white/45">{m}</span>
               ))}
             </div>
           </div>
