@@ -1,0 +1,74 @@
+import { FOOTER_COLS, PAYMENT_METHODS } from "@/app/data/new-homepage";
+
+const SOCIALS = [
+  { label: "f",  href: "#" },
+  { label: "ig", href: "#" },
+  { label: "P",  href: "#" },
+  { label: "▶",  href: "#" },
+];
+
+export default function Footer() {
+  return (
+    <footer className="bg-charcoal dark:bg-black text-white/60 pt-16 pb-8">
+      <div className="max-w-[1240px] mx-auto px-6">
+
+        {/* Grid: 1 col mobile → 2 col tablet → 4 col desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10 mb-12">
+
+          {/* Brand column */}
+          <div>
+            <a href="/" className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-red-700 flex items-center justify-center text-lg">🔥</div>
+              <span className="font-serif font-bold text-xl text-white">Solana Fireplaces</span>
+            </a>
+            <p className="text-sm leading-relaxed mb-5">
+              We specialize in creating exceptional indoor and outdoor living experiences through expertly curated heating and kitchen products.
+            </p>
+            <div className="flex gap-2">
+              {SOCIALS.map(s => (
+                <a key={s.label} href={s.href} className="
+                  w-8 h-8 rounded-lg bg-white/8 flex items-center justify-center
+                  text-white/50 font-serif font-bold text-sm
+                  hover:bg-fire hover:text-white transition-all duration-200
+                ">
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Link columns */}
+          {FOOTER_COLS.map(({ heading, links }) => (
+            <div key={heading}>
+              <h4 className="text-white text-sm font-semibold mb-4 tracking-wide">{heading}</h4>
+              <ul className="flex flex-col gap-2">
+                {links.map(l => (
+                  <li key={l}>
+                    <a href="#" className="text-xs hover:text-white transition-colors duration-150">{l}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="
+          border-t border-white/8 pt-5
+          flex flex-col sm:flex-row items-center justify-between gap-4
+          text-xs
+        ">
+          <p>© {new Date().getFullYear()} Solana Fireplaces. All rights reserved.</p>
+          <div className="text-center sm:text-right">
+            <p className="text-white/30 text-[11px] mb-1.5">We Accept:</p>
+            <div className="flex gap-1.5 flex-wrap justify-center sm:justify-end">
+              {PAYMENT_METHODS.map(m => (
+                <span key={m} className="bg-white/9 rounded px-2 py-1 text-[11px] text-white/45">{m}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

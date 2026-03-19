@@ -26,8 +26,9 @@ import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 
 // NEW IMPLEMENTATION IMPORTS
-import NavBar from "@/app/components/home-section/NavBar";
-import Footer from "@/app/components/home-section/Footer";
+import Topbar      from "@/app/components/new-design/layout/Topbar";
+import Navbar      from "@/app/components/new-design/layout/Navbar";
+import Footer      from "@/app/components/new-design/layout/Footer";
 
 import Script from "next/script";
 
@@ -140,7 +141,8 @@ export default async function MarketLayout({ children }) {
                         <ExtrasHeader />
                         <TuiNavBar logo={redisLogo} menu={menu} />
                         <FixedHeader /> */}
-                        <NavBar />
+                        <Topbar />
+                        <Navbar />
                         <div
                           style={{
                             minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,

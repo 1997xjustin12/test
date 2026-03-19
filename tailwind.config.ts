@@ -32,6 +32,12 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        fire:     { DEFAULT: '#E85D26', light: '#F97316' },
+        charcoal: '#1A1A1A',
+        cream:    '#FAF7F4',
+        sand:     '#F0E8DF',
+      },
       container: {
         // padding: '15px', // Add padding
       },
