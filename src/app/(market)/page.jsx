@@ -10,8 +10,26 @@ import Blog        from "@/app/components/new-design/sections/Blog";
 import Cta         from "@/app/components/new-design/sections/Cta";
 import NewsLetter  from "@/app/components/new-design/sections/NewsLetter";
 import StickyCall  from "@/app/components/new-design/ui/StickyCall";
+import {BASE_URL} from "@/app/lib/helpers";
 
-export default function HomePage() {
+const BEST_SELLERS_FOR_BLAZE = 137;
+const getInitialProducts = async (id) => {
+  // Use a full URL if calling from the server, or relative if client-side
+  const res = await fetch(`${BASE_URL}/api/collections/collection-products/${id}`, {
+    next: { revalidate: 3600 } // Optional: Cache for 1 hour
+  });
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch products');
+  }
+
+  return res.json();
+};
+
+
+export default async function HomePage() {
+  const blazeProducts = await getInitialProducts(BEST_SELLERS_FOR_BLAZE);
+
   return (
     <>
       <main>
@@ -19,7 +37,7 @@ export default function HomePage() {
         <Features />
         <Brands />
         <Categories />
-        <Products />
+        <Products initialProducts={blazeProducts}/>
         <WhySolana />
         <Promo />
         <Reviews />

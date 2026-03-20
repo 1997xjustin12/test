@@ -16,9 +16,9 @@ export default function WhySolana() {
             {/* Main image */}
             <div className="rounded-2xl overflow-hidden h-[420px] md:h-[480px] bg-gradient-to-br from-stone-800 to-stone-900">
               <img
-                src="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Ffireplace-banner.webp&w=3840&q=75"
+                src="/images/banner/fireplace-banner.webp"
                 alt="About Solana Fireplaces"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onError={e => (e.currentTarget.style.display = "none")}
               />
             </div>
@@ -29,8 +29,14 @@ export default function WhySolana() {
               w-44 h-36 rounded-xl overflow-hidden
               bg-gradient-to-br from-stone-700 to-stone-800
               border-4 border-white dark:border-stone-950
-              shadow-xl
-            " />
+              shadow-xl">
+              <img
+                src="/images/banner/fireplace-banner.webp"
+                alt="About Solana Fireplaces"
+                className="w-full h-full object-contain"
+                onError={e => (e.currentTarget.style.display = "none")}
+              />
+            </div>
             {/* Float badge — hidden on mobile */}
             <div className="
               hidden sm:block

@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { SEARCH_SUGGESTIONS, TRENDING, PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import { SearchIcon, PhoneIcon, CartIcon } from "@/app/components/new-design/ui/Icons";
+import CartButton from "@/app/components/new-design/ui/CartButton";
 
 import { useSolanaCategories } from "@/app/context/category";
 
 export default function Navbar() {
   const { solana_categories: solana_menu_object } = useSolanaCategories();
-  console.log("solana_menu_object", solana_menu_object)
   const [scrolled,  setScrolled]  = useState(false);
   const [query,     setQuery]     = useState("");
   const [showDrop,  setShowDrop]  = useState(false);
@@ -40,7 +40,7 @@ export default function Navbar() {
   },[solana_menu_object])
   return (
     <nav className={`
-      sticky top-0 z-40
+      sticky top-0 z-20
       bg-white/95 dark:bg-charcoal/95
       backdrop-blur-md
       border-b border-stone-100 dark:border-stone-800
@@ -150,15 +150,12 @@ export default function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-2 ml-auto md:ml-0 flex-shrink-0">
             {/* Phone — hidden on mobile/tablet */}
-            <a href={PHONE_HREF} className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-charcoal dark:text-white whitespace-nowrap">
+            <Link href={PHONE_HREF} className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-charcoal dark:text-white whitespace-nowrap">
               <span className="text-fire"><PhoneIcon /></span>
               {PHONE}
-            </a>
+            </Link>
             {/* Cart */}
-            <a href="#" className="relative w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-charcoal dark:text-white hover:bg-fire hover:text-white transition-all duration-200">
-              <CartIcon />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-fire rounded-full border-2 border-white dark:border-charcoal" />
-            </a>
+            <CartButton />
             {/* Hamburger — mobile only */}
             <button
               className="md:hidden w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center gap-1.5"
@@ -189,15 +186,15 @@ export default function Navbar() {
                 transition-all duration-200 z-30
               ">
                 {children.map(c => (
-                  <a key={`desktop-child-nav-item-${c.id}`} href="#" className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
+                  <Link key={`desktop-child-nav-item-${c.id}`} href="#" className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
                     {c.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
           ))}
-          {/* <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</a> */}
-          <a href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Current Deals 🔥</a>
+          {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
+          <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Current Deals 🔥</Link>
         </div>
 
         {/* ── Mobile Menu ── */}
@@ -218,11 +215,11 @@ export default function Navbar() {
                 {name}
               </Link>
             ))}
-            {/* <a href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Open Box</a> */}
-            <a href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Current Deals 🔥</a>
-            <a href={PHONE_HREF} className="mt-2 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white">
+            {/* <Link href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Open Box</Link> */}
+            <Link href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Current Deals 🔥</Link>
+            <Link href={PHONE_HREF} className="mt-2 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white">
               <span className="text-fire"><PhoneIcon /></span> {PHONE}
-            </a>
+            </Link>
           </div>
         )}
 

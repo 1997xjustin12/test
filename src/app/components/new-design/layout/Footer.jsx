@@ -1,10 +1,54 @@
-import { FOOTER_COLS, PAYMENT_METHODS } from "@/app/data/new-homepage";
+import { PAYMENT_METHODS } from "@/app/data/new-homepage";
+import { STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_constants";
+
+import Link from "next/link";
+import { createSlug } from "@/app/lib/helpers"
+
+export const FOOTER_COLS = [
+  {
+    heading: "Products",
+    links: [
+      { name: "Fireplaces", url: "/fireplaces" },
+      { name: "Patio Heaters", url: "/patio-heaters" },
+      { name: "Built-In Grills", url: "/built-in-grills" },
+      { name: "Freestanding Grills", url: "/freestanding-grills" },
+      { name: "Outdoor Refrigeration", url: "/outdoor-refrigeration" },
+      { name: "Outdoor Storage", url: "/outdoor-storage" },
+    ],
+  },
+  {
+    heading: "Customer Service",
+    links: [
+      { name: "Contact Us", url: "/contact" },
+      { name: "Returns & Refunds", url: "/return-policy" },
+      { name: "Shipping Policy", url: "/shipping-policy" },
+      { name: "Privacy Policy", url: "/privacy-policy" },
+      // { name: "FAQs", url: "#" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { name: "About Solana", url: "/about" },
+      { name: "Our Brands", url: "/brands" },
+      { name: "Open Box", url: "/open-box" },
+      {
+        name: "Package Deals",
+        url: "/package-deals",
+      },
+      {
+        name: "Clearance Sale",
+        url: "/clearance-sale",
+      },
+      { name: "Current Deals", url: "/brand/eloquence" },
+      { name: "Contractor Program", url: "/professional-program" },
+    ],
+  },
+];
 
 const SOCIALS = [
-  { label: "f",  href: "#" },
-  { label: "ig", href: "#" },
-  { label: "P",  href: "#" },
-  { label: "▶",  href: "#" },
+  { label: "f",  href: STORE_FACEBOOK },
+  { label: "P",  href: STORE_PINTEREST },
 ];
 
 export default function Footer() {
@@ -42,9 +86,9 @@ export default function Footer() {
             <div key={heading}>
               <h4 className="text-white text-sm font-semibold mb-4 tracking-wide">{heading}</h4>
               <ul className="flex flex-col gap-2">
-                {links.map(l => (
-                  <li key={l}>
-                    <a href="#" className="text-xs hover:text-white transition-colors duration-150">{l}</a>
+                {links.map((item, index) => (
+                  <li key={`foot-link-${createSlug(heading)}-${index}`}>
+                    <Link href={item?.url || "#"} className="text-xs hover:text-white transition-colors duration-150">{item?.name}</Link>
                   </li>
                 ))}
               </ul>

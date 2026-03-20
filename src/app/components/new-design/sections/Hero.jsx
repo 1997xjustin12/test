@@ -2,7 +2,7 @@
 import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 
-const STATS  = [{ num: "15K+", label: "Products" }, { num: "4.4★", label: "122 Reviews" }, { num: "20+", label: "Brands" }];
+const STATS  = [{ num: "6K+", label: "Products" }, { num: "4.4★", label: "122 Reviews" }, { num: "20+", label: "Brands" }];
 const TRUST  = ["Free Shipping Available", "Expert Consultations", "Contractor Pricing"];
 const CARDS  = [{ title: "Gas Fireplaces", sub: "Starting from $1,299" }, { title: "Outdoor Kitchens", sub: "Clearance — Up to 40% Off" }];
 
@@ -36,10 +36,13 @@ export default function Hero() {
             className="opacity-0 translate-y-6 transition-all duration-700"
           >
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">
-              Premium Heating Solutions
+              Premium Outdoor Solutions
             </p>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
+            {/* <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
               Ignite the Heart<br />of Your <em className="not-italic text-fire-light">Home</em>
+            </h1> */}
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
+              Your Dream<br />Kitchen  <em className="not-italic text-fire-light">One</em><br />Call Away
             </h1>
             <p className="text-white/70 text-base lg:text-lg max-w-md mb-9 leading-relaxed">
               From stunning gas fireplaces to all-weather outdoor kitchens — we bring warmth, beauty, and craftsmanship to every space.
