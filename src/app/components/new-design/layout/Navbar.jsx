@@ -9,11 +9,13 @@ import { useSolanaCategories } from "@/app/context/category";
 
 export default function Navbar() {
   const { solana_categories: solana_menu_object } = useSolanaCategories();
-  const [scrolled,  setScrolled]  = useState(false);
-  const [query,     setQuery]     = useState("");
-  const [showDrop,  setShowDrop]  = useState(false);
-  const [menuOpen,  setMenuOpen]  = useState(false);
-  const searchRef                 = useRef(null);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [query,      setQuery]      = useState("");
+  const [showDrop,   setShowDrop]   = useState(false);
+  const [menuOpen,   setMenuOpen]   = useState(false);
+  const [lockedMenu, setLockedMenu] = useState(null);
+  const searchRef                   = useRef(null);
+  const navRowRef                   = useRef(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -23,6 +25,12 @@ export default function Navbar() {
 
   useEffect(() => {
     const fn = (e) => { if (!searchRef.current?.contains(e.target)) setShowDrop(false); };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, []);
+
+  useEffect(() => {
+    const fn = (e) => { if (!navRowRef.current?.contains(e.target)) setLockedMenu(null); };
     document.addEventListener("mousedown", fn);
     return () => document.removeEventListener("mousedown", fn);
   }, []);
@@ -170,29 +178,51 @@ export default function Navbar() {
         </div>
 
         {/* ── Row 2: Nav Links — desktop only ── */}
-        <div className="hidden lg:flex items-center h-10 gap-0.5 border-t border-stone-100 dark:border-stone-800">
-          {NAV_LINKS.map(({ name, children, id, url }) => (
+        <div ref={navRowRef} className="hidden lg:flex items-center h-10 gap-0.5 border-t border-stone-100 dark:border-stone-800">
+          {NAV_LINKS.map(({ name, children, id, url }) => {
+            const isLocked = lockedMenu === id;
+            return (
             <div key={`desktop-nav-item-${id}`} className="relative group flex items-center">
-              <Link href={`/${url}`} prefetch={false} className="px-3 py-1.5 rounded-md text-[13px] font-medium text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire transition-all duration-150 flex items-center gap-0.5">
-                {name} <span className="text-[10px] opacity-60">▾</span>
+              <Link
+                href={`/${url}`}
+                prefetch={false}
+                onClick={e => { e.preventDefault(); setLockedMenu(isLocked ? null : id); }}
+                className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 flex items-center gap-0.5
+                  ${isLocked ? "bg-stone-100 dark:bg-stone-800 text-fire" : "text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire"}`}
+              >
+                {name} <span className={`text-[10px] opacity-60 transition-transform duration-150 ${isLocked ? "rotate-180" : ""}`}>▾</span>
               </Link>
-              <div className="
+              <div className={`
                 absolute top-[calc(100%+4px)] left-0
                 bg-white dark:bg-stone-900
                 border border-stone-100 dark:border-stone-700
-                rounded-xl shadow-2xl min-w-[200px] p-2
-                opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto
-                translate-y-2 group-hover:translate-y-0
+                rounded-xl shadow-2xl min-w-[200px] overflow-hidden
                 transition-all duration-200 z-30
-              ">
-                {children.map(c => (
-                  <Link key={`desktop-child-nav-item-${c.id}`} href="#" className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
-                    {c.name}
-                  </Link>
-                ))}
+                ${isLocked
+                  ? "opacity-100 pointer-events-auto translate-y-0"
+                  : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto translate-y-2 group-hover:translate-y-0"}
+              `}>
+                {/* Parent category link */}
+                <Link
+                  href={`/${url}`}
+                  onClick={() => setLockedMenu(null)}
+                  className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-fire transition-colors group/parent"
+                >
+                  <span>All {name}</span>
+                  <span className="text-fire opacity-0 group-hover/parent:opacity-100 transition-opacity text-xs">→</span>
+                </Link>
+                {/* Children */}
+                <div className="p-2">
+                  {children.map(c => (
+                    <Link key={`desktop-child-nav-item-${c.id}`} href={`${c?.url}`} onClick={() => setLockedMenu(null)} className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
-          ))}
+            );
+          })}
           {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
           <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Current Deals 🔥</Link>
         </div>

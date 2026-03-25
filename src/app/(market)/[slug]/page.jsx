@@ -14,40 +14,45 @@ import BaseNavPage from "@/app/components/template/BaseNavItemPage";
 import Image from "next/image";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
-const isShopify = true;
 
-const feat_carousel_items = [
-  {
-    label: "Fireplaces",
-    img: "/images/feature/Firepit.webp",
-    url: `${BASE_URL}/fireplaces`,
-  },
-  {
-    label: "Patio Heaters",
-    img: "/images/feature/patio-heaters-1.webp",
-    url: `${BASE_URL}/patio-heaters`,
-  },
-  {
-    label: "Built-In Grills",
-    img: "/images/feature/Built-in Grill 2.webp",
-    url: `${BASE_URL}/built-in-grills`,
-  },
-  {
-    label: "Freestanding Grills",
-    img: "/images/feature/Freestanding Grill 2.webp",
-    url: `${BASE_URL}/freestanding-grills`,
-  },
-  {
-    label: "Open Box",
-    img: "/images/feature/open-box.webp",
-    url: `${BASE_URL}/open-box`,
-  },
-  {
-    label: "Current Deals",
-    img: "/images/home/categories/clearance.webp",
-    url: `${BASE_URL}/brand/eloquence`,
-  },
-];
+import HeroBanner from "@/app/components/new-design/sections/gallery/HeroBanner";
+import SubcategoryTabs from "@/app/components/new-design/sections/gallery/SubcategoryTabs";
+import { getRootByUrl } from "@/app/lib/helpers";
+
+// const isShopify = true;
+
+// const feat_carousel_items = [
+//   {
+//     label: "Fireplaces",
+//     img: "/images/feature/Firepit.webp",
+//     url: `${BASE_URL}/fireplaces`,
+//   },
+//   {
+//     label: "Patio Heaters",
+//     img: "/images/feature/patio-heaters-1.webp",
+//     url: `${BASE_URL}/patio-heaters`,
+//   },
+//   {
+//     label: "Built-In Grills",
+//     img: "/images/feature/Built-in Grill 2.webp",
+//     url: `${BASE_URL}/built-in-grills`,
+//   },
+//   {
+//     label: "Freestanding Grills",
+//     img: "/images/feature/Freestanding Grill 2.webp",
+//     url: `${BASE_URL}/freestanding-grills`,
+//   },
+//   {
+//     label: "Open Box",
+//     img: "/images/feature/open-box.webp",
+//     url: `${BASE_URL}/open-box`,
+//   },
+//   {
+//     label: "Current Deals",
+//     img: "/images/home/categories/clearance.webp",
+//     url: `${BASE_URL}/brand/eloquence`,
+//   },
+// ];
 
 // const defaultMenuKey = keys.default_shopify_menu.value;
 const defaultMenuKey = keys.dev_shopify_menu.value; // dev-menu-object
@@ -81,32 +86,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const Hero = ({ data }) => {
-  const useBanner = data?.banner?.img?.src;
-  if (!useBanner) return;
-
-  return (
-    <div className={`w-full mx-auto flex flex-col md:flex-row`}>
-      <div className={`w-full md:w-full relative overflow-hidden`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[414/77]">
-          {
-            <Image
-              src={useBanner}
-              alt={"Banner"}
-              className="w-full h-full object-contain"
-              fill
-              loading="eager"
-              priority={true}
-              quality={100}
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-            />
-          }
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
   const menuData = await redis.get(defaultMenuKey);
@@ -117,17 +96,28 @@ export default async function GenericCategoryPage({ params }) {
     }))
   );
   const pageData = getPageData(slug, flatData);
+  const url = pageData?.url;
 
-  if (!pageData) return notFound();
+  if (!pageData || !url) return notFound();
+  const rootNav = getRootByUrl(menuData, url);
+
+  if (!rootNav) return notFound();
 
   if (pageData?.is_base_nav) return <BaseNavPage page_details={pageData} />;
 
+  const navConfig = {
+    root: rootNav,
+    url: url 
+  }
+
   return (
     <div>
+        <HeroBanner config={navConfig}/>
+        <SubcategoryTabs config={navConfig}/>
+      {/* <MobileLoader isLoading={!pageData} />
       <HeroNotice data={pageData} />
-      <Hero data={pageData} />
-      {/* <TuiHero data={pageData} /> */}
-      <div className="px-1 md:px-[20px]">
+      <Hero data={pageData} /> */}
+      {/* <div className="px-1 md:px-[20px]">
         {isShopify ? (
           <ShopifyProductsSection category={slug} />
         ) : (
@@ -148,10 +138,7 @@ export default async function GenericCategoryPage({ params }) {
           )}
 
         <Reviews />
-        {/* <CategoriesCarousel /> */}
-
         <FeatureCategoriesSection items={feat_carousel_items} />
-
         {pageData?.faqs &&
           pageData?.faqs?.visible &&
           pageData?.faqs?.data &&
@@ -159,7 +146,7 @@ export default async function GenericCategoryPage({ params }) {
           pageData.faqs.data.length > 0 && <Faq data={pageData.faqs.data} />}
 
         <NewsLetter />
-      </div>
+      </div> */}
     </div>
   );
 }

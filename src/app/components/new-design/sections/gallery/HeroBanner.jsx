@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Link from 'next/link';
 function HeroBanner() {
   return (
     <div className="relative h-52 sm:h-64 bg-neutral-950 overflow-hidden flex items-center">
@@ -11,7 +11,7 @@ function HeroBanner() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-neutral-500 mb-3">
-          <a href="#" className="hover:text-neutral-300 transition-colors">Home</a>
+          <Link href="/" className="hover:text-neutral-300 transition-colors">Home</Link>
           <span>/</span>
           <span className="text-neutral-300">Fireplaces</span>
         </nav>
