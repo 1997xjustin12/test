@@ -22,7 +22,7 @@ const CARDS = [
     sub: "Instant Warmth & Modern Ambiance",
   },
   {
-    image: "/images/banner/bbq-banner.webp",
+    image: "/images/banner/home-built-in-grills.webp",
     url: "/built-in-grills",
     title: "Built-In Grills",
     sub: "Elevate Your Outdoor Kitchen Luxury",
