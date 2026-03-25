@@ -2,9 +2,8 @@ import { notFound } from "next/navigation";
 import { keys, redis } from "@/app/lib/redis";
 import { getPageData, BASE_URL } from "@/app/lib/helpers";
 import TuiHero from "@/app/components/template/tui_hero";
-import ProductsSection from "@/app/components/section/Products";
 import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
-import ShopifyProductsSection from "@/app/components/molecule/ProductsSection";
+import ProductsSection from "@/app/components/molecule/ProductsSection";
 import MobileLoader from "@/app/components/molecule/MobileLoader";
 import Faq from "@/app/components/molecule/Faq";
 import Reviews from "@/app/components/molecule/Reviews";
@@ -116,6 +115,9 @@ export default async function GenericCategoryPage({ params }) {
     <div>
         <HeroBanner config={navConfig}/>
         <SubcategoryTabs config={navConfig}/>
+        <div className="px-1 md:px-[20px]">
+          <ProductsSection category={slug} />
+        </div>
       {/* <MobileLoader isLoading={!pageData} />
       <HeroNotice data={pageData} />
       <Hero data={pageData} /> */}

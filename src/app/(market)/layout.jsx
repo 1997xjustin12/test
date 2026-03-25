@@ -141,10 +141,7 @@ export default async function MarketLayout({ children }) {
                         <Topbar />
                         <Navbar />
                         <div
-                          style={{
-                            minHeight: `calc(100vh - ${deskHeadFootHeight}px)`,
-                          }}
-                          className={`flex flex-col`}
+                          className={`flex flex-col min-h-svh`}
                         >
                           {children}
                         </div>
