@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 function SubcategoryTabs({ config }) {
-  console.log("config", config);
-
   return (
     <div className="bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 sticky top-16 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">

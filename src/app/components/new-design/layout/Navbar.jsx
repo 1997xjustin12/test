@@ -214,7 +214,7 @@ export default function Navbar() {
                 {/* Children */}
                 <div className="p-2">
                   {children.map(c => (
-                    <Link key={`desktop-child-nav-item-${c.id}`} href={`${c?.url}`} className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
+                    <Link key={`desktop-child-nav-item-${c.id}`} href={`${c?.url}`} onClick={() => setLockedMenu(null)} className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors">
                       {c.name}
                     </Link>
                   ))}
