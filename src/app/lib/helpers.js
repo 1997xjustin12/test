@@ -895,6 +895,13 @@ export const transformFilterGrillArea = (items) => {
   return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
 } 
 
+export const transformYesNo = (items) => {
+  const sortKeys = ["Yes", "No"];
+  return items.sort((a, b) => {
+    return sortKeys.indexOf(a.value) - sortKeys.indexOf(b.value);
+  });
+};
+
 export function getRootByUrl(data, url) {
     // Helper function to check if an object or any of its nested children match the URL
     const hasMatch = (node, target) => {
