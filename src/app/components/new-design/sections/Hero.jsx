@@ -16,13 +16,13 @@ const TRUST = [
 ];
 const CARDS = [
   {
-    image: "/images/feature/gas-fireplaces-1.webp",
+    image: "/images/banner/home-gas-fireplace.webp",
     url: "/gas-fireplaces",
     title: "Gas Fireplaces",
     sub: "Instant Warmth & Modern Ambiance",
   },
   {
-    image: "/images/feature/Built-In Grill 2.webp",
+    image: "/images/banner/bbq-banner.webp",
     url: "/built-in-grills",
     title: "Built-In Grills",
     sub: "Elevate Your Outdoor Kitchen Luxury",
@@ -146,7 +146,7 @@ export default function Hero() {
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-contain"
+                    className="object-cover"
                   />
                 </div>
                 <div className="px-5 py-3.5 flex items-center justify-between">
