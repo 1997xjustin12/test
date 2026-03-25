@@ -1,4 +1,5 @@
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import Link from "next/link";
 
 export default function Topbar() {
   return (
@@ -19,9 +20,9 @@ export default function Topbar() {
         </span>
         <span className="hidden md:inline text-gray-600">|</span>
         <span className="px-0 md:px-3.5">
-          <a href="#" className="text-fire-light font-semibold hover:underline">
+          <Link href="/professional-program" className="text-fire-light font-semibold hover:underline">
             Contractor Discount Program
-          </a>
+          </Link>
         </span>
       </div>
     </div>
