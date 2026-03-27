@@ -2,7 +2,8 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
-import SPProductCard from "@/app/components/atom/ProductCard";
+// import SPProductCard from "@/app/components/atom/ProductCard"; // old product card
+import SPProductCard from "@/app/components/new-design/ui/ProductCard"; // new product card
 import {
   InstantSearch,
   Hits,
@@ -16,6 +17,8 @@ import {
   SortBy,
   useInstantSearch,
   SearchBox,
+  useStats,
+  usePagination,
 } from "react-instantsearch";
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
@@ -31,6 +34,8 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const es_index = ES_INDEX;
 
+const hitsPerPage = 30;
+
 const searchClient = Client({
   url: `/api/es/searchkit/`,
 });
@@ -41,6 +46,32 @@ const sortPriceItems = (items) => {
       priceBucketKeys.indexOf(a.value) - priceBucketKeys.indexOf(b.value),
   );
 };
+
+function DisplayedItems() {
+  const { nbHits } = useStats();
+  const { currentRefinement, nbPages } = usePagination();
+  
+  const perPage = hitsPerPage ?? 30;
+  
+  const start = nbHits === 0 ? 0 : currentRefinement * perPage + 1;
+  const end = Math.min((currentRefinement + 1) * perPage, nbHits);
+
+  if (nbHits === 0) {
+    return (
+      <p className="text-sm text-neutral-500">No products found for this search.</p>
+    );
+  }
+
+  return (
+    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+      Showing <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+        {start}–{end}
+      </span> of <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+        {nbHits.toLocaleString()} products
+      </span>
+    </p>
+  );
+}
 
 const Panel = ({ header, children }) => {
   const [expanded, setExpanded] = useState(true);
@@ -64,23 +95,11 @@ const FilterGroup = ({ header, children }) => {
       >
         <h5 className=" font-semibold text-[13px] text-stone-800">{header}</h5>
         {expanded ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="currentColor" d="M19 13H5v-2h14z" />
-          </svg>
+          // boxicons:chevron-up-filled
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="text-[#6e6e6e]" viewBox="0 0 24 24"><path fill="currentColor" d="m7.71 15.71l4.29-4.3l4.29 4.3l1.42-1.42L12 8.59l-5.71 5.7z"/></svg>
         ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" />
-          </svg>
+          // boxicons:chevron-down-filled
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="text-[#6e6e6e]" viewBox="0 0 24 24"><path fill="currentColor" d="m12 15.41l5.71-5.7l-1.42-1.42l-4.29 4.3l-4.29-4.3l-1.42 1.42z"/></svg>
         )}
       </button>
       <div className={`pl-4 py-1 ${expanded ? "" : "hidden"}`}>{children}</div>
@@ -195,11 +214,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   if (shouldShowNoResults) {
     return (
       <div className="container">
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="uppercase text-lg font-bold">{`${page_details?.name} ${
-            results?.nbHits && `(${results?.nbHits})`
-          }`}</h1>
-        </div>
         <div className="pb-[100px] flex justify-center text-neutral-600 font-bold text-lg">
           No Results Found...
         </div>
@@ -210,23 +224,11 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   if (!firstLoad) {
     return (
       <div className="container">
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="uppercase text-lg font-bold">{`${page_details?.name} ${
-            results?.nbHits && `(${results?.nbHits})`
-          }`}</h1>
-          <SortBy
-            items={[
-              { label: "Most Popular", value: `${es_index}_popular` },
-              { label: "Newest", value: `${es_index}_newest` },
-              { label: "Price: Low to High", value: `${es_index}_price_asc` },
-              { label: "Price: High to Low", value: `${es_index}_price_desc` },
-            ]}
-          />
-        </div>
         <div className="search-panel flex pb-[50px] gap-[20px]">
-          <div className="search-panel__filters  pfd-filter-section">
+          <div className="search-panel__filters  pfd-filter-section relative">
             <div className="border rounded-xl">
               <div className="text-sm font-semibold p-4">Filters</div>
+              <CurrentRefinements />
               {page_details &&
                 page_details?.nav_type === "custom_page" &&
                 page_details?.nav_type !== "brand" &&
@@ -321,7 +323,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                 </DynamicWidgets>
               )}
             </div>
-            <div className="relative lg:w-[240px] h-[360px]">
+            <div className="relative w-full aspect-w-3 aspect-h-4 mt-2">
               <Link
                 href={`tel:${page_details?.contact_number || STORE_CONTACT}`}
                 prefetch={false}
@@ -340,7 +342,17 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             </div>
           </div>
           <div className="search-panel__results pfd-product-section">
-            <CurrentRefinements />
+            <div className="flex sm:flex-col items-center justify-between mb-5">
+              <DisplayedItems />
+              <SortBy
+                items={[
+                  { label: "Most Popular", value: `${es_index}_popular` },
+                  { label: "Newest", value: `${es_index}_newest` },
+                  { label: "Price: Low to High", value: `${es_index}_price_asc` },
+                  { label: "Price: High to Low", value: `${es_index}_price_desc` },
+                ]}
+              />
+            </div>
             <QueryRulesBanner />
 
             <Hits
@@ -630,9 +642,9 @@ function ProductsSection({ category, search = "" }) {
             <Refresh search={search} />
             {/* <HitsPerPage /> */}
             {filterString ? (
-              <Configure hitsPerPage={30} filter={filterString} />
+              <Configure hitsPerPage={hitsPerPage} filter={filterString} />
             ) : (
-              <Configure hitsPerPage={30} />
+              <Configure hitsPerPage={hitsPerPage} />
             )}
             {/*  hack to make initialUiState work*/}
             <Pagination className="hidden" />
