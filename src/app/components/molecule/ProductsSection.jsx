@@ -342,7 +342,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             </div>
           </div>
           <div className="search-panel__results pfd-product-section">
-            <div className="flex sm:flex-col items-center justify-between mb-5">
+            <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
               <DisplayedItems />
               <SortBy
                 items={[
