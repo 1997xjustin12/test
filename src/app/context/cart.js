@@ -8421,8 +8421,7 @@ export const CartProvider = ({ children }) => {
   const [cartStorage, setCartStorage] = useState(null);
   const [forage, setForage] = useState(null);
   const [loadingCartItems, setLoadingCartItems] = useState(true);
-  // const [addedToCart, setAddedToCart] = useState(null);
-  const [addedToCart, setAddedToCart] = useState(added_to_cart_test_data);
+  const [addedToCart, setAddedToCart] = useState(null);
 
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [abandonedCartUser, setAbandonedCartUser] = useState(null);
