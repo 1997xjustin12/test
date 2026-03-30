@@ -9,6 +9,8 @@ import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import FicDropDown from "@/app/components/atom/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { useQuickView } from "@/app/context/quickview";
+
 
 const BADGE_STYLES = {
   bestseller: "bg-orange-500 text-white",
@@ -61,6 +63,7 @@ function StarRating({ rating }) {
 }
 
 function ProductCard({ hit, page_details, onCompare }) {
+  const { viewItem } = useQuickView();
   const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
   const { isPriceVisible, getProductUrl } = useSolanaCategories();
@@ -74,6 +77,7 @@ function ProductCard({ hit, page_details, onCompare }) {
     console.log("hit", hit);
     const id = hit?.product_id;
     const badge = "bestseller";
+    const ratings = parseInt(hit?.ratings?.rating_count?.replace("'", "") || 0, 10);
     // process dynamic product badge
     const result = {
       id,
@@ -83,9 +87,7 @@ function ProductCard({ hit, page_details, onCompare }) {
       brand: hit?.brand,
       name: hit?.title,
       url: getProductUrl(hit),
-      rating: hit?.rating?.rating_count
-        ? parseInt(hit?.rating?.rating_count)
-        : 0,
+      rating: ratings,
     };
 
     console.log("result", result);
@@ -190,7 +192,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         </div>
 
         <div className="flex gap-2 mt-2">
-          <button className="w-9 h-9 min-w-9 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors">
+          <button onClick={()=> viewItem(hit)} className="w-9 h-9 min-w-9 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors">
             <svg
               className="w-4 h-4"
               fill="none"
