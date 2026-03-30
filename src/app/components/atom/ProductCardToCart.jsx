@@ -91,7 +91,7 @@ const AddToCartBtn = ({ item }) => {
   return (
     <button
       onClick={() => handleAddToCart(item)}
-      className="hover:bg-theme-600 bg-theme-700 text-white rounded py-1 px-4 font-bold text-sm h-[28px] w-[110px] flex items-center justify-center"
+      className="hover:bg-theme-600 bg-theme-700 text-white rounded-md py-1 px-4 font-bold text-sm h-[28px] w-[110px] flex items-center justify-center"
       disabled={loading}
     >
       {loading ? <Eos3DotsLoading width={30} height={30} /> : "Add to Cart"}
