@@ -8949,6 +8949,9 @@ export const CartProvider = ({ children }) => {
       notifyCartUpdate();
       setAddToCartLoading(false);
       setAddedToCart(item);
+      if (!isLoggedIn && typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("guestEmailRequired"));
+      }
       return {
         code: 200,
         status: "success",
@@ -9383,7 +9386,7 @@ export const CartProvider = ({ children }) => {
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
-      <GuestEmailDialog isLoggedIn={isLoggedIn} cart={cart} />
+      <GuestEmailDialog />
     </CartContext.Provider>
   );
 };

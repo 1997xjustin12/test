@@ -15,7 +15,7 @@ import {
   parseRatingCount,
 } from "@/app/lib/helpers";
 
-function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
+function GuestEmailCaptureDialog() {
   const pathname = usePathname();
   const pathname_exclusion = [
     "/login",
@@ -112,15 +112,14 @@ function GuestEmailCaptureDialog({ isLoggedIn, cart }) {
   }, []);
 
   useEffect(() => {
-    if (
-      !isLoggedIn &&
-      cart &&
-      !pathname_exclusion.includes(pathname) &&
-      !infoEmail
-    ) {
-      setToggle(true);
-    }
-  }, [isLoggedIn, cart, pathname, infoEmail]);
+    const handler = () => {
+      if (!infoEmail && !pathname_exclusion.includes(pathname)) {
+        setToggle(true);
+      }
+    };
+    window.addEventListener("guestEmailRequired", handler);
+    return () => window.removeEventListener("guestEmailRequired", handler);
+  }, [infoEmail, pathname]);
 
   return (
     <GuestModal isOpen={toggle} onClose={setToggle} />
