@@ -112,7 +112,7 @@ function ProductQuickView({ data, product_link, onClose }) {
     <Dialog open={toggle} onClose={setToggle} className="relative z-10">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-[350ms] data-[leave]:duration-200 data-[enter]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[leave]:ease-in"
       />
 
       <div className="fixed inset-0 z-100 w-screen overflow-y-auto">
@@ -120,7 +120,7 @@ function ProductQuickView({ data, product_link, onClose }) {
           <div className="absolute inset-0  flex items-end justify-center md:p-4 text-center sm:items-center sm:p-[10px]">
             <DialogPanel
               transition
-              className="relative transform text-left  transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[800px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-[640px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-2xl max-h-svh"
+              className="relative transform text-left  transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-[400ms] data-[leave]:duration-200 data-[enter]:ease-[cubic-bezier(0.16,1,0.3,1)] data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-[800px] data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 overflow-y-auto bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-[640px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-2xl max-h-svh"
             >
               <div className="absolute right-[15px] top-[15px] rounded-bl-lg z-10">
                 {/* <div onClick={handleClose} className="cursor-pointer p-1">

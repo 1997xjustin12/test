@@ -126,7 +126,7 @@ export default function GuestModal({ isOpen, onClose }) {
       className={`
         fixed inset-0 z-[100] flex items-center justify-center p-4
         bg-black/60 backdrop-blur-sm
-        transition-opacity duration-350 ease-in-out
+        transition-opacity duration-[350ms] ease-in-out
         ${visible ? "opacity-100" : "opacity-0"}
       `}
     >
@@ -138,7 +138,7 @@ export default function GuestModal({ isOpen, onClose }) {
           bg-white dark:bg-stone-900
           rounded-2xl overflow-hidden shadow-2xl
           flex flex-col sm:flex-row
-          transition-all duration-350 ease-out
+          transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
           ${visible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4"}
         `}
       >
