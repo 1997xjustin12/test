@@ -572,7 +572,7 @@ export function URLHandler() {
         stringParams ? `?${stringParams}` : ""
       }`;
       // console.log("[URLHandler] Updating URL:", newUrl);
-      window.history.pushState({}, "", newUrl);
+      window.history.replaceState({}, "", newUrl);
     }
   }, [indexUiState, results, isSearchPage]);
 
