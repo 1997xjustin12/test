@@ -852,7 +852,8 @@ export const SearchProvider = ({ children }) => {
           aggs_collections
         );
 
-        setCollectionsResults(collection_results);
+        // console.log("collection_results", collection_results.filter(({name})=> !name.includes("Shop All")));
+        setCollectionsResults(collection_results.filter(({name})=> !name.includes("Shop All")));
         const { exactMatch, products } = processProductSearchResult(
           trim_query,
           formatted_results || []
