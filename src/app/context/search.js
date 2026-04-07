@@ -646,7 +646,9 @@ export const SearchProvider = ({ children }) => {
 
       // Merge: matching brands first, then all brands (deduplicated)
       const mergedNames = [
-        ...new Set([...matchingBrands, ...allBrands.map((item) => item?.name)]),
+        ...new Set([
+          // ...matchingBrands,
+          ...allBrands.map((item) => item?.name)]),
       ];
 
       return mergedNames.map((name) => ({
@@ -788,7 +790,6 @@ export const SearchProvider = ({ children }) => {
         const popular_searches = processPopularSearchResult(query);
         setPopularResults(popular_searches);
         const category_searches = await fetchSearchResultsWithCategories(query);
-        console.log("category_searches", category_searches)
         setCategoryResults((category_searches || []).map(item=> ({...item, url:`category/${createSlug(item?.name)}`})));
         const brand_searches = processBrandSearchResult(query, brands);
         setBrandResults(brand_searches);
@@ -804,7 +805,7 @@ export const SearchProvider = ({ children }) => {
         return null;
       }
     },
-    [getRecentSearch, popularSearches, fetchSearchResultsWithCategories, filterNavigationItems],
+    [getRecentSearch, popularSearches, processBrandSearchResult, processPopularSearchResult],
   );
 
   // ---------------------------------------------------------------------------
@@ -1045,7 +1046,7 @@ export const SearchProvider = ({ children }) => {
       // Update state and fetch data without updating URL (since we're already responding to a URL change)
       setSearch(urlQuery, false);
     }
-  }, [pathname, searchParams, searchQuery, setSearch]);
+  }, [pathname, searchParams, setSearch]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Update noResults State

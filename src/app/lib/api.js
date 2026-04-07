@@ -252,6 +252,6 @@ export const fetchSearchResultsWithCategories = async (searchTerm) => {
     return categories;
   } catch (err) {
     console.error("Search error:", err);
-    return { products: [], categories: [] };
+    return [];
   }
 };
