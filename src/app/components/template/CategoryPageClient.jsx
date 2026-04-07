@@ -50,7 +50,7 @@ export function CategoryHero({ category }) {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-5 sm:px-8 py-16 sm:py-24 w-full">
+      <div className="relative container mx-auto px-5 sm:px-8 py-16 sm:py-24 w-full">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-white/30 mb-5">
           {[
@@ -259,7 +259,7 @@ export function CTABanner() {
           }}
         />
       </div>
-      <div className="relative z-10 max-w-lg mx-auto">
+      <div className="relative max-w-lg mx-auto">
         <p className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#F97316] m-0 mb-3">
           Need Help Choosing?
         </p>
@@ -312,7 +312,7 @@ function CategoryPageClient({ category_slug }) {
         {/* <SubcatTabs active={activeTab} setActive={setActiveTab} /> */}
 
         {/* Main content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex gap-7 items-start">
             <ProductsSection category={category_slug} />
           </div>
