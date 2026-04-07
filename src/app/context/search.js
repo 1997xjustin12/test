@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
+import { fetchSearchResultsWithCategories } from "@/app/lib/api";
 import {
   BASE_URL,
   exclude_brands,
@@ -49,7 +50,7 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // HOOKS
   // ---------------------------------------------------------------------------
-  const { flatCategories } = useSolanaCategories();
+  const { flatCategories, categories } = useSolanaCategories();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -449,7 +450,7 @@ export const SearchProvider = ({ children }) => {
         rawSearchString
           .toLowerCase()
           .split(/\W+/)
-          .filter((word) => word.length > 0)
+          .filter((word) => word.length > 0),
       );
 
       if (searchWords.size === 0) {
@@ -466,13 +467,21 @@ export const SearchProvider = ({ children }) => {
             .filter((word) => word.length > 0);
 
           return itemNameWords.some((itemNameWord) =>
-            searchWords.has(itemNameWord)
+            searchWords.has(itemNameWord),
           );
         })
         .sort(sortAlphabetically);
       return result;
     },
-    [flatCategories, sortAlphabetically]
+    [flatCategories, sortAlphabetically],
+  );
+
+  // ---------------------------------------------------------------------------
+  // HELPER: Filter Category Items
+  // ---------------------------------------------------------------------------
+  const filterCategoryItems = useCallback(
+    (navType, query = "", suggestion = "") => {},
+    [flatCategories, sortAlphabetically],
   );
 
   // ---------------------------------------------------------------------------
@@ -504,7 +513,7 @@ export const SearchProvider = ({ children }) => {
       const newUrl = `/search?${params.toString()}`;
       window.history.pushState(null, "", newUrl);
     },
-    [searchParams]
+    [searchParams],
   );
 
   // ---------------------------------------------------------------------------
@@ -533,13 +542,13 @@ export const SearchProvider = ({ children }) => {
           new_value.map((item) => ({
             ...item,
             term: item?.term?.toLowerCase(),
-          }))
+          })),
         );
       } catch (error) {
         console.error("[LocalForage] setRecentSearch error:", error);
       }
     },
-    [lForage, dedupeRecents]
+    [lForage, dedupeRecents],
   );
 
   // ---------------------------------------------------------------------------
@@ -605,13 +614,13 @@ export const SearchProvider = ({ children }) => {
 
       // Filter static keywords
       const staticResults = (static_keywords || []).filter((keyword) =>
-        matchesQueryWords(keyword, queryWords)
+        matchesQueryWords(keyword, queryWords),
       );
 
       // Merge and deduplicate, prioritizing static keywords
       return [...new Set([...staticResults, ...dynamicResults])];
     },
-    [popularSearches, matchesQueryWords]
+    [popularSearches, matchesQueryWords],
   );
 
   // ---------------------------------------------------------------------------
@@ -645,7 +654,7 @@ export const SearchProvider = ({ children }) => {
         url: createSlug(name || ""),
       }));
     },
-    [matchesQueryWords]
+    [matchesQueryWords],
   );
 
   // ---------------------------------------------------------------------------
@@ -656,8 +665,8 @@ export const SearchProvider = ({ children }) => {
       const allCollections = collections.filter(
         (item) =>
           !HIDDEN_COLLECTIONS.map((hcol) => hcol.toLowerCase()).includes(
-            item.key.toLowerCase()
-          )
+            item.key.toLowerCase(),
+          ),
       );
 
       if (!query || query.trim() === "") {
@@ -685,7 +694,7 @@ export const SearchProvider = ({ children }) => {
         url: `search?query=${query}&filter%3Acollections=${item}`,
       }));
     },
-    [matchesQueryWords]
+    [matchesQueryWords],
   );
 
   // ---------------------------------------------------------------------------
@@ -714,7 +723,7 @@ export const SearchProvider = ({ children }) => {
 
           // Check if any query word exactly matches the last token
           return queryWords.some((word) => word === lastToken);
-        }
+        },
       );
 
       // Create a Map for O(1) product lookups by title
@@ -722,7 +731,7 @@ export const SearchProvider = ({ children }) => {
         allProducts.map((product) => [
           (product.title || "").toLowerCase(),
           product,
-        ])
+        ]),
       );
 
       const matchingProducts = (allProducts || [])
@@ -743,11 +752,11 @@ export const SearchProvider = ({ children }) => {
 
       // Prioritize exact last substring matches at the top
       const exactMatchTitles = new Set(
-        exactLastSubstringMatches.map(({ title }) => title.toLowerCase())
+        exactLastSubstringMatches.map(({ title }) => title.toLowerCase()),
       );
 
       const otherProducts = mergedNamesProduct.filter(
-        (product) => !exactMatchTitles.has(product.title.toLowerCase())
+        (product) => !exactMatchTitles.has(product.title.toLowerCase()),
       );
 
       return {
@@ -755,7 +764,7 @@ export const SearchProvider = ({ children }) => {
         products: [...exactLastSubstringMatches, ...otherProducts],
       };
     },
-    [matchesQueryWords]
+    [matchesQueryWords],
   );
 
   // ---------------------------------------------------------------------------
@@ -772,18 +781,15 @@ export const SearchProvider = ({ children }) => {
             ? recent
             : recent
                 .filter((i) =>
-                  i.term.toLowerCase().includes(query.toLowerCase())
+                  i.term.toLowerCase().includes(query.toLowerCase()),
                 )
                 .sort((a, b) => b.timestamp - a.timestamp);
 
         const popular_searches = processPopularSearchResult(query);
         setPopularResults(popular_searches);
-        const category_searches = filterNavigationItems(
-          "custom_page",
-          query,
-          suggest
-        );
-        setCategoryResults(category_searches);
+        const category_searches = await fetchSearchResultsWithCategories(query);
+        console.log("category_searches", category_searches)
+        setCategoryResults((category_searches || []).map(item=> ({...item, url:`category/${createSlug(item?.name)}`})));
         const brand_searches = processBrandSearchResult(query, brands);
         setBrandResults(brand_searches);
 
@@ -798,7 +804,7 @@ export const SearchProvider = ({ children }) => {
         return null;
       }
     },
-    [getRecentSearch, popularSearches, filterNavigationItems]
+    [getRecentSearch, popularSearches, fetchSearchResultsWithCategories, filterNavigationItems],
   );
 
   // ---------------------------------------------------------------------------
@@ -832,7 +838,7 @@ export const SearchProvider = ({ children }) => {
 
         const data = await res.json();
         const formatted_results = data?.hits?.hits?.map(
-          ({ _source }) => _source
+          ({ _source }) => _source,
         );
 
         // console.log("data", data);
@@ -849,21 +855,25 @@ export const SearchProvider = ({ children }) => {
 
         const collection_results = processCollectionSearchResult(
           trim_query,
-          aggs_collections
+          aggs_collections,
         );
 
         // console.log("collection_results", collection_results.filter(({name})=> !name.includes("Shop All")));
-        setCollectionsResults(collection_results.filter(({name})=> !name.includes("Shop All")));
+        setCollectionsResults(
+          collection_results.filter(({ name }) => !name.includes("Shop All")),
+        );
         const { exactMatch, products } = processProductSearchResult(
           trim_query,
-          formatted_results || []
+          formatted_results || [],
         );
 
         setProductHit(exactMatch);
         setProductResults(products);
 
         setSuggestionResults(
-          trim_query.length > MIN_SUGGESTION_LENGTH ? suggest_options || [] : []
+          trim_query.length > MIN_SUGGESTION_LENGTH
+            ? suggest_options || []
+            : [],
         );
 
         setProductResultsCount(result_total_count || 0);
@@ -873,7 +883,7 @@ export const SearchProvider = ({ children }) => {
         getSearchResults(
           trim_query,
           suggest_options?.[0]?.text || "",
-          aggs_brands
+          aggs_brands,
         );
         return data;
       } catch (err) {
@@ -885,7 +895,7 @@ export const SearchProvider = ({ children }) => {
         return null;
       }
     },
-    [buildSearchQuery, getSearchResults]
+    [buildSearchQuery, getSearchResults],
   );
 
   // ---------------------------------------------------------------------------
@@ -939,7 +949,7 @@ export const SearchProvider = ({ children }) => {
         // getSearchResults(search_string);
       }, DEBOUNCE_DELAY);
     },
-    [pathname, updateURL, fetchProducts, getSearchResults]
+    [pathname, updateURL, fetchProducts, getSearchResults],
   );
 
   // ---------------------------------------------------------------------------
@@ -1201,7 +1211,7 @@ export const SearchProvider = ({ children }) => {
       redirectToSearchPage,
       getRecentSearch,
       setRecentSearch,
-    ]
+    ],
   );
 
   // ---------------------------------------------------------------------------

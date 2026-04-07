@@ -49,10 +49,10 @@ const VariantItemLink = ({ product, comparePrice, type = "openbox" }) => {
   // Different text formats for open box vs new items
   const priceText = isOpenBox
     ? `Open Box: From $${formatPrice(productPrice)} - Save $${formatPrice(
-        savings
+        savings,
       )} (${percentage}%)`
     : `Brand New at $${formatPrice(productPrice)} (+$${formatPrice(
-        Math.abs(savings)
+        Math.abs(savings),
       )})`;
 
   const savingsColor = isOpenBox
@@ -242,27 +242,30 @@ const ProductInfo = ({ product, reviews }) => {
 };
 
 const ProductCategoryChips = ({ product }) => {
-  const [categories, setCategories] = useState([]);
-  const { getProductCategoriesV2 } = useSolanaCategories();
-  useEffect(() => {
-    if (product) {
-      const cats = getProductCategoriesV2(product);
-      setCategories(cats);
-    }
-  }, [product]);
+  const category = product?.accentuate_data?.category;
+
+  if (!category) {
+    return (
+      <div
+        className={
+          "self-start inline-block w-auto px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-600 border-red-700/20 bg-red-100/70 border rounded-full"
+        }
+      >
+        Category Not Assigned
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-wrap gap-1">
-      {categories.map((category, index) => (
-        <Link
-          prefetch={false}
-          href={`${BASE_URL}/${createSlug(category)}`}
-          key={`category-chip-item-${index}-${category}`}
-          className="bg-theme-600 text-xs text-white text-medium py-1 px-5 rounded-full border-2 border-neutral-900/10 hover:bg-theme-500"
-        >
-          {category}
-        </Link>
-      ))}
-    </div>
+    <Link
+      prefetch={false}
+      href={`/category/${createSlug(category)}`}
+      className={
+        "self-start inline-block w-auto px-3 py-1 text-xs font-semibold uppercase tracking-widest text-zinc-600 border-zinc-700/20 bg-zinc-100/70 border rounded-full"
+      }
+    >
+      {category}
+    </Link>
   );
 };
 
@@ -280,7 +283,7 @@ const ProductToCart = ({ product, loading, reviews }) => {
   useEffect(() => {
     const checkFullscreen = () => {
       setIsGalleryFullscreen(
-        document.body.classList.contains("gallery-fullscreen-active")
+        document.body.classList.contains("gallery-fullscreen-active"),
       );
     };
 
@@ -300,7 +303,7 @@ const ProductToCart = ({ product, loading, reviews }) => {
   const variant = productData?.variants?.[0];
   const showPrice = isPriceVisible(
     productData?.product_category,
-    productData?.brand
+    productData?.brand,
   );
 
   // Dynamic z-index: negative when gallery is fullscreen, positive otherwise

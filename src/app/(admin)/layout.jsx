@@ -20,12 +20,12 @@ export default async function AdminLayout({ children }) {
   // const defaultKey = keys.default_shopify_menu.value;
   const defaultKey = keys.dev_shopify_menu.value;
   const mgetKeys = [defaultKey];
-  const [menu] = await redis.mget(mgetKeys);
+  const [menu_items] = await redis.mget(mgetKeys);
 
   return (
     <html lang="en">
       <body className={`${MontserratFont.className}`}>
-        <CategoriesProvider categories={menu}>
+        <CategoriesProvider menu_items={menu_items}>
           <AdminContent>
             {children}
           </AdminContent>

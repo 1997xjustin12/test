@@ -9,19 +9,19 @@ import {
 import { usePathname } from "next/navigation";
 const CategoriesContext = createContext([]);
 
-export function CategoriesProvider({ categories, children }) {
+export function CategoriesProvider({ menu_items, categories, children }) {
   const pathName = usePathname();
 
   /**
    * Recursively flattens a nested category tree into a single-level array.
    *
-   * @param {Array} categories - An array of category objects. Each category may contain a `children` array with nested categories.
-   * @param {Array} [flatArray=[]] - (Optional) The accumulator array used to collect flattened categories during recursion.
+   * @param {Array} menu_items - An array of category objects. Each category may contain a `children` array with nested menu_items.
+   * @param {Array} [flatArray=[]] - (Optional) The accumulator array used to collect flattened menu_items during recursion.
    *
-   * @returns {Array} - A flat array containing all categories from the nested structure.
+   * @returns {Array} - A flat array containing all menu_items from the nested structure.
    */
-  const flattenCategories = (categories, flatArray = []) => {
-    categories.forEach((category) => {
+  const flattenCategories = (menu_items, flatArray = []) => {
+    menu_items.forEach((category) => {
       flatArray.push(category);
       if (category.children && category.children.length > 0) {
         flattenCategories(category.children, flatArray);
@@ -101,12 +101,12 @@ export function CategoriesProvider({ categories, children }) {
     );
 
     return category_scope
-      .filter((menuItem) =>
+      .filter((menu_itemsItem) =>
         product_category.some(
-          (category) => category.category_name === menuItem.origin_name,
+          (category) => category.category_name === menu_itemsItem.origin_name,
         ),
       )
-      .map((menuItem) => menuItem.name);
+      .map((menu_itemsItem) => menu_itemsItem.name);
   };
 
   const getProductCategoriesV2 = (product) => {
@@ -175,8 +175,8 @@ export function CategoriesProvider({ categories, children }) {
       return "#";
     }
 
-    // const menu_item = flatCategories.find(({url})=> url === pathname);
-    // if(menu_item?.nav_type === "custom_page"){
+    // const menu_items_item = flatCategories.find(({url})=> url === pathname);
+    // if(menu_items_item?.nav_type === "custom_page"){
     //   return product_urls[0];
     // }
 
@@ -201,13 +201,13 @@ export function CategoriesProvider({ categories, children }) {
   };
 
   const solana_categories = useMemo(() => {
-    return categories.map((item) => ({ ...item }));
-  }, [categories]);
+    return menu_items.map((item) => ({ ...item }));
+  }, [menu_items]);
 
   const flatCategories = useMemo(() => {
-    const _flatCategories = flattenCategories(categories);
+    const _flatCategories = flattenCategories(menu_items);
     return _flatCategories || [];
-  }, [categories]);
+  }, [menu_items]);
 
   const collectionsByCategory = useMemo(() => {
     const mapped = flatCategories
@@ -236,6 +236,7 @@ export function CategoriesProvider({ categories, children }) {
     <CategoriesContext.Provider
       value={{
         categories,
+        menu_items,
         solana_categories,
         flatCategories,
         isPriceVisible,

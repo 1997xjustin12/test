@@ -3,27 +3,11 @@ import API from "@searchkit/api";
 
 import {
   BaseNavObj,
-  burnerBuckets,
-  sizeBuckets,
   ES_INDEX,
   exclude_brands,
   exclude_collections,
   main_products,
   shouldApplyMainProductSort,
-  STAR_FILTERS,
-  sizeBucketKeys,
-  widthBucketKeys,
-  depthBucketKeys,
-  heightBucketKeys,
-  capacityBucketKeys,
-  refVentBucketKeys,
-  refHingeBucketKeys,
-  refOutdoorCertBucketKeys,
-  refClassBucketKeys,
-  refDailyIceBucketKeys,
-  refConfigBucketKeys,
-  refDrainTypeBucketKeys,
-  refNoOfZonesBucketKeys,
 } from "../../../app/lib/helpers";
 
 import COLLECTIONS_BY_CATEGORY from "../../../app/data/collections_by_category";
@@ -112,6 +96,14 @@ export default async function handler(req, res) {
       filter_key = check_filter.split(":")[0];
       filter_value = check_filter.split(":")[1];
       filter_type = check_filter.split(":")[2];
+    }
+
+    if (filter_key === "page_category1") {
+      filter_query.push({
+        term: {
+          "accentuate_data.category": filter_value,
+        },
+      });
     }
 
     if (filter_key === "page_category") {

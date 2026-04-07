@@ -48,7 +48,7 @@ const Panel = ({ header, children }) => {
   return (
     // border-gray-200 shadow border
     <div className="panel p-2">
-      {/* <button
+      <button
         onClick={() => setExpanded((prev) => !prev)}
         className="w-full flex items-center gap-[20px] justify-between"
       >
@@ -72,7 +72,7 @@ const Panel = ({ header, children }) => {
             <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" />
           </svg>
         )}
-      </button> */}
+      </button>
       <div className={`${expanded ? "" : "hidden"}`}>{children}</div>
     </div>
   );
@@ -311,6 +311,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               )}
 
             {((page_details && page_details?.nav_type === "brand") ||
+            (page_details && page_details?.nav_type === "category1") ||
               page_details?.name === "Search") && (
               <DynamicWidgets facets={["*"]}>
                 {filters.map((item) => (
@@ -530,14 +531,6 @@ export function URLHandler() {
   }
 
   useEffect(() => {
-    // Don't run URLHandler on /search page - let search context handle URL
-    // if (isSearchPage) {
-    //   console.log(
-    //     "[URLHandler] Skipping - on /search page, search context handles URL"
-    //   );
-    //   return;
-    // }
-
     if (results) {
       let url = new URL(window.location.href);
       const { refinementList, sortBy, range, page } = indexUiState;
@@ -582,36 +575,48 @@ export function URLHandler() {
 function ProductsSection({ category, search = "" }) {
   // search is assigned only on search page
   const url = typeof window !== "undefined" ? window.location.href : null;
-  const { flatCategories } = useSolanaCategories();
+  const { categories, flatCategories } = useSolanaCategories();
   const [pageDetails, setPageDetails] = useState(null);
   const [firstLoad, setFirstLoad] = useState(true);
   const [filterString, setFilterString] = useState("");
 
+  function getCategory1Deails(category){
+    const cat = categories.find(({slug})=> slug === category);
+    console.log("category",category);
+    console.log("categories",categories);
+    console.log("cat",cat);
+    return cat;
+  }
+
   useEffect(() => {
     if (category) {
       const details = flatCategories.find(({ url }) => url === category);
-      if (details) {
-        setPageDetails(details);
+      const use_details = details || getCategory1Deails(category);
+
+      if (use_details) {
+        setPageDetails(use_details);
 
         // Calculate filter string
         let result = "";
-        if (details?.nav_type === "category") {
-          result = `page_category:${details?.origin_name}${":" + details.filter_type}`;
-        } else if (details?.nav_type === "brand") {
-          result = `page_brand:${details?.origin_name}${":" + details.filter_type}`;
-        } else if (details?.nav_type === "custom_page") {
-          if (details?.name === "Search") {
+        if (use_details?.nav_type === "category") {
+          result = `page_category:${use_details?.origin_name}${":" + use_details.filter_type}`;
+        } else if (use_details?.nav_type === "brand") {
+          result = `page_brand:${use_details?.origin_name}${":" + use_details.filter_type}`;
+        } else if (use_details?.nav_type === "custom_page") {
+          if (use_details?.name === "Search") {
             result = `custom_page:Search:Search`;
           } else {
-            const page_name = details?.name;
+            const page_name = use_details?.name;
             if (BaseNavKeys.includes(page_name)) {
-              result = `custom_page:${page_name}:${details.filter_type}`;
+              result = `custom_page:${page_name}:${use_details.filter_type}`;
             } else {
               result = `custom_page:${
-                details?.collection_display?.name || "NA"
-              }:${details.filter_type}`;
+                use_details?.collection_display?.name || "NA"
+              }:${use_details.filter_type}`;
             }
           }
+        } else if(use_details?.nav_type === "category1"){
+          result = `page_category1:${use_details?.name}${":" + use_details.filter_type}`;
         }
 
         // console.log("filterString", result);
