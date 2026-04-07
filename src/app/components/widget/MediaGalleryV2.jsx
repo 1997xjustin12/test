@@ -380,4 +380,6 @@ const MediaGallery = ({ mediaItems = [] }) => {
   );
 };
 
+
+
 export default MediaGallery;
