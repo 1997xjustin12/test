@@ -1,6 +1,12 @@
 //  API functions that can be used for guest users
 //  API functions for auth user can be found in context/auth.js
 
+import {
+  ES_INDEX,
+  exclude_brands,
+  exclude_collections,
+} from "@/app/lib/helpers";
+
 export const getProductsByIds = async (ids) => {
   try {
     if (!ids) {
@@ -184,5 +190,68 @@ export const getProductsByCollectionId = async (collection_id) => {
       success: false,
       error: "getProductsByCollectionId Error",
     };
+  }
+};
+
+export const fetchSearchResultsWithCategories = async (searchTerm) => {
+  try {
+    const query = {
+      query: {
+        bool: {
+          must: [
+            { term: { published: true } },
+            {
+              bool: {
+                should: [
+                  {
+                    // Fuzzy search is fine for these standard fields
+                    multi_match: {
+                      query: searchTerm,
+                      fields: ["title^3", "product_category"],
+                      fuzziness: "AUTO"
+                    }
+                  },
+                  {
+                    // Exact/Partial match for the flattened field (No Fuzziness)
+                    match: {
+                      "accentuate_data.category": searchTerm
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          must_not: [
+            { terms: { "brand.keyword": exclude_brands } },
+            { terms: { "collections.name.keyword": exclude_collections } }
+          ]
+        }
+      },
+      aggs: {
+        unique_categories: {
+          terms: {
+            field: "accentuate_data.category",
+            size: 15
+          }
+        }
+      }
+    };
+
+    const res = await fetch("/api/es/shopify/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(query),
+    });
+
+    const data = await res.json();
+    const categoryBuckets = data?.aggregations?.unique_categories?.buckets || [];
+    const categories = categoryBuckets.map(bucket => ({
+      name: bucket.key,
+      count: bucket.doc_count
+    }));
+    return categories;
+  } catch (err) {
+    console.error("Search error:", err);
+    return [];
   }
 };

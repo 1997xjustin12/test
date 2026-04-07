@@ -258,6 +258,62 @@ export const filters = [
     },
     collapse: true,
   },
+  // {
+  //   label: "Category",
+  //   attribute: "product_category",
+  //   searchable: false,
+  //   type: "RefinementList",
+  //   runtime_mapping: null,
+  //   facet_attribute: {
+  //     attribute: "product_category",
+  //     type: "string",
+
+  //     facetQuery: () => {
+  //       const dynamicFilters = {};
+  //       COLLECTIONS_BY_CATEGORY.forEach((item) => {
+  //         // Build the filter object dynamically for each category
+  //         dynamicFilters[item.category_name] = {
+  //           terms: { "collections.name.keyword": item.collections },
+  //         };
+  //       });
+  //       return {
+  //         filters: {
+  //           filters: dynamicFilters,
+  //         },
+  //       };
+  //     },
+
+  //     facetResponse: (aggregation) => {
+  //       const buckets = aggregation.buckets || {};
+  //       const navData = COLLECTIONS_BY_CATEGORY || [];
+
+  //       // Use the order from your dynamic array
+  //       return navData.reduce((acc, item) => {
+  //         const key = item.category_name;
+  //         const count = buckets[key]?.doc_count ?? 0;
+  //         if (count > 0) acc[key] = count;
+  //         return acc;
+  //       }, {});
+  //     },
+
+  //     filterQuery: (field, value) => {
+  //       const navData = COLLECTIONS_BY_CATEGORY || [];
+  //       const selectedCategory = navData.find(
+  //         (item) => item.category_name === value,
+  //       );
+
+  //       if (selectedCategory) {
+  //         return {
+  //           terms: {
+  //             "collections.name.keyword": selectedCategory.collections,
+  //           },
+  //         };
+  //       }
+  //       return {};
+  //     },
+  //   },
+  //   collapse: true,
+  // },
   {
     label: "Category",
     attribute: "product_category",
@@ -266,51 +322,8 @@ export const filters = [
     runtime_mapping: null,
     facet_attribute: {
       attribute: "product_category",
+      field: "accentuate_data.category",
       type: "string",
-
-      facetQuery: () => {
-        const dynamicFilters = {};
-        COLLECTIONS_BY_CATEGORY.forEach((item) => {
-          // Build the filter object dynamically for each category
-          dynamicFilters[item.category_name] = {
-            terms: { "collections.name.keyword": item.collections },
-          };
-        });
-        return {
-          filters: {
-            filters: dynamicFilters,
-          },
-        };
-      },
-
-      facetResponse: (aggregation) => {
-        const buckets = aggregation.buckets || {};
-        const navData = COLLECTIONS_BY_CATEGORY || [];
-
-        // Use the order from your dynamic array
-        return navData.reduce((acc, item) => {
-          const key = item.category_name;
-          const count = buckets[key]?.doc_count ?? 0;
-          if (count > 0) acc[key] = count;
-          return acc;
-        }, {});
-      },
-
-      filterQuery: (field, value) => {
-        const navData = COLLECTIONS_BY_CATEGORY || [];
-        const selectedCategory = navData.find(
-          (item) => item.category_name === value,
-        );
-
-        if (selectedCategory) {
-          return {
-            terms: {
-              "collections.name.keyword": selectedCategory.collections,
-            },
-          };
-        }
-        return {};
-      },
     },
     collapse: true,
   },

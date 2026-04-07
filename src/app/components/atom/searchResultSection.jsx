@@ -33,10 +33,10 @@ const SimpleTextItem = ({ text }) => (
 );
 
 // Helper component for items with label (category, brand)
-const LabeledTextItem = ({ text, label }) => (
+const LabeledTextItem = ({ text, label, count }) => (
   <HoverContainer>
     <div className="text-[14px] group-hover:text-theme-600">{text}</div>
-    <div className="text-[10px] text-gray-500 font-normal">{label}</div>
+    <div className="text-[10px] text-gray-500 font-normal">{label} {count && <>&middot;&nbsp;{`${count} match${count===1?"":"es"}`}</>}</div>
   </HoverContainer>
 );
 
@@ -147,7 +147,7 @@ function SearchResultSection({ section, onOptionSelect }) {
           return {
             href: `${BASE_URL}/${item.url}`,
             key: `cat-result-${item.url}`,
-            content: <LabeledTextItem text={item.name} label={label} />,
+            content: <LabeledTextItem text={item.name} label={label} count={item?.count}/>,
           };
         case "brand":
           return {

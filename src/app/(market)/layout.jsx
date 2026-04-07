@@ -24,6 +24,7 @@ import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
 import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
+import { fetchUniqueCategories } from "@/app/lib/fn_server";
 
 import Script from "next/script";
 
@@ -86,6 +87,7 @@ export const dynamic = "force-dynamic";
 export default async function MarketLayout({ children }) {
   const deskHeadFootHeight = 656; //px
   const init_data = await init();
+  const categories = await fetchUniqueCategories();
 
   if (!init_data) {
     return (
@@ -124,10 +126,11 @@ export default async function MarketLayout({ children }) {
             <FreeShippingBanner />
             <ExtrasHeader />
             <CategoriesProvider
-              categories={menu.map((i) => ({
+              menu_items={menu.map((i) => ({
                 ...i,
                 is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
               }))}
+              categories={categories}
             >
               <CartProvider>
                 <CompareProductsProvider>

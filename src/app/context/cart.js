@@ -47,6 +47,7 @@ export const CartProvider = ({ children }) => {
   const [loadingCartItems, setLoadingCartItems] = useState(true);
   const [addedToCart, setAddedToCart] = useState(null);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [guestEmailTrigger, setGuestEmailTrigger] = useState(0);
   const [abandonedCartUser, setAbandonedCartUser] = useState(null);
 
   // for stale value
@@ -572,6 +573,7 @@ export const CartProvider = ({ children }) => {
       notifyCartUpdate();
       setAddToCartLoading(false);
       setAddedToCart(item);
+      setGuestEmailTrigger((prev) => prev + 1);
       return {
         code: 200,
         status: "success",
@@ -625,6 +627,7 @@ export const CartProvider = ({ children }) => {
       notifyCartUpdate();
       setAddToCartLoading(false);
       setAddedToCart(items);
+      setGuestEmailTrigger((prev) => prev + 1);
       return {
         code: 200,
         status: "success",
@@ -1006,7 +1009,7 @@ export const CartProvider = ({ children }) => {
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={handleCloseAddedToCart} />
-      <GuestEmailDialog isLoggedIn={isLoggedIn} cart={cart} />
+      <GuestEmailDialog isLoggedIn={isLoggedIn} addToCartTrigger={guestEmailTrigger} />
     </CartContext.Provider>
   );
 };
