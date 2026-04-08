@@ -1,14 +1,15 @@
 "use client";
 import { useReveal } from "@/app/hooks/useReveal";
 import { CATEGORIES } from "@/app/data/new-homepage";
+import { useSolanaCategories } from "@/app/context/category";
 import { ArrowIcon } from "@/app/components/new-design/ui/Icons";
 import Image from "next/image";
 import Link from "next/link";
 
-function CategoryCard({ title, desc, link, image, url }) {
+function CategoryCard({ name, description, slug, image }) {
   const ref = useReveal();
   return (
-    <Link href={url || "#"} prefetch={false}>
+    <Link href={slug ? `/category/${slug}` : "#"} prefetch={false}>
     <article
       ref={ref}
       className="
@@ -31,7 +32,7 @@ function CategoryCard({ title, desc, link, image, url }) {
         {/* The actual image using next/image */}
         <Image
           src={image} // The URL or static import of the image
-          alt={title}
+          alt={name}
           fill // Tells next/image to fill the parent container (needs position: relative)
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Helps with optimization
           className="object-cover transition-transform duration-500 hover:scale-105"
@@ -43,17 +44,17 @@ function CategoryCard({ title, desc, link, image, url }) {
         {/* Text Content */}
         <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
           <h3 className="font-serif text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-lg">
-            {title}
+            {name}
           </h3>
         </div>
       </div>
       {/* Body */}
       <div className="p-4 pb-5 bg-white dark:bg-stone-900">
         <p className="text-sm text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
-          {desc}
+          {description}
         </p>
         <div className="flex items-center gap-1.5 text-sm font-semibold text-fire group-hover:gap-2.5 transition-all duration-200">
-          {link} <ArrowIcon />
+          Shop {name} <ArrowIcon />
         </div>
       </div>
     </article>
@@ -62,6 +63,7 @@ function CategoryCard({ title, desc, link, image, url }) {
 }
 
 export default function Categories() {
+  const { categories } = useSolanaCategories();
   const hdrRef = useReveal();
   return (
     <section
@@ -88,8 +90,8 @@ export default function Categories() {
 
         {/* Grid: 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {CATEGORIES.map((c) => (
-            <CategoryCard key={c.title} {...c} />
+          {categories.map((c) => (
+            <CategoryCard key={`home-cat-cart-${c.slug}`} {...c} />
           ))}
         </div>
       </div>
