@@ -34,6 +34,7 @@ export default function NewsLetter() {
         <div>
           <div className="border inline-block">
             <form onSubmit={handleSubmit}>
+              <label htmlFor="email" className="sr-only">Email Address</label>
               <input
                 type="email"
                 name="email"
