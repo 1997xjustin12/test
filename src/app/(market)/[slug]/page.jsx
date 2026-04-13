@@ -1,22 +1,22 @@
-import { notFound } from "next/navigation";
-import { keys, redis } from "@/app/lib/redis";
-import { getPageData, BASE_URL } from "@/app/lib/helpers";
-import TuiHero from "@/app/components/template/tui_hero";
-import ProductsSection from "@/app/components/section/Products";
-import FeatureCategoriesSection from "@/app/components/section/HomePageFeatureCategories";
-import ShopifyProductsSection from "@/app/components/molecule/ProductsSection";
-import MobileLoader from "@/app/components/molecule/MobileLoader";
-import Faq from "@/app/components/molecule/Faq";
-import Reviews from "@/app/components/molecule/Reviews";
-import CategoriesCarousel from "@/app/components/molecule/CategoriesCarousel";
-import HeroNotice from "@/app/components/atom/HeroNotice";
-import NewsLetter from "@/app/components/section/NewsLetter";
-import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
-import BaseNavPage from "@/app/components/template/BaseNavItemPage";
-import Image from "next/image";
-import { STORE_NAME } from "@/app/lib/store_constants";
 
-const isShopify = true;
+// NEXT
+import { notFound } from "next/navigation";
+
+// HELPERS
+import { keys, redis } from "@/app/lib/redis";
+import { STORE_NAME } from "@/app/lib/store_constants";
+import { getRootByUrl, getPageData, BASE_URL } from "@/app/lib/helpers";
+
+// OLD UI
+import OldProductGallery from "@/app/components/pages/ProductGallery"
+
+// NEW UI
+import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
+
+// COMMON
+import BaseNavPage from "@/app/components/template/BaseNavItemPage";
+
+const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 const feat_carousel_items = [
   {
@@ -83,32 +83,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const Hero = ({ data }) => {
-  const useBanner = data?.banner?.img?.src;
-  if (!useBanner) return;
-
-  return (
-    <div className={`w-full mx-auto flex flex-col md:flex-row`}>
-      <div className={`w-full md:w-full relative overflow-hidden`}>
-        <div className="w-full relative isolate px-6 lg:px-8 bg-no-repeat bg-center bg-cover aspect-[414/77]">
-          {
-            <Image
-              src={useBanner}
-              alt={"Banner"}
-              className="w-full h-full object-contain"
-              fill
-              loading="eager"
-              priority={true}
-              quality={100}
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1200px"
-            />
-          }
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
   const menuData = await redis.get(defaultMenuKey);
@@ -119,50 +93,26 @@ export default async function GenericCategoryPage({ params }) {
     }))
   );
   const pageData = getPageData(slug, flatData);
+  const url = pageData?.url;
 
-  if (!pageData) return notFound();
+  if (!pageData || !url) return notFound();
+  const rootNav = getRootByUrl(menuData, url);
+
+  if (!rootNav) return notFound();
 
   if (pageData?.is_base_nav) return <BaseNavPage page_details={pageData} />;
 
+  const navConfig = {
+    root: rootNav,
+    url: url 
+  }
+
+  if(UIV2){
+    return (
+      <NewProductGallery slug={slug} config={navConfig}/>
+    )
+  }
   return (
-    <div>
-      <MobileLoader isLoading={!pageData} />
-      <HeroNotice data={pageData} />
-      <Hero data={pageData} />
-      {/* <TuiHero data={pageData} /> */}
-      <div className="px-1 md:px-[20px]">
-        {isShopify ? (
-          <ShopifyProductsSection category={slug} />
-        ) : (
-          <ProductsSection category={slug} />
-        )}
-
-        {pageData?.collections &&
-          Array.isArray(pageData.collections) &&
-          pageData.collections.length > 0 && (
-            <div className="container mx-auto flex flex-col gap-[50px]">
-              {pageData.collections.map((collection) => (
-                <CollectionCarouselWrap
-                  key={`collection-carousel-${collection?.mb_uid}`}
-                  data={collection}
-                />
-              ))}
-            </div>
-          )}
-
-        <Reviews />
-        {/* <CategoriesCarousel /> */}
-
-        <FeatureCategoriesSection items={feat_carousel_items} />
-
-        {pageData?.faqs &&
-          pageData?.faqs?.visible &&
-          pageData?.faqs?.data &&
-          Array.isArray(pageData.faqs.data) &&
-          pageData.faqs.data.length > 0 && <Faq data={pageData.faqs.data} />}
-
-        <NewsLetter />
-      </div>
-    </div>
+    <OldProductGallery pageData={pageData} slug={slug}/>
   );
 }

@@ -901,3 +901,17 @@ export const transformYesNo = (items) => {
     return sortKeys.indexOf(a.value) - sortKeys.indexOf(b.value);
   });
 };
+
+export function getRootByUrl(data, url) {
+    // Helper function to check if an object or any of its nested children match the URL
+    const hasMatch = (node, target) => {
+        if (node.url === target) return true;
+        if (node.children && node.children.length > 0) {
+            return node.children.some(child => hasMatch(child, target));
+        }
+        return false;
+    };
+
+    // Find the top-level object where the URL exists somewhere in its tree
+    return data.find(rootItem => hasMatch(rootItem, url));
+}

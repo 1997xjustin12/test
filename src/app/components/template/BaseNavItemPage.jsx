@@ -15,7 +15,7 @@ async function BaseNavItemPage({ page_details }) {
   // console.log("[TEST] page_details:", page_details);
 
   return (
-    <div className="container mx-auto p-3">
+    <div className="max-w-7xl mx-auto p-3">
       <div className="my-3">
         <Link prefetch={false} href={BASE_URL} className="hover:underline">
           Home

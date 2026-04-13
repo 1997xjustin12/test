@@ -1,5 +1,6 @@
 "use server";
 import {
+  BASE_URL,
   ES_INDEX,
   exclude_brands,
   exclude_collections,
@@ -152,6 +153,20 @@ function getCategorySubs(category = "") {
   return uniqueSub;
 }
 
+function getCategoryDescription(category = "") {
+  const desc = {
+    "grills-and-smokers": "Premium gas, charcoal, and wood-pellet grills designed for professional-grade backyard searing and smoking.",
+    "heating-and-fire": "Enhance your outdoor ambiance with high-efficiency fireplaces, fire pits, and patio heaters for year-round warmth.",
+    "outdoor-refrigeration": "Keep beverages chilled and ingredients fresh with weather-resistant outdoor refrigerators, kegerators, and wine coolers.",
+    "installation-and-parts": "Essential mounting kits, gas lines, and structural components to ensure a safe and seamless outdoor kitchen setup.",
+    "outdoor-kitchen-components": "Durable stainless steel storage drawers, access doors, and built-in islands to complete your custom outdoor space.",
+    accessories: "Must-have BBQ tools, protective covers, and specialized cookware to maximize your outdoor cooking experience.",
+    "replacement-parts": "OEM burners, igniters, and grates to maintain your equipment and extend the lifespan of your favorite outdoor appliances.",
+  };
+
+  return desc[createSlug(category)] || "";
+}
+
 export async function fetchUniqueCategories() {
   try {
     const ESURL = process.env.NEXT_ES_URL;
@@ -200,9 +215,9 @@ export async function fetchUniqueCategories() {
           name: b.key,
           count: b.doc_count,
           slug: slug,
-          slug: slug,
           image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
           type: getCategoryType(b.key),
+          description: getCategoryDescription(b.key),
           sub: (getCategorySubs(b.key) || []).join(" · "),
           nav_type: "category1",
         };
@@ -273,234 +288,66 @@ export async function fetchBrands() {
   }
 }
 
-// {
-//     "id": "8ohr6y5oc",
-//     "menu_id": "8ohr6y5oc",
-//     "parent_id": "",
-//     "key": "Freestanding Grills",
-//     "name": "Freestanding Grills",
-//     "url": "freestanding-grills",
-//     "slug": "freestanding-grills",
-//     "origin_name": "Freestanding Grills",
-//     "children": [
-//         {
-//             "id": "hcnzcpay2",
-//             "menu_id": "hcnzcpay2",
-//             "parent_id": "",
-//             "key": "Shop Blaze Freestanding Grills",
-//             "name": "Shop Blaze Freestanding Grills",
-//             "url": "shop-blaze-freestanding-grills",
-//             "slug": "shop-blaze-freestanding-grills",
-//             "origin_name": "Shop Blaze Freestanding Grills",
-//             "children": [],
-//             "price_visibility": "hide",
-//             "meta_title": "",
-//             "meta_description": "",
-//             "banner": {
-//                 "img": {
-//                     "src": "/images/banner/shop-blaze-freestanding-grills.webp",
-//                     "alt": "Banner Image"
-//                 },
-//                 "title": "",
-//                 "tag_line": ""
-//             },
-//             "page_contact_number": null,
-//             "searchable": true,
-//             "nav_visibility": true,
-//             "nav_type": "custom_page",
-//             "order": 0,
-//             "parentId": "8ohr6y5oc",
-//             "depth": 1,
-//             "index": 0,
-//             "isLast": false,
-//             "parent": null,
-//             "collection_display": {
-//                 "id": 955,
-//                 "name": "Blaze Freestanding Grills",
-//                 "slug": "blaze-freestanding-grills",
-//                 "image": null,
-//                 "description": "",
-//                 "is_active": true,
-//                 "categories": [],
-//                 "brands": [],
-//                 "tags": [],
-//                 "created_at": "2025-10-09T07:55:27.727884Z",
-//                 "updated_at": "2025-10-09T07:55:27.727920Z"
-//             },
-//             "filter_type": "freestanding-grills-x-brands",
-//             "feature_image": "/images/feature/blaze-freestanding-grills.webp"
-//         },
-//         {
-//             "id": "6t1evg64s",
-//             "menu_id": "6t1evg64s",
-//             "parent_id": "",
-//             "key": "Shop Bull Freestanding Grills",
-//             "name": "Shop Bull Freestanding Grills",
-//             "url": "shop-bull-freestanding-grills",
-//             "slug": "shop-bull-freestanding-grills",
-//             "origin_name": "Shop Bull Freestanding Grills",
-//             "children": [],
-//             "price_visibility": "hide",
-//             "meta_title": "",
-//             "meta_description": "",
-//             "banner": {
-//                 "img": {
-//                     "src": "/images/banner/shop-bull-freestanding-grills.webp",
-//                     "alt": "Banner Image"
-//                 },
-//                 "title": "",
-//                 "tag_line": ""
-//             },
-//             "page_contact_number": null,
-//             "searchable": true,
-//             "nav_visibility": true,
-//             "nav_type": "custom_page",
-//             "order": 1,
-//             "parentId": "8ohr6y5oc",
-//             "depth": 1,
-//             "index": 1,
-//             "isLast": false,
-//             "parent": null,
-//             "feature_image": "/images/feature/bull-freestanding-grills.webp",
-//             "collection_display": {
-//                 "id": 957,
-//                 "name": "Bull Freestanding Grills",
-//                 "slug": "bull-freestanding-grills",
-//                 "image": null,
-//                 "description": "",
-//                 "is_active": true,
-//                 "categories": [],
-//                 "brands": [],
-//                 "tags": [],
-//                 "created_at": "2025-10-09T08:05:04.881608Z",
-//                 "updated_at": "2025-10-09T08:05:04.881626Z"
-//             },
-//             "filter_type": "freestanding-grills-x-brands"
-//         },
-//         {
-//             "id": "j8wbs51n0",
-//             "menu_id": "j8wbs51n0",
-//             "parent_id": "",
-//             "key": "Shop Twin Eagles Freestanding Grills",
-//             "name": "Shop Twin Eagles Freestanding Grills",
-//             "url": "shop-twin-eagles-freestanding-grills",
-//             "slug": "shop-twin-eagles-freestanding-grills",
-//             "origin_name": "Shop Twin Eagles Freestanding Grills",
-//             "children": [],
-//             "price_visibility": "hide",
-//             "meta_title": "",
-//             "meta_description": "",
-//             "banner": {
-//                 "img": {
-//                     "src": "/images/banner/shop-twin-eagles-freestanding-grills.webp",
-//                     "alt": "Banner Image"
-//                 },
-//                 "title": "",
-//                 "tag_line": ""
-//             },
-//             "page_contact_number": null,
-//             "searchable": true,
-//             "nav_visibility": true,
-//             "nav_type": "custom_page",
-//             "order": 2,
-//             "parentId": "8ohr6y5oc",
-//             "depth": 1,
-//             "index": 2,
-//             "isLast": false,
-//             "parent": null,
-//             "collection_display": {
-//                 "id": 959,
-//                 "name": "Twin Eagles Freestanding Grills",
-//                 "slug": "twin-eagles-freestanding-grills",
-//                 "image": null,
-//                 "description": "",
-//                 "is_active": true,
-//                 "categories": [],
-//                 "brands": [],
-//                 "tags": [],
-//                 "created_at": "2025-10-09T08:53:09.258639Z",
-//                 "updated_at": "2025-10-09T08:53:09.258657Z"
-//             },
-//             "filter_type": "freestanding-grills-x-brands",
-//             "feature_image": "/images/feature/twin-eagles-freestanding-grills.webp"
-//         },
-//         {
-//             "id": "zvnxn2g3c",
-//             "menu_id": "zvnxn2g3c",
-//             "parent_id": "",
-//             "key": "Shop All Freestanding Grills",
-//             "name": "Shop All Freestanding Grills",
-//             "url": "shop-all-freestanding-grills",
-//             "slug": "shop-all-freestanding-grills",
-//             "origin_name": "Shop All Freestanding Grills",
-//             "children": [],
-//             "price_visibility": "hide",
-//             "meta_title": "",
-//             "meta_description": "",
-//             "banner": {
-//                 "img": {
-//                     "src": "/images/banner/shop-all-freestanding-grills.webp",
-//                     "alt": "Banner Image"
-//                 },
-//                 "title": "",
-//                 "tag_line": ""
-//             },
-//             "page_contact_number": null,
-//             "searchable": true,
-//             "nav_visibility": true,
-//             "nav_type": "custom_page",
-//             "order": 3,
-//             "parentId": "8ohr6y5oc",
-//             "depth": 1,
-//             "index": 3,
-//             "isLast": true,
-//             "parent": null,
-//             "collection_display": {
-//                 "id": 962,
-//                 "name": "Shop All Freestanding Grills",
-//                 "slug": "shop-all-freestanding-grills",
-//                 "image": null,
-//                 "description": "",
-//                 "is_active": true,
-//                 "categories": [],
-//                 "brands": [],
-//                 "tags": [
-//                     "Freestanding Charcoal Grills",
-//                     "Freestanding Electric Grills",
-//                     "Freestanding Gas Grills",
-//                     "Freestanding Kamado Grills",
-//                     "Freestanding Pellet Grills",
-//                     "Shop All Freestanding Grills"
-//                 ],
-//                 "created_at": "2025-10-28T07:37:00.932340Z",
-//                 "updated_at": "2025-10-28T07:41:40.649518Z"
-//             },
-//             "filter_type": "freestanding-grills",
-//             "feature_image": "/images/feature/freestanding-grills.webp"
-//         }
-//     ],
-//     "price_visibility": "hide",
-//     "meta_title": "",
-//     "meta_description": "",
-//     "banner": {
-//         "img": {
-//             "src": null,
-//             "alt": ""
-//         },
-//         "title": "",
-//         "tag_line": ""
-//     },
-//     "page_contact_number": null,
-//     "searchable": true,
-//     "nav_visibility": true,
-//     "nav_type": "custom_page",
-//     "order": 4,
-//     "parentId": null,
-//     "depth": 0,
-//     "index": 4,
-//     "isLast": false,
-//     "parent": null,
-//     "collapsed": true,
-//     "filter_type": "freestanding-grills",
-//     "is_base_nav": true
-// }
+export async function getCollectionProducts(id) {
+  try {
+    // 1. Fetch from your backend (external URL is safe during build)
+    const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/collections/collection-products/${id}`;
+    const key = `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
+        Authorization: key,
+      },
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
+
+    if (!response.ok) throw new Error("Backend failed to respond");
+
+    const raw_collection = await response.json();
+
+    // 2. Fetch from Elasticsearch
+    const ESURL = process.env.NEXT_ES_URL;
+    const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
+
+    const es_query = {
+      query: {
+        bool: {
+          filter: [
+            {
+              terms: {
+                "handle.keyword": raw_collection.map((item) => item?.handle),
+              },
+            },
+            {
+              term: { published: true },
+            },
+          ],
+        },
+      },
+    };
+
+    const esResponse = await fetch(`${ESURL}/${ES_INDEX}/_search`, {
+      method: "POST",
+      headers: {
+        Authorization: ESApiKey,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(es_query),
+      next: { revalidate: 3600 }
+    });
+
+    const data = await esResponse.json();
+
+    // 3. RETURN the data directly (Don't use res.status)
+    return data?.hits?.hits?.map((item) => item?._source) || [];
+
+  } catch (error) {
+    console.error("Data Fetch Error:", error);
+    // Return empty array so the UI doesn't crash if the search fails
+    return []; 
+  }
+}
