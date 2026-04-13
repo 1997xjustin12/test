@@ -169,11 +169,29 @@ const ProductCountUpdater = () => {
   return null;
 };
 
+const ScrollOnPaginate = ({ targetRef }) => {
+  const { currentRefinement } = usePagination();
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (targetRef?.current) {
+      targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [currentRefinement]);
+
+  return null;
+};
+
 const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const { status, results } = useInstantSearch();
   const [loadHint, setLoadHint] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
   const hasLoadedResults = useRef(false);
+  const productSectionRef = useRef(null);
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -341,7 +359,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               </Link>
             </div>
           </div>
-          <div className="search-panel__results pfd-product-section">
+          <div ref={productSectionRef} className="search-panel__results pfd-product-section">
             <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
               <DisplayedItems />
               <SortBy
@@ -355,6 +373,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             </div>
             <QueryRulesBanner />
 
+            <ScrollOnPaginate targetRef={productSectionRef} />
             <Hits
               hitComponent={(props) => (
                 <SPProductCard {...props} page_details={page_details} />
