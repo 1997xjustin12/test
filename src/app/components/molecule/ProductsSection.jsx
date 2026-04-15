@@ -50,23 +50,28 @@ const sortPriceItems = (items) => {
 function DisplayedItems() {
   const { nbHits } = useStats();
   const { currentRefinement, nbPages } = usePagination();
-  
+
   const perPage = hitsPerPage ?? 30;
-  
+
   const start = nbHits === 0 ? 0 : currentRefinement * perPage + 1;
   const end = Math.min((currentRefinement + 1) * perPage, nbHits);
 
   if (nbHits === 0) {
     return (
-      <p className="text-sm text-neutral-500">No products found for this search.</p>
+      <p className="text-sm text-neutral-500">
+        No products found for this search.
+      </p>
     );
   }
 
   return (
     <p className="text-sm text-neutral-500 dark:text-neutral-400">
-      Showing <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+      Showing{" "}
+      <span className="font-semibold text-neutral-800 dark:text-neutral-200">
         {start}–{end}
-      </span> of <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+      </span>{" "}
+      of{" "}
+      <span className="font-semibold text-neutral-800 dark:text-neutral-200">
         {nbHits.toLocaleString()} products
       </span>
     </p>
@@ -96,10 +101,32 @@ const FilterGroup = ({ header, children }) => {
         <h5 className=" font-semibold text-[13px] text-stone-800">{header}</h5>
         {expanded ? (
           // boxicons:chevron-up-filled
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="text-[#6e6e6e]" viewBox="0 0 24 24"><path fill="currentColor" d="m7.71 15.71l4.29-4.3l4.29 4.3l1.42-1.42L12 8.59l-5.71 5.7z"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            className="text-[#6e6e6e]"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="m7.71 15.71l4.29-4.3l4.29 4.3l1.42-1.42L12 8.59l-5.71 5.7z"
+            />
+          </svg>
         ) : (
           // boxicons:chevron-down-filled
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="text-[#6e6e6e]" viewBox="0 0 24 24"><path fill="currentColor" d="m12 15.41l5.71-5.7l-1.42-1.42l-4.29 4.3l-4.29-4.3l-1.42 1.42z"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            className="text-[#6e6e6e]"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="m12 15.41l5.71-5.7l-1.42-1.42l-4.29 4.3l-4.29-4.3l-1.42 1.42z"
+            />
+          </svg>
         )}
       </button>
       <div className={`pl-4 py-1 ${expanded ? "" : "hidden"}`}>{children}</div>
@@ -247,10 +274,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             <div className="border rounded-xl">
               <div className="text-sm font-semibold p-4">Filters</div>
               <CurrentRefinements />
-              {page_details &&
-                page_details?.nav_type === "custom_page" &&
-                page_details?.nav_type !== "brand" &&
-                page_details?.name !== "Search" && (
                   <DynamicWidgets facets={["*"]}>
                     {filters
                       .filter(
@@ -304,42 +327,6 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
                       </Panel>
                     </div>
                   </DynamicWidgets>
-                )}
-
-              {((page_details && page_details?.nav_type === "brand") ||
-                page_details?.name === "Search") && (
-                <DynamicWidgets facets={["*"]}>
-                  {filters.map((item) => (
-                    <div
-                      key={`filter-item-${item?.attribute}`}
-                      className={`my-1 facet_${item?.attribute}`}
-                    >
-                      <Panel header={item?.label}>
-                        {item?.attribute && item?.attribute !== "price" ? (
-                          <>
-                            {item?.attribute !== "ratings" ? (
-                              <RefinementList
-                                attribute={item?.attribute}
-                                searchable={item?.searchable}
-                                showMore={item?.collapse || true}
-                              />
-                            ) : (
-                              <RefinementList
-                                attribute={item?.attribute}
-                                searchable={item?.searchable}
-                                classNames={{ labelText: "stars" }}
-                                showMore={item?.collapse || true}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          <RangeInput attribute="price" />
-                        )}
-                      </Panel>
-                    </div>
-                  ))}
-                </DynamicWidgets>
-              )}
             </div>
             <div className="relative w-full aspect-w-3 aspect-h-4 mt-2">
               <Link
@@ -359,15 +346,24 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
               </Link>
             </div>
           </div>
-          <div ref={productSectionRef} className="search-panel__results pfd-product-section">
+          <div
+            ref={productSectionRef}
+            className="search-panel__results pfd-product-section"
+          >
             <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
               <DisplayedItems />
               <SortBy
                 items={[
                   { label: "Most Popular", value: `${es_index}_popular` },
                   { label: "Newest", value: `${es_index}_newest` },
-                  { label: "Price: Low to High", value: `${es_index}_price_asc` },
-                  { label: "Price: High to Low", value: `${es_index}_price_desc` },
+                  {
+                    label: "Price: Low to High",
+                    value: `${es_index}_price_asc`,
+                  },
+                  {
+                    label: "Price: High to Low",
+                    value: `${es_index}_price_desc`,
+                  },
                 ]}
               />
             </div>
@@ -586,11 +582,11 @@ function ProductsSection({ category, search = "" }) {
   const [firstLoad, setFirstLoad] = useState(true);
   const [filterString, setFilterString] = useState("");
 
-  function getCategory1Deails(category){
-    const cat = categories.find(({slug})=> slug === category);
-    console.log("category",category);
-    console.log("categories",categories);
-    console.log("cat",cat);
+  function getCategory1Deails(category) {
+    const cat = categories.find(({ slug }) => slug === category);
+    console.log("category", category);
+    console.log("categories", categories);
+    console.log("cat", cat);
     return cat;
   }
 
@@ -621,7 +617,7 @@ function ProductsSection({ category, search = "" }) {
               }:${use_details.filter_type}`;
             }
           }
-        } else if(use_details?.nav_type === "category1"){
+        } else if (use_details?.nav_type === "category1") {
           result = `page_category1:${use_details?.name}${":" + use_details.filter_type}`;
         }
 
@@ -644,7 +640,9 @@ function ProductsSection({ category, search = "" }) {
 
   return (
     <>
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 ${firstLoad ? "" : "hidden"}`}>
+      <div
+        className={`max-w-7xl mx-auto px-4 sm:px-6 ${firstLoad ? "" : "hidden"}`}
+      >
         <div className="mt-5">
           <SkeletonLoader />
         </div>
