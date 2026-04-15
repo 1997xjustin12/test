@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import {BASE_URL} from "@/app/lib/helpers";
 import Link from "next/link";
 import {
   SEARCH_SUGGESTIONS,
@@ -263,7 +264,7 @@ export default function Navbar() {
                 className="relative group flex items-center"
               >
                 <Link
-                  href={`/${url}`}
+                  href={`${BASE_URL}/${url}`}
                   prefetch={false}
                   onClick={(e) => {
                     e.preventDefault();
@@ -295,7 +296,7 @@ export default function Navbar() {
                 >
                   {/* Parent category link */}
                   <Link
-                    href={`/${url}`}
+                    href={`${BASE_URL}/${url}`}
                     onClick={() => setLockedMenu(null)}
                     className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-fire transition-colors group/parent"
                   >
@@ -309,7 +310,7 @@ export default function Navbar() {
                     {children.map((c) => (
                       <Link
                         key={`desktop-child-nav-item-${c.id}`}
-                        href={`${c?.url}`}
+                        href={`${BASE_URL}/${c?.url}`}
                         onClick={() => setLockedMenu(null)}
                         className="block px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors"
                       >
@@ -323,7 +324,7 @@ export default function Navbar() {
           })}
           {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
           <Link
-            href="/brand/eloquence"
+            href={`${BASE_URL}/brand/eloquence`}
             className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
           >
             Current Deals 🔥
@@ -346,7 +347,7 @@ export default function Navbar() {
             {NAV_LINKS.map(({ name, url, id }) => (
               <Link
                 key={`mobile-nav-item-${id}`}
-                href={`/${url}`}
+                href={`${BASE_URL}/${url}`}
                 prefetch={false}
                 className="px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
               >
@@ -355,7 +356,7 @@ export default function Navbar() {
             ))}
             {/* <Link href="#" className="px-3 py-2.5 text-sm font-semibold text-fire">Open Box</Link> */}
             <Link
-              href="/brand/eloquence"
+              href={`${BASE_URL}/brand/eloquence`}
               className="px-3 py-2.5 text-sm font-semibold text-fire"
             >
               Current Deals 🔥

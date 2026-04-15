@@ -7,25 +7,7 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 import ProductsSection from "@/app/components/molecule/ProductsSection";
 import Link from "next/link";
 
-function BreadCrumbs({ category }) {
-  const category_slug = createSlug(category);
-  return (
-    <div>
-      <Link prefetch={false} href="/">
-        Home
-      </Link>
-      /{" "}
-      <Link prefetch={false} href="/categories">
-        Categories
-      </Link>{" "}
-      /{" "}
-      <Link prefetch={false} href={`/category/${category_slug}`}>
-        {category}
-      </Link>
-    </div>
-  );
-}
-
+const CONTAINER_CLASS = process.env.NEXT_PUBLIC_UIV2 ? "max-w-[1240px]": "container";
 export function CategoryHero({ category }) {
   return (
     <section className="relative overflow-hidden bg-[#080200] min-h-[300px] sm:min-h-[340px] flex items-center">
@@ -50,7 +32,7 @@ export function CategoryHero({ category }) {
         </div>
       </div>
 
-      <div className="relative container mx-auto px-5 sm:px-8 py-16 sm:py-24 w-full">
+      <div className={`relative ${CONTAINER_CLASS} mx-auto px-5 sm:px-8 py-16 sm:py-24 w-full`}>
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-white/30 mb-5">
           {[

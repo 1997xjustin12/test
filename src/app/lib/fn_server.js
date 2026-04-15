@@ -141,6 +141,11 @@ function getCategorySubs(category = "") {
       "Control Valve",
       "Pilot Assembly",
     ],
+    "deals": [
+      "Clearance Sale",
+      "Package Deals",
+      "Open Box"
+    ],
   };
 
   const extracted = subs[createSlug(category)];
@@ -162,6 +167,7 @@ function getCategoryDescription(category = "") {
     "outdoor-kitchen-components": "Durable stainless steel storage drawers, access doors, and built-in islands to complete your custom outdoor space.",
     accessories: "Must-have BBQ tools, protective covers, and specialized cookware to maximize your outdoor cooking experience.",
     "replacement-parts": "OEM burners, igniters, and grates to maintain your equipment and extend the lifespan of your favorite outdoor appliances.",
+    "deals": "Exclusive savings on top-tier outdoor appliances and essential gear to help you build your dream kitchen for less."
   };
 
   return desc[createSlug(category)] || "";

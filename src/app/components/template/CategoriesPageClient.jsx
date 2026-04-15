@@ -4,19 +4,8 @@ import { useSolanaCategories } from "@/app/context/category";
 import {STORE_CONTACT} from "@/app/lib/store_constants";
 
 // const CONTAINER_CLASS = "max-w-7xl";
-const CONTAINER_CLASS = "container";
+const CONTAINER_CLASS = process.env.NEXT_PUBLIC_UIV2 ? "max-w-[1240px]":"container";
 
-const BRANDS = [
-  "Napoleon",
-  "Majestic",
-  "Regency",
-  "Dimplex",
-  "Heat & Glo",
-  "Isokern",
-  "Broil King",
-  "Weber",
-  "Twin Eagles",
-];
 const TRENDING = [
   { label: "Linear Gas Fireplaces", badge: "🔥 Hot" },
   { label: "Electric Wall Mounts", badge: "✨ New" },
