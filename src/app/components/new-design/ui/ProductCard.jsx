@@ -74,7 +74,7 @@ function ProductCard({ hit, page_details, onCompare }) {
   }
 
   const product = useMemo(() => {
-    console.log("hit", hit);
+    // console.log("hit", hit);
     const id = hit?.product_id;
     const badge = "bestseller";
     const ratings = parseInt(hit?.ratings?.rating_count?.replace("'", "") || 0, 10);
@@ -90,7 +90,7 @@ function ProductCard({ hit, page_details, onCompare }) {
       rating: ratings,
     };
 
-    console.log("result", result);
+    // console.log("result", result);
     return result;
   }, [hit]);
 

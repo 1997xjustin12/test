@@ -482,7 +482,7 @@ export const refOutdoorCertBuckets = {
   ETL: "Edison Testing Laboratories (ETL)",
   UL: "Underwriters Laboratories (UL)",
   NSF: "NSF Certified",
-  "NSF Certified": "NSF Certified"
+  "NSF Certified": "NSF Certified",
 };
 
 export const refClassBuckets = {
@@ -733,21 +733,20 @@ export const formatToInches = (items) => {
   }));
 };
 
-
 export const decimalToFraction = (decimal) => {
   if (decimal === null || decimal === undefined) return "";
-  
+
   // 1. Handle whole numbers immediately
   if (decimal % 1 === 0) return decimal.toString();
 
   const wholeNumber = Math.floor(decimal);
-  
+
   // 2. Work only with the fractional part
   let fractionalPart = decimal - wholeNumber;
-  
+
   // 3. Use a fixed precision (e.g., 10^8) to avoid floating point errors
   // instead of trying to count string length
-  const precision = 100000000; 
+  const precision = 100000000;
   let numerator = Math.round(fractionalPart * precision);
   let denominator = precision;
 
@@ -767,84 +766,82 @@ export const decimalToFraction = (decimal) => {
   denominator /= commonDivisor;
 
   // 6. Return formatted string
-  return wholeNumber === 0 
-    ? `${numerator}/${denominator}` 
+  return wholeNumber === 0
+    ? `${numerator}/${denominator}`
     : `${wholeNumber} ${numerator}/${denominator}`;
-}
-
+};
 
 export const transformNumber = (value) => {
-  if(!value) return "";
-  return Number(value)
-}
+  if (!value) return "";
+  return Number(value);
+};
 
 export const transformFilterNumber = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumber(item.value),
   }));
-}
+};
 
 export const transformNumberBurners = (value) => {
-  if(!value) return "";
-  return Number(value) + "-Burner"
-}
+  if (!value) return "";
+  return Number(value) + "-Burner";
+};
 
 export const transformFilterNumberBurners = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumberBurners(item.value),
   }));
-}
+};
 
 export const transformNumberDoors = (value) => {
-  if(!value) return "";
-  return Number(value) + "-Door"
-}
+  if (!value) return "";
+  return Number(value) + "-Door";
+};
 
 export const transformFilterNumberDoors = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumberDoors(item.value),
   }));
-}
+};
 
-export const transformNumberSize = (value="") => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + " Inches"
-}
+export const transformNumberSize = (value = "") => {
+  if (!value) return "";
+  return decimalToFraction(Number(value)) + " Inches";
+};
 
 export const transformFilterNumberSize = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumberSize(item.value),
   }));
-}
-
+};
 
 export const transformNumberDrawers = (value) => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + "-Drawer"
-}
+  if (!value) return "";
+  return decimalToFraction(Number(value)) + "-Drawer";
+};
 
 export const transformFilterNumberDrawers = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumberDrawers(item.value),
   }));
-}
+};
 
 export const transformNumberRacks = (value) => {
-  if(!value) return "";
-  return decimalToFraction(Number(value)) + "-Rack"
-}
+  if (!value) return "";
+  return decimalToFraction(Number(value)) + "-Rack";
+};
 
 export const transformFilterNumberRacks = (items) => {
   return items.map((item) => ({
     ...item,
     label: transformNumberRacks(item.value),
   }));
-}
+};
 
 export const transformDimension = (value) => {
   if (!value) return "";
@@ -855,45 +852,51 @@ export const transformDimension = (value) => {
     .split("x")
     .map((part, index) => {
       const trimmed = part.trim();
-      
+
       // Handle cases where there might be an extra 'x' or empty space
       if (trimmed === "") return "";
 
       const fraction = decimalToFraction(trimmed);
-      
+
       // Only attach a suffix if we have one defined for this index
       const label = suf[index] ? ` ${suf[index]}` : "";
-      
+
       return `${fraction}${label}`;
     })
-    .filter(part => part !== "") // Remove empty segments
+    .filter((part) => part !== "") // Remove empty segments
     .join(" x ");
-}
+};
 
 export const transformFilterDimensions = (items) => {
-  return items.map((item)=>({
+  return items.map((item) => ({
     ...item,
-    label: transformDimension(item.value)
-  }))
-}
+    label: transformDimension(item.value),
+  }));
+};
 
 export const transformWeight = (value) => {
-  if(!value) return "";
+  if (!value) return "";
   return `${Number(value)} lbs`;
-}
+};
 
 export const transformFilterWeight = (items) => {
-  return items.map(item=>({...item, label: transformWeight(item?.value)}))
-} 
+  return items.map((item) => ({
+    ...item,
+    label: transformWeight(item?.value),
+  }));
+};
 
 export const transformGrillArea = (value) => {
-  if(!value) return "";
+  if (!value) return "";
   return `${Number(value)} Sq. Inches`;
-}
+};
 
 export const transformFilterGrillArea = (items) => {
-  return items.map(item=>({...item, label: transformGrillArea(item?.value)}))
-} 
+  return items.map((item) => ({
+    ...item,
+    label: transformGrillArea(item?.value),
+  }));
+};
 
 export const transformYesNo = (items) => {
   const sortKeys = ["Yes", "No"];
@@ -903,15 +906,200 @@ export const transformYesNo = (items) => {
 };
 
 export function getRootByUrl(data, url) {
-    // Helper function to check if an object or any of its nested children match the URL
-    const hasMatch = (node, target) => {
-        if (node.url === target) return true;
-        if (node.children && node.children.length > 0) {
-            return node.children.some(child => hasMatch(child, target));
-        }
-        return false;
-    };
+  // Helper function to check if an object or any of its nested children match the URL
+  const hasMatch = (node, target) => {
+    if (node.url === target) return true;
+    if (node.children && node.children.length > 0) {
+      return node.children.some((child) => hasMatch(child, target));
+    }
+    return false;
+  };
 
-    // Find the top-level object where the URL exists somewhere in its tree
-    return data.find(rootItem => hasMatch(rootItem, url));
+  // Find the top-level object where the URL exists somewhere in its tree
+  return data.find((rootItem) => hasMatch(rootItem, url));
+}
+
+function getCategoryType(category = "") {
+  // used for displaying categories in categories page
+  switch (category) {
+    case "Grills & Smokers":
+    case "Heating & Fire":
+    case "Outdoor Kitchen Components":
+    case "Outdoor Refrigeration":
+      return "outdoor";
+    case "Installation & Parts":
+    case "Replacement Parts":
+      return "technical";
+    default:
+      return "general";
+  }
+}
+
+function getCategorySubs(category = "") {
+  const subs = {
+    "grills-and-smokers": [
+      "Gas Grill",
+      "Kamado Grill",
+      "Charcoal Grill",
+      "Flat Top Grill",
+      "Pizza Oven",
+      "Electric Grill",
+      "Wood Grill",
+      "Pellet Grill",
+      "Pellet Grill/Smoker",
+    ],
+    "heating-and-fire": [
+      "Patio Heater",
+      "Fireplace",
+      "Firebowl",
+      "Fire Pit Table",
+      "Firebox",
+      "Log Sets",
+      "Screens",
+    ],
+    "outdoor-refrigeration": [
+      "Compact Refrigerator",
+      "Beverage Cooler",
+      "Drawer Refrigerator",
+      "Ice Maker",
+      "Kegerator",
+      "Ice Bin Cooler",
+      "Wine Cooler",
+      "Freezer",
+      "Beverage Center",
+      "Outdoor Refrigerator",
+      "Beverage Refrigerator",
+      "Convertible Refrigerator",
+      "Wine Cellar + Kegerator",
+    ],
+    "installation-and-parts": [
+      "Refrigerator Door Sleeve",
+      "Trim Kit",
+      "Insulating Liner",
+      "Insulated Sleeve",
+      "Insulated Jacket",
+      "Insulating Jacket",
+      "Insulation Liner",
+      "Zero Clearance Liner",
+      "Clearance Liner",
+      "Insulated Liner",
+      "Liner",
+      "Grill Liner",
+      "Trim or Surround",
+      "Kamado Sleeve",
+      "Recess Kit",
+      "Mounting Bracket",
+      "Tube Suspension Kit",
+      "Recess Kit/Replacement Part",
+      "Controller/Recess Kit",
+      "Vent Cap",
+      "Protector Plate",
+      "Conversion Kits",
+    ],
+    "outdoor-kitchen-components": [
+      "Grill Center",
+      "Modano Island",
+      "Storage Drawers",
+      "Propane Tank Bin",
+      "Storage Drawer",
+      "Trash Bin",
+      "Paper Towel Dispenser",
+      "Access Door",
+      "Ice Bin",
+      "Door & Drawer Combo",
+      "Storage Pantry",
+      "Ice Bin and Storage",
+      "Ice Bin And Storage",
+      "Spice Rack",
+      "Outdoor Kitchen Cabinet & Storage",
+      "Warming Drawer",
+      "Cabinet",
+      "Storage Package",
+      "Trash Chute",
+      "Tank Tables",
+    ],
+    accessories: [
+      "Kegerator Tap Kit",
+      "Adaptor",
+      "Wind Guard",
+      "Accessory",
+      "Cart",
+      "Grill Handle",
+      "Steel Grid Cover",
+      "Cart Bracket",
+      "Bar Accessory",
+      "Extension Hose",
+      "GFRC Cover",
+      "Fire Bowl Cover",
+      "Fire Urn Cover",
+    ],
+    "replacement-parts": [
+      "Ice Maker Water Filter",
+      "Water Filtration System",
+      "Drain Pump",
+      "Replacement Door",
+      "Replacement Part",
+      "Replacement Part/Controller",
+      "Replacement Part/Mesh",
+      "Replacement Part/Gas Valve",
+      "Replacement Part/Manifold Assembly",
+      "Controller",
+      "Mesh/Replacement Part",
+      "Gas Valve",
+      "Gas Valves",
+      "Mesh",
+      "Manifold Assembly",
+      "Tube Element",
+      "Control Valve",
+      "Pilot Assembly",
+    ],
+    deals: ["Clearance Sale", "Package Deals", "Open Box"],
+  };
+
+  const extracted = subs[createSlug(category)];
+
+  const uniqueSub = [
+    ...new Set(
+      extracted.flatMap((item) => item.split("/").map((s) => s.trim())),
+    ),
+  ];
+  return uniqueSub;
+}
+
+function getCategoryDescription(category = "") {
+  const desc = {
+    "grills-and-smokers":
+      "Premium gas, charcoal, and wood-pellet grills designed for professional-grade backyard searing and smoking.",
+    "heating-and-fire":
+      "Enhance your outdoor ambiance with high-efficiency fireplaces, fire pits, and patio heaters for year-round warmth.",
+    "outdoor-refrigeration":
+      "Keep beverages chilled and ingredients fresh with weather-resistant outdoor refrigerators, kegerators, and wine coolers.",
+    "installation-and-parts":
+      "Essential mounting kits, gas lines, and structural components to ensure a safe and seamless outdoor kitchen setup.",
+    "outdoor-kitchen-components":
+      "Durable stainless steel storage drawers, access doors, and built-in islands to complete your custom outdoor space.",
+    accessories:
+      "Must-have BBQ tools, protective covers, and specialized cookware to maximize your outdoor cooking experience.",
+    "replacement-parts":
+      "OEM burners, igniters, and grates to maintain your equipment and extend the lifespan of your favorite outdoor appliances.",
+    deals:
+      "Exclusive savings on top-tier outdoor appliances and essential gear to help you build your dream kitchen for less.",
+  };
+
+  return desc[createSlug(category)] || "";
+}
+
+export function mapCategoryResults(cat) {
+  if (!cat) return null;
+  const slug = createSlug(cat.key);
+  return {
+    name: cat.key,
+    count: cat.doc_count,
+    slug: slug,
+    image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
+    type: getCategoryType(cat.key),
+    description: getCategoryDescription(cat.key),
+    sub: (getCategorySubs(cat.key) || []).join(" · "),
+    nav_type: "category1",
+  };
 }

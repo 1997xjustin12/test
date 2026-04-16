@@ -5,6 +5,7 @@ import {
   ES_INDEX,
   exclude_brands,
   exclude_collections,
+  mapCategoryResults
 } from "@/app/lib/helpers";
 
 export const getProductsByIds = async (ids) => {
@@ -246,8 +247,7 @@ export const fetchSearchResultsWithCategories = async (searchTerm) => {
     const data = await res.json();
     const categoryBuckets = data?.aggregations?.unique_categories?.buckets || [];
     const categories = categoryBuckets.map(bucket => ({
-      name: bucket.key,
-      count: bucket.doc_count
+      ...mapCategoryResults(bucket)
     }));
     return categories;
   } catch (err) {

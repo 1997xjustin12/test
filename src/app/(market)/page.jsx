@@ -13,7 +13,6 @@ export default async function HomePage() {
   if (UIV2) {
     const BEST_SELLERS_FOR_BLAZE = 137;
     const blazeProducts = await getCollectionProducts(BEST_SELLERS_FOR_BLAZE);
-    console.log("INITPRODUCTS", blazeProducts)
     return (<NewHomePage initialProducts={blazeProducts}/> );
   }
 

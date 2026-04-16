@@ -34,6 +34,7 @@ export default async function handler(req, res) {
         hits: products.map(({ _source }) => ({
           _source: {
             title: _source?.title,
+            image: _source?.images?.find(i => i?.position==1)?.src,
             images: _source?.images,
             product_id: _source?.product_id,
             variants: _source?.variants,
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
             published: _source?.published,
             product_category: _source?.product_category,
             ratings: _source?.ratings,
+            price: _source?.variants?.[0]?.price,
           },
         })),
       },

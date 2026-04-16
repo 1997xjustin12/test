@@ -5,6 +5,7 @@ import {
   exclude_brands,
   exclude_collections,
   createSlug,
+  mapCategoryResults
 } from "@/app/lib/helpers";
 
 function getCategoryType(category = "") {
@@ -216,17 +217,18 @@ export async function fetchUniqueCategories() {
     const data = await res.json();
     return (
       data?.aggregations?.unique_categories?.buckets?.map((b) => {
-        const slug = createSlug(b.key);
-        return {
-          name: b.key,
-          count: b.doc_count,
-          slug: slug,
-          image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
-          type: getCategoryType(b.key),
-          description: getCategoryDescription(b.key),
-          sub: (getCategorySubs(b.key) || []).join(" · "),
-          nav_type: "category1",
-        };
+        return mapCategoryResults(b);
+        // const slug = createSlug(b.key);
+        // return {
+        //   name: b.key,
+        //   count: b.doc_count,
+        //   slug: slug,
+        //   image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
+        //   type: getCategoryType(b.key),
+        //   description: getCategoryDescription(b.key),
+        //   sub: (getCategorySubs(b.key) || []).join(" · "),
+        //   nav_type: "category1",
+        // };
       }) || []
     );
   } catch (error) {

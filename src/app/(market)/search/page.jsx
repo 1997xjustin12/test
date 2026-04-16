@@ -103,9 +103,9 @@ export default function SearchPage(props) {
                       .length > 0 ? (
                       searchResults
                         .find(({ prop }) => prop === "category")
-                        .data.map((i) => (
+                        .data.map((i, index) => (
                           <Link
-                            key={`search-page-category-item-${i.url}`}
+                            key={`search-page-category-item-${i.url}-${index}`}
                             href={`${BASE_URL}/${i.url}`}
                           >
                             <div className="hover:text-theme-600">{i.name}</div>
@@ -132,9 +132,9 @@ export default function SearchPage(props) {
                       .length > 0 ? (
                       searchResults
                         .find(({ prop }) => prop === "brand")
-                        .data.map((i) => (
+                        .data.map((i, index) => (
                           <Link
-                            key={`search-page-category-item-${i.url}`}
+                            key={`search-page-category-item-${i.url}-${index}`}
                             href={`${BASE_URL}/${i.url}`}
                           >
                             <div className="hover:text-theme-600">{i.name}</div>
