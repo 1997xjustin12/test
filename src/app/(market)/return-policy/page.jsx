@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
+import ReturnPolicyPage from "@/app/components/new-design/page/ReturnPolicyPage";
+
+const UIV2 = process.env.NEXT_PUBLIC_UIV2;
+
 function ReturnPolicy() {
   const brandName = STORE_NAME2;
+  
+  if(UIV2) return (<ReturnPolicyPage />)
   return (
     <div className="w-full p-5">
       <div className="max-w-4xl mx-auto px-10 py-10 text-gray-800 rounded shadow-lg border border-neutral-200">

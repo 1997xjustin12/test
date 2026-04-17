@@ -33,7 +33,7 @@ const Breadcrumb = ({ items }) => (
             {item}
           </span>
         ) : (
-          <a href="#" className="hover:text-orange-500 transition-colors">
+          <a href={BASE_URL} className="hover:text-orange-500 transition-colors">
             {item}
           </a>
         )}
