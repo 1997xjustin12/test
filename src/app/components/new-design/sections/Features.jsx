@@ -9,7 +9,7 @@ const ITEMS = [
 export default function Features() {
   return (
     <div className="bg-charcoal dark:bg-black py-8">
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="
           grid
           grid-cols-2 gap-px md:grid-cols-4

@@ -47,7 +47,7 @@ export default function Hero() {
       {/* Directional overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30" />
 
-      <div className="relative z-10 max-w-[1240px] mx-auto px-6 w-full">
+      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 w-full">
         <div
           className="
           grid gap-14 items-center py-20

@@ -90,7 +90,7 @@ export default function Navbar() {
       ${galleryOnFullscreen ? "": "z-20"}
     `}
     >
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* ── Row 1: Logo + Search + Actions ── */}
         <div className="flex items-center h-16 gap-4">
           {/* Logo */}

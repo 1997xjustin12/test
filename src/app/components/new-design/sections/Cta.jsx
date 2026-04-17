@@ -13,7 +13,7 @@ export default function Cta() {
       <div className="absolute inset-0 bg-black/80" />
 
       <div className="relative z-10 py-20 md:py-24">
-        <div className="max-w-[1240px] mx-auto px-6">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
           <div ref={ref} className="opacity-0 translate-y-6 transition-all duration-700">
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">Ready to Get Started?</p>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-tight">
