@@ -5,6 +5,7 @@ import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import Image from "next/image";
 import { useSearch } from "@/app/context/search";
 import { useSolanaCategories } from "@/app/context/category";
+import { usePathname } from "next/navigation";
 
 const FIRE = "#E85D26";
 
@@ -272,8 +273,11 @@ function SearchBox() {
   } = useSearch();
 
   const { getProductUrl } = useSolanaCategories();
+  const pathname = usePathname();
+  // On the /search page: typing only updates local input — no live fetch.
+  // setSearch (which triggers both pipelines) is called only on explicit submit.
+  const isSearchPage = pathname === "/search";
 
-  // const [query, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [showAllPopular, setShowAllPopular] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
@@ -281,8 +285,18 @@ function SearchBox() {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCollections, setShowAllCollections] = useState(false);
   const [focused, setFocused] = useState(false);
+  // Local controlled value used only on the search page
+  const [localInput, setLocalInput] = useState(searchQuery);
   const inputRef = useRef(null);
   const wrapRef = useRef(null);
+
+  // Keep localInput in sync when searchQuery changes externally
+  // (e.g. user clicks a popular search link → URL changes → context syncs)
+  useEffect(() => {
+    if (isSearchPage) {
+      setLocalInput(searchQuery);
+    }
+  }, [searchQuery, isSearchPage]);
 
   const filtered = useCallback(
     (prop) => {
@@ -292,13 +306,6 @@ function SearchBox() {
     [searchResults],
   );
 
-  // const topResult = useCallback(() => {
-  //   if (!searchQuery.trim()) return ALL_RESULTS.find(r => r.type === "product");
-  //   return ALL_RESULTS.find(r => r.type === "product" && r.label.toLowerCase().includes(searchQuery.toLowerCase()));
-  // }, [searchQuery]);
-
-  // const POPULAR = filtered("popular");
-  // console.log("popular", POPULAR)
   const trends = filtered("popular");
   const top = filtered("top-product")?.[0] || null;
   const products = filtered("product");
@@ -318,29 +325,49 @@ function SearchBox() {
   }, []);
 
   function handleFocus() {
-    setOpen(true);
+    if (!isSearchPage) setOpen(true);
     setFocused(true);
   }
+
   function handleChange(e) {
-    setSearch(e.target.value);
-    setOpen(true);
-  }
-  function handleChip(label) {
-    setSearch(label);
-    inputRef.current?.focus();
-  }
-  function clearSearch() {
-    setSearch("");
-    inputRef.current?.focus();
+    if (isSearchPage) {
+      // Only update local display — don't trigger any fetch
+      setLocalInput(e.target.value);
+    } else {
+      setSearch(e.target.value);
+      setOpen(true);
+    }
   }
 
-  useEffect(()=>{
-    if(loading){
-      console.log("searching...");
-    }else{
-      console.log("searchResults: ", searchResults)
+  function handleSubmit() {
+    if (isSearchPage) {
+      // Commit the local input — this triggers both fetch pipelines once
+      setSearch(localInput);
+    } else {
+      redirectToSearchPage();
     }
-  },[loading, searchResults])
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  }
+
+  function handleChip(label) {
+    setSearch(label);
+    if (!isSearchPage) inputRef.current?.focus();
+  }
+
+  function clearSearch() {
+    if (isSearchPage) {
+      setLocalInput("");
+      setSearch("");
+    } else {
+      setSearch("");
+    }
+    inputRef.current?.focus();
+  }
   return (
     <div ref={wrapRef} className="flex-1 relative max-w-2xl mx-auto">
       <div
@@ -367,9 +394,10 @@ function SearchBox() {
         <input
           ref={inputRef}
           type="text"
-          value={searchQuery}
+          value={isSearchPage ? localInput : searchQuery}
           onChange={handleChange}
           onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
           placeholder="Search fireplaces, brands, styles…"
           className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-white placeholder-stone-400 min-w-0"
         />
@@ -387,7 +415,7 @@ function SearchBox() {
                 </div> */}
 
         {/* Clear */}
-        {searchQuery && (
+        {(isSearchPage ? localInput : searchQuery) && (
           <button
             onClick={clearSearch}
             className="flex-shrink-0 w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-600 flex items-center justify-center transition hover:bg-stone-300"
@@ -407,6 +435,7 @@ function SearchBox() {
 
         {/* Search button */}
         <button
+          onClick={handleSubmit}
           className="flex-shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition hover:opacity-90 hidden sm:flex items-center gap-1"
           style={{ background: FIRE }}
         >
@@ -425,8 +454,8 @@ function SearchBox() {
         </button>
       </div>
 
-      {/* ── DROPDOWN ── */}
-      {open && (
+      {/* ── DROPDOWN ── (suppressed on /search — the page itself is the results) */}
+      {open && !isSearchPage && (
         <div
           className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-2xl shadow-2xl overflow-hidden z-50"
           style={{ maxHeight: "80vh", overflowY: "auto" }}

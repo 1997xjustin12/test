@@ -902,15 +902,16 @@ export const SearchProvider = ({ children }) => {
 
         setProductResultsCount(result_total_count || 0);
 
-        setLoading(false);
-
-        getSearchResults(
+        await getSearchResults(
           trim_query,
           suggest_options?.[0]?.text || "",
           aggs_brands,
           aggs_categories,
           aggs_collections
         );
+
+        setLoading(false);
+
         return data;
       } catch (err) {
         // Don't log abort errors as they're expected when canceling

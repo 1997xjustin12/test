@@ -44,6 +44,17 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   // ---------------------------------------------------------------------------
   const [openSearch, setOpenSearch] = useState(false);
   const isSearchPage = pathname === "/search";
+  // Local controlled value used only on the search page — typing never calls
+  // setSearch directly so neither fetch pipeline fires until explicit submit.
+  const [localInput, setLocalInput] = useState(searchQuery);
+
+  // Keep localInput in sync when searchQuery changes externally
+  // (e.g. URL navigation or popular-search click updates context)
+  useEffect(() => {
+    if (isSearchPage) {
+      setLocalInput(searchQuery);
+    }
+  }, [searchQuery, isSearchPage]);
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Search Input
@@ -51,34 +62,45 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
   const handleSearch = useCallback(
     (e) => {
       const { value } = e.target;
-      setSearch(value);
+      if (isSearchPage) {
+        // Only update local display — no fetch triggered
+        setLocalInput(value);
+      } else {
+        setSearch(value);
+      }
     },
-    [setSearch]
+    [isSearchPage, setSearch]
   );
 
   const handleInputClick = useCallback(() => {
-    setOpenSearch(true);
-  }, []);
+    if (!isSearchPage) setOpenSearch(true);
+  }, [isSearchPage]);
 
   const handleSearchEnterKey = useCallback(
     (e) => {
-      if (e.key === "Enter" && searchQuery !== "") {
+      if (e.key !== "Enter") return;
+      if (isSearchPage) {
+        // Commit local input in-place — triggers both fetch pipelines once
+        if (localInput !== "") setSearch(localInput);
+      } else if (searchQuery !== "") {
         setOpenSearch(false);
         redirectToSearchPage();
       }
     },
-    [searchQuery, redirectToSearchPage]
+    [isSearchPage, localInput, searchQuery, setSearch, redirectToSearchPage]
   );
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Search Button
   // ---------------------------------------------------------------------------
   const handleSearchButtonClick = useCallback(() => {
-    if (searchQuery !== "") {
+    if (isSearchPage) {
+      if (localInput !== "") setSearch(localInput);
+    } else if (searchQuery !== "") {
       setOpenSearch(false);
       redirectToSearchPage();
     }
-  }, [searchQuery, redirectToSearchPage]);
+  }, [isSearchPage, localInput, searchQuery, setSearch, redirectToSearchPage]);
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Option Selection
@@ -165,7 +187,7 @@ const HomeSearch = ({ main = false, controlled_height = false }) => {
         className="w-full text-sm font-normal px-[20px] py-[10px] border border-theme-400 rounded-tl-full rounded-bl-full focus:outline-none focus:ring-2 focus:ring-theme-500 focus:border-transparent transition-all"
         onClick={handleInputClick}
         onKeyDown={handleSearchEnterKey}
-        value={searchQuery}
+        value={isSearchPage ? localInput : searchQuery}
         onChange={handleSearch}
         aria-label="Search products"
         aria-expanded={openSearch}
