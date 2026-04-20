@@ -10,8 +10,6 @@ import PageHero from "@/app/components/new-design/utility/PageHero";
 import InfoCard from "@/app/components/new-design/utility/InfoCard";
 import PolicySection from "@/app/components/new-design/utility/PolicySection";
 
-const F = "#E85D26";
-
 export default function ReturnPolicyPage() {
   return (
     <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-10">
@@ -53,7 +51,7 @@ export default function ReturnPolicyPage() {
                 "The customer is responsible for all return shipping cost. All incurred shipping costs to and from will be deducted from the refund. Once we receive the item(s) it will be inspected. Once the item(s) passes the return inspection a refund/partial refund will be issued and the customer will receive the refund within 14 business days depending on payment method.",
               ].map(item => (
                 <li key={item} className="flex items-start gap-2">
-                  <span style={{color:F}} className="mt-0.5 shrink-0 text-theme-600">•</span>
+                  <span className="mt-0.5 shrink-0 text-theme-600">•</span>
                   {item}
                 </li>
               ))}
@@ -69,7 +67,7 @@ export default function ReturnPolicyPage() {
                 "If you receive a defective or damage item please contact us immediately. Most products come with a manufacturer's warranty. We will help direct you to the manufacturer to receive a replacement. Customers must call us to receive Return Merchandise Authorization (RMA) prior to all returns.",
               ].map(item => (
                 <li key={item} className="flex items-start gap-2">
-                  <span style={{color:F}} className="mt-0.5 shrink-0 text-theme-600">•</span>
+                  <span className="mt-0.5 shrink-0 text-theme-600">•</span>
                   {item}
                 </li>
               ))}
