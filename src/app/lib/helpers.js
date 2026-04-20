@@ -5,6 +5,7 @@ import popular_keywords_json from "@/app/data/popular_keyword.json";
 export const popular_keywords = popular_keywords_json;
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+export const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";

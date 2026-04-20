@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, UIV2 } from "@/app/lib/helpers";
 import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
 import {
   STORE_NAME2,
@@ -7,8 +7,6 @@ import {
   STORE_EMAIL,
 } from "@/app/lib/store_constants";
 import ContactPage from "@/app/components/new-design/page/ContactPage";
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 function Contact() {
   const brandName = STORE_NAME2;

@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 // HELPERS
 import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
-import { getRootByUrl, getPageData, BASE_URL } from "@/app/lib/helpers";
+import { getRootByUrl, getPageData, BASE_URL, UIV2 } from "@/app/lib/helpers";
+
 
 // OLD UI
 import OldProductGallery from "@/app/components/pages/ProductGallery"
@@ -15,8 +16,6 @@ import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 
 // COMMON
 import BaseNavPage from "@/app/components/template/BaseNavItemPage";
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 const feat_carousel_items = [
   {

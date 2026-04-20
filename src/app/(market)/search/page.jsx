@@ -1,7 +1,6 @@
 import OldSearchPage from "@/app/components/template/SearchPage";
 import NewSearchPage from "@/app/components/new-design/page/SearchPage"
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
+import { UIV2 } from "@/app/lib/helpers";
 
 export default function SearchPage(props) {
   return (<>

@@ -1,11 +1,11 @@
 import { getCollectionProducts } from "@/app/lib/fn_server";
+import { UIV2 } from "@/app/lib/helpers";
+
 // OLD UI
 import OldHomePage from "@/app/components/pages/HomePage"
 
 // NEW UI COMPONENTS
 import NewHomePage from "@/app/components/new-design/page/HomePage"
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 // NEW UI CONSTANTS & FUNCTIONS
 

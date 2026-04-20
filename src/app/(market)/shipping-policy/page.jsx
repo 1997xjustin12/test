@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, UIV2 } from "@/app/lib/helpers";
 import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
 import ShippingPolicyPage from "@/app/components/new-design/page/ShippingPolicyPage";
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 function ReturnPolicy() {
   const brandName = STORE_NAME2;
