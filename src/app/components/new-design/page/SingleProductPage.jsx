@@ -6,7 +6,7 @@ import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
 
-import {useSolanaCategories} from "@/app/context/category"
+import { useSolanaCategories } from "@/app/context/category";
 
 const BRAND_COLOR = "#f97316";
 
@@ -260,8 +260,9 @@ const IconBtn = ({ onClick, className = "", title, children }) => (
   </button>
 );
 
-const ProductGallery = ({ images }) => {
-  const [active, setActive] = useState(0);
+const ProductGallery = ({ images, productTitle }) => {
+  const [active, setActive] = useState({});
+  const [activeIndex, setActiveIndex] = useState(0);
   const [zoom, setZoom] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
   const [fullscreen, setFullscreen] = useState(false);
@@ -269,12 +270,23 @@ const ProductGallery = ({ images }) => {
   const imgRef = useRef(null);
 
   const prev = useCallback(
-    () => setActive((i) => (i - 1 + images.length) % images.length),
+    () => setActiveIndex((i) => (i - 1 + images.length) % images.length),
+    [images.length], // Optimization: Only depend on the length
+  );
+
+  const next = useCallback(
+    () => setActiveIndex((i) => (i + 1) % images.length),
     [images.length],
   );
-  const next = useCallback(
-    () => setActive((i) => (i + 1) % images.length),
-    [images.length],
+
+  const selectThumb = useCallback(
+    (image) => {
+      const index = images.findIndex((img) => img.src === image.src);
+      if (index !== -1) {
+        setActiveIndex(index);
+      }
+    },
+    [images],
   );
 
   useEffect(() => {
@@ -297,14 +309,40 @@ const ProductGallery = ({ images }) => {
     setZoomPos({ x, y });
   };
 
-  const GalleryMainImage = ({ slot, inFullscreen = false }) => (
+  const mainImage = useMemo(() => {
+    return images?.[activeIndex]?.src;
+  }, [images, activeIndex]);
+
+  useEffect(() => {
+    // 1. Dispatch your custom event
+    window.dispatchEvent(
+      new CustomEvent("galleryStatus", {
+        detail: { isFullscreen: fullscreen },
+      }),
+    );
+
+    // 2. Lock/Unlock the body scroll
+    if (fullscreen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // 3. Cleanup function (Crucial!)
+    // This ensures scroll is restored if the component unmounts unexpectedly
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [fullscreen]);
+
+  const GalleryMainImage = ({ image, productTitle, inFullscreen = false }) => (
     <div
       ref={inFullscreen ? null : imgRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => !inFullscreen && setZoom(true)}
       onMouseLeave={() => setZoom(false)}
+      onClick={() => !inFullscreen && setZoom((z) => !z)}
       className={`relative overflow-hidden select-none ${inFullscreen ? "w-full h-full" : "w-full h-full"}`}
-      style={zoom && !inFullscreen ? { cursor: "zoom-in" } : {}}
+      style={!inFullscreen ? { cursor: zoom ? "zoom-out" : "zoom-in" } : {}}
     >
       <div
         className="w-full h-full transition-transform duration-150"
@@ -317,11 +355,18 @@ const ProductGallery = ({ images }) => {
             : {}
         }
       >
-        <GrillMockSVG slot={slot} className="w-full h-full object-contain" />
+        {image && (
+          <Image
+            src={image}
+            alt={`${productTitle} -- Gallery Main Image`}
+            fill
+            className="w-full h-full object-contain"
+          />
+        )}
       </div>
-      {zoom && !inFullscreen && (
+      {!zoom && !inFullscreen && (
         <div className="absolute bottom-3 left-3 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-sm pointer-events-none">
-          🔍 Hover to zoom
+          🔍 Click to zoom
         </div>
       )}
     </div>
@@ -332,13 +377,13 @@ const ProductGallery = ({ images }) => {
       {/* Main gallery */}
       <div className="flex flex-col gap-3">
         {/* Primary image */}
-        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden aspect-square lg:aspect-auto lg:h-[460px]">
-          <GalleryMainImage slot={active} />
+        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden aspect-1 lg:aspect-auto lg:h-[460px]">
+          <GalleryMainImage image={mainImage} productTitle={productTitle} />
 
           {/* Top controls */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
             <span className="bg-black/50 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm">
-              {active + 1} / {images.length}
+              {activeIndex + 1} / {images.length}
             </span>
             <div className="flex gap-2 pointer-events-auto">
               <IconBtn
@@ -397,11 +442,11 @@ const ProductGallery = ({ images }) => {
 
           {/* Dot indicators (mobile) */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
-            {images.map((_, i) => (
+            {images.map((img, i) => (
               <button
-                key={i}
-                onClick={() => setActive(i)}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${i === active ? "bg-orange-500 w-4" : "bg-white/60"}`}
+                key={`mobile-gallery-thumbs-${img?.src}-${i}`}
+                onClick={() => selectThumb(img)}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${img?.src === mainImage ? "bg-orange-500 w-4" : "bg-white/60"}`}
               />
             ))}
           </div>
@@ -409,36 +454,20 @@ const ProductGallery = ({ images }) => {
 
         {/* Thumbnails */}
         <div className="hidden sm:grid grid-cols-6 gap-2">
-          {images.map((_, i) => (
+          {images.map((img, i) => (
             <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 bg-white dark:bg-gray-900 ${i === active ? "border-orange-500 ring-2 ring-orange-200 dark:ring-orange-800" : "border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"}`}
+              key={`gallery-thumbs-${img?.src}-${i}`}
+              onClick={() => selectThumb(img)}
+              className={`relative aspect-1 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-white dark:bg-gray-900 ${img?.src === mainImage ? "border-orange-500 ring-2 ring-orange-200 dark:ring-orange-800" : "border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"}`}
             >
-              <svg viewBox="0 0 60 60" className="w-full h-full">
-                <rect
-                  width="60"
-                  height="60"
-                  className="fill-gray-100 dark:fill-gray-800"
+              {img?.src && (
+                <Image
+                  src={img.src}
+                  alt={img?.alt || `${productTitle} -- Thumb-${i}`}
+                  fill
+                  className="w-full h-full object-contain"
                 />
-                <rect
-                  x="8"
-                  y="10"
-                  width="44"
-                  height="32"
-                  rx="2"
-                  className="fill-gray-300 dark:fill-gray-600"
-                />
-                <text
-                  x="30"
-                  y="52"
-                  textAnchor="middle"
-                  fontSize="8"
-                  className="fill-gray-400"
-                >
-                  {i + 1}
-                </text>
-              </svg>
+              )}
             </button>
           ))}
         </div>
@@ -456,7 +485,7 @@ const ProductGallery = ({ images }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <span className="text-white/60 text-sm">
-              {active + 1} / {images.length}
+              {activeIndex + 1} / {images.length}
             </span>
             <div className="flex items-center gap-2">
               <span className="text-white/40 text-xs hidden sm:block">
@@ -497,8 +526,14 @@ const ProductGallery = ({ images }) => {
                 <path d="M15 19l-7-7 7-7" />
               </svg>
             </IconBtn>
-            <div className="w-full max-w-2xl aspect-square">
-              <GrillMockSVG slot={active} />
+            <div className="w-full max-w-2xl aspect-1 relative">
+              {/* <GrillMockSVG slot={active} /> */}
+              <Image
+                src={mainImage}
+                alt={`${productTitle} -- Gallery Main Image`}
+                fill
+                className="w-full h-full object-contain"
+              />
             </div>
             <IconBtn
               onClick={next}
@@ -520,23 +555,20 @@ const ProductGallery = ({ images }) => {
             className="flex-shrink-0 flex gap-2 justify-center px-5 py-4 overflow-x-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {images.map((_, i) => (
+            {images.map((img, i) => (
               <button
-                key={i}
-                onClick={() => setActive(i)}
-                className={`w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${i === active ? "border-orange-500 opacity-100" : "border-white/20 opacity-50 hover:opacity-80"}`}
+                key={`gal-expand-thumbs-${img?.src}-${i}`}
+                onClick={() => selectThumb(img)}
+                className={`relative w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${img?.src === mainImage ? "border-orange-500 opacity-100" : "border-white/20 opacity-50 hover:opacity-80"}`}
               >
-                <svg viewBox="0 0 56 56" className="w-full h-full">
-                  <rect width="56" height="56" className="fill-gray-700" />
-                  <rect
-                    x="6"
-                    y="8"
-                    width="44"
-                    height="32"
-                    rx="2"
-                    className="fill-gray-500"
+                {img?.src && (
+                  <Image
+                    src={img.src}
+                    alt={img?.alt || `${productTitle} -- Thumb-${i}`}
+                    fill
+                    className="w-full h-full object-contain"
                   />
-                </svg>
+                )}
               </button>
             ))}
           </div>
@@ -1373,37 +1405,55 @@ const MobileStickyCTA = ({ price, was }) => (
   </div>
 );
 
-const Topbar = () => (
-  <div className="bg-charcoal hidden md:block sticky top-[105px] z-10">
-    <div className="max-w-[1240]  py-2 px-4 sm:px-6 mx-auto flex items-center justify-between gap-3 flex-wrap">
-      <span className="text-xs text-gray-400">
-        🔥 Free Shipping on Selected Orders —{" "}
-        <Link
-          href={`tel:${STORE_CONTACT}`}
-          className="text-orange-400 font-semibold hover:text-orange-300"
-        >
-          Call now ↗
-        </Link>
-      </span>
-      <div className="hidden sm:flex gap-5">
-        {["Learning Center", "Professional Program", "Support"].map((l) => (
+const Topbar = () => {
+  const [galleryOnFullscreen, setGalleryOnFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleGallery = (e) => {
+      setGalleryOnFullscreen(e.detail.isFullscreen);
+    };
+
+    window.addEventListener("galleryStatus", handleGallery);
+    return () => window.removeEventListener("galleryStatus", handleGallery);
+  }, []);
+
+  return (
+    <div
+      className={`bg-charcoal hidden md:block sticky top-[105px] ${galleryOnFullscreen ? "" : "z-10"}`}
+    >
+      <div className="max-w-[1240]  py-2 px-4 sm:px-6 mx-auto flex items-center justify-between gap-3 flex-wrap">
+        <span className="text-xs text-gray-400">
+          🔥 Free Shipping on Selected Orders —{" "}
           <Link
-            key={l}
-            href="#"
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            href={`tel:${STORE_CONTACT}`}
+            className="text-orange-400 font-semibold hover:text-orange-300"
           >
-            {l}
+            Call now ↗
           </Link>
-        ))}
+        </span>
+        <div className="hidden sm:flex gap-5">
+          {["Learning Center", "Professional Program", "Support"].map((l) => (
+            <Link
+              key={l}
+              href="#"
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              {l}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Breadcrumb = ({ crumbs }) => (
   <nav className="flex items-center gap-1.5 flex-wrap mb-5">
     {crumbs.map((c, i) => (
-      <span key={`breadcrumb-${c.name}-${i}`} className="flex items-center gap-1.5">
+      <span
+        key={`breadcrumb-${c.name}-${i}`}
+        className="flex items-center gap-1.5"
+      >
         {i < crumbs.length - 1 ? (
           <>
             <Link
@@ -1431,7 +1481,7 @@ function SingleProductPage({
   reviews,
   recentlyViewed,
 }) {
-    const { getNameBySlug } = useSolanaCategories();
+  const { getNameBySlug } = useSolanaCategories();
   const breadcrumbs = useMemo(() => {
     if (!product || !slug) return [];
     return [
@@ -1449,7 +1499,10 @@ function SingleProductPage({
         {/* ── HERO: GALLERY + INFO ── */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-6 lg:gap-10 mb-12 lg:items-start">
           <div className="lg:sticky lg:top-4">
-            {/* <ProductGallery images={product?.images} /> */}
+            <ProductGallery
+              images={product?.images || []}
+              productTitle={product?.title}
+            />
           </div>
           {/* <ProductInfo product={PRODUCT} /> */}
         </div>
