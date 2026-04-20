@@ -339,10 +339,10 @@ const ProductGallery = ({ images, productTitle }) => {
     <div
       ref={inFullscreen ? null : imgRef}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => !inFullscreen && setZoom(true)}
       onMouseLeave={() => setZoom(false)}
-      onClick={() => !inFullscreen && setZoom((z) => !z)}
       className={`relative overflow-hidden select-none ${inFullscreen ? "w-full h-full" : "w-full h-full"}`}
-      style={!inFullscreen ? { cursor: zoom ? "zoom-out" : "zoom-in" } : {}}
+      style={zoom && !inFullscreen ? { cursor: "zoom-in" } : {}}
     >
       <div
         className="w-full h-full transition-transform duration-150"
@@ -364,9 +364,9 @@ const ProductGallery = ({ images, productTitle }) => {
           />
         )}
       </div>
-      {!zoom && !inFullscreen && (
+      {zoom && !inFullscreen && (
         <div className="absolute bottom-3 left-3 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-sm pointer-events-none">
-          🔍 Click to zoom
+          🔍 Hover to zoom
         </div>
       )}
     </div>
@@ -1408,6 +1408,21 @@ const MobileStickyCTA = ({ price, was }) => (
 const Topbar = () => {
   const [galleryOnFullscreen, setGalleryOnFullscreen] = useState(false);
 
+  const links = [
+    {
+      name: "Learning Center",
+      url: `${BASE_URL}/blogs`,
+    },
+    {
+      name: "Professional Program",
+      url: `${BASE_URL}/professional-program`,
+    },
+    {
+      name: "Support",
+      url: `${BASE_URL}/contact`,
+    },
+  ];
+
   useEffect(() => {
     const handleGallery = (e) => {
       setGalleryOnFullscreen(e.detail.isFullscreen);
@@ -1432,13 +1447,13 @@ const Topbar = () => {
           </Link>
         </span>
         <div className="hidden sm:flex gap-5">
-          {["Learning Center", "Professional Program", "Support"].map((l) => (
+          {links.map((l) => (
             <Link
-              key={l}
-              href="#"
+              key={`links-redirect-${l?.url}`}
+              href={l?.url || "#"}
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
             >
-              {l}
+              {l?.name}
             </Link>
           ))}
         </div>
