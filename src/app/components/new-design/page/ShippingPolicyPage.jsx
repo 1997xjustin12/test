@@ -10,8 +10,6 @@ import PageHero from "@/app/components/new-design/utility/PageHero";
 import InfoCard from "@/app/components/new-design/utility/InfoCard";
 import PolicySection from "@/app/components/new-design/utility/PolicySection";
 
-const F = "#E85D26";
-
 export default function ShippingPolicyPage() {
   const highlights = [
     { icon: "🆓", title: "Free Shipping",    sub: "On selected items" },
@@ -58,7 +56,7 @@ export default function ShippingPolicyPage() {
             <ul className="list-none space-y-2">
               {terms.map((term, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <span style={{ color: F }} className="mt-0.5 shrink-0">•</span>
+                  <span className="mt-0.5 shrink-0 text-theme-600">•</span>
                   {term}
                 </li>
               ))}
@@ -82,8 +80,7 @@ export default function ShippingPolicyPage() {
             <Link
               prefetch={false}
               href={`tel:${contact}`}
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity"
-              style={{ background: F }}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity bg-theme-700"
             >
               {contact}
             </Link>
