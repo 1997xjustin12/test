@@ -9,111 +9,18 @@ import {
   STORE_EMAIL,
 } from "@/app/lib/store_constants";
 
+
+// utility components
+import Divider from "@/app/components/new-design/utility/Divider";
+import Breadcrumb from "@/app/components/new-design/utility/Breadcrumb";
+import PageHero from "@/app/components/new-design/utility/PageHero";
+import SectionLabel from "@/app/components/new-design/utility/SectionLabel";
+import InfoCard from "@/app/components/new-design/utility/InfoCard";
+import PolicySection from "@/app/components/new-design/utility/PolicySection";
+
 const F = "#E85D26",
   FL = "#F97316",
   FD = "rgba(232,93,38,0.10)";
-
-const Breadcrumb = ({ items }) => (
-  <nav className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 mb-8">
-    {items.map((item, i) => (
-      <span key={i} className="flex items-center gap-1.5">
-        {i > 0 && (
-          <svg
-            className="w-3 h-3"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        )}
-        {i === items.length - 1 ? (
-          <span className="font-semibold text-gray-700 dark:text-gray-300">
-            {item}
-          </span>
-        ) : (
-          <a href={BASE_URL} className="hover:text-orange-500 transition-colors">
-            {item}
-          </a>
-        )}
-      </span>
-    ))}
-  </nav>
-);
-
-const PageHero = ({ eyebrow, title, subtitle, children }) => (
-  <div className="relative overflow-hidden rounded-2xl mb-10 px-6 sm:px-10 py-12">
-    <div
-      className="absolute inset-0"
-      style={{ background: "linear-gradient(120deg,#1a0600,#3d1208)" }}
-    />
-    <div
-      className="absolute inset-0"
-      style={{
-        background: `radial-gradient(ellipse at 75% 50%,${F}40,transparent 65%)`,
-      }}
-    />
-    <div className="relative z-10">
-      {eyebrow && (
-        <p
-          className="text-xs font-bold uppercase tracking-widest mb-2"
-          style={{ color: FL }}
-        >
-          {eyebrow}
-        </p>
-      )}
-      <h1
-        className="text-3xl sm:text-4xl font-bold text-white mb-3"
-        style={{ fontFamily: "Georgia,serif" }}
-      >
-        {title}
-      </h1>
-      {subtitle && (
-        <p className="text-orange-200 text-sm sm:text-base max-w-xl leading-relaxed">
-          {subtitle}
-        </p>
-      )}
-      {children}
-    </div>
-  </div>
-);
-
-const SectionLabel = ({ children }) => (
-  <p
-    className="text-xs font-bold uppercase tracking-widest mb-1"
-    style={{ color: F }}
-  >
-    {children}
-  </p>
-);
-
-const Divider = () => (
-  <hr className="border-gray-100 dark:border-gray-800 my-8" />
-);
-
-const InfoCard = ({ icon, title, children, accent }) => (
-  <div
-    className={`rounded-2xl p-6 border w-full ${accent ? "border-orange-200 dark:border-orange-900/50" : "border-gray-200 dark:border-gray-800"} bg-white dark:bg-gray-900`}
-  >
-    {icon && (
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-xl"
-        style={{ background: FD }}
-      >
-        {icon}
-      </div>
-    )}
-    {title && (
-      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 text-base">
-        {title}
-      </h3>
-    )}
-    <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-      {children}
-    </div>
-  </div>
-);
 
 export default function ContactPage() {
   const brandName = STORE_NAME2;
@@ -131,7 +38,7 @@ export default function ContactPage() {
   const [sent, setSent] = useState(false);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 text-sm outline-none focus:border-orange-500 dark:focus:border-orange-500 transition-colors";
+    "w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 text-sm outline-none focus:border-theme-500 dark:focus:border-theme-500 transition-colors";
 
   const channels = [
     {
@@ -193,14 +100,14 @@ export default function ContactPage() {
                 <a
                   key={c.label}
                   href={c.href}
-                  className="group flex flex-col gap-3 p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-orange-400 dark:hover:border-orange-700 hover:shadow-md transition-all"
+                  className="group flex flex-col gap-3 p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-theme-600 dark:hover:border-theme-700 hover:shadow-md transition-all"
                 >
                   <span className="text-2xl">{c.icon}</span>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-0.5">
                       {c.label}
                     </p>
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-theme-600 dark:group-hover:text-theme-400 transition-colors">
                       {c.value}
                     </p>
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
