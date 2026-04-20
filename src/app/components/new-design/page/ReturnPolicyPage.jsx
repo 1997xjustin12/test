@@ -13,14 +13,17 @@ import PolicySection from "@/app/components/new-design/utility/PolicySection";
 export default function ReturnPolicyPage() {
   return (
     <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-10">
+
+      {/* ============ NOT IN ORIGINAL SOURCE ============ */}
       <Breadcrumb items={["Home", "Return Policy"]}/>
       <PageHero
-        eyebrow="Hassle-Free Returns"
         title="Return Policy"
         subtitle={`The ${brandName} offers a straightforward return policy. If you need to return an item please give us a call. We strive to provide a superior shopping experience for all of our customers. Our Return Policy requirements are detailed below.`}
       />
+      {/* ============ END NOT IN ORIGINAL SOURCE ============ */}
 
-      {/* Key facts */}
+      {/* ============ NOT IN ORIGINAL SOURCE ============ */}
+      {/* Key facts — data derived from original content */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
         {[
           { icon: "📅", title: "30-Day Window",      desc: "Return an item within 30 calendar days from the date you received it." },
@@ -28,10 +31,12 @@ export default function ReturnPolicyPage() {
           { icon: "💳", title: "Refund Issued",      desc: "Refunds provided 3–5 business days after return is received. Allow up to 14 business days depending on payment method." },
         ].map(c => <InfoCard key={c.title} icon={c.icon} title={c.title} accent>{c.desc}</InfoCard>)}
       </div>
+      {/* ============ END NOT IN ORIGINAL SOURCE ============ */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
 
+          {/* ============ FROM ORIGINAL SOURCE ============ */}
           <PolicySection title="Return Eligibility">
             <p>
               You have{" "}
@@ -110,13 +115,15 @@ export default function ReturnPolicyPage() {
               .
             </p>
           </PolicySection>
+          {/* ============ END FROM ORIGINAL SOURCE ============ */}
 
         </div>
 
+        {/* ============ NOT IN ORIGINAL SOURCE ============ */}
         {/* Sidebar */}
         <div className="space-y-4 lg:sticky lg:top-[120px] self-start">
           <InfoCard icon="📞" title="Need Help?" accent>
-            <p className="mb-3">Our team is ready to assist with your return.</p>
+            <p className="mb-3">Contact us to initiate your return or get a Return Merchandise Authorization (RMA).</p>
             <Link
               prefetch={false}
               href={BASE_URL + "/contact"}
@@ -143,6 +150,8 @@ export default function ReturnPolicyPage() {
             </ul>
           </InfoCard>
         </div>
+        {/* ============ END NOT IN ORIGINAL SOURCE ============ */}
+
       </div>
     </div>
   );
