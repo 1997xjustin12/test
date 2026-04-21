@@ -252,9 +252,14 @@ function PromoBanner() {
 }
 
 function ExactMatchCard({ p, q }) {
+  
   const [added, setAdded] = useState(false);
   const { getProductUrl } = useSolanaCategories();
-  const save = p.was ? p.was - p.price : 0;
+
+  const save = p?.was ? p.was - p.price : 0;
+  
+  if(!p) return null;
+
   return (
     <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
       <div
@@ -341,15 +346,15 @@ function ExactMatchCard({ p, q }) {
               />
               {/* Specs pills */}
 
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {p.product_category && (
+              {/* <div className="flex flex-wrap gap-1.5 mt-3"> */}
+                {/* {p.product_category && (
                   <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
                     {p.product_category}
                   </span>
-                )}
+                )} */}
                 {/* <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">In Stock</span> */}
                 {/* <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400">Free Shipping</span> */}
-              </div>
+              {/* </div> */}
               <a
                 href="tel:8885759720"
                 className="mt-2 text-xs inline-flex items-center gap-1 text-gray-400 hover:text-orange-500 transition-colors"
