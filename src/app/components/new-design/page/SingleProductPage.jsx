@@ -1025,7 +1025,7 @@ function SingleProductPage({
         </div>
 
         {/* ── BELOW-FOLD SECTIONS ── */}
-        {/* <CollectionStrip />
+        <CollectionStrip />
         <DescriptionSection />
         <SpecsShipping specs={PRODUCT.specs} shipping={PRODUCT.shipping} />
         <ReviewsSection
@@ -1075,7 +1075,7 @@ function SingleProductPage({
               </svg>
             </Link>
           }
-        /> */}
+        />
       </div>
 
       <StickyCTA price={PRODUCT.price} was={PRODUCT.was} />
