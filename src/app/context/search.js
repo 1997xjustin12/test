@@ -798,7 +798,7 @@ export const SearchProvider = ({ children }) => {
             ? recent
             : recent
                 .filter((i) =>
-                  i.term.toLowerCase().includes(query.toLowerCase()),
+                  (i?.term || "").toLowerCase().includes(query.toLowerCase()),
                 )
                 .sort((a, b) => b.timestamp - a.timestamp);
 
