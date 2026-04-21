@@ -1,12 +1,19 @@
 "use client";
+// REACT
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+// NEXT
 import Image from "next/image";
 import Link from "next/link";
-
-import { BASE_URL } from "@/app/lib/helpers";
+// HELPERS
+import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
-
+// CONTEXT
 import { useSolanaCategories } from "@/app/context/category";
+// COMPONENTS
+import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
+import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
+import StarRating from "@/app/components/new-design/sections/sp/StarRating";
+import Badge from "@/app/components/new-design/sections/sp/Badge";
 
 const BRAND_COLOR = "#f97316";
 
@@ -195,48 +202,6 @@ const GrillMockSVG = ({ slot = 0, className = "" }) => (
   </svg>
 );
 
-const StarRating = ({ rating, size = "sm", showCount, count }) => {
-  const s = size === "lg" ? "w-5 h-5" : "w-3.5 h-3.5";
-  return (
-    <span className="inline-flex items-center gap-1">
-      <span className="inline-flex gap-0.5">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <svg
-            key={i}
-            className={`${s} ${i <= Math.round(rating) ? "text-amber-400" : "text-gray-200 dark:text-gray-600"}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        ))}
-      </span>
-      {showCount && (
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          ({count})
-        </span>
-      )}
-    </span>
-  );
-};
-
-const Badge = ({ children, variant = "orange" }) => {
-  const variants = {
-    orange:
-      "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
-    green:
-      "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-    blue: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-    gray: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
-  };
-  return (
-    <span
-      className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide uppercase ${variants[variant]}`}
-    >
-      {children}
-    </span>
-  );
-};
 
 const SectionHeading = ({ children, action }) => (
   <div className="flex items-center justify-between mb-5">
@@ -249,520 +214,6 @@ const SectionHeading = ({ children, action }) => (
     {action}
   </div>
 );
-
-const IconBtn = ({ onClick, className = "", title, children }) => (
-  <button
-    onClick={onClick}
-    title={title}
-    className={`flex items-center justify-center rounded-full transition-all duration-200 ${className}`}
-  >
-    {children}
-  </button>
-);
-
-const ProductGallery = ({ images, productTitle }) => {
-  const [active, setActive] = useState({});
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [zoom, setZoom] = useState(false);
-  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
-  const [fullscreen, setFullscreen] = useState(false);
-  const [wishlist, setWishlist] = useState(false);
-  const imgRef = useRef(null);
-
-  const prev = useCallback(
-    () => setActiveIndex((i) => (i - 1 + images.length) % images.length),
-    [images.length], // Optimization: Only depend on the length
-  );
-
-  const next = useCallback(
-    () => setActiveIndex((i) => (i + 1) % images.length),
-    [images.length],
-  );
-
-  const selectThumb = useCallback(
-    (image) => {
-      const index = images.findIndex((img) => img.src === image.src);
-      if (index !== -1) {
-        setActiveIndex(index);
-      }
-    },
-    [images],
-  );
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (!fullscreen) return;
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
-      if (e.key === "Escape") setFullscreen(false);
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [fullscreen, prev, next]);
-
-  const handleMouseMove = (e) => {
-    if (!zoom) return;
-    const rect = imgRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setZoomPos({ x, y });
-  };
-
-  const mainImage = useMemo(() => {
-    return images?.[activeIndex]?.src;
-  }, [images, activeIndex]);
-
-  useEffect(() => {
-    // 1. Dispatch your custom event
-    window.dispatchEvent(
-      new CustomEvent("galleryStatus", {
-        detail: { isFullscreen: fullscreen },
-      }),
-    );
-
-    // 2. Lock/Unlock the body scroll
-    if (fullscreen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    // 3. Cleanup function (Crucial!)
-    // This ensures scroll is restored if the component unmounts unexpectedly
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [fullscreen]);
-
-  const GalleryMainImage = ({ image, productTitle, inFullscreen = false }) => (
-    <div
-      ref={inFullscreen ? null : imgRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => !inFullscreen && setZoom(true)}
-      onMouseLeave={() => setZoom(false)}
-      className={`relative overflow-hidden select-none ${inFullscreen ? "w-full h-full" : "w-full h-full"}`}
-      style={zoom && !inFullscreen ? { cursor: "zoom-in" } : {}}
-    >
-      <div
-        className="w-full h-full transition-transform duration-150"
-        style={
-          zoom && !inFullscreen
-            ? {
-                transform: "scale(2.2)",
-                transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-              }
-            : {}
-        }
-      >
-        {image && (
-          <Image
-            src={image}
-            alt={`${productTitle} -- Gallery Main Image`}
-            fill
-            className="w-full h-full object-contain"
-          />
-        )}
-      </div>
-      {zoom && !inFullscreen && (
-        <div className="absolute bottom-3 left-3 bg-black/50 text-white text-[10px] px-2 py-1 rounded-full backdrop-blur-sm pointer-events-none">
-          🔍 Hover to zoom
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <>
-      {/* Main gallery */}
-      <div className="flex flex-col gap-3">
-        {/* Primary image */}
-        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden aspect-1 lg:aspect-auto lg:h-[460px]">
-          <GalleryMainImage image={mainImage} productTitle={productTitle} />
-
-          {/* Top controls */}
-          <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-            <span className="bg-black/50 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm">
-              {activeIndex + 1} / {images.length}
-            </span>
-            <div className="flex gap-2 pointer-events-auto">
-              <IconBtn
-                onClick={() => setFullscreen(true)}
-                title="Fullscreen"
-                className="w-8 h-8 bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-600 shadow-sm hover:bg-orange-50 hover:border-orange-300 dark:hover:border-orange-500"
-              >
-                <svg
-                  className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-              </IconBtn>
-            </div>
-          </div>
-
-          {/* Prev / Next */}
-          {images.length > 1 && (
-            <>
-              <IconBtn
-                onClick={prev}
-                title="Previous"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-600 shadow-md hover:bg-orange-50 hover:border-orange-300 dark:hover:border-orange-500"
-              >
-                <svg
-                  className="w-4 h-4 text-gray-700 dark:text-gray-200"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M15 19l-7-7 7-7" />
-                </svg>
-              </IconBtn>
-              <IconBtn
-                onClick={next}
-                title="Next"
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-600 shadow-md hover:bg-orange-50 hover:border-orange-300 dark:hover:border-orange-500"
-              >
-                <svg
-                  className="w-4 h-4 text-gray-700 dark:text-gray-200"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              </IconBtn>
-            </>
-          )}
-
-          {/* Dot indicators (mobile) */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
-            {images.map((img, i) => (
-              <button
-                key={`mobile-gallery-thumbs-${img?.src}-${i}`}
-                onClick={() => selectThumb(img)}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${img?.src === mainImage ? "bg-orange-500 w-4" : "bg-white/60"}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Thumbnails */}
-        <div className="hidden sm:grid grid-cols-6 gap-2">
-          {images.map((img, i) => (
-            <button
-              key={`gallery-thumbs-${img?.src}-${i}`}
-              onClick={() => selectThumb(img)}
-              className={`relative aspect-1 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-white dark:bg-gray-900 ${img?.src === mainImage ? "border-orange-500 ring-2 ring-orange-200 dark:ring-orange-800" : "border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"}`}
-            >
-              {img?.src && (
-                <Image
-                  src={img.src}
-                  alt={img?.alt || `${productTitle} -- Thumb-${i}`}
-                  fill
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Fullscreen Lightbox */}
-      {fullscreen && (
-        <div
-          className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
-          onClick={() => setFullscreen(false)}
-        >
-          {/* Header */}
-          <div
-            className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="text-white/60 text-sm">
-              {activeIndex + 1} / {images.length}
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-white/40 text-xs hidden sm:block">
-                ← → arrow keys to navigate · ESC to close
-              </span>
-              <IconBtn
-                onClick={() => setFullscreen(false)}
-                className="w-9 h-9 bg-white/10 hover:bg-white/20 border border-white/10"
-              >
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </IconBtn>
-            </div>
-          </div>
-          {/* Image */}
-          <div
-            className="flex-1 flex items-center justify-center px-16 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <IconBtn
-              onClick={prev}
-              className="absolute left-4 w-11 h-11 bg-white/10 hover:bg-white/20 border border-white/10"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                viewBox="0 0 24 24"
-              >
-                <path d="M15 19l-7-7 7-7" />
-              </svg>
-            </IconBtn>
-            <div className="w-full max-w-2xl aspect-1 relative">
-              {/* <GrillMockSVG slot={active} /> */}
-              <Image
-                src={mainImage}
-                alt={`${productTitle} -- Gallery Main Image`}
-                fill
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <IconBtn
-              onClick={next}
-              className="absolute right-4 w-11 h-11 bg-white/10 hover:bg-white/20 border border-white/10"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                viewBox="0 0 24 24"
-              >
-                <path d="M9 5l7 7-7 7" />
-              </svg>
-            </IconBtn>
-          </div>
-          {/* Thumbnail strip */}
-          <div
-            className="flex-shrink-0 flex gap-2 justify-center px-5 py-4 overflow-x-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {images.map((img, i) => (
-              <button
-                key={`gal-expand-thumbs-${img?.src}-${i}`}
-                onClick={() => selectThumb(img)}
-                className={`relative w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${img?.src === mainImage ? "border-orange-500 opacity-100" : "border-white/20 opacity-50 hover:opacity-80"}`}
-              >
-                {img?.src && (
-                  <Image
-                    src={img.src}
-                    alt={img?.alt || `${productTitle} -- Thumb-${i}`}
-                    fill
-                    className="w-full h-full object-contain"
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
-const ProductInfo = ({ product }) => {
-  const [qty, setQty] = useState(1);
-  const [added, setAdded] = useState(false);
-
-  const handleCart = () => {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2200);
-  };
-
-  return (
-    <div className="flex flex-col gap-5">
-      {/* Brand + SKU */}
-      <div className="flex items-center gap-2.5 flex-wrap">
-        <Link
-          href="#"
-          className="text-[10px] font-bold text-orange-500 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-2.5 py-1 rounded-full uppercase tracking-widest hover:bg-orange-100 transition-colors"
-        >
-          {product.brand}
-        </Link>
-        <span className="text-[10px] text-gray-400 dark:text-gray-500">
-          SKU: {product.sku}
-        </span>
-      </div>
-
-      {/* Title */}
-      <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white leading-tight">
-        {product.name}
-      </h1>
-
-      {/* Rating */}
-      <div className="flex items-center gap-3 flex-wrap pb-4 border-b border-gray-100 dark:border-gray-800">
-        <StarRating
-          rating={product.rating}
-          showCount
-          count={product.reviewCount}
-        />
-        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-          {product.rating} out of 5
-        </span>
-        <span className="text-gray-200 dark:text-gray-700">·</span>
-        <Link
-          href="#reviews"
-          className="text-xs font-semibold text-orange-500 hover:underline"
-        >
-          Write a Review
-        </Link>
-      </div>
-
-      {/* Price */}
-      <div className="flex items-end gap-3 flex-wrap">
-        <span className="text-4xl font-black text-gray-900 dark:text-white">
-          ${product.price.toLocaleString()}
-        </span>
-        <div className="flex flex-col pb-1">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 line-through">
-              ${product.was.toLocaleString()}
-            </span>
-            <Badge variant="green">SAVE {product.savePct}%</Badge>
-          </div>
-          <span className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            You save ${product.was - product.price} · Free Shipping
-          </span>
-        </div>
-      </div>
-
-      {/* Ships */}
-      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-        <svg
-          className="w-4 h-4 text-green-500 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          viewBox="0 0 24 24"
-        >
-          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span className="font-medium">{product.ships}</span>
-      </div>
-
-      {/* Discounts */}
-      <div className="bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="w-5 h-5 rounded-md bg-orange-500 flex items-center justify-center text-xs flex-shrink-0">
-            🔥
-          </span>
-          <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
-            Discounts & Savings Available
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          {product.badges.map((b) => (
-            <div
-              key={b}
-              className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400"
-            >
-              <span className="w-4 h-4 rounded-full bg-orange-100 dark:bg-orange-900/40 border border-orange-200 dark:border-orange-800 flex items-center justify-center flex-shrink-0">
-                <svg
-                  className="w-2 h-2 text-orange-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              {b}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Qty + CTA */}
-      <div className="flex items-stretch gap-3 flex-wrap">
-        <div className="flex items-center bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-          <button
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="w-10 h-11 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 text-xl font-light transition-colors"
-          >
-            −
-          </button>
-          <span className="w-9 text-center text-sm font-bold text-gray-900 dark:text-white">
-            {qty}
-          </span>
-          <button
-            onClick={() => setQty((q) => q + 1)}
-            className="w-10 h-11 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 text-xl font-light transition-colors"
-          >
-            +
-          </button>
-        </div>
-        <button
-          onClick={handleCart}
-          className={`flex-1 min-w-[140px] flex items-center justify-center gap-2 h-11 px-5 rounded-xl text-sm font-bold text-white transition-all duration-200 ${added ? "bg-green-500" : "bg-orange-500 hover:bg-orange-600 active:scale-[.98]"}`}
-        >
-          {added ? (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                viewBox="0 0 24 24"
-              >
-                <path d="M5 13l4 4L19 7" />
-              </svg>{" "}
-              Added to Cart
-            </>
-          ) : (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>{" "}
-              Add to Cart
-            </>
-          )}
-        </button>
-        <Link
-          href={`tel:${STORE_CONTACT}`}
-          className="flex items-center gap-2 h-11 px-4 rounded-xl border-2 border-orange-500 text-orange-600 dark:text-orange-400 text-sm font-bold hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors whitespace-nowrap"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-          </svg>
-          Call Expert
-        </Link>
-      </div>
-    </div>
-  );
-};
 
 const CollectionStrip = () => {
   const [tab, setTab] = useState(0);
@@ -1283,12 +734,12 @@ const ProductCard = ({ p }) => {
         <StarRating rating={4} showCount count={0} />
         <div className="flex items-baseline gap-1.5 mt-1">
           <span className="text-sm font-extrabold text-gray-900 dark:text-white">
-            ${p.price.toLocaleString()}
+            ${formatPrice(p.price)}
           </span>
           {p.was && (
             <>
               <span className="text-xs text-gray-400 line-through">
-                ${p.was.toLocaleString()}
+                ${formatPrice(p.was)}
               </span>
               <span className="text-[10px] text-green-600 dark:text-green-400 font-bold">
                 −${(p.was - p.price).toLocaleString()}
@@ -1334,7 +785,7 @@ const StickyCTA = ({ price, was, onCart }) => {
     <div className="fixed bottom-4 right-4 z-50 hidden lg:flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3 shadow-2xl shadow-black/10">
       <div className="pr-3 border-r border-gray-100 dark:border-gray-800">
         <p className="text-base font-black text-gray-900 dark:text-white leading-none">
-          ${price.toLocaleString()}
+          ${formatPrice(price)}
         </p>
         <p className="text-[10px] text-green-500 font-semibold mt-0.5">
           Save ${was - price} · Free Ship
@@ -1369,7 +820,7 @@ const MobileStickyCTA = ({ price, was }) => (
   <div className="fixed bottom-0 left-0 right-0 lg:hidden z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center gap-3 shadow-2xl">
     <div className="flex-1 min-w-0">
       <p className="text-base font-black text-gray-900 dark:text-white leading-none">
-        ${price.toLocaleString()}
+        ${formatPrice(price)}
       </p>
       <p className="text-[10px] text-green-500 font-semibold mt-0.5">
         Save ${was - price} · Free Shipping
@@ -1497,6 +948,7 @@ function SingleProductPage({
   recentlyViewed,
 }) {
   const { getNameBySlug } = useSolanaCategories();
+
   const breadcrumbs = useMemo(() => {
     if (!product || !slug) return [];
     return [
@@ -1505,6 +957,56 @@ function SingleProductPage({
       { name: product?.title || "", url: `#` },
     ];
   }, [product, slug]);
+
+  const getSavingsPercentage = (price, was) => {
+    if (!was || was <= 0 || price >= was) return 0;
+
+    const discount = was - price;
+    const percentage = (discount / was) * 100;
+
+    return Math.round(percentage);
+  };
+
+  const getSavings = (price, was) => {
+    if (!was || was <= 0 || price >= was) return 0;
+    console.log("price", price);
+    console.log("was", was);
+    const discount = was - price;
+
+    return discount.toFixed(2);
+  };
+
+  const formattedProduct = useMemo(() => {
+    if (!product) null;
+    const p = product;
+    const v = p?.variants?.[0];
+    const price = v?.price;
+    const was = v?.compare_at_price;
+    const saveAmt = getSavings(parseFloat(price), parseFloat(was));
+    const savePct = getSavingsPercentage(parseFloat(price), parseFloat(was));
+    return {
+      ...p,
+      name: p?.title,
+      sku: v?.sku,
+      rating: parseInt((p?.ratings?.rating_count || "").replace("'", "")) || 0,
+      reviewCount: 0, // static
+      price: formatPrice(price),
+      was: formatPrice(was),
+      savePct: savePct,
+      saveAmt: formatPrice(saveAmt),
+      ships: "Ships Within 1–2 Business Days", // static
+      badges: [ // static
+        "Phone Discounts",
+        "Package Deals",
+        "Scratch & Dent",
+        "Close Out Deals",
+        "Free Accessory Bundle",
+        "Open Box",
+        "Finance Now",
+        "Low Monthly Payments",
+      ],
+    };
+  }, [product]);
   return (
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans">
       <Topbar />
@@ -1514,12 +1016,12 @@ function SingleProductPage({
         {/* ── HERO: GALLERY + INFO ── */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-6 lg:gap-10 mb-12 lg:items-start">
           <div className="lg:sticky lg:top-4">
-            <ProductGallery
+            <ImageGallery
               images={product?.images || []}
               productTitle={product?.title}
             />
           </div>
-          {/* <ProductInfo product={PRODUCT} /> */}
+          <ProductInfo product={formattedProduct} />
         </div>
 
         {/* ── BELOW-FOLD SECTIONS ── */}
