@@ -77,7 +77,7 @@ function ProductCard({ hit, page_details, onCompare }) {
     // console.log("hit", hit);
     const id = hit?.product_id;
     const badge = "bestseller";
-    const ratings = parseInt(hit?.ratings?.rating || 0, 10);
+    const ratings = parseFloat(hit?.ratings?.rating || 0, 10);
     const reviews = parseInt(hit?.ratings?.review_count || 0, 10);
     // process dynamic product badge
     const result = {
@@ -88,7 +88,7 @@ function ProductCard({ hit, page_details, onCompare }) {
       brand: hit?.brand,
       name: hit?.title,
       url: getProductUrl(hit),
-      rating: ratings,
+      rating: Math.round(ratings),
       reviews: reviews,
     };
 
