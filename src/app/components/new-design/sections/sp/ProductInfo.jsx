@@ -1,5 +1,5 @@
-"use client";
-import { useState } from "react";
+// "use client";
+// import { useState } from "react";
 import Link from "next/link";
 // COMPONENTS
 import StarRating from "@/app/components/new-design/sections/sp/StarRating";
@@ -9,14 +9,6 @@ import { STORE_CONTACT } from "@/app/lib/store_constants"
 
 
 const ProductInfo = ({ product }) => {
-  const [qty, setQty] = useState(1);
-  const [added, setAdded] = useState(false);
-
-  const handleCart = () => {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2200);
-  };
-
   return (
     <div className="flex flex-col gap-5">
       {/* Brand + SKU */}
@@ -25,27 +17,27 @@ const ProductInfo = ({ product }) => {
           href="#"
           className="text-[10px] font-bold text-orange-500 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-2.5 py-1 rounded-full uppercase tracking-widest hover:bg-orange-100 transition-colors"
         >
-          {product.brand}
+          {product?.brand}
         </Link>
         <span className="text-[10px] text-gray-400 dark:text-gray-500">
-          SKU: {product.sku}
+          SKU: {product?.sku}
         </span>
       </div>
 
       {/* Title */}
       <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white leading-tight">
-        {product.name}
+        {product?.name}
       </h1>
 
       {/* Rating */}
       <div className="flex items-center gap-3 flex-wrap pb-4 border-b border-gray-100 dark:border-gray-800">
         <StarRating
-          rating={product.rating}
+          rating={product?.ratings?.rating}
           showCount
-          count={product.reviewCount}
+          count={product?.ratings?.review_count}
         />
         <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-          {product.rating} out of 5
+          {product?.rating} out of 5
         </span>
         <span className="text-gray-200 dark:text-gray-700">·</span>
         {/* <Link
@@ -59,17 +51,17 @@ const ProductInfo = ({ product }) => {
       {/* Price */}
       <div className="flex items-end gap-3 flex-wrap">
         <span className="text-4xl font-black text-gray-900 dark:text-white">
-          ${product.price}
+          ${product?.price}
         </span>
         <div className="flex flex-col pb-1">
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400 line-through">
-              ${product.was}
+              ${product?.was}
             </span>
-            <Badge variant="green">SAVE {product.savePct}%</Badge>
+            <Badge variant="green">SAVE {product?.savePct}%</Badge>
           </div>
           <span className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            You save ${product.saveAmt} · Free Shipping
+            You save ${product?.saveAmt} · Free Shipping
           </span>
         </div>
       </div>
@@ -85,7 +77,7 @@ const ProductInfo = ({ product }) => {
         >
           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="font-medium">{product.ships}</span>
+        <span className="font-medium">{product?.ships}</span>
       </div>
 
       {/* Discounts */}
@@ -99,7 +91,7 @@ const ProductInfo = ({ product }) => {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-1.5">
-          {product.badges.map((b) => (
+          {product?.badges.map((b) => (
             <div
               key={b}
               className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400"
@@ -127,13 +119,13 @@ const ProductInfo = ({ product }) => {
       <div className="flex items-stretch gap-3 flex-wrap">
         <div className="flex items-center bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
           <button
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
+            // onClick={() => setQty((q) => Math.max(1, q - 1))}
             className="w-10 h-11 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 text-xl font-light transition-colors"
           >
             −
           </button>
           <span className="w-9 text-center text-sm font-bold text-gray-900 dark:text-white">
-            {qty}
+            {1}
           </span>
           <button
             onClick={() => setQty((q) => q + 1)}
@@ -143,24 +135,9 @@ const ProductInfo = ({ product }) => {
           </button>
         </div>
         <button
-          onClick={handleCart}
-          className={`flex-1 min-w-[140px] flex items-center justify-center gap-2 h-11 px-5 rounded-xl text-sm font-bold text-white transition-all duration-200 ${added ? "bg-green-500" : "bg-orange-500 hover:bg-orange-600 active:scale-[.98]"}`}
+          // onClick={handleCart}
+          className={`flex-1 min-w-[140px] flex items-center justify-center gap-2 h-11 px-5 rounded-xl text-sm font-bold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 active:scale-[.98]}`}
         >
-          {added ? (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                viewBox="0 0 24 24"
-              >
-                <path d="M5 13l4 4L19 7" />
-              </svg>{" "}
-              Added to Cart
-            </>
-          ) : (
-            <>
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -171,8 +148,6 @@ const ProductInfo = ({ product }) => {
                 <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>{" "}
               Add to Cart
-            </>
-          )}
         </button>
         <Link
           href={`tel:${STORE_CONTACT}`}

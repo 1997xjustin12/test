@@ -10,7 +10,7 @@ import FicDropDown from "@/app/components/atom/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useQuickView } from "@/app/context/quickview";
-
+import { formatPrice } from "@/app/lib/helpers";
 
 const BADGE_STYLES = {
   bestseller: "bg-orange-500 text-white",
@@ -175,17 +175,17 @@ function ProductCard({ hit, page_details, onCompare }) {
               <>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-lg font-bold text-neutral-900 dark:text-white">
-                    ${product?.price.toLocaleString()}
+                    ${formatPrice(product?.price)}
                   </span>
                   {!!product?.was && (
                     <span className="text-xs text-neutral-400 line-through">
-                      ${product?.was.toLocaleString()}
+                      ${formatPrice(product?.was)}
                     </span>
                   )}
                 </div>
                 {!!(product?.was && product?.was > product?.price) && (
                   <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-0.5">
-                    Save ${(product.was - product.price).toLocaleString()}
+                    Save ${formatPrice(product.was - product.price)}
                   </p>
                 )}
               </>
