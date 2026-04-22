@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 // import { useState } from "react";
 import Link from "next/link";
 // COMPONENTS
@@ -9,6 +9,7 @@ import { STORE_CONTACT } from "@/app/lib/store_constants"
 
 
 const ProductInfo = ({ product }) => {
+  console.log("ProductInfo", product);
   return (
     <div className="flex flex-col gap-5">
       {/* Brand + SKU */}

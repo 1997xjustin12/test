@@ -103,16 +103,8 @@ function buildFormattedProduct(product) {
   };
 }
 
-function SingleProductPage({ product, slug, brandName, reviews, recentlyViewed }) {
+function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
   const formattedProduct = buildFormattedProduct(product);
-
-  const breadcrumbs = product && slug
-    ? [
-        { name: "Home", url: BASE_URL },
-        { name: brandName || slug, url: `${BASE_URL}/${slug}` },
-        { name: product?.title || "", url: "#" },
-      ]
-    : [];
 
   const firstVariant = product?.variants?.[0];
   const price = parseFloat(firstVariant?.price) || 0;
@@ -126,7 +118,7 @@ function SingleProductPage({ product, slug, brandName, reviews, recentlyViewed }
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans">
       <Topbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-20">
-        <Breadcrumb crumbs={breadcrumbs} />
+        <Breadcrumb crumbs={product?.breadcrumbs} />
 
         {/* HERO: GALLERY + INFO */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-6 lg:gap-10 mb-12 lg:items-start">

@@ -1107,7 +1107,7 @@ export function mapCategoryResults(cat) {
 
 export function productIsFreeshipping(product_tags) {
   return (product_tags || []).some(
-    (tag) => tag?.toLowerCase() === "free shipping"
+    (tag) => tag?.toLowerCase() === "free shipping",
   );
 }
 
@@ -1116,11 +1116,11 @@ export function productBadge(product_tags, product_collections) {
 
   for (const tag of product_tags) {
     const lowerTag = tag?.toLowerCase();
-    
+
     if (lowerTag.includes("new arrival")) {
       return "new";
     }
-    
+
     if (lowerTag.includes("sale")) {
       return "sale";
     }
@@ -1128,7 +1128,7 @@ export function productBadge(product_tags, product_collections) {
 
   for (const col of product_collections) {
     const lowerCol = col?.name?.toLowerCase();
-    
+
     if (lowerCol.includes("best sellers")) {
       return "bestseller";
     }
@@ -1136,7 +1136,7 @@ export function productBadge(product_tags, product_collections) {
 
   for (const col of product_collections) {
     const lowerCol = col?.name?.toLowerCase();
-    
+
     if (lowerCol.includes("open box")) {
       return "openbox";
     }
@@ -1145,23 +1145,37 @@ export function productBadge(product_tags, product_collections) {
   return "";
 }
 
-export function formatProduct(product){
-  if(!product) return null;
+function generateBreadCrumbs(product) {
+  if (!product || !product?.brand) return null;
+
+  return [
+    { name: "Home", url: BASE_URL },
+    { name: product?.brand, url: `${BASE_URL}/${createSlug(product?.brand)}` },
+    { name: product?.title || "", url: "#" },
+  ];
+}
+
+export function formatProduct(product) {
+  if (!product) return null;
   const variant = product?.variants?.[0];
   const rating = product?.ratings;
-
+  const price = variant?.price;
+  const was = variant?.compare_at_price || 0;
+  const save_amt = was ? was - price : 0;
+  const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
   return {
     ...product,
     name: product?.title,
     image: product?.images?.find((i) => i?.position == 1)?.src,
-    variants: product?.variants,
+    breadcrumbs: generateBreadCrumbs(product),
     category: product?.accentuate_data?.category,
     ratings: rating.rating,
     reviews: rating.review_count,
-    price: variant?.price,
-    was: variant?.compare_at_price,
     is_freeshipping: productIsFreeshipping(product?.tags),
     badge: productBadge(product?.tags, product?.collections),
+    price: price,
+    was: was,
+    save_amt,
+    save_pct,
   };
-    
 }
