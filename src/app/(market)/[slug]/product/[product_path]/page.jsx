@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
@@ -81,21 +82,73 @@ export async function generateMetadata({ params }) {
   };
 }
 
+function buildJsonLd(product, slug, product_path) {
+  const variant = product?.variants?.[0];
+  const price = variant?.price;
+  const availability = product?.published
+    ? "https://schema.org/InStock"
+    : "https://schema.org/OutOfStock";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: stripHtml(product?.seo?.description || product?.body_html || ""),
+    image: product.images?.map((img) => img.src).filter(Boolean) || [],
+    sku: variant?.sku || "",
+    brand: {
+      "@type": "Brand",
+      name: product.vendor || STORE_NAME,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${BASE_URL}/${slug}/product/${product_path}`,
+      priceCurrency: "USD",
+      price: price || "0",
+      availability,
+      seller: {
+        "@type": "Organization",
+        name: STORE_NAME,
+      },
+    },
+  };
+
+  if (product?.ratings?.rating_count) {
+    const ratingValue = parseFloat(product.ratings.rating_count) || 0;
+    if (ratingValue > 0) {
+      jsonLd.aggregateRating = {
+        "@type": "AggregateRating",
+        ratingValue: ratingValue.toFixed(1),
+        reviewCount: product.ratings.review_count || 1,
+      };
+    }
+  }
+
+  return jsonLd;
+}
+
 export default async function ProductPage({ params }) {
   const { slug, product_path } = await params;
 
   const product = await fetchProduct(product_path);
   const product_id = product?.product_id;
-  
+
   if(!product || !product_id){
     notFound();
   }
 
   const product_reviews = await getReviewsByProductId(product_id) || [];
+  const jsonLd = buildJsonLd(product, slug, product_path);
+
   return (
-    <Suspense fallback={<ProductPlaceholder />}>
-      <SingleProductPage product={product} slug={slug} reviews={product_reviews}/>
-      {/* <ProductClient params={params} /> */}
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Suspense fallback={<ProductPlaceholder />}>
+        <SingleProductPage product={product} slug={slug} reviews={product_reviews}/>
+      </Suspense>
+    </>
   );
 }
