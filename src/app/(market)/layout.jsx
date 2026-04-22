@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
 import { redis, keys } from "@/app/lib/redis";
@@ -113,6 +114,7 @@ export default async function MarketLayout({ children }) {
             >
               <CartProvider>
                 <CompareProductsProvider>
+                  <Suspense fallback={null}>
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
@@ -138,6 +140,7 @@ export default async function MarketLayout({ children }) {
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
+                  </Suspense>
                 </CompareProductsProvider>
               </CartProvider>
             </CategoriesProvider>
