@@ -34,28 +34,21 @@ export default function Hero() {
   const contentRef = useReveal();
   const cardsRef = useReveal();
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[85vh] md:min-h-[92vh] flex items-center overflow-hidden">
       <HeroBackground />
       {/* Fallback gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
-      {/* Directional overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30" />
+      {/* Mobile: uniform dark overlay — Desktop: directional so right side is lighter for cards */}
+      <div className="absolute inset-0 bg-black/75 md:bg-gradient-to-r md:from-black/90 md:via-black/70 md:to-black/30" />
 
-      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 w-full">
-        <div
-          className="
-          grid gap-14 items-center py-20
-          grid-cols-1 md:grid-cols-2
-        "
-        >
-          {/* ── Left: Copy ── no opacity-0 here — LCP content must be visible immediately */}
-          <div>
+      <div className="relative z-10 max-w-[1240px] mx-auto px-6 sm:px-6 w-full">
+        <div className="grid gap-14 items-center py-16 md:py-20 grid-cols-1 md:grid-cols-2">
+
+          {/* ── Copy — centered on mobile, left-aligned on desktop ── */}
+          <div className="text-center md:text-left">
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">
               Premium Outdoor Solutions
             </p>
-            {/* <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
-              Ignite the Heart<br />of Your <em className="not-italic text-fire-light">Home</em>
-            </h1> */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
               Your Dream
               <br />
@@ -63,13 +56,13 @@ export default function Hero() {
               <br />
               Call Away
             </h1>
-            <p className="text-white/70 text-base lg:text-lg max-w-md mb-9 leading-relaxed">
+            <p className="text-white/70 text-base lg:text-lg max-w-md mb-9 leading-relaxed mx-auto md:mx-0">
               From stunning gas fireplaces to all-weather outdoor kitchens — we
               bring warmth, beauty, and craftsmanship to every space.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap gap-3 mb-10">
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
               <Link
                 href="#categories"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30"
@@ -85,7 +78,7 @@ export default function Hero() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-8 mb-5">
+            <div className="flex justify-center md:justify-start gap-8 mb-5">
               {STATS.map(({ num, label }) => (
                 <div key={label}>
                   <div className="font-serif text-3xl font-bold text-white">
@@ -99,7 +92,7 @@ export default function Hero() {
             </div>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
               {TRUST.map((t) => (
                 <div
                   key={t}
