@@ -61,7 +61,7 @@ const ProductInfo = ({ product }) => {
             <Badge variant="green">SAVE {product?.savePct}%</Badge>
           </div>
           <span className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            You save ${product?.saveAmt} · Free Shipping
+            You save ${product?.saveAmt}{product?.is_freeshipping && ` · Free Shipping`}
           </span>
         </div>
       </div>

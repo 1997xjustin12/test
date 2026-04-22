@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 // COMPONENTS — server
-import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
 import ReviewsSection from "@/app/components/new-design/sections/sp/ReviewsSection";
 import SupportCTA from "@/app/components/new-design/sections/sp/SupportCTA";
 import ProductGrid from "@/app/components/new-design/sections/sp/ProductGrid";
 import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
 // COMPONENTS — client
+import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
 import Topbar from "@/app/components/new-design/sections/sp/Topbar";
 import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
 import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
@@ -103,13 +103,13 @@ function buildFormattedProduct(product) {
   };
 }
 
-function SingleProductPage({ product, slug, categoryName, reviews, recentlyViewed }) {
+function SingleProductPage({ product, slug, brandName, reviews, recentlyViewed }) {
   const formattedProduct = buildFormattedProduct(product);
 
   const breadcrumbs = product && slug
     ? [
         { name: "Home", url: BASE_URL },
-        { name: categoryName || slug, url: `${BASE_URL}/${slug}` },
+        { name: brandName || slug, url: `${BASE_URL}/${slug}` },
         { name: product?.title || "", url: "#" },
       ]
     : [];

@@ -10,7 +10,7 @@ import FicDropDown from "@/app/components/atom/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useQuickView } from "@/app/context/quickview";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, formatProduct } from "@/app/lib/helpers";
 
 const BADGE_STYLES = {
   bestseller: "bg-orange-500 text-white",
@@ -80,20 +80,12 @@ function ProductCard({ hit, page_details, onCompare }) {
     const ratings = parseFloat(hit?.ratings?.rating || 0, 10);
     const reviews = parseInt(hit?.ratings?.review_count || 0, 10);
     // process dynamic product badge
-    const result = {
-      id,
-      badge,
-      price: hit?.variants?.[0]?.price,
-      was: hit?.variants?.[0]?.compare_at_price,
-      brand: hit?.brand,
-      name: hit?.title,
-      url: getProductUrl(hit),
-      rating: Math.round(ratings),
-      reviews: reviews,
-    };
+    
 
-    // console.log("result", result);
-    return result;
+    const format = formatProduct(hit);
+
+    console.log("formatted hit", format);
+    return { ...format, url: getProductUrl(hit) };
   }, [hit]);
 
   return (
@@ -194,7 +186,10 @@ function ProductCard({ hit, page_details, onCompare }) {
         </div>
 
         <div className="flex gap-2 mt-2">
-          <button onClick={()=> viewItem(hit)} className="w-9 h-9 min-w-9 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors">
+          <button
+            onClick={() => viewItem(hit)}
+            className="w-9 h-9 min-w-9 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors"
+          >
             <svg
               className="w-4 h-4"
               fill="none"

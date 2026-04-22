@@ -128,7 +128,7 @@ const ImageGallery = ({ images, productTitle }) => {
       {/* Main gallery */}
       <div className="flex flex-col gap-3">
         {/* Primary image — fixed container height prevents CLS */}
-        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden aspect-square lg:aspect-auto lg:h-[460px]">
+        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden aspect-1 lg:aspect-auto lg:h-[460px]">
           <GalleryMainImage
             image={mainImage}
             productTitle={productTitle}
@@ -225,7 +225,7 @@ const ImageGallery = ({ images, productTitle }) => {
               key={`thumb-${i}`}
               onClick={() => selectThumb(img)}
               aria-label={`View image ${i + 1}`}
-              className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 bg-white dark:bg-gray-900 ${
+              className={`relative aspect-1 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-white dark:bg-gray-900 ${
                 img?.src === mainImage
                   ? "border-orange-500 ring-2 ring-orange-200 dark:ring-orange-800"
                   : "border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"
@@ -302,7 +302,7 @@ const ImageGallery = ({ images, productTitle }) => {
                 <path d="M15 19l-7-7 7-7" />
               </svg>
             </IconBtn>
-            <div className="w-full max-w-2xl aspect-square relative">
+            <div className="w-full max-w-2xl aspect-1 relative">
               {mainImage && (
                 <Image
                   src={mainImage}

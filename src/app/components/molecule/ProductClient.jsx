@@ -94,7 +94,7 @@ export default function ProductClient({ params }) {
     return <ProductPlaceholder />;
   }
 
-  if(UIV2) return (<NewSingleProductPage  product={product} slug={slug} loading={loading} reviews={reviews} reventlyViewed={recentlyViewed}/>)
+  if(UIV2) return (<NewSingleProductPage  product={product} slug={slug} loading={loading} brandName={product?.brand} reviews={reviews} reventlyViewed={recentlyViewed}/>)
 
   return (
     <OldSingleProductPage product={product} slug={slug} loading={loading} reviews={reviews} reventlyViewed={recentlyViewed}/>
