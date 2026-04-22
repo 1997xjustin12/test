@@ -685,7 +685,6 @@ export default function NewSearchPage() {
 
   const top = filtered("top-product");
   const topResult = top ? top.map((i) => ({ ...i, name: i.title })) : null;
-  console.log("topResult", topResult);
   const categoryResults = filtered("category");
   const brandResults = filtered("brand");
   const collectionResults = filtered("collections");
