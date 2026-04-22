@@ -673,15 +673,15 @@ function NoResults({ query }) {
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────
 export default function NewSearchPage() {
-  const { loading, searchQuery, searchResults, noResults } = useSearch();
+  const { searchPageLoading, searchPageQuery, searchPageResults, noPageResults } = useSearch();
   const [tab, setTab] = useState("product");
   const dropRef = useRef(null);
 
   const filtered = useCallback(
     (prop) => {
-      return searchResults.find((result) => result?.prop === prop)?.data || [];
+      return searchPageResults.find((result) => result?.prop === prop)?.data || [];
     },
-    [searchResults],
+    [searchPageResults],
   );
 
   const top = filtered("top-product");
@@ -707,10 +707,10 @@ export default function NewSearchPage() {
       {/* Tabs */}
       <div className="max-w-[1240px] mx-auto">
         {/* ── IDLE ── */}
-        {searchQuery.trim() === "" && <IdleState />}
+        {searchPageQuery.trim() === "" && <IdleState />}
 
         {/* ── LOADING ── */}
-        {loading && searchQuery.trim() !== "" && (
+        {searchPageLoading && searchPageQuery.trim() !== "" && (
           <div className="flex gap-6">
             {/* Sidebar skeleton */}
             <div className="w-64 shrink-0 hidden lg:block">
@@ -731,27 +731,27 @@ export default function NewSearchPage() {
         )}
 
         {/* ── NO RESULTS ── */}
-        {noResults && <NoResults query={searchQuery} />}
+        {noPageResults && <NoResults query={searchPageQuery} />}
 
         {/* ── RESULTS ── */}
-        {!noResults && searchQuery.trim() !== "" && (
+        {!noPageResults && searchPageQuery.trim() !== "" && (
           <>
             {/* "Results for" label */}
             <div className="max-w-[1240px] mx-auto  px-4 sm:px-6 py-6">
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 Results found for{" "}
                 <span className="font-bold" style={{ color: F }}>
-                  {searchQuery}
+                  {searchPageQuery}
                 </span>
               </p>
             </div>
 
             {topResult?.[0] && (
-              <ExactMatchCard p={topResult[0]} q={searchQuery} />
+              <ExactMatchCard p={topResult[0]} q={searchPageQuery} />
             )}
 
             <ResultTabs
-              searchResults={searchResults}
+              searchResults={searchPageResults}
               onChange={setTab}
               active={tab}
             />
@@ -760,7 +760,7 @@ export default function NewSearchPage() {
               <div
                 className={`w-full ${tab === "product" ? "flex" : "hidden"}`}
               >
-                <ProductsSection category={"search"} search={searchQuery} />
+                <ProductsSection category={"search"} search={searchPageQuery} />
               </div>
               <div
                 className={`w-full ${tab === "category" ? "flex" : "hidden"}`}

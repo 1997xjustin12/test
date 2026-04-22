@@ -71,7 +71,7 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
     (e) => {
       if (e.key !== "Enter") return;
       if (isSearchPage) {
-        if (localInput !== "") setSearch(localInput);
+        if (localInput !== "") setSearch(localInput, true, true);
       } else if (searchQuery !== "") {
         setOpenSearch(false);
         redirectToSearchPage();
@@ -85,7 +85,7 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
   // ---------------------------------------------------------------------------
   const handleSearchButtonClick = useCallback(() => {
     if (isSearchPage) {
-      if (localInput !== "") setSearch(localInput);
+      if (localInput !== "") setSearch(localInput, true, true);
     } else if (searchQuery !== "") {
       setOpenSearch(false);
       redirectToSearchPage();

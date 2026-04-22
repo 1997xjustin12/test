@@ -12,38 +12,31 @@ export default function OldSearchPageClient({props}) {
   const searchParams = use(props.searchParams);
   const [tab, setTab] = useState("product");
   const { query } = searchParams;
-  const { loading, searchQuery, searchResults, noResults } = useSearch();
-  // console.log("[SEARCH RESULTS]", searchResults)
-  // NOTE: URL→search sync is handled by the search context's own effect.
-  // A redundant setSearch(query) here caused a double-trigger race on mount.
+  const { searchPageLoading, searchPageQuery, searchPageResults, noPageResults } = useSearch();
 
   const handleTabChange = (tab) => {
     setTab(tab);
   };
 
-  if (!loading) {
-    if (!query) return <NoSearchResultFound query={query} />;
-    // Only show no-results once searchQuery has caught up to the URL param,
-    // preventing a flash while supplementary results (categories/brands) are still loading.
-    if (noResults && searchQuery === query) return <NoSearchResultFound query={query} />;
-  }
+  if (!query) return <NoSearchResultFound query={query} />;
+  if (!searchPageLoading && noPageResults && searchPageQuery === query) return <NoSearchResultFound query={query} />;
 
   return (
     <div className="min-h-screen">
       <MobileLoader />
       <div className="container mx-auto px-2 sm:px-4 pt-4 flex items-center justify-between">
         <div className="flex flex-col gap-[10px] w-full pb-[100px]">
-          {loading ? (
+          {searchPageLoading ? (
             <div className="bg-neutral-200 w-full max-w-[200px] h-[24px] rounded"></div>
           ) : (
             <div>
               Results found for{" "}
-              <span className="font-bold text-theme-600">{searchQuery}</span>
+              <span className="font-bold text-theme-600">{searchPageQuery}</span>
             </div>
           )}
           {/* tabs */}
           <div className="flex items-center justify-evenly w-full my-[10px]">
-            {loading ? (
+            {searchPageLoading ? (
               <>
                 {[165, 180, 150].map((i, idx) => (
                   <div
@@ -65,9 +58,9 @@ export default function OldSearchPageClient({props}) {
               </>
             ) : (
               <>
-                {searchResults &&
-                  searchResults.length > 0 &&
-                  searchResults
+                {searchPageResults &&
+                  searchPageResults.length > 0 &&
+                  searchPageResults
                     .filter((i) =>
                       ["product", "category", "brand"].includes(i.prop)
                     )
@@ -89,17 +82,17 @@ export default function OldSearchPageClient({props}) {
           {/* tab display contents*/}
 
           {tab === "product" && (
-            <ProductsSection category={"search"} search={searchQuery} />
+            <ProductsSection category={"search"} search={searchPageQuery} />
           )}
 
           {tab === "category" && (
             <>
-              {searchResults &&
-                searchResults.find(({ prop }) => prop === "category") && (
+              {searchPageResults &&
+                searchPageResults.find(({ prop }) => prop === "category") && (
                   <>
-                    {searchResults.find(({ prop }) => prop === "category").data
+                    {searchPageResults.find(({ prop }) => prop === "category").data
                       .length > 0 ? (
-                      searchResults
+                      searchPageResults
                         .find(({ prop }) => prop === "category")
                         .data.map((i, index) => (
                           <Link
@@ -123,12 +116,12 @@ export default function OldSearchPageClient({props}) {
 
           {tab === "brand" && (
             <>
-              {searchResults &&
-                searchResults.find(({ prop }) => prop === "brand") && (
+              {searchPageResults &&
+                searchPageResults.find(({ prop }) => prop === "brand") && (
                   <>
-                    {searchResults.find(({ prop }) => prop === "brand").data
+                    {searchPageResults.find(({ prop }) => prop === "brand").data
                       .length > 0 ? (
-                      searchResults
+                      searchPageResults
                         .find(({ prop }) => prop === "brand")
                         .data.map((i, index) => (
                           <Link

@@ -63,8 +63,9 @@ export const SearchProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
-  const [noPageResults, setNoPageResults] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchPageLoading, setSearchPageLoading] = useState(true);
+  const [searchPageQuery, setSearchPageQuery] = useState("");
 
   // ---------------------------------------------------------------------------
   // STATE - SEARCH RESULTS
@@ -96,6 +97,8 @@ export const SearchProvider = ({ children }) => {
   const debounceTimeoutRef = useRef(null);
   const lastProcessedUrlQuery = useRef(null);
   const currentSearchQuery = useRef("");
+  const shouldCommitRef = useRef(false);
+  const searchResultsRef = useRef([]);
 
   // ---------------------------------------------------------------------------
   // HELPER: Build Elasticsearch Query
@@ -970,9 +973,23 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Set Search with Debounce
   // ---------------------------------------------------------------------------
   const setSearch = useCallback(
-    (search_string, shouldUpdateUrl = true) => {
+    (search_string, shouldUpdateUrl = true, commitToPage = false) => {
+      if (commitToPage) {
+        shouldCommitRef.current = true;
+        if (search_string !== currentSearchQuery.current) {
+          setSearchPageLoading(true);
+        }
+      }
+
       // Guard: Prevent update if same value (prevents loops)
       if (search_string === currentSearchQuery.current) {
+        // Commit-with-same-query: snapshot current results immediately
+        if (commitToPage) {
+          setSearchPageResults(searchResultsRef.current);
+          setSearchPageQuery(search_string);
+          setSearchPageLoading(false);
+          shouldCommitRef.current = false;
+        }
         return;
       }
 
@@ -1084,6 +1101,11 @@ export const SearchProvider = ({ children }) => {
   useEffect(() => {
     const urlQuery = searchParams.get("query");
 
+    if (pathname === "/search" && !urlQuery) {
+      setSearchPageLoading(false);
+      return;
+    }
+
     // Only process if: on search page, has query, different from current, and not already processed
     if (
       pathname === "/search" &&
@@ -1092,8 +1114,8 @@ export const SearchProvider = ({ children }) => {
       urlQuery !== lastProcessedUrlQuery.current
     ) {
       lastProcessedUrlQuery.current = urlQuery;
-      // Update state and fetch data without updating URL (since we're already responding to a URL change)
-      setSearch(urlQuery, false);
+      // Commit to page results since this is a URL-driven search (navigation / submit)
+      setSearch(urlQuery, false, true);
     }
   }, [pathname, searchParams, setSearch]);
 
@@ -1234,6 +1256,38 @@ export const SearchProvider = ({ children }) => {
     loading,
   ]);
   // ---------------------------------------------------------------------------
+  // EFFECT: Commit search page results (only on explicit submit / URL navigation)
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    searchResultsRef.current = searchResults;
+    if (shouldCommitRef.current) {
+      setSearchPageResults(searchResults);
+      setSearchPageQuery(currentSearchQuery.current);
+      setSearchPageLoading(false);
+      shouldCommitRef.current = false;
+    }
+  }, [searchResults]);
+
+  // ---------------------------------------------------------------------------
+  // MEMO: No Page Results (derived from committed page results)
+  // ---------------------------------------------------------------------------
+  const noPageResults = useMemo(() => {
+    if (searchPageResults.length === 0) return false;
+    const products = searchPageResults.find((r) => r.prop === "product")?.data || [];
+    const categories = searchPageResults.find((r) => r.prop === "category")?.data || [];
+    const brands = searchPageResults.find((r) => r.prop === "brand")?.data || [];
+    const collections = searchPageResults.find((r) => r.prop === "collections")?.data || [];
+    const skus = searchPageResults.find((r) => r.prop === "skus")?.data || [];
+    return (
+      products.length === 0 &&
+      categories.length === 0 &&
+      brands.length === 0 &&
+      collections.length === 0 &&
+      skus.length === 0
+    );
+  }, [searchPageResults]);
+
+  // ---------------------------------------------------------------------------
   // CONTEXT VALUE
   // ---------------------------------------------------------------------------
   const contextValue = useMemo(
@@ -1243,6 +1297,10 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
+      searchPageResults,
+      noPageResults,
+      searchPageLoading,
+      searchPageQuery,
       searchPageProductCount,
       recentSearchKey: RECENT_SEARCH_KEY,
       setSearch,
@@ -1258,10 +1316,14 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
+      searchPageResults,
+      noPageResults,
+      searchPageLoading,
+      searchPageQuery,
       searchPageProductCount,
       setSearch,
-      setSearchPageProductCount, // Added
-      setMainIsActive, // Added
+      setSearchPageProductCount,
+      setMainIsActive,
       redirectToSearchPage,
       getRecentSearch,
       setRecentSearch,

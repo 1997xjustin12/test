@@ -337,8 +337,7 @@ function SearchBox() {
 
   function handleSubmit() {
     if (isSearchPage) {
-      // Commit the local input — this triggers both fetch pipelines once
-      setSearch(localInput);
+      setSearch(localInput, true, true);
     } else {
       redirectToSearchPage();
     }
