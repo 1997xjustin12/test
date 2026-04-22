@@ -514,16 +514,15 @@ function IdleState() {
         </p>
         <div className="flex flex-wrap gap-2">
           {TRENDING.map((t, i) => (
-            <button
-              key={t}
-              onClick={() => onSelect(t)}
+            <Link
+              key={`idle-state-popular-${t}`} href={`${BASE_URL}/search?query=${t}`}
               className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
             >
               <span className="text-[10px] text-gray-300 font-mono">
                 {String(i + 1).padStart(2, "0")}
               </span>
               {t}
-            </button>
+            </Link>
           ))}
         </div>
       </div>
@@ -629,9 +628,9 @@ function NoResults({ query }) {
       <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Try these popular searches</p>
       <div className="flex flex-wrap justify-center gap-2 mb-8">
         {TRENDING.slice(0,6).map(t=>(
-          <button key={t} onClick={()=>onSuggest(t)} className="px-4 py-2 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all">
+          <Link key={`no-result-popular-${t}`} href={`${BASE_URL}/search?query=${t}`} className="px-4 py-2 rounded-full text-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all">
             {t}
-          </button>
+          </Link>
         ))}
       </div>
 
