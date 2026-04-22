@@ -1,5 +1,7 @@
 import { ES_INDEX, createSlug, exclude_brands, exclude_collections } from "./lib/helpers";
 
+export const revalidate = 3600;
+
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL || "https://yourdomain.com";
 const ESURL = process.env.NEXT_ES_URL;
 const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
@@ -9,7 +11,7 @@ async function fetchAllProducts() {
   try {
     const fetchConfig = {
       method: "POST",
-      cache: "no-store",
+      next: { revalidate: 3600 },
       headers: {
         Authorization: ESApiKey,
         "Content-Type": "application/json",
@@ -71,7 +73,7 @@ async function fetchAllBrands() {
   try {
     const fetchConfig = {
       method: "POST",
-      cache: "no-store",
+      next: { revalidate: 3600 },
       headers: {
         Authorization: ESApiKey,
         "Content-Type": "application/json",
@@ -105,7 +107,7 @@ async function fetchAllCategories() {
   try {
     const fetchConfig = {
       method: "POST",
-      cache: "no-store",
+      next: { revalidate: 3600 },
       headers: {
         Authorization: ESApiKey,
         "Content-Type": "application/json",
