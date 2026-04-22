@@ -77,7 +77,8 @@ function ProductCard({ hit, page_details, onCompare }) {
     // console.log("hit", hit);
     const id = hit?.product_id;
     const badge = "bestseller";
-    const ratings = parseInt(hit?.ratings?.rating_count?.replace("'", "") || 0, 10);
+    const ratings = parseInt(hit?.ratings?.rating || 0, 10);
+    const reviews = parseInt(hit?.ratings?.review_count || 0, 10);
     // process dynamic product badge
     const result = {
       id,
@@ -88,6 +89,7 @@ function ProductCard({ hit, page_details, onCompare }) {
       name: hit?.title,
       url: getProductUrl(hit),
       rating: ratings,
+      reviews: reviews,
     };
 
     // console.log("result", result);
@@ -155,7 +157,7 @@ function ProductCard({ hit, page_details, onCompare }) {
           <div className="flex items-center gap-1.5">
             <StarRating rating={product?.rating} />
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
-              {product?.rating} {/* ({product?.reviews}) */}
+              {product?.rating} {!!product?.reviews && `(${product?.reviews})`}
             </span>
           </div>
           {/* <span className="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded-md">
