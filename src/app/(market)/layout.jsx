@@ -11,7 +11,6 @@ import { CategoriesProvider } from "@/app/context/category";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
-import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
 
@@ -102,9 +101,6 @@ export default async function MarketLayout({ children }) {
       <body
         className={`antialiased ${InterFont.variable} ${libreBaskerville.variable} ${playfairDisplay.variable} theme-${color}`}
       >
-        <GoogleReCaptchaProvider
-          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        >
           <AuthProvider>
             <CategoriesProvider
               menu_items={formattedMenuItems}
@@ -115,17 +111,12 @@ export default async function MarketLayout({ children }) {
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        {/* SPEED FIX 3: Ensure these components are server-rendered 
-                          or have fixed heights to prevent Layout Shift (CLS).
-                        */}
                         {UIV2 && (
                           <>
                             <Topbar />
                             <Navbar logo={redisLogo} />
                           </>
                         )}
-
-                        {/* --- OLD UI VERSION --- */}
                         {!UIV2 && (
                           <>
                             <FreeShippingBanner />
@@ -134,11 +125,9 @@ export default async function MarketLayout({ children }) {
                             <FixedHeader />
                           </>
                         )}
-
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
-
                         {UIV2 && <Footer />}
                         {!UIV2 && <OldFooter />}
                       </QuickViewProvider>
@@ -148,7 +137,6 @@ export default async function MarketLayout({ children }) {
               </CartProvider>
             </CategoriesProvider>
           </AuthProvider>
-        </GoogleReCaptchaProvider>
       </body>
     </html>
   );

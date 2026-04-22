@@ -52,6 +52,13 @@
     "slick-carousel": "^1.8.1",
     "use-debounce": "^10.0.4"
   },
+  "browserslist": [
+    "chrome >= 80",
+    "firefox >= 78",
+    "safari >= 14",
+    "edge >= 80",
+    "not dead"
+  ],
   "devDependencies": {
     "@iconify/react": "^5.1.0",
     "@types/node": "^20",

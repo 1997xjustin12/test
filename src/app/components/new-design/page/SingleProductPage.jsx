@@ -1,20 +1,23 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { BASE_URL, formatPrice } from "@/app/lib/helpers";
-// COMPONENTS — server
-import ReviewsSection from "@/app/components/new-design/sections/sp/ReviewsSection";
-import SupportCTA from "@/app/components/new-design/sections/sp/SupportCTA";
-import ProductGrid from "@/app/components/new-design/sections/sp/ProductGrid";
-import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
-// COMPONENTS — client
+
+// Above-fold — load immediately
 import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
 import Topbar from "@/app/components/new-design/sections/sp/Topbar";
 import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
 import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
-import CollectionStrip from "@/app/components/new-design/sections/sp/CollectionStrip";
-import DescriptionSection from "@/app/components/new-design/sections/sp/DescriptionSection";
-import SpecsShipping from "@/app/components/new-design/sections/sp/SpecsShipping";
-import FAQSection from "@/app/components/new-design/sections/sp/FAQSection";
 import StickyCTA from "@/app/components/new-design/sections/sp/StickyCTA";
+import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
+
+// Below-fold — lazy loaded to reduce initial JS bundle
+const CollectionStrip = dynamic(() => import("@/app/components/new-design/sections/sp/CollectionStrip"));
+const DescriptionSection = dynamic(() => import("@/app/components/new-design/sections/sp/DescriptionSection"));
+const SpecsShipping = dynamic(() => import("@/app/components/new-design/sections/sp/SpecsShipping"));
+const ReviewsSection = dynamic(() => import("@/app/components/new-design/sections/sp/ReviewsSection"));
+const FAQSection = dynamic(() => import("@/app/components/new-design/sections/sp/FAQSection"));
+const SupportCTA = dynamic(() => import("@/app/components/new-design/sections/sp/SupportCTA"));
+const ProductGrid = dynamic(() => import("@/app/components/new-design/sections/sp/ProductGrid"));
 
 const STATIC_SPECS = [
   { label: "Class", value: "Premium" },

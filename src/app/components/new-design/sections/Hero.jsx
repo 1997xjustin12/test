@@ -34,13 +34,16 @@ export default function Hero() {
   const cardsRef = useReveal();
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-      {/* Background */}
-      <img
-        src="https://solanafireplaces.com/_next/image?url=%2Fimages%2Fbanner%2Fhome-banner-202509.webp&w=3840&q=75"
+      {/* Background — priority forces fetchpriority=high and preload, fixing LCP */}
+      <Image
+        src="/images/banner/home-banner-202509.webp"
         alt=""
-        aria-hidden
-        className="absolute inset-0 w-full h-full object-cover"
-        onError={(e) => (e.currentTarget.style.display = "none")}
+        aria-hidden="true"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+        quality={75}
       />
       {/* Fallback gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
