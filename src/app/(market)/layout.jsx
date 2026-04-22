@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import "@/app/globals.css";
 import { redis, keys } from "@/app/lib/redis";
 import { unstable_cache } from "next/cache";
-import { UIV2 } from "@/app/lib/helpers";
 import { Inter, Playfair_Display } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
@@ -14,23 +13,11 @@ import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
-
-// OLD DESIGN COMPONENTS
-import FixedHeader from "@/app/components/template/fixed_header";
-import ExtrasHeader from "@/app/components/atom/ExtrasHeader";
-import TuiNavBar from "@/app/components/template/tui_navbarV3"; // uncomment for shopify structure
-import FreeShippingBanner from "@/app/components/molecule/FreeShippingBanner";
-import OldFooter from "@/app/components/section/Footer";
-
-// NEW DESIGN COMPONENTS
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
 import RatingStyles from "@/app/components/atom/RatingStyles";
 
-/** * SPEED FIX 1: Reduced font weights & consolidated Playfair versions.
- * Using 'swap' ensures text is visible while fonts load (prevents FOIT).
- */
 const InterFont = Inter({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
@@ -66,24 +53,17 @@ const getInitData = unstable_cache(
 );
 
 export default async function MarketLayout({ children }) {
-  /** * SPEED FIX 2: Parallel Fetching.
-   * Both requests fire at the same time instead of waiting for each other.
-   */
   const [initData, categories] = await Promise.all([
     getInitData(),
     fetchUniqueCategories(),
   ]);
 
-  /** * SEO FIX: Handle missing data properly.
-   * Returning a 404 or throwing an error is better than a 200 OK "Error" div.
-   */
   if (!initData) {
     return notFound();
   }
 
   const [menu, redisLogo, color] = initData;
 
-  // Pre-process menu items outside of the JSX for cleaner rendering
   const formattedMenuItems =
     menu?.map((i) => ({
       ...i,
@@ -97,48 +77,30 @@ export default async function MarketLayout({ children }) {
         <link rel="preconnect" href="https://cdn.shopify.com" />
         <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.digitaloceanspaces.com" />
       </head>
-      <body
-        className={`antialiased ${InterFont.variable} ${playfairDisplay.variable} theme-${color}`}
-      >
-          <RatingStyles />
-          <AuthProvider>
-            <CategoriesProvider
-              menu_items={formattedMenuItems}
-              categories={categories}
-            >
-              <CartProvider>
-                <CompareProductsProvider>
-                  <Suspense fallback={null}>
+      <body className={`antialiased ${InterFont.variable} ${playfairDisplay.variable} theme-${color}`}>
+        <RatingStyles />
+        <AuthProvider>
+          <CategoriesProvider menu_items={formattedMenuItems} categories={categories}>
+            <CartProvider>
+              <CompareProductsProvider>
+                <Suspense fallback={null}>
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        {UIV2 && (
-                          <>
-                            <Topbar />
-                            <Navbar logo={redisLogo} />
-                          </>
-                        )}
-                        {!UIV2 && (
-                          <>
-                            <FreeShippingBanner />
-                            <ExtrasHeader />
-                            <TuiNavBar logo={redisLogo} menu={menu} />
-                            <FixedHeader />
-                          </>
-                        )}
+                        <Topbar />
+                        <Navbar logo={redisLogo} />
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
-                        {UIV2 && <Footer />}
-                        {!UIV2 && <OldFooter />}
+                        <Footer />
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
-                  </Suspense>
-                </CompareProductsProvider>
-              </CartProvider>
-            </CategoriesProvider>
-          </AuthProvider>
+                </Suspense>
+              </CompareProductsProvider>
+            </CartProvider>
+          </CategoriesProvider>
+        </AuthProvider>
       </body>
     </html>
   );
