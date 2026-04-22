@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useReveal } from "@/app/hooks/useReveal";
 import { BLOG_POSTS } from "@/app/data/new-homepage";
 import Link from "next/link";
@@ -18,14 +19,14 @@ function BlogCard({ tag, title, readTime, date, img, url }) {
         hover:-translate-y-1 group
       "
       >
-        <div className="h-48 overflow-hidden bg-stone-200 dark:bg-stone-800">
-          <img
+        <div className="relative h-48 overflow-hidden bg-stone-200 dark:bg-stone-800">
+          <Image
             src={img}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            onError={(e) =>
-              (e.currentTarget.parentElement.style.background = "#e8e2dc")
-            }
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
           />
         </div>
         <div className="p-5">

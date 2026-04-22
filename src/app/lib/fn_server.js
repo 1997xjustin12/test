@@ -224,7 +224,7 @@ export async function fetchUniqueCategories() {
           },
         },
       },
-      { cache: "no-store" },
+      { next: { revalidate: 3600 } },
     );
     return data?.aggregations?.unique_categories?.buckets?.map(mapCategoryResults) || [];
   } catch (error) {

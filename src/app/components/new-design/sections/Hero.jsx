@@ -1,8 +1,8 @@
 "use client";
 import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
-import Image from "next/image";
 import Link from "next/link";
+import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
 
 const STATS = [
   { num: "6K+", label: "Products" },
@@ -34,17 +34,7 @@ export default function Hero() {
   const cardsRef = useReveal();
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-      {/* Background — priority forces fetchpriority=high and preload, fixing LCP */}
-      <Image
-        src="/images/banner/home-banner-202509.webp"
-        alt=""
-        aria-hidden="true"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-        quality={75}
-      />
+      <HeroBackground />
       {/* Fallback gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
       {/* Directional overlay */}

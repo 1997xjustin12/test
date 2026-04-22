@@ -1,5 +1,6 @@
 "use client"
 import React from "react";
+import Image from "next/image";
 import { useReveal } from "@/app/hooks/useReveal";
 import { WHY_POINTS } from "@/app/data/new-homepage";
 
@@ -14,12 +15,14 @@ export default function WhySolana() {
           {/* ── Visual column ── */}
           <div ref={visRef} className="relative opacity-0 translate-y-6 transition-all duration-700">
             {/* Main image */}
-            <div className="rounded-2xl overflow-hidden h-[420px] md:h-[480px] bg-gradient-to-br from-stone-800 to-stone-900">
-              <img
+            <div className="relative rounded-2xl overflow-hidden h-[420px] md:h-[480px] bg-gradient-to-br from-stone-800 to-stone-900">
+              <Image
                 src="/images/banner/fireplace-banner.webp"
                 alt="About Solana Fireplaces"
-                className="w-full h-full object-contain"
-                onError={e => (e.currentTarget.style.display = "none")}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain"
+                loading="lazy"
               />
             </div>
             {/* Small inset — hidden on mobile */}
@@ -30,11 +33,13 @@ export default function WhySolana() {
               bg-gradient-to-br from-stone-700 to-stone-800
               border-4 border-white dark:border-stone-950
               shadow-xl">
-              <img
+              <Image
                 src="/images/banner/fireplace-banner.webp"
                 alt="About Solana Fireplaces"
-                className="w-full h-full object-contain"
-                onError={e => (e.currentTarget.style.display = "none")}
+                fill
+                sizes="176px"
+                className="object-contain"
+                loading="lazy"
               />
             </div>
             {/* Float badge — hidden on mobile */}
