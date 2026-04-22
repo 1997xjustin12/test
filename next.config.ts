@@ -85,11 +85,35 @@ const config: NextConfig = {
 
     return [
       {
-        source: "/:path*",
+        // Homepage — cache at Cloudflare edge for 1 hour, revalidate in background
+        source: "/",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: CSP.replace(/\s+/g, " ").trim(),
+          },
+        ],
+      },
+      {
+        // Static assets — cache long term
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // All other pages — CSP only, no HTML caching
+        source: "/((?!_next).*)",
         headers: [
           {
             key: "Content-Security-Policy",
-            // Clean up the string for a valid HTTP header
             value: CSP.replace(/\s+/g, " ").trim(),
           },
         ],
