@@ -92,12 +92,8 @@ export default {
         lg: "3px 3px 6px rgba(0, 0, 0, 0.3)",
       },
       fontFamily: {
-        // montserrat: "var(--font-montserrat)",
         inter: "var(--font-inter)",
-        libre: "var(--font-libre-baskerville)",
-        "playfair": "var(--font-playfair)",
         "playfair-display": "var(--font-playfair-display)",
-        "playfair-display-sc": "var(--font-playfair-display-sc)",
       },
     },
   },

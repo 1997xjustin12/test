@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import "@/app/globals.css";
-import "@smastrom/react-rating/style.css";
 import { redis, keys } from "@/app/lib/redis";
 import { unstable_cache } from "next/cache";
 import { UIV2 } from "@/app/lib/helpers";
-import { Inter, Libre_Baskerville, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
@@ -27,6 +26,7 @@ import OldFooter from "@/app/components/section/Footer";
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
+import RatingStyles from "@/app/components/atom/RatingStyles";
 
 /** * SPEED FIX 1: Reduced font weights & consolidated Playfair versions.
  * Using 'swap' ensures text is visible while fonts load (prevents FOIT).
@@ -36,13 +36,6 @@ const InterFont = Inter({
   weight: ["400", "600", "700"],
   display: "swap",
   variable: "--font-inter",
-});
-
-const libreBaskerville = Libre_Baskerville({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-libre-baskerville",
 });
 
 const playfairDisplay = Playfair_Display({
@@ -105,8 +98,9 @@ export default async function MarketLayout({ children }) {
         <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.digitaloceanspaces.com" />
       </head>
       <body
-        className={`antialiased ${InterFont.variable} ${libreBaskerville.variable} ${playfairDisplay.variable} theme-${color}`}
+        className={`antialiased ${InterFont.variable} ${playfairDisplay.variable} theme-${color}`}
       >
+          <RatingStyles />
           <AuthProvider>
             <CategoriesProvider
               menu_items={formattedMenuItems}
