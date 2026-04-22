@@ -183,7 +183,7 @@ export default async function sitemap() {
   const categoryUrls = categories
     .filter((category) => category)
     .map((category) => ({
-      url: `${BASE_URL}/${createSlug(category)}`,
+      url: `${BASE_URL}/category/${createSlug(category)}`,
       lastModified: new Date().toISOString(),
       changeFrequency: "weekly",
       priority: 0.7,
