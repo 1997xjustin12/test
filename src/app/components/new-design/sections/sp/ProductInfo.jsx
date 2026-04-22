@@ -33,9 +33,9 @@ const ProductInfo = ({ product }) => {
       {/* Rating */}
       <div className="flex items-center gap-3 flex-wrap pb-4 border-b border-gray-100 dark:border-gray-800">
         <StarRating
-          rating={product?.ratings?.rating}
+          rating={product?.rating}
           showCount
-          count={product?.ratings?.review_count}
+          count={product?.reviewCount}
         />
         <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
           {product?.rating} out of 5
@@ -54,17 +54,19 @@ const ProductInfo = ({ product }) => {
         <span className="text-4xl font-black text-gray-900 dark:text-white">
           ${product?.price}
         </span>
-        <div className="flex flex-col pb-1">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 line-through">
-              ${product?.was}
+        {product?.savePct > 0 && (
+          <div className="flex flex-col pb-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-400 line-through">
+                ${product?.was}
+              </span>
+              <Badge variant="green">SAVE {product?.savePct}%</Badge>
+            </div>
+            <span className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+              You save ${product?.saveAmt}{product?.is_freeshipping && ` · Free Shipping`}
             </span>
-            <Badge variant="green">SAVE {product?.savePct}%</Badge>
           </div>
-          <span className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            You save ${product?.saveAmt}{product?.is_freeshipping && ` · Free Shipping`}
-          </span>
-        </div>
+        )}
       </div>
 
       {/* Ships */}

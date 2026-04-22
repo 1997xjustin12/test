@@ -83,8 +83,8 @@ function buildFormattedProduct(product) {
     ...product,
     name: product?.title,
     sku: v?.sku,
-    rating: parseInt((product?.ratings?.rating_count || "").replace("'", "")) || 0,
-    reviewCount: 0,
+    rating: parseFloat(product?.ratings) || 0,
+    reviewCount: product?.reviews || 0,
     price: formatPrice(price),
     was: formatPrice(was),
     savePct: getSavingsPercentage(price, was),
@@ -137,7 +137,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
           description={product?.body_html}
         />
         <SpecsShipping specs={STATIC_SPECS} shipping={STATIC_SHIPPING} />
-        <ReviewsSection rating={formattedProduct?.rating ?? 0} reviewCount={formattedProduct?.reviewCount ?? 0} />
+        <ReviewsSection rating={formattedProduct?.rating ?? 0} reviewCount={formattedProduct?.reviewCount ?? 0} reviews={reviews} />
         <FAQSection faqs={STATIC_FAQS} />
         <SupportCTA />
         <ProductGrid
