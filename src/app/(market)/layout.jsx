@@ -32,7 +32,7 @@ import Footer from "@/app/components/new-design/layout/Footer";
  */
 const InterFont = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   display: "swap",
   variable: "--font-inter",
 });
@@ -94,6 +94,11 @@ export default async function MarketLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com" />
+        <link rel="preconnect" href="https://cdn.shopify.com" />
+        <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.digitaloceanspaces.com" />
+      </head>
       <body
         className={`antialiased ${InterFont.variable} ${libreBaskerville.variable} ${playfairDisplay.variable} theme-${color}`}
       >

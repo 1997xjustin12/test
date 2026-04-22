@@ -5,7 +5,6 @@ import SubcategoryTabs from "@/app/components/new-design/sections/gallery/Subcat
 import ProductsSection from "@/app/components/molecule/ProductsSection";
 
 function ProductGallery({ config, slug }) {
-  console.log("config", config);
   return (
     <main>
       <HeroBanner config={config} />

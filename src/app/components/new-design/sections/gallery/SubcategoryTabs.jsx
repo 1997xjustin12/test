@@ -4,7 +4,6 @@ import Link from "next/link";
 import { exclude_brands, exclude_collections } from "@/app/lib/helpers";
 
 const TabItem = ({ category, active_url }) => {
-  console.log("category", category);
   const [count, setCount] = useState("");
   useEffect(() => {
     const getCollectionCount = async (collectionId) => {
@@ -54,7 +53,6 @@ const TabItem = ({ category, active_url }) => {
         });
 
         const data = await response.json();
-        console.log("data", data);
 
         // Use total.value for the actual count in Elasticsearch 7+
         const totalCount = data?.hits?.total?.value || 0;

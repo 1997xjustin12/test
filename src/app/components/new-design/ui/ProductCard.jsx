@@ -84,7 +84,6 @@ function ProductCard({ hit, page_details, onCompare }) {
 
     const format = formatProduct(hit);
 
-    console.log("formatted hit", format);
     return { ...format, url: getProductUrl(hit) };
   }, [hit]);
 

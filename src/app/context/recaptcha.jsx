@@ -8,46 +8,28 @@ export function GoogleReCaptchaProvider({ reCaptchaKey, children }) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (!reCaptchaKey) {
-      console.error("reCAPTCHA site key is not provided");
-      return;
-    }
+    if (!reCaptchaKey) return;
 
-    // Check if script is already loaded
-    if (window.grecaptcha && window.grecaptcha.ready) {
-      window.grecaptcha.ready(() => {
-        setIsReady(true);
-      });
-      return;
-    }
-
-    // Load reCAPTCHA script
-    const script = document.createElement("script");
-    script.src = `https://www.google.com/recaptcha/api.js?render=${reCaptchaKey}`;
-    script.async = true;
-    script.defer = true;
-
-    script.onload = () => {
-      window.grecaptcha.ready(() => {
-        setIsReady(true);
-      });
-    };
-
-    script.onerror = () => {
-      console.error("Failed to load reCAPTCHA script");
-    };
-
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup
-      const existingScript = document.querySelector(
-        `script[src*="google.com/recaptcha"]`
-      );
-      if (existingScript && existingScript.parentNode) {
-        existingScript.parentNode.removeChild(existingScript);
+    const loadScript = () => {
+      if (window.grecaptcha && window.grecaptcha.ready) {
+        window.grecaptcha.ready(() => setIsReady(true));
+        return;
       }
+
+      const script = document.createElement("script");
+      script.src = `https://www.google.com/recaptcha/api.js?render=${reCaptchaKey}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => window.grecaptcha.ready(() => setIsReady(true));
+      document.head.appendChild(script);
     };
+
+    // Defer until browser is idle so it doesn't compete with LCP/FID
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(loadScript, { timeout: 4000 });
+    } else {
+      setTimeout(loadScript, 3000);
+    }
   }, [reCaptchaKey]);
 
   const executeRecaptcha = useCallback(
