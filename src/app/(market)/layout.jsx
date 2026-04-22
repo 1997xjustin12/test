@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
 import { redis, keys } from "@/app/lib/redis";
+import { UIV2 } from "@/app/lib/helpers";
 import { Inter, Libre_Baskerville, Playfair_Display } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
@@ -25,8 +26,6 @@ import OldFooter from "@/app/components/section/Footer";
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
-
-const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 
 /** * SPEED FIX 1: Reduced font weights & consolidated Playfair versions.
  * Using 'swap' ensures text is visible while fonts load (prevents FOIT).

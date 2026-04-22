@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { useSolanaCategories } from "@/app/context/category";
-import {STORE_CONTACT} from "@/app/lib/store_constants";
-
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { UIV2 } from "@/app/lib/helpers";
 // const CONTAINER_CLASS = "max-w-7xl";
-const CONTAINER_CLASS = process.env.NEXT_PUBLIC_UIV2 ? "max-w-[1240px]":"container";
+const CONTAINER_CLASS = UIV2
+  ? "max-w-[1240px]"
+  : "container";
 
 const TRENDING = [
   { label: "Linear Gas Fireplaces", badge: "🔥 Hot" },
@@ -97,7 +99,7 @@ function CategoryGrid() {
   // const tabs = [];
   const tabs = [
     { id: "all", label: "All", count: categories.length },
-    
+
     {
       id: "outdoor",
       label: "🌿 Outdoor",
@@ -266,7 +268,7 @@ function ExpertCTA() {
   );
 }
 
-function BrandSpotlight({brands = []}) {
+function BrandSpotlight({ brands = [] }) {
   return (
     <section className="bg-neutral-50 dark:bg-neutral-900 border-y border-neutral-200 dark:border-neutral-800 py-10 px-5">
       <div className={`${CONTAINER_CLASS} mx-auto`}>
@@ -288,7 +290,7 @@ function BrandSpotlight({brands = []}) {
   );
 }
 
-function CategoriesPage({brands}) {
+function CategoriesPage({ brands }) {
   return (
     <main>
       <PromoBanner />
@@ -296,7 +298,7 @@ function CategoriesPage({brands}) {
       <CategoryGrid />
       <PromoBanner />
       {/* <ShopByRoom /> */}
-      <BrandSpotlight brands={brands}/>
+      <BrandSpotlight brands={brands} />
       {/* <SocialProof /> */}
       <ExpertCTA />
     </main>

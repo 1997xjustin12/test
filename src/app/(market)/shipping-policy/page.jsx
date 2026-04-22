@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, UIV2 } from "@/app/lib/helpers";
 import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
+import ShippingPolicyPage from "@/app/components/new-design/page/ShippingPolicyPage";
+
 function ReturnPolicy() {
   const brandName = STORE_NAME2;
   const contact = STORE_CONTACT;
+
+  if(UIV2) return (<ShippingPolicyPage />)
+    
   return (
     <div className="w-full p-5">
       <div className="max-w-4xl mx-auto px-10 py-10 text-gray-800 rounded shadow-lg border border-neutral-200">

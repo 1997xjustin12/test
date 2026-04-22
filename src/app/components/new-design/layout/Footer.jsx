@@ -54,7 +54,7 @@ const SOCIALS = [
 export default function Footer() {
   return (
     <footer className="bg-charcoal dark:bg-black text-white/60 pt-16 pb-8">
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
 
         {/* Grid: 1 col mobile → 2 col tablet → 4 col desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10 mb-12">

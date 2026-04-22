@@ -1,16 +1,20 @@
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, UIV2 } from "@/app/lib/helpers";
 import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
 import {
   STORE_NAME2,
   STORE_CONTACT,
   STORE_EMAIL,
 } from "@/app/lib/store_constants";
+import ContactPage from "@/app/components/new-design/page/ContactPage";
 
 function Contact() {
   const brandName = STORE_NAME2;
   const contact = STORE_CONTACT;
   const email = STORE_EMAIL;
+
+  if(UIV2) return (<ContactPage />)
+
   return (
     <div className="w-full p-5">
       <div className="max-w-[700px] mx-auto mt-10 p-6 bg-white rounded shadow-lg text-gray-800 border border-neutral-200">
@@ -57,5 +61,6 @@ function Contact() {
     </div>
   );
 }
+
 
 export default Contact;

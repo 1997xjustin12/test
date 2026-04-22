@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { notFound } from "next/navigation";
 import useESFetchProductShopify from "@/app/hooks/useESFetchProductShopify";
-
 import {
   calculateRatingSummary,
+  UIV2
 } from "@/app/lib/helpers";
 import {
   getReviewsByProductId,
@@ -13,6 +13,7 @@ import {
 
 import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
 import OldSingleProductPage from "@/app/components/pages/SingleProductPage"
+import NewSingleProductPage from "@/app/components/new-design/page/SingleProductPage"
 
 
 export default function ProductClient({ params }) {
@@ -92,6 +93,8 @@ export default function ProductClient({ params }) {
   if (!product && loading) {
     return <ProductPlaceholder />;
   }
+
+  if(UIV2) return (<NewSingleProductPage  product={product} slug={slug} loading={loading} brandName={product?.brand} reviews={reviews} reventlyViewed={recentlyViewed}/>)
 
   return (
     <OldSingleProductPage product={product} slug={slug} loading={loading} reviews={reviews} reventlyViewed={recentlyViewed}/>

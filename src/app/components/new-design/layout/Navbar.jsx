@@ -14,6 +14,7 @@ import {
   CartIcon,
 } from "@/app/components/new-design/ui/Icons";
 import CartButton from "@/app/components/new-design/ui/CartButton";
+import SearchBox from "@/app/components/new-design/ui/SearchBox";
 
 import { useSolanaCategories } from "@/app/context/category";
 
@@ -89,7 +90,7 @@ export default function Navbar() {
       ${galleryOnFullscreen ? "": "z-20"}
     `}
     >
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* ── Row 1: Logo + Search + Actions ── */}
         <div className="flex items-center h-16 gap-4">
           {/* Logo */}
@@ -103,120 +104,7 @@ export default function Navbar() {
           </Link>
 
           {/* Search — hidden on mobile, visible md+ */}
-          <div
-            ref={searchRef}
-            className="relative flex-1 max-w-2xl mx-auto hidden md:block"
-          >
-            <div
-              className="
-              flex items-center
-              bg-stone-100 dark:bg-stone-800
-              border border-transparent focus-within:border-fire focus-within:bg-white dark:focus-within:bg-stone-900
-              focus-within:ring-2 focus-within:ring-fire/10
-              rounded-full px-5 py-2.5 gap-3
-              transition-all duration-200
-            "
-            >
-              <SearchIcon />
-              <input
-                type="text"
-                value={query}
-                placeholder="Search fireplaces, brands, BTUs…"
-                aria-label="Search products"
-                className="flex-1 bg-transparent border-none outline-none text-sm text-stone-800 dark:text-stone-100 placeholder-stone-400 min-w-0"
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setShowDrop(true);
-                }}
-                onFocus={() => setShowDrop(true)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              />
-              {/* Category divider — hidden on tablet */}
-              <div className="hidden lg:flex items-center gap-2">
-                <div className="w-px h-5 bg-stone-300 dark:bg-stone-600" />
-                <select className="bg-transparent text-xs text-stone-500 dark:text-stone-400 outline-none cursor-pointer">
-                  {[
-                    "All Categories",
-                    "Gas Fireplaces",
-                    "Electric Fireplaces",
-                    "Wood-Burning",
-                    "Patio Heaters",
-                    "Built-In Grills",
-                    "Outdoor",
-                  ].map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-              <button
-                onClick={handleSearch}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-fire hover:bg-fire-light text-white text-xs font-semibold transition-all duration-200 hover:shadow-md flex-shrink-0"
-              >
-                <SearchIcon size={12} /> Search
-              </button>
-            </div>
-
-            {/* Dropdown */}
-            {showDrop && (
-              <div
-                className="
-                absolute top-[calc(100%+6px)] left-0 right-0
-                bg-white dark:bg-stone-900
-                border border-stone-100 dark:border-stone-700
-                rounded-2xl shadow-2xl overflow-hidden z-50
-              "
-              >
-                {query.trim() === "" ? (
-                  <>
-                    <div className="px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-stone-400 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700">
-                      Trending
-                    </div>
-                    <div className="flex flex-wrap gap-2 p-3">
-                      {TRENDING.map((t) => (
-                        <span
-                          key={t}
-                          onClick={() => {
-                            setQuery(t);
-                            setShowDrop(false);
-                          }}
-                          className="px-3 py-1.5 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 cursor-pointer hover:bg-fire hover:text-white hover:border-fire transition-all duration-150"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </>
-                ) : filtered.length > 0 ? (
-                  <>
-                    <div className="px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-stone-400 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700">
-                      Suggestions
-                    </div>
-                    {filtered.map((s) => (
-                      <div
-                        key={s}
-                        onClick={() => {
-                          setQuery(s);
-                          setShowDrop(false);
-                        }}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors"
-                      >
-                        <SearchIcon size={12} />
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: s.replace(
-                              new RegExp(query, "gi"),
-                              (m) =>
-                                `<mark class="bg-transparent text-fire font-semibold">${m}</mark>`,
-                            ),
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </>
-                ) : null}
-              </div>
-            )}
-          </div>
+          <SearchBox />
 
           {/* Actions */}
           <div className="flex items-center gap-2 ml-auto md:ml-0 flex-shrink-0">

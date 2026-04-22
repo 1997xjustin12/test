@@ -271,7 +271,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
       <div className="container">
         <div className="search-panel flex pb-[50px] gap-[20px]">
           <div className="search-panel__filters  pfd-filter-section relative">
-            <div className="border rounded-xl">
+            <div className="border rounded-xl bg-white">
               <div className="text-sm font-semibold p-4">Filters</div>
               <CurrentRefinements />
                   <DynamicWidgets facets={["*"]}>
@@ -386,8 +386,8 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 // desktop skeleton loader
 const SkeletonLoader = () => {
   return (
-    <div className="container">
-      <div className="flex items-center justify-between mb-5">
+    <div className="container mx-auto">
+      <div className="w-full flex items-center justify-between mb-5">
         <div className="h-[28px] w-[150px] rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
         <div className="h-[28px] w-[200px] rounded  bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
       </div>
@@ -425,7 +425,7 @@ const SkeletonLoader = () => {
               />
             ))}
           </div>
-          <div className="flex gap-[20px] mt-[20px]">
+          <div className="w-full flex gap-[20px] mt-[20px]">
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={`pagination-loader-btn-${index}`}
@@ -641,13 +641,11 @@ function ProductsSection({ category, search = "" }) {
   return (
     <>
       <div
-        className={`max-w-7xl mx-auto px-4 sm:px-6 ${firstLoad ? "" : "hidden"}`}
+        className={`${firstLoad ? "max-w-[1240] mx-auto w-full px-4 sm:px-6 " : "hidden"}`}
       >
-        <div className="mt-5">
           <SkeletonLoader />
-        </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className={`${!firstLoad?"max-w-7xl mx-auto w-full px-4 sm:px-6":"hidden"}`}>
         <div className="mt-5">
           <InstantSearch
             indexName={es_index}

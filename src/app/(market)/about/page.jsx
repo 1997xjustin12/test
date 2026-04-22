@@ -1,10 +1,15 @@
 import React from "react";
 import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, UIV2 } from "@/app/lib/helpers";
 import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
+import AboutPage from "@/app/components/new-design/page/AboutPage";
+
 function About() {
   const brandName = STORE_NAME2;
   const contact = STORE_CONTACT;
+
+  if(UIV2) return (<AboutPage />);
+  
   return (
     <div className="w-full p-5">
       <div className="max-w-[700px] mx-auto mt-10 p-6 bg-white rounded shadow-lg text-gray-800 border border-neutral-200">

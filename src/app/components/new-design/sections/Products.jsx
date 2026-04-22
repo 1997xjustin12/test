@@ -165,7 +165,7 @@ export default function Products({ initialProducts }) {
       id="products"
       className="py-20 md:py-24 bg-cream dark:bg-stone-950"
     >
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* Header */}
         <div
           ref={hdrRef}

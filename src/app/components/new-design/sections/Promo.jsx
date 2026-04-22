@@ -11,7 +11,7 @@ export default function Promo() {
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0300] via-[#1a0d00] to-[#0a1a10]" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/35" />
 
-      <div className="relative z-10 max-w-[1240px] mx-auto px-6">
+      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center py-20">
 
           {/* Copy */}

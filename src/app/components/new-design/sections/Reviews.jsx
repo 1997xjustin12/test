@@ -39,7 +39,7 @@ export default function Reviews() {
   const hdrRef = useReveal();
   return (
     <section id="reviews" className="py-20 md:py-24 bg-cream dark:bg-stone-950">
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
         <div ref={hdrRef} className="opacity-0 translate-y-6 transition-all duration-700 text-center mb-12">

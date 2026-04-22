@@ -1,8 +1,12 @@
 import { Suspense } from "react";
-import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
-import ProductClient from "@/app/components/molecule/ProductClient";
 import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
+
+import { fetchProduct,getReviewsByProductId } from "@/app/lib/fn_server";
+
+import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
+import ProductClient from "@/app/components/molecule/ProductClient";
+import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
 
 // Helper function to strip HTML tags
 function stripHtml(html) {
@@ -10,57 +14,11 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "");
 }
 
-// Helper function to fetch product data directly from Elasticsearch
-async function fetchProductData(product_path) {
-  try {
-    const ESURL = process.env.NEXT_ES_URL;
-    const ESShard = ES_INDEX;
-    const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
-
-    if (!ESURL || !ESApiKey || !ESShard) {
-      console.error("Missing Elasticsearch configuration");
-      return null;
-    }
-
-    const response = await fetch(`${ESURL}/${ESShard}/_search`, {
-      method: "POST",
-      headers: {
-        Authorization: ESApiKey,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        size: 1,
-        query: {
-          term: {
-            "handle.keyword": {
-              value: product_path,
-            },
-          },
-        },
-      }),
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      console.error("Failed to fetch product data from Elasticsearch");
-      return null;
-    }
-
-    const data = await response.json();
-    const products = data?.hits?.hits.map((i) => i._source);
-    return products?.[0] || null;
-  } catch (error) {
-    console.error("Error fetching product data for metadata:", error);
-    return null;
-  }
-}
-
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   const { slug, product_path } = await params;
 
-  const product = await fetchProductData(product_path);
+  const product = await fetchProduct(product_path);
 
   if (!product) {
     return {
@@ -71,7 +29,7 @@ export async function generateMetadata({ params }) {
 
   // Clean description from HTML
   const cleanDescription = stripHtml(
-    product?.seo?.description || product.title || ""
+    product?.seo?.description || product.title || "",
   );
   const metaDescription = cleanDescription.substring(0, 160) || product.title;
 
@@ -124,9 +82,20 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductPage({ params }) {
+  const { slug, product_path } = await params;
+
+  const product = await fetchProduct(product_path);
+  const product_id = product?.product_id;
+  
+  if(!product || !product_id){
+    notFound();
+  }
+
+  const product_reviews = await getReviewsByProductId(product_id) || [];
   return (
     <Suspense fallback={<ProductPlaceholder />}>
-      <ProductClient params={params} />
+      <SingleProductPage product={product} slug={slug} reviews={product_reviews}/>
+      {/* <ProductClient params={params} /> */}
     </Suspense>
   );
 }

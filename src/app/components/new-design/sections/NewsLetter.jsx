@@ -19,7 +19,7 @@ export default function Newsletter() {
 
   return (
     <section className="py-12 bg-stone-100 dark:bg-stone-900 border-y border-stone-200 dark:border-stone-800">
-      <div className="max-w-[1240px] mx-auto px-6">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="
           flex flex-col sm:flex-row
           items-start sm:items-center

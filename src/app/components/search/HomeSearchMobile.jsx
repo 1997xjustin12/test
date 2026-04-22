@@ -3,6 +3,7 @@ import { SearchIcon } from "../icons/lib";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import SearchSection from "@/app/components/atom/searchResultSection";
 import { useSearch } from "@/app/context/search";
+import { usePathname } from "next/navigation";
 
 // ============================================================================
 // CONSTANTS
@@ -32,12 +33,23 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
     redirectToSearchPage,
   } = useSearch();
 
+  const pathname = usePathname();
   const searchRef = useRef(null);
 
   // ---------------------------------------------------------------------------
   // STATE
   // ---------------------------------------------------------------------------
   const [openSearch, setOpenSearch] = useState(false);
+  const isSearchPage = pathname === "/search";
+  // Local controlled value used only on the search page
+  const [localInput, setLocalInput] = useState(searchQuery);
+
+  // Keep localInput in sync when searchQuery changes externally
+  useEffect(() => {
+    if (isSearchPage) {
+      setLocalInput(searchQuery);
+    }
+  }, [searchQuery, isSearchPage]);
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Search Input
@@ -45,6 +57,7 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
   const handleSearch = useCallback(
     (e) => {
       const { value } = e.target;
+      setLocalInput(value);
       setSearch(value);
     },
     [setSearch]
@@ -56,23 +69,28 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
 
   const handleSearchEnterKey = useCallback(
     (e) => {
-      if (e.key === "Enter" && searchQuery !== "") {
+      if (e.key !== "Enter") return;
+      if (isSearchPage) {
+        if (localInput !== "") setSearch(localInput, true, true);
+      } else if (searchQuery !== "") {
         setOpenSearch(false);
         redirectToSearchPage();
       }
     },
-    [searchQuery, redirectToSearchPage]
+    [isSearchPage, localInput, searchQuery, setSearch, redirectToSearchPage]
   );
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Search Button
   // ---------------------------------------------------------------------------
   const handleSearchButtonClick = useCallback(() => {
-    if (searchQuery !== "") {
+    if (isSearchPage) {
+      if (localInput !== "") setSearch(localInput, true, true);
+    } else if (searchQuery !== "") {
       setOpenSearch(false);
       redirectToSearchPage();
     }
-  }, [searchQuery, redirectToSearchPage]);
+  }, [isSearchPage, localInput, searchQuery, setSearch, redirectToSearchPage]);
 
   // ---------------------------------------------------------------------------
   // HANDLERS: Option Selection
@@ -151,7 +169,7 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
         className="w-[calc(100%-50px)] text-sm sm:text-base px-[5px] focus:outline-none focus:ring-2 focus:ring-theme-500 transition-all"
         onClick={handleInputClick}
         onKeyDown={handleSearchEnterKey}
-        value={searchQuery}
+        value={isSearchPage ? localInput : searchQuery}
         onChange={handleSearch}
         aria-label="Search products"
         aria-expanded={openSearch}

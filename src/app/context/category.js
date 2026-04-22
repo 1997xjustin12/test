@@ -141,7 +141,7 @@ export function CategoriesProvider({ menu_items, categories, children }) {
 
     const product_categories_brand = [
       ...new Set([
-        ...tmp_category.map(({ category_name }) => category_name),
+        // ...tmp_category.map(({ category_name }) => category_name),
         product_brand,
       ]),
     ].filter(Boolean);

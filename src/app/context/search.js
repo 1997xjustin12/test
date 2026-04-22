@@ -11,6 +11,7 @@ import React, {
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
 import { fetchSearchResultsWithCategories } from "@/app/lib/api";
+
 import {
   BASE_URL,
   exclude_brands,
@@ -20,6 +21,7 @@ import {
   shouldApplyMainProductSort,
   popular_keywords,
 } from "@/app/lib/helpers";
+import { mapCategoryResults } from "../lib/helpers";
 
 // ============================================================================
 // CONSTANTS
@@ -62,6 +64,8 @@ export const SearchProvider = ({ children }) => {
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchPageLoading, setSearchPageLoading] = useState(true);
+  const [searchPageQuery, setSearchPageQuery] = useState("");
 
   // ---------------------------------------------------------------------------
   // STATE - SEARCH RESULTS
@@ -76,6 +80,7 @@ export const SearchProvider = ({ children }) => {
   const [brandResults, setBrandResults] = useState([]);
   const [collectionsResults, setCollectionsResults] = useState([]);
   const [skusResults, setSkusResults] = useState([]);
+  const [searchPageResults, setSearchPageResults] = useState([]);
 
   // ---------------------------------------------------------------------------
   // STATE - DATA SOURCES
@@ -92,6 +97,8 @@ export const SearchProvider = ({ children }) => {
   const debounceTimeoutRef = useRef(null);
   const lastProcessedUrlQuery = useRef(null);
   const currentSearchQuery = useRef("");
+  const shouldCommitRef = useRef(false);
+  const searchResultsRef = useRef([]);
 
   // ---------------------------------------------------------------------------
   // HELPER: Build Elasticsearch Query
@@ -254,6 +261,12 @@ export const SearchProvider = ({ children }) => {
         collections_facet: {
           terms: {
             field: "collections.name.keyword",
+            size: 1000,
+          },
+        },
+        categories_facet: {
+          terms: {
+            field: "accentuate_data.category",
             size: 1000,
           },
         },
@@ -569,10 +582,12 @@ export const SearchProvider = ({ children }) => {
 
       if (!query || query.trim() === "") {
         // No query: show top 10 static keywords alphabetically
-        return (static_keywords || [])
-          .sort((a, b) => a.localeCompare(b))
-          .slice(0, 10)
-          .map((item) => (item || "").toLowerCase());
+        return (
+          (static_keywords || [])
+            .sort((a, b) => a.localeCompare(b))
+            // .slice(0, 10)
+            .map((item) => (item || "").toLowerCase())
+        );
       }
 
       const queryLower = query.toLowerCase().trim();
@@ -630,6 +645,7 @@ export const SearchProvider = ({ children }) => {
     (query, brands) => {
       const allBrands = (brands || []).map((item) => ({
         name: item?.key,
+        count: item?.doc_count,
         url: createSlug(item?.key),
       }));
 
@@ -645,16 +661,22 @@ export const SearchProvider = ({ children }) => {
         .filter((brand) => matchesQueryWords(brand, queryWords));
 
       // Merge: matching brands first, then all brands (deduplicated)
+      const allBrandsMap = new Map(allBrands.map((item) => [item.name, item]));
       const mergedNames = [
         ...new Set([
           // ...matchingBrands,
-          ...allBrands.map((item) => item?.name)]),
+          ...allBrands.map((item) => item?.name),
+        ]),
       ];
 
-      return mergedNames.map((name) => ({
-        name,
-        url: createSlug(name || ""),
-      }));
+      return mergedNames.map(
+        (name) =>
+          allBrandsMap.get(name) || {
+            name,
+            count: 0,
+            url: createSlug(name || ""),
+          },
+      );
     },
     [matchesQueryWords],
   );
@@ -674,6 +696,7 @@ export const SearchProvider = ({ children }) => {
       if (!query || query.trim() === "") {
         return allCollections.map((item) => ({
           name: item?.key,
+          count: item?.doc_count,
           url: `search?query=${query}&filter%3Acollections=${item?.key}`,
         }));
       }
@@ -684,6 +707,9 @@ export const SearchProvider = ({ children }) => {
         .map(({ key }) => key)
         .filter((collection) => matchesQueryWords(collection, queryWords));
 
+      const allCollectionsMap = new Map(
+        allCollections.map((item) => [item.key, item]),
+      );
       const mergedNames = [
         ...new Set([
           ...matchingCollections,
@@ -691,10 +717,14 @@ export const SearchProvider = ({ children }) => {
         ]),
       ];
 
-      return mergedNames.map((item) => ({
-        name: item,
-        url: `search?query=${query}&filter%3Acollections=${item}`,
-      }));
+      return mergedNames.map((name) => {
+        const item = allCollectionsMap.get(name);
+        return {
+          name,
+          count: item?.doc_count ?? 0,
+          url: `search?query=${query}&filter%3Acollections=${name}`,
+        };
+      });
     },
     [matchesQueryWords],
   );
@@ -773,7 +803,7 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
   // ---------------------------------------------------------------------------
   const getSearchResults = useCallback(
-    async (query, suggest, brands = []) => {
+    async (query, suggest, brands = [], categories = [], collections = []) => {
       try {
         const recentLS = await getRecentSearch();
         const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
@@ -783,29 +813,48 @@ export const SearchProvider = ({ children }) => {
             ? recent
             : recent
                 .filter((i) =>
-                  i.term.toLowerCase().includes(query.toLowerCase()),
+                  (i?.term || "").toLowerCase().includes(query.toLowerCase()),
                 )
                 .sort((a, b) => b.timestamp - a.timestamp);
 
         const popular_searches = processPopularSearchResult(query);
         setPopularResults(popular_searches);
-        const category_searches = await fetchSearchResultsWithCategories(query);
-        setCategoryResults((category_searches || []).map(item=> ({...item, url:`category/${createSlug(item?.name)}`})));
-        const brand_searches = processBrandSearchResult(query, brands);
+        // const category_searches = await fetchSearchResultsWithCategories(query);
+        const category_searches = categories;
+        setCategoryResults(
+          (category_searches || []).map((item) => ({
+            ...mapCategoryResults(item),
+          })),
+        );
+        const brand_searches = processBrandSearchResult(query, brands).map(
+          (b) => ({ ...b, image: `/images/brand-logo/${b.url}.webp` }),
+        );
         setBrandResults(brand_searches);
+        const collection_results = processCollectionSearchResult(
+          query,
+          collections,
+        ).filter(({ name }) => !name.includes("Shop All"));
+        console.log("collection_results", collection_results);
+        setCollectionsResults(collection_results);
 
         return {
           recent: results,
           popular: popular_searches,
           category: category_searches,
           brand: brand_searches,
+          collection: collection_results,
         };
       } catch (error) {
         console.error("[ERROR] getSearchResults:", error);
         return null;
       }
     },
-    [getRecentSearch, popularSearches, processBrandSearchResult, processPopularSearchResult],
+    [
+      getRecentSearch,
+      popularSearches,
+      processBrandSearchResult,
+      processPopularSearchResult,
+    ],
   );
 
   // ---------------------------------------------------------------------------
@@ -851,23 +900,23 @@ export const SearchProvider = ({ children }) => {
         const aggs_brands = data?.aggregations?.brands_facet?.buckets || [];
         const aggs_collections =
           data?.aggregations?.collections_facet?.buckets || [];
+        const aggs_categories = data?.aggregations?.categories_facet?.buckets;
 
         setSkusResults(trim_query.length > 2 ? sku_ac_options || [] : []);
 
-        const collection_results = processCollectionSearchResult(
-          trim_query,
-          aggs_collections,
-        );
+        // const collection_results = processCollectionSearchResult(
+        //   trim_query,
+        //   aggs_collections,
+        // );
 
         // console.log("collection_results", collection_results.filter(({name})=> !name.includes("Shop All")));
-        setCollectionsResults(
-          collection_results.filter(({ name }) => !name.includes("Shop All")),
-        );
+
         const { exactMatch, products } = processProductSearchResult(
           trim_query,
           formatted_results || [],
         );
 
+        console.log("exactMatch", exactMatch);
         setProductHit(exactMatch);
         setProductResults(products);
 
@@ -879,13 +928,16 @@ export const SearchProvider = ({ children }) => {
 
         setProductResultsCount(result_total_count || 0);
 
-        setLoading(false);
-
-        getSearchResults(
+        await getSearchResults(
           trim_query,
           suggest_options?.[0]?.text || "",
           aggs_brands,
+          aggs_categories,
+          aggs_collections,
         );
+
+        setLoading(false);
+
         return data;
       } catch (err) {
         // Don't log abort errors as they're expected when canceling
@@ -921,9 +973,23 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Set Search with Debounce
   // ---------------------------------------------------------------------------
   const setSearch = useCallback(
-    (search_string, shouldUpdateUrl = true) => {
+    (search_string, shouldUpdateUrl = true, commitToPage = false) => {
+      if (commitToPage) {
+        shouldCommitRef.current = true;
+        if (search_string !== currentSearchQuery.current) {
+          setSearchPageLoading(true);
+        }
+      }
+
       // Guard: Prevent update if same value (prevents loops)
       if (search_string === currentSearchQuery.current) {
+        // Commit-with-same-query: snapshot current results immediately
+        if (commitToPage) {
+          setSearchPageResults(searchResultsRef.current);
+          setSearchPageQuery(search_string);
+          setSearchPageLoading(false);
+          shouldCommitRef.current = false;
+        }
         return;
       }
 
@@ -1035,6 +1101,11 @@ export const SearchProvider = ({ children }) => {
   useEffect(() => {
     const urlQuery = searchParams.get("query");
 
+    if (pathname === "/search" && !urlQuery) {
+      setSearchPageLoading(false);
+      return;
+    }
+
     // Only process if: on search page, has query, different from current, and not already processed
     if (
       pathname === "/search" &&
@@ -1043,8 +1114,8 @@ export const SearchProvider = ({ children }) => {
       urlQuery !== lastProcessedUrlQuery.current
     ) {
       lastProcessedUrlQuery.current = urlQuery;
-      // Update state and fetch data without updating URL (since we're already responding to a URL change)
-      setSearch(urlQuery, false);
+      // Commit to page results since this is a URL-driven search (navigation / submit)
+      setSearch(urlQuery, false, true);
     }
   }, [pathname, searchParams, setSearch]);
 
@@ -1123,7 +1194,10 @@ export const SearchProvider = ({ children }) => {
         prop: "popular",
         label: "Popular Searches",
         visible: true,
-        data: popularResults || [],
+        data:
+          searchQuery === ""
+            ? processPopularSearchResult("")
+            : popularResults || [],
         showExpand: (popularResults?.length || 0) > 0,
       },
       {
@@ -1160,9 +1234,9 @@ export const SearchProvider = ({ children }) => {
       },
     ];
 
-    if (!loading) {
-      oldSearchResults.current = newSearchResults;
-    }
+    // if (!loading) {
+    oldSearchResults.current = newSearchResults;
+    // }
 
     const finalResults = loading ? oldSearchResults.current : newSearchResults;
 
@@ -1181,6 +1255,37 @@ export const SearchProvider = ({ children }) => {
     productResultsCount,
     loading,
   ]);
+  // ---------------------------------------------------------------------------
+  // EFFECT: Commit search page results (only on explicit submit / URL navigation)
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    searchResultsRef.current = searchResults;
+    if (shouldCommitRef.current) {
+      setSearchPageResults(searchResults);
+      setSearchPageQuery(currentSearchQuery.current);
+      setSearchPageLoading(false);
+      shouldCommitRef.current = false;
+    }
+  }, [searchResults]);
+
+  // ---------------------------------------------------------------------------
+  // MEMO: No Page Results (derived from committed page results)
+  // ---------------------------------------------------------------------------
+  const noPageResults = useMemo(() => {
+    if (searchPageResults.length === 0) return false;
+    const products = searchPageResults.find((r) => r.prop === "product")?.data || [];
+    const categories = searchPageResults.find((r) => r.prop === "category")?.data || [];
+    const brands = searchPageResults.find((r) => r.prop === "brand")?.data || [];
+    const collections = searchPageResults.find((r) => r.prop === "collections")?.data || [];
+    const skus = searchPageResults.find((r) => r.prop === "skus")?.data || [];
+    return (
+      products.length === 0 &&
+      categories.length === 0 &&
+      brands.length === 0 &&
+      collections.length === 0 &&
+      skus.length === 0
+    );
+  }, [searchPageResults]);
 
   // ---------------------------------------------------------------------------
   // CONTEXT VALUE
@@ -1192,6 +1297,10 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
+      searchPageResults,
+      noPageResults,
+      searchPageLoading,
+      searchPageQuery,
       searchPageProductCount,
       recentSearchKey: RECENT_SEARCH_KEY,
       setSearch,
@@ -1207,8 +1316,14 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
+      searchPageResults,
+      noPageResults,
+      searchPageLoading,
+      searchPageQuery,
       searchPageProductCount,
       setSearch,
+      setSearchPageProductCount,
+      setMainIsActive,
       redirectToSearchPage,
       getRecentSearch,
       setRecentSearch,
