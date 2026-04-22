@@ -47,11 +47,8 @@ export default function Hero() {
           grid-cols-1 md:grid-cols-2
         "
         >
-          {/* ── Left: Copy ── */}
-          <div
-            ref={contentRef}
-            className="opacity-0 translate-y-6 transition-all duration-700"
-          >
+          {/* ── Left: Copy ── no opacity-0 here — LCP content must be visible immediately */}
+          <div>
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">
               Premium Outdoor Solutions
             </p>

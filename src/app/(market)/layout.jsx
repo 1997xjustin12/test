@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
 import { redis, keys } from "@/app/lib/redis";
+import { unstable_cache } from "next/cache";
 import { UIV2 } from "@/app/lib/helpers";
 import { Inter, Libre_Baskerville, Playfair_Display } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
@@ -52,19 +53,23 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata = await generateMetadata();
 
-async function getInitData() {
-  try {
-    const mgetKeys = [
-      keys.dev_shopify_menu.value,
-      "admin_solana_market_logo",
-      keys.theme.value,
-    ];
-    return await redis.mget(mgetKeys);
-  } catch (err) {
-    console.error("[Redis Init Error]:", err);
-    return null;
-  }
-}
+const getInitData = unstable_cache(
+  async () => {
+    try {
+      const mgetKeys = [
+        keys.dev_shopify_menu.value,
+        "admin_solana_market_logo",
+        keys.theme.value,
+      ];
+      return await redis.mget(mgetKeys);
+    } catch (err) {
+      console.error("[Redis Init Error]:", err);
+      return null;
+    }
+  },
+  ["market-layout-init"],
+  { revalidate: 3600 }
+);
 
 export default async function MarketLayout({ children }) {
   /** * SPEED FIX 2: Parallel Fetching.

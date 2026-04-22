@@ -40,7 +40,16 @@ const frameSrcDomains = [
 ];
 
 const config: NextConfig = {
-  // Required: Next.js Image component configuration
+  compress: true,
+  poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: [
+      "@heroicons/react",
+      "lucide-react",
+      "@headlessui/react",
+      "@iconify/react",
+    ],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "cdn11.bigcommerce.com" },
