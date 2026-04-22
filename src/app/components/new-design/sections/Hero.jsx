@@ -2,6 +2,7 @@
 import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import Link from "next/link";
+import Image from "next/image";
 import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
 
 const STATS = [
