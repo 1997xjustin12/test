@@ -63,6 +63,7 @@ export const SearchProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [noPageResults, setNoPageResults] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // ---------------------------------------------------------------------------
@@ -78,6 +79,7 @@ export const SearchProvider = ({ children }) => {
   const [brandResults, setBrandResults] = useState([]);
   const [collectionsResults, setCollectionsResults] = useState([]);
   const [skusResults, setSkusResults] = useState([]);
+  const [searchPageResults, setSearchPageResults] = useState([]);
 
   // ---------------------------------------------------------------------------
   // STATE - DATA SOURCES
@@ -577,10 +579,12 @@ export const SearchProvider = ({ children }) => {
 
       if (!query || query.trim() === "") {
         // No query: show top 10 static keywords alphabetically
-        return (static_keywords || [])
-          .sort((a, b) => a.localeCompare(b))
-          // .slice(0, 10)
-          .map((item) => (item || "").toLowerCase());
+        return (
+          (static_keywords || [])
+            .sort((a, b) => a.localeCompare(b))
+            // .slice(0, 10)
+            .map((item) => (item || "").toLowerCase())
+        );
       }
 
       const queryLower = query.toLowerCase().trim();
@@ -658,10 +662,18 @@ export const SearchProvider = ({ children }) => {
       const mergedNames = [
         ...new Set([
           // ...matchingBrands,
-          ...allBrands.map((item) => item?.name)]),
+          ...allBrands.map((item) => item?.name),
+        ]),
       ];
 
-      return mergedNames.map((name) => allBrandsMap.get(name) || { name, count: 0, url: createSlug(name || "") });
+      return mergedNames.map(
+        (name) =>
+          allBrandsMap.get(name) || {
+            name,
+            count: 0,
+            url: createSlug(name || ""),
+          },
+      );
     },
     [matchesQueryWords],
   );
@@ -693,7 +705,7 @@ export const SearchProvider = ({ children }) => {
         .filter((collection) => matchesQueryWords(collection, queryWords));
 
       const allCollectionsMap = new Map(
-        allCollections.map((item) => [item.key, item])
+        allCollections.map((item) => [item.key, item]),
       );
       const mergedNames = [
         ...new Set([
@@ -788,7 +800,7 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
   // ---------------------------------------------------------------------------
   const getSearchResults = useCallback(
-    async (query, suggest, brands = [], categories = [], collections=[]) => {
+    async (query, suggest, brands = [], categories = [], collections = []) => {
       try {
         const recentLS = await getRecentSearch();
         const recent = recentLS && Array.isArray(recentLS) ? recentLS : [];
@@ -806,8 +818,14 @@ export const SearchProvider = ({ children }) => {
         setPopularResults(popular_searches);
         // const category_searches = await fetchSearchResultsWithCategories(query);
         const category_searches = categories;
-        setCategoryResults((category_searches || []).map(item=> ({...mapCategoryResults(item)})));
-        const brand_searches = processBrandSearchResult(query, brands).map(b=> ({...b, image: `/images/brand-logo/${b.url}.webp` }));
+        setCategoryResults(
+          (category_searches || []).map((item) => ({
+            ...mapCategoryResults(item),
+          })),
+        );
+        const brand_searches = processBrandSearchResult(query, brands).map(
+          (b) => ({ ...b, image: `/images/brand-logo/${b.url}.webp` }),
+        );
         setBrandResults(brand_searches);
         const collection_results = processCollectionSearchResult(
           query,
@@ -828,7 +846,12 @@ export const SearchProvider = ({ children }) => {
         return null;
       }
     },
-    [getRecentSearch, popularSearches, processBrandSearchResult, processPopularSearchResult],
+    [
+      getRecentSearch,
+      popularSearches,
+      processBrandSearchResult,
+      processPopularSearchResult,
+    ],
   );
 
   // ---------------------------------------------------------------------------
@@ -884,13 +907,13 @@ export const SearchProvider = ({ children }) => {
         // );
 
         // console.log("collection_results", collection_results.filter(({name})=> !name.includes("Shop All")));
-        
+
         const { exactMatch, products } = processProductSearchResult(
           trim_query,
           formatted_results || [],
         );
 
-        console.log("exactMatch",exactMatch)
+        console.log("exactMatch", exactMatch);
         setProductHit(exactMatch);
         setProductResults(products);
 
@@ -907,7 +930,7 @@ export const SearchProvider = ({ children }) => {
           suggest_options?.[0]?.text || "",
           aggs_brands,
           aggs_categories,
-          aggs_collections
+          aggs_collections,
         );
 
         setLoading(false);
@@ -1149,7 +1172,10 @@ export const SearchProvider = ({ children }) => {
         prop: "popular",
         label: "Popular Searches",
         visible: true,
-        data: searchQuery === "" ? processPopularSearchResult(""):popularResults || [],
+        data:
+          searchQuery === ""
+            ? processPopularSearchResult("")
+            : popularResults || [],
         showExpand: (popularResults?.length || 0) > 0,
       },
       {
@@ -1187,7 +1213,7 @@ export const SearchProvider = ({ children }) => {
     ];
 
     // if (!loading) {
-      oldSearchResults.current = newSearchResults;
+    oldSearchResults.current = newSearchResults;
     // }
 
     const finalResults = loading ? oldSearchResults.current : newSearchResults;
@@ -1207,7 +1233,6 @@ export const SearchProvider = ({ children }) => {
     productResultsCount,
     loading,
   ]);
-
   // ---------------------------------------------------------------------------
   // CONTEXT VALUE
   // ---------------------------------------------------------------------------
@@ -1235,6 +1260,8 @@ export const SearchProvider = ({ children }) => {
       noResults,
       searchPageProductCount,
       setSearch,
+      setSearchPageProductCount, // Added
+      setMainIsActive, // Added
       redirectToSearchPage,
       getRecentSearch,
       setRecentSearch,

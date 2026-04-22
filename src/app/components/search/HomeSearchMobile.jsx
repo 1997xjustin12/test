@@ -57,18 +57,15 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
   const handleSearch = useCallback(
     (e) => {
       const { value } = e.target;
-      if (isSearchPage) {
-        setLocalInput(value);
-      } else {
-        setSearch(value);
-      }
+      setLocalInput(value);
+      setSearch(value);
     },
-    [isSearchPage, setSearch]
+    [setSearch]
   );
 
   const handleInputClick = useCallback(() => {
-    if (!isSearchPage) setOpenSearch(true);
-  }, [isSearchPage]);
+    setOpenSearch(true);
+  }, []);
 
   const handleSearchEnterKey = useCallback(
     (e) => {
@@ -191,7 +188,7 @@ const HomeSearchMobile = ({ main = false, controlled_height = false }) => {
       </button>
 
       {/* Dropdown Results */}
-      {openSearch && !isSearchPage && (
+      {openSearch && (
         <div
           id="search-dropdown-mobile"
           className="absolute left-0 top-full w-full z-50"

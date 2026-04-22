@@ -325,18 +325,14 @@ function SearchBox() {
   }, []);
 
   function handleFocus() {
-    if (!isSearchPage) setOpen(true);
+    setOpen(true);
     setFocused(true);
   }
 
   function handleChange(e) {
-    if (isSearchPage) {
-      // Only update local display — don't trigger any fetch
-      setLocalInput(e.target.value);
-    } else {
-      setSearch(e.target.value);
-      setOpen(true);
-    }
+    setLocalInput(e.target.value);
+    setSearch(e.target.value);
+    setOpen(true);
   }
 
   function handleSubmit() {
@@ -454,8 +450,8 @@ function SearchBox() {
         </button>
       </div>
 
-      {/* ── DROPDOWN ── (suppressed on /search — the page itself is the results) */}
-      {open && !isSearchPage && (
+      {/* ── DROPDOWN ── */}
+      {open && (
         <div
           className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-2xl shadow-2xl overflow-hidden z-50"
           style={{ maxHeight: "80vh", overflowY: "auto" }}
