@@ -67,25 +67,12 @@ function ProductCard({ hit, page_details, onCompare }) {
   const [wished, setWished] = useState(false);
   const [added, setAdded] = useState(false);
   const { isPriceVisible, getProductUrl } = useSolanaCategories();
-
+  const [product, setProduct] = useState(formatProduct(hit))
+  console.log("hit", hit);
   function handleAdd() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   }
-
-  const product = useMemo(() => {
-    // console.log("hit", hit);
-    const id = hit?.product_id;
-    const badge = "bestseller";
-    const ratings = parseFloat(hit?.ratings?.rating || 0, 10);
-    const reviews = parseInt(hit?.ratings?.review_count || 0, 10);
-    // process dynamic product badge
-    
-
-    const format = formatProduct(hit);
-
-    return { ...format, url: getProductUrl(hit) };
-  }, [hit]);
 
   return (
     <article className="group bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-200/60 dark:hover:shadow-black/40 hover:-translate-y-1 transition-all duration-300">
@@ -146,9 +133,9 @@ function ProductCard({ hit, page_details, onCompare }) {
         </Link>
         <div className="flex items-center gap-2 mb-3 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <StarRating rating={product?.rating} />
+            <StarRating rating={product?.ratings} />
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
-              {product?.rating} {!!product?.reviews && `(${product?.reviews})`}
+              {product?.ratings} {!!product?.reviews && `(${product?.reviews})`}
             </span>
           </div>
           {/* <span className="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded-md">
