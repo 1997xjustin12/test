@@ -1,6 +1,7 @@
 import brands_json from "@/app/data/filters/brands.json";
 import products_json from "@/app/data/filters/products.json";
 import popular_keywords_json from "@/app/data/popular_keyword.json";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 export const popular_keywords = popular_keywords_json;
 
@@ -1155,6 +1156,66 @@ function generateBreadCrumbs(product) {
   ];
 }
 
+function formatProductOptionItem(product) {}
+
+function generateProductOptionItem(config, product) {
+  if (!config || !product || !product?.accentuate_data) return null;
+  const ad = product?.accentuate_data;
+
+  const options = (ad?.[config?.options] || []).map(i=> i.trim());
+  const handles = ad?.[config?.urls];
+  const prop = ad?.[config?.prop];
+  return {
+    option_label: ad?.[config?.title],
+    options,
+    handles,
+    prop,
+  };
+}
+
+function generateProductOptions(product) {
+  if (!product || !product?.accentuate_data) return null;
+  const options_config = [
+    {
+      prop: "bbq.option_related_product",
+      title: "bbq.option_title",
+      options: "bbq.option_type",
+      urls: "bbq.option_related_product",
+    },
+    {
+      prop: "bbq.configuration_product",
+      title: "bbq.configuration_heading_title",
+      options: "bbq.configuration_type",
+      urls: "bbq.configuration_product",
+    },
+    {
+      prop: "bbq.related_product",
+      title: "bbq.size_heading_title",
+      options: "size_title",
+      urls: "bbq.related_product",
+    },
+    {
+      prop: "bbq.product_option_related_product",
+      title: "bbq.product_option_heading_title",
+      options: "bbq.product_option_name",
+      urls: "bbq.product_option_related_product",
+    },
+    {
+      prop: "bbq.hinge_related_product",
+      title: "hinge_heading_title",
+      options: "hinge_selection",
+      urls: "bbq.hinge_related_product",
+    },
+  ];
+  const options = options_config.map((i) => ({
+    ...generateProductOptionItem(i, product),
+  }));
+
+  return options.filter(
+    (item) => item.option_label !== null && item.handles !== null,
+  );
+}
+
 export function formatProduct(product) {
   if (!product) return null;
   const variant = product?.variants?.[0];
@@ -1163,19 +1224,60 @@ export function formatProduct(product) {
   const was = variant?.compare_at_price || 0;
   const save_amt = was ? was - price : 0;
   const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
+  const category = product?.accentuate_data?.category;
+  const category_url = `${BASE_URL}/category/${createSlug(category)}`;
+  const brand_url = `${BASE_URL}/${createSlug(product?.brand)}`;
+  const product_options = generateProductOptions(product);
+  const discount_links = [
+    {
+      url: `tel:${STORE_CONTACT}`,
+      label: "Phone Discounts",
+    },
+    {
+      url: `${BASE_URL}/package-deals`,
+      label: "Package Deals",
+    },
+    {
+      url: `${BASE_URL}/open-box`,
+      label: "Open Box",
+    },
+    {
+      url: `${BASE_URL}/close-out-deals`,
+      label: "Close Out",
+    },
+    {
+      url: `#`,
+      label: "Scratch + Dent",
+    },
+    {
+      url: `#`,
+      label: "Low Monthly Payments",
+    },
+    {
+      url: `#`,
+      label: "Free Accessory Bundle",
+    },
+  ];
   return {
     ...product,
     name: product?.title,
     image: product?.images?.find((i) => i?.position == 1)?.src,
     breadcrumbs: generateBreadCrumbs(product),
-    category: product?.accentuate_data?.category,
-    ratings: rating.rating,
-    reviews: rating.review_count,
+    brand_url,
+    category,
+    category_url,
+    sku: variant?.sku || "",
+    ratings: rating?.rating || 0,
+    reviews: rating?.review_count || 0,
     is_freeshipping: productIsFreeshipping(product?.tags),
     badge: productBadge(product?.tags, product?.collections),
     price: price,
     was: was,
     save_amt,
     save_pct,
+    discount_links,
+    url: `${BASE_URL}/${createSlug(product?.brand)}/product/${product?.handle}`,
+    ships: "Ships Within 1 to 2 Business Days",
+    product_options,
   };
 }

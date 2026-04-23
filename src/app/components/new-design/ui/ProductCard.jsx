@@ -125,7 +125,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         </p>
         <Link title={product?.name} href={product?.url} prefetch={false}>
           <h2
-            className="line-clamp-2 text-sm font-semibold text-neutral-900 dark:text-white leading-snug mb-2"
+            className="line-clamp-2 min-h-[38.5px] text-sm font-semibold text-neutral-900 dark:text-white leading-snug mb-2"
             style={{ fontFamily: "Georgia, serif" }}
           >
             {product?.name}
