@@ -1,4 +1,5 @@
 "use client";
+import "@/app/search.css";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Rating } from "@smastrom/react-rating";

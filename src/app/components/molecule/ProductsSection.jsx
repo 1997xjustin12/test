@@ -1,4 +1,5 @@
 "use client";
+import "@/app/search.css";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";

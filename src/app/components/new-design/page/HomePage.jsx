@@ -16,11 +16,11 @@ const Cta         = dynamic(() => import("@/app/components/new-design/sections/C
 const NewsLetter  = dynamic(() => import("@/app/components/new-design/sections/NewsLetter"));
 const StickyCall  = dynamic(() => import("@/app/components/new-design/ui/StickyCall"));
 
-function HomePage({ initialProducts }) {
+function HomePage({ initialProducts, heroBg }) {
   return (
     <>
       <div>
-        <Hero />
+        <Hero background={heroBg} />
         <Features />
         <Brands />
         <Categories />

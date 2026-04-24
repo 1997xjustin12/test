@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import "@/app/globals.css";
+import { THEME_COLORS } from "@/app/data/theme-colors";
 import { redis, keys } from "@/app/lib/redis";
 import { unstable_cache } from "next/cache";
 import { Inter, Playfair_Display } from "next/font/google";
@@ -64,6 +65,9 @@ export default async function MarketLayout({ children }) {
 
   const [menu, redisLogo, color] = initData;
 
+  const activeTheme = THEME_COLORS[color] ?? THEME_COLORS.orange;
+  const themeCSS = `:root{${Object.entries(activeTheme).map(([k, v]) => `--theme-primary-${k}:${v}`).join(';')}}`;
+
   const formattedMenuItems =
     menu?.map((i) => ({
       ...i,
@@ -73,11 +77,12 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com" />
-        <link rel="preconnect" href="https://cdn.shopify.com" />
-        <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.digitaloceanspaces.com" />
+        <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com" />
+        <link rel="dns-prefetch" href="https://cdn.shopify.com" />
+        {/* eslint-disable-next-line react/no-danger */}
+        <style dangerouslySetInnerHTML={{ __html: themeCSS }} suppressHydrationWarning />
       </head>
-      <body className={`antialiased ${InterFont.variable} ${playfairDisplay.variable} theme-${color}`}>
+      <body className={`antialiased ${InterFont.variable} ${playfairDisplay.variable}`}>
         <RatingStyles />
         <AuthProvider>
           <CategoriesProvider menu_items={formattedMenuItems} categories={categories}>

@@ -3,7 +3,6 @@ import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import Link from "next/link";
 import Image from "next/image";
-import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
 
 const STATS = [
   { num: "6K+", label: "Products" },
@@ -30,12 +29,12 @@ const CARDS = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ background }) {
   const contentRef = useReveal();
   const cardsRef = useReveal();
   return (
     <section className="relative min-h-[85vh] md:min-h-[92vh] flex items-center overflow-hidden">
-      <HeroBackground />
+      {background}
       {/* Fallback gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
       {/* Mobile: uniform dark overlay — Desktop: directional so right side is lighter for cards */}
