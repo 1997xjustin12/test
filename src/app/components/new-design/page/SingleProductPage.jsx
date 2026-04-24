@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { BASE_URL, formatPrice } from "@/app/lib/helpers";
+import { BASE_URL, formatPrice, formatProduct } from "@/app/lib/helpers";
 
 // Above-fold — load immediately
 import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
@@ -67,48 +67,7 @@ const RECENT = [
   { name: "Sunglo Stainless Steel Patio Heater A270SS", brand: "Sunglo", price: 1325, was: null, badge: null },
 ];
 
-function getSavingsPercentage(price, was) {
-  if (!was || was <= 0 || price >= was) return 0;
-  return Math.round(((was - price) / was) * 100);
-}
-
-function getSavings(price, was) {
-  if (!was || was <= 0 || price >= was) return 0;
-  return (was - price).toFixed(2);
-}
-
-function buildFormattedProduct(product) {
-  if (!product) return null;
-  const v = product?.variants?.[0];
-  const price = parseFloat(v?.price);
-  const was = parseFloat(v?.compare_at_price);
-  return {
-    ...product,
-    name: product?.title,
-    sku: v?.sku,
-    rating: parseFloat(product?.ratings) || 0,
-    reviewCount: product?.reviews || 0,
-    price: formatPrice(price),
-    was: formatPrice(was),
-    savePct: getSavingsPercentage(price, was),
-    saveAmt: formatPrice(getSavings(price, was)),
-    ships: "Ships Within 1–2 Business Days",
-    badges: [
-      "Phone Discounts",
-      "Package Deals",
-      "Scratch & Dent",
-      "Close Out Deals",
-      "Free Accessory Bundle",
-      "Open Box",
-      "Finance Now",
-      "Low Monthly Payments",
-    ],
-  };
-}
-
 function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
-  const formattedProduct = buildFormattedProduct(product);
-
   const firstVariant = product?.variants?.[0];
   const price = parseFloat(firstVariant?.price) || 0;
   const was = parseFloat(firstVariant?.compare_at_price) || 0;
@@ -129,7 +88,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
           <div className="lg:sticky lg:top-4 min-h-[300px] lg:min-h-[460px]">
             <ImageGallery images={product?.images || []} productTitle={product?.title} />
           </div>
-          <ProductInfo product={formattedProduct} />
+          <ProductInfo product={product} />
         </div>
 
         {/* BELOW-FOLD SECTIONS */}
@@ -140,7 +99,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
           description={product?.body_html}
         />
         <SpecsShipping specs={STATIC_SPECS} shipping={STATIC_SHIPPING} />
-        <ReviewsSection rating={formattedProduct?.rating ?? 0} reviewCount={formattedProduct?.reviewCount ?? 0} reviews={reviews} />
+        {/* <ReviewsSection rating={product?.rating ?? 0} reviewCount={product?.reviewCount ?? 0} reviews={reviews} /> */}
         <FAQSection faqs={STATIC_FAQS} />
         <SupportCTA />
         <ProductGrid
@@ -169,8 +128,8 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
         />
       </div>
 
-      <StickyCTA price={price} was={was} />
-      <MobileStickyCTA price={price} was={was} />
+      <StickyCTA price={product?.price} was={product?.was} />
+      <MobileStickyCTA price={product?.price} was={product?.was} />
     </div>
   );
 }

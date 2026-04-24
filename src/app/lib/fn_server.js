@@ -5,8 +5,9 @@ import {
   exclude_collections,
   createSlug,
   mapCategoryResults,
-  formatProduct
+  formatProduct,
 } from "@/app/lib/helpers";
+import { accentuateSpecLabels } from "@/app/lib/filter-helper";
 
 // ─── Private: Elasticsearch ──────────────────────────────────────────────────
 
@@ -203,7 +204,9 @@ function getCategoryType(category = "") {
 function getCategorySubs(category = "") {
   const raw = CATEGORY_SUBS[createSlug(category)];
   if (!raw) return [];
-  return [...new Set(raw.flatMap((item) => item.split("/").map((s) => s.trim())))];
+  return [
+    ...new Set(raw.flatMap((item) => item.split("/").map((s) => s.trim()))),
+  ];
 }
 
 function getCategoryDescription(category = "") {
@@ -226,7 +229,10 @@ export async function fetchUniqueCategories() {
       },
       { next: { revalidate: 3600 } },
     );
-    return data?.aggregations?.unique_categories?.buckets?.map(mapCategoryResults) || [];
+    return (
+      data?.aggregations?.unique_categories?.buckets?.map(mapCategoryResults) ||
+      []
+    );
   } catch (error) {
     console.error("fetchUniqueCategories:", error);
     return [];
@@ -241,7 +247,11 @@ export async function fetchBrands() {
         query: publishedQuery,
         aggs: {
           unique_brands: {
-            terms: { field: "brand.keyword", size: 100, order: { _key: "asc" } },
+            terms: {
+              field: "brand.keyword",
+              size: 100,
+              order: { _key: "asc" },
+            },
           },
         },
       },
@@ -284,7 +294,11 @@ export async function getCollectionProducts(id) {
         query: {
           bool: {
             filter: [
-              { terms: { "handle.keyword": raw_collection.map((item) => item?.handle) } },
+              {
+                terms: {
+                  "handle.keyword": raw_collection.map((item) => item?.handle),
+                },
+              },
               { term: { published: true } },
             ],
           },
@@ -299,23 +313,162 @@ export async function getCollectionProducts(id) {
   }
 }
 
+// export async function fetchProduct(product_path) {
+//   try {
+//     const data = await esSearch(
+//       {
+//         size: 1,
+//         query: { term: { "handle.keyword": { value: product_path } } },
+//       },
+//       { cache: "no-store" },
+//     );
+//     const product = formatProduct(data?.hits?.hits?.map((i) => i._source)?.[0]);
+
+//     return  product;
+//   } catch (error) {
+//     console.error("fetchProduct:", error);
+//     return null;
+//   }
+// }
+/**
+ * Refactored fetchProduct
+ */
 export async function fetchProduct(product_path) {
   try {
-    const data = await esSearch(
+    // 1. Initial Search
+    const searchResponse = await esSearch(
       {
         size: 1,
         query: { term: { "handle.keyword": { value: product_path } } },
       },
       { cache: "no-store" },
     );
-    const product = formatProduct(data?.hits?.hits?.map((i) => i._source)?.[0]);
-    return  product;
+
+    const rawProduct = searchResponse?.hits?.hits?.[0]?._source;
+    if (!rawProduct) return null;
+
+    const product = rawProduct;
+    const accentuateData = rawProduct.accentuate_data || {};
+
+    // 2. Resolve Related Products (FBW, Open Box, etc.)
+    const { productOptions, fbwProducts, obProducts, newProducts } =
+      await fetchRelatedProductData(accentuateData);
+
+    // 3. Map Specifications
+    const specs = accentuateSpecLabels.map((item) => {
+      let val = accentuateData[item.key] || "";
+      if (item.transform) val = item.transform(val);
+      return { label:item.label, value: val };
+    });
+
+    const specsIsEmpty = specs.every((item) => !item.value);
+
+    // 4. Map Manuals
+    const manualLabels = accentuateData["bbq.file_name"] || [];
+    const manualLinks = accentuateData["bbq.upload_file"] || [];
+    const manuals = Array.isArray(manualLinks)
+      ? manualLinks.map((link, i) => ({
+          label: manualLabels[i] || "",
+          value: link,
+        }))
+      : null;
+
+    // 5. Map Shipping Info
+    const shippingInfo = [
+      {
+        key: "weight",
+        label: "Shipping Weight",
+        value: accentuateData["bbq.shipping_weight"],
+      },
+      {
+        key: "dims",
+        label: "Shipping Dimensions (WxDxH)",
+        value: accentuateData["bbq.shipping_dimensions"],
+      },
+    ].filter((info) => !!info.value);
+
+    // 6. Inject Properties into Result
+    return formatProduct({
+      ...product,
+      sp_product_options: productOptions,
+      fbt_bundle: (rawProduct.frequently_bought_together || []).map((i) => ({
+        ...i,
+        product_id: i.id,
+      })),
+      fbt_carousel: fbwProducts,
+      open_box: obProducts,
+      new_items: newProducts,
+      product_specs: specsIsEmpty ? null : specs,
+      product_manuals: manuals?.length ? manuals : null,
+      product_shipping_info: shippingInfo.length ? shippingInfo : null,
+    });
   } catch (error) {
-    console.error("fetchProduct:", error);
+    console.error("fetchProduct Error:", error);
     return null;
   }
 }
 
+/**
+ * Helper to handle the secondary fetch for related product handles
+ */
+async function fetchRelatedProductData(accentuateData) {
+  const relatedKeys = [
+    "bbq.related_product",
+    "bbq.configuration_product",
+    "bbq.hinge_related_product",
+    "bbq.option_related_product",
+    "bbq.openbox_related_product",
+    "bbq.shopnew_related_product",
+    "bbq.selection_related_product",
+    "bbq.product_option_related_product",
+    "frequently.fbi_related_product",
+  ];
+
+  const mergedHandles = [
+    ...new Set(mergeRelatedProducts(accentuateData, relatedKeys)),
+  ];
+  if (!mergedHandles.length) {
+    return {
+      productOptions: null,
+      fbwProducts: null,
+      obProducts: null,
+      newProducts: null,
+    };
+  }
+
+  // Note: Ensure API_URL and fetchConfig are accessible in this scope
+
+  const response = await esSearch(
+    {
+      size: 100,
+      query: {
+        bool: {
+          filter: [
+            { terms: { "handle.keyword": mergedHandles } },
+          ],
+        },
+      },
+    },
+    { cache: "no-store" },
+  );
+
+  // console.log("response",response)
+  // const json = await response;
+  const relatives = (response?.hits?.hits || []).map((h) => h._source);
+
+  const fbwHandles = accentuateData["frequently.fbi_related_product"] || [];
+  const obHandles = accentuateData["bbq.openbox_related_product"] || [];
+  const newHandles = accentuateData["bbq.shopnew_related_product"] || [];
+
+  return {
+    fbwProducts: relatives.filter((p) => fbwHandles.includes(p.handle)),
+    obProducts: relatives.filter((p) => obHandles.includes(p.handle)),
+    newProducts: relatives.filter((p) => newHandles.includes(p.handle)),
+    productOptions: relatives.filter(
+      (p) => ![...fbwHandles, ...obHandles, ...newHandles].includes(p.handle),
+    ),
+  };
+}
 
 export async function getReviewsByProductId(product_id) {
   try {
@@ -346,12 +499,51 @@ export async function getReviewsByProductId(product_id) {
     }
 
     const data = await response.json();
-    
+
     // 4. Return the data directly (assuming the API returns { reviews: [] } or just [])
     return data?.reviews || data || [];
-
   } catch (error) {
     console.error("Proxy Error:", error);
     return [];
   }
+}
+
+function mergeRelatedProducts(data, keys) {
+  const merged = [];
+
+  keys.forEach((key) => {
+    // 1. Get the value for the current key
+    const rawValue = data[key];
+    let value = [];
+
+    // 2. Check the raw value's type before proceeding
+    if (rawValue === null || rawValue === undefined) {
+      // If null or undefined, skip or set to empty array
+      value = [];
+    } else if (Array.isArray(rawValue)) {
+      // If it's already an array, use it directly
+      value = rawValue;
+    } else if (typeof rawValue === "string") {
+      // If it's a string, attempt to parse it
+      try {
+        value = JSON.parse(rawValue);
+      } catch (e) {
+        console.error(`Error parsing JSON for key "${key}":`, e);
+        // On error, treat as empty or handle as required
+        value = [];
+      }
+    } else {
+      // For any other non-string, non-null, non-array value (e.g., number or object)
+      // This is defensive coding; assuming related products should be an array.
+      value = [];
+    }
+
+    // 3. Ensure the final result is an array before spreading
+    if (Array.isArray(value)) {
+      merged.push(...value);
+    }
+  });
+
+  // 4. Optionally, you might want to deduplicate the results
+  return [...new Set(merged)];
 }
