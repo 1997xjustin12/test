@@ -17,7 +17,6 @@ import { notFound } from "next/navigation";
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
-import RatingStyles from "@/app/components/atom/RatingStyles";
 
 const InterFont = Inter({
   subsets: ["latin"],
@@ -83,7 +82,6 @@ export default async function MarketLayout({ children }) {
         <style dangerouslySetInnerHTML={{ __html: themeCSS }} suppressHydrationWarning />
       </head>
       <body className={`antialiased ${InterFont.variable} ${playfairDisplay.variable}`}>
-        <RatingStyles />
         <AuthProvider>
           <CategoriesProvider menu_items={formattedMenuItems} categories={categories}>
             <CartProvider>

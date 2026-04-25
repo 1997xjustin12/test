@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import RatingStyles from "@/app/components/atom/RatingStyles";
 import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
@@ -142,6 +143,7 @@ export default async function ProductPage({ params }) {
 
   return (
     <>
+      <RatingStyles />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

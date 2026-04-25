@@ -31,11 +31,12 @@ function CategoryCard({ name, description, slug, image }) {
       <div className="relative h-56 sm:h-60 overflow-hidden">
         {/* The actual image using next/image */}
         <Image
-          src={image} // The URL or static import of the image
+          src={image}
           alt={name}
-          fill // Tells next/image to fill the parent container (needs position: relative)
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Helps with optimization
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 hover:scale-105"
+          quality={60}
         />
 
         {/* Your existing gradients for text legibility */}
