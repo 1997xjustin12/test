@@ -1178,7 +1178,7 @@ function getProductMainImage(images){
 }
 
 function generateProductOptionItem(config, product) {
-  if (!config || !product || !product?.accentuate_data) return null;
+  if (!config || !product || !product?.accentuate_data || !product?.handle) return null;
   const base_product_price = product?.variants?.[0]?.price || 0;
   const ad = product?.accentuate_data;
   const handles = ad?.[config?.urls] || [];
@@ -1246,7 +1246,7 @@ function generateProductOptions(product) {
   );
 }
 
-export function formatProduct(product) {
+export function formatProduct(product, mod="pdp") {
   if (!product) return null;
   const variant = product?.variants?.[0];
   const rating = product?.ratings;
@@ -1257,7 +1257,6 @@ export function formatProduct(product) {
   const category = product?.accentuate_data?.category;
   const category_url = `${BASE_URL}/category/${createSlug(category)}`;
   const brand_url = `${BASE_URL}/${createSlug(product?.brand)}`;
-  const product_options = generateProductOptions(product);
   const discount_links = [
     {
       url: `tel:${STORE_CONTACT}`,
@@ -1288,7 +1287,8 @@ export function formatProduct(product) {
       label: "Free Accessory Bundle",
     },
   ];
-  return {
+
+  const formatted_product = {
     ...product,
     name: product?.title,
     image: product?.images?.find((i) => i?.position == 1)?.src,
@@ -1308,6 +1308,16 @@ export function formatProduct(product) {
     discount_links,
     url: `${BASE_URL}/${createSlug(product?.brand)}/product/${product?.handle}`,
     ships: "Ships Within 1 to 2 Business Days",
-    product_options,
   };
+
+  // PDP only properties
+  // if(mod==="pdp"){
+  //   const product_options = generateProductOptions(product);
+  //   formatted_product.map((p)=>({
+  //     ...p,
+  //     product_options,
+  //   }))
+  // }
+  
+  return formatted_product;
 }
