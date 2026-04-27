@@ -338,6 +338,8 @@ function SearchBox() {
   }
 
   function handleSubmit() {
+    setOpen(false);
+
     if (isSearchPage) {
       // 1. Initialize with the existing string to preserve other filters
       const params = new URLSearchParams(searchParams.toString());
@@ -746,7 +748,6 @@ function SearchBox() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
-                          {/* {highlight(col.name, searchQuery)} */}
                           {col.name}
                         </div>
                         <div className="text-xs text-stone-400 dark:text-stone-500">
