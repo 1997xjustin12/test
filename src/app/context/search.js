@@ -437,21 +437,21 @@ export const SearchProvider = ({ children }) => {
       const queryWords = query.toLowerCase().trim().split(" ");
 
       const exactLastSubstringMatches = products.filter((product) => {
-        const titleTokens = (product.title || "").toLowerCase().trim().split(/\s+/);
+        const titleTokens = (product?.title || "").toLowerCase().trim().split(/\s+/);
         const lastToken = titleTokens[titleTokens.length - 1];
         return queryWords.some((word) => word === lastToken);
       });
 
       const productsByTitle = new Map(
-        products.map((product) => [(product.title || "").toLowerCase(), product]),
+        products.map((product) => [(product?.title || "").toLowerCase(), product]),
       );
 
       const matchingTitles = products
-        .map(({ title }) => (title || "").toLowerCase())
+        .map((p) => (p?.title || "").toLowerCase())
         .filter((title) => matchesQueryWords(title, queryWords));
 
       const mergedNames = [
-        ...new Set([...matchingTitles, ...products.map(({ title }) => title.toLowerCase())]),
+        ...new Set([...matchingTitles, ...products.map((p) => (p?.title || "").toLowerCase())]),
       ];
 
       const mergedProducts = mergedNames
@@ -459,11 +459,11 @@ export const SearchProvider = ({ children }) => {
         .filter(Boolean);
 
       const exactMatchTitles = new Set(
-        exactLastSubstringMatches.map(({ title }) => title.toLowerCase()),
+        exactLastSubstringMatches.map((p) => (p?.title || "").toLowerCase()),
       );
 
       const otherProducts = mergedProducts.filter(
-        (product) => !exactMatchTitles.has(product.title.toLowerCase()),
+        (p) => !exactMatchTitles.has((p?.title || "").toLowerCase()),
       );
 
       return {
@@ -795,6 +795,14 @@ export const SearchProvider = ({ children }) => {
         data: brandResults,
         showExpand: brandResults.length > 0,
       },
+      {
+        total: collectionsResults.length,
+        prop: "collections",
+        label: "Collections",
+        visible: true,
+        data: collectionsResults,
+        showExpand: collectionsResults.length > 0,
+      },
     ];
 
     if (!loading) {
@@ -810,6 +818,7 @@ export const SearchProvider = ({ children }) => {
     searchPageProductCount,
     categoryResults,
     brandResults,
+    collectionsResults,
     searchQuery,
     processPopularSearchResult,
     loading,

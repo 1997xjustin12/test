@@ -1125,35 +1125,19 @@ export function productIsFreeshipping(product_tags) {
   );
 }
 
-export function productBadge(product_tags, product_collections) {
+export function productBadge(product_tags = [], product_collections = []) {
   if (!Array.isArray(product_tags)) return "";
 
   for (const tag of product_tags) {
     const lowerTag = tag?.toLowerCase();
-
-    if (lowerTag.includes("new arrival")) {
-      return "new";
-    }
-
-    if (lowerTag.includes("sale")) {
-      return "sale";
-    }
+    if (lowerTag?.includes("new arrival")) return "new";
+    if (lowerTag?.includes("sale")) return "sale";
   }
 
-  for (const col of product_collections) {
+  for (const col of product_collections || []) {
     const lowerCol = col?.name?.toLowerCase();
-
-    if (lowerCol.includes("best sellers")) {
-      return "bestseller";
-    }
-  }
-
-  for (const col of product_collections) {
-    const lowerCol = col?.name?.toLowerCase();
-
-    if (lowerCol.includes("open box")) {
-      return "openbox";
-    }
+    if (lowerCol?.includes("best sellers")) return "bestseller";
+    if (lowerCol?.includes("open box")) return "openbox";
   }
 
   return "";
