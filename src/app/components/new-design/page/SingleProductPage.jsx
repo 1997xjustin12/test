@@ -67,6 +67,7 @@ const RECENT = [
   { name: "Sunglo Stainless Steel Patio Heater A270SS", brand: "Sunglo", price: 1325, was: null, badge: null },
 ];
 
+
 function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
   const firstVariant = product?.variants?.[0];
   const price = parseFloat(firstVariant?.price) || 0;

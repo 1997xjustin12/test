@@ -1,18 +1,20 @@
 "use client"; // temporary
 import Link from "next/link";
+import Image from "next/image";
 // COMPONENTS
 import StarRating from "@/app/components/new-design/sections/sp/StarRating";
 import Badge from "@/app/components/new-design/sections/sp/Badge";
 // HELPERS
 import { STORE_CONTACT } from "@/app/lib/store_constants";
-import { formatPrice } from "@/app/lib/helpers";
+import { createSlug, formatPrice } from "@/app/lib/helpers";
+import { Icon } from "@iconify/react";
 
-const ProductCategoryChip = ({ category, url="#" }) => {
-
+const ProductCategoryChip = ({ category, url = "#" }) => {
   if (!category) {
     return (
       <div
-        className={//text-red-600 border-red-700/20 bg-red-100/70
+        className={
+          //text-red-600 border-red-700/20 bg-red-100/70
           "text-[10px] font-bold text-red-600 border-red-700/20 bg-red-100/70 border px-2.5 py-1 rounded-full uppercase tracking-widest hover:bg-orange-100 transition-colors"
         }
       >
@@ -34,6 +36,81 @@ const ProductCategoryChip = ({ category, url="#" }) => {
   );
 };
 
+const ProductOptionGroup = ({ option_group }) => {
+  if (
+    !option_group ||
+    !option_group?.options ||
+    (option_group?.options || []).length === 0
+  )
+    return null;
+  return (
+    <div className="w-full">
+      <div>{option_group?.option_label}</div>
+      <ProductOptionGroupItems options={option_group?.options} />
+    </div>
+  );
+};
+
+const ProductOptionGroupItems = ({ options }) => {
+  return (
+    <div className="mt-1 grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
+      {options &&
+        Array.isArray(options) &&
+        options.map((opt, index) => (
+          <Link
+            prefetch={false}
+            href={opt?.url}
+            title={opt?.title}
+            key={`${createSlug(opt?.title)}-option-${index}`}
+            className={`product-option-item-link group relative flex items-center gap-1 p-0 transition-all duration-300 border rounded-lg overflow-hidden ${
+              opt?.active
+                ? "bg-theme-600 text-white shadow-xs shadow-theme-500/30 border-theme-600 border-2"
+                : "bg-white border-2 border-neutral-300 hover:border-theme-600 hover:shadow-md"
+            }`}
+          >
+            {/* Active Check Icon */}
+            {opt?.active && (
+              <div className="absolute top-1 right-1 z-10 w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                <Icon icon="mdi:check" className="text-theme-600 text-sm" />
+              </div>
+            )}
+
+            {/* Image Container */}
+            <div
+              className={`flex-shrink-0 w-[60px] bg-white h-[60px] overflow-hidden relative p-1`}
+            >
+              {opt?.image && (
+                <Image
+                  src={opt?.image}
+                  alt={opt?.title}
+                  width={60}
+                  height={60}
+                  className="object-contain w-full h-full"
+                />
+              )}
+            </div>
+
+            {/* Content Container */}
+            <div className="flex flex-col gap-1 min-w-0 flex-1 px-2">
+              <div
+                className={`font-semibold text-xs line-clamp-2 ${
+                  opt?.active
+                    ? "text-white"
+                    : "text-neutral-800 group-hover:text-theme-600"
+                }`}
+              >
+                {/* {formatOptionLabel(item)} */}
+                {opt?.label}
+              </div>
+              <div className="text-xs">
+                { opt?.upsell?.mod !== "same" && `${opt?.upsell?.mod} ${opt?.upsell?.value}`}
+              </div>
+            </div>
+          </Link>
+        ))}
+    </div>
+  );
+};
 
 const ProductInfo = ({ product }) => {
   console.log("ProductInfo", product);
@@ -58,7 +135,10 @@ const ProductInfo = ({ product }) => {
         {product?.name}
       </h1>
 
-      <ProductCategoryChip category={product?.category} url={product?.category_url}/>
+      <ProductCategoryChip
+        category={product?.category}
+        url={product?.category_url}
+      />
 
       {/* Rating */}
       <div className="flex items-center gap-3 flex-wrap pb-4 border-b border-gray-100 dark:border-gray-800">
@@ -114,6 +194,17 @@ const ProductInfo = ({ product }) => {
         <span className="font-medium">{product?.ships}</span>
       </div>
 
+      {/* ProductOptions */}
+      <div className="flex flex-col gap-4">
+        {Array.isArray(product?.product_options) &&
+          product.product_options.length > 0 &&
+          (product?.product_options || []).map((og, i) => (
+            <ProductOptionGroup
+              key={`product-option-group-${og?.option_label}-${i}`}
+              option_group={og}
+            />
+          ))}
+      </div>
 
       {/* Discounts */}
       {Array.isArray(product?.discount_links) &&

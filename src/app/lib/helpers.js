@@ -1156,20 +1156,50 @@ function generateBreadCrumbs(product) {
   ];
 }
 
-function formatProductOptionItem(product) {}
+function calculateUpsell(base_price, option_price){
+  if(!base_price || !option_price) return null;
+  const fbase_price = parseFloat(base_price);
+  const foption_price = parseFloat(option_price);
+  
+  if(fbase_price === foption_price) return {
+    mod: "same",
+    value: 0,
+  };
+  
+  return {
+    mod: fbase_price > foption_price ? "add": "less",
+    value: Math.abs(fbase_price - foption_price)
+  }
+}
+
+function getProductMainImage(images){
+  if(!images && !Array.isArray(images)) return null;
+  return images.find(({position}) => position == 1)?.src || null; 
+}
 
 function generateProductOptionItem(config, product) {
   if (!config || !product || !product?.accentuate_data) return null;
+  const base_product_price = product?.variants?.[0]?.price || 0;
   const ad = product?.accentuate_data;
+  const handles = ad?.[config?.urls] || [];
+  const prop = ad?.[config?.prop] || [];
+  const labels = (ad?.[config?.options] || []).map(i=> i.trim());
+  const active_index = prop.indexOf(product?.handle);
+  const options = (product?.sp_product_options || [])
+  .filter(o => prop.includes(o?.handle))
+  .map((o, i)=> ({
+    active: i === active_index,
+    title: o?.name || o?.title, 
+    label: labels[i],
+    image: getProductMainImage(o?.images || []),
+    upsell: calculateUpsell(base_product_price, (o?.variants?.[0]?.price || 0)),
+    url: `${BASE_URL}/${createSlug(o?.brand)}/product/${o?.handle}`,
+    data: {...o},
+  }))
 
-  const options = (ad?.[config?.options] || []).map(i=> i.trim());
-  const handles = ad?.[config?.urls];
-  const prop = ad?.[config?.prop];
   return {
     option_label: ad?.[config?.title],
     options,
-    handles,
-    prop,
   };
 }
 
