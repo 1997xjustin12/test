@@ -5,7 +5,7 @@ import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import Image from "next/image";
 import { useSearch } from "@/app/context/search";
 import { useSolanaCategories } from "@/app/context/category";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const FIRE = "#E85D26";
 
@@ -274,6 +274,8 @@ function SearchBox() {
 
   const { getProductUrl } = useSolanaCategories();
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   // On the /search page: typing only updates local input — no live fetch.
   // setSearch (which triggers both pipelines) is called only on explicit submit.
   const isSearchPage = pathname === "/search";
@@ -331,13 +333,22 @@ function SearchBox() {
 
   function handleChange(e) {
     setLocalInput(e.target.value);
-    setSearch(e.target.value);
+    setSearch(e.target.value, false);
     setOpen(true);
   }
 
   function handleSubmit() {
     if (isSearchPage) {
-      setSearch(localInput, true, true);
+      // 1. Initialize with the existing string to preserve other filters
+      const params = new URLSearchParams(searchParams.toString());
+
+      // 2. Update the query key
+      params.set("query", localInput);
+
+      // 3. Construct the path (Relative path is faster for Next.js)
+      const url = `/search?${params.toString()}`;
+
+      router.push(url);
     } else {
       redirectToSearchPage();
     }
@@ -466,20 +477,24 @@ function SearchBox() {
                   Direct Match
                 </span>
               </SectionHeader>
-              <Link prefetch={false} href={getProductUrl(top)} className="mx-3 mb-1 rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-3 p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group">
+              <Link
+                prefetch={false}
+                href={getProductUrl(top)}
+                className="mx-3 mb-1 rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-3 p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group"
+              >
                 <div className="rounded-xl min-w-20 min-h-20 relative overflow-hidden flex-shrink-0 border border-stone-200 dark:border-stone-700">
-                  {
-                    top?.images?.find(({position})=> position == 1)?.src && (
-                          <Image
-                            src={top?.images?.find(({position})=> position == 1)?.src} // or your specific object path
-                            alt={top.title || "Top search result thumbnail"}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 64px"
-                            className="object-contain"
-                            priority={false}
-                          />
-                        )
-                  }
+                  {top?.images?.find(({ position }) => position == 1)?.src && (
+                    <Image
+                      src={
+                        top?.images?.find(({ position }) => position == 1)?.src
+                      } // or your specific object path
+                      alt={top.title || "Top search result thumbnail"}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 64px"
+                      className="object-contain"
+                      priority={false}
+                    />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-stone-400 dark:text-stone-500 mb-0.5">

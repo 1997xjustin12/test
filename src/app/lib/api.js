@@ -194,7 +194,7 @@ export const getProductsByCollectionId = async (collection_id) => {
   }
 };
 
-export const fetchSearchResultsWithCategories = async (searchTerm) => {
+export const fetchSearchResults = async (searchTerm) => {
   try {
     const query = {
       query: {
@@ -247,7 +247,7 @@ export const fetchSearchResultsWithCategories = async (searchTerm) => {
     const data = await res.json();
     const categoryBuckets = data?.aggregations?.unique_categories?.buckets || [];
     const categories = categoryBuckets.map(bucket => ({
-      ...mapCategoryResults(bucket)
+      ...mapCategoryResults(bucket),
     }));
     return categories;
   } catch (err) {

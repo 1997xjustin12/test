@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
-import { fetchSearchResultsWithCategories } from "@/app/lib/api";
+import { fetchSearchResults } from "@/app/lib/api";
 
 import {
   BASE_URL,
@@ -64,8 +64,6 @@ export const SearchProvider = ({ children }) => {
   const [mainIsActive, setMainIsActive] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searchPageLoading, setSearchPageLoading] = useState(true);
-  const [searchPageQuery, setSearchPageQuery] = useState("");
 
   // ---------------------------------------------------------------------------
   // STATE - SEARCH RESULTS
@@ -80,7 +78,6 @@ export const SearchProvider = ({ children }) => {
   const [brandResults, setBrandResults] = useState([]);
   const [collectionsResults, setCollectionsResults] = useState([]);
   const [skusResults, setSkusResults] = useState([]);
-  const [searchPageResults, setSearchPageResults] = useState([]);
 
   // ---------------------------------------------------------------------------
   // STATE - DATA SOURCES
@@ -97,8 +94,6 @@ export const SearchProvider = ({ children }) => {
   const debounceTimeoutRef = useRef(null);
   const lastProcessedUrlQuery = useRef(null);
   const currentSearchQuery = useRef("");
-  const shouldCommitRef = useRef(false);
-  const searchResultsRef = useRef([]);
 
   // ---------------------------------------------------------------------------
   // HELPER: Build Elasticsearch Query
@@ -862,6 +857,7 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   const fetchProducts = useCallback(
     async (query_string) => {
+      setLoading(true);
       try {
         // Cancel previous fetch if it exists
         if (abortControllerRef.current) {
@@ -887,9 +883,9 @@ export const SearchProvider = ({ children }) => {
         }
 
         const data = await res.json();
-        const formatted_results = data?.hits?.hits?.map(
-          ({ _source }) => _source,
-        );
+        const formatted_results = data?.hits?.hits
+          ?.filter(Boolean)
+          .map(({ _source }) => _source);
 
         // console.log("data", data);
         const result_total_count = data?.hits?.total?.value;
@@ -973,23 +969,9 @@ export const SearchProvider = ({ children }) => {
   // FUNCTION: Set Search with Debounce
   // ---------------------------------------------------------------------------
   const setSearch = useCallback(
-    (search_string, shouldUpdateUrl = true, commitToPage = false) => {
-      if (commitToPage) {
-        shouldCommitRef.current = true;
-        if (search_string !== currentSearchQuery.current) {
-          setSearchPageLoading(true);
-        }
-      }
-
+    (search_string, shouldUpdateUrl = true) => {
       // Guard: Prevent update if same value (prevents loops)
       if (search_string === currentSearchQuery.current) {
-        // Commit-with-same-query: snapshot current results immediately
-        if (commitToPage) {
-          setSearchPageResults(searchResultsRef.current);
-          setSearchPageQuery(search_string);
-          setSearchPageLoading(false);
-          shouldCommitRef.current = false;
-        }
         return;
       }
 
@@ -1115,7 +1097,7 @@ export const SearchProvider = ({ children }) => {
     ) {
       lastProcessedUrlQuery.current = urlQuery;
       // Commit to page results since this is a URL-driven search (navigation / submit)
-      setSearch(urlQuery, false, true);
+      setSearch(urlQuery, false);
     }
   }, [pathname, searchParams, setSearch]);
 
@@ -1224,14 +1206,14 @@ export const SearchProvider = ({ children }) => {
         data: brandResults,
         showExpand: brandResults.length > 0,
       },
-      {
-        total: collectionsResults.length,
-        prop: "collections",
-        label: "Collections",
-        visible: true,
-        data: collectionsResults,
-        showExpand: collectionsResults.length > 0,
-      },
+      // {
+      //   total: collectionsResults.length,
+      //   prop: "collections",
+      //   label: "Collections",
+      //   visible: true,
+      //   data: collectionsResults,
+      //   showExpand: collectionsResults.length > 0,
+      // },
     ];
 
     // if (!loading) {
@@ -1256,38 +1238,6 @@ export const SearchProvider = ({ children }) => {
     loading,
   ]);
   // ---------------------------------------------------------------------------
-  // EFFECT: Commit search page results (only on explicit submit / URL navigation)
-  // ---------------------------------------------------------------------------
-  useEffect(() => {
-    searchResultsRef.current = searchResults;
-    if (shouldCommitRef.current) {
-      setSearchPageResults(searchResults);
-      setSearchPageQuery(currentSearchQuery.current);
-      setSearchPageLoading(false);
-      shouldCommitRef.current = false;
-    }
-  }, [searchResults]);
-
-  // ---------------------------------------------------------------------------
-  // MEMO: No Page Results (derived from committed page results)
-  // ---------------------------------------------------------------------------
-  const noPageResults = useMemo(() => {
-    if (searchPageResults.length === 0) return false;
-    const products = searchPageResults.find((r) => r.prop === "product")?.data || [];
-    const categories = searchPageResults.find((r) => r.prop === "category")?.data || [];
-    const brands = searchPageResults.find((r) => r.prop === "brand")?.data || [];
-    const collections = searchPageResults.find((r) => r.prop === "collections")?.data || [];
-    const skus = searchPageResults.find((r) => r.prop === "skus")?.data || [];
-    return (
-      products.length === 0 &&
-      categories.length === 0 &&
-      brands.length === 0 &&
-      collections.length === 0 &&
-      skus.length === 0
-    );
-  }, [searchPageResults]);
-
-  // ---------------------------------------------------------------------------
   // CONTEXT VALUE
   // ---------------------------------------------------------------------------
   const contextValue = useMemo(
@@ -1297,10 +1247,6 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
-      searchPageResults,
-      noPageResults,
-      searchPageLoading,
-      searchPageQuery,
       searchPageProductCount,
       recentSearchKey: RECENT_SEARCH_KEY,
       setSearch,
@@ -1316,10 +1262,6 @@ export const SearchProvider = ({ children }) => {
       mainIsActive,
       searchResults,
       noResults,
-      searchPageResults,
-      noPageResults,
-      searchPageLoading,
-      searchPageQuery,
       searchPageProductCount,
       setSearch,
       setSearchPageProductCount,

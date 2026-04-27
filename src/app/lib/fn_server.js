@@ -5,6 +5,7 @@ import {
   exclude_collections,
   createSlug,
   mapCategoryResults,
+  mapBrandResults,
   formatProduct,
 } from "@/app/lib/helpers";
 import { accentuateSpecLabels } from "@/app/lib/filter-helper";
@@ -358,7 +359,7 @@ export async function fetchProduct(product_path) {
     const specs = accentuateSpecLabels.map((item) => {
       let val = accentuateData[item.key] || "";
       if (item.transform) val = item.transform(val);
-      return { label:item.label, value: val };
+      return { label: item.label, value: val };
     });
 
     const specsIsEmpty = specs.every((item) => !item.value);
@@ -443,9 +444,7 @@ async function fetchRelatedProductData(accentuateData) {
       size: 100,
       query: {
         bool: {
-          filter: [
-            { terms: { "handle.keyword": mergedHandles } },
-          ],
+          filter: [{ terms: { "handle.keyword": mergedHandles } }],
         },
       },
     },
@@ -546,4 +545,96 @@ function mergeRelatedProducts(data, keys) {
 
   // 4. Optionally, you might want to deduplicate the results
   return [...new Set(merged)];
+}
+
+export async function fetchSearchResults(searchTerm) {
+  try {
+    if (!searchTerm) return null;
+    const query = {
+      query: {
+        bool: {
+          must: [
+            { term: { published: true } },
+            {
+              bool: {
+                should: [
+                  {
+                    // Fuzzy search is fine for these standard fields
+                    multi_match: {
+                      query: searchTerm,
+                      fields: ["title^3", "product_category"],
+                      fuzziness: "AUTO",
+                    },
+                  },
+                  {
+                    // Exact/Partial match for the flattened field (No Fuzziness)
+                    match: {
+                      "accentuate_data.category": searchTerm,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+          must_not: [
+            { terms: { "brand.keyword": exclude_brands } },
+            { terms: { "collections.name.keyword": exclude_collections } },
+          ],
+        },
+      },
+      aggs: {
+        unique_categories: {
+          terms: {
+            field: "accentuate_data.category",
+            size: 15,
+          },
+        },
+        unique_brands: {
+          terms: {
+            field: "brand.keyword",
+            size: 100,
+          },
+        },
+        // unique_collections: {
+        //   terms: {
+        //     field: "collections.name.keyword",
+        //     size: 200
+        //   }
+        // }
+      },
+    };
+
+    const res = await esSearch(query, { cache: "no-store" });
+
+    // 2. Handle potential fetch errors if esSearch returns a Response object
+    // If esSearch already returns the parsed JSON, you can skip res.json()
+    const data = typeof res.json === "function" ? await res.json() : res;
+
+console.log("SSR RESPONSE DATA:", data);
+
+    // 3. Map the aggregations
+    const categoryBuckets =
+      data?.aggregations?.unique_categories?.buckets || [];
+    const brandBuckets = data?.aggregations?.unique_brands?.buckets || [];
+
+    // Assuming mapCategoryResults is a helper function you have elsewhere
+    const categories = categoryBuckets.map((bucket) => ({
+      ...mapCategoryResults(bucket),
+    }));
+    
+    const brands = brandBuckets.map((bucket) => ({
+      ...mapBrandResults(bucket),
+    }));
+
+    return {
+      brands,
+      categories,
+      products:
+        data?.hits?.hits?.map((hit) => ({ id: hit._id, ...hit._source })) || [],
+        total_products: data?.hits?.total?.value || 0
+    };
+  } catch (error) {
+    console.error("Proxy Error:", error);
+    return [];
+  }
 }

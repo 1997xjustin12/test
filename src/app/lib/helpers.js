@@ -1098,11 +1098,24 @@ export function mapCategoryResults(cat) {
     name: cat.key,
     count: cat.doc_count,
     slug: slug,
+    url: `${BASE_URL}/category/${slug}`,
     image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
     type: getCategoryType(cat.key),
     description: getCategoryDescription(cat.key),
     sub: (getCategorySubs(cat.key) || []).join(" · "),
     nav_type: "category1",
+  };
+}
+
+export function mapBrandResults(brand) {
+  if (!brand) return null;
+  const slug = createSlug(brand.key);
+  return {
+    name: brand.key,
+    count: brand.doc_count,
+    slug: slug,
+    url: `${BASE_URL}/${slug}`,
+    image: `/images/brand-logo/${slug}.webp`
   };
 }
 
