@@ -34,9 +34,9 @@ function CategoryCard({ name, description, slug, image }) {
           src={image}
           alt={name}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 hover:scale-105"
-          quality={60}
+          quality={50}
         />
 
         {/* Your existing gradients for text legibility */}

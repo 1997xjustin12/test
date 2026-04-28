@@ -13,7 +13,7 @@ export default function HeroBackground() {
       fetchPriority="high"
       sizes="100vw"
       className="object-cover"
-      quality={55}
+      quality={30}
     />
   );
 }

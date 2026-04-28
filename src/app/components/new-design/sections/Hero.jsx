@@ -32,9 +32,9 @@ const CARDS = [
 export default function Hero({ background }) {
   return (
     <section className="relative min-h-[85vh] md:min-h-[92vh] flex items-center overflow-hidden">
-      {background}
-      {/* Fallback gradient */}
+      {/* Fallback gradient — visible while image loads or if it fails */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
+      {background}
       {/* Mobile: uniform dark overlay — Desktop: directional so right side is lighter for cards */}
       <div className="absolute inset-0 bg-black/75 md:bg-gradient-to-r md:from-black/90 md:via-black/70 md:to-black/30" />
 
