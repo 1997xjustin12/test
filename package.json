@@ -30,6 +30,7 @@
     "braintree": "^3.28.0",
     "braintree-web-drop-in": "^1.44.1",
     "cookie": "^1.0.2",
+    "critters": "^0.0.23",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.18",
     "dnd-kit-sortable-tree": "^0.1.73",

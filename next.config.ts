@@ -43,6 +43,7 @@ const config: NextConfig = {
   compress: true,
   poweredByHeader: false,
   experimental: {
+    optimizeCss: true,
     optimizePackageImports: [
       "@heroicons/react",
       "lucide-react",
