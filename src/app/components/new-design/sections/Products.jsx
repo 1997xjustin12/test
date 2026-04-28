@@ -130,7 +130,7 @@ function ProductCard({ product }) {
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold text-charcoal dark:text-white">
             ${formatPrice(product_attr?.price)}
-            {product_attr?.was && (
+            {!!product_attr?.was && (
               <s className="text-sm font-normal text-stone-400 ml-1.5">
                 ${formatPrice(product_attr?.was)}
               </s>
