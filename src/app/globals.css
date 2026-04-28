@@ -91,3 +91,22 @@ button:disabled {
   animation: fadeOut 0.3s ease-in-out forwards;
 }
 
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-cards-reveal {
+  animation: slideInUp 700ms ease 150ms both;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 120s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

@@ -1,11 +1,8 @@
-"use client";
-import { useReveal } from "@/app/hooks/useReveal";
-
 import Link from "next/link";
 import Image from "next/image";
 
 import { BASE_URL } from "@/app/lib/helpers";
-import {STORE_CONTACT} from "@/app/lib/store_constants";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const STATS = [
   { num: "6K+", label: "Products" },
@@ -33,8 +30,6 @@ const CARDS = [
 ];
 
 export default function Hero({ background }) {
-  const contentRef = useReveal();
-  const cardsRef = useReveal();
   return (
     <section className="relative min-h-[85vh] md:min-h-[92vh] flex items-center overflow-hidden">
       {background}
@@ -107,10 +102,7 @@ export default function Hero({ background }) {
           </div>
 
           {/* ── Right: Feature Cards — hidden on mobile ── */}
-          <div
-            ref={cardsRef}
-            className="hidden md:flex flex-col gap-3 opacity-0 translate-y-6 transition-all duration-700 delay-150"
-          >
+          <div className="hidden md:flex flex-col gap-3 hero-cards-reveal">
             {CARDS.map(({ image, url, title, sub }) => (
               <Link
                 key={title}
@@ -124,12 +116,12 @@ export default function Hero({ background }) {
                 transition-all duration-300 group
               "
               >
-                {/* <div className="h-40 bg-gradient-to-br from-stone-900 to-stone-800 relative overflow-hidden"> */}
                 <div className="h-40 bg-white relative overflow-hidden">
                   <Image
                     src={image}
                     alt={title}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
                   />
