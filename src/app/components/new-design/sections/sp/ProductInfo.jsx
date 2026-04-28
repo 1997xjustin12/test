@@ -45,10 +45,44 @@ const ProductOptionGroup = ({ option_group }) => {
     return null;
   return (
     <div className="w-full">
-      <div>{option_group?.option_label}</div>
+      <div className="font-semibold text-base text-neutral-800">
+        {option_group?.option_label}
+      </div>
       <ProductOptionGroupItems options={option_group?.options} />
     </div>
   );
+};
+
+const UpsellPriceDisplay = ({
+  mod,
+  value,
+  active,
+}) => {
+  if (mod === "less") {
+    return (
+        <div
+          className={`font-semibold text-xs ${
+            active ? "text-green-200" : "text-green-600"
+          }`}
+        >
+          {`Save $${formatPrice(value)}`}
+        </div>
+    );
+  }
+  if (mod === "add") {
+    return (
+      <div
+        className={`font-semibold text-xs ${
+          active ? "text-red-200" : "text-red-600"
+        }`}
+      >
+        {`Add $${formatPrice(value)}`}
+      </div>
+    );
+  }
+  if (mod==="same") {
+    return ``;
+  }
 };
 
 const ProductOptionGroupItems = ({ options }) => {
@@ -102,9 +136,11 @@ const ProductOptionGroupItems = ({ options }) => {
                 {/* {formatOptionLabel(item)} */}
                 {opt?.label}
               </div>
-              <div className="text-xs">
-                { opt?.upsell?.mod !== "same" && `${opt?.upsell?.mod} ${opt?.upsell?.value}`}
-              </div>
+              <UpsellPriceDisplay
+                mod={opt?.upsell?.mod}
+                value={opt?.upsell?.value}
+                active={opt?.active}
+              />
             </div>
           </Link>
         ))}

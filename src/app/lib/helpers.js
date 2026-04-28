@@ -1181,11 +1181,10 @@ function generateProductOptionItem(config, product) {
   const handles = ad?.[config?.urls] || [];
   const prop = ad?.[config?.prop] || [];
   const labels = (ad?.[config?.options] || []).map(i=> i.trim());
-  const active_index = prop.indexOf(product?.handle);
   const options = (product?.sp_product_options || [])
   .filter(o => prop.includes(o?.handle))
   .map((o, i)=> ({
-    active: i === active_index,
+    active: o?.handle === product?.handle,
     title: o?.name || o?.title, 
     label: labels[i],
     image: getProductMainImage(o?.images || []),
@@ -1308,13 +1307,10 @@ export function formatProduct(product, mod="pdp") {
   };
 
   // PDP only properties
-  // if(mod==="pdp"){
-  //   const product_options = generateProductOptions(product);
-  //   formatted_product.map((p)=>({
-  //     ...p,
-  //     product_options,
-  //   }))
-  // }
+  if(mod==="pdp"){
+    const product_options = generateProductOptions(product);
+    formatted_product["product_options"] = product_options;
+  }
   
   return formatted_product;
 }
