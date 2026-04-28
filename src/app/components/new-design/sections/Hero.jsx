@@ -1,8 +1,11 @@
 "use client";
 import { useReveal } from "@/app/hooks/useReveal";
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+
 import Link from "next/link";
 import Image from "next/image";
+
+import { BASE_URL } from "@/app/lib/helpers";
+import {STORE_CONTACT} from "@/app/lib/store_constants";
 
 const STATS = [
   { num: "6K+", label: "Products" },
@@ -63,13 +66,13 @@ export default function Hero({ background }) {
             {/* CTAs */}
             <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
               <Link
-                href="#categories"
+                href={`${BASE_URL}/fireplaces`}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30"
               >
                 Shop All Products
               </Link>
               <Link
-                href={PHONE_HREF}
+                href={`tel:${STORE_CONTACT}`}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold transition-all duration-200"
               >
                 Get Expert Advice
