@@ -76,6 +76,8 @@ export default async function MarketLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com" />
         <link rel="dns-prefetch" href="https://cdn.shopify.com" />
         {/* eslint-disable-next-line react/no-danger */}
@@ -91,7 +93,7 @@ export default async function MarketLayout({ children }) {
                     <SessionWrapper>
                       <QuickViewProvider>
                         <Topbar />
-                        <Navbar logo={redisLogo} />
+                        <Navbar />
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>

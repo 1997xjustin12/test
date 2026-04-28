@@ -65,7 +65,7 @@ function CategoryCard({ name, description, slug, image }) {
 
 export default function Categories() {
   const { categories } = useSolanaCategories();
-  console.log("base CAT", categories)
+  // console.log("base CAT", categories)
   const hdrRef = useReveal();
   return (
     <section

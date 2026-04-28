@@ -1,3 +1,4 @@
+import "@/app/styles/product-pages.css";
 
 // NEXT
 import { notFound } from "next/navigation";

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { formatPrice } from "@/app/lib/helpers";
 import { useReveal } from "@/app/hooks/useReveal";
 import { useSolanaCategories } from "@/app/context/category";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
@@ -121,17 +122,17 @@ function ProductCard({ product }) {
 
             {/* The Unrated Stars */}
             <span className="text-stone-300 dark:text-stone-600 drop-shadow-sm">
-              {"★".repeat(5 - Math.round(product_attr?.rating || 0))}
+              {"★".repeat(5 - Math.round(product_attr?.ratings || 0))}
             </span>
           </div>
-          {product_attr?.rating || ""}
+          {product_attr?.ratings || ""}
         </div>
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold text-charcoal dark:text-white">
-            {product_attr?.price}
+            ${formatPrice(product_attr?.price)}
             {product_attr?.was && (
               <s className="text-sm font-normal text-stone-400 ml-1.5">
-                {product_attr?.was}
+                ${formatPrice(product_attr?.was)}
               </s>
             )}
           </div>
@@ -149,8 +150,8 @@ function ProductCard({ product }) {
   );
 }
 
-export default function Products({ initialProducts }) {
-  const [products, setProducts] = useState(initialProducts || []);
+export default function Products() {
+  const [products, setProducts] = useState([]);
   const [active, setActive] = useState("All");
   const hdrRef = useReveal();
 
@@ -159,6 +160,28 @@ export default function Products({ initialProducts }) {
     const newProducts = await getProductsByCollectionId(tab?.collection_id);
     setProducts(newProducts);
   };
+
+  useEffect(() => {
+
+
+    // // Define the function inside to avoid dependency warnings
+    const fetchInitialData = async () => {
+      try {
+        // Hardcoding '137' is fine for a default,
+        // but ensure this matches your "All" or default tab logic
+        const initialProducts = await getProductsByCollectionId(137);
+
+        if (initialProducts) {
+          setProducts(initialProducts);
+        }
+      } catch (error) {
+        console.error("Error loading initial products:", error);
+      }
+    };
+
+    fetchInitialData();
+
+  }, []);
 
   return (
     <section

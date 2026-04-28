@@ -20,36 +20,6 @@
   }
 }
 
-.product-add-to-cart-quantity-input {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.product-add-to-cart-quantity-input input {
-  border-color: #afafaf !important;
-  border: 2px;
-  border-style: solid;
-  padding: 4px 4px;
-  border-radius: 10px;
-  width: 56px;
-  text-align: center;
-}
-
-.product-add-to-cart-quantity-input input::-webkit-inner-spin-button,
-.product-add-to-cart-quantity-input input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.product-add-to-cart-quantity-input button {
-  width: 32px;
-  height: 32px;
-  color: #918e8e;
-  text-align: center;
-  padding: 0px;
-  border-radius: 999px;
-}
 
 .text-pallete-green { color: #089e1b; }
 .text-theme-500 { color: #ff6b14; }
@@ -90,71 +60,8 @@
   background: #ebebeb;
 }
 
-.product-section__filter-wrap {
-  width: var(--product-section__filter-width);
-}
-
-.product-section__products-wrap {
-  width: calc(100% - var(--product-section__filter-width));
-}
-
-.related-products-scroll-wrap::-webkit-scrollbar,
-.shop-now-scroll-wrap::-webkit-scrollbar {
-  display: none;
-}
-
-.related-products-scroll-wrap,
-.shop-now-scroll-wrap {
-  scrollbar-width: none;
-}
-
 button:disabled {
   opacity: 0.5;
-}
-
-.shop-now-card-wrap,
-.related-product-card-wrap {
-  min-width: 340px !important;
-}
-
-input[type="checkbox"].market {
-  width: 20px;
-  height: 20px;
-  appearance: none;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  background-color: #f0f0f0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-input[type="checkbox"].market:hover {
-  border-color: #888;
-}
-
-input[type="checkbox"].market:checked {
-  background-color: #ff6b14;
-  border-color: #ff6b14;
-}
-
-input[type="checkbox"].market:checked::before {
-  content: "";
-  display: block;
-  font-size: 10px;
-  color: white;
-  text-align: center;
-  line-height: 15px;
-}
-
-.slick-slide > div {
-  margin: 0 10px;
-}
-
-.slick-dots {
-  width: auto !important;
-  display: flex !important;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .scroll-to-section {
@@ -184,11 +91,3 @@ input[type="checkbox"].market:checked::before {
   animation: fadeOut 0.3s ease-in-out forwards;
 }
 
-.product_description_content p {
-  margin-bottom: 20px;
-}
-
-body.gallery-fullscreen-active .product-option-item-link {
-  z-index: -10 !important;
-  pointer-events: none !important;
-}

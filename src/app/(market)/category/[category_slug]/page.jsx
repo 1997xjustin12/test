@@ -1,3 +1,4 @@
+import "@/app/styles/product-pages.css";
 import CategoryPageClient from "@/app/components/template/CategoryPageClient";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { BASE_URL } from "@/app/lib/helpers";

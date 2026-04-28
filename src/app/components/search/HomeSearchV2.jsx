@@ -138,7 +138,7 @@ const HomeSearch = () => {
     });
   };
 
-  const handleOptionClick = (e) => {
+  const handleOptionClick = () => {
     const recentLS = localStorage.getItem("recent_searches");
     if (recentLS) {
       const recentArray = JSON.parse(recentLS);

@@ -9,113 +9,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const FIRE = "#E85D26";
 
-const POPULAR = [
-  "Gas Fireplaces",
-  "Napoleon Ascent",
-  "Electric Insert",
-  "Outdoor Fire Pit",
-  "Linear Fireplace",
-  "Patio Heater",
-  "Open Box Deals",
-  "Lynx Built-In Grill",
-  "Wood Burning",
-  "Fireplace Mantel",
-  "Regency Gas Insert",
-  "Blaze Grill",
-];
-
-const ALL_RESULTS = [
-  // products
-  {
-    type: "product",
-    id: 1,
-    name: "Napoleon Ascent 60 Linear Gas Fireplace",
-    brand: "Napoleon",
-    price: "$3,299",
-    tag: "Bestseller",
-    color: "#1a0803",
-    accent: "#e85d26",
-  },
-  {
-    type: "product",
-    id: 2,
-    name: 'Dimplex Revillusion 36" Electric Fireplace',
-    brand: "Dimplex",
-    price: "$1,499",
-    tag: "New",
-    color: "#0d1a2e",
-    accent: "#3b82f6",
-  },
-  {
-    type: "product",
-    id: 3,
-    name: "Hearth & Home Outdoor Propane Fire Pit",
-    brand: "Hearth & Home",
-    price: "$899",
-    tag: "Sale",
-    color: "#1a1208",
-    accent: "#e85d26",
-  },
-  {
-    type: "product",
-    id: 4,
-    name: 'Lynx Professional 54" Built-In Gas Grill',
-    brand: "Lynx Grills",
-    price: "$5,499",
-    tag: null,
-    color: "#0d1520",
-    accent: "#64748b",
-  },
-  {
-    type: "product",
-    id: 5,
-    name: "Majestic Quartz 32 Direct-Vent Gas Fireplace",
-    brand: "Majestic",
-    price: "$2,199",
-    tag: "Sale",
-    color: "#1a0a03",
-    accent: "#f97316",
-  },
-  {
-    type: "product",
-    id: 6,
-    name: 'Blaze 4-Burner 32" Freestanding Gas Grill',
-    brand: "Blaze",
-    price: "$1,099",
-    tag: null,
-    color: "#181208",
-    accent: "#64748b",
-  },
-  // categories
-  { type: "category", id: 7, name: "Gas Fireplaces", count: "248 products" },
-  {
-    type: "category",
-    id: 8,
-    name: "Electric Fireplaces",
-    count: "174 products",
-  },
-  { type: "category", id: 9, name: "Built-In Grills", count: "92 products" },
-  { type: "category", id: 10, name: "Patio Heaters", count: "67 products" },
-  // brands
-  { type: "brand", id: 11, name: "Napoleon", count: "312 products" },
-  { type: "brand", id: 12, name: "Dimplex", count: "88 products" },
-  { type: "brand", id: 13, name: "Lynx Grills", count: "54 products" },
-  { type: "brand", id: 14, name: "Majestic", count: "76 products" },
-  // collections
-  {
-    type: "collection",
-    id: 15,
-    name: "Modern Linear Collection",
-    count: "34 items",
-  },
-  {
-    type: "collection",
-    id: 16,
-    name: "Outdoor Living Bundles",
-    count: "18 items",
-  },
-  { type: "collection", id: 17, name: "Open Box Deals", count: "42 items" },
-];
 
 function highlight(text, query) {
   if (!query) return text;
@@ -367,6 +260,11 @@ function SearchBox() {
     if (!isSearchPage) inputRef.current?.focus();
   }
 
+  function handleItemClick() {
+    setOpen(false);
+    setFocused(false);
+  }
+
   function clearSearch() {
     if (isSearchPage) {
       setLocalInput("");
@@ -482,6 +380,7 @@ function SearchBox() {
               <Link
                 prefetch={false}
                 href={getProductUrl(top)}
+                onClick={handleItemClick}
                 className="mx-3 mb-1 rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-3 p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group"
               >
                 <div className="rounded-xl min-w-20 min-h-20 relative overflow-hidden flex-shrink-0 border border-stone-200 dark:border-stone-700">
@@ -590,13 +489,14 @@ function SearchBox() {
                     <Link
                       prefetch={false}
                       href={getProductUrl(p)}
-                      key={`products-${p.product_id}-${index}`}
+                      key={`product-${p.product_id}-${index}`}
+                      onClick={handleItemClick}
                       className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition group"
                     >
                       <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
                         {p?.image && (
                           <Image
-                            src={p.image} // or your specific object path
+                            src={p.image}
                             alt={p.title || "Search result thumbnail"}
                             fill
                             sizes="(max-width: 768px) 100vw, 64px"
@@ -640,13 +540,14 @@ function SearchBox() {
                     <Link
                       prefetch={false}
                       href={`${BASE_URL}/category/${c.slug}`}
-                      key={`category-search-${c?.name}-${index}`}
+                      key={`category-${c.slug}-${index}`}
+                      onClick={handleItemClick}
                       className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
                     >
                       <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
                         {c?.image && (
                           <Image
-                            src={c.image} // or your specific object path
+                            src={c.image}
                             alt={c.name || "Category search result thumbnail"}
                             fill
                             sizes="(max-width: 768px) 100vw, 64px"
@@ -657,7 +558,6 @@ function SearchBox() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
-                          {/* {highlight(c.name, searchQuery)} */}
                           {c.name}
                         </div>
                         <div className="text-xs text-stone-400 dark:text-stone-500">
@@ -691,14 +591,15 @@ function SearchBox() {
                     <Link
                       prefetch={false}
                       href={`${BASE_URL}/${b.url}`}
-                      key={`brand-search-${b.name}-${index}`}
+                      key={`brand-${b.name}-${index}`}
+                      onClick={handleItemClick}
                       className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
                     >
                       <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
                         {b?.image && (
                           <Image
-                            src={b.image} // or your specific object path
-                            alt={b.name || "Category search result thumbnail"}
+                            src={b.image}
+                            alt={b.name || "Brand search result thumbnail"}
                             fill
                             sizes="(max-width: 768px) 100vw, 64px"
                             className="object-contain"
@@ -708,7 +609,6 @@ function SearchBox() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
-                          {/* {highlight(b.name, searchQuery)} */}
                           {b.name}
                         </div>
                         <div className="text-xs text-stone-400 dark:text-stone-500">

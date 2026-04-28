@@ -1,3 +1,4 @@
+import "@/app/styles/product-pages.css";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";

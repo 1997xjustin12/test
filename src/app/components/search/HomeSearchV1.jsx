@@ -156,11 +156,8 @@ const HomeSearch = () => {
     });
   };
 
-  const handleOptionClick = (e) => {
-    // store search value inside a local storage array
-    // e.preventDefault();
+  const handleOptionClick = () => {
     const recentLS = localStorage.getItem("recent_searches");
-    // console.log("recentLS", recentLS ? "YES" : "NO");
     if (recentLS) {
       const recentArray = JSON.parse(recentLS);
       if (Array.isArray(recentArray)) {
@@ -275,7 +272,6 @@ const HomeSearch = () => {
                               </div>
                               <div className="text-[10px] text-gray-500 font-normal">
                                 Category
-                                {/* &bull; {i.url} */}
                               </div>
                             </div>
                           </Link>
@@ -318,7 +314,6 @@ const HomeSearch = () => {
                                 </div>
                                 <div className="text-[10px] text-gray-500 font-normal">
                                   Product
-                                  {/* &bull; {i.name} */}
                                 </div>
                               </div>
                             </div>
