@@ -8,6 +8,7 @@ const NewHomePage = dynamic(() => import("@/app/components/new-design/page/HomeP
 
 export default async function HomePage() {
   const BEST_SELLERS_FOR_BLAZE = 137;
-  const blazeProducts = await getCollectionProducts(BEST_SELLERS_FOR_BLAZE);
+  // const blazeProducts = await getCollectionProducts(BEST_SELLERS_FOR_BLAZE);
+  const blazeProducts = [];
   return <NewHomePage initialProducts={blazeProducts} heroBg={<HeroBackground />} />;
 }
