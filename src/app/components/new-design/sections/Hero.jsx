@@ -121,7 +121,7 @@ export default function Hero({ background }) {
                     src={image}
                     alt={title}
                     fill
-                    loading="lazy"
+                    loading="eager"
                     sizes="(max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
                   />
