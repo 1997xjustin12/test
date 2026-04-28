@@ -237,7 +237,7 @@ export default function Products() {
         </div>
 
         {/* Grid: 1 col → 2 col tablet → 4 col desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-h-[1496px] sm:min-h-0">
           {products.slice(0, 4).map((p, index) => (
             <ProductCard
               key={`homepage-product-item-${p.title}-${index}`}

@@ -91,7 +91,7 @@ export default function Categories() {
         </div>
 
         {/* Grid: 1 col mobile → 2 col tablet → 3 col desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[3038px] sm:min-h-0">
           {categories.map((c) => (
             <CategoryCard key={`home-cat-cart-${c.slug}`} {...c} />
           ))}
