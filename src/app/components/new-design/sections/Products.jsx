@@ -236,14 +236,21 @@ export default function Products() {
           </Link>
         </div>
 
-        {/* Grid: 1 col → 2 col tablet → 4 col desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-h-[1496px] sm:min-h-0">
-          {products.slice(0, 4).map((p, index) => (
-            <ProductCard
-              key={`homepage-product-item-${p.title}-${index}`}
-              product={p}
-            />
-          ))}
+        {/* Grid: 2 col mobile → 2 col tablet → 4 col desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {products.length === 0
+            ? [...Array(4)].map((_, i) => (
+                <div
+                  key={`product-skeleton-${i}`}
+                  className="rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse"
+                />
+              ))
+            : products.slice(0, 4).map((p, index) => (
+                <ProductCard
+                  key={`homepage-product-item-${p.title}-${index}`}
+                  product={p}
+                />
+              ))}
         </div>
       </div>
     </section>

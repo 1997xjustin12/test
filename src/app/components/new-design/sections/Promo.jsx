@@ -41,12 +41,12 @@ export default function Promo() {
             {PROMO_CARDS.map(({ icon, title, desc, url }) => (
               <Link key={`promo-back-links-${title}`} className="
                 flex items-center gap-4 px-5 py-4 rounded-xl
-                bg-white/7 border border-white/10 backdrop-blur-sm
+                bg-white/10 border border-white/10 md:backdrop-blur-sm
               "
               prefetch={false}
               href={url || "#"}
               >
-                <span className="text-3xl flex-shrink-0">{icon}</span>
+                <span className="text-2xl sm:text-3xl flex-shrink-0">{icon}</span>
                 <div>
                   <h4 className="text-white text-sm font-semibold mb-0.5">{title}</h4>
                   <p className="text-white/45 text-xs">{desc}</p>

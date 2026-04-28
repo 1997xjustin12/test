@@ -110,3 +110,19 @@ button:disabled {
   animation-play-state: paused;
 }
 
+/* ── Mobile performance ─────────────────────────────────────────── */
+
+/* Skip rendering below-fold sections until they approach the viewport.
+   contain-intrinsic-block-size gives the browser a height estimate so
+   the scrollbar stays stable (prevents CLS from 0-height placeholders). */
+@media (max-width: 767px) {
+  #categories,
+  #products,
+  #why,
+  #reviews,
+  #blog {
+    content-visibility: auto;
+    contain-intrinsic-block-size: 600px;
+  }
+}
+

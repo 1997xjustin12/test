@@ -28,7 +28,7 @@ function CategoryCard({ name, description, slug, image }) {
           <h3 className="font-serif text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-lg">{title}</h3>
         </div>
       </div> */}
-      <div className="relative h-56 sm:h-60 overflow-hidden">
+      <div className="relative h-36 sm:h-60 overflow-hidden">
         {/* The actual image using next/image */}
         <Image
           src={image}
@@ -90,10 +90,16 @@ export default function Categories() {
           </p>
         </div>
 
-        {/* Grid: 1 col mobile → 2 col tablet → 3 col desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[3038px] sm:min-h-0">
-          {categories.map((c) => (
-            <CategoryCard key={`home-cat-cart-${c.slug}`} {...c} />
+        {/* Grid: 2 col mobile → 2 col tablet → 3 col desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* Show 6 on mobile to limit image loads; show all on sm+ */}
+          {categories.slice(0, 6).map((c) => (
+            <CategoryCard key={`home-cat-cart-mobile-${c.slug}`} {...c} />
+          ))}
+          {categories.slice(6).map((c) => (
+            <div key={`home-cat-cart-desktop-${c.slug}`} className="hidden sm:block">
+              <CategoryCard {...c} />
+            </div>
           ))}
         </div>
       </div>
