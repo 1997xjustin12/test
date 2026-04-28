@@ -1126,18 +1126,23 @@ export function productIsFreeshipping(product_tags) {
 }
 
 export function productBadge(product_tags = [], product_collections = []) {
-  if (!Array.isArray(product_tags)) return "";
+  const tags = Array.isArray(product_tags) ? product_tags : [];
+  const collections = Array.isArray(product_collections) ? product_collections : [];
 
-  for (const tag of product_tags) {
-    const lowerTag = tag?.toLowerCase();
-    if (lowerTag?.includes("new arrival")) return "new";
-    if (lowerTag?.includes("sale")) return "sale";
+  for (const tag of tags) {
+    if (typeof tag !== 'string') continue;
+    const lowerTag = tag.toLowerCase();
+    
+    if (lowerTag.includes("new arrival")) return "new";
+    if (lowerTag.includes("sale")) return "sale";
   }
 
-  for (const col of product_collections || []) {
-    const lowerCol = col?.name?.toLowerCase();
-    if (lowerCol?.includes("best sellers")) return "bestseller";
-    if (lowerCol?.includes("open box")) return "openbox";
+  for (const col of collections) {
+    const name = col?.name?.toLowerCase();
+    if (!name) continue; // Skip if name is missing
+
+    if (name.includes("best sellers")) return "bestseller";
+    if (name.includes("open box")) return "openbox";
   }
 
   return "";
@@ -1250,7 +1255,7 @@ export function formatProduct(product, mod="pdp") {
   const was = variant?.compare_at_price || 0;
   const save_amt = was ? was - price : 0;
   const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
-  const category = product?.accentuate_data?.category;
+  const category = product?.accentuate_data?.category || "uncategorized";
   const category_url = `${BASE_URL}/category/${createSlug(category)}`;
   const brand_url = `${BASE_URL}/${createSlug(product?.brand)}`;
   const discount_links = [
