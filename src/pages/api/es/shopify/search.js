@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       hits: {
         ...data?.hits,
         hits: products.filter(Boolean).map(({ _source }) => ({
-          _source: formatProduct(_source, "card"),
+          _source: _source,
         })),
       },
     };
