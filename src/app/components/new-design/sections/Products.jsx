@@ -171,8 +171,8 @@ function ProductCard({ product }) {
 
 const MOBILE_INITIAL = 2;
 
-export default function Products() {
-  const [products, setProducts] = useState([]);
+export default function Products({ initialProducts = [] }) {
+  const [products, setProducts] = useState(initialProducts);
   const [active, setActive] = useState("All");
   const [showAll, setShowAll] = useState(false);
   const hdrRef = useReveal();
@@ -183,28 +183,6 @@ export default function Products() {
     const newProducts = await getProductsByCollectionId(tab?.collection_id);
     setProducts(newProducts);
   };
-
-  useEffect(() => {
-
-
-    // // Define the function inside to avoid dependency warnings
-    const fetchInitialData = async () => {
-      try {
-        // Hardcoding '137' is fine for a default,
-        // but ensure this matches your "All" or default tab logic
-        const initialProducts = await getProductsByCollectionId(137);
-
-        if (initialProducts) {
-          setProducts(initialProducts);
-        }
-      } catch (error) {
-        console.error("Error loading initial products:", error);
-      }
-    };
-
-    fetchInitialData();
-
-  }, []);
 
   return (
     <section

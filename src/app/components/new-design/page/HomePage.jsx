@@ -16,7 +16,7 @@ const Cta         = dynamic(() => import("@/app/components/new-design/sections/C
 const NewsLetter  = dynamic(() => import("@/app/components/new-design/sections/NewsLetter"));
 const StickyCall  = dynamic(() => import("@/app/components/new-design/ui/StickyCall"));
 
-function HomePage({ heroBg }) {
+function HomePage({ heroBg, initialProducts }) {
   return (
     <>
       <div>
@@ -24,7 +24,7 @@ function HomePage({ heroBg }) {
         <Features />
         <div className="hidden md:block"><Brands /></div>
         <Categories />
-        <Products />
+        <Products initialProducts={initialProducts} />
         <div className="hidden md:block"><WhySolana /></div>
         <div className="hidden md:block"><Promo /></div>
         <Reviews />
