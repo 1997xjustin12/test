@@ -1,77 +1,72 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useReveal } from "@/app/hooks/useReveal";
-import { CATEGORIES } from "@/app/data/new-homepage";
 import { useSolanaCategories } from "@/app/context/category";
 import { ArrowIcon } from "@/app/components/new-design/ui/Icons";
 import Image from "next/image";
 import Link from "next/link";
 
+const INITIAL_COUNT = 4;
+
 function CategoryCard({ name, description, slug, image }) {
   const ref = useReveal();
   return (
     <Link href={slug ? `/category/${slug}` : "#"} prefetch={false}>
-    <article
-      ref={ref}
-      className="
-        opacity-0 translate-y-6 transition-all duration-700
-        rounded-2xl overflow-hidden bg-white dark:bg-stone-900
-        shadow-[0_4px_24px_rgba(0,0,0,.10)] dark:shadow-[0_4px_24px_rgba(0,0,0,.4)]
-        hover:shadow-[0_12px_48px_rgba(0,0,0,.20)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,.6)]
-        hover:-translate-y-1.5 cursor-pointer group
-        border border-transparent dark:border-stone-800
-      "
-    >
-      {/* Image placeholder — swap for <img> */}
-      {/* <div className="relative h-56 sm:h-60 bg-gradient-to-br from-stone-800 to-stone-900">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent z-10" />
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-          <h3 className="font-serif text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-lg">{title}</h3>
+      <article
+        ref={ref}
+        className="
+          opacity-0 translate-y-6 transition-all duration-700
+          rounded-2xl overflow-hidden bg-white dark:bg-stone-900
+          shadow-[0_4px_24px_rgba(0,0,0,.10)] dark:shadow-[0_4px_24px_rgba(0,0,0,.4)]
+          hover:shadow-[0_12px_48px_rgba(0,0,0,.20)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,.6)]
+          hover:-translate-y-1.5 cursor-pointer group
+          border border-transparent dark:border-stone-800
+        "
+      >
+        <div className="relative h-36 sm:h-60 overflow-hidden">
+          <Image
+            src={image}
+            alt={name}
+            fill
+            sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 hover:scale-105"
+            quality={40}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-lg">
+              {name}
+            </h3>
+          </div>
         </div>
-      </div> */}
-      <div className="relative h-36 sm:h-60 overflow-hidden">
-        {/* The actual image using next/image */}
-        <Image
-          src={image}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 hover:scale-105"
-          quality={40}
-        />
-
-        {/* Your existing gradients for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-
-        {/* Text Content */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-          <h3 className="font-serif text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-lg">
-            {name}
-          </h3>
+        <div className="p-4 pb-5 bg-white dark:bg-stone-900">
+          <p className="text-sm text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
+            {description}
+          </p>
+          <div className="flex items-center gap-1.5 text-sm font-semibold text-fire group-hover:gap-2.5 transition-all duration-200">
+            Shop {name} <ArrowIcon />
+          </div>
         </div>
-      </div>
-      {/* Body */}
-      <div className="p-4 pb-5 bg-white dark:bg-stone-900">
-        <p className="text-sm text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
-          {description}
-        </p>
-        <div className="flex items-center gap-1.5 text-sm font-semibold text-fire group-hover:gap-2.5 transition-all duration-200">
-          Shop {name} <ArrowIcon />
-        </div>
-      </div>
-    </article>
+      </article>
     </Link>
   );
 }
 
 export default function Categories() {
   const { categories } = useSolanaCategories();
-  // console.log("base CAT", categories)
   const hdrRef = useReveal();
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    // Desktop: auto-expand without requiring button click
+    if (window.innerWidth >= 640) setShowAll(true);
+  }, []);
+
+  const visible = showAll ? categories : categories.slice(0, INITIAL_COUNT);
+  const remaining = categories.length - INITIAL_COUNT;
+
   return (
-    <section
-      id="categories"
-      className="py-20 md:py-24 bg-white dark:bg-stone-950"
-    >
+    <section id="categories" className="py-20 md:py-24 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* Header */}
         <div
@@ -90,18 +85,24 @@ export default function Categories() {
           </p>
         </div>
 
-        {/* Grid: 2 col mobile → 2 col tablet → 3 col desktop */}
+        {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* Show 6 on mobile to limit image loads; show all on sm+ */}
-          {categories.slice(0, 6).map((c) => (
-            <CategoryCard key={`home-cat-cart-mobile-${c.slug}`} {...c} />
-          ))}
-          {categories.slice(6).map((c) => (
-            <div key={`home-cat-cart-desktop-${c.slug}`} className="hidden sm:block">
-              <CategoryCard {...c} />
-            </div>
+          {visible.map((c) => (
+            <CategoryCard key={c.slug} {...c} />
           ))}
         </div>
+
+        {/* Show All button — mobile only, disappears once expanded */}
+        {!showAll && remaining > 0 && (
+          <div className="mt-8 text-center sm:hidden">
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-fire text-fire font-semibold text-sm hover:bg-fire hover:text-white transition-all duration-200"
+            >
+              Show All Categories ({remaining} more)
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

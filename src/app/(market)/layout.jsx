@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import "@/app/globals.css";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { redis, keys } from "@/app/lib/redis";
-import { unstable_cache } from "next/cache";
 import { Inter, Playfair_Display } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
@@ -38,23 +37,19 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata = await generateMetadata();
 
-const getInitData = unstable_cache(
-  async () => {
-    try {
-      const mgetKeys = [
-        keys.dev_shopify_menu.value,
-        "admin_solana_market_logo",
-        keys.theme.value,
-      ];
-      return await redis.mget(mgetKeys);
-    } catch (err) {
-      console.error("[Redis Init Error]:", err);
-      return null;
-    }
-  },
-  ["market-layout-init"],
-  { revalidate: 3600 }
-);
+async function getInitData() {
+  try {
+    const mgetKeys = [
+      keys.dev_shopify_menu.value,
+      "admin_solana_market_logo",
+      keys.theme.value,
+    ];
+    return await redis.mget(mgetKeys);
+  } catch (err) {
+    console.error("[Redis Init Error]:", err);
+    return null;
+  }
+}
 
 export default async function MarketLayout({ children }) {
   const [initData, categories] = await Promise.all([

@@ -41,7 +41,7 @@ const es_index = ES_INDEX;
 const hitsPerPage = 30;
 
 const searchClient = Client({
-  url: `/api/es/searchkit/`,
+  url: `/api/es/searchkit`,
 });
 
 const sortPriceItems = (items) => {

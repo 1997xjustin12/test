@@ -228,7 +228,7 @@ export async function fetchUniqueCategories() {
           },
         },
       },
-      { next: { revalidate: 3600 } },
+      { cache: "no-store" },
     );
     return (
       data?.aggregations?.unique_categories?.buckets?.map(mapCategoryResults) ||
@@ -256,7 +256,7 @@ export async function fetchBrands() {
           },
         },
       },
-      { next: { revalidate: 3600 } },
+      { cache: "no-store" },
     );
     return (
       data?.aggregations?.unique_brands?.buckets?.map((b) => ({
@@ -305,7 +305,7 @@ export async function getCollectionProducts(id) {
           },
         },
       },
-      { next: { revalidate: 3600 } },
+      { cache: "no-store" },
     );
     return data?.hits?.hits?.map((item) => item?._source) || [];
   } catch (error) {

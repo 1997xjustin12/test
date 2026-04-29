@@ -40,7 +40,7 @@ const VIEW_ALL_URL = "/blaze-outdoor-products";
 async function getProductsByCollectionId(id) {
   // Use a full URL if calling from the server, or relative if client-side
   const res = await fetch(`/api/collections/collection-products/${id}`, {
-    next: { revalidate: 3600 }, // Optional: Cache for 1 hour
+    cache: "no-store",
   });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -51,23 +51,28 @@ async function getProductsByCollectionId(id) {
 }
 
 function ProductCard({ product }) {
-  const { isPriceVisible, getProductUrl } = useSolanaCategories();
+  const { getProductUrl } = useSolanaCategories();
   const ref = useReveal();
 
   const product_attr = useMemo(() => {
     const image =
       product?.images?.find((item) => item?.position == 1)?.src || null;
-
+    const price = product?.variants?.[0]?.price;
+    const was = product?.variants?.[0]?.compare_at_price;
+    const savings = was && price ? Math.round(((was - price) / was) * 100) : 0;
     return {
       title: product?.title,
       brand: product?.brand,
       url: getProductUrl(product),
       image,
-      price: product?.variants?.[0]?.price,
-      was: product?.variants?.[0]?.compare_at_price,
+      price,
+      was,
+      savings,
       rating: Number(product?.ratings?.rating_count),
     };
   }, [product]);
+
+  const onSale = !!product_attr.was && product_attr.savings > 0;
 
   return (
     <article
@@ -77,86 +82,104 @@ function ProductCard({ product }) {
         rounded-xl overflow-hidden bg-white dark:bg-stone-900
         border border-stone-100 dark:border-stone-800
         hover:shadow-[0_12px_48px_rgba(0,0,0,.15)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,.5)]
-        hover:-translate-y-1 group
+        hover:-translate-y-1 group flex flex-col
       "
     >
-      {/* Image placeholder */}
+      {/* Image */}
       <Link href={product_attr.url} title={product_attr?.title}>
-        <div className="relative h-48 bg-white dark:from-stone-800 dark:to-stone-900">
-          {/* {badge && (
+        <div className="relative h-48 bg-white">
+          {onSale && (
             <div className="absolute top-2.5 left-2.5 z-10">
-              <span className={`${badgeCls} text-white text-[10px] font-semibold tracking-wide uppercase px-3 py-1 rounded-full`}>
-                {badge}
+              <span className="bg-red-500 text-white text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full">
+                -{product_attr.savings}%
               </span>
             </div>
-          )} */}
+          )}
           {product_attr?.image && (
             <Image
-              src={product_attr?.image} // Ensure this is a full URL or absolute path
-              alt={product_attr?.title}
+              src={product_attr.image}
+              alt={product_attr.title}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
               className="object-contain transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
-              // priority={index < 4} // Uncomment if these are the first things a user sees
             />
           )}
         </div>
       </Link>
+
       {/* Body */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-1">
         <p className="text-[10px] tracking-widest uppercase text-stone-400 dark:text-stone-500 mb-0.5">
-          {product_attr?.brand}
+          {product_attr.brand}
         </p>
-        <Link href={product_attr.url} title={product_attr?.title}>
+        <Link href={product_attr.url} title={product_attr.title}>
           <h3 className="font-serif text-base text-charcoal dark:text-white mb-2 leading-snug line-clamp-2">
-            {product_attr?.title}
+            {product_attr.title}
           </h3>
         </Link>
-        <div className="flex items-center gap-1.5 text-xs text-stone-400 mb-3">
-          <div className="flex items-center gap-1">
-            {/* The Rated Stars */}
-            <span className="text-amber-400">
-              {"★".repeat(Math.round(product_attr?.rating || 0))}
-            </span>
-
-            {/* The Unrated Stars */}
-            <span className="text-stone-300 dark:text-stone-600 drop-shadow-sm">
-              {"★".repeat(5 - Math.round(product_attr?.ratings || 0))}
-            </span>
-          </div>
-          {product_attr?.ratings || ""}
+        <div className="flex items-center gap-0.5 mb-3">
+          <span className="text-amber-400 text-xs">
+            {"★".repeat(Math.round(product_attr.rating || 0))}
+          </span>
+          <span className="text-stone-300 dark:text-stone-600 text-xs">
+            {"★".repeat(5 - Math.round(product_attr.rating || 0))}
+          </span>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="text-lg font-bold text-charcoal dark:text-white">
-            ${formatPrice(product_attr?.price)}
-            {!!product_attr?.was && (
-              <s className="text-sm font-normal text-stone-400 ml-1.5">
-                ${formatPrice(product_attr?.was)}
-              </s>
-            )}
-          </div>
-          <AddToCartButtonWrap product={product}>
-            <button
-              aria-label={`Add ${product_attr?.title} to cart`}
-              className="w-9 h-9 rounded-lg bg-fire hover:bg-fire-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200 border-none"
-            >
-              +
-            </button>
-          </AddToCartButtonWrap>
+
+        {/* Price + Button */}
+        <div className="mt-auto">
+          {onSale ? (
+            <div className="flex items-end justify-between gap-2">
+              <div>
+                <s className="text-xs text-stone-400 block leading-none mb-0.5">
+                  ${formatPrice(product_attr.was)}
+                </s>
+                <span className="text-lg font-bold text-red-500">
+                  ${formatPrice(product_attr.price)}
+                </span>
+              </div>
+              <AddToCartButtonWrap product={product}>
+                <button
+                  aria-label={`Add ${product_attr.title} to cart`}
+                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
+                >
+                  +
+                </button>
+              </AddToCartButtonWrap>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold text-charcoal dark:text-white">
+                ${formatPrice(product_attr.price)}
+              </span>
+              <AddToCartButtonWrap product={product}>
+                <button
+                  aria-label={`Add ${product_attr.title} to cart`}
+                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-fire hover:bg-fire-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
+                >
+                  +
+                </button>
+              </AddToCartButtonWrap>
+            </div>
+          )}
         </div>
       </div>
     </article>
   );
 }
 
+const MOBILE_INITIAL = 2;
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [active, setActive] = useState("All");
+  const [showAll, setShowAll] = useState(false);
   const hdrRef = useReveal();
 
   const handleChangeTab = async (tab) => {
     setActive(tab?.name);
+    setShowAll(false);
     const newProducts = await getProductsByCollectionId(tab?.collection_id);
     setProducts(newProducts);
   };
@@ -238,20 +261,43 @@ export default function Products() {
 
         {/* Grid: 2 col mobile → 2 col tablet → 4 col desktop */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {products.length === 0
-            ? [...Array(4)].map((_, i) => (
-                <div
-                  key={`product-skeleton-${i}`}
-                  className="rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse"
-                />
-              ))
-            : products.slice(0, 4).map((p, index) => (
-                <ProductCard
-                  key={`homepage-product-item-${p.title}-${index}`}
-                  product={p}
-                />
+          {products.length === 0 ? (
+            <>
+              {/* Mobile: 2 skeletons; desktop: 4 */}
+              {[...Array(2)].map((_, i) => (
+                <div key={`skeleton-${i}`} className="rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse" />
               ))}
+              {[...Array(2)].map((_, i) => (
+                <div key={`skeleton-d-${i}`} className="hidden sm:block rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse" />
+              ))}
+            </>
+          ) : (
+            <>
+              {/* Mobile: first 2 always rendered */}
+              {products.slice(0, MOBILE_INITIAL).map((p, i) => (
+                <ProductCard key={`product-${p.title}-${i}`} product={p} />
+              ))}
+              {/* Mobile: rest only rendered after "Show All" click; always shown on sm+ */}
+              {products.slice(MOBILE_INITIAL, 4).map((p, i) => (
+                showAll
+                  ? <ProductCard key={`product-more-${p.title}-${i}`} product={p} />
+                  : <div key={`product-more-${p.title}-${i}`} className="hidden sm:block"><ProductCard product={p} /></div>
+              ))}
+            </>
+          )}
         </div>
+
+        {/* Show All — mobile only */}
+        {!showAll && products.length > MOBILE_INITIAL && (
+          <div className="mt-8 text-center sm:hidden">
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-fire text-fire font-semibold text-sm hover:bg-fire hover:text-white transition-all duration-200"
+            >
+              Show All Products ({products.length - MOBILE_INITIAL} more)
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

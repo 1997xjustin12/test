@@ -49,7 +49,7 @@ const TabItem = ({ category, active_url }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(rawQuery),
-          next: { revalidate: 3600 }
+          cache: "no-store",
         });
 
         const data = await response.json();

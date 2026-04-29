@@ -20,8 +20,7 @@ export default function useFetchBrands(initialParams = {}) {
       try {
         const res = await fetch(url, {
           signal,
-          cache: "force-cache",
-          next: { revalidate: 3600 },
+          cache: "no-store",
         }); // Pass the signal to fetch
         if (!res.ok) {
           throw new Error("Failed to fetch brands");
