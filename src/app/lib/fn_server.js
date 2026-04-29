@@ -283,7 +283,7 @@ export async function getCollectionProducts(id) {
           "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
           Authorization: `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`,
         },
-        next: { revalidate: 3600 },
+        cache: "no-store",
       },
     );
     if (!response.ok) throw new Error("Backend failed to respond");
