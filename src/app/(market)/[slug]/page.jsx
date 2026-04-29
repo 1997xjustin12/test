@@ -8,10 +8,6 @@ import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { getRootByUrl, getPageData, BASE_URL, UIV2 } from "@/app/lib/helpers";
 
-
-// OLD UI
-import OldProductGallery from "@/app/components/pages/ProductGallery"
-
 // NEW UI
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 
@@ -83,6 +79,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
+
+
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
   const menuData = await redis.get(defaultMenuKey);
@@ -107,12 +105,7 @@ export default async function GenericCategoryPage({ params }) {
     url: url 
   }
 
-  if(UIV2){
-    return (
-      <NewProductGallery slug={slug} config={navConfig}/>
-    )
-  }
   return (
-    <OldProductGallery pageData={pageData} slug={slug}/>
+      <NewProductGallery slug={slug} config={navConfig}/>
   );
 }
