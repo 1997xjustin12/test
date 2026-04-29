@@ -93,7 +93,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
         </div>
 
         {/* BELOW-FOLD SECTIONS */}
-        <CollectionStrip />
+        <CollectionStrip product={product}/>
         <DescriptionSection
           brand={product?.vendor}
           brandDescription={brandDescription}
