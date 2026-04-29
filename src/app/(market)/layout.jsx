@@ -28,7 +28,11 @@ const InterFont = Inter({
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "700"],
-  display: "swap",
+  // "optional" tells the browser: paint with whatever font is ready right now,
+  // never swap later. This collapses LCP and FCP to the same moment (~1.4 s)
+  // instead of waiting for the web font swap (was causing LCP at 3.9 s).
+  // Repeat visitors still see Playfair Display because next/font preloads it.
+  display: "optional",
   variable: "--font-playfair-display",
 });
 
