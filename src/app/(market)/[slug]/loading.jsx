@@ -1,29 +1,21 @@
+import ProductsSectionLoader from "@/app/components/new-design/sections/gallery/ProductsSectionLoader";
+
 export default function Loading() {
   return (
     <div className="min-h-svh animate-pulse">
       {/* Hero banner skeleton */}
-      <div className="h-48 bg-stone-900" />
-      {/* Filter + grid skeleton */}
-      <div className="max-w-[1240px] mx-auto px-4 py-10 flex gap-8">
-        <div className="hidden lg:block w-56 shrink-0 space-y-4">
-          <div className="h-5 w-24 rounded bg-stone-200" />
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-4 rounded bg-stone-100" />
-          ))}
-        </div>
-        <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-5">
-          {[...Array(9)].map((_, i) => (
-            <div key={i} className="rounded-xl overflow-hidden border border-stone-100">
-              <div className="h-48 bg-stone-200" />
-              <div className="p-3 space-y-2">
-                <div className="h-4 rounded bg-stone-200 w-4/5" />
-                <div className="h-4 rounded bg-stone-100 w-1/2" />
-                <div className="h-8 rounded bg-stone-200 mt-2" />
-              </div>
+      <div className="min-h-[256px] bg-neutral-950" />
+      {/* tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex overflow-x-auto scrollbar-hide gap-0 -mb-px border-b-2 min-h-[50px]">
+        {[...Array(3)].map((_, i) => (
+            <div key={`page-tab-placeholder-${i}`} className="flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0">
+              <div className="bg-neutral-200 w-32 min-h-[17px] rounded-sm"></div>
+              <div className="bg-neutral-200 w-[17px] min-h-[17px] rounded-sm"></div>
             </div>
           ))}
-        </div>
       </div>
+      {/* Filter + grid skeleton */}
+      <ProductsSectionLoader />
     </div>
   );
 }
