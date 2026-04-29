@@ -58,7 +58,11 @@ export default function Reviews() {
 
         {/* Grid: 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {REVIEWS.map(r => <ReviewCard key={r.name} {...r} />)}
+          {REVIEWS.map((r, i) => (
+            <div key={r.name} className={i >= 2 ? "hidden sm:block" : ""}>
+              <ReviewCard {...r} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

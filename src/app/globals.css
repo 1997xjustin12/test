@@ -118,7 +118,6 @@ button:disabled {
 @media (max-width: 767px) {
   #categories,
   #products,
-  #why,
   #reviews,
   #blog {
     content-visibility: auto;

@@ -80,8 +80,22 @@ export default function Blog() {
           </a>
         </div>
 
-        {/* Grid: 1 col mobile → 2 col tablet → 3 col desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Mobile: first post only as compact horizontal card */}
+        {BLOG_POSTS[0] && (
+          <Link href={BLOG_POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
+            <div className="relative w-28 flex-shrink-0">
+              <Image src={BLOG_POSTS[0].img} alt={BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
+            </div>
+            <div className="p-4 min-w-0">
+              <p className="text-[10px] font-bold tracking-widest uppercase text-fire mb-1">{BLOG_POSTS[0].tag}</p>
+              <h3 className="font-serif text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BLOG_POSTS[0].title}</h3>
+              <p className="text-xs text-stone-400 mt-2">{BLOG_POSTS[0].readTime}</p>
+            </div>
+          </Link>
+        )}
+
+        {/* Tablet+: full grid */}
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {BLOG_POSTS.map((p,index) => (
             <BlogCard key={`home-blogs-${index}`} {...p} />
           ))}
