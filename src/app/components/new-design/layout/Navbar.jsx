@@ -81,9 +81,9 @@ export default function Navbar() {
     // z-20
     <nav
       className={`
-      sticky top-0 
-      bg-white/95 dark:bg-charcoal/95
-      backdrop-blur-md
+      sticky top-0
+      bg-white dark:bg-charcoal md:bg-white/95 md:dark:bg-charcoal/95
+      md:backdrop-blur-md
       border-b border-stone-100 dark:border-stone-800
       transition-shadow duration-300
       ${scrolled ? "shadow-md" : ""}

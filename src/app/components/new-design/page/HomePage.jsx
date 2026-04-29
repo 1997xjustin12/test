@@ -22,11 +22,11 @@ function HomePage({ heroBg }) {
       <div>
         <Hero background={heroBg} />
         <Features />
-        <Brands />
+        <div className="hidden md:block"><Brands /></div>
         <Categories />
         <Products />
-        <WhySolana />
-        <Promo />
+        <div className="hidden md:block"><WhySolana /></div>
+        <div className="hidden md:block"><Promo /></div>
         <Reviews />
         <Blog />
         <Cta />
