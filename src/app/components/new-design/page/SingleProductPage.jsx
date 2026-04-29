@@ -84,16 +84,16 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
         <Breadcrumb crumbs={product?.breadcrumbs} />
 
         {/* HERO: GALLERY + INFO */}
-        <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-6 lg:gap-10 mb-12 lg:items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-12 lg:items-start">
           {/* min-h matches the gallery's lg:h-[460px] — prevents CLS during hydration */}
-          <div className="lg:sticky lg:top-4 min-h-[300px] lg:min-h-[460px]">
+          <div className="lg:sticky lg:top-[140px]">
             <ImageGallery images={product?.images || []} productTitle={product?.title} />
           </div>
           <ProductInfo product={product} />
         </div>
 
         {/* BELOW-FOLD SECTIONS */}
-        <CollectionStrip />
+        <CollectionStrip product={product}/>
         <DescriptionSection
           brand={product?.vendor}
           brandDescription={brandDescription}
