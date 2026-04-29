@@ -3,6 +3,7 @@ import "@/app/search.css";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
+import { usePathname } from "next/navigation";
 // import SPProductCard from "@/app/components/atom/ProductCard"; // old product card
 import SPProductCard from "@/app/components/new-design/ui/ProductCard"; // new product card
 import {
@@ -220,6 +221,8 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const hasLoadedResults = useRef(false);
   const productSectionRef = useRef(null);
+  const pathname = usePathname();
+  const isSearchPage = pathname === "/search";
 
   useEffect(() => {
     setLoadHint((prev) => {
@@ -352,7 +355,9 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
             className="search-panel__results pfd-product-section"
           >
             <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
-              <DisplayedItems />
+              {
+                !!isSearchPage && <DisplayedItems />
+              }
               <SortBy
                 items={[
                   { label: "Most Popular", value: `${es_index}_popular` },
