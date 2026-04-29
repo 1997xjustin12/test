@@ -251,6 +251,11 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
       if (prev === "loading" && status === "idle") {
         result = "loading-idle";
       }
+      // In production, InstantSearch can start in "idle" (cached/fast response)
+      // without ever going through "loading", so handle it explicitly
+      if (prev === "" && status === "idle") {
+        result = "loading-idle";
+      }
       return result;
     });
   }, [status]);
