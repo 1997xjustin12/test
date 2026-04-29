@@ -93,12 +93,11 @@ const config: NextConfig = {
 
     return [
       {
-        // Homepage — cache at Cloudflare edge for 1 hour, revalidate in background
         source: "/",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400",
+            value: "no-store",
           },
           {
             key: "Content-Security-Policy",
