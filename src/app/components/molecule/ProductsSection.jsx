@@ -236,7 +236,7 @@ const ScrollOnPaginate = ({ targetRef }) => {
 const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const { status, results } = useInstantSearch();
   const [loadHint, setLoadHint] = useState("");
-  const [firstLoad, setFirstLoad] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(false);
   const hasLoadedResults = useRef(false);
   const productSectionRef = useRef(null);
   const pathname = usePathname();
@@ -279,32 +279,46 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
     let nextHint = loadHint;
 
     console.log("InstantSearch STATUS: ", status);
+    console.log("NBHITS: ", results?.nbHits);
 
-    if (loadHint === "" && (status === "loading" || status === "idle")) {
-      // Start the loading cycle (handle both standard and cached/fast starts)
-      nextHint = status === "loading" ? "loading" : "loading-idle";
-    } else if (
-      loadHint === "loading" &&
-      (status === "idle" || status === "stalled")
-    ) {
-      nextHint = "loading-idle";
+    if (results?.nbHits > 0) {
+      console.log("display items");
+      setLoadHint("idle");
+      onDataLoaded(true);
+    } else {
+      console.log("loading only");
+      setLoadHint("loading-idle");
+      onDataLoaded(false);
     }
 
-    // Update state if it changed
-    if (nextHint !== loadHint) {
-      setLoadHint(nextHint);
-    }
+    // if (results?.nbHits === 0) {
+    //   if (loadHint === "" && (status === "loading" || status === "idle")) {
+    //     // Start the loading cycle (handle both standard and cached/fast starts)
+    //     nextHint = status === "loading" ? "loading" : "loading-idle";
+    //   } else if (
+    //     loadHint === "loading" &&
+    //     (status === "idle" || status === "stalled")
+    //   ) {
+    //     nextHint = "loading-idle";
+    //   }
 
-    // 2. Calculate and trigger loading callbacks/state
-    if (nextHint !== "") {
-      // Keep skeleton until a real response has arrived (nbHits defined)
-      const isStillLoading =
-        nextHint === "loading" || results?.nbHits === 0;
+    //   // Update state if it changed
+    //   if (nextHint !== loadHint) {
+    //     setLoadHint(nextHint);
+    //   }
 
-      setFirstLoad(isStillLoading);
-      onDataLoaded(isStillLoading);
-    }
-
+    //   // 2. Calculate and trigger loading callbacks/state
+    //   if (nextHint !== "") {
+    //     // Keep skeleton until a real response has arrived (nbHits defined)
+    //     const isStillLoading = nextHint === "loading" || results?.nbHits === 0;
+    //     setFirstLoad(isStillLoading);
+    //     onDataLoaded(isStillLoading);
+    //   }
+    // }else{
+    //   console.log("must display cached?", )
+    //     setFirstLoad(true);
+    //     onDataLoaded(true);
+    // }
   }, [status, results?.nbHits, loadHint, onDataLoaded]);
 
   // Track when we've actually received results
@@ -330,178 +344,121 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
     );
   }
 
-  if (!firstLoad) {
-    return (
-      <div className="container">
-        <div className="search-panel flex pb-[50px] gap-[20px]">
-          <div className="search-panel__filters  pfd-filter-section relative">
-            <div className="border rounded-xl bg-white">
-              <div className="text-sm font-semibold p-4">Filters</div>
-              <CurrentRefinements />
-              <DynamicWidgets facets={["*"]}>
-                {filters
-                  .filter(
-                    (item) =>
-                      !["price", "price_groups"].includes(item?.attribute),
-                  )
-                  .map((item) => (
-                    <div
-                      key={`filter-item-${item?.attribute}`}
-                      className={`facet-wrapper facet_${item?.attribute}`}
-                    >
-                      <FilterGroup header={item?.label}>
-                        {item?.attribute && (
-                          <>
-                            {item?.attribute !== "ratings" ? (
-                              <RefinementList
-                                attribute={item?.attribute}
-                                searchable={item?.searchable}
-                                {...(item?.transform
-                                  ? { transformItems: item.transform }
-                                  : {})}
-                                showMore={item?.collapse ?? true}
-                              />
-                            ) : (
-                              <RefinementList
-                                attribute={item?.attribute}
-                                searchable={item?.searchable}
-                                classNames={{ labelText: "stars" }}
-                                showMore={item?.collapse || false}
-                              />
-                            )}
-                          </>
-                        )}
-                      </FilterGroup>
-                    </div>
-                  ))}
-
-                <div>
-                  <FilterGroup header={"Price"}>
-                    <RefinementList
-                      attribute={"price_groups"}
-                      searchable={false}
-                      showMore={false}
-                      transformItems={sortPriceItems}
-                    />
-                  </FilterGroup>
-                </div>
-                <div>
-                  <Panel>
-                    <RangeInput attribute="price" />
-                  </Panel>
-                </div>
-              </DynamicWidgets>
-            </div>
-            <div className="relative w-full aspect-w-3 aspect-h-4 mt-2">
-              <Link
-                href={`tel:${page_details?.contact_number || STORE_CONTACT}`}
-                prefetch={false}
-                className=""
-              >
-                <Image
-                  src="/images/banner/sub-banner-image.webp"
-                  alt={`Sub Banner Image`}
-                  className="object-contain"
-                  layout="fill"
-                  objectFit="contain"
-                  objectPosition="center"
-                  sizes="100vw"
-                />
-              </Link>
-            </div>
-          </div>
-          <div
-            ref={productSectionRef}
-            className="search-panel__results pfd-product-section"
-          >
-            <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
-              {!!isSearchPage && <DisplayedItems />}
-              <SortBy
-                items={[
-                  { label: "Most Popular", value: `${es_index}_popular` },
-                  { label: "Newest", value: `${es_index}_newest` },
-                  {
-                    label: "Price: Low to High",
-                    value: `${es_index}_price_asc`,
-                  },
-                  {
-                    label: "Price: High to Low",
-                    value: `${es_index}_price_desc`,
-                  },
-                ]}
-              />
-            </div>
-            <QueryRulesBanner />
-
-            <ScrollOnPaginate targetRef={productSectionRef} />
-            <Hits
-              hitComponent={(props) => (
-                <SPProductCard {...props} page_details={page_details} />
-              )}
-            />
-            <Pagination />
-          </div>
-        </div>
-      </div>
-    );
-  }
-};
-
-// desktop skeleton loader
-const SkeletonLoader = () => {
   return (
-    <div className="container mx-auto">
-      <div className="w-full flex items-center justify-between mb-5">
-        <div className="h-[28px] w-[150px] rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-        <div className="h-[28px] w-[200px] rounded  bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-      </div>
-      <div className="search-panel flex pb-[50px]">
-        <div className="search-panel__filters  pfd-filter-section pr-[10px]">
-          <div className="my-5">
-            <div className="my-3 h-[23px] w-[130px] rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-            <div className="h-[35px] w-full rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-            <div className="mt-[3px]">
-              <ul className="flex flex-col gap-[2px]">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <li
-                    key={`checkbox-loader-list-${index}`}
-                    className="border-b border-neutral-200 w-full h-[25px] flex items-center"
+    <div className="container">
+      <div className="search-panel flex pb-[50px] gap-[20px]">
+        <div className="search-panel__filters  pfd-filter-section relative">
+          <div className="border rounded-xl bg-white">
+            <div className="text-sm font-semibold p-4">Filters</div>
+            <CurrentRefinements />
+            <DynamicWidgets facets={["*"]}>
+              {filters
+                .filter(
+                  (item) =>
+                    !["price", "price_groups"].includes(item?.attribute),
+                )
+                .map((item) => (
+                  <div
+                    key={`filter-item-${item?.attribute}`}
+                    className={`facet-wrapper facet_${item?.attribute}`}
                   >
-                    <div className="w-[16px] h-[16px] bg-neutral-200"></div>
-                  </li>
+                    <FilterGroup header={item?.label}>
+                      {item?.attribute && (
+                        <>
+                          {item?.attribute !== "ratings" ? (
+                            <RefinementList
+                              attribute={item?.attribute}
+                              searchable={item?.searchable}
+                              {...(item?.transform
+                                ? { transformItems: item.transform }
+                                : {})}
+                              showMore={item?.collapse ?? true}
+                            />
+                          ) : (
+                            <RefinementList
+                              attribute={item?.attribute}
+                              searchable={item?.searchable}
+                              classNames={{ labelText: "stars" }}
+                              showMore={item?.collapse || false}
+                            />
+                          )}
+                        </>
+                      )}
+                    </FilterGroup>
+                  </div>
                 ))}
-              </ul>
-            </div>
-            <div className="my-3 h-[23px] w-[130px] bg-neutral-200 rounded  bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-            <div className="flex justify-between">
-              <div className="h-[23px] w-[75px] bg-neutral-200 rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-              <div className="h-[23px] w-[75px] bg-neutral-200 rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-              <div className="h-[23px] w-[30px] bg-neutral-200 rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"></div>
-            </div>
+
+              <div>
+                <FilterGroup header={"Price"}>
+                  <RefinementList
+                    attribute={"price_groups"}
+                    searchable={false}
+                    showMore={false}
+                    transformItems={sortPriceItems}
+                  />
+                </FilterGroup>
+              </div>
+              <div>
+                <Panel>
+                  <RangeInput attribute="price" />
+                </Panel>
+              </div>
+            </DynamicWidgets>
+          </div>
+          <div className="relative w-full aspect-w-3 aspect-h-4 mt-2">
+            <Link
+              href={`tel:${page_details?.contact_number || STORE_CONTACT}`}
+              prefetch={false}
+              className=""
+            >
+              <Image
+                src="/images/banner/sub-banner-image.webp"
+                alt={`Sub Banner Image`}
+                className="object-contain"
+                layout="fill"
+                objectFit="contain"
+                objectPosition="center"
+                sizes="100vw"
+              />
+            </Link>
           </div>
         </div>
-        <div className="search-panel__results pfd-product-section">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 30 }).map((_, index) => (
-              <div
-                key={`product-loader-card-${index}`}
-                className="bg-neutral-100 w-full h-[400px] rounded"
-              />
-            ))}
+        <div
+          ref={productSectionRef}
+          className="search-panel__results pfd-product-section"
+        >
+          <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
+            {!!isSearchPage && <DisplayedItems />}
+            <SortBy
+              items={[
+                { label: "Most Popular", value: `${es_index}_popular` },
+                { label: "Newest", value: `${es_index}_newest` },
+                {
+                  label: "Price: Low to High",
+                  value: `${es_index}_price_asc`,
+                },
+                {
+                  label: "Price: High to Low",
+                  value: `${es_index}_price_desc`,
+                },
+              ]}
+            />
           </div>
-          <div className="w-full flex gap-[20px] mt-[20px]">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div
-                key={`pagination-loader-btn-${index}`}
-                className="bg-neutral-200 w-[40px] h-[30px] rounded bg-gradient-to-r from-neutral-200 via-neutral-300 to-neutral-200 bg-[length:200%_100%] animate-pulse"
-              />
-            ))}
-          </div>
+          <QueryRulesBanner />
+
+          <ScrollOnPaginate targetRef={productSectionRef} />
+          <Hits
+            hitComponent={(props) => (
+              <SPProductCard {...props} page_details={page_details} />
+            )}
+          />
+          <Pagination />
         </div>
       </div>
     </div>
   );
 };
+
 
 const Refresh = ({ search }) => {
   const { refresh, setUiState } = useInstantSearch();
@@ -643,14 +600,11 @@ function ProductsSection({ category, search = "" }) {
   const url = typeof window !== "undefined" ? window.location.href : null;
   const { categories, flatCategories } = useSolanaCategories();
   const [pageDetails, setPageDetails] = useState(null);
-  const [firstLoad, setFirstLoad] = useState(true);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [filterString, setFilterString] = useState("");
 
   function getCategory1Deails(category) {
     const cat = categories.find(({ slug }) => slug === category);
-    console.log("category", category);
-    console.log("categories", categories);
-    console.log("cat", cat);
     return cat;
   }
 
@@ -704,12 +658,12 @@ function ProductsSection({ category, search = "" }) {
 
   return (
     <>
-      <div className={`${firstLoad ? "w-full" : "hidden"}`}>
+      <div className={`${!dataLoaded ? "w-full" : "hidden"}`}>
         <ProductsSectionLoader />
       </div>
 
       <div
-        className={`${!firstLoad ? "max-w-7xl mx-auto w-full px-4 sm:px-6" : "hidden"}`}
+        className={`${dataLoaded ? "max-w-7xl mx-auto w-full px-4 sm:px-6" : "hidden"}`}
       >
         <div className="mt-5">
           <InstantSearch
@@ -1082,7 +1036,7 @@ function ProductsSection({ category, search = "" }) {
             <InnerUI
               category={category}
               page_details={pageDetails}
-              onDataLoaded={setFirstLoad}
+              onDataLoaded={setDataLoaded}
             />
           </InstantSearch>
         </div>

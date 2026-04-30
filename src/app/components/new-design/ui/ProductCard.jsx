@@ -69,7 +69,7 @@ function ProductCard({ hit, page_details, onCompare }) {
   const [added, setAdded] = useState(false);
   const { isPriceVisible, getProductUrl } = useSolanaCategories();
   const [product, setProduct] = useState(formatProduct(hit, "card"))
-  // console.log("hit", hit);
+
   function handleAdd() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);

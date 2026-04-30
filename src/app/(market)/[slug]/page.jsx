@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { getRootByUrl, getPageData, BASE_URL, UIV2 } from "@/app/lib/helpers";
+import { fetchCollectionsCount } from "@/app/lib/fn_server";
 
 // NEW UI
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
@@ -72,14 +73,14 @@ export async function generateMetadata({ params }) {
 
   return {
     title:
-      pageData.meta_title || pageData.name || `${STORE_NAME} | Stylish Indoor & Outdoor Heating`,
+      pageData.meta_title ||
+      pageData.name ||
+      `${STORE_NAME} | Stylish Indoor & Outdoor Heating`,
     description:
       pageData.meta_description ||
       `Transform your home with ${STORE_NAME}! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!`,
   };
 }
-
-
 
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
@@ -88,7 +89,7 @@ export default async function GenericCategoryPage({ params }) {
     menuData.map((i) => ({
       ...i,
       is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
-    }))
+    })),
   );
   const pageData = getPageData(slug, flatData);
   const url = pageData?.url;
@@ -98,14 +99,39 @@ export default async function GenericCategoryPage({ params }) {
 
   if (!rootNav) return notFound();
 
+  // 1. Extract IDs efficiently
+  const children = rootNav?.children || [];
+  const collection_ids = children
+    .map((item) => item?.collection_display?.id)
+    .filter(Boolean);
+
+  // 2. Fetch Aggregations
+  const collection_aggs = await fetchCollectionsCount(collection_ids);
+  const buckets =
+    collection_aggs?.aggregations?.counts_per_collection?.buckets || [];
+
+  // 3. Create a Lookup Map (O(n) instead of O(n*m))
+  const countMap = new Map(buckets.map((b) => [String(b.key), b.doc_count]));
+
+  // 4. Map the final structure
+  const subs = children.map((item) => {
+    const col_id = item?.collection_display?.id;
+
+    return {
+      id: col_id,
+      name: item?.name,
+      count: countMap.get(String(col_id)) || 0, // Fallback to 0 if no products found
+      url: `${BASE_URL}/${item?.url}`,
+    };
+  });
+
   if (pageData?.is_base_nav) return <BaseNavPage page_details={pageData} />;
 
   const navConfig = {
     root: rootNav,
-    url: url 
-  }
+    url,
+    subs,
+  };
 
-  return (
-      <NewProductGallery slug={slug} config={navConfig}/>
-  );
+  return <NewProductGallery slug={slug} config={navConfig} />;
 }

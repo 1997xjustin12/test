@@ -610,8 +610,6 @@ export async function fetchSearchResults(searchTerm) {
     // If esSearch already returns the parsed JSON, you can skip res.json()
     const data = typeof res.json === "function" ? await res.json() : res;
 
-console.log("SSR RESPONSE DATA:", data);
-
     // 3. Map the aggregations
     const categoryBuckets =
       data?.aggregations?.unique_categories?.buckets || [];
@@ -621,7 +619,7 @@ console.log("SSR RESPONSE DATA:", data);
     const categories = categoryBuckets.map((bucket) => ({
       ...mapCategoryResults(bucket),
     }));
-    
+
     const brands = brandBuckets.map((bucket) => ({
       ...mapBrandResults(bucket),
     }));
@@ -631,10 +629,39 @@ console.log("SSR RESPONSE DATA:", data);
       categories,
       products:
         data?.hits?.hits?.map((hit) => ({ id: hit._id, ...hit._source })) || [],
-        total_products: data?.hits?.total?.value || 0
+      total_products: data?.hits?.total?.value || 0,
     };
   } catch (error) {
     console.error("Proxy Error:", error);
     return [];
+  }
+}
+
+export async function fetchCollectionsCount(collection_ids) {
+  try {
+    if (!collection_ids) return null;
+
+    const query = {
+      size: 0,
+      query: publishedQuery,
+      aggs: {
+        counts_per_collection: {
+          terms: {
+            field: "collections.id",
+            // This forces ES to ONLY bucket the IDs in your list
+            include: Array.isArray(collection_ids)
+              ? collection_ids
+              : [collection_ids],
+            size: Array.isArray(collection_ids) ? collection_ids.length : 10,
+          },
+        },
+      },
+    };
+
+    // 3. Ensure esSearch is set up to handle the next.revalidate object
+    return await esSearch(query, { next: { revalidate: 86400 } });
+  } catch (err) {
+    console.error("ES Search Error:", err);
+    return null; // Return null so the UI doesn't crash
   }
 }
