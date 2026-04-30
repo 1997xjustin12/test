@@ -1,7 +1,7 @@
 "use client";
 import { useMediaQuery } from "react-responsive";
 import { useState, useEffect } from "react";
-import Loader from "../../(market)/loading";
+import Loader from "../../(market)/(home)/loading";
 export default function MobileLoader({isLoading}) {
   // const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   // const [isLoading, setIsLoading] = useState(true);
