@@ -278,6 +278,8 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
     // 1. Calculate the new loadHint based on the current status
     let nextHint = loadHint;
 
+    console.log("InstantSearch STATUS: ", status);
+
     if (loadHint === "" && (status === "loading" || status === "idle")) {
       // Start the loading cycle (handle both standard and cached/fast starts)
       nextHint = status === "loading" ? "loading" : "loading-idle";
