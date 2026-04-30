@@ -242,31 +242,68 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
   const pathname = usePathname();
   const isSearchPage = pathname === "/search";
 
-  useEffect(() => {
-    setLoadHint((prev) => {
-      let result = prev;
-      if (prev === "" && status === "loading") {
-        result = "loading";
-      }
-      if (prev === "loading" && status === "idle") {
-        result = "loading-idle";
-      }
-      // In production, InstantSearch can start in "idle" (cached/fast response)
-      // without ever going through "loading", so handle it explicitly
-      if (prev === "" && status === "idle") {
-        result = "loading-idle";
-      }
-      return result;
-    });
-  }, [status]);
+  // useEffect(() => {
+  //   console.log("IS STATUS", status);
+  //   setLoadHint((prev) => {
+  //     let result = prev;
+  //     if (prev === "" && status === "loading") {
+  //       result = "loading";
+  //     }
+  //     if (prev === "loading" && status === "idle") {
+  //       result = "loading-idle";
+  //     }
+  //     if (prev === "loading" && status === "stalled") {
+  //       result = "loading-idle";
+  //     }
+  //     // In production, InstantSearch can start in "idle" (cached/fast response)
+  //     // without ever going through "loading", so handle it explicitly
+  //     if (prev === "" && status === "idle") {
+  //       result = "loading-idle";
+  //     }
+  //     console.log("LoadHint", result);
+  //     return result;
+  //   });
+  // }, [status, results?.nbHits]);
+
+  // useEffect(() => {
+  //   if (loadHint === "") return; // no cycle started yet — don't prematurely hide skeleton
+  //   // Keep skeleton until a real response has arrived (nbHits defined), not just status idle
+  //   const result = loadHint === "loading" || results?.nbHits === undefined;
+  //   setFirstLoad(result);
+  //   onDataLoaded(result);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loadHint, results?.nbHits]); // onDataLoaded is stable from parent
 
   useEffect(() => {
-    if (loadHint === "") return; // no cycle started yet — don't prematurely hide skeleton
-    const result = ["loading"].includes(loadHint);
-    setFirstLoad(result);
-    onDataLoaded(result);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadHint]); // onDataLoaded is stable from parent
+    // 1. Calculate the new loadHint based on the current status
+    let nextHint = loadHint;
+
+    if (loadHint === "" && (status === "loading" || status === "idle")) {
+      // Start the loading cycle (handle both standard and cached/fast starts)
+      nextHint = status === "loading" ? "loading" : "loading-idle";
+    } else if (
+      loadHint === "loading" &&
+      (status === "idle" || status === "stalled")
+    ) {
+      nextHint = "loading-idle";
+    }
+
+    // Update state if it changed
+    if (nextHint !== loadHint) {
+      setLoadHint(nextHint);
+    }
+
+    // 2. Calculate and trigger loading callbacks/state
+    if (nextHint !== "") {
+      // Keep skeleton until a real response has arrived (nbHits defined)
+      const isStillLoading =
+        nextHint === "loading" || results?.nbHits === 0;
+
+      setFirstLoad(isStillLoading);
+      onDataLoaded(isStillLoading);
+    }
+
+  }, [status, results?.nbHits, loadHint, onDataLoaded]);
 
   // Track when we've actually received results
   useEffect(() => {
@@ -279,9 +316,7 @@ const InnerUI = ({ category, page_details, onDataLoaded }) => {
 
   // Only show "No Results" after a full search cycle (loading → idle) has completed
   const shouldShowNoResults =
-    loadHint === "loading-idle" &&
-    results?.nbHits === 0 &&
-    status !== "loading";
+    loadHint === "loading-idle" && results?.nbHits === 0 && status === "idle";
 
   if (shouldShowNoResults) {
     return (
@@ -667,9 +702,7 @@ function ProductsSection({ category, search = "" }) {
 
   return (
     <>
-      <div
-        className={`${firstLoad ? "w-full" : "hidden"}`}
-      >
+      <div className={`${firstLoad ? "w-full" : "hidden"}`}>
         <ProductsSectionLoader />
       </div>
 
