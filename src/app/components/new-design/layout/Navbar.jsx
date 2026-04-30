@@ -104,10 +104,12 @@ export default function Navbar() {
           </Link>
 
           {/* Search — hidden on mobile, visible md+ */}
-          <SearchBox />
+          <div className="hidden md:flex flex-1 min-w-0">
+            <SearchBox />
+          </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 ml-auto md:ml-0 flex-shrink-0">
+          <div className="flex items-center gap-2 ml-auto flex-shrink-0">
             {/* Phone — hidden on mobile/tablet */}
             <Link
               href={PHONE_HREF}
