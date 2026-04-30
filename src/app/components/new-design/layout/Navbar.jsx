@@ -3,13 +3,10 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import {BASE_URL} from "@/app/lib/helpers";
 import Link from "next/link";
 import {
-  SEARCH_SUGGESTIONS,
-  TRENDING,
   PHONE,
   PHONE_HREF,
 } from "@/app/data/new-homepage";
 import {
-  SearchIcon,
   PhoneIcon,
   CartIcon,
 } from "@/app/components/new-design/ui/Icons";
@@ -21,7 +18,6 @@ import { useSolanaCategories } from "@/app/context/category";
 export default function Navbar() {
   const { solana_categories: solana_menu_object } = useSolanaCategories();
   const [scrolled, setScrolled] = useState(false);
-  const [query, setQuery] = useState("");
   const [showDrop, setShowDrop] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [lockedMenu, setLockedMenu] = useState(null);
@@ -60,16 +56,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", fn);
   }, []);
 
-  const filtered = query.trim()
-    ? SEARCH_SUGGESTIONS.filter((s) =>
-        s.toLowerCase().includes(query.toLowerCase()),
-      ).slice(0, 6)
-    : [];
-
-  const handleSearch = () => {
-    if (query.trim()) alert("Searching: " + query);
-  };
-
   const NAV_LINKS = useMemo(() => {
     return solana_menu_object.filter(
       ({ name }) =>
@@ -94,7 +80,7 @@ export default function Navbar() {
         {/* ── Row 1: Logo + Search + Actions ── */}
         <div className="flex items-center h-16 gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 flex-none w-8 sm:w-auto">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-red-700 flex items-center justify-center text-lg">
               🔥
             </div>
@@ -103,13 +89,11 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Search — hidden on mobile, visible md+ */}
-          <div className="hidden md:flex flex-1 min-w-0">
-            <SearchBox />
-          </div>
+          {/* Search */}
+          <SearchBox />
 
           {/* Actions */}
-          <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+          <div className="flex items-center gap-2 flex-none w-[88px] md:w-auto">
             {/* Phone — hidden on mobile/tablet */}
             <Link
               href={PHONE_HREF}
@@ -124,7 +108,7 @@ export default function Navbar() {
             <CartButton />
             {/* Hamburger — mobile only */}
             <button
-              className="md:hidden w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center gap-1.5"
+              className="lg:hidden w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center gap-1.5"
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
             >
@@ -223,17 +207,7 @@ export default function Navbar() {
 
         {/* ── Mobile Menu ── */}
         {menuOpen && (
-          <div className="md:hidden border-t border-stone-100 dark:border-stone-800 py-4 flex flex-col gap-1">
-            {/* Mobile search */}
-            <div className="flex items-center bg-stone-100 dark:bg-stone-800 rounded-full px-4 py-2.5 gap-2 mb-2">
-              <SearchIcon />
-              <input
-                type="text"
-                placeholder="Search…"
-                className="flex-1 bg-transparent outline-none text-sm placeholder-stone-400"
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              />
-            </div>
+          <div className="lg:hidden border-t border-stone-100 dark:border-stone-800 py-4 flex flex-col gap-1">
             {NAV_LINKS.map(({ name, url, id }) => (
               <Link
                 key={`mobile-nav-item-${id}`}

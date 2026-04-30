@@ -140,7 +140,7 @@ function Tag({ type }) {
 
 function SectionHeader({ label, children }) {
   return (
-    <div className="flex items-center justify-between px-4 pt-3 pb-1.5">
+    <div className="flex items-center justify-between px-3 sm:px-4 pt-2.5 sm:pt-3 pb-1 sm:pb-1.5">
       <span className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 dark:text-stone-500">
         {label}
       </span>
@@ -151,7 +151,7 @@ function SectionHeader({ label, children }) {
 
 function Divider() {
   return (
-    <div className="mx-4 border-t border-stone-100 dark:border-stone-700/60" />
+    <div className="mx-3 sm:mx-4 border-t border-stone-100 dark:border-stone-700/60" />
   );
 }
 
@@ -275,7 +275,7 @@ function SearchBox() {
     inputRef.current?.focus();
   }
   return (
-    <div ref={wrapRef} className="flex-1 relative max-w-2xl mx-auto">
+    <div ref={wrapRef} className="flex-1 min-w-0 relative max-w-2xl mx-auto">
       <div
         className={`flex items-center rounded-full px-4 py-2 gap-2 transition-all duration-200 ${focused ? "bg-white dark:bg-stone-800 ring-2 shadow-sm" : "bg-stone-100 dark:bg-stone-800"}`}
         style={{
@@ -363,7 +363,7 @@ function SearchBox() {
       {/* ── DROPDOWN ── */}
       {open && (
         <div
-          className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-2xl shadow-2xl overflow-hidden z-50"
+          className="absolute top-[calc(100%+4px)] sm:top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-lg sm:rounded-2xl shadow-2xl overflow-hidden z-50"
           style={{ maxHeight: "80vh", overflowY: "auto" }}
         >
           {/* TOP RESULT */}
@@ -381,14 +381,14 @@ function SearchBox() {
                 prefetch={false}
                 href={getProductUrl(top)}
                 onClick={handleItemClick}
-                className="mx-3 mb-1 rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-3 p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group"
+                className="mx-2 sm:mx-3 mb-1 rounded-lg sm:rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group"
               >
-                <div className="rounded-xl min-w-20 min-h-20 relative overflow-hidden flex-shrink-0 border border-stone-200 dark:border-stone-700">
+                <div className="rounded-lg sm:rounded-xl min-w-14 min-h-14 sm:min-w-20 sm:min-h-20 relative overflow-hidden flex-shrink-0 border border-stone-200 dark:border-stone-700">
                   {top?.images?.find(({ position }) => position == 1)?.src && (
                     <Image
                       src={
                         top?.images?.find(({ position }) => position == 1)?.src
-                      } // or your specific object path
+                      }
                       alt={top.title || "Top search result thumbnail"}
                       fill
                       sizes="(max-width: 768px) 100vw, 64px"
@@ -412,8 +412,11 @@ function SearchBox() {
                       {top.tag}
                     </span>
                   )}
+                  <div className="sm:hidden text-xs font-bold mt-1" style={{ color: FIRE }}>
+                    ${formatPrice(top.price)}
+                  </div>
                 </div>
-                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <div className="hidden sm:flex flex-col items-end gap-2 flex-shrink-0">
                   <span className="text-base font-bold text-stone-900 dark:text-white">
                     ${formatPrice(top.price)}
                   </span>
@@ -440,7 +443,7 @@ function SearchBox() {
                   {showAllPopular ? "See less ↑" : "See all ↓"}
                 </button>
               </SectionHeader>
-              <div className="flex flex-wrap gap-2 px-4 pb-3">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 px-3 sm:px-4 pb-2 sm:pb-3">
                 {trends
                   .slice(0, showAllPopular ? trends.length : 10)
                   .map((p) => (
@@ -482,7 +485,7 @@ function SearchBox() {
                   {showAllPopular ? "See less ↑" : "See all ↓"}
                 </button>
               </SectionHeader>
-              <div className="px-3 pb-1">
+              <div className="px-2 sm:px-3 pb-1">
                 {products
                   .slice(0, showAllProducts ? products.length : 3)
                   .map((p, index) => (
@@ -491,9 +494,9 @@ function SearchBox() {
                       href={getProductUrl(p)}
                       key={`product-${p.product_id}-${index}`}
                       onClick={handleItemClick}
-                      className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition group"
+                      className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-lg sm:rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition group"
                     >
-                      <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
+                      <div className="rounded-md sm:rounded-lg min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
                         {p?.image && (
                           <Image
                             src={p.image}
@@ -513,7 +516,7 @@ function SearchBox() {
                           {p.brand} · ${formatPrice(p.price)}
                         </div>
                       </div>
-                      <Tag type="product" />
+                      <span className="hidden sm:inline-flex"><Tag type="product" /></span>
                     </Link>
                   ))}
               </div>
@@ -533,7 +536,7 @@ function SearchBox() {
                   {showAllCategories ? "See less ↑" : "See all ↓"}
                 </button>
               </SectionHeader>
-              <div className="px-3 pb-1">
+              <div className="px-2 sm:px-3 pb-1">
                 {categories
                   .slice(0, showAllCategories ? categories.length : 3)
                   .map((c, index) => (
@@ -542,9 +545,9 @@ function SearchBox() {
                       href={`${BASE_URL}/category/${c.slug}`}
                       key={`category-${c.slug}-${index}`}
                       onClick={handleItemClick}
-                      className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
+                      className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-lg sm:rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
                     >
-                      <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
+                      <div className="rounded-md sm:rounded-lg min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
                         {c?.image && (
                           <Image
                             src={c.image}
@@ -564,7 +567,7 @@ function SearchBox() {
                           {c.count + ` item` + (!!(c.count > 1) ? "s" : "")}
                         </div>
                       </div>
-                      <Tag type="category" />
+                      <span className="hidden sm:inline-flex"><Tag type="category" /></span>
                     </Link>
                   ))}
               </div>

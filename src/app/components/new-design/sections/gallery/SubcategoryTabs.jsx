@@ -90,7 +90,7 @@ const TabItem = ({ category, active_url }) => {
 
 function SubcategoryTabs({ config }) {
   return (
-    <div className="bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 sticky top-[105px] z-10">
+    <div className="bg-white dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 sticky top-[64px] md:top-[105px] z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex overflow-x-auto scrollbar-hide gap-0 -mb-px">
           {config?.root?.children.map((t, index) => (
