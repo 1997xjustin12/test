@@ -805,11 +805,14 @@ export const SearchProvider = ({ children }) => {
       },
     ];
 
-    if (!loading) {
-      oldSearchResults.current = newSearchResults;
-    }
+    // if (!loading) {
+    //   oldSearchResults.current = newSearchResults;
+    // }
 
-    return loading ? oldSearchResults.current : newSearchResults;
+    // const finalResults = loading ? oldSearchResults.current : newSearchResults;
+    // console.log("finalResults", finalResults);
+    // return finalResults;
+    return newSearchResults;
   }, [
     productHit,
     popularResults,

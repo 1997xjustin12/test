@@ -9,7 +9,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const FIRE = "#E85D26";
 
-
 function highlight(text, query) {
   if (!query) return text;
   const idx = (text || "").toLowerCase().indexOf(query.toLowerCase());
@@ -180,6 +179,13 @@ function SearchBox() {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCollections, setShowAllCollections] = useState(false);
   const [focused, setFocused] = useState(false);
+  //  results 
+  const [top, setTop] = useState(null);
+  const [trends, setTrends] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [collections, setCollections] = useState([]);
   // Local controlled value used only on the search page
   const [localInput, setLocalInput] = useState(searchQuery);
   const inputRef = useRef(null);
@@ -193,20 +199,22 @@ function SearchBox() {
     }
   }, [searchQuery, isSearchPage]);
 
-  const filtered = useCallback(
-    (prop) => {
-      const item = searchResults.find((r) => r.prop === prop);
-      return item?.total > 0 ? item.data : [];
-    },
-    [searchResults],
-  );
+  const filtered = (prop, results) => {
+    console.log("results", results);
+    const item = (results || []).find((r) => r.prop === prop);
+    console.log(`[prop: ${prop}]: `, item)
+    return item?.total > 0 ? item.data : [];
+    // return item?.data;
+  };
 
-  const trends = filtered("popular");
-  const top = filtered("top-product")?.[0] || null;
-  const products = filtered("product");
-  const categories = filtered("category");
-  const brands = filtered("brand");
-  const collections = filtered("collections");
+  useEffect(()=>{
+    setTop(filtered("top-product", searchResults)?.[0] || null);
+    setTrends(filtered("popular", searchResults));
+    setProducts(filtered("product", searchResults));
+    setCategories(filtered("category", searchResults));
+    setBrands(filtered("brand", searchResults))
+    setCollections(filtered("collections", searchResults))
+  },[searchResults, searchQuery])
 
   useEffect(() => {
     function onClickOutside(e) {
@@ -255,9 +263,13 @@ function SearchBox() {
     }
   }
 
-  function handleChip(label) {
-    setSearch(label);
-    if (!isSearchPage) inputRef.current?.focus();
+  function handleChip(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
+    const url = e?.target?.href;
+    router.push(url)
+    // if (!isSearchPage) inputRef.current?.focus();
   }
 
   function handleItemClick() {
@@ -412,7 +424,10 @@ function SearchBox() {
                       {top.tag}
                     </span>
                   )}
-                  <div className="sm:hidden text-xs font-bold mt-1" style={{ color: FIRE }}>
+                  <div
+                    className="sm:hidden text-xs font-bold mt-1"
+                    style={{ color: FIRE }}
+                  >
                     ${formatPrice(top.price)}
                   </div>
                 </div>
@@ -451,7 +466,7 @@ function SearchBox() {
                       prefetch={false}
                       href={`${BASE_URL}/search?query=${p}`}
                       key={`popular-search-${p}`}
-                      onClick={() => handleChip(p)}
+                      onClick={handleChip}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition"
                     >
                       <svg
@@ -473,7 +488,7 @@ function SearchBox() {
             </>
           )}
           {/* PRODUCTS */}
-          {products.length > 0 && (
+          {products.length > 0 && searchQuery!=="" && (
             <>
               <Divider />
               <SectionHeader label="Products">
@@ -516,7 +531,9 @@ function SearchBox() {
                           {p.brand} · ${formatPrice(p.price)}
                         </div>
                       </div>
-                      <span className="hidden sm:inline-flex"><Tag type="product" /></span>
+                      <span className="hidden sm:inline-flex">
+                        <Tag type="product" />
+                      </span>
                     </Link>
                   ))}
               </div>
@@ -524,7 +541,7 @@ function SearchBox() {
           )}
 
           {/* CATEGORIES */}
-          {categories.length > 0 && (
+          {categories.length > 0 &&  searchQuery!=="" && (
             <>
               <Divider />
               <SectionHeader label="Categories">
@@ -567,7 +584,9 @@ function SearchBox() {
                           {c.count + ` item` + (!!(c.count > 1) ? "s" : "")}
                         </div>
                       </div>
-                      <span className="hidden sm:inline-flex"><Tag type="category" /></span>
+                      <span className="hidden sm:inline-flex">
+                        <Tag type="category" />
+                      </span>
                     </Link>
                   ))}
               </div>
@@ -575,7 +594,7 @@ function SearchBox() {
           )}
 
           {/* BRANDS */}
-          {brands.length > 0 && (
+          {brands.length > 0 &&  searchQuery!=="" && (
             <>
               <Divider />
               <SectionHeader label="Brands">
@@ -626,7 +645,7 @@ function SearchBox() {
           )}
 
           {/* COLLECTIONS */}
-          {collections.length > 0 && (
+          {collections.length > 0 &&  searchQuery!=="" && (
             <>
               <Divider />
               <SectionHeader label="Collections">
@@ -686,6 +705,8 @@ function SearchBox() {
                 close
               </span>
             </div> */}
+            {
+              localInput.trim() !== "" &&
             <Link
               prefetch={false}
               href={
@@ -706,6 +727,7 @@ function SearchBox() {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
+            }
           </div>
         </div>
       )}
