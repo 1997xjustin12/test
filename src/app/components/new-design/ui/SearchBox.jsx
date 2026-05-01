@@ -200,11 +200,8 @@ function SearchBox() {
   }, [searchQuery, isSearchPage]);
 
   const filtered = (prop, results) => {
-    console.log("results", results);
     const item = (results || []).find((r) => r.prop === prop);
-    console.log(`[prop: ${prop}]: `, item)
     return item?.total > 0 ? item.data : [];
-    // return item?.data;
   };
 
   useEffect(()=>{

@@ -376,7 +376,11 @@ export const SearchProvider = ({ children }) => {
 
     return mergedNames.map(
       (name) =>
-        allBrandsMap.get(name) || { name, count: 0, url: createSlug(name || "") },
+        allBrandsMap.get(name) || {
+          name,
+          count: 0,
+          url: createSlug(name || ""),
+        },
     );
   }, []);
 
@@ -410,7 +414,10 @@ export const SearchProvider = ({ children }) => {
         allCollections.map((item) => [item.key, item]),
       );
       const mergedNames = [
-        ...new Set([...matchingCollections, ...allCollections.map(({ key }) => key)]),
+        ...new Set([
+          ...matchingCollections,
+          ...allCollections.map(({ key }) => key),
+        ]),
       ];
 
       return mergedNames.map((name) => {
@@ -437,13 +444,19 @@ export const SearchProvider = ({ children }) => {
       const queryWords = query.toLowerCase().trim().split(" ");
 
       const exactLastSubstringMatches = products.filter((product) => {
-        const titleTokens = (product?.title || "").toLowerCase().trim().split(/\s+/);
+        const titleTokens = (product?.title || "")
+          .toLowerCase()
+          .trim()
+          .split(/\s+/);
         const lastToken = titleTokens[titleTokens.length - 1];
         return queryWords.some((word) => word === lastToken);
       });
 
       const productsByTitle = new Map(
-        products.map((product) => [(product?.title || "").toLowerCase(), product]),
+        products.map((product) => [
+          (product?.title || "").toLowerCase(),
+          product,
+        ]),
       );
 
       const matchingTitles = products
@@ -451,7 +464,10 @@ export const SearchProvider = ({ children }) => {
         .filter((title) => matchesQueryWords(title, queryWords));
 
       const mergedNames = [
-        ...new Set([...matchingTitles, ...products.map((p) => (p?.title || "").toLowerCase())]),
+        ...new Set([
+          ...matchingTitles,
+          ...products.map((p) => (p?.title || "").toLowerCase()),
+        ]),
       ];
 
       const mergedProducts = mergedNames
@@ -566,9 +582,11 @@ export const SearchProvider = ({ children }) => {
 
         const result_total_count = data?.hits?.total?.value;
         const suggest_options = data?.suggest?.did_you_mean?.[0]?.options;
-        const sku_ac_options = data?.suggest?.sku_autocomplete?.[0]?.options || [];
+        const sku_ac_options =
+          data?.suggest?.sku_autocomplete?.[0]?.options || [];
         const aggs_brands = data?.aggregations?.brands_facet?.buckets || [];
-        const aggs_collections = data?.aggregations?.collections_facet?.buckets || [];
+        const aggs_collections =
+          data?.aggregations?.collections_facet?.buckets || [];
         const aggs_categories = data?.aggregations?.categories_facet?.buckets;
 
         setSkusResults(trim_query.length > 2 ? sku_ac_options : []);
@@ -654,7 +672,13 @@ export const SearchProvider = ({ children }) => {
     ]);
     await addPopularSearches(searchQuery);
     router.push(`${BASE_URL}/search?query=${searchQuery}`);
-  }, [searchQuery, getRecentSearch, setRecentSearch, addPopularSearches, router]);
+  }, [
+    searchQuery,
+    getRecentSearch,
+    setRecentSearch,
+    addPopularSearches,
+    router,
+  ]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Initialize LocalForage and Popular Searches
@@ -684,6 +708,17 @@ export const SearchProvider = ({ children }) => {
           .slice(0, 10)
           .map((item) => item?.term);
         setPopularResults(popular);
+
+        oldSearchResults.current = [
+          {
+            total: popular.length,
+            prop: "popular",
+            label: "Popular Searches",
+            visible: true,
+            data: popular,
+            showExpand: false,
+          },
+        ];
       } catch (err) {
         console.error("Failed to fetch popular searches", err);
       }
@@ -738,7 +773,13 @@ export const SearchProvider = ({ children }) => {
         collectionsResults.length === 0 &&
         skusResults.length === 0,
     );
-  }, [productResults, categoryResults, brandResults, collectionsResults, skusResults]);
+  }, [
+    productResults,
+    categoryResults,
+    brandResults,
+    collectionsResults,
+    skusResults,
+  ]);
 
   // ---------------------------------------------------------------------------
   // EFFECT: Cleanup on Unmount
@@ -768,7 +809,10 @@ export const SearchProvider = ({ children }) => {
         prop: "popular",
         label: "Popular Searches",
         visible: true,
-        data: searchQuery === "" ? processPopularSearchResult("") : popularResults || [],
+        data:
+          searchQuery === ""
+            ? processPopularSearchResult("")
+            : popularResults || [],
         showExpand: (popularResults?.length || 0) > 0,
       },
       {
@@ -805,14 +849,12 @@ export const SearchProvider = ({ children }) => {
       },
     ];
 
-    // if (!loading) {
-    //   oldSearchResults.current = newSearchResults;
-    // }
+    if (!loading) {
+      oldSearchResults.current = newSearchResults;
+    }
 
-    // const finalResults = loading ? oldSearchResults.current : newSearchResults;
-    // console.log("finalResults", finalResults);
-    // return finalResults;
-    return newSearchResults;
+    const finalResults = loading ? oldSearchResults.current : newSearchResults;
+    return finalResults;
   }, [
     productHit,
     popularResults,
