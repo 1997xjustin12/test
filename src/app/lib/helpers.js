@@ -1315,6 +1315,7 @@ export function formatProduct(product, mod="pdp") {
   if(mod==="pdp"){
     const product_options = generateProductOptions(product);
     formatted_product["product_options"] = product_options;
+    formatted_product["product_specs"] = (product?.["product_specs"] || []).filter(i=> i?.value !== "");
   }
   
   return formatted_product;
