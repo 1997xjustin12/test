@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { getProductsByCollectionId } from "@/app/lib/api";
 import { formatPrice, formatProduct } from "@/app/lib/helpers";
@@ -48,8 +49,15 @@ const CollectionStrip = ({ product }) => {
             prefetch={false} href={p?.url || "#"}
             className="relative group border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-900 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
-            <div className="h-28 bg-gray-50 dark:bg-gray-800 overflow-hidden">
-              <GrillMockSVG slot={i} />
+            <div className="h-28 bg-gray-50 dark:bg-gray-800 overflow-hidden relative">
+              {
+                p?.image && (<Image 
+                  src={p.image}
+                  alt={p?.title || "Collection Product Image"}
+                  fill
+                  className="object-contain"
+                />)
+              }
             </div>
             <div className="p-4 flex flex-col items-center justify-between">
               <div>
@@ -60,7 +68,7 @@ const CollectionStrip = ({ product }) => {
                   <StarRating rating={p?.ratings} />
                 </div>
                 <p className="text-xs text-gray-700 mt-0.5">
-                  ${formatPrice(p?.price || 0)}
+                  ${formatPrice(p?.price || 0)} {p?.was && (<span className="text-gray-400 line-through">${formatPrice(p.was)}</span>)}
                 </p>
               </div>
               <svg
