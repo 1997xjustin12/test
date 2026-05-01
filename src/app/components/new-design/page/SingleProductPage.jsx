@@ -99,7 +99,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
           brandDescription={brandDescription}
           description={product?.body_html}
         />
-        <SpecsShipping specs={product?.product_specs} shipping={STATIC_SHIPPING} />
+        <SpecsShipping specs={product?.product_specs} shipping={product?.shipping_info} isFreeshipping={product?.is_freeshipping || false}/>
         {/* <ReviewsSection rating={product?.rating ?? 0} reviewCount={product?.reviewCount ?? 0} reviews={reviews} /> */}
         <FAQSection faqs={STATIC_FAQS} />
         <SupportCTA />

@@ -1115,7 +1115,7 @@ export function mapBrandResults(brand) {
     count: brand.doc_count,
     slug: slug,
     url: `${BASE_URL}/${slug}`,
-    image: `/images/brand-logo/${slug}.webp`
+    image: `/images/brand-logo/${slug}.webp`,
   };
 }
 
@@ -1127,12 +1127,14 @@ export function productIsFreeshipping(product_tags) {
 
 export function productBadge(product_tags = [], product_collections = []) {
   const tags = Array.isArray(product_tags) ? product_tags : [];
-  const collections = Array.isArray(product_collections) ? product_collections : [];
+  const collections = Array.isArray(product_collections)
+    ? product_collections
+    : [];
 
   for (const tag of tags) {
-    if (typeof tag !== 'string') continue;
+    if (typeof tag !== "string") continue;
     const lowerTag = tag.toLowerCase();
-    
+
     if (lowerTag.includes("new arrival")) return "new";
     if (lowerTag.includes("sale")) return "sale";
   }
@@ -1158,45 +1160,47 @@ function generateBreadCrumbs(product) {
   ];
 }
 
-function calculateUpsell(base_price, option_price){
-  if(!base_price || !option_price) return null;
+function calculateUpsell(base_price, option_price) {
+  if (!base_price || !option_price) return null;
   const fbase_price = parseFloat(base_price);
   const foption_price = parseFloat(option_price);
-  
-  if(fbase_price === foption_price) return {
-    mod: "same",
-    value: 0,
-  };
-  
+
+  if (fbase_price === foption_price)
+    return {
+      mod: "same",
+      value: 0,
+    };
+
   return {
-    mod: fbase_price > foption_price ? "add": "less",
-    value: Math.abs(fbase_price - foption_price)
-  }
+    mod: fbase_price > foption_price ? "add" : "less",
+    value: Math.abs(fbase_price - foption_price),
+  };
 }
 
-function getProductMainImage(images){
-  if(!images && !Array.isArray(images)) return null;
-  return images.find(({position}) => position == 1)?.src || null; 
+function getProductMainImage(images) {
+  if (!images && !Array.isArray(images)) return null;
+  return images.find(({ position }) => position == 1)?.src || null;
 }
 
 function generateProductOptionItem(config, product) {
-  if (!config || !product || !product?.accentuate_data || !product?.handle) return null;
+  if (!config || !product || !product?.accentuate_data || !product?.handle)
+    return null;
   const base_product_price = product?.variants?.[0]?.price || 0;
   const ad = product?.accentuate_data;
   const handles = ad?.[config?.urls] || [];
   const prop = ad?.[config?.prop] || [];
-  const labels = (ad?.[config?.options] || []).map(i=> i.trim());
+  const labels = (ad?.[config?.options] || []).map((i) => i.trim());
   const options = (product?.sp_product_options || [])
-  .filter(o => prop.includes(o?.handle))
-  .map((o, i)=> ({
-    active: o?.handle === product?.handle,
-    title: o?.name || o?.title, 
-    label: labels[i],
-    image: getProductMainImage(o?.images || []),
-    upsell: calculateUpsell(base_product_price, (o?.variants?.[0]?.price || 0)),
-    url: `${BASE_URL}/${createSlug(o?.brand)}/product/${o?.handle}`,
-    data: {...o},
-  }))
+    .filter((o) => prop.includes(o?.handle))
+    .map((o, i) => ({
+      active: o?.handle === product?.handle,
+      title: o?.name || o?.title,
+      label: labels[i],
+      image: getProductMainImage(o?.images || []),
+      upsell: calculateUpsell(base_product_price, o?.variants?.[0]?.price || 0),
+      url: `${BASE_URL}/${createSlug(o?.brand)}/product/${o?.handle}`,
+      data: { ...o },
+    }));
 
   return {
     option_label: ad?.[config?.title],
@@ -1247,8 +1251,9 @@ function generateProductOptions(product) {
   );
 }
 
-export function formatProduct(product, mod="pdp") {
+export function formatProduct(product, mod = "pdp") {
   if (!product) return null;
+  const acc_data = product?.accentuate_data || null;
   const variant = product?.variants?.[0];
   const rating = product?.ratings;
   const price = variant?.price;
@@ -1312,11 +1317,40 @@ export function formatProduct(product, mod="pdp") {
   };
 
   // PDP only properties
-  if(mod==="pdp"){
+  if (mod === "pdp") {
     const product_options = generateProductOptions(product);
     formatted_product["product_options"] = product_options;
-    formatted_product["product_specs"] = (product?.["product_specs"] || []).filter(i=> i?.value !== "");
+    formatted_product["product_specs"] = (
+      product?.["product_specs"] || []
+    ).filter((i) => i?.value !== "");
+    formatted_product["shipping_info"] = [
+      {
+        label: "Weight",
+        value: acc_data ? acc_data?.["bbq.shipping_weight"] || "NA" : "NA",
+      },
+
+      {
+        label: "Dimensions",
+        value: acc_data
+          ? formatShippingDimensions(acc_data?.["bbq.shipping_dimensions"]) ||
+            "NA"
+          : "NA",
+      },
+      {
+        label: "Est. Delivery",
+        value: "5–7 Business Days", //static
+      },
+    ];
   }
-  
+
   return formatted_product;
+}
+
+function formatShippingDimensions(dimensions) {
+  if (!dimensions) return "NA";
+
+  return dimensions
+    .split("x")
+    .map((i) => `${i}"`)
+    .join(" x ");
 }
