@@ -29,8 +29,13 @@ const FAQSection = dynamic(
 const SupportCTA = dynamic(
   () => import("@/app/components/new-design/sections/sp/SupportCTA"),
 );
+
 const ProductGrid = dynamic(
   () => import("@/app/components/new-design/sections/sp/ProductGrid"),
+);
+
+const RecentViews = dynamic(
+  () => import("@/app/components/new-design/sections/sp/RecentViews"),
 );
 
 const STATIC_SPECS = [
@@ -193,20 +198,8 @@ function SingleProductPage({
             // }
           />
         )}
-        <ProductGrid
-          title="Recently Viewed"
-          items={RECENT}
-          // action={
-          //   <Link href="#" className="text-xs font-semibold text-gray-400 hover:text-red-500 flex items-center gap-1 transition-colors">
-          //     Clear{" "}
-          //     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-          //       <path d="M6 18L18 6M6 6l12 12" />
-          //     </svg>
-          //   </Link>
-          // }
-        />
+        <RecentViews />
       </div>
-
       <StickyCTA product={product} />
       <MobileStickyCTA price={product?.price} was={product?.was} />
     </div>
