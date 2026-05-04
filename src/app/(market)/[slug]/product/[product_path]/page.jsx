@@ -1,4 +1,5 @@
 import "@/app/styles/product-pages.css";
+import { redis, keys } from "@/app/lib/redis";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
@@ -142,6 +143,20 @@ export default async function ProductPage({ params }) {
   const product_reviews = await getReviewsByProductId(product_id) || [];
   const jsonLd = buildJsonLd(product, slug, product_path);
 
+  const [about, shipping_policy, return_policy, warranty] = await redis.mget([
+    keys.faqs_about_brand.value,
+    keys.faqs_shipping_policy.value,
+    keys.faqs_return_policy.value,
+    keys.faqs_warranty.value,
+  ]);
+
+  const FAQS = [
+    {q: `About ${STORE_NAME}`, a: about},
+    {q: `Shipping Policy`, a: shipping_policy},
+    {q: `Return Policy`, a: return_policy},
+    {q: `Warranty`, a: warranty},
+  ];
+
   return (
     <>
       <RatingStyles />
@@ -150,7 +165,7 @@ export default async function ProductPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Suspense fallback={<ProductPlaceholder />}>
-        <SingleProductPage product={product} slug={slug} reviews={product_reviews}/>
+        <SingleProductPage product={product} slug={slug} reviews={product_reviews} faqs={FAQS}/>
       </Suspense>
     </>
   );

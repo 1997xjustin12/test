@@ -25,7 +25,7 @@ const FAQSection = ({ faqs }) => {
             <p className="text-[10px] text-gray-400 dark:text-gray-500">Everything you need to know</p>
           </div>
         </div>
-        <div>
+        <div className="pdp-faq-accordion-container">
           {faqs.map((f, i) => (
             <div key={f.q} className="border-b border-gray-100 dark:border-gray-800 last:border-0">
               <button
@@ -54,7 +54,7 @@ const FAQSection = ({ faqs }) => {
               </button>
               {open === i && (
                 <div className="px-5 pb-5 pl-16">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{f.a}</p>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" dangerouslySetInnerHTML={{ __html: f.a }} />
                 </div>
               )}
             </div>

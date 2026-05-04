@@ -34,25 +34,6 @@ const STATIC_SHIPPING = [
   { label: "Dimensions", value: "36″ × 25″ × 25″" },
 ];
 
-const STATIC_FAQS = [
-  {
-    q: "About Solana Fireplaces",
-    a: "Welcome to Solana Fireplaces! Since 1997, we have been offering a wide selection of top grill brands from our Southern California location. Our knowledgeable sales team is here to help you find the right product at unbeatable prices.",
-  },
-  {
-    q: "Shipping Policy",
-    a: "We offer free shipping on all orders over $79.99. Orders typically ship within 1–2 business days and arrive within 5–7 business days depending on your location.",
-  },
-  {
-    q: "Return Policy",
-    a: "We stand by our Satisfaction Guarantee. If you encounter any issues, our team is committed to supporting you both before and after your purchase with hassle-free returns.",
-  },
-  {
-    q: "Warranty",
-    a: "If you have an issue with a product we are happy to assist with the warranty claim and coordinate directly with the manufacturer on your behalf.",
-  },
-];
-
 const RELATED = [
   { name: "Napoleon 700 Series Dual Range Top Burner", brand: "Napoleon", price: 889, was: 945, badge: "Popular" },
   { name: "Summit 76-Wide 2-Burner Radiant Cooking Block", brand: "Summit Appliance", price: 455, was: 500, badge: "Popular" },
@@ -68,7 +49,7 @@ const RECENT = [
 ];
 
 
-function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
+function SingleProductPage({ product, slug, reviews, recentlyViewed, faqs }) {
   const firstVariant = product?.variants?.[0];
   const price = parseFloat(firstVariant?.price) || 0;
   const was = parseFloat(firstVariant?.compare_at_price) || 0;
@@ -102,7 +83,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
         />
         <SpecsShipping specs={product?.product_specs} shipping={product?.shipping_info} isFreeshipping={product?.is_freeshipping || false}/>
         {/* <ReviewsSection rating={product?.rating ?? 0} reviewCount={product?.reviewCount ?? 0} reviews={reviews} /> */}
-        <FAQSection faqs={STATIC_FAQS} />
+        <FAQSection faqs={faqs} />
         <SupportCTA />
         <ProductGrid
           title="You May Also Like"

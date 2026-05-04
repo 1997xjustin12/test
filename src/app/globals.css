@@ -236,3 +236,51 @@ button:disabled {
 }
 
 /* INAPP PDP DESCRIPTION STYLE RULES -- END */
+
+/* INAPP PDP FAQS STYLE RULES -- START */
+/* 1. Spacing between Accordion Rows */
+/* Adds a margin above every item except the first one */
+.pdp-faq-accordion-container > div + div {
+  margin-top: 8px; 
+  border-top: 1px solid #f3f4f6; /* Optional: adds a divider if you prefer separate cards */
+}
+
+/* 2. Enhanced Vertical Rhythm inside Content */
+/* Targets paragraphs and lists inside the expanded area */
+.pdp-faq-accordion-container .px-5.pb-5 p {
+  margin-bottom: 12px;
+}
+
+.pdp-faq-accordion-container .px-5.pb-5 p:last-child {
+  margin-bottom: 0;
+}
+
+/* 3. Button Padding adjustment */
+/* Increasing the vertical padding slightly gives the title more "breath" */
+.pdp-faq-accordion-container button {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+/* 4. Desktop Specific Spacing */
+@media (min-width: 768px) {
+  .pdp-faq-accordion-container {
+    padding: 8px; /* Adds a small "buffer" inside the main border */
+    gap: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .pdp-faq-accordion-container > div {
+    border: 1px solid transparent;
+    border-radius: 10px;
+  }
+
+  /* Highlight the active item even more on desktop */
+  .pdp-faq-accordion-container div:has(svg.rotate-45) {
+    border-color: #fee2e2; /* Light orange/red border when open */
+    background-color: #fffaf8;
+  }
+}
+
+/* INAPP PDP FAQS STYLE RULES -- END */
