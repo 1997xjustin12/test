@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Rating } from "@smastrom/react-rating";
 import {
   BASE_URL,
   formatPrice,
@@ -10,38 +9,11 @@ import {
   parseRatingCount,
 } from "@/app/lib/helpers";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
+import { Rating } from "@smastrom/react-rating";
+import StarRating from "@/app/components/new-design/ui/StarRating";
 
 // CONTEXT
 import { useCart } from "@/app/context/cart";
-import { useSolanaCategories } from "@/app/context/category";
-
-const ImageDisplay = ({ images, title = "" }) => {
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    if (images && Array.isArray(images)) {
-      const img = images.find(({ position }) => position === 1)?.src;
-      setImage(img);
-    }
-  }, [images]);
-
-  if (!images && !Array.isArray(images)) {
-    return;
-  }
-
-  if (image) {
-    return (
-      <Image
-        src={image}
-        title={title}
-        alt={`${createSlug(title)}-image`}
-        fill
-        className="object-contain"
-        sizes="(max-width: 768px) 100vw, 300px"
-      />
-    );
-  }
-};
 
 const PriceDisplay = ({ data }) => {
   const [formattedPrice, setFormattedPrice] = useState("0.00");
@@ -83,7 +55,7 @@ const AddToCartBtn = ({ item }) => {
     setLoading(true);
     const response = await addToCart({
       ...item,
-      quantity: 1
+      quantity: 1,
     });
     setLoading(false);
   };
@@ -100,32 +72,33 @@ const AddToCartBtn = ({ item }) => {
 };
 
 function ProductCardToCart({ item }) {
-  const { getProductUrl } = useSolanaCategories();
-  const product_url = getProductUrl(item);
   return (
     <div className="min-w-[170px] w-full flex flex-col p-3">
       <Link
         prefetch={false}
-        href={product_url || "#"}
+        href={item?.url || "#"}
         className="w-full aspect-1 relative mb-3"
       >
-        <ImageDisplay images={item?.images} title={item?.title} />
+        {item?.image && (
+          <Image
+            src={item?.image}
+            title={item?.title}
+            alt={`${createSlug(item?.title)}-image`}
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, 300px"
+          />
+        )}
       </Link>
       <Link
         title={item?.title}
         prefetch={false}
-        href={product_url || "#"}
+        href={item?.url || "#"}
         className="text-xs line-clamp-3 min-h-[50px] mb-2 hover:underline hover:text-theme-700"
       >
         {item?.title}
       </Link>
-      <Rating
-        className="mb-2"
-        readOnly
-        value={parseRatingCount(item?.ratings?.rating_count)}
-        fractions={2}
-        style={{ maxWidth: 80 }}
-      ></Rating>
+      <StarRating rating={item?.ratings} />
       <PriceDisplay data={item?.variants?.[0]} />
       <AddToCartBtn item={item} />
     </div>

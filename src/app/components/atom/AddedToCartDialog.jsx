@@ -11,6 +11,7 @@ import {
   BASE_URL,
   createSlug,
   formatPrice,
+  formatProduct,
   parseRatingCount,
 } from "@/app/lib/helpers";
 const cartPageUrl = `${BASE_URL}/cart`;
@@ -39,7 +40,7 @@ const YouMightAlsoLike = () => {
     const fetchProducts = async () => {
       try {
         const ymal_products = await getCollectionProducts(33);
-        setProducts(ymal_products);
+        setProducts((ymal_products || []).map(i => formatProduct(i)));
       } catch (error) {
         setProducts([]);
       }
