@@ -317,22 +317,6 @@ const AddedToCartProducts = ({ data }) => {
 };
 
 function CartItem({ item }) {
-  const { brand, title, variants, quantity, images, tags } = item;
-  const price_per_item = variants?.[0]?.price;
-  const was_per_item = variants?.[0]?.compare_at_price || 0;
-  const product = {
-    brand: brand,
-    title: title,
-    quantity: quantity,
-    price: parseFloat(price_per_item),
-    was: was_per_item,
-    price_total: price_per_item ? parseFloat(price_per_item) * quantity : 0,
-    was_total: was_per_item ? parseFloat(was_per_item) * quantity : 0,
-    sku: variants?.[0]?.sku,
-    image: images?.find((f) => f.position == 1)?.src,
-    isFreeShipping: tags.includes("Free Shipping"),
-  };
-
   return (
     <div
       className="grid border-b border-gray-100 dark:border-white/10"
@@ -341,11 +325,11 @@ function CartItem({ item }) {
       {/* Photo */}
       <div className={`relative overflow-hidden min-h-[100px]`}>
         {/* <Thumb /> */}
-        {product?.image && (
+        {item?.image && (
           <Image
-            src={product?.image}
-            title={product?.title}
-            alt={product?.title}
+            src={item?.image}
+            title={item?.title}
+            alt={item?.title}
             className="w-full h-full"
             objectFit="contain"
             fill
@@ -359,32 +343,32 @@ function CartItem({ item }) {
       {/* Info */}
       <div className="border-l border-gray-100 dark:border-white/10 p-3 flex flex-col gap-1">
         <p className="text-[9px] tracking-widest uppercase text-gray-400 dark:text-gray-500">
-          {brand}
+          {item?.brand}
         </p>
         <p className="text-[12px] font-medium leading-snug text-gray-900 dark:text-gray-100">
-          {title}
+          {item?.title}
         </p>
 
         {/* Price */}
         <div className="flex flex-col mt-0.5">
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span className="text-[17px] font-medium text-orange-700 tracking-tight">
-              {formatPrice(product?.price_total)}
+              {formatPrice(item?.price * item?.quantity)}
             </span>
-            {!!product?.was && !!(product?.quantity === 1) && (
-              <Savings price={product.price} was={product?.was} />
+            {!!item?.was && !!(item?.quantity === 1) && (
+              <Savings price={item?.price} was={item?.was} />
             )}
           </div>
-          {!!(product?.quantity > 1) && (
+          {!!(item?.quantity > 1) && (
             <div className="text-[12px] text-neutral-700">
-              {formatPrice(product?.price)} per item{" "}
-              {!!product?.was && !!(product?.quantity > 1) && (
+              {formatPrice(item?.price)} per item{" "}
+              {!!item?.was && !!(item?.quantity > 1) && (
                 <span>
                   &nbsp;&middot;&nbsp;
                   <Savings
-                    price={product.price}
-                    was={product?.was}
-                    quantity={product?.quantity}
+                    price={item?.price}
+                    was={item?.was}
+                    quantity={item?.quantity}
                     format="percentage"
                   />
                 </span>
@@ -396,14 +380,14 @@ function CartItem({ item }) {
         {/* Meta chips + Remove */}
         <div className="flex items-center gap-1.5 flex-wrap mt-1">
           <span className="text-[10px] text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-md px-2 py-0.5">
-            Qty: {product?.quantity}
+            Qty: {item?.quantity}
           </span>
         </div>
 
         {/* Shipping */}
         {
           <div
-            className={`flex items-center gap-1.5 text-[10px] font-medium  mt-auto pt-1 ${product?.isFreeShipping ? "text-green-700 dark:text-green-500" : "text-gray-700 dark:text-gray-500 line-through"}`}
+            className={`flex items-center gap-1.5 text-[10px] font-medium  mt-auto pt-1 ${item?.is_freeShipping ? "text-green-700 dark:text-green-500" : "text-gray-700 dark:text-gray-500 line-through"}`}
           >
             <TruckIcon />
             Free shipping on this item
