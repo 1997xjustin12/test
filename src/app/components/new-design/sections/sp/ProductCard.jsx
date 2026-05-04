@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
@@ -8,10 +8,26 @@ import StarRating from "@/app/components/new-design/sections/sp/StarRating";
 import Badge from "@/app/components/new-design/sections/sp/Badge";
 import { formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { useCart } from "@/app/context/cart";
+import { Eos3DotsLoading } from "@/app/components/icons/lib";
+
 
 const ProductCard = ({ p }) => {
+  const { addToCart } = useCart();
   const [hovered, setHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
   const badgeVariant = p.badge === "Sale" ? "green" : "orange";
+  const atc_error = "[AddToCartError] Card trigger";
+  const handleClick = async() => {
+    try{
+      setLoading(true);
+      addToCart(p)
+      .catch((err) => console.log(atc_error))
+      .finally(()=> setLoading(false));
+    }catch(error){
+      console.log(atc_error)
+    }
+  };
 
   return (
     <div
@@ -75,11 +91,13 @@ const ProductCard = ({ p }) => {
         </div>
       </div>
       <div className="px-3 pb-3 flex gap-2">
-        <AddToCartButtonWrap product={p}>
-          <button className="flex-1 text-xs bg-theme-600 hover:bg-theme-700 text-white font-bold py-2 rounded-lg transition-colors">
-            Add to Cart
+          <button
+            onClick={handleClick}
+            className="w-full relative min-h-[32px] flex-1 text-xs bg-theme-600 hover:bg-theme-700 text-white font-bold py-2 rounded-lg transition-colors"
+          >
+            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${loading? "":"invisible"}`}><Eos3DotsLoading /></div>
+            <div className={loading? "invisible":""}>Add to Cart</div>
           </button>
-        </AddToCartButtonWrap>
         <Link
           href={`tel:${STORE_CONTACT}`}
           className="text-xs border-2 border-theme-600 text-theme-700 dark:text-theme-400 font-bold py-2 px-2.5 rounded-lg hover:bg-theme-50 dark:hover:bg-theme-950 transition-colors"

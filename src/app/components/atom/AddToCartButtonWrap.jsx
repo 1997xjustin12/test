@@ -4,7 +4,6 @@ function AddToCartButtonWrap({ product, children }) {
   const { addToCart, addToCartLoading } = useCart();
 
   const handleClick = () => {
-    console.log("[AddToCartButtonWrap] product", product)
     addToCart({...product, quantity: 1});
   }
 
