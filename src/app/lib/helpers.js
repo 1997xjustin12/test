@@ -1263,6 +1263,9 @@ export function formatProduct(product, mod = "pdp") {
   const category = product?.accentuate_data?.category || "uncategorized";
   const category_url = `${BASE_URL}/category/${createSlug(category)}`;
   const brand_url = `${BASE_URL}/${createSlug(product?.brand)}`;
+  const main_image = product?.images?.find((i) => i?.position == 1)?.src;
+  const secondary_image = product?.images?.find((i) => i?.position == 2)?.src;
+  const fallback_image = product?.images?.[0]?.src
   const discount_links = [
     {
       url: `tel:${STORE_CONTACT}`,
@@ -1297,7 +1300,7 @@ export function formatProduct(product, mod = "pdp") {
   const formatted_product = {
     ...product,
     name: product?.title,
-    image: product?.images?.find((i) => i?.position == 1)?.src,
+    image: main_image || secondary_image || fallback_image || null,
     breadcrumbs: generateBreadCrumbs(product),
     brand_url,
     category,
