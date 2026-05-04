@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, formatProduct } from "@/app/lib/helpers";
 import { useReveal } from "@/app/hooks/useReveal";
 import { useSolanaCategories } from "@/app/context/category";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
@@ -51,28 +51,9 @@ async function getProductsByCollectionId(id) {
 }
 
 function ProductCard({ product }) {
-  const { getProductUrl } = useSolanaCategories();
   const ref = useReveal();
 
-  const product_attr = useMemo(() => {
-    const image =
-      product?.images?.find((item) => item?.position == 1)?.src || null;
-    const price = product?.variants?.[0]?.price;
-    const was = product?.variants?.[0]?.compare_at_price;
-    const savings = was && price ? Math.round(((was - price) / was) * 100) : 0;
-    return {
-      title: product?.title,
-      brand: product?.brand,
-      url: getProductUrl(product),
-      image,
-      price,
-      was,
-      savings,
-      rating: Number(product?.ratings?.rating_count),
-    };
-  }, [product]);
-
-  const onSale = !!product_attr.was && product_attr.savings > 0;
+  const onSale = !!product.was && product?.save_amt > 0;
 
   return (
     <article
@@ -86,19 +67,19 @@ function ProductCard({ product }) {
       "
     >
       {/* Image */}
-      <Link href={product_attr.url} title={product_attr?.title}>
+      <Link href={product?.url || "#"} title={product?.title}>
         <div className="relative h-48 bg-white">
           {onSale && (
             <div className="absolute top-2.5 left-2.5 z-10">
               <span className="bg-red-500 text-white text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full">
-                -{product_attr.savings}%
+                -{product?.save_pct}%
               </span>
             </div>
           )}
-          {product_attr?.image && (
+          {product?.image && (
             <Image
-              src={product_attr.image}
-              alt={product_attr.title}
+              src={product?.image}
+              alt={product?.title}
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
               className="object-contain transition-transform duration-300 group-hover:scale-105"
@@ -111,19 +92,19 @@ function ProductCard({ product }) {
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
         <p className="text-[10px] tracking-widest uppercase text-stone-400 dark:text-stone-500 mb-0.5">
-          {product_attr.brand}
+          {product?.brand}
         </p>
-        <Link href={product_attr.url} title={product_attr.title}>
+        <Link href={product?.url || "#"} title={product.title}>
           <h3 className="font-serif text-base text-charcoal dark:text-white mb-2 leading-snug line-clamp-2">
-            {product_attr.title}
+            {product?.title}
           </h3>
         </Link>
         <div className="flex items-center gap-0.5 mb-3">
           <span className="text-amber-400 text-xs">
-            {"★".repeat(Math.round(product_attr.rating || 0))}
+            {"★".repeat(Math.round(product?.ratings || 0))}
           </span>
           <span className="text-stone-300 dark:text-stone-600 text-xs">
-            {"★".repeat(5 - Math.round(product_attr.rating || 0))}
+            {"★".repeat(5 - Math.round(product?.ratings || 0))}
           </span>
         </div>
 
@@ -133,15 +114,15 @@ function ProductCard({ product }) {
             <div className="flex items-end justify-between gap-2">
               <div>
                 <s className="text-xs text-stone-400 block leading-none mb-0.5">
-                  ${formatPrice(product_attr.was)}
+                  ${formatPrice(product?.was)}
                 </s>
                 <span className="text-lg font-bold text-red-500">
-                  ${formatPrice(product_attr.price)}
+                  ${formatPrice(product?.price)}
                 </span>
               </div>
               <AddToCartButtonWrap product={product}>
                 <button
-                  aria-label={`Add ${product_attr.title} to cart`}
+                  aria-label={`Add ${product.title} to cart`}
                   className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
                 >
                   +
@@ -151,11 +132,11 @@ function ProductCard({ product }) {
           ) : (
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold text-charcoal dark:text-white">
-                ${formatPrice(product_attr.price)}
+                ${formatPrice(product?.price)}
               </span>
               <AddToCartButtonWrap product={product}>
                 <button
-                  aria-label={`Add ${product_attr.title} to cart`}
+                  aria-label={`Add ${product?.title} to cart`}
                   className="flex-shrink-0 w-9 h-9 rounded-lg bg-fire hover:bg-fire-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
                 >
                   +
@@ -172,7 +153,7 @@ function ProductCard({ product }) {
 const MOBILE_INITIAL = 2;
 
 export default function Products({ initialProducts = [] }) {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState((initialProducts || []).map(i => formatProduct(i)));
   const [active, setActive] = useState("All");
   const [showAll, setShowAll] = useState(false);
   const hdrRef = useReveal();
@@ -181,7 +162,7 @@ export default function Products({ initialProducts = [] }) {
     setActive(tab?.name);
     setShowAll(false);
     const newProducts = await getProductsByCollectionId(tab?.collection_id);
-    setProducts(newProducts);
+    setProducts((newProducts || []).map(i => formatProduct(i)));
   };
 
   return (
