@@ -665,3 +665,52 @@ export async function fetchCollectionsCount(collection_ids) {
     return null; // Return null so the UI doesn't crash
   }
 }
+
+export async function getYMALProducts() {
+  try {
+    const seed = Date.now();
+    const query = {
+      size: 4,
+      query: {
+        function_score: {
+          query: {
+            bool: {
+              must: [
+                {
+                  match_all: {},
+                },
+                {
+                  term: {
+                    published: true,
+                  },
+                },
+              ],
+              must_not: [
+                {
+                  terms: {
+                    "brand.keyword": exclude_brands,
+                  },
+                },
+                {
+                  terms: {
+                    "collections.name.keyword": exclude_collections,
+                  },
+                },
+              ],
+            },
+          },
+          random_score: {
+            seed: seed,
+            field: "title.keyword",
+          },
+        },
+      },
+    };
+
+    const data = await esSearch(query, { cache: "no-store" });
+    return data?.hits?.hits?.map((item) => formatProduct(item?._source,"card")) || [];
+  } catch (error) {
+    console.error("getYMALProducts:", error);
+    return [];
+  }
+}

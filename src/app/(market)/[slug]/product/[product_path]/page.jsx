@@ -6,7 +6,7 @@ import RatingStyles from "@/app/components/atom/RatingStyles";
 import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
-import { fetchProduct,getReviewsByProductId } from "@/app/lib/fn_server";
+import { fetchProduct,getReviewsByProductId, getYMALProducts } from "@/app/lib/fn_server";
 
 import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
 import ProductClient from "@/app/components/molecule/ProductClient";
@@ -135,6 +135,7 @@ export default async function ProductPage({ params }) {
 
   const product = await fetchProduct(product_path);
   const product_id = product?.product_id;
+  const ymal_products = await getYMALProducts();
 
   if(!product || !product_id){
     notFound();
@@ -165,7 +166,13 @@ export default async function ProductPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Suspense fallback={<ProductPlaceholder />}>
-        <SingleProductPage product={product} slug={slug} reviews={product_reviews} faqs={FAQS}/>
+        <SingleProductPage
+        product={product}
+        slug={slug}
+        reviews={product_reviews}
+        faqs={FAQS}
+        ymalProducts={ymal_products}
+        />
       </Suspense>
     </>
   );
