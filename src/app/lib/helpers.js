@@ -1326,7 +1326,7 @@ export function formatProduct(product, mod = "pdp") {
     formatted_product["shipping_info"] = [
       {
         label: "Weight",
-        value: acc_data ? acc_data?.["bbq.shipping_weight"] || "NA" : "NA",
+        value: acc_data ? acc_data?.["bbq.shipping_weight"] ? acc_data?.["bbq.shipping_weight"]+" lbs" : "NA" : "NA",
       },
 
       {
