@@ -51,7 +51,7 @@ const ProductCard = ({ p }) => {
           <span className="text-sm font-extrabold text-gray-900 dark:text-white">
             ${formatPrice(p.price)}
           </span>
-          {p?.save_amt && (
+          { !!p?.save_amt && (
             <>
               <span className="text-xs text-gray-400 line-through">${formatPrice(p.was)}</span>
               <span className="text-[10px] text-green-600 dark:text-green-400 font-bold">
