@@ -7,7 +7,8 @@ const ProductGrid = dynamic(
   () => import("@/app/components/new-design/sections/sp/ProductGrid"),
 );
 
-function RecentViews() {
+function RecentViews({ product_id }) {
+  console.log("PRODUCT_ID", product_id);
   const [products, setProducts] = useState(null);
 
   useEffect(() => {
@@ -20,9 +21,17 @@ function RecentViews() {
 
       const response = await raw.json();
 
-      console.log("response", response)
       if (response?.data) {
-        setProducts((response?.data || []).map(i=> formatProduct(i, "card")));
+        const render_products = (response?.data || [])
+          .map((i) => formatProduct(i, "card"))
+          .slice(0, 4);
+        setProducts(
+          render_products.sort((a, b) => {
+            return (
+              recents.indexOf(a.product_id) - recents.indexOf(b.product_id)
+            );
+          }),
+        );
       }
     };
 
@@ -33,7 +42,10 @@ function RecentViews() {
     import("@/app/lib/localForage").then(async (module) => {
       if (!mounted) return;
       const recent_products = (await module.getItem("recentProducts")) || [];
-      getProducts(recent_products);
+      module.setItem("recentProducts", [
+        ...new Set([product_id, ...recent_products]),
+      ]);
+      getProducts(recent_products.filter((i) => product_id !== i));
     });
 
     return () => {
@@ -41,8 +53,7 @@ function RecentViews() {
     };
   }, []);
 
-  if (!Array.isArray(products) || products.length === 0)
-    return null;
+  if (!Array.isArray(products) || products.length === 0) return null;
 
   return <ProductGrid title="Recently Viewed" items={products} />;
 }

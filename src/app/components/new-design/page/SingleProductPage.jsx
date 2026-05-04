@@ -198,7 +198,7 @@ function SingleProductPage({
             // }
           />
         )}
-        <RecentViews />
+        <RecentViews product_id={product?.product_id}/>
       </div>
       <StickyCTA product={product} />
       <MobileStickyCTA price={product?.price} was={product?.was} />
