@@ -3,6 +3,8 @@ import React from "react";
 import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
+import { BASE_URL } from "@/app/lib/helpers"
+import Link from "next/link";
 
 export default function Cta() {
   const ref = useReveal();
@@ -23,12 +25,12 @@ export default function Cta() {
               Our heating specialists are standing by to help you find the perfect fireplace or outdoor kitchen — no pressure, just expertise.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="#" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold text-base transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30">
+              <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold text-base transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30">
                 Browse Products
-              </a>
-              <a href="#" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold text-base transition-all duration-200">
+              </Link>
+              <Link prefetch={false} href={`${BASE_URL}/contact`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold text-base transition-all duration-200">
                 Get a Free Quote
-              </a>
+              </Link>
             </div>
             <a href={PHONE_HREF} className="inline-flex items-center gap-2 text-white font-semibold text-lg mt-7">
               <span className="text-fire-light"><PhoneIcon size={18} /></span>
