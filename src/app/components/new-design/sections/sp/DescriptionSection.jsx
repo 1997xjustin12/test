@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { createSlug } from "@/app/lib/helpers";
 
 const DescriptionSection = ({
   brand,
   brandDescription,
   brandHref = "#",
+  brandImage,
   description,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -32,21 +35,21 @@ const DescriptionSection = ({
               Product Description
             </h3>
           </div>
-          <div className="p-5">
-            <div
-              className={`overflow-hidden transition-all duration-500 ${expanded ? "max-h-96" : "max-h-20"}`}
-            >
-              {description ? (
+          <div className="p-5 pdp-description-wrapper">
+            {description ? (
+              <div
+                className={`overflow-hidden transition-all duration-500 ${expanded ? "" : "max-h-56"}`}
+              >
                 <div
                   className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: description }}
                 />
-              ) : (
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                  No description available.
-                </p>
-              )}
-            </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                No description available.
+              </p>
+            )}
             <button
               onClick={() => setExpanded((e) => !e)}
               className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-orange-500 hover:text-orange-600 transition-colors"
@@ -75,6 +78,17 @@ const DescriptionSection = ({
               <p className="text-xs text-gray-400 leading-relaxed">
                 {brandDescription}
               </p>
+            </div>
+            <div className="w-full aspect-1 bg-white rounded-md relative">
+              {brandImage && (
+                <Image
+                  src={brandImage}
+                  alt="Brand Image"
+                  fill
+                  sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
+                  className="object-contain object-center transition-opacity duration-300"
+                />
+              )}
             </div>
             <Link
               href={brandHref}

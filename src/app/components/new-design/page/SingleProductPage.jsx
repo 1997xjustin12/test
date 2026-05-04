@@ -95,8 +95,9 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed }) {
         {/* BELOW-FOLD SECTIONS */}
         <CollectionStrip product={product}/>
         <DescriptionSection
-          brand={product?.vendor}
-          brandDescription={brandDescription}
+          brand={product?.brand}
+          brandHref={product?.brand_url}
+          brandImage={product?.brand_image}
           description={product?.body_html}
         />
         <SpecsShipping specs={product?.product_specs} shipping={product?.shipping_info} isFreeshipping={product?.is_freeshipping || false}/>

@@ -1262,7 +1262,9 @@ export function formatProduct(product, mod = "pdp") {
   const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
   const category = product?.accentuate_data?.category || "uncategorized";
   const category_url = `${BASE_URL}/category/${createSlug(category)}`;
-  const brand_url = `${BASE_URL}/${createSlug(product?.brand)}`;
+  const brand_slug = createSlug(product?.brand);
+  const brand_url = `${BASE_URL}/${brand_slug}`;
+  const brand_image = `/images/brand-logo/${brand_slug}.webp`;
   const main_image = product?.images?.find((i) => i?.position == 1)?.src;
   const secondary_image = product?.images?.find((i) => i?.position == 2)?.src;
   const fallback_image = product?.images?.[0]?.src
@@ -1302,6 +1304,7 @@ export function formatProduct(product, mod = "pdp") {
     name: product?.title,
     image: main_image || secondary_image || fallback_image || null,
     breadcrumbs: generateBreadCrumbs(product),
+    brand_image,
     brand_url,
     category,
     category_url,

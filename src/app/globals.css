@@ -125,3 +125,114 @@ button:disabled {
   }
 }
 
+
+/* INAPP PDP DESCRIPTION STYLE RULES -- START */
+/* 1. Base Wrapper & Paragraphs */
+.pdp-description-wrapper {
+  line-height: 1.7;
+  color: #374151; /* gray-700 */
+}
+
+.pdp-description-wrapper p {
+  margin-bottom: 1.25rem;
+}
+
+/* 2. Headings - Clean and Bold */
+.pdp-description-wrapper h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827; /* gray-900 */
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+/* 3. Links - Override that inline blue */
+.pdp-description-wrapper a {
+  color: var(--theme-primary-600) !important; /* Use your brand 'Fire' color */
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.pdp-description-wrapper a:hover {
+  opacity: 0.8;
+}
+
+/* 4. The "Pro" List Styling (UL) */
+.pdp-description-wrapper ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pdp-description-wrapper ul li {
+  position: relative;
+  padding-left: 1.75rem;
+  font-size: 0.95rem;
+}
+
+/* Custom Marker for UL */
+.pdp-description-wrapper ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 12px;
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--theme-primary-600); /* Your brand color */
+}
+
+/* 5. Numbered List Styling (OL) */
+.pdp-description-wrapper ol {
+  counter-reset: pdp-counter;
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  background: #f9fafb; /* Light gray subtle background */
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.pdp-description-wrapper ol li {
+  counter-increment: pdp-counter;
+  position: relative;
+  padding-left: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.pdp-description-wrapper ol li:last-child {
+  margin-bottom: 0;
+}
+
+/* Custom Marker for OL */
+.pdp-description-wrapper ol li::before {
+  content: counter(pdp-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #111827;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+/* 6. Bold Text inside lists (The Labels) */
+.pdp-description-wrapper li b, 
+.pdp-description-wrapper li strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+/* INAPP PDP DESCRIPTION STYLE RULES -- END */
