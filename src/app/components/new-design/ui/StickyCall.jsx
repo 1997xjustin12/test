@@ -1,11 +1,11 @@
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
 
 export default function StickyCall() {
   return (
     <div className="fixed bottom-5 right-5 z-50">
       <a
-        href={PHONE_HREF}
+        href={`tel:${STORE_CONTACT}`}
         className="
           flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold text-white
           bg-fire hover:bg-fire-light transition-all duration-300 hover:-translate-y-0.5
@@ -14,7 +14,7 @@ export default function StickyCall() {
         "
       >
         <PhoneIcon size={15} />
-        Call {PHONE}
+        Call {STORE_CONTACT}
       </a>
     </div>
   );
