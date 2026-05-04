@@ -23,7 +23,7 @@ const ProductCard = ({ p }) => {
           : "border-gray-200 dark:border-gray-700"
       }`}
     >
-      <div className="relative aspect-[16/9] bg-gray-50 dark:bg-gray-800 overflow-hidden">
+      <Link prefetch={false} href={p?.url || "#"} title={p?.title} className="relative aspect-[16/9] bg-gray-50 dark:bg-gray-800 overflow-hidden">
         {
           p?.image && (
               <Image
@@ -40,12 +40,12 @@ const ProductCard = ({ p }) => {
             <Badge variant={badgeVariant}>{p.badge}</Badge>
           </div>
         )}
-      </div>
+      </Link>
       <div className="flex flex-col gap-1.5 p-3 flex-1">
         <p className="text-[9px] font-bold text-theme-600 uppercase tracking-widest">{p.brand}</p>
-        <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 flex-1">
+        <Link prefetch={false} href={p?.url || "#"} title={p?.title} className="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug line-clamp-2 flex-1">
           {p.name}
-        </p>
+        </Link>
         <StarRating rating={p?.ratings} showCount count={p?.reviews} />
         <div className="flex items-baseline gap-1.5 mt-1">
           <span className="text-sm font-extrabold text-gray-900 dark:text-white">
