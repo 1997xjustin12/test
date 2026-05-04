@@ -111,7 +111,7 @@ function SingleProductPage({ product, slug, reviews, recentlyViewed, faqs }) {
         />
       </div>
 
-      <StickyCTA price={product?.price} was={product?.was} />
+      <StickyCTA product={product}/>
       <MobileStickyCTA price={product?.price} was={product?.was} />
     </div>
   );
