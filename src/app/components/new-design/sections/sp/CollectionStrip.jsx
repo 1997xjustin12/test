@@ -47,7 +47,7 @@ const CollectionStrip = ({ product }) => {
           <Link
             key={`collection-options-${p?.title}-${i}`}
             prefetch={false} href={p?.url || "#"}
-            className="relative group border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-900 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer"
+            className="relative group border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-900 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
             <div className="h-28 bg-gray-50 dark:bg-gray-800 overflow-hidden relative">
               {
@@ -72,7 +72,7 @@ const CollectionStrip = ({ product }) => {
                 </p>
               </div>
               <svg
-                className="absolute bottom-4 right-2 w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-orange-500 transition-colors"
+                className="absolute bottom-4 right-2 w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-theme-600 transition-colors"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2.5}

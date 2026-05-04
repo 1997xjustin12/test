@@ -19,7 +19,7 @@ const ProductCard = ({ p }) => {
       onMouseLeave={() => setHovered(false)}
       className={`group flex flex-col bg-white dark:bg-gray-900 border rounded-2xl overflow-hidden transition-all duration-200 ${
         hovered
-          ? "border-theme-200 dark:border-theme-800 shadow-lg -translate-y-1"
+          ? "border-gray-300 shadow-lg -translate-y-1"
           : "border-gray-200 dark:border-gray-700"
       }`}
     >
