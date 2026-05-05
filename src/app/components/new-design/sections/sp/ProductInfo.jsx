@@ -4,6 +4,7 @@ import Image from "next/image";
 import StarRating from "@/app/components/new-design/sections/sp/StarRating";
 import Badge from "@/app/components/new-design/sections/sp/Badge";
 import AddToCartWidget from "@/app/components/new-design/sections/sp/AddToCartWidget";
+import ProductOptionItemLink from "@/app/components/new-design/sections/sp/ProductOptionItemLink";
 // HELPERS
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
@@ -53,96 +54,16 @@ const ProductOptionGroup = ({ option_group }) => {
   );
 };
 
-const UpsellPriceDisplay = ({
-  mod,
-  value,
-  active,
-}) => {
-  if (mod === "less") {
-    return (
-        <div
-          className={`font-semibold text-xs ${
-            active ? "text-green-200" : "text-green-600"
-          }`}
-        >
-          {`Save $${formatPrice(value)}`}
-        </div>
-    );
-  }
-  if (mod === "add") {
-    return (
-      <div
-        className={`font-semibold text-xs ${
-          active ? "text-red-200" : "text-red-600"
-        }`}
-      >
-        {`Add $${formatPrice(value)}`}
-      </div>
-    );
-  }
-  if (mod==="same") {
-    return ``;
-  }
-};
-
 const ProductOptionGroupItems = ({ options }) => {
   return (
     <div className="mt-1 grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
       {options &&
         Array.isArray(options) &&
         options.map((opt, index) => (
-          <Link
-            prefetch={false}
-            href={opt?.url}
-            title={opt?.title}
+          <ProductOptionItemLink
             key={`${createSlug(opt?.title)}-option-${index}`}
-            className={`product-option-item-link group relative flex items-center gap-1 p-0 transition-all duration-300 border rounded-lg overflow-hidden ${
-              opt?.active
-                ? "bg-theme-600 text-white shadow-xs shadow-theme-500/30 border-theme-600 border-2"
-                : "bg-white border-2 border-neutral-300 hover:border-theme-600 hover:shadow-md"
-            }`}
-          >
-            {/* Active Check Icon */}
-            {opt?.active && (
-              <div className="absolute top-1 right-1 z-10 w-5 h-5 bg-white rounded-full flex items-center justify-center">
-                <Icon icon="mdi:check" className="text-theme-600 text-sm" />
-              </div>
-            )}
-
-            {/* Image Container */}
-            <div
-              className={`flex-shrink-0 w-[60px] bg-white h-[60px] overflow-hidden relative p-1`}
-            >
-              {opt?.image && (
-                <Image
-                  src={opt?.image}
-                  alt={opt?.title}
-                  width={60}
-                  height={60}
-                  className="object-contain w-full h-full"
-                />
-              )}
-            </div>
-
-            {/* Content Container */}
-            <div className="flex flex-col gap-1 min-w-0 flex-1 px-2">
-              <div
-                className={`font-semibold text-xs line-clamp-2 ${
-                  opt?.active
-                    ? "text-white"
-                    : "text-neutral-800 group-hover:text-theme-600"
-                }`}
-              >
-                {/* {formatOptionLabel(item)} */}
-                {opt?.label}
-              </div>
-              <UpsellPriceDisplay
-                mod={opt?.upsell?.mod}
-                value={opt?.upsell?.value}
-                active={opt?.active}
-              />
-            </div>
-          </Link>
+            product={opt}
+          />
         ))}
     </div>
   );
