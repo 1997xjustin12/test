@@ -192,7 +192,7 @@ function SingleProductPage({
         <RecentViews product_id={product?.product_id} />
       </div>
       <StickyCTA product={product} />
-      <MobileStickyCTA price={product?.price} was={product?.was} />
+      <MobileStickyCTA product={product} />
     </div>
   );
 }
