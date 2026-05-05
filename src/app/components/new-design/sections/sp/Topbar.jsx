@@ -21,7 +21,7 @@ const Topbar = () => {
   }, []);
 
   return (
-    <div className={`bg-charcoal hidden md:block sticky top-[105px] ${galleryOnFullscreen ? "" : "z-10"}`}>
+    <div className={`bg-charcoal hidden md:block sticky top-[64px] lg:top-[105px] ${galleryOnFullscreen ? "" : "z-10"}`}>
       <div className="max-w-[1240] py-2 px-4 sm:px-6 mx-auto flex items-center justify-between gap-3 flex-wrap">
         <span className="text-xs text-gray-400">
           🔥 Free Shipping on Selected Orders —{" "}
