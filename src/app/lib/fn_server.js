@@ -478,7 +478,7 @@ export async function getReviewsByProductId(product_id) {
 
     const response = await fetch(url, {
       method: "GET",
-      cache: "no-store",
+      next: { revalidate: 3600 },
       headers: {
         "Content-Type": "application/json",
         "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN || "",
