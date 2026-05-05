@@ -6,7 +6,7 @@ import RatingStyles from "@/app/components/atom/RatingStyles";
 import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
-import { fetchProduct,getReviewsByProductId, getYMALProducts } from "@/app/lib/fn_server";
+import { fetchProduct, getReviewsByProductId, getYMALProducts } from "@/app/lib/fn_server";
 
 import ProductPlaceholder from "@/app/components/atom/SingleProductPlaceholder";
 import ProductClient from "@/app/components/molecule/ProductClient";
