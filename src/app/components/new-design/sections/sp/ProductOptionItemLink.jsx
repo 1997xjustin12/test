@@ -65,15 +65,14 @@ function ProductOptionItemLink({ product }) {
 
       {/* Image Container */}
       <div
-        className={`flex-shrink-0 w-[60px] bg-white h-[60px] overflow-hidden relative p-1`}
+        className={`flex-shrink-0 w-[60px] bg-white h-full min-h-[60px] overflow-hidden relative p-1`}
       >
         {product?.image && (
           <Image
             src={product?.image}
             alt={product?.title}
-            width={60}
-            height={60}
-            className="object-contain w-full h-full"
+            fill
+            className="object-contain"
           />
         )}
       </div>
