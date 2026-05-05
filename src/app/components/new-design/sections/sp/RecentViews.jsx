@@ -8,7 +8,6 @@ const ProductGrid = dynamic(
 );
 
 function RecentViews({ product_id }) {
-  console.log("PRODUCT_ID", product_id);
   const [products, setProducts] = useState(null);
 
   useEffect(() => {

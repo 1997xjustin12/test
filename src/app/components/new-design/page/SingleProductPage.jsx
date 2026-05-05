@@ -7,6 +7,7 @@ import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
 import Topbar from "@/app/components/new-design/sections/sp/Topbar";
 import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
 import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
+import CompareTable from "@/app/components/new-design/sections/sp/CompareTable";
 import StickyCTA from "@/app/components/new-design/sections/sp/StickyCTA";
 import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
 
@@ -134,7 +135,6 @@ function SingleProductPage({
     ? `Designed with features that make it easy to grill great food, every ${product.vendor} product is built for those who demand performance, durability, and bold outdoor style.`
     : "";
 
-  console.log("product:", product);
   return (
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans">
       <Topbar />
@@ -166,6 +166,15 @@ function SingleProductPage({
           shipping={product?.shipping_info}
           isFreeshipping={product?.is_freeshipping || false}
         />
+        {/* Compare Table Component */}
+        {product?.sp_product_options &&
+          Array.isArray(product?.sp_product_options) &&
+          product?.sp_product_options.length > 1 && (
+            <CompareTable
+              products={product?.sp_product_options}
+              activeProductId={product?.product_id}
+            />
+          )}
         {/* <ReviewsSection rating={product?.rating ?? 0} reviewCount={product?.reviewCount ?? 0} reviews={reviews} /> */}
         <FAQSection faqs={faqs} />
         <SupportCTA />
@@ -174,31 +183,12 @@ function SingleProductPage({
             <ProductGrid
               title="Frequently Bought Together"
               items={product.fbt_carousel.map((i) => formatProduct(i))}
-              // action={
-              //   <Link href="#" className="text-xs font-semibold text-theme-500 hover:underline flex items-center gap-1">
-              //     View all{" "}
-              //     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              //       <path d="M9 5l7 7-7 7" />
-              //     </svg>
-              //   </Link>
-              // }
             />
           )}
         {ymalProducts && (
-          <ProductGrid
-            title="You May Also Like"
-            items={ymalProducts}
-            // action={
-            //   <Link href="#" className="text-xs font-semibold text-theme-500 hover:underline flex items-center gap-1">
-            //     View all{" "}
-            //     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-            //       <path d="M9 5l7 7-7 7" />
-            //     </svg>
-            //   </Link>
-            // }
-          />
+          <ProductGrid title="You May Also Like" items={ymalProducts} />
         )}
-        <RecentViews product_id={product?.product_id}/>
+        <RecentViews product_id={product?.product_id} />
       </div>
       <StickyCTA product={product} />
       <MobileStickyCTA price={product?.price} was={product?.was} />
