@@ -30,13 +30,13 @@ function BlogCard({ tag, title, readTime, date, img, url }) {
           />
         </div>
         <div className="p-5">
-          <p className="text-[10px] font-bold tracking-widest uppercase text-fire mb-2">
+          <p className="text-[10px] font-bold tracking-widest uppercase text-fire-accessible dark:text-fire mb-2">
             {tag}
           </p>
           <h3 className="font-serif text-base sm:text-[1.05rem] text-charcoal dark:text-white mb-2 leading-snug">
             {title}
           </h3>
-          <div className="flex gap-2 text-xs text-stone-400">
+          <div className="flex gap-2 text-xs text-stone-500 dark:text-stone-400">
             <span>{readTime}</span>
             <span>·</span>
             <span>{date}</span>
@@ -61,7 +61,7 @@ export default function Blog() {
           "
         >
           <div>
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire mb-2">
+            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-accessible dark:text-fire mb-2">
               Learning Center
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white leading-tight">
@@ -72,7 +72,7 @@ export default function Blog() {
             href="#"
             className="
             inline-flex items-center gap-2 px-7 py-3 rounded-lg
-            border-2 border-fire text-fire hover:bg-fire hover:text-white
+            border-2 border-fire text-fire-accessible dark:text-fire hover:bg-fire hover:text-white
             font-semibold text-sm transition-all duration-200 self-start sm:self-auto flex-shrink-0
           "
           >
@@ -87,9 +87,9 @@ export default function Blog() {
               <Image src={BLOG_POSTS[0].img} alt={BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
             </div>
             <div className="p-4 min-w-0">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-fire mb-1">{BLOG_POSTS[0].tag}</p>
+              <p className="text-[10px] font-bold tracking-widest uppercase text-fire-accessible dark:text-fire mb-1">{BLOG_POSTS[0].tag}</p>
               <h3 className="font-serif text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BLOG_POSTS[0].title}</h3>
-              <p className="text-xs text-stone-400 mt-2">{BLOG_POSTS[0].readTime}</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{BLOG_POSTS[0].readTime}</p>
             </div>
           </Link>
         )}

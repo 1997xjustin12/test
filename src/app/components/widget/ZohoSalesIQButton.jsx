@@ -57,7 +57,7 @@ export default function ZohoSalesIQButton() {
     <div className="fixed bottom-5 right-5 flex flex-col items-end gap-1" style={{ zIndex: 999999 }}>
       <button
         onClick={handleClick}
-        className="flex items-center gap-1.5 bg-white text-green-600 text-xs font-semibold px-2.5 py-1 rounded-full shadow-md cursor-pointer hover:bg-green-50 hover:shadow-lg transition-all duration-200 group"
+        className="flex items-center gap-1.5 bg-white text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-md cursor-pointer hover:bg-green-50 hover:shadow-lg transition-all duration-200 group"
       >
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />

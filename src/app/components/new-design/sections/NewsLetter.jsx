@@ -29,7 +29,7 @@ export default function Newsletter() {
               <h3 className="font-serif text-2xl text-charcoal dark:text-white mb-1">
                 You&rsquo;re all caught up
               </h3>
-              <p className="text-stone-500 dark:text-stone-400 text-sm">
+              <p className="text-stone-600 dark:text-stone-400 text-sm">
                 You&rsquo;re subscribed — exclusive sales, guides & seasonal inspiration are already on their way.
               </p>
             </div>
@@ -81,7 +81,7 @@ export default function Newsletter() {
             <h3 className="font-serif text-2xl text-charcoal dark:text-white mb-1">
               Stay in the Loop
             </h3>
-            <p className="text-stone-500 dark:text-stone-400 text-sm">
+            <p className="text-stone-600 dark:text-stone-400 text-sm">
               Exclusive sales, guides, tips & seasonal inspiration — straight to
               your inbox.
             </p>
@@ -106,7 +106,7 @@ export default function Newsletter() {
             <button
               onClick={submit}
               className={`
-                px-6 py-3 rounded-lg font-semibold text-sm text-white flex-shrink-0 transition-all duration-300
+                px-6 py-3 rounded-lg font-semibold text-sm text-gray-900 flex-shrink-0 transition-all duration-300
                 ${done ? "bg-green-600" : "bg-fire hover:bg-fire-light hover:-translate-y-0.5"}
               `}
             >
