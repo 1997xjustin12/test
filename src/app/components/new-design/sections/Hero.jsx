@@ -60,7 +60,7 @@ function TopbarRow({ cta, label }) {
             ✦ Name Your Price
           </span>
           <span className="text-white/20 mx-2.5">—</span>
-          <span className="text-white/50">Lowest Prices Guaranteed</span>
+          <span className="text-white/50 font-semibold uppercase tracking-[.1em] text-[10px]">Lowest Prices Guaranteed</span>
         </h2>
       </div>
     </div>
