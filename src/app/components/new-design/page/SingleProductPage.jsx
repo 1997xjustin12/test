@@ -141,6 +141,8 @@ function SingleProductPage({
   const price = parseFloat(firstVariant?.price) || 0;
   const was = parseFloat(firstVariant?.compare_at_price) || 0;
 
+  console.log()
+
   const brandDescription = product?.vendor
     ? `Designed with features that make it easy to grill great food, every ${product.vendor} product is built for those who demand performance, durability, and bold outdoor style.`
     : "";
@@ -187,8 +189,8 @@ function SingleProductPage({
             />
           )}
         <ReviewsSection
-        rating={product?.ratings || 0}
-        reviewCount={product?.reviews ?? 0}
+        rating={reviews?.summary?.average_rating || 0}
+        reviewCount={reviews?.summary?.total_reviews || reviews?.results?.length || 0}
         reviews={reviews?.results || []}
         summary={reviews?.summary || null}
         product_id={product?.product_id} />
