@@ -103,7 +103,7 @@ export default function Hero({ background }) {
             <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
               <Link
                 href={`${BASE_URL}/fireplaces`}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-gray-900 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30"
               >
                 Shop All Products
               </Link>
@@ -122,7 +122,7 @@ export default function Hero({ background }) {
                   <div className="font-serif text-3xl font-bold text-white">
                     {num}
                   </div>
-                  <div className="text-[11px] tracking-widest uppercase text-white/40 mt-0.5">
+                  <div className="text-[11px] tracking-widest uppercase text-white/60 mt-0.5">
                     {label}
                   </div>
                 </div>
