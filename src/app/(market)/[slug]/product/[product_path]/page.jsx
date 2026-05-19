@@ -37,7 +37,7 @@ export async function generateMetadata({ params }) {
   const seoDesc = product?.seo?.description?.trim();
   const bodyDesc = stripHtml(product?.body_html || "").trim();
   // Skip seo.description if it contains the generic Shopify pricing template.
-  const validSeoDesc = seoDesc && !seoDesc.toLowerCase().includes("best pricing") ? seoDesc : null;
+  const validSeoDesc = seoDesc && !seoDesc.toLowerCase().includes("best pricing") ? seoDesc : `${product.title} - Call us now for best pricing!`;
   const rawDescription = validSeoDesc || bodyDesc || product.title || "";
   const metaDescription = rawDescription.substring(0, 160) || product.title;
 
