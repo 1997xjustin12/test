@@ -9,6 +9,7 @@ function CartButton() {
     <Link
       href="/cart"
       prefetch={false}
+      aria-label="View cart"
       className="relative w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-charcoal dark:text-white hover:bg-fire hover:text-white transition-all duration-200"
     >
       <CartIcon />
