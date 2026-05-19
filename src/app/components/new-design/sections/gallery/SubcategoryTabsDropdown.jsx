@@ -74,7 +74,7 @@ function SubcategoryTabsDropdown({ subs }) {
               }`}
             >
               {activeInOverflow ? "More •" : `More (${overflow.length})`}
-              <span className="text-[10px]">{open ? "▲" : "▾"}</span>
+              <span className="inline-block w-[0.625rem] text-center text-[10px] leading-none">{open ? "▲" : "▼"}</span>
             </button>
 
             {open && (
