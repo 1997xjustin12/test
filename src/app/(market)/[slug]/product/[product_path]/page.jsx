@@ -148,6 +148,7 @@ export default async function ProductPage({ params }) {
   }
 
   const product_reviews = await getReviewsByProductId(product_id) || [];
+  console.log("product", product);
   const jsonLd = buildJsonLd(product, slug, product_path);
 
   const [about, shipping_policy, return_policy, warranty] = await redis.mget([
