@@ -23,7 +23,7 @@ export default function Features() {
               </div>
               <div>
                 <strong className="block text-white text-sm">{title}</strong>
-                <span className="text-white/40 text-xs">{sub}</span>
+                <span className="text-white/70 text-xs">{sub}</span>
               </div>
             </div>
           ))}
