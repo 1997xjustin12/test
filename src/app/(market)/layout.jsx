@@ -19,6 +19,7 @@ import { notFound } from "next/navigation";
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const InterFont = Inter({
   subsets: ["latin"],
@@ -140,6 +141,9 @@ export default async function MarketLayout({ children }) {
                         <Footer logo={redisLogo} />
                         <ConditionalZohoButton />
                         <LazyZohoLoader />
+                        {process.env.NEXT_PUBLIC_GA_ID && (
+                          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+                        )}
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
