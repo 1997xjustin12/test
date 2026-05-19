@@ -142,12 +142,12 @@ export default function Footer({ logo }) {
             © {new Date().getFullYear()} Solana Fireplaces. All rights reserved.
           </p>
           <div className="text-center sm:text-right">
-            <p className="text-white/30 text-[11px] mb-1.5">We Accept:</p>
+            <p className="text-white/60 text-[11px] mb-1.5">We Accept:</p>
             <div className="flex gap-1.5 flex-wrap justify-center sm:justify-end">
               {PAYMENT_METHODS.map((m) => (
                 <span
                   key={m}
-                  className="bg-white/10 rounded px-2 py-1 text-[11px] text-white/45"
+                  className="bg-white/10 rounded px-2 py-1 text-[11px] text-white/70"
                 >
                   {m}
                 </span>
