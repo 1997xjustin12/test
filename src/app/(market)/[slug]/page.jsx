@@ -1,5 +1,9 @@
 import "@/app/styles/product-pages.css";
 
+// Safety-net: pages self-heal after 24h; primary invalidation is on-demand
+// via /api/revalidate-plp using revalidatePath + revalidateTag.
+export const revalidate = 86400;
+
 import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 
@@ -69,6 +73,14 @@ const getInitialHits = unstable_cache(
 
 const defaultMenuKey = keys.dev_shopify_menu.value;
 
+// Cached so both generateMetadata and the page function share one Redis read
+// per cache window instead of two live round-trips per request.
+const getMenuData = unstable_cache(
+  () => redis.get(defaultMenuKey),
+  ["nav-menu"],
+  { revalidate: 86400, tags: ["nav-menu"] },
+);
+
 const flattenNav = (navItems) => {
   const result = [];
   const extractLinks = (items) => {
@@ -81,9 +93,17 @@ const flattenNav = (navItems) => {
   return result;
 };
 
+export async function generateStaticParams() {
+  const menuData = await getMenuData();
+  const flatData = flattenNav(menuData);
+  return flatData
+    .filter((item) => item.url)
+    .map((item) => ({ slug: item.url }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const menuData = await redis.get(defaultMenuKey);
+  const menuData = await getMenuData();
   const flatData = flattenNav(menuData);
   const pageData = getPageData(slug, flatData);
 
@@ -100,10 +120,9 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function GenericCategoryPage({ params, searchParams }) {
+export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
-  const resolvedSearchParams = await searchParams;
-  const menuData = await redis.get(defaultMenuKey);
+  const menuData = await getMenuData();
   const flatData = flattenNav(
     menuData.map((i) => ({
       ...i,
@@ -126,18 +145,13 @@ export default async function GenericCategoryPage({ params, searchParams }) {
 
   const filterString = computeFilterString(pageData);
 
-  // Only prefetch the base-state hits when the URL has no params that would
-  // conflict with them (sort, page, filters). When params are present the
-  // client-side InstantSearch instance already reads the correct state from
-  // the URL, so passing stale page-0 hits would cause a visible wrong-results
-  // flash before the live query resolves.
-  const hasUrlParams = Object.keys(resolvedSearchParams ?? {}).some(
-    (k) => k === "sort" || k === "page" || k.startsWith("filter:") || k.startsWith("range:"),
-  );
-
+  // Always prefetch page-0 hits. ProductsSectionV2 checks window.location
+  // client-side and ignores these when URL params are active, so there is
+  // no wrong-results flash and the server component stays param-free
+  // (required for generateStaticParams / full-page ISR caching to work).
   const [collection_aggs, initialHits] = await Promise.all([
     fetchCollectionsCount(collection_ids),
-    hasUrlParams ? Promise.resolve(null) : getInitialHits(filterString).catch(() => null),
+    getInitialHits(filterString).catch(() => null),
   ]);
 
   const buckets =

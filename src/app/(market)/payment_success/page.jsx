@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, BASE_URL } from "@/app/lib/helpers";
+import { pixelPurchase } from "@/app/lib/pixel";
 import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
 
 const cardCls =
@@ -24,6 +25,7 @@ function SuccessPaymentPage() {
       const parsed = JSON.parse(raw);
       setOrder(parsed);
       sessionStorage.removeItem("order_summary");
+      pixelPurchase({ value: parsed.cartTotal, orderId: parsed.orderId, items: parsed.items });
       if (!parsed.isLoggedIn && parsed.email) {
         sessionStorage.setItem(
           "register_prefill",

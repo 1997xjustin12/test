@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/cart";
 import { formatPrice, BASE_URL } from "@/app/lib/helpers";
+import { pixelInitiateCheckout } from "@/app/lib/pixel";
 import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import { useAuth } from "@/app/context/auth";
@@ -34,6 +35,7 @@ function CartOrderSummary({ checkoutButton = true }) {
       alert("You don't have items in your cart yet.");
       return;
     }
+    pixelInitiateCheckout({ value: salePrice, numItems: cartItems.length });
     window.location.href = `${BASE_URL}/checkout`;
   };
 

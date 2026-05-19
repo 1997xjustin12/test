@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { BASE_URL, formatPrice, formatProduct } from "@/app/lib/helpers";
+import PixelViewContent from "@/app/components/widget/PixelViewContent";
 
 // Above-fold — load immediately
 import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
@@ -146,6 +147,7 @@ function SingleProductPage({
 
   return (
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans">
+      <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-20">
         <Breadcrumb crumbs={product?.breadcrumbs} />

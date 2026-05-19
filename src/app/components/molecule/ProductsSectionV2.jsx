@@ -650,6 +650,16 @@ export function URLHandler() {
   return null;
 }
 
+// Returns true when the current URL already has active filter/sort/page params.
+// Called once at module scope so it runs before React state initialises.
+function urlHasActiveParams() {
+  if (typeof window === "undefined") return false;
+  const p = new URL(window.location.href).searchParams;
+  return Array.from(p.keys()).some(
+    (k) => k === "sort" || k === "page" || k.startsWith("filter:") || k.startsWith("range:"),
+  );
+}
+
 function ProductsSectionV2({
   category,
   search = "",
@@ -659,8 +669,11 @@ function ProductsSectionV2({
 }) {
   const { categories, flatCategories } = useSolanaCategories();
   const [pageDetails, setPageDetails] = useState(null);
+  // Suppress server hits when URL already has active params to avoid a
+  // wrong-results flash before InstantSearch resolves the filtered query.
+  const activeHits = initialHits?.length && !urlHasActiveParams() ? initialHits : null;
   // Start loaded immediately when we have server-prefetched hits — no skeleton shown.
-  const [dataLoaded, setDataLoaded] = useState(!!initialHits?.length);
+  const [dataLoaded, setDataLoaded] = useState(!!activeHits?.length);
   // initialFilterString comes from the server so InstantSearch has the right
   // filter on the very first render — before the context useEffect resolves.
   const [filterString, setFilterString] = useState(initialFilterString);
@@ -668,8 +681,8 @@ function ProductsSectionV2({
   // When initial hits are present, never allow the loader to re-appear while
   // InstantSearch is warming up — the static grid covers that window.
   const handleDataLoaded = useCallback(
-    (loaded) => setDataLoaded(initialHits?.length ? true : loaded),
-    [initialHits?.length],
+    (loaded) => setDataLoaded(activeHits?.length ? true : loaded),
+    [activeHits?.length],
   );
 
   // Computed once from the initial URL — URLHandler takes over after mount
@@ -770,7 +783,7 @@ function ProductsSectionV2({
               category={category}
               page_details={pageDetails}
               onDataLoaded={handleDataLoaded}
-              initialHits={initialHits}
+              initialHits={activeHits}
             />
           </InstantSearch>
         </div>
