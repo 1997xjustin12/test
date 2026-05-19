@@ -160,6 +160,7 @@ export default function Navbar({ logo }) {
               className="lg:hidden w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center gap-1.5"
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
+              aria-expanded={menuOpen}
             >
               <span
                 className={`w-5 h-0.5 bg-charcoal dark:bg-white transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
@@ -201,6 +202,8 @@ export default function Navbar({ logo }) {
                     e.preventDefault();
                     setLockedMenu(isLocked ? null : id);
                   }}
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
                   className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 flex items-center gap-0.5
                   ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-fire" : "text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire"}`}
                 >
@@ -282,6 +285,7 @@ export default function Navbar({ logo }) {
                 <div key={`mobile-nav-item-${id}`}>
                   <button
                     onClick={() => setExpandedMobileMenu(isExpanded ? null : id)}
+                    aria-expanded={isExpanded}
                     className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
                   >
                     <span>{name}</span>
