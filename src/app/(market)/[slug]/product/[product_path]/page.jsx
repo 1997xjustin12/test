@@ -34,11 +34,12 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  // Clean description from HTML
-  const cleanDescription = stripHtml(
-    product?.seo?.description || product.title || "",
-  );
-  const metaDescription = cleanDescription.substring(0, 160) || product.title;
+  const seoDesc = product?.seo?.description?.trim();
+  const bodyDesc = stripHtml(product?.body_html || "").trim();
+  // Skip seo.description if it contains the generic Shopify pricing template.
+  const validSeoDesc = seoDesc && !seoDesc.toLowerCase().includes("best pricing") ? seoDesc : null;
+  const rawDescription = validSeoDesc || bodyDesc || product.title || "";
+  const metaDescription = rawDescription.substring(0, 160) || product.title;
 
   // Get the first image or use a fallback
   const productImage = product.images?.[0]?.src;
