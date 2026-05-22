@@ -419,10 +419,11 @@ async function _fetchProduct(product_path) {
  * is missed; it does not replace the on-demand invalidation.
  */
 export async function fetchProduct(product_path) {
+  const decoded = decodeURIComponent(product_path);
   return unstable_cache(
-    () => _fetchProduct(product_path),
-    [`product-${product_path}`],
-    { tags: ["pdp", `product-${product_path}`], revalidate: 86400 },
+    () => _fetchProduct(decoded),
+    [`product-${decoded}`],
+    { tags: ["pdp", `product-${decoded}`], revalidate: 86400 },
   )();
 }
 

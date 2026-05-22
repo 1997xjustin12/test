@@ -144,6 +144,8 @@ export default async function ProductPage({ params }) {
   const product_id = product?.product_id;
   const ymal_products = await getYMALProducts();
 
+  console.log("[BEFORE 404][product]:", product);
+
   if(!product || !product_id){
     notFound();
   }
