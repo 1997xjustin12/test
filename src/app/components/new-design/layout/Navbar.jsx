@@ -112,7 +112,7 @@ export default function Navbar({ logo }) {
           >
             {!logo && (
               <>
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-red-700 flex items-center justify-center text-lg flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-theme-500 flex items-center justify-center text-lg flex-shrink-0">
                   🔥
                 </div>
                 <span className="font-serif font-bold text-xl text-charcoal dark:text-white hidden sm:block">
@@ -293,12 +293,12 @@ export default function Navbar({ logo }) {
                   </button>
                   <div className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
                     <div className="overflow-hidden">
-                      <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-orange-100 dark:border-orange-900/30 pl-3">
+                      <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-theme-100 dark:border-theme-900 pl-3">
                         <Link
                           href={`${BASE_URL}/${url}`}
                           prefetch={false}
                           onClick={() => setMenuOpen(false)}
-                          className="px-3 py-2 text-sm font-semibold text-theme-500 hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
+                          className="px-3 py-2 text-sm font-semibold text-theme-500 hover:bg-theme-50 dark:hover:bg-theme-950 rounded-lg transition-colors"
                         >
                           All {name}
                         </Link>

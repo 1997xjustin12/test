@@ -8,7 +8,7 @@ export default function Topbar() {
       <div className="flex md:hidden items-center justify-center gap-2 px-4">
         <span>🔥 Free Shipping on Select Orders</span>
         <span className="text-gray-600">·</span>
-        <a href={PHONE_HREF} className="text-fire-light font-semibold whitespace-nowrap">
+        <a href={PHONE_HREF} className="text-theme-500 font-semibold whitespace-nowrap">
           {PHONE}
         </a>
       </div>
