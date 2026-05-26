@@ -22,14 +22,12 @@
 
 
 .text-pallete-green { color: #089e1b; }
-.text-theme-500 { color: #ff6b14; }
 .text-pallete-dark { color: #2e2e2e; }
 .text-pallete-gray { color: #9c9c9c; }
 .text-pallete-lightgray { color: #d8d8d8; }
 .text-pallete-lightergray { color: #ebebeb; }
 
 .hover-text-pallete-green:hover { color: #089e1b; }
-.hover-text-theme-500:hover { color: #ff6b14; }
 .hover-text-pallete-dark:hover { color: #2e2e2e; }
 .hover-text-pallete-gray:hover { color: #9c9c9c; }
 .hover-text-pallete-lightgray:hover { color: #d8d8d8; }
