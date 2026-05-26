@@ -137,7 +137,7 @@ function ProductCard({ product }) {
               <AddToCartButtonWrap product={product}>
                 <button
                   aria-label={`Add ${product?.title} to cart`}
-                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-fire hover:bg-fire-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
+                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-theme-500 hover:bg-theme-500-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
                 >
                   +
                 </button>
@@ -180,7 +180,7 @@ export default function Products({ initialProducts = [] }) {
           "
         >
           <div>
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-accessible dark:text-fire mb-1.5">
+            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 dark:text-theme-500 mb-1.5">
               Featured Products
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-4 leading-tight">
@@ -196,8 +196,8 @@ export default function Products({ initialProducts = [] }) {
                     px-4 py-1.5 rounded-full text-sm font-medium border-2 transition-all duration-200
                     ${
                       active === t?.name
-                        ? "border-fire text-fire-accessible dark:text-fire bg-fire/5"
-                        : "border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 hover:border-fire hover:text-fire-accessible dark:hover:text-fire"
+                        ? "border-theme-600 text-theme-600 dark:text-theme-500 bg-theme-600/5"
+                        : "border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 hover:border-theme-500 hover:text-theme-600 dark:hover:text-theme-500"
                     }
                   `}
                 >
@@ -210,7 +210,7 @@ export default function Products({ initialProducts = [] }) {
             href={VIEW_ALL_URL}
             className="
             inline-flex items-center gap-2 px-7 py-3 rounded-lg
-            border-2 border-fire text-fire-accessible dark:text-fire hover:bg-fire hover:text-white
+            border-2 border-theme-500 text-theme-600 dark:text-theme-500 hover:bg-theme-500 hover:text-white
             font-semibold text-sm transition-all duration-200 self-start sm:self-auto flex-shrink-0
           "
           >
@@ -251,7 +251,7 @@ export default function Products({ initialProducts = [] }) {
           <div className="mt-8 text-center sm:hidden">
             <button
               onClick={() => setShowAll(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-fire text-fire-accessible dark:text-fire font-semibold text-sm hover:bg-fire hover:text-white transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-theme-500 text-theme-600 dark:text-theme-500 font-semibold text-sm hover:bg-theme-500 hover:text-white transition-all duration-200"
             >
               Show All Products ({products.length - MOBILE_INITIAL} more)
             </button>

@@ -67,7 +67,7 @@ export default function Footer({ logo }) {
                     🔥
                   </div>
                   <span className="font-serif font-bold text-xl text-white">
-                    Solana Fireplaces
+                    {STORE_NAME}
                   </span>
                 </>
               )}
@@ -139,7 +139,7 @@ export default function Footer({ logo }) {
         "
         >
           <p>
-            © {new Date().getFullYear()} Solana Fireplaces. All rights reserved.
+            © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
           </p>
           <div className="text-center sm:text-right">
             <p className="text-white/60 text-[11px] mb-1.5">We Accept:</p>

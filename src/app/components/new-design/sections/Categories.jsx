@@ -48,7 +48,7 @@ function CategoryCard({ name, description, slug, image, index }) {
           <p className="text-sm text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
             {description}
           </p>
-          <div className="flex items-center gap-1.5 text-sm font-semibold text-fire-accessible dark:text-fire group-hover:gap-2.5 transition-all duration-200">
+          <div className="flex items-center gap-1.5 text-sm font-semibold text-theme-600 dark:text-theme-500 group-hover:gap-2.5 transition-all duration-200">
             Shop {name} <ArrowIcon />
           </div>
         </div>
@@ -65,7 +65,7 @@ export default async function Categories() {
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
 
         <div className="text-center mb-12">
-          <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-accessible dark:text-fire mb-2.5">
+          <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 dark:text-theme-500 mb-2.5">
             Browse by Category
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-3 leading-tight">

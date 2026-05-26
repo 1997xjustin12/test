@@ -20,7 +20,7 @@ import { STORE_NAME } from "@/app/lib/store_constants";
 function NavSpinner({ className = "" }) {
   return (
     <svg
-      className={`animate-spin w-3 h-3 text-fire flex-shrink-0 ${className}`}
+      className={`animate-spin w-3 h-3 text-theme-500 flex-shrink-0 ${className}`}
       fill="none"
       viewBox="0 0 24 24"
     >
@@ -116,7 +116,7 @@ export default function Navbar({ logo }) {
                   🔥
                 </div>
                 <span className="font-serif font-bold text-xl text-charcoal dark:text-white hidden sm:block">
-                  Solana Fireplaces
+                  { STORE_NAME }
                 </span>
               </>
             )}
@@ -146,7 +146,7 @@ export default function Navbar({ logo }) {
               href={PHONE_HREF}
               className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-charcoal dark:text-white whitespace-nowrap"
             >
-              <span className="text-fire">
+              <span className="text-theme-500">
                 <PhoneIcon />
               </span>
               {PHONE}
@@ -205,7 +205,7 @@ export default function Navbar({ logo }) {
                   aria-expanded={isOpen}
                   aria-haspopup="true"
                   className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 flex items-center gap-0.5
-                  ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-fire" : "text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-fire"}`}
+                  ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-theme-500" : "text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-theme-500"}`}
                 >
                   {name}{" "}
                   <span
@@ -235,11 +235,11 @@ export default function Navbar({ logo }) {
                       if (`/${url}` === pathname) { setLockedMenu(null); setHoveredMenu(null); return; }
                       setLoadingHref(`${BASE_URL}/${url}`);
                     }}
-                    className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-fire transition-colors group/parent"
+                    className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-theme-500 transition-colors group/parent"
                   >
                     <span>All {name}</span>
                     <span className="relative w-3 h-3 flex-shrink-0 flex items-center justify-center">
-                      <span className={`absolute text-fire text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}>→</span>
+                      <span className={`absolute text-theme-500 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}>→</span>
                       <NavSpinner className={loadingHref === `${BASE_URL}/${url}` ? "visible" : "invisible"} />
                     </span>
                   </Link>
@@ -253,7 +253,7 @@ export default function Navbar({ logo }) {
                           if (`/${c?.url}` === pathname) { setLockedMenu(null); setHoveredMenu(null); return; }
                           setLoadingHref(`${BASE_URL}/${c?.url}`);
                         }}
-                        className="flex items-center justify-between px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors"
+                        className="flex items-center justify-between px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-theme-500 transition-colors"
                       >
                         <span>{c.name}</span>
                         <NavSpinner className={loadingHref === `${BASE_URL}/${c?.url}` ? "visible" : "invisible"} />
@@ -264,10 +264,10 @@ export default function Navbar({ logo }) {
               </div>
             );
           })}
-          {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
+          {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
           <Link
             href={`${BASE_URL}/brand/eloquence`}
-            className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-fire hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
+            className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
           >
             Current Deals 🔥
           </Link>
@@ -286,7 +286,7 @@ export default function Navbar({ logo }) {
                   <button
                     onClick={() => setExpandedMobileMenu(isExpanded ? null : id)}
                     aria-expanded={isExpanded}
-                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-theme-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
                   >
                     <span>{name}</span>
                     <span className={`text-[11px] opacity-50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}>▾</span>
@@ -298,7 +298,7 @@ export default function Navbar({ logo }) {
                           href={`${BASE_URL}/${url}`}
                           prefetch={false}
                           onClick={() => setMenuOpen(false)}
-                          className="px-3 py-2 text-sm font-semibold text-fire hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
+                          className="px-3 py-2 text-sm font-semibold text-theme-500 hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
                         >
                           All {name}
                         </Link>
@@ -308,7 +308,7 @@ export default function Navbar({ logo }) {
                             href={`${BASE_URL}/${c?.url}`}
                             prefetch={false}
                             onClick={() => setMenuOpen(false)}
-                            className="px-3 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-fire hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                            className="px-3 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-theme-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
                           >
                             {c.name}
                           </Link>
@@ -322,7 +322,7 @@ export default function Navbar({ logo }) {
             <Link
               href={`${BASE_URL}/brand/eloquence`}
               onClick={() => setMenuOpen(false)}
-              className="px-3 py-2.5 text-sm font-semibold text-fire"
+              className="px-3 py-2.5 text-sm font-semibold text-theme-500"
             >
               Current Deals 🔥
             </Link>
@@ -331,7 +331,7 @@ export default function Navbar({ logo }) {
               onClick={() => setMenuOpen(false)}
               className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white border-t border-stone-100 dark:border-stone-800"
             >
-              <span className="text-fire"><PhoneIcon /></span>
+              <span className="text-theme-500"><PhoneIcon /></span>
               {PHONE}
             </Link>
           </div>

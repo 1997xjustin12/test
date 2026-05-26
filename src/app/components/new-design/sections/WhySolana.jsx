@@ -50,14 +50,14 @@ export default function WhySolana() {
               rounded-xl shadow-xl px-4 py-3 w-36
               border border-stone-100 dark:border-stone-700
             ">
-              <div className="font-serif text-[1.9rem] font-bold text-fire leading-none">98%</div>
+              <div className="font-serif text-[1.9rem] font-bold text-theme-600 leading-none">98%</div>
               <p className="text-xs text-stone-400 mt-1">Customer Satisfaction</p>
             </div>
           </div>
 
           {/* ── Copy column ── */}
           <div ref={copyRef} className="opacity-0 translate-y-6 transition-all duration-700">
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire mb-2.5">Why Choose Solana</p>
+            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 mb-2.5">Why Choose Solana</p>
             <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-3 leading-tight">
               Your Trusted Partner in Warmth & Style
             </h2>
@@ -80,7 +80,7 @@ export default function WhySolana() {
             </div>
 
             <div className="mt-7">
-              <a href="#" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30">
+              <a href="#" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-600/30">
                 Learn About Us
               </a>
             </div>

@@ -97,7 +97,7 @@ export default function Newsletter() {
               className="
                 flex-1 px-4 py-3 rounded-lg text-sm
                 border-2 border-stone-200 dark:border-stone-700
-                focus:border-fire outline-none
+                focus:border-theme-600 outline-none
                 bg-white dark:bg-stone-800
                 text-charcoal dark:text-white
                 placeholder-stone-400 transition-colors
@@ -107,7 +107,7 @@ export default function Newsletter() {
               onClick={submit}
               className={`
                 px-6 py-3 rounded-lg font-semibold text-sm text-gray-900 flex-shrink-0 transition-all duration-300
-                ${done ? "bg-green-600" : "bg-fire hover:bg-fire-light hover:-translate-y-0.5"}
+                ${done ? "bg-green-600" : "bg-theme-600 hover:bg-theme-500 hover:-translate-y-0.5"}
               `}
             >
               {done ? "✓ Subscribed!" : "Subscribe"}

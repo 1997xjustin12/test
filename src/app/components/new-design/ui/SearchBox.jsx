@@ -386,8 +386,8 @@ function SearchBox() {
         {/* Search button */}
         <button
           onClick={handleSubmit}
-          className="flex-shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition hover:opacity-90 hidden sm:flex items-center gap-1"
-          style={{ background: FIRE }}
+          className="flex-shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition hover:opacity-90 hidden sm:flex items-center gap-1 bg-theme-600"
+          // style={{ background: FIRE }}
         >
           <svg
             width="12"

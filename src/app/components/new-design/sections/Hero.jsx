@@ -49,7 +49,7 @@ function TopbarRow({ cta, label }) {
 
           <Link
             href={`tel:${STORE_CONTACT}`}
-            className="text-fire hover:text-fire-light transition-colors duration-150 tracking-wide hover:underline"
+            className="text-theme-500 hover:text-theme-600 transition-colors duration-150 tracking-wide hover:underline"
           >
             {cta}
           </Link>
@@ -84,13 +84,13 @@ export default function Hero({ background }) {
         <div className="grid gap-14 items-center py-16 md:py-20 grid-cols-1 md:grid-cols-2">
           {/* ── Copy — centered on mobile, left-aligned on desktop ── */}
           <div className="text-center md:text-left">
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">
+            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 mb-3">
               Premium Outdoor Solutions
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
               Your Dream
               <br />
-              Kitchen <em className="not-italic text-fire-light">One</em>
+              Kitchen <em className="not-italic text-theme-600">One</em>
               <br />
               Call Away
             </h1>
@@ -103,7 +103,7 @@ export default function Hero({ background }) {
             <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
               <Link
                 href={`${BASE_URL}/fireplaces`}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-fire hover:bg-fire-light text-gray-900 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-gray-900 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-500/30"
               >
                 Shop All Products
               </Link>
@@ -134,7 +134,7 @@ export default function Hero({ background }) {
               {TRUST.map((t) => (
                 <div
                   key={t}
-                  className="flex items-center gap-1.5 text-white/55 text-xs before:content-['✓'] before:text-fire-light before:font-bold"
+                  className="flex items-center gap-1.5 text-white/55 text-xs before:content-['✓'] before:text-theme-600 before:font-bold"
                 >
                   {t}
                 </div>
@@ -174,7 +174,7 @@ export default function Hero({ background }) {
                     </h3>
                     <p className="text-white/50 text-xs mt-0.5">{sub}</p>
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-fire flex items-center justify-center text-white text-sm group-hover:bg-fire-light transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-theme-600 flex items-center justify-center text-white text-sm group-hover:bg-theme-500 transition-colors">
                     →
                   </div>
                 </div>

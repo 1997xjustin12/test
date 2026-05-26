@@ -58,8 +58,7 @@ function ReviewCard({ initial, gradient, user, comment, rating, product }) {
       {/* Header: avatar + name + stars */}
       <div className="flex items-start gap-3">
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 select-none"
-          style={{ background: avatarGradient }}
+          className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 select-none bg-theme-600"
         >
           {displayInitial}
         </div>
@@ -76,9 +75,9 @@ function ReviewCard({ initial, gradient, user, comment, rating, product }) {
 
       {/* Quote with max-height transition */}
       <div className="relative">
-        <span className="absolute -top-1 -left-0.5 font-serif text-5xl leading-none text-fire/10 select-none pointer-events-none">
+        {/* <span className="absolute -top-1 -left-0.5 font-serif text-5xl leading-none text-theme-600/10 select-none pointer-events-none">
           "
-        </span>
+        </span> */}
         <div
           className="overflow-hidden relative min-h-[60px]"
           style={{
@@ -100,7 +99,7 @@ function ReviewCard({ initial, gradient, user, comment, rating, product }) {
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
-        className="flex items-center gap-1 text-[10px] font-semibold text-fire/60 hover:text-fire transition-colors self-start -mt-2 select-none"
+        className="flex items-center gap-1 text-[10px] font-semibold text-theme-600/60 hover:text-theme-600 transition-colors self-start -mt-2 select-none"
       >
         {expanded ? "Show less" : "Read more"}
         <svg
@@ -117,7 +116,7 @@ function ReviewCard({ initial, gradient, user, comment, rating, product }) {
       {/* Product footer */}
       {product?.title && (
         <div className="flex items-center gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
-          <svg className="w-3 h-3 text-fire flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-3 h-3 text-theme-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
           </svg>
           <span className="text-xs text-stone-400 dark:text-stone-500 truncate" title={product.title}>
@@ -144,7 +143,7 @@ export default function Reviews() {
           ref={hdrRef}
           className="opacity-0 translate-y-6 transition-all duration-700 text-center mb-12"
         >
-          <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire mb-2.5">
+          <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 mb-2.5">
             Customer Reviews
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-6 leading-tight">

@@ -17,7 +17,7 @@ export default function Cta() {
       <div className="relative z-10 py-20 md:py-24">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
           <div ref={ref} className="opacity-0 translate-y-6 transition-all duration-700">
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-fire-light mb-3">Ready to Get Started?</p>
+            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-500 mb-3">Ready to Get Started?</p>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-tight">
               Let's Design Your Dream Space Together
             </h2>
@@ -25,7 +25,7 @@ export default function Cta() {
               Our heating specialists are standing by to help you find the perfect fireplace or outdoor kitchen — no pressure, just expertise.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-fire hover:bg-fire-light text-white font-semibold text-base transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-fire/30">
+              <Link prefetch={false} href={`${BASE_URL}/fireplaces`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-theme-600 hover:bg-theme-500 text-white font-semibold text-base transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-600/30">
                 Browse Products
               </Link>
               <Link prefetch={false} href={`${BASE_URL}/contact`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold text-base transition-all duration-200">
@@ -33,7 +33,7 @@ export default function Cta() {
               </Link>
             </div>
             <a href={PHONE_HREF} className="inline-flex items-center gap-2 text-white font-semibold text-lg mt-7">
-              <span className="text-fire-light"><PhoneIcon size={18} /></span>
+              <span className="text-theme-500"><PhoneIcon size={18} /></span>
               {PHONE}
             </a>
           </div>

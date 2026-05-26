@@ -70,7 +70,7 @@ export default function ZohoSalesIQButton() {
         onClick={handleClick}
         aria-label="Open live chat"
         className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold text-white
-          bg-fire hover:bg-fire-light transition-all duration-300 hover:-translate-y-0.5
+          bg-theme-600 hover:bg-theme-500 transition-all duration-300 hover:-translate-y-0.5
           shadow-[0_4px_20px_rgba(232,93,38,0.4)]
           animate-[pulse_2.5s_ease-in-out_infinite]"
       >

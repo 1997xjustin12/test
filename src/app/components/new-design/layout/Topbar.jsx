@@ -19,13 +19,13 @@ export default function Topbar() {
         <span className="text-gray-600">|</span>
         <span className="px-3.5">
           Expert Support:{" "}
-          <a href={PHONE_HREF} className="text-fire-light font-semibold hover:underline">
+          <a href={PHONE_HREF} className="text-theme-500 font-semibold hover:underline">
             {PHONE}
           </a>
         </span>
         <span className="text-gray-600">|</span>
         <span className="px-3.5">
-          <Link href="/professional-program" className="text-fire-light font-semibold hover:underline">
+          <Link href="/professional-program" className="text-theme-500 font-semibold hover:underline">
             Contractor Discount Program
           </Link>
         </span>
