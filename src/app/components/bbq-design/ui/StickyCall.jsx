@@ -1,0 +1,21 @@
+import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
+
+export default function StickyCall() {
+  return (
+    <div className="fixed bottom-5 right-5 z-50">
+      <a
+        href={`tel:${STORE_CONTACT}`}
+        className="
+          flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold text-white
+          bg-theme-600 hover:bg-theme-500 transition-all duration-300 hover:-translate-y-0.5
+          shadow-[0_4px_20px_rgba(232,93,38,0.4)]
+          animate-[pulse_2.5s_ease-in-out_infinite]
+        "
+      >
+        <PhoneIcon size={15} />
+        Call {STORE_CONTACT}
+      </a>
+    </div>
+  );
+}
