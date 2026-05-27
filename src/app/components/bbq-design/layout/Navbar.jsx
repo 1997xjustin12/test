@@ -9,12 +9,12 @@ import {
   PhoneIcon,
   CartIcon,
   UserIcon,
-} from "@/app/components/new-design/ui/Icons";
-import CartButton from "@/app/components/new-design/ui/CartButton";
-import SearchBox from "@/app/components/new-design/ui/SearchBox";
+} from "@/app/components/bbq-design/ui/Icons";
+import CartButton from "@/app/components/bbq-design/ui/CartButton";
+import SearchBox from "@/app/components/bbq-design/ui/SearchBox";
 
 import { useSolanaCategories } from "@/app/context/category";
-import MyAccountButton from "@/app/components/new-design/ui/MyAccountButton";
+import MyAccountButton from "@/app/components/bbq-design/ui/MyAccountButton";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 function NavSpinner({ className = "" }) {
@@ -24,8 +24,19 @@ function NavSpinner({ className = "" }) {
       fill="none"
       viewBox="0 0 24 24"
     >
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
     </svg>
   );
 }
@@ -106,7 +117,7 @@ export default function Navbar({ logo }) {
         {/* ── Row 1: Logo + Search + Actions ── */}
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo — flex-none so it never shrinks; width set on the inner div */}
-          <Link
+          {/* <Link
             href="/"
             className="flex items-center gap-2 flex-none"
           >
@@ -132,6 +143,15 @@ export default function Navbar({ logo }) {
                 />
               </div>
             )}
+          </Link> */}
+          <Link
+            href="/"
+            className="font-oswald font-bold text-2xl tracking-wide shrink-0"
+          >
+            BBQGrill<span className="text-ember">Outlet</span>
+            <small className="block font-sora font-normal text-[9px] tracking-[.35em] text-stone-400 uppercase">
+              Outdoor Kitchen Experts
+            </small>
           </Link>
 
           {/* Search — desktop only inside Row 1 */}
@@ -179,11 +199,12 @@ export default function Navbar({ logo }) {
         <div className="lg:hidden pb-3">
           <SearchBox />
         </div>
-
-        {/* ── Row 2: Nav Links — desktop only ── */}
+      </div>
+      {/* ── Row 2: Nav Links — desktop only ── */}
+      <div className="border-y border-neutral-300">
         <div
           ref={navRowRef}
-          className="hidden lg:flex items-center h-10 gap-0.5 border-t border-stone-100 dark:border-stone-800"
+          className="max-w-[1240px] mx-auto sm:px-6 hidden lg:flex items-center gap-0.5 dark:border-stone-800"
         >
           {NAV_LINKS.map(({ name, children, id, url }) => {
             const isLocked = lockedMenu === id;
@@ -204,8 +225,8 @@ export default function Navbar({ logo }) {
                   }}
                   aria-expanded={isOpen}
                   aria-haspopup="true"
-                  className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 flex items-center gap-0.5
-                  ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-theme-500" : "text-charcoal dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-theme-500"}`}
+                  className={`px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2
+                  ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-theme-700  border-theme-700" : "text-smoke dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-500 border-transparent"}`}
                 >
                   {name}{" "}
                   <span
@@ -232,15 +253,29 @@ export default function Navbar({ logo }) {
                   <Link
                     href={`${BASE_URL}/${url}`}
                     onClick={() => {
-                      if (`/${url}` === pathname) { setLockedMenu(null); setHoveredMenu(null); return; }
+                      if (`/${url}` === pathname) {
+                        setLockedMenu(null);
+                        setHoveredMenu(null);
+                        return;
+                      }
                       setLoadingHref(`${BASE_URL}/${url}`);
                     }}
                     className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-theme-500 transition-colors group/parent"
                   >
                     <span>All {name}</span>
                     <span className="relative w-3 h-3 flex-shrink-0 flex items-center justify-center">
-                      <span className={`absolute text-theme-500 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}>→</span>
-                      <NavSpinner className={loadingHref === `${BASE_URL}/${url}` ? "visible" : "invisible"} />
+                      <span
+                        className={`absolute text-theme-500 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}
+                      >
+                        →
+                      </span>
+                      <NavSpinner
+                        className={
+                          loadingHref === `${BASE_URL}/${url}`
+                            ? "visible"
+                            : "invisible"
+                        }
+                      />
                     </span>
                   </Link>
                   {/* Children */}
@@ -250,13 +285,23 @@ export default function Navbar({ logo }) {
                         key={`desktop-child-nav-item-${c.id}`}
                         href={`${BASE_URL}/${c?.url}`}
                         onClick={() => {
-                          if (`/${c?.url}` === pathname) { setLockedMenu(null); setHoveredMenu(null); return; }
+                          if (`/${c?.url}` === pathname) {
+                            setLockedMenu(null);
+                            setHoveredMenu(null);
+                            return;
+                          }
                           setLoadingHref(`${BASE_URL}/${c?.url}`);
                         }}
                         className="flex items-center justify-between px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-theme-500 transition-colors"
                       >
                         <span>{c.name}</span>
-                        <NavSpinner className={loadingHref === `${BASE_URL}/${c?.url}` ? "visible" : "invisible"} />
+                        <NavSpinner
+                          className={
+                            loadingHref === `${BASE_URL}/${c?.url}`
+                              ? "visible"
+                              : "invisible"
+                          }
+                        />
                       </Link>
                     ))}
                   </div>
@@ -267,12 +312,11 @@ export default function Navbar({ logo }) {
           {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
           <Link
             href={`${BASE_URL}/brand/eloquence`}
-            className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
+            className="px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2 border-transparent text-theme-700 dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-600"
           >
             Current Deals 🔥
           </Link>
         </div>
-
       </div>
 
       {/* ── Mobile Menu — absolute so it overlays content below ── */}
@@ -284,14 +328,22 @@ export default function Navbar({ logo }) {
               return (
                 <div key={`mobile-nav-item-${id}`}>
                   <button
-                    onClick={() => setExpandedMobileMenu(isExpanded ? null : id)}
+                    onClick={() =>
+                      setExpandedMobileMenu(isExpanded ? null : id)
+                    }
                     aria-expanded={isExpanded}
                     className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-theme-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
                   >
                     <span>{name}</span>
-                    <span className={`text-[11px] opacity-50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}>▾</span>
+                    <span
+                      className={`text-[11px] opacity-50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                    >
+                      ▾
+                    </span>
                   </button>
-                  <div className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                  <div
+                    className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+                  >
                     <div className="overflow-hidden">
                       <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-theme-100 dark:border-theme-900 pl-3">
                         <Link
@@ -322,7 +374,7 @@ export default function Navbar({ logo }) {
             <Link
               href={`${BASE_URL}/brand/eloquence`}
               onClick={() => setMenuOpen(false)}
-              className="px-3 py-2.5 text-sm font-semibold text-theme-500"
+              className="font-oswald upppercase px-3 py-2.5 text-sm font-semibold text-theme-500"
             >
               Current Deals 🔥
             </Link>
@@ -331,7 +383,9 @@ export default function Navbar({ logo }) {
               onClick={() => setMenuOpen(false)}
               className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white border-t border-stone-100 dark:border-stone-800"
             >
-              <span className="text-theme-500"><PhoneIcon /></span>
+              <span className="text-theme-500">
+                <PhoneIcon />
+              </span>
               {PHONE}
             </Link>
           </div>

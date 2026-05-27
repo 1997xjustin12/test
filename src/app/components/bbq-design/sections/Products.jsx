@@ -7,6 +7,7 @@ import { useSolanaCategories } from "@/app/context/category";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import Link from "next/link";
 import Image from "next/image";
+import { BASE_URL } from "@/app/lib/helpers";
 
 const PRODUCT_TABS = [
   {
@@ -59,23 +60,29 @@ function ProductCard({ product }) {
     <article
       ref={ref}
       className="
-        opacity-0 translate-y-6 transition-all duration-700
-        rounded-xl overflow-hidden bg-white dark:bg-stone-900
-        border border-stone-100 dark:border-stone-800
-        hover:shadow-[0_12px_48px_rgba(0,0,0,.15)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,.5)]
-        hover:-translate-y-1 group flex flex-col
+        bg-white border border-grate rounded overflow-hidden flex flex-col hover:shadow-lg hover:-translate-y-1 hover:border-stone-300 transition-all group
       "
     >
       {/* Image */}
-      <Link href={product?.url || "#"} aria-label={product?.title} title={product?.title}>
+      <Link
+        href={product?.url || "#"}
+        aria-label={product?.title}
+        title={product?.title}
+      >
         <div className="relative h-48 bg-white">
-          {onSale && (
-            <div className="absolute top-2.5 left-2.5 z-10">
-              <span className="bg-red-500 text-white text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full">
+          {/* Flags */}
+          <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+            {product?.badge && (
+              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-gold uppercase tracking-wide rounded-sm z-[1]">
+                {product?.badge}
+              </span>
+            )}
+            {product?.save_pct && (
+              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-ember uppercase tracking-wide rounded-sm z-[1]">
                 -{product?.save_pct}%
               </span>
-            </div>
-          )}
+            )}
+          </div>
           {product?.image && (
             <Image
               src={product?.image}
@@ -91,25 +98,57 @@ function ProductCard({ product }) {
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="text-[10px] tracking-widest uppercase text-stone-400 dark:text-stone-500 mb-0.5">
+        <p className="text-[10px] text-stone-400 tracking-widest uppercase font-medium line-clamp-1">
           {product?.brand}
         </p>
-        <Link href={product?.url || "#"} aria-label={product?.title} title={product?.title}>
-          <h3 className="font-serif text-base text-charcoal dark:text-white mb-2 leading-snug line-clamp-2">
+        <Link
+          href={product?.url || "#"}
+          aria-label={product?.title}
+          title={product?.title}
+        >
+          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 hover:text-ember transition-colors line-clamp-2">
             {product?.title}
           </h3>
         </Link>
-        <div className="flex items-center gap-0.5 mb-3">
-          <span className="text-amber-400 text-xs">
-            {"★".repeat(Math.round(product?.ratings || 0))}
+
+        <div className="flex items-center gap-1.5 text-xs text-stone-400 mb-2">
+          <span className="text-gold tracking-wider">
+            {"★".repeat(Math.round(product?.ratings))}
+            {"☆".repeat(5 - Math.round(product?.ratings))}
           </span>
-          <span className="text-stone-300 dark:text-stone-600 text-xs">
-            {"★".repeat(5 - Math.round(product?.ratings || 0))}
-          </span>
+          {product?.ratings}
+          {/* ({reviewCount}) */}
         </div>
 
+        <div className="min-h-[46px]">
+          <div className="flex items-baseline gap-2">
+            <span className="font-oswald font-bold text-xl">
+              ${formatPrice(product?.price)}
+            </span>
+            {product?.was && (
+              <span className="text-xs text-stone-400 line-through">
+                ${formatPrice(product.was)}
+              </span>
+            )}
+          </div>
+          {product?.save_amt && (
+            <p className="text-xs font-semibold text-bbq-green mt-0.5">
+              Save ${formatPrice(product.save_amt)}
+            </p>
+          )}
+        </div>
+
+        {/* <p className={`text-xs mt-1.5 flex items-center gap-1 ${lowStock ? 'text-ember-deep' : 'text-bbq-green'}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${lowStock ? 'bg-ember-deep' : 'bg-bbq-green'}`} />
+          {stock}
+        </p> */}
+
+        <button className="mt-3 w-full py-2.5 bg-char text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-ember transition-colors">
+          Add to Cart
+        </button>
+
         {/* Price + Button */}
-        <div className="mt-auto">
+        {/* <div className="mt-auto">
           {onSale ? (
             <div className="flex items-end justify-between gap-2">
               <div>
@@ -144,7 +183,7 @@ function ProductCard({ product }) {
               </AddToCartButtonWrap>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </article>
   );
@@ -153,7 +192,9 @@ function ProductCard({ product }) {
 const MOBILE_INITIAL = 2;
 
 export default function Products({ initialProducts = [] }) {
-  const [products, setProducts] = useState((initialProducts || []).map(i => formatProduct(i)));
+  const [products, setProducts] = useState(
+    (initialProducts || []).map((i) => formatProduct(i)),
+  );
   const [active, setActive] = useState("All");
   const [showAll, setShowAll] = useState(false);
   const hdrRef = useReveal();
@@ -162,101 +203,34 @@ export default function Products({ initialProducts = [] }) {
     setActive(tab?.name);
     setShowAll(false);
     const newProducts = await getProductsByCollectionId(tab?.collection_id);
-    setProducts((newProducts || []).map(i => formatProduct(i)));
+    setProducts((newProducts || []).map((i) => formatProduct(i)));
   };
 
   return (
-    <section
-      id="products"
-      className="py-20 md:py-24 bg-cream dark:bg-stone-950"
-    >
+    <section id="products" className="py-20 md:py-24 bg-ash dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div
-          ref={hdrRef}
-          className="
-            opacity-0 translate-y-6 transition-all duration-700
-            flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10
-          "
-        >
+        <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
           <div>
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 dark:text-theme-500 mb-1.5">
-              Featured Products
+            <p className="font-oswald text-xs font-semibold text-ember tracking-[.14em] uppercase">
+              Limited Quantities
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-4 leading-tight">
-              Blaze Bestsellers
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">
+              Open-Box &amp; Clearance Deals
             </h2>
-            {/* Tabs */}
-            <div className="flex gap-2 flex-wrap">
-              {PRODUCT_TABS.map((t, index) => (
-                <button
-                  key={`product-tabs-${t?.name}-${index}`}
-                  onClick={() => handleChangeTab(t)}
-                  className={`
-                    px-4 py-1.5 rounded-full text-sm font-medium border-2 transition-all duration-200
-                    ${
-                      active === t?.name
-                        ? "border-theme-600 text-theme-600 dark:text-theme-500 bg-theme-600/5"
-                        : "border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 hover:border-theme-500 hover:text-theme-600 dark:hover:text-theme-500"
-                    }
-                  `}
-                >
-                  {t?.name}
-                </button>
-              ))}
-            </div>
           </div>
           <Link
-            href={VIEW_ALL_URL}
-            className="
-            inline-flex items-center gap-2 px-7 py-3 rounded-lg
-            border-2 border-theme-500 text-theme-600 dark:text-theme-500 hover:bg-theme-500 hover:text-white
-            font-semibold text-sm transition-all duration-200 self-start sm:self-auto flex-shrink-0
-          "
+            href={`${BASE_URL}/open-box`}
+            className="font-oswald font-semibold text-sm tracking-wide border-b-2 border-ember pb-0.5 hover:text-ember transition-colors"
           >
-            View All Products
+            Shop All Open Box →
           </Link>
         </div>
 
-        {/* Grid: 2 col mobile → 2 col tablet → 4 col desktop */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {products.length === 0 ? (
-            <>
-              {/* Mobile: 2 skeletons; desktop: 4 */}
-              {[...Array(2)].map((_, i) => (
-                <div key={`skeleton-${i}`} className="rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse" />
-              ))}
-              {[...Array(2)].map((_, i) => (
-                <div key={`skeleton-d-${i}`} className="hidden sm:block rounded-xl bg-stone-100 dark:bg-stone-800 h-64 animate-pulse" />
-              ))}
-            </>
-          ) : (
-            <>
-              {/* Mobile: first 2 always rendered */}
-              {products.slice(0, MOBILE_INITIAL).map((p, i) => (
-                <ProductCard key={`product-${p.title}-${i}`} product={p} />
-              ))}
-              {/* Mobile: rest only rendered after "Show All" click; always shown on sm+ */}
-              {products.slice(MOBILE_INITIAL, 4).map((p, i) => (
-                showAll
-                  ? <ProductCard key={`product-more-${p.title}-${i}`} product={p} />
-                  : <div key={`product-more-${p.title}-${i}`} className="hidden sm:block"><ProductCard product={p} /></div>
-              ))}
-            </>
-          )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {(products || []).slice(0, 4).map((p) => (
+            <ProductCard key={p.name} product={p} />
+          ))}
         </div>
-
-        {/* Show All — mobile only */}
-        {!showAll && products.length > MOBILE_INITIAL && (
-          <div className="mt-8 text-center sm:hidden">
-            <button
-              onClick={() => setShowAll(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-theme-500 text-theme-600 dark:text-theme-500 font-semibold text-sm hover:bg-theme-500 hover:text-white transition-all duration-200"
-            >
-              Show All Products ({products.length - MOBILE_INITIAL} more)
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );

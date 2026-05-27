@@ -15,19 +15,40 @@ export default function MyAccountButton({ className }) {
         prefetch={false}
         href={`${BASE_URL}/login`}
         aria-label="My account"
-        onClick={(e) => { e.preventDefault(); setIsOpen((o) => !o); }}
-        className="w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-charcoal dark:text-white hover:bg-fire hover:text-white transition-all duration-200"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen((o) => !o);
+        }}
+        className="w-10 h-10  dark:bg-stone-800 flex items-center justify-center text-charcoal dark:text-white transition-all duration-200"
       >
-        <UserIcon />
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-7 h-7"
+            >
+              <path d="M5 6 H19 L17 16 L12 21 L7 16 Z" />
+            </svg>
+          </div>
+          <small className="text-[12px] hidden sm:block">Account</small>
+        </div>
       </Link>
 
       {isOpen && (
         <>
           {/* Backdrop — closes on outside tap/click */}
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setIsOpen(false)}
+          />
 
           <div className="absolute right-0 mt-2 w-[220px] bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-xl shadow-2xl overflow-hidden z-50">
-
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700">
               <span className="text-[13px] font-semibold text-charcoal dark:text-white">
@@ -38,7 +59,14 @@ export default function MyAccountButton({ className }) {
                 aria-label="Close"
                 className="p-1 rounded-md text-stone-400 dark:text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
                   <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />
                 </svg>
               </button>
@@ -82,7 +110,9 @@ export default function MyAccountButton({ className }) {
                           key={`acc-benefit-${i}`}
                           className="flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400"
                         >
-                          <span className="text-fire font-bold text-[10px]">✓</span>
+                          <span className="text-fire font-bold text-[10px]">
+                            ✓
+                          </span>
                           {item}
                         </li>
                       ))}
@@ -91,7 +121,6 @@ export default function MyAccountButton({ className }) {
                 )}
               </div>
             )}
-
           </div>
         </>
       )}

@@ -9,53 +9,28 @@ export default function Promo() {
   const copyRef  = useReveal();
   const cardsRef = useReveal();
   return (
-    <section className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0300] via-[#1a0d00] to-[#0a1a10]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/35" />
+    <section className="py-14 sm:py-16">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-      <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center py-20">
+        <Link href={`${BASE_URL}/open-box`}
+          className="relative overflow-hidden rounded min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-8 sm:p-10 bg-gradient-to-br from-[#3a2f23] to-char text-ash hover:-translate-y-1 transition-transform"
+        >
+          <p className="font-oswald text-xs font-semibold tracking-[.12em] text-white/60 uppercase">Scratch &amp; Dent</p>
+          <h3 className="font-oswald font-bold text-2xl sm:text-3xl uppercase mt-1.5 mb-2">Premium Grills, Discount Prices</h3>
+          <p className="text-sm text-white/75 font-light max-w-xs mb-4">Slight cosmetic imperfections, same great grilling power — top brands for way less.</p>
+          <span className="font-oswald font-semibold text-sm tracking-wide flex items-center gap-2">Shop All Open Box →</span>
+        </Link>
 
-          {/* Copy */}
-          <div ref={copyRef} className="opacity-0 translate-y-6 transition-all duration-700">
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-500 mb-3">Limited-Time Deals</p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-white leading-tight mb-4">
-              Name Your Budget.<br />We'll Find Your Fireplace.
-            </h2>
-            <p className="text-white/60 text-base mb-7 leading-relaxed">
-              From open box savings to close-out deals, we make luxury heating accessible. Talk to an expert and discover your best deal today.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link prefetch={false} href={PHONE_HREF} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-white font-semibold transition-all duration-200 hover:-translate-y-0.5">
-                Call to Save Now
-              </Link>
-              <Link prefetch={false} href={`${BASE_URL}/close-out-deals`} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold transition-all duration-200">
-                Browse All Deals
-              </Link>
-            </div>
-          </div>
-
-          {/* Promo cards */}
-          <div ref={cardsRef} className="flex flex-col gap-3 opacity-0 translate-y-6 transition-all duration-700 delay-150">
-            {PROMO_CARDS.map(({ icon, title, desc, url }) => (
-              <Link key={`promo-back-links-${title}`} className="
-                flex items-center gap-4 px-5 py-4 rounded-xl
-                bg-white/10 border border-white/10 md:backdrop-blur-sm
-              "
-              prefetch={false}
-              href={url || "#"}
-              >
-                <span className="text-2xl sm:text-3xl flex-shrink-0">{icon}</span>
-                <div>
-                  <h4 className="text-white text-sm font-semibold mb-0.5">{title}</h4>
-                  <p className="text-white/45 text-xs">{desc}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <Link href={`${BASE_URL}/package-deals`}
+          className="relative overflow-hidden rounded min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-8 sm:p-10 bg-gradient-to-br from-ember-deep to-[#7a2606] text-ash hover:-translate-y-1 transition-transform"
+        >
+          <p className="font-oswald text-xs font-semibold tracking-[.12em] text-white/60 uppercase">Complete Setups</p>
+          <h3 className="font-oswald font-bold text-2xl sm:text-3xl uppercase mt-1.5 mb-2">Outdoor Kitchen Packages</h3>
+          <p className="text-sm text-white/75 font-light max-w-xs mb-4">Grill, storage and stylish extras bundled together — less planning, more grilling.</p>
+          <span className="font-oswald font-semibold text-sm tracking-wide flex items-center gap-2">Shop Package Deals →</span>
+        </Link>
       </div>
     </section>
+    
   );
 }

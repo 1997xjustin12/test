@@ -37,6 +37,16 @@ export default {
         charcoal: "#1A1A1A",
         cream: "#FAF7F4",
         sand: "#F0E8DF",
+        // BBQ
+        char:       '#18130f',
+        ember:      '#e2541d',
+        'ember-deep':'#b83c0e',
+        ash:        '#f4f1ec',
+        smoke:      '#2a241e',
+        paper:      '#fdfbf7',
+        grate:      '#d9d2c6',
+        'bbq-green':'#2f7d4f',
+        gold:       '#d99b1c',
       },
       container: {
         // padding: '15px', // Add padding

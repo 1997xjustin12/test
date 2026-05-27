@@ -16,14 +16,19 @@ import ConditionalZohoButton from "@/app/components/widget/ConditionalZohoButton
 import LazyZohoLoader from "@/app/components/widget/LazyZohoLoader";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { ISBBQ } from "@/app/lib/helpers";
+import Script from "next/script";
+
+// SOLANA COMPONENTS
 import Topbar from "@/app/components/new-design/layout/Topbar";
 import Navbar from "@/app/components/new-design/layout/Navbar";
 import Footer from "@/app/components/new-design/layout/Footer";
-import { GoogleAnalytics } from "@next/third-parties/google";
-import Script from "next/script";
 
-const isBBQ = true;
-
+// BBQ COMPONENTS
+import BBQTopbar from "@/app/components/bbq-design/layout/Topbar";
+import BBQNavbar from "@/app/components/bbq-design/layout/Navbar";
+import BBQFooter from "@/app/components/bbq-design/layout/Footer";
 
 const InterFont = Inter({
   subsets: ["latin"],
@@ -53,7 +58,7 @@ export const sora = Sora({
   display: 'swap',
 })
 
-const fontClass = `${isBBQ ? `${oswald.variable} ${sora.variable}`: `${InterFont.variable} ${playfairDisplay.variable}`}`
+const bodyClass = `${ISBBQ ? `${oswald.variable} ${sora.variable} bg-paper`: `${InterFont.variable} ${playfairDisplay.variable}`}`
 
 export const metadata = await generateMetadata();
 
@@ -136,7 +141,7 @@ export default async function MarketLayout({ children }) {
         />
       </head>
       <body
-        className={`antialiased ${fontClass}`}
+        className={`antialiased ${bodyClass}`}
       >
         <AuthProvider>
           <CategoriesProvider
@@ -149,12 +154,12 @@ export default async function MarketLayout({ children }) {
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        <Topbar />
-                        <Navbar logo={redisLogo} />
+                        { ISBBQ ? <BBQTopbar /> : <Topbar />}
+                        { ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
-                        <Footer logo={redisLogo} />
+                        { ISBBQ ? <BBQFooter logo={redisLogo} />: <Footer logo={redisLogo} />}
                         <ConditionalZohoButton />
                         <LazyZohoLoader />
                         {process.env.NEXT_PUBLIC_GA_ID && (

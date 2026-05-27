@@ -34,154 +34,84 @@ const CARDS = [
 // Option B: "Call. Tell Us Your Budget. Save. →"
 // Option C: "Tell Us What You Need →"
 
-function TopbarRow({ cta, label }) {
-  return (
-    <div className="bg-charcoal dark:bg-black py-2.5 text-[11px] border-b border-white/5 last:border-0">
-      <div className="max-w-[1240px] mx-auto px-6">
-        <div className="hidden md:flex items-center justify-between">
-          <h2 className="font-normal tracking-wide text-xs">
-            <span className="text-white font-semibold uppercase tracking-[.1em] italic">
-              ✦ Name Your Price
-            </span>
-            <span className="text-neutral-400 mx-3">—</span>
-            <span className="text-white/50">Lowest Prices Guaranteed</span>
-          </h2>
+// function TopbarRow({ cta, label }) {
+//   return (
+//     <div className="bg-charcoal dark:bg-black py-2.5 text-[11px] border-b border-white/5 last:border-0">
+//       <div className="max-w-[1240px] mx-auto px-6">
+//         <div className="hidden md:flex items-center justify-between">
+//           <h2 className="font-normal tracking-wide text-xs">
+//             <span className="text-white font-semibold uppercase tracking-[.1em] italic">
+//               ✦ Name Your Price
+//             </span>
+//             <span className="text-neutral-400 mx-3">—</span>
+//             <span className="text-white/50">Lowest Prices Guaranteed</span>
+//           </h2>
 
-          <Link
-            href={`tel:${STORE_CONTACT}`}
-            className="text-theme-500 hover:text-theme-600 transition-colors duration-150 tracking-wide hover:underline"
-          >
-            {cta}
-          </Link>
-        </div>
+//           <Link
+//             href={`tel:${STORE_CONTACT}`}
+//             className="text-theme-500 hover:text-theme-600 transition-colors duration-150 tracking-wide hover:underline"
+//           >
+//             {cta}
+//           </Link>
+//         </div>
 
-        <h2 className="md:hidden text-center font-normal">
-          <span className="text-white font-semibold uppercase tracking-[.1em] text-[10px]">
-            ✦ Name Your Price
-          </span>
-          <span className="text-white/20 mx-2.5">—</span>
-          <span className="text-white/50 font-semibold uppercase tracking-[.1em] text-[10px]">Lowest Prices Guaranteed</span>
-        </h2>
-      </div>
-    </div>
-  );
-}
+//         <h2 className="md:hidden text-center font-normal">
+//           <span className="text-white font-semibold uppercase tracking-[.1em] text-[10px]">
+//             ✦ Name Your Price
+//           </span>
+//           <span className="text-white/20 mx-2.5">—</span>
+//           <span className="text-white/50 font-semibold uppercase tracking-[.1em] text-[10px]">Lowest Prices Guaranteed</span>
+//         </h2>
+//       </div>
+//     </div>
+//   );
+// }
 
 
 export default function Hero({ background }) {
   return (
-    <section className="relative min-h-[85vh] md:min-h-[92vh] flex items-center overflow-hidden">
-      <div className="absolute top-0 left-0 bg-white z-10 w-full">
-        <TopbarRow label="A:" cta="Call Now & Start Saving →" />
-      </div>
-      {/* Fallback gradient — visible while image loads or if it fails */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1a0600] via-[#3d1208] to-[#0d0300]" />
-      {background}
-      {/* Mobile: uniform dark overlay — Desktop: directional so right side is lighter for cards */}
-      <div className="absolute inset-0 bg-black/75 md:bg-gradient-to-r md:from-black/90 md:via-black/70 md:to-black/30" />
+    <section className="relative overflow-hidden bg-gradient-to-br from-smoke via-char to-[#100c08] text-ash">
+      {/* Glow overlays */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_30%,rgba(226,84,29,.34),transparent_45%),radial-gradient(circle_at_90%_80%,rgba(217,155,28,.20),transparent_40%)] pointer-events-none" />
 
-      <div className="relative z-10 max-w-[1240px] mx-auto px-6 sm:px-6 w-full">
-        <div className="grid gap-14 items-center py-16 md:py-20 grid-cols-1 md:grid-cols-2">
-          {/* ── Copy — centered on mobile, left-aligned on desktop ── */}
-          <div className="text-center md:text-left">
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 mb-3">
-              Premium Outdoor Solutions
-            </p>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] text-white leading-[1.15] mb-5">
-              Your Dream
-              <br />
-              Kitchen <em className="not-italic text-theme-600">One</em>
-              <br />
-              Call Away
-            </h1>
-            <p className="text-white/70 text-base lg:text-lg max-w-md mb-9 leading-relaxed mx-auto md:mx-0">
-              From stunning gas fireplaces to all-weather outdoor kitchens — we
-              bring warmth, beauty, and craftsmanship to every space.
-            </p>
+      <div className="relative max-w-[1240px] mx-auto px-4 sm:px-6 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
-            {/* CTAs */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
-              <Link
-                href={`${BASE_URL}/fireplaces`}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-gray-900 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-500/30"
-              >
-                Shop All Products
-              </Link>
-              <Link
-                href={`tel:${STORE_CONTACT}`}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold transition-all duration-200"
-              >
-                Get Expert Advice
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="flex justify-center md:justify-start gap-8 mb-5">
-              {STATS.map(({ num, label }) => (
-                <div key={label}>
-                  <div className="font-serif text-3xl font-bold text-white">
-                    {num}
-                  </div>
-                  <div className="text-[11px] tracking-widest uppercase text-white/60 mt-0.5">
-                    {label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              {TRUST.map((t) => (
-                <div
-                  key={t}
-                  className="flex items-center gap-1.5 text-white/55 text-xs before:content-['✓'] before:text-theme-600 before:font-bold"
-                >
-                  {t}
-                </div>
-              ))}
-            </div>
+        {/* Copy */}
+        <div>
+          <div className="flex flex-wrap gap-2 mb-5">
+            <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 bg-ember border border-ember rounded-sm uppercase">★ Outlet Pricing</span>
+            <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 border border-white/30 rounded-sm uppercase">4.4 ★ · 122 Reviews</span>
+            <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 border border-white/30 rounded-sm uppercase">Authorized Dealer</span>
           </div>
-
-          {/* ── Right: Feature Cards — hidden on mobile ── */}
-          <div className="hidden md:flex flex-col gap-3 hero-cards-reveal">
-            {CARDS.map(({ image, url, title, sub }, index) => (
-              <Link
-                key={title}
-                href={url}
-                className="
-                rounded-2xl overflow-hidden
-                bg-white/7 backdrop-blur-md
-                border border-white/10
-                shadow-[0_8px_32px_rgba(0,0,0,.3)]
-                hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(0,0,0,.4)]
-                transition-all duration-300 group
-              "
-              >
-                <div className="h-40 bg-white relative overflow-hidden">
-                  <Image
-                    src={image}
-                    alt={title}
-                    fill
-                    priority={index === 0}
-                    sizes="(max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="px-5 py-3.5 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white text-[15px] font-semibold">
-                      {title}
-                    </h3>
-                    <p className="text-white/50 text-xs mt-0.5">{sub}</p>
-                  </div>
-                  <div className="w-8 h-8 rounded-lg bg-theme-600 flex items-center justify-center text-white text-sm group-hover:bg-theme-500 transition-colors">
-                    →
-                  </div>
-                </div>
-              </Link>
-            ))}
+          <h1 className="font-oswald font-bold text-4xl sm:text-5xl xl:text-6xl uppercase leading-none">
+            Premium Grills.<br />
+            <em className="text-ember not-italic">Outlet Prices.</em>
+          </h1>
+          <p className="mt-5 mb-8 text-base sm:text-lg text-stone-400 font-light max-w-md leading-relaxed">
+            Top-brand gas grills, built-ins and outdoor kitchens — including inspected open-box units at up to 35% off retail.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/open-box" className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 bg-ember text-white rounded-sm hover:bg-ember-deep transition-all hover:-translate-y-0.5">
+              Shop Open-Box Deals →
+            </Link>
+            <Link href="/grills" className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 border border-white/40 text-ash rounded-sm hover:bg-white/10 transition-all hover:-translate-y-0.5">
+              Browse All Grills
+            </Link>
           </div>
         </div>
+
+        {/* Featured product card */}
+        <div className="bg-paper text-char rounded p-6 shadow-2xl rotate-[1.5deg] max-w-sm mx-auto lg:mx-0">
+          <span className="inline-block bg-bbq-green text-white font-oswald font-semibold text-xs tracking-widest px-2 py-1 uppercase">Open Box · Save $1,026</span>
+          <div className="flex items-center justify-center h-44 text-7xl bg-ash rounded mt-3 mb-3">🔥</div>
+          <p className="font-sora font-medium text-sm leading-snug">Blaze Premium LTE 32" 4-Burner Built-In</p>
+          <div className="flex items-baseline gap-3 mt-2">
+            <span className="font-oswald font-bold text-3xl text-ember-deep">$1,849</span>
+            <span className="text-sm text-stone-400 line-through">$2,874.99</span>
+          </div>
+          <p className="text-xs font-semibold text-bbq-green mt-1">You save $1,025.99 (36%)</p>
+        </div>
+
       </div>
     </section>
   );
