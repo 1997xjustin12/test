@@ -33,10 +33,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        fire:     { DEFAULT: '#E85D26', light: '#F97316', accessible: '#C44B18' },
-        charcoal: '#1A1A1A',
-        cream:    '#FAF7F4',
-        sand:     '#F0E8DF',
+        fire: { DEFAULT: "#E85D26", light: "#F97316", accessible: "#C44B18" },
+        charcoal: "#1A1A1A",
+        cream: "#FAF7F4",
+        sand: "#F0E8DF",
       },
       container: {
         // padding: '15px', // Add padding
@@ -94,6 +94,8 @@ export default {
       fontFamily: {
         inter: "var(--font-inter)",
         "playfair-display": "var(--font-playfair-display)",
+        oswald: ["var(--font-oswald)"],
+        sora: ["var(--font-sora)"],
       },
     },
   },

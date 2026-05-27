@@ -3,7 +3,7 @@ import { unstable_cache } from "next/cache";
 import "@/app/globals.css";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { redis, keys } from "@/app/lib/redis";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Oswald, Sora } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
@@ -22,6 +22,9 @@ import Footer from "@/app/components/new-design/layout/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 
+const isBBQ = true;
+
+
 const InterFont = Inter({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
@@ -32,13 +35,25 @@ const InterFont = Inter({
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "700"],
-  // "optional" tells the browser: paint with whatever font is ready right now,
-  // never swap later. This collapses LCP and FCP to the same moment (~1.4 s)
-  // instead of waiting for the web font swap (was causing LCP at 3.9 s).
-  // Repeat visitors still see Playfair Display because next/font preloads it.
   display: "optional",
   variable: "--font-playfair-display",
 });
+
+export const oswald = Oswald({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-oswald',
+  display: 'swap',
+})
+
+export const sora = Sora({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-sora',
+  display: 'swap',
+})
+
+const fontClass = `${isBBQ ? `${oswald.variable} ${sora.variable}`: `${InterFont.variable} ${playfairDisplay.variable}`}`
 
 export const metadata = await generateMetadata();
 
@@ -121,7 +136,7 @@ export default async function MarketLayout({ children }) {
         />
       </head>
       <body
-        className={`antialiased ${InterFont.variable} ${playfairDisplay.variable}`}
+        className={`antialiased ${fontClass}`}
       >
         <AuthProvider>
           <CategoriesProvider
