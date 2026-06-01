@@ -17,6 +17,24 @@
     --pfd-filter-nav-width: 280px;
     --pfd-product-grid-gap: 10px;
     --pfd-product-grid-cols: 1;
+
+    /* BBQ palette — mirrors tailwind.config.ts theme.extend.colors */
+    --char:       #18130f;
+    --ember:      #e2541d;
+    --ember-deep: #b83c0e;
+    --ash:        #f4f1ec;
+    --smoke:      #2a241e;
+    --paper:      #fdfbf7;
+    --grate:      #d9d2c6;
+    --bbq-green:  #2f7d4f;
+    --gold:       #d99b1c;
+  }
+}
+
+
+@layer base {
+  .bbqgrilloutlet {
+    font-family: var(--font-sora);
   }
 }
 

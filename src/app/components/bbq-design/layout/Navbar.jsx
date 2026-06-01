@@ -146,9 +146,9 @@ export default function Navbar({ logo }) {
           </Link> */}
           <Link
             href="/"
-            className="font-oswald font-bold text-2xl tracking-wide shrink-0"
+            className="font-bold text-2xl tracking-wide shrink-0 font-oswald"
           >
-            BBQGrill<span className="text-ember">Outlet</span>
+            BBQGrill<span className="text-theme-600 font-oswald">Outlet</span>
             <small className="block font-sora font-normal text-[9px] tracking-[.35em] text-stone-400 uppercase">
               Outdoor Kitchen Experts
             </small>

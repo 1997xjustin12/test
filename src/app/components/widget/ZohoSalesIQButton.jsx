@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { ISBBQ } from "@/app/lib/helpers";
 
 function isZohoWindowOpen() {
   const candidates = [
@@ -54,10 +55,10 @@ export default function ZohoSalesIQButton() {
   if (chatOpen) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 flex flex-col items-end gap-1" style={{ zIndex: 999999 }}>
+    <div className="fixed bottom-5 right-5 flex flex-col items-end" style={{ zIndex: 999999 }}>
       <button
         onClick={handleClick}
-        className="flex items-center gap-1.5 bg-white text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-md cursor-pointer hover:bg-green-50 hover:shadow-lg transition-all duration-200 group"
+        className={`flex w-full items-center gap-1.5 text-xs font-semibold px-2.5 py-1 cursor-pointer  transition-all duration-200 group ${ISBBQ ? "bg-charcoal text-white":"shadow-md hover:bg-green-50 hover:shadow-lg text-green-700 rounded-full bg-white"}`}
       >
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -69,10 +70,10 @@ export default function ZohoSalesIQButton() {
       <button
         onClick={handleClick}
         aria-label="Open live chat"
-        className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold text-white
-          bg-theme-600 hover:bg-theme-500 transition-all duration-300 hover:-translate-y-0.5
+        className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white
+          bg-theme-600 hover:bg-theme-500 transition-all duration-300 
           shadow-[0_4px_20px_rgba(232,93,38,0.4)]
-          animate-[pulse_2.5s_ease-in-out_infinite]"
+          animate-[pulse_2.5s_ease-in-out_infinite] ${ISBBQ ? "":"rounded-full hover:-translate-y-0.5"}`}
       >
         <PhoneIcon size={15} />
         Call {STORE_CONTACT}

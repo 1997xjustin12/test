@@ -58,7 +58,7 @@ export const sora = Sora({
   display: 'swap',
 })
 
-const bodyClass = `${ISBBQ ? `${oswald.variable} ${sora.variable} bg-paper`: `${InterFont.variable} ${playfairDisplay.variable}`}`
+const bodyClass = `${ISBBQ ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`: `${InterFont.variable} ${playfairDisplay.variable}`}`
 
 export const metadata = await generateMetadata();
 

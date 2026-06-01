@@ -38,7 +38,7 @@ function HeroBanner({config}) {
           <Link href="/" className="hover:text-neutral-300 transition-colors">Home</Link>
           {!!breadcrumbs && breadcrumbs.map((crumb, index) => (
                 <React.Fragment key={crumb.url}>
-                <span>/</span>
+                <span>❯</span>
                 {index === breadcrumbs.length - 1 ? (
                     // The last item is usually plain text (active page)
                     <span className="text-neutral-300">{crumb.name}</span>
@@ -54,7 +54,7 @@ function HeroBanner({config}) {
                 </React.Fragment>
             ))}
         </nav>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{fontFamily:"Georgia, serif"}}>{breadcrumbs?.[breadcrumbs.length - 1]?.name}</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 uppercase font-oswald">{breadcrumbs?.[breadcrumbs.length - 1]?.name}</h1>
       </div>
     </div>
   );}

@@ -1,7 +1,7 @@
 // PRIMARILY USED IN /[slug] page
 import React from "react";
-import HeroBanner from "@/app/components/new-design/sections/gallery/HeroBanner";
-import SubcategoryTabs from "@/app/components/new-design/sections/gallery/SubcategoryTabs";
+import HeroBanner from "@/app/components/bbq-design/sections/gallery/HeroBanner";
+import SubcategoryTabs from "@/app/components/bbq-design/sections/gallery/SubcategoryTabs";
 // import PerfComparisonLayout from "@/app/components/dev/PerfComparisonLayout";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 

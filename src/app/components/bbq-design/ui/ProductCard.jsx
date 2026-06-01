@@ -17,7 +17,7 @@ import { Eos3DotsLoading } from "@/app/components/icons/lib";
 
 
 const BADGE_STYLES = {
-  bestseller: "bg-orange-500 text-white",
+  bestseller: "bg-theme-600 text-white",
   sale: "bg-green-600 text-white",
   new: "bg-blue-600 text-white",
   openbox: "bg-violet-600 text-white",
@@ -69,7 +69,7 @@ function ProductCard({ hit, page_details, onCompare }) {
   }
 
   return (
-    <article className="group bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-200/60 dark:hover:shadow-black/40 hover:-translate-y-1 transition-all duration-300">
+    <article className="group bg-white dark:bg-neutral-900 border border-grate dark:border-neutral-800 overflow-hidden hover:shadow-xl hover:shadow-neutral-200/60 dark:hover:shadow-black/40 hover:-translate-y-1 transition-all duration-300">
       {/* Image */}
       <div className="relative h-52 bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
         <Link aria-label={product?.name} title={product?.name} href={product?.url} prefetch={false}>
@@ -89,7 +89,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         {/* wishlist */}
         {/* <button
           onClick={() => setWished(!wished)}
-          className={`absolute top-3 right-3 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${wished ? "bg-white dark:bg-neutral-800 text-orange-500" : "bg-white/80 dark:bg-neutral-800/80 text-neutral-400 hover:text-orange-500"}`}
+          className={`absolute top-3 right-3 w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center transition-colors z-10 ${wished ? "bg-white dark:bg-neutral-800 text-theme-600" : "bg-white/80 dark:bg-neutral-800/80 text-neutral-400 hover:text-theme-600"}`}
         >
           <svg
             className="w-4 h-4"
@@ -104,7 +104,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         {/* compare */}
         {/* <button
           onClick={() => onCompare(product)}
-          className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-neutral-700 dark:text-neutral-200 px-2.5 py-1 rounded-lg font-medium hover:bg-orange-500 hover:text-white transition-colors z-10"
+          className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm text-neutral-700 dark:text-neutral-200 px-2.5 py-1 rounded-lg font-medium hover:bg-theme-500 hover:text-white transition-colors z-10"
         >
           + Compare
         </button> */}
@@ -120,7 +120,6 @@ function ProductCard({ hit, page_details, onCompare }) {
         <Link aria-label={product?.name} title={product?.name} href={product?.url} prefetch={false}>
           <h2
             className="line-clamp-2 min-h-[38.5px] text-sm font-semibold text-neutral-900 dark:text-white leading-snug mb-2"
-            style={{ fontFamily: "Georgia, serif" }}
           >
             {product?.name}
           </h2>
@@ -145,18 +144,18 @@ function ProductCard({ hit, page_details, onCompare }) {
               </div>
             ) : (
               <>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-lg font-bold text-neutral-900 dark:text-white">
+                <div className={`flex items-baseline gap-1.5`}>
+                  <span className="text-lg font-bold text-neutral-900 dark:text-white font-oswald">
                     ${formatPrice(product?.price)}
                   </span>
                   {!!product?.was && (
-                    <span className="text-xs text-neutral-400 line-through">
+                    <span className="text-xs text-neutral-400 line-through font-oswald">
                       ${formatPrice(product?.was)}
                     </span>
                   )}
                 </div>
                 {!!(product?.was && product?.was > product?.price) && (
-                  <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-0.5">
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-0.5 font-oswald">
                     Save ${formatPrice(product.was - product.price)}
                   </p>
                 )}
@@ -165,11 +164,12 @@ function ProductCard({ hit, page_details, onCompare }) {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-2">
+        <div className="flex mt-2">
           <button
+            title="Quick View"
             onClick={() => viewItem(hit)}
             aria-label="Quick view"
-            className="w-9 h-9 min-w-9 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors"
+            className="w-9 h-9 min-w-9  bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:bg-neutral-800 dark:hover:bg-neutral-600 hover:text-white dark:hover:text-white transition-colors"
           >
             <svg
               className="w-4 h-4"
@@ -185,7 +185,7 @@ function ProductCard({ hit, page_details, onCompare }) {
             <button
               onClick={handleAdd}
               disabled={atcLoading}
-              className={`relative w-full flex justify-center   items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors bg-orange-500 hover:bg-orange-600 text-white`}
+              className={`relative w-full uppercase font-oswald flex justify-center items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-colors bg-theme-600 hover:bg-theme-700 text-white`}
             >
               {
                 atcLoading && <div>
@@ -194,16 +194,7 @@ function ProductCard({ hit, page_details, onCompare }) {
               }
               {
                 !atcLoading && <>
-                
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
-              </svg>
+                🛒&nbsp;
               Add to Cart</>
               }
             </button>

@@ -28,7 +28,7 @@ function SubcategoryTabsDropdown({ subs }) {
   }, []);
 
   const tabClass = (url) =>
-    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 ${
+    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-oswald ${
       active_url === url
         ? "border-orange-500 text-orange-600 dark:text-orange-400"
         : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-600"
@@ -67,7 +67,7 @@ function SubcategoryTabsDropdown({ subs }) {
           <div className="relative flex-shrink-0" ref={dropdownRef}>
             <button
               onClick={() => setOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+              className={`flex font-oswald items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                 activeInOverflow
                   ? "border-orange-500 text-orange-600 dark:text-orange-400"
                   : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300"
@@ -84,7 +84,7 @@ function SubcategoryTabsDropdown({ subs }) {
                     key={`desk-overflow-${i}`}
                     href={s?.url || "#"}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm font-medium transition-colors ${
+                    className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm font-medium transition-colors font-oswald ${
                       active_url === s?.url
                         ? "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30"
                         : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"

@@ -4,48 +4,48 @@ import { BASE_URL, formatPrice, formatProduct } from "@/app/lib/helpers";
 import PixelViewContent from "@/app/components/widget/PixelViewContent";
 
 // Above-fold — load immediately
-import Breadcrumb from "@/app/components/new-design/sections/sp/Breadcrumb";
-import Topbar from "@/app/components/new-design/sections/sp/Topbar";
-import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
-import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
-import CompareTable from "@/app/components/new-design/sections/sp/CompareTable";
-import StickyCTA from "@/app/components/new-design/sections/sp/StickyCTA";
-import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
+import Breadcrumb from "@/app/components/bbq-design/sections/sp/Breadcrumb";
+import Topbar from "@/app/components/bbq-design/sections/sp/Topbar";
+import ImageGallery from "@/app/components/bbq-design/sections/sp/ImageGallery";
+import ProductInfo from "@/app/components/bbq-design/sections/sp/ProductInfo";
+import CompareTable from "@/app/components/bbq-design/sections/sp/CompareTable";
+import StickyCTA from "@/app/components/bbq-design/sections/sp/StickyCTA";
+import MobileStickyCTA from "@/app/components/bbq-design/sections/sp/MobileStickyCTA";
 
 // Below-fold — lazy loaded to reduce initial JS bundle.
 // Each dynamic() gets its own loading:()=>null so chunk-fetch suspense is
 // contained per-section and never bubbles up to the page-level Suspense
 // boundary (which would flash ProductPlaceholder over the whole page).
 const CollectionStrip = dynamic(
-  () => import("@/app/components/new-design/sections/sp/CollectionStrip"),
+  () => import("@/app/components/bbq-design/sections/sp/CollectionStrip"),
   { loading: () => null },
 );
 const DescriptionSection = dynamic(
-  () => import("@/app/components/new-design/sections/sp/DescriptionSection"),
+  () => import("@/app/components/bbq-design/sections/sp/DescriptionSection"),
   { loading: () => null },
 );
 const SpecsShipping = dynamic(
-  () => import("@/app/components/new-design/sections/sp/SpecsShipping"),
+  () => import("@/app/components/bbq-design/sections/sp/SpecsShipping"),
   { loading: () => null },
 );
 const ReviewsSection = dynamic(
-  () => import("@/app/components/new-design/sections/sp/ReviewsSection"),
+  () => import("@/app/components/bbq-design/sections/sp/ReviewsSection"),
   { loading: () => null },
 );
 const FAQSection = dynamic(
-  () => import("@/app/components/new-design/sections/sp/FAQSection"),
+  () => import("@/app/components/bbq-design/sections/sp/FAQSection"),
   { loading: () => null },
 );
 const SupportCTA = dynamic(
-  () => import("@/app/components/new-design/sections/sp/SupportCTA"),
+  () => import("@/app/components/bbq-design/sections/sp/SupportCTA"),
   { loading: () => null },
 );
 const ProductGrid = dynamic(
-  () => import("@/app/components/new-design/sections/sp/ProductGrid"),
+  () => import("@/app/components/bbq-design/sections/sp/ProductGrid"),
   { loading: () => null },
 );
 const RecentViews = dynamic(
-  () => import("@/app/components/new-design/sections/sp/RecentViews"),
+  () => import("@/app/components/bbq-design/sections/sp/RecentViews"),
   { loading: () => null },
 );
 

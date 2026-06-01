@@ -9,10 +9,11 @@ import { unstable_cache } from "next/cache";
 
 import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
-import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX } from "@/app/lib/helpers";
+import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX, ISBBQ } from "@/app/lib/helpers";
 import { fetchCollectionsCount } from "@/app/lib/fn_server";
 
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
+import BBQProductGallery from "@/app/components/bbq-design/page/ProductGallery";
 import BaseNavPage from "@/app/components/template/BaseNavItemPage";
 
 // Computes the Elasticsearch filter string from page metadata.
@@ -168,6 +169,16 @@ export default async function GenericCategoryPage({ params }) {
       url: `${BASE_URL}/${item?.url}`,
     };
   });
+
+  if(ISBBQ) {
+    return <BBQProductGallery
+      slug={slug}
+      config={{ root: rootNav, url, subs }}
+      filterType={pageData?.filter_type ?? null}
+      initialFilterString={filterString}
+      initialHits={initialHits}
+    />
+  }
 
   return (
     <NewProductGallery

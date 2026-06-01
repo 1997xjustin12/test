@@ -5,7 +5,9 @@ import { useSolanaCategories } from "@/app/context/category";
 import { useSearch } from "@/app/context/search";
 import { usePathname } from "next/navigation";
 import SPProductCard from "@/app/components/new-design/ui/ProductCard";
+import BBQProductCard from "@/app/components/bbq-design/ui/ProductCard";
 import ProductsSectionLoader from "@/app/components/new-design/sections/gallery/ProductsSectionLoader";
+import { ISBBQ } from "@/app/lib/helpers";
 
 import {
   InstantSearch,
@@ -47,7 +49,6 @@ const searchClient = Client({
       ? `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`
       : "/api/es/searchkit",
 });
-
 
 // Registers a single attribute with InstantSearch via the hook connector —
 // same effect as a hidden <RefinementList> but with no DOM output.
@@ -228,6 +229,67 @@ const FilterContent = memo(({ filters }) => (
 ));
 FilterContent.displayName = "FilterContent";
 
+const CollapsedIcon = () => {
+  if (ISBBQ) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path fill="currentColor" d="m7 10l5 5l5-5z" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      className="text-[#6e6e6e]"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="currentColor"
+        d="m12 15.41l5.71-5.7l-1.42-1.42l-4.29 4.3l-4.29-4.3l-1.42 1.42z"
+      />
+    </svg>
+  );
+};
+
+const ExpandedIcon = () => {
+  if (ISBBQ) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        className="text-smoke"
+      >
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path fill="currentColor" d="m7 15l5-5l5 5z" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      className="text-[#6e6e6e]"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="currentColor"
+        d="m7.71 15.71l4.29-4.3l4.29 4.3l1.42-1.42L12 8.59l-5.71 5.7z"
+      />
+    </svg>
+  );
+};
+
 const FilterGroup = ({ header, children }) => {
   const [expanded, setExpanded] = useState(true);
 
@@ -235,36 +297,10 @@ const FilterGroup = ({ header, children }) => {
     <div className="panel">
       <button
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center gap-[20px] justify-between px-4 py-2 border-t"
+        className={`w-full flex items-center gap-[20px] justify-between px-4 py-2 ${expanded ? "border-y" : "border-t"} ${ISBBQ ? "border-grate" : ""}`}
       >
         <h5 className=" font-semibold text-[13px] text-stone-800">{header}</h5>
-        {expanded ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            className="text-[#6e6e6e]"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="currentColor"
-              d="m7.71 15.71l4.29-4.3l4.29 4.3l1.42-1.42L12 8.59l-5.71 5.7z"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            className="text-[#6e6e6e]"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="currentColor"
-              d="m12 15.41l5.71-5.7l-1.42-1.42l-4.29 4.3l-4.29-4.3l-1.42 1.42z"
-            />
-          </svg>
-        )}
+        {expanded ? <ExpandedIcon /> : <CollapsedIcon />}
       </button>
       <div className={`pl-4 py-1 ${expanded ? "" : "hidden"}`}>{children}</div>
     </div>
@@ -381,7 +417,8 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
 
   // Show the pre-fetched static grid until InstantSearch has its own results.
   // Once live results arrive the swap is invisible — same products, same order.
-  const hasLiveResults = results && results.nbHits !== undefined && results.nbHits > 0;
+  const hasLiveResults =
+    results && results.nbHits !== undefined && results.nbHits > 0;
   const showStaticHits = !hasLiveResults && !!initialHits?.length;
 
   // Memoized so FilterContent doesn't re-render when unrelated state changes
@@ -392,7 +429,7 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
 
   // Memoized so Hits doesn't remount all 30 cards on unrelated InnerUI re-renders
   const hitComponent = useCallback(
-    (props) => <SPProductCard {...props} page_details={page_details} />,
+    (props) => ISBBQ ? <BBQProductCard {...props} page_details={page_details} />:<SPProductCard {...props} page_details={page_details} />,
     [page_details],
   );
 
@@ -465,8 +502,14 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
       <div className="search-panel flex pb-[50px] gap-[20px]">
         {/* Desktop filter sidebar */}
         <div className="search-panel__filters pfd-filter-section relative">
-          <div className="border rounded-xl bg-white">
-            <div className="text-sm font-semibold p-4">Filters</div>
+          <div
+            className={`overflow-hidden ${ISBBQ ? "border border-grate bg-white" : "border rounded-xl bg-white"}`}
+          >
+            <div
+              className={`text-sm font-semibold p-4 ${ISBBQ ? "font-oswald text-white bg-charcoal" : ""}`}
+            >
+              Filters
+            </div>
             <FilterContent filters={filters} />
           </div>
           <div className="relative w-full aspect-w-3 aspect-h-4 mt-2">
@@ -521,7 +564,10 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
                 { label: "Most Popular", value: `${es_index}_popular` },
                 { label: "Newest", value: `${es_index}_newest` },
                 { label: "Price: Low to High", value: `${es_index}_price_asc` },
-                { label: "Price: High to Low", value: `${es_index}_price_desc` },
+                {
+                  label: "Price: High to Low",
+                  value: `${es_index}_price_desc`,
+                },
               ]}
             />
           </div>
@@ -656,7 +702,11 @@ function urlHasActiveParams() {
   if (typeof window === "undefined") return false;
   const p = new URL(window.location.href).searchParams;
   return Array.from(p.keys()).some(
-    (k) => k === "sort" || k === "page" || k.startsWith("filter:") || k.startsWith("range:"),
+    (k) =>
+      k === "sort" ||
+      k === "page" ||
+      k.startsWith("filter:") ||
+      k.startsWith("range:"),
   );
 }
 
@@ -671,7 +721,8 @@ function ProductsSectionV2({
   const [pageDetails, setPageDetails] = useState(null);
   // Suppress server hits when URL already has active params to avoid a
   // wrong-results flash before InstantSearch resolves the filtered query.
-  const activeHits = initialHits?.length && !urlHasActiveParams() ? initialHits : null;
+  const activeHits =
+    initialHits?.length && !urlHasActiveParams() ? initialHits : null;
   // Start loaded immediately when we have server-prefetched hits — no skeleton shown.
   const [dataLoaded, setDataLoaded] = useState(!!activeHits?.length);
   // initialFilterString comes from the server so InstantSearch has the right
@@ -768,7 +819,10 @@ function ProductsSectionV2({
                 { label: "Most Popular", value: `${es_index}_popular` },
                 { label: "Newest", value: `${es_index}_newest` },
                 { label: "Price: Low to High", value: `${es_index}_price_asc` },
-                { label: "Price: High to Low", value: `${es_index}_price_desc` },
+                {
+                  label: "Price: High to Low",
+                  value: `${es_index}_price_desc`,
+                },
               ]}
             />
             <RangeInput attribute="price" className="hidden" />
