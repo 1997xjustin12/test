@@ -71,7 +71,7 @@ function ProductCard({ hit, page_details, onCompare }) {
   return (
     <article className="group bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-200/60 dark:hover:shadow-black/40 hover:-translate-y-1 transition-all duration-300">
       {/* Image */}
-      <div className="relative h-52 bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
+      <div className="relative h-40 sm:h-52 bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
         <Link aria-label={product?.name} title={product?.name} href={product?.url} prefetch={false}>
           <FireplaceThumb product={hit} />
         </Link>
@@ -110,7 +110,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         </button> */}
       </div>
       {/* Body */}
-      <div className="p-4">
+      <div className="p-2.5 sm:p-4">
         <p
           title={product?.brand}
           className="line-clamp-1 text-xs uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-1 font-medium"
@@ -125,7 +125,7 @@ function ProductCard({ hit, page_details, onCompare }) {
             {product?.name}
           </h2>
         </Link>
-        <div className="flex items-center gap-2 mb-3 flex-wrap">
+        <div className="flex items-center gap-2 md:mb-3 flex-wrap">
           <div className="flex items-center gap-1.5">
             <StarRating rating={product?.ratings} />
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -146,7 +146,7 @@ function ProductCard({ hit, page_details, onCompare }) {
             ) : (
               <>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-lg font-bold text-neutral-900 dark:text-white">
+                  <span className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white">
                     ${formatPrice(product?.price)}
                   </span>
                   {!!product?.was && (
@@ -194,7 +194,6 @@ function ProductCard({ hit, page_details, onCompare }) {
               }
               {
                 !atcLoading && <>
-                
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -204,7 +203,8 @@ function ProductCard({ hit, page_details, onCompare }) {
               >
                 <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
               </svg>
-              Add to Cart</>
+              <span className="hidden sm:inline">Add to Cart</span>
+              </>
               }
             </button>
         </div>
