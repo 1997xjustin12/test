@@ -28,7 +28,7 @@ export default function CategoriesGrid({ children, total }) {
         <div className="mt-8 text-center sm:hidden">
           <button
             onClick={() => setShowAll(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-fire text-fire-accessible dark:text-fire font-semibold text-sm hover:bg-fire hover:text-white transition-all duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-theme-600 text-theme-600 font-semibold text-sm hover:bg-theme-600 hover:text-white transition-all duration-200"
           >
             Show All Categories ({remaining} more)
           </button>

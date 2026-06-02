@@ -78,7 +78,7 @@ function ProductCard({ product }) {
               </span>
             )}
             {product?.save_pct && (
-              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-ember uppercase tracking-wide rounded-sm z-[1]">
+              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-theme-600 uppercase tracking-wide rounded-sm z-[1]">
                 -{product?.save_pct}%
               </span>
             )}
@@ -106,7 +106,7 @@ function ProductCard({ product }) {
           aria-label={product?.title}
           title={product?.title}
         >
-          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 hover:text-ember transition-colors line-clamp-2">
+          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 hover:text-theme-600 transition-colors line-clamp-2">
             {product?.title}
           </h3>
         </Link>
@@ -143,7 +143,7 @@ function ProductCard({ product }) {
           {stock}
         </p> */}
 
-        <button className="mt-3 w-full py-2.5 bg-char text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-ember transition-colors">
+        <button className="mt-3 w-full py-2.5 bg-theme-600 text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-theme-700 transition-colors">
           Add to Cart
         </button>
 
@@ -211,7 +211,7 @@ export default function Products({ initialProducts = [] }) {
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
           <div>
-            <p className="font-oswald text-xs font-semibold text-ember tracking-[.14em] uppercase">
+            <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
               Limited Quantities
             </p>
             <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">
@@ -220,7 +220,7 @@ export default function Products({ initialProducts = [] }) {
           </div>
           <Link
             href={`${BASE_URL}/open-box`}
-            className="font-oswald font-semibold text-sm tracking-wide border-b-2 border-ember pb-0.5 hover:text-ember transition-colors"
+            className="font-oswald font-semibold text-sm tracking-wide border-b-2 border-theme-600 pb-0.5 hover:text-theme-600 transition-colors"
           >
             Shop All Open Box →
           </Link>

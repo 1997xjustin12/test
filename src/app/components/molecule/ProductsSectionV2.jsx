@@ -6,7 +6,8 @@ import { useSearch } from "@/app/context/search";
 import { usePathname } from "next/navigation";
 import SPProductCard from "@/app/components/new-design/ui/ProductCard";
 import BBQProductCard from "@/app/components/bbq-design/ui/ProductCard";
-import ProductsSectionLoader from "@/app/components/new-design/sections/gallery/ProductsSectionLoader";
+import NewDesignProductsSectionLoader from "@/app/components/new-design/sections/gallery/ProductsSectionLoader";
+import BBQProductsSectionLoader from "@/app/components/bbq-design/sections/gallery/ProductsSectionLoader";
 import { ISBBQ } from "@/app/lib/helpers";
 
 import {
@@ -787,7 +788,7 @@ function ProductsSectionV2({
   return (
     <>
       <div className={`${!dataLoaded ? "w-full" : "hidden"}`}>
-        <ProductsSectionLoader />
+        {ISBBQ ? <BBQProductsSectionLoader /> : <NewDesignProductsSectionLoader />}
       </div>
 
       <div

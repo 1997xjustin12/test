@@ -23,7 +23,7 @@ export default async function Categories() {
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
           <div>
-            <p className="font-oswald text-xs font-semibold text-ember tracking-[.14em] uppercase">
+            <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
               Shop by Category
             </p>
             <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">

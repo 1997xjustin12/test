@@ -22,7 +22,8 @@ export default function Promo() {
         </Link>
 
         <Link href={`${BASE_URL}/package-deals`}
-          className="relative overflow-hidden rounded min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-8 sm:p-10 bg-gradient-to-br from-ember-deep to-[#7a2606] text-ash hover:-translate-y-1 transition-transform"
+          className="relative overflow-hidden rounded min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-8 sm:p-10 text-ash hover:-translate-y-1 transition-transform"
+          style={{ background: "linear-gradient(to bottom right, var(--theme-primary-800), var(--theme-primary-700))" }}
         >
           <p className="font-oswald text-xs font-semibold tracking-[.12em] text-white/60 uppercase">Complete Setups</p>
           <h3 className="font-oswald font-bold text-2xl sm:text-3xl uppercase mt-1.5 mb-2">Outdoor Kitchen Packages</h3>

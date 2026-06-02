@@ -79,19 +79,19 @@ export default function Hero({ background }) {
         {/* Copy */}
         <div>
           <div className="flex flex-wrap gap-2 mb-5">
-            <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 bg-ember border border-ember rounded-sm uppercase">★ Outlet Pricing</span>
+            <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 bg-theme-600 border border-theme-600 rounded-sm uppercase">★ Outlet Pricing</span>
             <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 border border-white/30 rounded-sm uppercase">4.4 ★ · 122 Reviews</span>
             <span className="font-oswald text-xs font-semibold tracking-widest px-3 py-1.5 border border-white/30 rounded-sm uppercase">Authorized Dealer</span>
           </div>
           <h1 className="font-oswald font-bold text-4xl sm:text-5xl xl:text-6xl uppercase leading-none">
             Premium Grills.<br />
-            <em className="text-ember not-italic">Outlet Prices.</em>
+            <em className="text-theme-600 not-italic">Outlet Prices.</em>
           </h1>
           <p className="mt-5 mb-8 text-base sm:text-lg text-stone-400 font-light max-w-md leading-relaxed">
             Top-brand gas grills, built-ins and outdoor kitchens — including inspected open-box units at up to 35% off retail.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/open-box" className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 bg-ember text-white rounded-sm hover:bg-ember-deep transition-all hover:-translate-y-0.5">
+            <Link href="/open-box" className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 bg-theme-600 text-white rounded-sm hover:bg-theme-700 transition-all hover:-translate-y-0.5">
               Shop Open-Box Deals →
             </Link>
             <Link href="/grills" className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 border border-white/40 text-ash rounded-sm hover:bg-white/10 transition-all hover:-translate-y-0.5">

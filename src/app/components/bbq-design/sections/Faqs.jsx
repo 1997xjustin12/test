@@ -29,7 +29,7 @@ function FaqItem({ q, a }) {
         className="w-full flex justify-between items-center px-5 sm:px-6 py-4 text-left font-oswald font-semibold text-base sm:text-lg uppercase tracking-wide"
       >
         {q}
-        <span className="text-2xl text-ember shrink-0 ml-3">{open ? '−' : '+'}</span>
+        <span className="text-2xl text-theme-600 shrink-0 ml-3">{open ? '−' : '+'}</span>
       </button>
       {open && (
         <p className="px-5 sm:px-6 pb-5 text-sm text-stone-600 font-light leading-relaxed">
@@ -45,7 +45,7 @@ export default function FAQ() {
     <section className="py-14 sm:py-16">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="text-center mb-10">
-          <p className="font-oswald text-xs font-semibold text-ember tracking-[.14em] uppercase">Buyer Questions</p>
+          <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">Buyer Questions</p>
           <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">Frequently Asked Questions</h2>
         </div>
         <div className="max-w-3xl mx-auto flex flex-col gap-3">

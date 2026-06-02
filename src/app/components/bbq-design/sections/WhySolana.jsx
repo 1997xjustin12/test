@@ -68,7 +68,7 @@ export default function WhySolana() {
             <div className="flex flex-col gap-5">
               {WHY_POINTS.map(({ icon, title, desc }) => (
                 <div key={title} className="flex gap-4">
-                  <div className="w-11 h-11 rounded-[11px] bg-fire/10 flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+                  <div className="w-11 h-11 rounded-[11px] bg-theme-600/10 flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
                     {icon}
                   </div>
                   <div>
