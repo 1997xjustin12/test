@@ -107,7 +107,7 @@ export default function Navbar({ logo }) {
       sticky top-0
       bg-white dark:bg-charcoal md:bg-white/95 md:dark:bg-charcoal/95
       md:backdrop-blur-md
-      border-b border-stone-100 dark:border-stone-800
+      border-b border-grate dark:border-stone-800
       transition-shadow duration-300
       ${scrolled ? "shadow-md" : ""}
       ${galleryOnFullscreen ? "" : "z-20"}
@@ -201,7 +201,7 @@ export default function Navbar({ logo }) {
         </div>
       </div>
       {/* ── Row 2: Nav Links — desktop only ── */}
-      <div className="border-y border-neutral-300">
+      <div className="border-y border-grate">
         <div
           ref={navRowRef}
           className="max-w-[1240px] mx-auto sm:px-6 hidden lg:flex items-center gap-0.5 dark:border-stone-800"
@@ -226,7 +226,7 @@ export default function Navbar({ logo }) {
                   aria-expanded={isOpen}
                   aria-haspopup="true"
                   className={`px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2
-                  ${isOpen ? "bg-stone-100 dark:bg-stone-800 text-theme-700  border-theme-700" : "text-smoke dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-500 border-transparent"}`}
+                  ${isOpen ? "bg-theme-50 dark:bg-theme-950 text-theme-700 border-theme-700" : "text-smoke dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-500 border-transparent"}`}
                 >
                   {name}{" "}
                   <span
@@ -260,7 +260,7 @@ export default function Navbar({ logo }) {
                       }
                       setLoadingHref(`${BASE_URL}/${url}`);
                     }}
-                    className="flex items-center justify-between px-4 py-2.5 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700 text-[13px] font-semibold text-charcoal dark:text-white hover:text-theme-500 transition-colors group/parent"
+                    className="flex items-center justify-between px-4 py-2.5 bg-theme-50 dark:bg-theme-950 border-b border-theme-100 dark:border-theme-900 text-[13px] font-semibold text-charcoal dark:text-white hover:text-theme-600 transition-colors group/parent"
                   >
                     <span>All {name}</span>
                     <span className="relative w-3 h-3 flex-shrink-0 flex items-center justify-center">
@@ -374,7 +374,7 @@ export default function Navbar({ logo }) {
             <Link
               href={`${BASE_URL}/brand/eloquence`}
               onClick={() => setMenuOpen(false)}
-              className="font-oswald upppercase px-3 py-2.5 text-sm font-semibold text-theme-500"
+              className="font-oswald uppercase px-3 py-2.5 text-sm font-semibold text-theme-600"
             >
               Current Deals 🔥
             </Link>
