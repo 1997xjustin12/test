@@ -1,7 +1,9 @@
-import React from 'react'
-import CartComponent from "@/app/components/molecule/CartComponent"
-const CartPage = () => {
-  return <CartComponent />
-}
+import { ISBBQ } from "@/app/lib/helpers";
+import BBQCart from "@/app/components/bbq-design/page/Cart";
+import Cart from "@/app/components/new-design/page/Cart";
 
-export default CartPage
+const CartPage = () => {
+  return ISBBQ ? <BBQCart /> : <Cart />;
+};
+
+export default CartPage;
