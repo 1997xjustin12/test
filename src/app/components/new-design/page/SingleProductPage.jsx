@@ -9,6 +9,7 @@ import Topbar from "@/app/components/new-design/sections/sp/Topbar";
 import ImageGallery from "@/app/components/new-design/sections/sp/ImageGallery";
 import ProductInfo from "@/app/components/new-design/sections/sp/ProductInfo";
 import CompareTable from "@/app/components/new-design/sections/sp/CompareTable";
+import FrequentlyBoughtTogether from "@/app/components/new-design/sections/sp/FrequentlyBoughtTogether";
 import StickyCTA from "@/app/components/new-design/sections/sp/StickyCTA";
 import MobileStickyCTA from "@/app/components/new-design/sections/sp/MobileStickyCTA";
 
@@ -167,6 +168,7 @@ function SingleProductPage({
         </div>
 
         {/* BELOW-FOLD SECTIONS */}
+        <FrequentlyBoughtTogether product={product}/>
         <CollectionStrip product={product} />
         <DescriptionSection
           brand={product?.brand}

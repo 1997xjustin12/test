@@ -1133,9 +1133,10 @@ export function formatProduct(product, mod = "pdp") {
   const brand_slug = createSlug(product?.brand);
   const brand_url = `${BASE_URL}/${brand_slug}`;
   const brand_image = `/images/brand-logo/${brand_slug}.webp`;
-  const main_image = product?.images?.find((i) => i?.position == 1)?.src;
-  const secondary_image = product?.images?.find((i) => i?.position == 2)?.src;
-  const fallback_image = product?.images?.[0]?.src
+  const main_image = (product?.images?.find((i) => i?.position == 1)?.src || "").split('?')[0];
+  const secondary_image = (product?.images?.find((i) => i?.position == 2)?.src || "").split('?')[0];
+  const fallback_image = (product?.images?.[0]?.src || "").split('?')[0];
+  const url = `${BASE_URL}/${createSlug(product?.brand)}/product/${product?.handle}`;
   const discount_links = [
     {
       url: `tel:${STORE_CONTACT}`,
@@ -1167,6 +1168,22 @@ export function formatProduct(product, mod = "pdp") {
     },
   ];
 
+  if(mod==="fbt_bundle"){
+    return {
+      id: product.id,
+      product_id: product.product_id,
+      handle: product.handle,
+      image: main_image || secondary_image || fallback_image || null,
+      images: product.images,
+      title: product.title,
+      brand: product.brand,
+      price: price,
+      variants: product.variants,
+      ratings: product.ratings,
+      url: url
+    }
+  }
+
   const formatted_product = {
     ...product,
     name: product?.title,
@@ -1186,7 +1203,7 @@ export function formatProduct(product, mod = "pdp") {
     save_amt,
     save_pct,
     discount_links,
-    url: `${BASE_URL}/${createSlug(product?.brand)}/product/${product?.handle}`,
+    url: url,
     ships: "Ships Within 1 to 2 Business Days",
   };
 
