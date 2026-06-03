@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/context/auth";
 import { BASE_URL } from "@/app/lib/helpers";
-import { UserIcon } from "@/app/components/new-design/ui/Icons";
+import { UserIcon } from "@/app/components/bbq-design/ui/Icons";
 
 export default function MyAccountButton({ className }) {
   const { isLoggedIn, logout, myAccountLinks, accountBenefits } = useAuth();
@@ -11,68 +11,54 @@ export default function MyAccountButton({ className }) {
 
   return (
     <div className={`relative inline-block ${className}`}>
-      <Link
-        prefetch={false}
-        href={`${BASE_URL}/login`}
+      {/* Trigger */}
+      <button
+        onClick={() => setIsOpen((o) => !o)}
         aria-label="My account"
-        onClick={(e) => {
-          e.preventDefault();
-          setIsOpen((o) => !o);
-        }}
-        className="w-10 h-10  dark:bg-stone-800 flex items-center justify-center text-charcoal dark:text-white transition-all duration-200"
+        className="flex flex-col items-center justify-center w-10 h-10 text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
       >
-        <div className="flex flex-col items-center justify-center">
-          <div className="text-xl">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-7 h-7"
-            >
-              <path d="M5 6 H19 L17 16 L12 21 L7 16 Z" />
-            </svg>
-          </div>
-          <small className="text-[12px] hidden sm:block">Account</small>
-        </div>
-      </Link>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-[18px] h-[18px]"
+        >
+          <path d="M5 6 H19 L17 16 L12 21 L7 16 Z" />
+        </svg>
+        <span className="font-oswald text-[10px] uppercase tracking-wide hidden sm:block leading-none mt-0.5">
+          Account
+        </span>
+      </button>
 
       {isOpen && (
         <>
-          {/* Backdrop — closes on outside tap/click */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
-          />
+          {/* Backdrop */}
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
-          <div className="absolute right-0 mt-2 w-[220px] bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-xl shadow-2xl overflow-hidden z-50">
+          {/* Dropdown */}
+          <div className="absolute right-0 mt-2 w-[220px] bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-xl shadow-char/10 dark:shadow-black/40 overflow-hidden z-50">
+
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-stone-50 dark:bg-stone-800 border-b border-stone-100 dark:border-stone-700">
-              <span className="text-[13px] font-semibold text-charcoal dark:text-white">
+            <div className="flex items-center justify-between px-4 py-3 bg-ash dark:bg-char border-b border-grate dark:border-white/10">
+              <span className="font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash">
                 My Account
               </span>
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close"
-                className="p-1 rounded-md text-stone-400 dark:text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+                className="p-1 text-char/40 dark:text-ash/40 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
               >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Logged in */}
+            {/* Logged in — nav links */}
             {isLoggedIn && (
               <div className="p-2">
                 {myAccountLinks.map((item) => (
@@ -81,11 +67,17 @@ export default function MyAccountButton({ className }) {
                     prefetch={false}
                     href={item?.url}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-fire transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 text-xs font-oswald uppercase tracking-wide text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors rounded-sm"
                   >
                     {item?.label}
                   </Link>
                 ))}
+                <button
+                  onClick={() => { logout(); setIsOpen(false); }}
+                  className="w-full mt-1 flex items-center gap-2 px-3 py-2 text-xs font-oswald uppercase tracking-wide text-char/40 dark:text-ash/30 hover:bg-ash dark:hover:bg-white/5 hover:text-ember dark:hover:text-ember transition-colors rounded-sm"
+                >
+                  Sign Out
+                </button>
               </div>
             )}
 
@@ -95,24 +87,20 @@ export default function MyAccountButton({ className }) {
                 <Link
                   href={`${BASE_URL}/login`}
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-2 bg-fire hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors"
+                  className="w-full text-center py-2 font-oswald font-semibold text-xs uppercase tracking-wide bg-theme-600 hover:bg-theme-700 text-white rounded-sm transition-colors"
                 >
                   Login / Register
                 </Link>
+
                 {accountBenefits?.length > 0 && (
                   <div>
-                    <p className="text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wide mb-2">
+                    <p className="font-oswald text-[10px] font-semibold uppercase tracking-widest text-char/40 dark:text-ash/30 mb-2">
                       Benefits
                     </p>
                     <ul className="flex flex-col gap-1.5">
                       {accountBenefits.map((item, i) => (
-                        <li
-                          key={`acc-benefit-${i}`}
-                          className="flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400"
-                        >
-                          <span className="text-fire font-bold text-[10px]">
-                            ✓
-                          </span>
+                        <li key={`acc-benefit-${i}`} className="flex items-center gap-2 text-xs text-char/60 dark:text-ash/50">
+                          <span className="font-oswald font-bold text-[10px] text-theme-600">✓</span>
                           {item}
                         </li>
                       ))}

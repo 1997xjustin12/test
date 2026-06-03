@@ -2,7 +2,7 @@
 import React from "react";
 import { useReveal } from "@/app/hooks/useReveal";
 import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
-import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
+import { PhoneIcon } from "@/app/components/bbq-design/ui/Icons";
 import { BASE_URL } from "@/app/lib/helpers"
 import Link from "next/link";
 

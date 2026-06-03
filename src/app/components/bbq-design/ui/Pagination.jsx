@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pagination = ({ total_count, results_per_page, onChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,17 +15,13 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
 
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       let start = Math.max(1, currentPage - 1);
       let end = Math.min(totalPages, start + 2);
-
       if (currentPage <= 2) end = 4;
       if (currentPage >= totalPages - 1) start = totalPages - 3;
-
       for (let i = start; i <= end; i++) pages.push(i);
     }
     return pages;
@@ -34,83 +29,100 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
 
   if (totalPages <= 1) return null;
 
+  const rangeStart = (currentPage - 1) * results_per_page + 1;
+  const rangeEnd = Math.min(currentPage * results_per_page, total_count);
+
+  const btnBase =
+    "h-9 flex items-center justify-center font-oswald font-semibold text-xs uppercase tracking-wide border transition-all duration-150 rounded-sm";
+  const btnActive = "bg-theme-600 border-theme-600 text-white";
+  const btnIdle =
+    "bg-paper dark:bg-smoke border-grate dark:border-white/10 text-char/60 dark:text-ash/40 hover:border-theme-600 hover:text-theme-600 dark:hover:text-theme-500 disabled:opacity-30 disabled:pointer-events-none";
+
   return (
-    <div className="w-full py-4">
-      <div className="flex flex-col space-y-4">
-        {/* Responsive Container */}
+    <div className="pt-5">
+      {/* Count line */}
+      <p className="font-oswald text-[10px] uppercase tracking-widest text-char/40 dark:text-ash/30 mb-3">
+        Showing {rangeStart}–{rangeEnd} of {total_count} reviews
+      </p>
 
-        <div className="flex items-center justify-between bg-white px-4 py-3 border border-gray-200 rounded-lg shadow-sm sm:px-6">
-          {/* Mobile Buttons */}
-          <div className="flex flex-1 justify-between sm:hidden">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-            >
-              Previous
+      {/* Mobile: Prev / Page X of Y / Next */}
+      <div className="flex items-center justify-between gap-2 sm:hidden">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`${btnBase} ${btnIdle} px-4`}
+        >
+          ← Prev
+        </button>
+        <span className="font-oswald text-xs text-char/50 dark:text-ash/40 uppercase tracking-wide">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`${btnBase} ${btnIdle} px-4`}
+        >
+          Next →
+        </button>
+      </div>
+
+      {/* Desktop: full page row */}
+      <div className="hidden sm:flex items-center gap-1.5">
+        {/* Prev */}
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`${btnBase} ${btnIdle} w-9`}
+          aria-label="Previous page"
+        >
+          ←
+        </button>
+
+        {/* First page + ellipsis */}
+        {getPageNumbers()[0] > 1 && (
+          <>
+            <button onClick={() => handlePageChange(1)} className={`${btnBase} ${btnIdle} w-9`}>
+              1
             </button>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-            >
-              Next
+            {getPageNumbers()[0] > 2 && (
+              <span className="font-oswald text-xs text-char/30 dark:text-ash/20 px-1">…</span>
+            )}
+          </>
+        )}
+
+        {/* Page numbers */}
+        {getPageNumbers().map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            aria-current={currentPage === page ? "page" : undefined}
+            className={`${btnBase} w-9 ${currentPage === page ? btnActive : btnIdle}`}
+          >
+            {page}
+          </button>
+        ))}
+
+        {/* Last page + ellipsis */}
+        {getPageNumbers().at(-1) < totalPages && (
+          <>
+            {getPageNumbers().at(-1) < totalPages - 1 && (
+              <span className="font-oswald text-xs text-char/30 dark:text-ash/20 px-1">…</span>
+            )}
+            <button onClick={() => handlePageChange(totalPages)} className={`${btnBase} ${btnIdle} w-9`}>
+              {totalPages}
             </button>
-          </div>
+          </>
+        )}
 
-          {/* Desktop View */}
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-semibold">
-                  {(currentPage - 1) * results_per_page + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-semibold">
-                  {Math.min(currentPage * results_per_page, total_count)}
-                </span>{" "}
-                of <span className="font-semibold">{total_count}</span>
-              </p>
-            </div>
-
-            <nav
-              className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-              aria-label="Pagination"
-            >
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 disabled:opacity-50 transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-
-              {getPageNumbers().map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  aria-current={currentPage === page ? "page" : undefined}
-                  className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold transition-all duration-200 ${
-                    currentPage === page
-                      ? "z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                      : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 disabled:opacity-50 transition-colors"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </nav>
-          </div>
-        </div>
+        {/* Next */}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`${btnBase} ${btnIdle} w-9`}
+          aria-label="Next page"
+        >
+          →
+        </button>
       </div>
     </div>
   );

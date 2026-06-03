@@ -2,7 +2,7 @@ import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
-import { ArrowIcon } from "@/app/components/new-design/ui/Icons";
+import { ArrowIcon } from "@/app/components/bbq-design/ui/Icons";
 import CategoriesGrid from "./CategoriesGrid";
 import { BASE_URL } from "@/app/lib/helpers";
 

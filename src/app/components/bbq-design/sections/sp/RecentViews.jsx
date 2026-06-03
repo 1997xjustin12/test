@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { formatProduct } from "@/app/lib/helpers";
 
 const ProductGrid = dynamic(
-  () => import("@/app/components/new-design/sections/sp/ProductGrid"),
+  () => import("@/app/components/bbq-design/sections/sp/ProductGrid"),
 );
 
 function RecentViews({ product_id }) {

@@ -8,14 +8,14 @@ const Breadcrumb = ({ crumbs }) => (
           <>
             <Link
               href={c?.url}
-              className="text-xs text-gray-400 dark:text-gray-500 hover:text-orange-500 transition-colors"
+              className="text-xs text-char/40 dark:text-ash/40 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
             >
               {c?.name}
             </Link>
-            <span className="text-xs text-gray-200 dark:text-gray-700">/</span>
+            <span className="text-xs text-grate dark:text-white/20">❯</span>
           </>
         ) : (
-          <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+          <span className="text-xs text-char dark:text-ash font-medium line-clamp-1">
             {c?.name}
           </span>
         )}

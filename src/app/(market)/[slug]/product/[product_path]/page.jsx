@@ -7,13 +7,18 @@ export const revalidate = 86400;
 import { redis, keys } from "@/app/lib/redis";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
-import { BASE_URL, ES_INDEX } from "@/app/lib/helpers";
+import { BASE_URL, ES_INDEX, ISBBQ } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
-import { fetchProduct, getReviewsByProductId, getYMALProducts } from "@/app/lib/fn_server";
+import {
+  fetchProduct,
+  getReviewsByProductId,
+  getYMALProducts,
+} from "@/app/lib/fn_server";
 
 import ProductClient from "@/app/components/molecule/ProductClient";
 import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
+import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
 
 // Helper function to strip HTML tags
 function stripHtml(html) {
@@ -37,7 +42,10 @@ export async function generateMetadata({ params }) {
   const seoDesc = product?.seo?.description?.trim();
   const bodyDesc = stripHtml(product?.body_html || "").trim();
   // Skip seo.description if it contains the generic Shopify pricing template.
-  const validSeoDesc = seoDesc && !seoDesc.toLowerCase().includes("best pricing") ? seoDesc : `${product.title} - Call us now for best pricing!`;
+  const validSeoDesc =
+    seoDesc && !seoDesc.toLowerCase().includes("best pricing")
+      ? seoDesc
+      : `${product.title} - Call us now for best pricing!`;
   const rawDescription = validSeoDesc || bodyDesc || product.title || "";
   const metaDescription = rawDescription.substring(0, 160) || product.title;
 
@@ -137,6 +145,22 @@ function buildJsonLd(product, slug, product_path) {
   return jsonLd;
 }
 
+function MainSection({ ...props }) {
+  if (ISBBQ) {
+    return (
+      <BBQSingleProductPage
+        {...props}
+      />
+    );
+  }
+
+  return (
+    <SingleProductPage
+      {...props}
+    />
+  );
+}
+
 export default async function ProductPage({ params }) {
   const { slug, product_path } = await params;
 
@@ -144,13 +168,11 @@ export default async function ProductPage({ params }) {
   const product_id = product?.product_id;
   const ymal_products = await getYMALProducts();
 
-  console.log("[BEFORE 404][product]:", product);
-
-  if(!product || !product_id){
+  if (!product || !product_id) {
     notFound();
   }
 
-  const product_reviews = await getReviewsByProductId(product_id) || [];
+  const product_reviews = (await getReviewsByProductId(product_id)) || [];
   console.log("product", product);
   const jsonLd = buildJsonLd(product, slug, product_path);
 
@@ -162,10 +184,10 @@ export default async function ProductPage({ params }) {
   ]);
 
   const FAQS = [
-    {q: `About ${STORE_NAME}`, a: about},
-    {q: `Shipping Policy`, a: shipping_policy},
-    {q: `Return Policy`, a: return_policy},
-    {q: `Warranty`, a: warranty},
+    { q: `About ${STORE_NAME}`, a: about },
+    { q: `Shipping Policy`, a: shipping_policy },
+    { q: `Return Policy`, a: return_policy },
+    { q: `Warranty`, a: warranty },
   ];
 
   return (
@@ -175,7 +197,7 @@ export default async function ProductPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SingleProductPage
+      <MainSection
         product={product}
         slug={slug}
         reviews={product_reviews}

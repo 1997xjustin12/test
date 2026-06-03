@@ -1,5 +1,5 @@
 import { STORE_CONTACT } from "@/app/lib/store_constants";
-import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
+import { PhoneIcon } from "@/app/components/bbq-design/ui/Icons";
 
 export default function StickyCall() {
   return (
