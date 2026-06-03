@@ -3,7 +3,7 @@ import StarRating from "@/app/components/bbq-design/sections/sp/StarRating";
 import Badge from "@/app/components/bbq-design/sections/sp/Badge";
 import AddToCartWidget from "@/app/components/bbq-design/sections/sp/AddToCartWidget";
 import ProductOptionItemLink from "@/app/components/bbq-design/sections/sp/ProductOptionItemLink";
-import FicDropDown from "@/app/components/atom/FicDropDown";
+import FicDropDown from "@/app/components/bbq-design/ui/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { createSlug, formatPrice } from "@/app/lib/helpers";

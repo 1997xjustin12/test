@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import FicDropDown from "@/app/components/atom/FicDropDown";
+import FicDropDown from "@/app/components/bbq-design/ui/FicDropDown";
 import { ICRoundPhone, Eos3DotsLoading } from "@/app/components/icons/lib";
 import StarRating from "@/app/components/bbq-design/sections/sp/StarRating";
 
@@ -140,7 +140,7 @@ const ProductCard = ({ p }) => {
       {/* Found it cheaper */}
       <div className="px-3 pb-3 -mt-1">
         <FicDropDown contact_number={STORE_CONTACT}>
-          <div className="text-xs text-theme-600/70 flex items-center cursor-default gap-[7px] flex-wrap hover:text-theme-600 transition-colors">
+          <div className="text-xs text-white flex items-center cursor-default gap-[7px] flex-wrap hover:text-theme-600 transition-colors">
             Found It Cheaper?
             <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
               <ICRoundPhone width={14} height={14} />

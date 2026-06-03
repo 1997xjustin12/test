@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
-import FicDropDown from "@/app/components/atom/FicDropDown";
+import FicDropDown from "@/app/components/new-design/ui/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useQuickView } from "@/app/context/quickview";

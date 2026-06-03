@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
-import FicDropDown from "@/app/components/atom/FicDropDown";
+import FicDropDown from "@/app/components/new-design/ui/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import StarRating from "@/app/components/new-design/sections/sp/StarRating";
 import Badge from "@/app/components/new-design/sections/sp/Badge";

@@ -5,7 +5,7 @@ import StarRating from "@/app/components/new-design/sections/sp/StarRating";
 import Badge from "@/app/components/new-design/sections/sp/Badge";
 import AddToCartWidget from "@/app/components/new-design/sections/sp/AddToCartWidget";
 import ProductOptionItemLink from "@/app/components/new-design/sections/sp/ProductOptionItemLink";
-import FicDropDown from "@/app/components/atom/FicDropDown";
+import FicDropDown from "@/app/components/new-design/ui/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 
 // HELPERS
