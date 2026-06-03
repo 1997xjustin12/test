@@ -28,29 +28,29 @@ function SubcategoryTabsDropdown({ subs }) {
   }, []);
 
   const tabClass = (url) =>
-    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-oswald ${
+    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-oswald uppercase tracking-wide ${
       active_url === url
-        ? "border-orange-500 text-orange-600 dark:text-orange-400"
-        : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-600"
+        ? "border-theme-600 text-theme-600 dark:text-theme-500"
+        : "border-transparent text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate dark:hover:border-white/20"
     }`;
 
   const badgeClass = (url, hot) =>
-    `text-xs px-2 py-0.5 rounded-full font-medium ${
+    `text-xs px-2 py-0.5 font-medium font-oswald ${
       active_url === url
-        ? "bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400"
+        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
         : hot
-        ? "bg-orange-100 dark:bg-orange-950 text-orange-500"
-        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400"
+        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
+        : "bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40"
     }`;
 
   return (
     <>
-      {/* Mobile / Tablet — custom select dropdown */}
+      {/* Mobile / Tablet */}
       <div className="block lg:hidden">
         <SubcategoryTabsMobile subs={subs} />
       </div>
 
-      {/* Desktop — first N tabs + dropdown for overflow */}
+      {/* Desktop */}
       <div className="hidden lg:flex items-center gap-0 -mb-px">
         {visible.map((s, i) => (
           <Link
@@ -67,10 +67,10 @@ function SubcategoryTabsDropdown({ subs }) {
           <div className="relative flex-shrink-0" ref={dropdownRef}>
             <button
               onClick={() => setOpen((v) => !v)}
-              className={`flex font-oswald items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+              className={`flex font-oswald uppercase tracking-wide items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
                 activeInOverflow
-                  ? "border-orange-500 text-orange-600 dark:text-orange-400"
-                  : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300"
+                  ? "border-theme-600 text-theme-600 dark:text-theme-500"
+                  : "border-transparent text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate"
               }`}
             >
               {activeInOverflow ? "More •" : `More (${overflow.length})`}
@@ -78,16 +78,16 @@ function SubcategoryTabsDropdown({ subs }) {
             </button>
 
             {open && (
-              <div className="absolute top-full left-0 mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-20 min-w-[200px] py-1">
+              <div className="absolute top-full left-0 mt-1 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-lg shadow-char/10 dark:shadow-black/30 z-20 min-w-[200px] py-1">
                 {overflow.map((s, i) => (
                   <Link
                     key={`desk-overflow-${i}`}
                     href={s?.url || "#"}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm font-medium transition-colors font-oswald ${
+                    className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm font-medium transition-colors font-oswald uppercase tracking-wide ${
                       active_url === s?.url
-                        ? "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30"
-                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"
+                        ? "text-theme-600 dark:text-theme-500 bg-theme-600/5 dark:bg-theme-600/10"
+                        : "text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-char dark:hover:text-ash"
                     }`}
                   >
                     {s?.name}

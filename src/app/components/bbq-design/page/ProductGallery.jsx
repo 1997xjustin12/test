@@ -5,9 +5,15 @@ import SubcategoryTabs from "@/app/components/bbq-design/sections/gallery/Subcat
 // import PerfComparisonLayout from "@/app/components/dev/PerfComparisonLayout";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
-function ProductGallery({ config, slug, filterType, initialFilterString, initialHits }) {
+function ProductGallery({
+  config,
+  slug,
+  filterType,
+  initialFilterString,
+  initialHits,
+}) {
   return (
-    <main>
+    <main className="dark:bg-char">
       <HeroBanner config={config} />
       {config?.root?.url !== "brands" && (
         <SubcategoryTabs subs={config?.subs} />

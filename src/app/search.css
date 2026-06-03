@@ -563,3 +563,112 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 .bbqgrilloutlet .ais-SortBy-select:focus {
   border-color: var(--theme-primary-600);
 }
+
+/* ═══════════════════════════════════════════
+   BBQ dark-mode overrides (OS preference)
+   ═══════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+
+  /* ─── Checkbox ─── */
+  .bbqgrilloutlet input[type="checkbox"].ais-RefinementList-checkbox {
+    border-color: rgba(255,255,255,0.15);
+    background-color: var(--smoke);
+  }
+  .bbqgrilloutlet input[type="checkbox"].ais-RefinementList-checkbox:checked {
+    background-color: var(--theme-primary-600);
+    border-color: var(--theme-primary-600);
+  }
+
+  /* ─── Label & count ─── */
+  .bbqgrilloutlet label.ais-RefinementList-label {
+    color: rgba(244,241,236,0.6);
+  }
+  .bbqgrilloutlet .ais-RefinementList-count {
+    color: rgba(244,241,236,0.3);
+  }
+
+  /* ─── List items ─── */
+  .bbqgrilloutlet .ais-RefinementList-item:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* ─── Search box ─── */
+  .bbqgrilloutlet .ais-SearchBox-input {
+    border-color: rgba(255,255,255,0.1);
+    background-color: var(--smoke);
+    color: var(--ash);
+  }
+  .bbqgrilloutlet .ais-SearchBox-input::placeholder {
+    color: rgba(244,241,236,0.3);
+  }
+  .bbqgrilloutlet .ais-SearchBox-input:focus {
+    border-color: var(--theme-primary-600);
+  }
+
+  /* ─── Price range inputs ─── */
+  .bbqgrilloutlet .ais-RangeInput-form input {
+    border-color: rgba(255,255,255,0.1);
+    background-color: var(--smoke);
+    color: var(--ash);
+  }
+  .bbqgrilloutlet .ais-RangeInput-form input::placeholder {
+    color: rgba(244,241,236,0.3);
+  }
+  .bbqgrilloutlet .ais-RangeInput-form input:focus {
+    border-color: var(--theme-primary-600);
+  }
+
+  /* ─── Apply button ─── */
+  .bbqgrilloutlet .ais-RangeInput-submit {
+    background-color: var(--theme-primary-600);
+  }
+  .bbqgrilloutlet .ais-RangeInput-submit:hover {
+    background-color: var(--theme-primary-700);
+  }
+
+  /* ─── Current refinement tags ─── */
+  .bbqgrilloutlet .ais-CurrentRefinements-category {
+    background: var(--smoke);
+    border-color: rgba(255,255,255,0.1);
+  }
+  .bbqgrilloutlet .ais-CurrentRefinements-categoryLabel {
+    color: var(--theme-primary-500);
+  }
+  .bbqgrilloutlet .ais-CurrentRefinements-delete {
+    color: var(--theme-primary-500);
+  }
+  .bbqgrilloutlet .ais-CurrentRefinements-delete:hover {
+    color: var(--ash);
+  }
+
+  /* ─── Pagination ─── */
+  .bbqgrilloutlet .ais-Pagination-link {
+    border-color: rgba(255,255,255,0.1);
+    background-color: var(--smoke);
+    color: rgba(244,241,236,0.5);
+  }
+  .bbqgrilloutlet .ais-Pagination-link:hover {
+    border-color: var(--theme-primary-600);
+    color: var(--theme-primary-500);
+  }
+  .bbqgrilloutlet .ais-Pagination-item--selected .ais-Pagination-link {
+    background-color: var(--theme-primary-600);
+    border-color: var(--theme-primary-600);
+    color: #fff;
+  }
+
+  /* ─── SortBy ─── */
+  .bbqgrilloutlet .ais-SortBy-select {
+    background-color: var(--smoke);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--ash);
+  }
+  .bbqgrilloutlet .ais-SortBy-select:focus {
+    border-color: var(--theme-primary-600);
+  }
+
+}
+.dark .bbqgrilloutlet .ais-SortBy-select:focus {
+  border-color: var(--theme-primary-600);
+}
