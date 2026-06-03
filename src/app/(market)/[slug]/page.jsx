@@ -14,7 +14,8 @@ import { fetchCollectionsCount } from "@/app/lib/fn_server";
 
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 import BBQProductGallery from "@/app/components/bbq-design/page/ProductGallery";
-import BaseNavPage from "@/app/components/template/BaseNavItemPage";
+import NewDesignBasePlp from "@/app/components/new-design/page/BasePlp";
+import BBQBasePlp from "@/app/components/bbq-design/page/BasePlp";
 
 // Computes the Elasticsearch filter string from page metadata.
 // Mirrors the same logic in ProductsSectionV2 so V2 can receive the correct
@@ -134,7 +135,9 @@ export default async function GenericCategoryPage({ params }) {
   const url = pageData?.url;
 
   if (!pageData || !url) return notFound();
-  if (pageData.is_base_nav) return <BaseNavPage page_details={pageData} />;
+  if (pageData.is_base_nav) return ISBBQ
+    ? <BBQBasePlp page_details={pageData} />
+    : <NewDesignBasePlp page_details={pageData} />;
 
   const rootNav = getRootByUrl(menuData, url);
   if (!rootNav) return notFound();

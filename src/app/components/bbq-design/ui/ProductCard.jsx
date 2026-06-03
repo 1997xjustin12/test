@@ -66,9 +66,9 @@ function ProductCard({ hit, page_details, onCompare }) {
   }
 
   return (
-    <article className="group bg-paper border border-grate overflow-hidden hover:shadow-lg hover:shadow-stone-300/50 hover:-translate-y-0.5 transition-all duration-300">
+    <article className="group bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-1 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-300">
       {/* Image */}
-      <div className="relative h-40 sm:h-52 bg-ash overflow-hidden">
+      <div className="relative h-40 sm:h-52 bg-white dark:bg-char overflow-hidden">
         <Link aria-label={product?.name} title={product?.name} href={product?.url} prefetch={false}>
           <FireplaceThumb product={hit} />
         </Link>
@@ -87,38 +87,38 @@ function ProductCard({ hit, page_details, onCompare }) {
       <div className="p-2.5 sm:p-4">
         <p
           title={product?.brand}
-          className="line-clamp-1 font-oswald text-[10px] uppercase tracking-widest text-stone-400 mb-1"
+          className="line-clamp-1 font-oswald text-[10px] uppercase tracking-widest text-theme-600 mb-1"
         >
           {product?.brand}
         </p>
 
         <Link aria-label={product?.name} title={product?.name} href={product?.url} prefetch={false}>
-          <h2 className="line-clamp-2 min-h-[38.5px] font-sora text-sm font-semibold text-char leading-snug mb-2 group-hover:text-ember transition-colors">
+          <h2 className="line-clamp-2 min-h-[38.5px] font-sora text-sm font-semibold text-char dark:text-ash leading-snug mb-2 group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors">
             {product?.name}
           </h2>
         </Link>
 
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={product?.ratings} />
-          <span className="text-xs text-stone-400">
+          <span className="text-xs text-char/40 dark:text-ash/30">
             {product?.ratings} {!!product?.reviews && `(${product?.reviews})`}
           </span>
         </div>
 
         {/* Price */}
-        <div className="pt-2 border-t border-grate min-h-[46px]">
+        <div className="pt-2 border-t border-grate dark:border-white/10 min-h-[55px]">
           {!isPriceVisible(hit?.product_category, hit?.brand) ? (
-            <div className="font-oswald font-medium text-sm text-smoke">
+            <div className="font-oswald font-medium text-sm text-char/60 dark:text-ash/50">
               Contact us for pricing.
             </div>
           ) : (
             <>
               <div className="flex items-baseline gap-1.5">
-                <span className="font-oswald text-base sm:text-lg font-bold text-char">
+                <span className="font-oswald text-base sm:text-lg font-bold text-ember-deep dark:text-ember">
                   ${formatPrice(product?.price)}
                 </span>
                 {!!product?.was && (
-                  <span className="font-oswald text-xs text-stone-400 line-through">
+                  <span className="font-oswald text-xs text-char/40 dark:text-ash/30 line-through">
                     ${formatPrice(product?.was)}
                   </span>
                 )}
@@ -138,7 +138,7 @@ function ProductCard({ hit, page_details, onCompare }) {
             title="Quick View"
             onClick={() => viewItem(hit)}
             aria-label="Quick view"
-            className="w-9 h-9 min-w-9 bg-ash flex items-center justify-center text-smoke hover:bg-char hover:text-white transition-colors"
+            className="w-9 h-9 min-w-9 flex items-center justify-center bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40 hover:bg-theme-600 hover:text-white dark:hover:text-white transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8" />
@@ -161,7 +161,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         </div>
 
         <FicDropDown contact_number={page_details?.contact_number}>
-          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-white flex items-center cursor-default gap-[7px] flex-wrap">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <>Call for Price</>
             ) : (
