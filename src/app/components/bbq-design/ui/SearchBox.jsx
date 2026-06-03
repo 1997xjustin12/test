@@ -338,7 +338,7 @@ function SearchBox() {
   return (
     <div ref={wrapRef} className="flex-1 min-w-0 relative max-w-2xl mx-auto">
       <div
-        className={`flex items-center rounded-sm p-1 gap-2 transition-all duration-200 ring-black ${focused ? "bg-white dark:bg-stone-800 ring-2 shadow-sm ring-black" : "bg-stone-100 dark:bg-stone-800 ring-1"}`}
+        className={`flex items-center rounded-sm p-1 gap-2 transition-all duration-200 ${focused ? "bg-paper dark:bg-smoke ring-2 ring-theme-600 shadow-sm" : "bg-ash dark:bg-smoke ring-1 ring-grate dark:ring-white/10"}`}
       >
         <input
           ref={inputRef}
@@ -348,13 +348,13 @@ function SearchBox() {
           onFocus={handleFocus}
           onKeyDown={handleKeyDown}
           placeholder="Search grills, brands, parts…"
-          className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-white placeholder-stone-400 min-w-0 px-2 py-1"
+          className="flex-1 bg-transparent outline-none text-sm text-char dark:text-ash placeholder-char/40 dark:placeholder-ash/30 min-w-0 px-2 py-1"
         />
 
         {(isSearchPage ? localInput : searchQuery) && (
           <button
             onClick={clearSearch}
-            className="flex-shrink-0 w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-600 flex items-center justify-center transition hover:bg-stone-300"
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center bg-grate dark:bg-white/15 text-char/50 dark:text-ash/40 hover:bg-char/20 dark:hover:bg-white/25 transition-colors"
           >
             <svg
               width="10"
@@ -372,7 +372,7 @@ function SearchBox() {
         {/* Search button */}
         <button
           onClick={handleSubmit}
-          className="flex-shrink-0 w-10 bg-ember text-white rounded-sm text-base hover:bg-ember-deep transition-colors flex items-center justify-center aspect-1"
+          className="flex-shrink-0 w-10 bg-theme-600 hover:bg-theme-700 text-white rounded-sm flex items-center justify-center aspect-1 transition-colors"
         >
           <svg
             width="12"
