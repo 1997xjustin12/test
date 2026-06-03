@@ -86,7 +86,6 @@ export default function Navbar({ logo }) {
     return () => document.removeEventListener("mousedown", fn);
   }, []);
 
-  // Close dropdown and clear loading state when navigation completes
   useEffect(() => {
     setLoadingHref(null);
     setLockedMenu(null);
@@ -98,58 +97,29 @@ export default function Navbar({ logo }) {
       ({ name }) =>
         !["Search", "Home", "Brands", "Current Deals"].includes(name),
     );
-    // .filter(({}))
   }, [solana_menu_object]);
+
   return (
-    // z-20
     <nav
       className={`
       sticky top-0
-      bg-white dark:bg-charcoal md:bg-white/95 md:dark:bg-charcoal/95
+      bg-paper dark:bg-char md:bg-paper/95 md:dark:bg-char/95
       md:backdrop-blur-md
-      border-b border-grate dark:border-stone-800
+      border-b border-grate dark:border-white/10
       transition-shadow duration-300
-      ${scrolled ? "shadow-md" : ""}
+      ${scrolled ? "shadow-md shadow-char/10 dark:shadow-black/30" : ""}
       ${galleryOnFullscreen ? "" : "z-20"}
     `}
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* ── Row 1: Logo + Search + Actions ── */}
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
-          {/* Logo — flex-none so it never shrinks; width set on the inner div */}
-          {/* <Link
-            href="/"
-            className="flex items-center gap-2 flex-none"
-          >
-            {!logo && (
-              <>
-                <div className="w-8 h-8 rounded-lg bg-theme-500 flex items-center justify-center text-lg flex-shrink-0">
-                  🔥
-                </div>
-                <span className="font-serif font-bold text-xl text-charcoal dark:text-white hidden sm:block">
-                  { STORE_NAME }
-                </span>
-              </>
-            )}
-            {logo && (
-              <div className="relative w-[72px] sm:w-[120px] aspect-[2/1] flex-shrink-0">
-                <Image
-                  src={logo}
-                  alt={`${STORE_NAME} logo`}
-                  fill
-                  sizes="(max-width: 640px) 72px, 120px"
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            )}
-          </Link> */}
           <Link
             href="/"
-            className="font-bold text-2xl tracking-wide shrink-0 font-oswald"
+            className="font-bold text-2xl tracking-wide shrink-0 font-oswald text-char dark:text-ash"
           >
             BBQGrill<span className="text-theme-600 font-oswald">Outlet</span>
-            <small className="block font-sora font-normal text-[9px] tracking-[.35em] text-stone-400 uppercase">
+            <small className="block font-sora font-normal text-[9px] tracking-[.35em] text-char/40 dark:text-ash/30 uppercase">
               Outdoor Kitchen Experts
             </small>
           </Link>
@@ -159,14 +129,14 @@ export default function Navbar({ logo }) {
             <SearchBox />
           </div>
 
-          {/* Actions — flex-none, no fixed width; gap tightened on mobile */}
+          {/* Actions */}
           <div className="flex items-center gap-1 sm:gap-2 flex-none">
             {/* Phone — hidden on mobile/tablet */}
             <Link
               href={PHONE_HREF}
-              className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-charcoal dark:text-white whitespace-nowrap"
+              className="hidden lg:flex items-center gap-1.5 font-oswald text-xs uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors whitespace-nowrap"
             >
-              <span className="text-theme-500">
+              <span className="text-theme-600">
                 <PhoneIcon />
               </span>
               {PHONE}
@@ -177,19 +147,19 @@ export default function Navbar({ logo }) {
             <CartButton />
             {/* Hamburger — mobile only */}
             <button
-              className="lg:hidden w-10 h-10 rounded-lg bg-stone-100 dark:bg-stone-800 flex flex-col items-center justify-center gap-1.5"
+              className="lg:hidden w-10 h-10 bg-ash dark:bg-white/10 flex flex-col items-center justify-center gap-1.5"
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
             >
               <span
-                className={`w-5 h-0.5 bg-charcoal dark:bg-white transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
+                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
               />
               <span
-                className={`w-5 h-0.5 bg-charcoal dark:bg-white transition-all ${menuOpen ? "opacity-0" : ""}`}
+                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "opacity-0" : ""}`}
               />
               <span
-                className={`w-5 h-0.5 bg-charcoal dark:bg-white transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
               />
             </button>
           </div>
@@ -200,11 +170,12 @@ export default function Navbar({ logo }) {
           <SearchBox />
         </div>
       </div>
+
       {/* ── Row 2: Nav Links — desktop only ── */}
-      <div className="border-y border-grate">
+      <div className="border-y border-grate dark:border-white/10">
         <div
           ref={navRowRef}
-          className="max-w-[1240px] mx-auto sm:px-6 hidden lg:flex items-center gap-0.5 dark:border-stone-800"
+          className="max-w-[1240px] mx-auto sm:px-6 hidden lg:flex items-center gap-0.5"
         >
           {NAV_LINKS.map(({ name, children, id, url }) => {
             const isLocked = lockedMenu === id;
@@ -226,7 +197,10 @@ export default function Navbar({ logo }) {
                   aria-expanded={isOpen}
                   aria-haspopup="true"
                   className={`px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2
-                  ${isOpen ? "bg-theme-50 dark:bg-theme-950 text-theme-700 border-theme-700" : "text-smoke dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-500 border-transparent"}`}
+                  ${isOpen
+                    ? "bg-theme-600/5 dark:bg-theme-600/10 text-theme-600 dark:text-theme-500 border-theme-600"
+                    : "text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 border-transparent"
+                  }`}
                 >
                   {name}{" "}
                   <span
@@ -238,9 +212,10 @@ export default function Navbar({ logo }) {
                 <div
                   className={`
                 absolute top-[calc(100%+4px)] left-0
-                bg-white dark:bg-stone-900
-                border border-stone-100 dark:border-stone-700
-                rounded-xl shadow-2xl min-w-[200px] overflow-hidden
+                bg-paper dark:bg-smoke
+                border border-grate dark:border-white/10
+                shadow-xl shadow-char/15 dark:shadow-black/40
+                rounded-sm min-w-[200px] overflow-hidden
                 transition-all duration-200 z-30
                 ${
                   isOpen
@@ -260,12 +235,12 @@ export default function Navbar({ logo }) {
                       }
                       setLoadingHref(`${BASE_URL}/${url}`);
                     }}
-                    className="flex items-center justify-between px-4 py-2.5 bg-theme-50 dark:bg-theme-950 border-b border-theme-100 dark:border-theme-900 text-[13px] font-semibold text-charcoal dark:text-white hover:text-theme-600 transition-colors group/parent"
+                    className="flex items-center justify-between px-4 py-2.5 bg-ash dark:bg-char/60 border-b border-grate dark:border-white/10 font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors group/parent"
                   >
                     <span>All {name}</span>
                     <span className="relative w-3 h-3 flex-shrink-0 flex items-center justify-center">
                       <span
-                        className={`absolute text-theme-500 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}
+                        className={`absolute text-theme-600 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}
                       >
                         →
                       </span>
@@ -292,7 +267,7 @@ export default function Navbar({ logo }) {
                           }
                           setLoadingHref(`${BASE_URL}/${c?.url}`);
                         }}
-                        className="flex items-center justify-between px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-theme-500 transition-colors"
+                        className="flex items-center justify-between px-4 py-2 text-xs text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
                       >
                         <span>{c.name}</span>
                         <NavSpinner
@@ -309,19 +284,18 @@ export default function Navbar({ logo }) {
               </div>
             );
           })}
-          {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
           <Link
             href={`${BASE_URL}/brand/eloquence`}
-            className="px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2 border-transparent text-theme-700 dark:text-stone-300 dark:hover:bg-stone-800 hover:text-theme-600"
+            className="px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2 border-transparent text-theme-600 dark:text-theme-500 hover:bg-ash dark:hover:bg-white/5"
           >
             Current Deals 🔥
           </Link>
         </div>
       </div>
 
-      {/* ── Mobile Menu — absolute so it overlays content below ── */}
+      {/* ── Mobile Menu ── */}
       {menuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-charcoal border-b border-stone-100 dark:border-stone-800 shadow-lg z-30 max-h-[75vh] overflow-y-auto">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-paper dark:bg-smoke border-b border-grate dark:border-white/10 shadow-lg shadow-char/10 dark:shadow-black/30 z-30 max-h-[75vh] overflow-y-auto">
           <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-3 flex flex-col gap-0.5">
             {NAV_LINKS.map(({ name, url, id, children }) => {
               const isExpanded = expandedMobileMenu === id;
@@ -332,7 +306,7 @@ export default function Navbar({ logo }) {
                       setExpandedMobileMenu(isExpanded ? null : id)
                     }
                     aria-expanded={isExpanded}
-                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-charcoal dark:text-stone-200 hover:text-theme-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2.5 font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 hover:bg-ash dark:hover:bg-white/5 transition-colors"
                   >
                     <span>{name}</span>
                     <span
@@ -345,12 +319,12 @@ export default function Navbar({ logo }) {
                     className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
                   >
                     <div className="overflow-hidden">
-                      <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-theme-100 dark:border-theme-900 pl-3">
+                      <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-theme-600/20 dark:border-theme-600/20 pl-3">
                         <Link
                           href={`${BASE_URL}/${url}`}
                           prefetch={false}
                           onClick={() => setMenuOpen(false)}
-                          className="px-3 py-2 text-sm font-semibold text-theme-500 hover:bg-theme-50 dark:hover:bg-theme-950 rounded-lg transition-colors"
+                          className="px-3 py-2 font-oswald text-xs font-semibold uppercase tracking-wide text-theme-600 dark:text-theme-500 hover:bg-theme-600/10 dark:hover:bg-theme-600/10 transition-colors"
                         >
                           All {name}
                         </Link>
@@ -360,7 +334,7 @@ export default function Navbar({ logo }) {
                             href={`${BASE_URL}/${c?.url}`}
                             prefetch={false}
                             onClick={() => setMenuOpen(false)}
-                            className="px-3 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-theme-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                            className="px-3 py-2 text-xs text-char/60 dark:text-ash/50 hover:text-theme-600 dark:hover:text-theme-500 hover:bg-ash dark:hover:bg-white/5 transition-colors"
                           >
                             {c.name}
                           </Link>
@@ -374,16 +348,16 @@ export default function Navbar({ logo }) {
             <Link
               href={`${BASE_URL}/brand/eloquence`}
               onClick={() => setMenuOpen(false)}
-              className="font-oswald uppercase px-3 py-2.5 text-sm font-semibold text-theme-600"
+              className="font-oswald uppercase px-3 py-2.5 text-sm font-semibold text-theme-600 dark:text-theme-500"
             >
               Current Deals 🔥
             </Link>
             <Link
               href={PHONE_HREF}
               onClick={() => setMenuOpen(false)}
-              className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white border-t border-stone-100 dark:border-stone-800"
+              className="mt-1 flex items-center gap-2 px-3 py-2.5 font-oswald text-xs uppercase tracking-wide font-semibold text-char dark:text-ash border-t border-grate dark:border-white/10"
             >
-              <span className="text-theme-500">
+              <span className="text-theme-600">
                 <PhoneIcon />
               </span>
               {PHONE}
