@@ -564,7 +564,7 @@ label.ais-RefinementList-label .ais-RefinementList-count {
   font-family: var(--font-oswald, "Oswald"), sans-serif;
 }
 
-.bbqgrilloutlet .panel button {
+.bbqgrilloutlet .panel button  {
   font-family: var(--font-oswald, "Oswald"), sans-serif;
 }
 
@@ -624,5 +624,10 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 
   .bbqgrilloutlet .ais-CurrentRefinements-delete:hover{
     color: var(--theme-primary-600);
+  }
+
+  .bbqgrilloutlet .ais-Pagination-link {
+    color:whitesmoke;
+    border-color:rgba(255, 255, 255, 0.1);
   }
 }
