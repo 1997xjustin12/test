@@ -8,14 +8,20 @@ import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
 
+const inputClass =
+  "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
+
+const labelClass =
+  "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
+
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
       {/* <h3 className="text-base">Username Guidelines</h3> */}
-      <p className="text-neutral-600">
+      <p className="text-stone-500 dark:text-stone-400">
         Follow these rules when choosing a username.
       </p>
-      <ul className="mt-3 list-disc list-inside space-y-2 marker:text-red-500 text-neutral-600">
+      <ul className="mt-3 list-disc list-inside space-y-2 marker:text-red-500 text-stone-500 dark:text-stone-400">
         <li>Must be 3-20 characters long.</li>
         <li>Can contain letters, numbers, dots (.), or underscores (_).</li>
         <li>Must start with a letter or number.</li>
@@ -168,13 +174,13 @@ function RegisterForm() {
 
   return (
     <div>
-      <h2 className="font-extrabold mb-5">Ignite Your Journey</h2>
-      <p className="mb-5 text-sm font-medium text-neutral-600">
+      <h2 className="text-xl font-bold text-charcoal dark:text-white tracking-tight mb-1">Ignite Your Journey</h2>
+      <p className="text-sm text-stone-500 dark:text-stone-400 mb-7">
         Join today to unlock exclusive offers, whether you're heating up the
         backyard or cozying up by the fire.
       </p>
       <div className="mb-10">
-        <div className="text-sm font-bold mb-3">Benefits</div>
+        <div className="text-sm font-bold mb-3 text-stone-500 dark:text-stone-400">Benefits</div>
         <ul className="list-disc list-inside space-y-2 marker:text-red-500">
           {accountBenefits &&
             Array.isArray(accountBenefits) &&
@@ -182,7 +188,7 @@ function RegisterForm() {
             accountBenefits.map((item, index) => (
               <li
                 key={`li-acc-benefit-${index}`}
-                className="text-sm text-neutral-600"
+                className="text-sm text-stone-500 dark:text-stone-400"
               >
                 {item}
               </li>
@@ -191,8 +197,8 @@ function RegisterForm() {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="first_name" className="text-xs font-bold">
-            <span className="text-red-600">*</span> First Name
+          <label htmlFor="first_name" className={labelClass}>
+            <span className="text-theme-600">*</span> First Name
           </label>
           <input
             name="first_name"
@@ -200,12 +206,12 @@ function RegisterForm() {
             value={form.first_name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
         <div>
-          <label htmlFor="last_name" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Last Name
+          <label htmlFor="last_name" className={labelClass}>
+            <span className="text-theme-600">*</span> Last Name
           </label>
           <input
             name="last_name"
@@ -213,12 +219,12 @@ function RegisterForm() {
             value={form.last_name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
         <div>
-          <label htmlFor="email" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Email
+          <label htmlFor="email" className={labelClass}>
+            <span className="text-theme-600">*</span> Email
           </label>
           <input
             name="email"
@@ -227,25 +233,25 @@ function RegisterForm() {
             value={form.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
         <div>
-          <label htmlFor="username" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Username
+          <label htmlFor="username" className={labelClass}>
+            <span className="text-theme-600">*</span> Username
           </label>
           <input
             name="username"
             placeholder="Username"
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
         <UsernameGuide />
         <div>
-          <label htmlFor="password" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Password
+          <label htmlFor="password" className={labelClass}>
+            <span className="text-theme-600">*</span> Password
           </label>
           <input
             name="password"
@@ -253,12 +259,12 @@ function RegisterForm() {
             placeholder="Password"
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
         <div>
-          <label htmlFor="password2" className="text-xs font-bold">
-            <span className="text-red-600">*</span> Confirm Password
+          <label htmlFor="password2" className={labelClass}>
+            <span className="text-theme-600">*</span> Confirm Password
           </label>
           <input
             name="password2"
@@ -266,11 +272,11 @@ function RegisterForm() {
             placeholder="Confirm Password"
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
 
-        <div className="flex items-start text-sm text-neutral-600">
+        <div className="flex items-start text-sm text-stone-500 dark:text-stone-400">
           <input
             id="terms"
             name="terms"
@@ -279,7 +285,7 @@ function RegisterForm() {
             className="mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
           />
           <label htmlFor="terms" className="text-sm">
-            <span className="text-red-600" aria-hidden="true">
+            <span className="text-theme-600" aria-hidden="true">
               *
             </span>{" "}
             By checking this box, I agree to {STORE_NAME2}'{" "}
@@ -308,14 +314,14 @@ function RegisterForm() {
         {message && (
           <p
             className={`text-sm mb-4 text-center font-medium ${
-              message.type === "error" ? "text-red-600" : "text-green-600"
+              message.type === "error" ? "text-theme-600" : "text-green-600"
             }`}
           >
             {message.text}
           </p>
         )}
       </form>
-      <p className="mt-10 text-neutral-600 text-sm">
+      <p className="mt-10 text-stone-500 dark:text-stone-400 text-sm">
         Are you a <b>PRO</b>? Join our{" "}
         <Link
           prefetch={false}
