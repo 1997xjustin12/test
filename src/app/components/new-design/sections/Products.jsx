@@ -71,7 +71,7 @@ function ProductCard({ product }) {
         <div className="relative h-48 bg-white">
           {onSale && (
             <div className="absolute top-2.5 left-2.5 z-10">
-              <span className="bg-red-500 text-white text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full">
+              <span className="bg-theme-500 text-white text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full">
                 -{product?.save_pct}%
               </span>
             </div>
@@ -116,14 +116,14 @@ function ProductCard({ product }) {
                 <s className="text-xs text-stone-400 block leading-none mb-0.5">
                   ${formatPrice(product?.was)}
                 </s>
-                <span className="text-lg font-bold text-red-500">
+                <span className="text-lg font-bold text-theme-500">
                   ${formatPrice(product?.price)}
                 </span>
               </div>
               <AddToCartButtonWrap product={product}>
                 <button
                   aria-label={`Add ${product.title} to cart`}
-                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
+                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-theme-500 hover:bg-theme-600 text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
                 >
                   +
                 </button>
@@ -196,7 +196,7 @@ export default function Products({ initialProducts = [] }) {
                     px-4 py-1.5 rounded-full text-sm font-medium border-2 transition-all duration-200
                     ${
                       active === t?.name
-                        ? "border-theme-600 text-theme-600 dark:text-theme-500 bg-theme-600/5"
+                        ? "border-theme-500 text-theme-600 dark:text-theme-500 bg-theme-600/5"
                         : "border-stone-200 dark:border-stone-700 text-stone-500 dark:text-stone-400 hover:border-theme-500 hover:text-theme-600 dark:hover:text-theme-500"
                     }
                   `}
