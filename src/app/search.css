@@ -458,6 +458,104 @@ label.ais-RefinementList-label .ais-RefinementList-count {
 }
 
 /* ═══════════════════════════════════════════
+   Fallback dark-mode overrides (OS preference)
+   ═══════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  /* ─── Checkbox ─── */
+  input[type="checkbox"].ais-RefinementList-checkbox {
+    border-color: #4b5563;
+    background-color: #111827;
+  }
+  input[type="checkbox"].ais-RefinementList-checkbox:hover {
+    border-color: #9ca3af;
+  }
+  input[type="checkbox"].ais-RefinementList-checkbox:checked {
+    background-color: #ff6b14;
+    border-color: #ff6b14;
+  }
+
+  /* ─── Label & count ─── */
+  label.ais-RefinementList-label {
+    color: #e5e7eb;
+  }
+  label.ais-RefinementList-label .ais-RefinementList-count {
+    color: #9ca3af;
+  }
+
+  /* ─── List items ─── */
+  .ais-RefinementList-item:hover {
+    background: #1f2937;
+  }
+
+  /* ─── Search & range inputs ─── */
+  .ais-RangeInput-form input,
+  .ais-SearchBox-input {
+    background-color: #111827;
+    border-color: #374151;
+    color: #f3f4f6;
+  }
+  .ais-RangeInput-form input::placeholder,
+  .ais-SearchBox-input::placeholder {
+    color: #6b7280;
+  }
+  .ais-RangeInput-form input:focus,
+  .ais-SearchBox-input:focus {
+    border-color: #fb923c;
+    box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.2);
+  }
+
+  /* ─── Apply button ─── */
+  .ais-RangeInput-submit {
+    background-color: #374151;
+  }
+  .ais-RangeInput-submit:hover {
+    background-color: #f97316;
+  }
+
+  /* ─── Current refinement tags ─── */
+  .ais-CurrentRefinements-label {
+    color: #e5e7eb;
+  }
+  .ais-CurrentRefinements-category {
+    background-color: #1f2937;
+    border-color: #4b5563;
+  }
+  .ais-CurrentRefinements-categoryLabel {
+    color: #fb923c;
+  }
+  .ais-CurrentRefinements-delete {
+    color: #fb923c;
+  }
+  .ais-CurrentRefinements-delete:hover {
+    color: #fca5a5;
+  }
+  .ais-CurrentRefinements-item {
+    border-top-color: #374151;
+  }
+
+  /* ─── Rating stars ─── */
+  .ais-RefinementList-checkbox[value*="★"] + .ais-RefinementList-labelText,
+  .ais-RefinementList-checkbox[value*="☆"] + .ais-RefinementList-labelText {
+    -webkit-text-stroke: 1px #d1d5db;
+  }
+
+  /* ─── Filter section panel ─── */
+  .pfd-filter-section * {
+    color: #e5e7eb;
+  }
+  .pfd-filter-section > div {
+    background-color: #111827;
+    border: 1px solid #374151;
+  }
+  .panel button {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+}
+
+/* ═══════════════════════════════════════════
    BBQ theme overrides (.bbqgrilloutlet scope)
    ═══════════════════════════════════════════ */
 
