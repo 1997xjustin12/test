@@ -12,6 +12,8 @@ const inputClass =
 const labelClass =
   "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
 
+const buttonClass = "w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+
 function LoginForm({ successLogin = null }) {
   const { login } = useAuth();
   const router = useRouter();
@@ -116,7 +118,7 @@ function LoginForm({ successLogin = null }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-theme-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className={buttonClass}
         >
           {loading ? "Signing in…" : "Sign In"}
         </button>

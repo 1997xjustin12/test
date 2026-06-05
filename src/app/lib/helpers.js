@@ -3,8 +3,8 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
-export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
-// export const ISBBQ = true;
+// export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
+export const ISBBQ = true;
 
 // export const ES_INDEX = "solana_updated_product_index_flat";
 // export const ES_INDEX = "solana_suggest_v2"; // did_you_mean

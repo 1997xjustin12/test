@@ -14,6 +14,8 @@ const inputClass =
 const labelClass =
   "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
 
+const buttonClass = "w-full py-2.5 bg-theme-600 hover:bg-theme-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -306,7 +308,7 @@ function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-theme-600 hover:bg-theme-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className={buttonClass}
         >
           {loading ? "Registering…" : "Create Account"}
         </button>

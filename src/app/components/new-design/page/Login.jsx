@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import FormCard from "@/app/components/new-design/form/FormCard.jsx";
 import LoginForm from "@/app/components/new-design/form/Login";
 import RegisterForm from "@/app/components/new-design/form/Register";
-
 
 export default function LoginPage() {
   const [tab, setTab] = useState("login");
@@ -12,7 +12,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-stone-50 dark:bg-stone-950 py-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-
         {/* Page header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-charcoal dark:text-white tracking-tight">
@@ -48,11 +47,12 @@ export default function LoginPage() {
         </div>
 
         {/* Two-panel card */}
-        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+        <FormCard>
           <div className="flex">
-
             {/* Login panel */}
-            <div className={`flex-1 p-8 lg:p-10 ${isLogin ? "block" : "hidden"} md:block`}>
+            <div
+              className={`flex-1 p-8 lg:p-10 ${isLogin ? "block" : "hidden"} md:block`}
+            >
               <LoginForm />
             </div>
 
@@ -60,13 +60,13 @@ export default function LoginPage() {
             <div className="hidden md:block w-px bg-stone-100 dark:bg-stone-800 my-8" />
 
             {/* Register panel */}
-            <div className={`flex-1 p-8 lg:p-10 ${!isLogin ? "block" : "hidden"} md:block`}>
+            <div
+              className={`flex-1 p-8 lg:p-10 ${!isLogin ? "block" : "hidden"} md:block`}
+            >
               <RegisterForm />
             </div>
-
           </div>
-        </div>
-
+        </FormCard>
       </div>
     </div>
   );

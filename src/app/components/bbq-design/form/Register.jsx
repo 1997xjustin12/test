@@ -14,6 +14,8 @@ const inputClass =
 const labelClass =
   "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
 
+const buttonClass =
+  "w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
 const UsernameGuide = () => {
   return (
     <section className="text-sm ml-2">
@@ -174,13 +176,17 @@ function RegisterForm() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-charcoal dark:text-white tracking-tight mb-1 font-oswald">Ignite Your Journey</h2>
+      <h2 className="text-xl font-bold text-charcoal dark:text-white tracking-tight mb-1 font-oswald">
+        Ignite Your Journey
+      </h2>
       <p className="text-sm text-stone-500 dark:text-stone-400 mb-7">
         Join today to unlock exclusive offers, whether you're heating up the
         backyard or cozying up by the fire.
       </p>
       <div className="mb-10">
-        <div className="text-sm font-bold mb-3 text-stone-500 dark:text-stone-400">Benefits</div>
+        <div className="text-sm font-bold mb-3 text-stone-500 dark:text-stone-400">
+          Benefits
+        </div>
         <ul className="list-disc list-inside space-y-2 marker:text-red-500">
           {accountBenefits &&
             Array.isArray(accountBenefits) &&
@@ -284,7 +290,10 @@ function RegisterForm() {
             required
             className="mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
           />
-          <label htmlFor="terms" className="text-sm text-stone-500 dark:text-stone-400">
+          <label
+            htmlFor="terms"
+            className="text-sm text-stone-500 dark:text-stone-400"
+          >
             <span className="text-theme-700" aria-hidden="true">
               *
             </span>{" "}
@@ -306,7 +315,7 @@ function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className={buttonClass}
         >
           {loading ? "Registering…" : "Create Account"}
         </button>

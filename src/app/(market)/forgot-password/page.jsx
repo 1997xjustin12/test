@@ -11,14 +11,26 @@ export const metadata = {
   title: `Forgot Password | ${STORE_NAME}`,
 };
 
-function ForgotPasswordPage() {
-  if(ISBBQ){
-    return <BBQForgotPasswordPage />
+const wrapperClass = "min-h-svh py-10 px-4 sm:px-6";
+
+function ThemeComponent() {
+  if (ISBBQ) {
+    return (
+      <div className={`${wrapperClass} bg-stone-50 dark:bg-stone-950`}>
+        <BBQForgotPasswordPage />;
+      </div>
+    );
   }
 
   return (
-    <NewForgotPasswordPage />
+    <div className={`${wrapperClass} bg-stone-50 dark:bg-stone-950`}>
+      <NewForgotPasswordPage />
+    </div>
   );
+}
+
+function ForgotPasswordPage() {
+  return <ThemeComponent />;
 }
 
 export default ForgotPasswordPage;
