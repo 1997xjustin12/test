@@ -22,7 +22,7 @@ export default function Newsletter() {
 
   if (user?.is_subscribed)
     return (
-      <section className="py-14 sm:py-16 bg-char text-ash text-center">
+      <section className="py-14 sm:py-16 bg-char dark:bg-stone-950 text-ash text-center">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
           <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase">Stay in the Loop</h2>
           <p className="text-stone-400 font-light text-sm mt-2.5 mb-6">
@@ -64,7 +64,7 @@ export default function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
-              className="flex-1 px-4 py-3.5 border border-stone-700 bg-[#211b15] text-ash rounded-sm font-sora text-sm placeholder:text-stone-600 focus:outline-none focus:border-theme-600"
+              className="flex-1 px-4 py-3.5 border border-stone-700 dark:border-stone-600 bg-[#211b15] dark:bg-stone-900 text-ash rounded-sm font-sora text-sm placeholder:text-stone-600 focus:outline-none focus:border-theme-600"
             />
             <button
               type="submit"

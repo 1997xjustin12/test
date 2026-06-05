@@ -19,14 +19,14 @@ export default async function Categories() {
   const categories = await getCategoriesCache();
 
   return (
-    <section className="py-14 sm:py-16 ">
+    <section className="py-14 sm:py-16 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
           <div>
             <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
               Shop by Category
             </p>
-            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
               Find Your Perfect Setup
             </h2>
           </div>
@@ -43,7 +43,7 @@ export default async function Categories() {
             <Link
               key={`category-card-${slug}`}
               href={`${BASE_URL}/category/${slug}`}
-              className="bg-ash border border-grate rounded-sm  text-center hover:bg-char hover:text-ash hover:-translate-y-1 transition-all group"
+              className="bg-ash dark:bg-stone-900 border border-grate dark:border-stone-700 rounded-sm text-center hover:bg-char hover:text-ash dark:hover:bg-stone-800 hover:-translate-y-1 transition-all group"
             >
               {/* <span className="text-3xl block mb-2">{icon}</span> */}
               <div className="relative w-full aspect-w-3 aspect-h-2 overflow-hidden">
@@ -60,7 +60,7 @@ export default async function Categories() {
                 )}
               </div>
               <div className="p-4 sm:p-5">
-                <b className="font-oswald text-xs sm:text-sm font-semibold tracking-wide">
+                <b className="font-oswald text-xs sm:text-sm font-semibold tracking-wide text-stone-900 dark:text-ash group-hover:text-ash">
                   {name}
                 </b>
               </div>

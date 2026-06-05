@@ -9,7 +9,7 @@ export default function Promo() {
   const copyRef  = useReveal();
   const cardsRef = useReveal();
   return (
-    <section className="py-14 sm:py-16">
+    <section className="py-14 sm:py-16 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
         <Link href={`${BASE_URL}/open-box`}

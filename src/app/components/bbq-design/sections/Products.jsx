@@ -60,7 +60,7 @@ function ProductCard({ product }) {
     <article
       ref={ref}
       className="
-        bg-white border border-grate rounded overflow-hidden flex flex-col hover:shadow-lg hover:-translate-y-1 hover:border-stone-300 transition-all group
+        bg-white dark:bg-stone-900 border border-grate dark:border-stone-700 rounded overflow-hidden flex flex-col hover:shadow-lg hover:-translate-y-1 hover:border-stone-300 dark:hover:border-stone-500 transition-all group
       "
     >
       {/* Image */}
@@ -69,7 +69,7 @@ function ProductCard({ product }) {
         aria-label={product?.title}
         title={product?.title}
       >
-        <div className="relative h-48 bg-white">
+        <div className="relative h-48 bg-white dark:bg-stone-800">
           {/* Flags */}
           <div className="absolute top-2 left-2 flex flex-col gap-1.5">
             {product?.badge && (
@@ -98,7 +98,7 @@ function ProductCard({ product }) {
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="text-[10px] text-stone-400 tracking-widest uppercase font-medium line-clamp-1">
+        <p className="text-[10px] text-stone-400 dark:text-stone-500 tracking-widest uppercase font-medium line-clamp-1">
           {product?.brand}
         </p>
         <Link
@@ -106,12 +106,12 @@ function ProductCard({ product }) {
           aria-label={product?.title}
           title={product?.title}
         >
-          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 hover:text-theme-600 transition-colors line-clamp-2">
+          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 text-stone-900 dark:text-ash hover:text-theme-600 transition-colors line-clamp-2">
             {product?.title}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-1.5 text-xs text-stone-400 mb-2">
+        <div className="flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 mb-2">
           <span className="text-gold tracking-wider">
             {"★".repeat(Math.round(product?.ratings))}
             {"☆".repeat(5 - Math.round(product?.ratings))}
@@ -122,11 +122,11 @@ function ProductCard({ product }) {
 
         <div className="min-h-[46px]">
           <div className="flex items-baseline gap-2">
-            <span className="font-oswald font-bold text-xl">
+            <span className="font-oswald font-bold text-xl text-stone-900 dark:text-ash">
               ${formatPrice(product?.price)}
             </span>
             {product?.was && (
-              <span className="text-xs text-stone-400 line-through">
+              <span className="text-xs text-stone-400 dark:text-stone-500 line-through">
                 ${formatPrice(product.was)}
               </span>
             )}
@@ -214,7 +214,7 @@ export default function Products({ initialProducts = [] }) {
             <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
               Limited Quantities
             </p>
-            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1">
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
               Open-Box &amp; Clearance Deals
             </h2>
           </div>
