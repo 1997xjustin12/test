@@ -1,5 +1,5 @@
-const Divider = () => {
-  return <hr className="block border-t border-gray-300 dark:border-gray-800 my-8" />;
-};
+const Divider = () => (
+  <div className="border-t border-grate dark:border-white/10 my-[30px]" />
+);
 
 export default Divider;

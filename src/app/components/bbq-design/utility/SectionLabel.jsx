@@ -1,5 +1,5 @@
 const SectionLabel = ({ children }) => (
-  <p className="text-xs font-bold uppercase tracking-widest mb-1 text-theme-600">{children}</p>
+  <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase mb-1">{children}</p>
 );
 
 export default SectionLabel;
