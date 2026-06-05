@@ -117,7 +117,7 @@ function LoginForm({ successLogin = null }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-fire hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-2.5 bg-theme-600 hover:bg-theme-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Signing in…" : "Sign In"}
         </button>
