@@ -12,7 +12,7 @@ function BasePlp({ page_details }) {
   const children = page_details.children ?? [];
 
   return (
-    <div className="bg-ash dark:bg-char min-h-screen font-sora">
+    <div className="font-sora">
       <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 py-6">
 
         {/* Breadcrumb */}

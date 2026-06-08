@@ -142,14 +142,12 @@ function SingleProductPage({
   const price = parseFloat(firstVariant?.price) || 0;
   const was = parseFloat(firstVariant?.compare_at_price) || 0;
 
-  console.log()
-
   const brandDescription = product?.vendor
     ? `Designed with features that make it easy to grill great food, every ${product.vendor} product is built for those who demand performance, durability, and bold outdoor style.`
     : "";
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans">
+    <div className="font-sans">
       <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-20">

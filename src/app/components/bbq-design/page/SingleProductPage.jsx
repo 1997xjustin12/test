@@ -61,7 +61,7 @@ function SingleProductPage({
   const price = parseFloat(firstVariant?.price) || 0;
 
   return (
-    <div className="bg-ash dark:bg-char text-char dark:text-ash min-h-screen font-sora">
+    <div className="text-char dark:text-ash font-sora">
       <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />
 

@@ -13,7 +13,7 @@ function ProductGallery({
   initialHits,
 }) {
   return (
-    <main className="dark:bg-char">
+    <main>
       <HeroBanner config={config} />
       {config?.root?.url !== "brands" && (
         <SubcategoryTabs subs={config?.subs} />

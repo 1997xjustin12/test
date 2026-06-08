@@ -161,7 +161,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         </div>
 
         <FicDropDown contact_number={page_details?.contact_number}>
-          <div className="text-xs my-[5px] text-white flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <>Call for Price</>
             ) : (

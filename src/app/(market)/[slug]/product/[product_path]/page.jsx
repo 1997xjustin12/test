@@ -173,7 +173,6 @@ export default async function ProductPage({ params }) {
   }
 
   const product_reviews = (await getReviewsByProductId(product_id)) || [];
-  console.log("product", product);
   const jsonLd = buildJsonLd(product, slug, product_path);
 
   const [about, shipping_policy, return_policy, warranty] = await redis.mget([
@@ -197,13 +196,15 @@ export default async function ProductPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <MainSection
-        product={product}
-        slug={slug}
-        reviews={product_reviews}
-        faqs={FAQS}
-        ymalProducts={ymal_products}
-      />
+      <div className={`min-h-svh ${ISBBQ ? "bg-ash dark:bg-char" : "bg-white dark:bg-gray-950"}`}>
+        <MainSection
+          product={product}
+          slug={slug}
+          reviews={product_reviews}
+          faqs={FAQS}
+          ymalProducts={ymal_products}
+        />
+      </div>
     </>
   );
 }

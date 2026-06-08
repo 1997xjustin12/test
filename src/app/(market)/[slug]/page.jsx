@@ -135,9 +135,20 @@ export default async function GenericCategoryPage({ params }) {
   const url = pageData?.url;
 
   if (!pageData || !url) return notFound();
-  if (pageData.is_base_nav) return ISBBQ
-    ? <BBQBasePlp page_details={pageData} />
-    : <NewDesignBasePlp page_details={pageData} />;
+  if (pageData.is_base_nav) {
+    if (ISBBQ) {
+      return (
+        <div className="min-h-svh bg-ash dark:bg-char">
+          <BBQBasePlp page_details={pageData} />
+        </div>
+      );
+    }
+    return (
+      <div className="min-h-svh bg-white dark:bg-gray-950">
+        <NewDesignBasePlp page_details={pageData} />
+      </div>
+    );
+  }
 
   const rootNav = getRootByUrl(menuData, url);
   if (!rootNav) return notFound();
@@ -173,23 +184,29 @@ export default async function GenericCategoryPage({ params }) {
     };
   });
 
-  if(ISBBQ) {
-    return <BBQProductGallery
-      slug={slug}
-      config={{ root: rootNav, url, subs }}
-      filterType={pageData?.filter_type ?? null}
-      initialFilterString={filterString}
-      initialHits={initialHits}
-    />
+  if (ISBBQ) {
+    return (
+      <div className="min-h-svh bg-ash dark:bg-char">
+        <BBQProductGallery
+          slug={slug}
+          config={{ root: rootNav, url, subs }}
+          filterType={pageData?.filter_type ?? null}
+          initialFilterString={filterString}
+          initialHits={initialHits}
+        />
+      </div>
+    );
   }
 
   return (
-    <NewProductGallery
-      slug={slug}
-      config={{ root: rootNav, url, subs }}
-      filterType={pageData?.filter_type ?? null}
-      initialFilterString={filterString}
-      initialHits={initialHits}
-    />
+    <div className="min-h-svh bg-white dark:bg-gray-950">
+      <NewProductGallery
+        slug={slug}
+        config={{ root: rootNav, url, subs }}
+        filterType={pageData?.filter_type ?? null}
+        initialFilterString={filterString}
+        initialHits={initialHits}
+      />
+    </div>
   );
 }
