@@ -7,8 +7,6 @@ import { useSearch } from "@/app/context/search";
 import { useSolanaCategories } from "@/app/context/category";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const FIRE = "#E85D26";
-
 function highlight(text, query) {
   if (!query) return text;
   const idx = (text || "").toLowerCase().indexOf(query.toLowerCase());
@@ -16,7 +14,7 @@ function highlight(text, query) {
   return (
     <>
       {text.slice(0, idx)}
-      <span style={{ color: FIRE, fontWeight: 700 }}>
+      <span className="text-ember font-bold">
         {text.slice(idx, idx + query.length)}
       </span>
       {text.slice(idx + query.length)}
@@ -71,7 +69,7 @@ function CategoryIcon() {
       height="16"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#2056b0"
+      stroke="currentColor"
       strokeWidth="2"
     >
       <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -88,7 +86,7 @@ function BrandIcon() {
       height="16"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#2a6b2a"
+      stroke="currentColor"
       strokeWidth="2"
     >
       <circle cx="12" cy="8" r="4" />
@@ -103,7 +101,7 @@ function CollectionIcon() {
       height="16"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#6330c4"
+      stroke="currentColor"
       strokeWidth="2"
     >
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -113,14 +111,10 @@ function CollectionIcon() {
 
 function Tag({ type }) {
   const styles = {
-    product:
-      "bg-orange-50 text-orange-700 border border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700",
-    category:
-      "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700",
-    brand:
-      "bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700",
-    collection:
-      "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700",
+    product:    "bg-ember/10 dark:bg-ember/20 text-ember",
+    category:   "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600",
+    brand:      "bg-bbq-green/10 dark:bg-bbq-green/20 text-bbq-green",
+    collection: "bg-gold/10 dark:bg-gold/20 text-gold",
   };
   const labels = {
     product: "Product",
@@ -130,7 +124,7 @@ function Tag({ type }) {
   };
   return (
     <span
-      className={`text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded flex-shrink-0 ${styles[type]}`}
+      className={`font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm flex-shrink-0 ${styles[type]}`}
     >
       {labels[type]}
     </span>
@@ -140,7 +134,7 @@ function Tag({ type }) {
 function SectionHeader({ label, children }) {
   return (
     <div className="flex items-center justify-between px-3 sm:px-4 pt-2.5 sm:pt-3 pb-1 sm:pb-1.5">
-      <span className="text-[10px] font-semibold tracking-widest uppercase text-stone-400 dark:text-stone-500">
+      <span className="font-oswald text-[10px] font-semibold tracking-widest uppercase text-char/40 dark:text-ash/40">
         {label}
       </span>
       {children}
@@ -150,14 +144,14 @@ function SectionHeader({ label, children }) {
 
 function Divider() {
   return (
-    <div className="mx-3 sm:mx-4 border-t border-stone-100 dark:border-stone-700/60" />
+    <div className="mx-3 sm:mx-4 border-t border-grate dark:border-white/10" />
   );
 }
 
 function SearchSpinner({ className = "" }) {
   return (
     <svg
-      className={`animate-spin w-3 h-3 text-stone-400 flex-shrink-0 ${className}`}
+      className={`animate-spin w-3 h-3 text-char/40 dark:text-ash/40 flex-shrink-0 ${className}`}
       fill="none"
       viewBox="0 0 24 24"
     >
@@ -390,10 +384,10 @@ function SearchBox() {
 
       {/* ── DROPDOWN ── */}
       {open && (
-        <div className="absolute top-[calc(100%+4px)] sm:top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-700 rounded-lg sm:rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col">
+        <div className="absolute top-[calc(100%+4px)] sm:top-[calc(100%+8px)] left-0 right-0 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-2xl overflow-hidden z-50 flex flex-col">
           {/* Loading progress bar — always mounted so transition is smooth */}
           <div
-            className={`h-0.5 flex-shrink-0 bg-orange-400 transition-opacity duration-300 ${loading ? "opacity-100 animate-pulse" : "opacity-0"}`}
+            className={`h-0.5 flex-shrink-0 bg-theme-600 transition-opacity duration-300 ${loading ? "opacity-100 animate-pulse" : "opacity-0"}`}
           />
           <div
             className={`transition-opacity duration-150 ${loading ? "opacity-60 pointer-events-none select-none" : ""}`}
@@ -403,10 +397,7 @@ function SearchBox() {
             {top && (
               <>
                 <SectionHeader label="Top Result">
-                  <span
-                    className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={{ background: "#fff4ee", color: FIRE }}
-                  >
+                  <span className="font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm bg-ember/10 dark:bg-ember/20 text-ember">
                     Direct Match
                   </span>
                 </SectionHeader>
@@ -414,9 +405,9 @@ function SearchBox() {
                   prefetch={false}
                   href={getProductUrl(top)}
                   onClick={() => handleItemClick(getProductUrl(top))}
-                  className="mx-2 sm:mx-3 mb-1 rounded-lg sm:rounded-xl border border-orange-100 dark:border-orange-900/40 bg-orange-50/50 dark:bg-orange-950/20 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/40 transition group"
+                  className="mx-2 sm:mx-3 mb-1 rounded-sm border border-grate dark:border-white/10 bg-ash dark:bg-char/60 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 cursor-pointer hover:bg-paper dark:hover:bg-smoke hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-md hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200 group"
                 >
-                  <div className="rounded-lg sm:rounded-xl min-w-14 min-h-14 sm:min-w-20 sm:min-h-20 relative overflow-hidden flex-shrink-0 border border-stone-200 dark:border-stone-700">
+                  <div className="rounded-sm min-w-14 min-h-14 sm:min-w-20 sm:min-h-20 relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10 bg-white dark:bg-char">
                     {top?.images?.find(({ position }) => position == 1)
                       ?.src && (
                       <Image
@@ -433,38 +424,28 @@ function SearchBox() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs text-stone-400 dark:text-stone-500 mb-0.5">
+                    <div className="font-oswald text-[10px] uppercase tracking-widest text-theme-600 mb-0.5">
                       {top.brand}
                     </div>
-                    <div className="text-sm font-semibold text-stone-900 dark:text-white leading-snug truncate">
+                    <div className="text-sm font-semibold text-char dark:text-ash leading-snug truncate">
                       {highlight(top.title, searchQuery)}
                     </div>
                     {top.tag && (
-                      <span
-                        className="mt-1 inline-block text-[10px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-full"
-                        style={{
-                          background: "rgba(232,93,38,.12)",
-                          color: FIRE,
-                        }}
-                      >
+                      <span className="mt-1 inline-block font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm bg-ember/10 dark:bg-ember/20 text-ember">
                         {top.tag}
                       </span>
                     )}
-                    <div
-                      className="sm:hidden text-xs font-bold mt-1"
-                      style={{ color: FIRE }}
-                    >
+                    <div className="sm:hidden font-oswald font-bold text-xs mt-1 text-ember-deep dark:text-ember">
                       ${formatPrice(top.price)}
                     </div>
                   </div>
                   <div className="hidden sm:flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="text-base font-bold text-stone-900 dark:text-white">
+                    <span className="font-oswald font-bold text-base text-ember-deep dark:text-ember">
                       ${formatPrice(top.price)}
                     </span>
                     <span className="relative">
                       <span
-                        className={`text-xs text-white px-2 py-1 rounded-lg transition ${loadingHref === getProductUrl(top) ? "invisible" : "opacity-0 group-hover:opacity-100"}`}
-                        style={{ background: FIRE }}
+                        className={`font-oswald text-xs font-semibold uppercase tracking-wide text-white px-2 py-1 rounded-sm bg-ember transition ${loadingHref === getProductUrl(top) ? "invisible" : "opacity-0 group-hover:opacity-100"}`}
                       >
                         View →
                       </span>
@@ -485,8 +466,7 @@ function SearchBox() {
                 <SectionHeader label="Popular Searches">
                   <button
                     onClick={() => setShowAllPopular((v) => !v)}
-                    className="text-[11px] font-semibold rounded px-2 py-0.5 transition hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    style={{ color: FIRE }}
+                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
                   >
                     {showAllPopular ? "See less ↑" : "See all ↓"}
                   </button>
@@ -500,7 +480,7 @@ function SearchBox() {
                         href={`${BASE_URL}/search?query=${p}`}
                         key={`popular-search-${p}`}
                         onClick={handleChip}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium font-sora bg-ash dark:bg-smoke text-char dark:text-ash border border-grate dark:border-white/10 hover:border-theme-600 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
                       >
                         <svg
                           width="11"
@@ -527,8 +507,7 @@ function SearchBox() {
                 <SectionHeader label="Products">
                   <button
                     onClick={() => setShowAllProducts((v) => !v)}
-                    className="text-[11px] font-semibold rounded px-2 py-0.5 transition hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    style={{ color: FIRE }}
+                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
                   >
                     {showAllPopular ? "See less ↑" : "See all ↓"}
                   </button>
@@ -542,9 +521,9 @@ function SearchBox() {
                         href={getProductUrl(p)}
                         key={`product-${p.product_id}-${index}`}
                         onClick={() => handleItemClick(getProductUrl(p))}
-                        className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-lg sm:rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition group"
+                        className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition group"
                       >
-                        <div className="rounded-md sm:rounded-lg min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
+                        <div className="rounded-sm min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
                           {p?.image && (
                             <Image
                               src={p.image}
@@ -557,7 +536,7 @@ function SearchBox() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-stone-800 dark:text-stone-200 truncate">
+                          <div className="text-sm font-medium text-char dark:text-ash truncate">
                             {highlight(p.title, searchQuery)}
                           </div>
                           <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">
@@ -581,8 +560,7 @@ function SearchBox() {
                 <SectionHeader label="Categories">
                   <button
                     onClick={() => setShowAllCategories((v) => !v)}
-                    className="text-[11px] font-semibold rounded px-2 py-0.5 transition hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    style={{ color: FIRE }}
+                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
                   >
                     {showAllCategories ? "See less ↑" : "See all ↓"}
                   </button>
@@ -598,9 +576,9 @@ function SearchBox() {
                           href={href}
                           key={`category-${c.slug}-${index}`}
                           onClick={() => handleItemClick(href)}
-                          className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-lg sm:rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
+                          className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
                         >
-                          <div className="rounded-md sm:rounded-lg min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
+                          <div className="rounded-sm min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
                             {c?.image && (
                               <Image
                                 src={c.image}
@@ -615,7 +593,7 @@ function SearchBox() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
+                            <div className="text-sm font-medium text-char dark:text-ash">
                               {c.name}
                             </div>
                             <div className="text-xs text-stone-400 dark:text-stone-500">
@@ -640,8 +618,7 @@ function SearchBox() {
                 <SectionHeader label="Brands">
                   <button
                     onClick={() => setShowAllBrands((v) => !v)}
-                    className="text-[11px] font-semibold rounded px-2 py-0.5 transition hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    style={{ color: FIRE }}
+                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
                   >
                     {showAllBrands ? "See less ↑" : "See all ↓"}
                   </button>
@@ -657,9 +634,9 @@ function SearchBox() {
                           href={href}
                           key={`brand-${b.name}-${index}`}
                           onClick={() => handleItemClick(href)}
-                          className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
+                          className="flex items-center gap-3 px-2 py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
                         >
-                          <div className="rounded-lg min-w-16 min-h-16 bg-white relative overflow-hidden flex-shrink-0 border border-stone-100 dark:border-stone-700">
+                          <div className="rounded-sm min-w-16 min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
                             {b?.image && (
                               <Image
                                 src={b.image}
@@ -672,7 +649,7 @@ function SearchBox() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
+                            <div className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
                               {b.name}
                             </div>
                             <div className="text-xs text-stone-400 dark:text-stone-500">
@@ -697,8 +674,7 @@ function SearchBox() {
                 <SectionHeader label="Collections">
                   <button
                     onClick={() => setShowAllCollections((v) => !v)}
-                    className="text-[11px] font-semibold rounded px-2 py-0.5 transition hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                    style={{ color: FIRE }}
+                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
                   >
                     {showAllCollections ? "See less ↑" : "See all ↓"}
                   </button>
@@ -709,13 +685,13 @@ function SearchBox() {
                     .map((col, index) => (
                       <div
                         key={`collection-search-${col.name}-${index}`}
-                        className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-stone-50 dark:hover:bg-stone-800 transition"
+                        className="flex items-center gap-3 px-2 py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-theme-600/10 dark:bg-theme-600/20 flex items-center justify-center flex-shrink-0 text-theme-600">
                           <CollectionIcon />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-stone-800 dark:text-stone-200">
+                          <div className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
                             {col.name}
                           </div>
                           <div className="text-xs text-stone-400 dark:text-stone-500">
@@ -730,9 +706,9 @@ function SearchBox() {
             )}
 
             {/* FOOTER */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-stone-100 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50">
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-grate dark:border-white/10 bg-ash dark:bg-smoke">
               {loading ? (
-                <span className="flex items-center gap-1.5 text-[11px] text-stone-400 dark:text-stone-500">
+                <span className="flex items-center gap-1.5 text-[11px] text-char/40 dark:text-ash/40 font-sora">
                   <svg
                     className="animate-spin w-3 h-3 flex-shrink-0"
                     fill="none"
@@ -765,8 +741,7 @@ function SearchBox() {
                       ? `${BASE_URL}/search?query=${searchQuery}`
                       : "#"
                   }
-                  className="text-xs font-semibold flex items-center gap-1 transition hover:underline"
-                  style={{ color: FIRE }}
+                  className="font-oswald text-xs font-semibold uppercase tracking-wide flex items-center gap-1 text-theme-600 hover:text-theme-700 transition"
                 >
                   View all results
                   <svg
