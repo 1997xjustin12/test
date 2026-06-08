@@ -1,17 +1,8 @@
-export const STORE_NAME = "Solana Fireplaces";
-
-export const STORE_NAME2 = "SolanaFireplaces";
-
-export const STORE_EMAIL = "info@solanafireplaces.com";
-
-export const STORE_CONTACT = "(888) 575-9720";
-
+export const STORE_NAME = process.env.NEXT_PUBLIC_STORE_NAME;
+export const STORE_NAME2 = process.env.NEXT_PUBLIC_STORE_NAME2;
+export const STORE_EMAIL = process.env.NEXT_PUBLIC_STORE_EMAIL;
+export const STORE_CONTACT = process.env.NEXT_PUBLIC_STORE_CONTACT;
 export const STORE_DOMAIN = process.env.NEXT_PUBLIC_STORE_DOMAIN;
-
-// REDIS KEY PREFIX (MUST BE UNIQUE FOR EVERY STORE) LowerCased
-export const STORE_REDIS_PREFIX = "solana";
-
-// SOCIALS
-export const STORE_FACEBOOK =
-  "https://www.facebook.com/profile.php?id=61576364267085";
-export const STORE_PINTEREST = "https://www.pinterest.com/solanafireplaces/";
+export const STORE_REDIS_PREFIX = process.env.STORE_REDIS_PREFIX;
+export const STORE_FACEBOOK = process.env.NEXT_PUBLIC_STORE_FACEBOOK;
+export const STORE_PINTEREST = process.env.NEXT_PUBLIC_STORE_PINTEREST;
