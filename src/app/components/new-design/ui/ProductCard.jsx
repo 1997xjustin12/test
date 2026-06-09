@@ -129,7 +129,7 @@ function ProductCard({ hit, page_details, onCompare }) {
           <div className="flex items-center gap-1.5">
             <StarRating rating={product?.ratings} />
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
-              {product?.ratings} {!!product?.reviews && `(${product?.reviews})`}
+              {!!product?.ratings && product.ratings} {!!product?.reviews && `(${product?.reviews})`}
             </span>
           </div>
           {/* <span className="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded-md">
@@ -209,7 +209,7 @@ function ProductCard({ hit, page_details, onCompare }) {
             </button>
         </div>
         <FicDropDown contact_number={page_details?.contact_number}>
-          <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <>Call for Price </>
             ) : (

@@ -9,15 +9,15 @@ import StarRating from "@/app/components/bbq-design/sections/sp/StarRating";
 
 const BADGE_STYLES = {
   bestseller: "bg-gold text-white",
-  sale:       "bg-ember text-white",
-  new:        "bg-char text-white",
-  openbox:    "bg-smoke text-white",
+  sale: "bg-ember text-white",
+  new: "bg-char text-white",
+  openbox: "bg-smoke text-white",
 };
 const BADGE_LABELS = {
   bestseller: "Bestseller",
-  sale:       "Sale",
-  new:        "New",
-  openbox:    "Open Box",
+  sale: "Sale",
+  new: "New",
+  openbox: "Open Box",
 };
 import { formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
@@ -42,7 +42,6 @@ const ProductCard = ({ p }) => {
 
   return (
     <article className="group flex flex-col bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-1 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200">
-
       {/* Image */}
       <Link
         prefetch={false}
@@ -62,7 +61,9 @@ const ProductCard = ({ p }) => {
         )}
         {p?.badge && BADGE_STYLES[p.badge] && (
           <div className="absolute top-2 left-2">
-            <span className={`font-oswald text-[10px] font-semibold px-2 py-0.5 uppercase tracking-wide ${BADGE_STYLES[p.badge]}`}>
+            <span
+              className={`font-oswald text-[10px] font-semibold px-2 py-0.5 uppercase tracking-wide ${BADGE_STYLES[p.badge]}`}
+            >
               {BADGE_LABELS[p.badge]}
             </span>
           </div>
@@ -110,7 +111,13 @@ const ProductCard = ({ p }) => {
           aria-label="Quick view"
           className="w-9 h-9 min-w-[36px] flex items-center justify-center rounded-sm bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40 hover:bg-theme-600 hover:text-white dark:hover:text-white transition-colors"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
@@ -122,10 +129,17 @@ const ProductCard = ({ p }) => {
           disabled={loading}
           className="relative flex-1 h-9 flex items-center justify-center font-oswald font-semibold text-xs uppercase tracking-wide text-white bg-theme-600 hover:bg-theme-700 rounded-sm transition-colors disabled:opacity-60"
         >
-          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${loading ? "" : "invisible"}`}>
+          <div
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${loading ? "" : "invisible"}`}
+          >
             <Eos3DotsLoading />
           </div>
-          <span className={loading ? "invisible" : ""}>Add to Cart</span>
+          <span className={`hidden md:block ${loading ? "invisible" : ""}`}>
+            Add to Cart
+          </span>
+          <span className={`block md:hidden ${loading ? "invisible" : ""}`}>
+            <span className="text-lg leading-none">🛒</span>
+          </span>
         </button>
 
         {/* Call */}
@@ -133,14 +147,25 @@ const ProductCard = ({ p }) => {
           href={`tel:${STORE_CONTACT}`}
           className="h-9 px-2.5 flex items-center justify-center border border-theme-600 text-theme-600 font-oswald font-semibold text-xs uppercase tracking-wide hover:bg-theme-600/10 rounded-sm transition-colors whitespace-nowrap"
         >
-          Call
+          <span className="hidden md:block">Call</span>
+          <span className="block md:hidden">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </span>
         </Link>
       </div>
 
       {/* Found it cheaper */}
       <div className="px-3 pb-3 -mt-1">
         <FicDropDown contact_number={STORE_CONTACT}>
-          <div className="text-xs text-white flex items-center cursor-default gap-[7px] flex-wrap hover:text-theme-600 transition-colors">
+          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             Found It Cheaper?
             <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
               <ICRoundPhone width={14} height={14} />

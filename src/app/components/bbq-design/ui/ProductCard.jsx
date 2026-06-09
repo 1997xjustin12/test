@@ -101,7 +101,7 @@ function ProductCard({ hit, page_details, onCompare }) {
         <div className="flex items-center gap-1.5 mb-2">
           <StarRating rating={product?.ratings} />
           <span className="text-xs text-char/40 dark:text-ash/30">
-            {product?.ratings} {!!product?.reviews && `(${product?.reviews})`}
+            {!!product?.ratings && product.ratings} {!!product?.reviews && `(${product?.reviews})`}
           </span>
         </div>
 
@@ -148,20 +148,21 @@ function ProductCard({ hit, page_details, onCompare }) {
           <button
             onClick={handleAdd}
             disabled={atcLoading}
-            className="relative w-full uppercase font-oswald tracking-wide flex justify-center items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-colors bg-ember hover:bg-ember-deep text-white"
+            className="relative w-full uppercase font-oswald tracking-wide flex justify-center items-center gap-1.5 px-3 py-2 text-[12px] md:text-xs font-semibold transition-colors bg-theme-600 hover:bg-theme-700 text-white"
           >
             {atcLoading ? (
               <Eos3DotsLoading />
             ) : (
               <>
-                🔥<span className="hidden sm:inline">&nbsp;Add to Cart</span>
+                <span className="text-lg leading-none">🛒</span>
+                <span className="hidden sm:inline">&nbsp;Add to Cart</span>
               </>
             )}
           </button>
         </div>
 
         <FicDropDown contact_number={page_details?.contact_number}>
-          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (
               <>Call for Price</>
             ) : (

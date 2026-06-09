@@ -9,11 +9,12 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
 
 const ProductCategoryChip = ({ category, url = "#" }) => {
-  if (!category) return (
-    <div className="self-start text-[10px] font-oswald font-semibold text-red-500 bg-red-500/10 border border-red-500/20 px-2.5 py-1 rounded-sm uppercase tracking-widest">
-      Category Not Assigned
-    </div>
-  );
+  if (!category)
+    return (
+      <div className="self-start text-[10px] font-oswald font-semibold text-red-500 bg-red-500/10 border border-red-500/20 px-2.5 py-1 rounded-sm uppercase tracking-widest">
+        Category Not Assigned
+      </div>
+    );
   return (
     <Link
       prefetch={false}
@@ -34,7 +35,10 @@ const ProductOptionGroup = ({ option_group }) => {
       </p>
       <div className="mt-1 grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
         {option_group.options.map((opt, i) => (
-          <ProductOptionItemLink key={`${createSlug(opt?.title)}-option-${i}`} product={opt} />
+          <ProductOptionItemLink
+            key={`${createSlug(opt?.title)}-option-${i}`}
+            product={opt}
+          />
         ))}
       </div>
     </div>
@@ -43,7 +47,6 @@ const ProductOptionGroup = ({ option_group }) => {
 
 const ProductInfo = ({ product }) => (
   <div className="flex flex-col gap-5">
-
     {/* Brand + SKU */}
     <div className="flex items-center gap-2.5 flex-wrap">
       <Link
@@ -53,7 +56,9 @@ const ProductInfo = ({ product }) => (
       >
         {product?.brand}
       </Link>
-      <span className="text-[10px] text-char/30 dark:text-ash/30">SKU: {product?.sku}</span>
+      <span className="text-[10px] text-char/30 dark:text-ash/30">
+        SKU: {product?.sku}
+      </span>
     </div>
 
     {/* Title */}
@@ -61,7 +66,10 @@ const ProductInfo = ({ product }) => (
       {product?.name}
     </h1>
 
-    <ProductCategoryChip category={product?.category} url={product?.category_url} />
+    <ProductCategoryChip
+      category={product?.category}
+      url={product?.category_url}
+    />
 
     {/* Price */}
     <div className="flex flex-col items-start gap-2 my-2">
@@ -76,7 +84,9 @@ const ProductInfo = ({ product }) => (
           <Badge variant="green">SAVE {product?.save_pct}%</Badge>
           <span className="text-xs text-char/50 dark:text-ash/40">
             You save{" "}
-            <strong className="text-bbq-green">${formatPrice(product?.save_amt)}</strong>
+            <strong className="text-bbq-green">
+              ${formatPrice(product?.save_amt)}
+            </strong>
             {product?.is_freeshipping && " · Free Shipping"}
           </span>
         </div>
@@ -86,7 +96,13 @@ const ProductInfo = ({ product }) => (
     {/* Ships */}
     <div>
       <div className="flex items-center gap-2 text-sm text-char/60 dark:text-ash/50">
-        <svg className="w-4 h-4 text-bbq-green flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4 text-bbq-green flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span className="font-medium">{product?.ships}</span>
@@ -104,44 +120,72 @@ const ProductInfo = ({ product }) => (
 
     {/* Product Options */}
     <div className="flex flex-col gap-4">
-      {Array.isArray(product?.product_options) && product.product_options.map((og, i) => (
-        <ProductOptionGroup key={`product-option-group-${og?.option_label}-${i}`} option_group={og} />
-      ))}
+      {Array.isArray(product?.product_options) &&
+        product.product_options.map((og, i) => (
+          <ProductOptionGroup
+            key={`product-option-group-${og?.option_label}-${i}`}
+            option_group={og}
+          />
+        ))}
     </div>
 
     {/* Discounts */}
-    {Array.isArray(product?.discount_links) && product.discount_links.length > 0 && (
-      <div className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-xs flex-shrink-0">🔥</span>
-          <span className="font-oswald text-xs font-semibold text-char/70 dark:text-ash/70 uppercase tracking-wide">
-            Discounts &amp; Savings Available
-          </span>
+    {Array.isArray(product?.discount_links) &&
+      product.discount_links.length > 0 && (
+        <div className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs flex-shrink-0">🔥</span>
+            <span className="font-oswald text-xs font-semibold text-char/70 dark:text-ash/70 uppercase tracking-wide">
+              Discounts &amp; Savings Available
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {product.discount_links.map((b, i) => (
+              <Link
+                prefetch={false}
+                href={b?.url}
+                key={`discount-links-${b?.label}-${i}`}
+                className="flex items-center gap-2 text-xs text-char/50 dark:text-ash/40 hover:text-theme-600 transition-colors"
+              >
+                <span className="w-1 h-1 rounded-full bg-theme-600 flex-shrink-0" />
+                {b?.label}
+              </Link>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          {product.discount_links.map((b, i) => (
-            <Link
-              prefetch={false}
-              href={b?.url}
-              key={`discount-links-${b?.label}-${i}`}
-              className="flex items-center gap-2 text-xs text-char/50 dark:text-ash/40 hover:text-theme-600 transition-colors"
-            >
-              <span className="w-1 h-1 rounded-full bg-theme-600 flex-shrink-0" />
-              {b?.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-    )}
+      )}
 
     {/* Qty + CTA */}
-    <div className="flex items-stretch gap-3 flex-wrap">
-      <AddToCartWidget product={product} />
+    <div className="flex flex-col gap-3">
+      <div className="flex items-stretch gap-3 flex-wrap">
+        <AddToCartWidget product={product} />
+        <Link
+          href={`tel:${STORE_CONTACT}`}
+          className="hidden items-center gap-2 h-11 px-4 border md:flex border-theme-600 text-theme-600 font-oswald font-semibold text-xs uppercase tracking-wide hover:bg-theme-600/10 transition-colors whitespace-nowrap rounded-sm"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+          Call Expert
+        </Link>
+      </div>
       <Link
         href={`tel:${STORE_CONTACT}`}
-        className="flex items-center gap-2 h-11 px-4 border border-theme-600 text-theme-600 font-oswald font-semibold text-xs uppercase tracking-wide hover:bg-theme-600/10 transition-colors whitespace-nowrap rounded-sm"
+        className="flex md:hidden items-center justify-center gap-2 h-11 px-4 border border-theme-600 text-theme-600 font-oswald font-semibold text-xs uppercase tracking-wide hover:bg-theme-600/10 transition-colors whitespace-nowrap rounded-sm"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
           <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
         </svg>
         Call Expert

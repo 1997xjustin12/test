@@ -13,6 +13,8 @@ import { formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useCart } from "@/app/context/cart";
 import { useQuickView } from "@/app/context/quickview";
+import { CartIcon } from "@/app/components/new-design/ui/Icons";
+
 
 const ProductCard = ({ p }) => {
   const { addToCart } = useCart();
@@ -111,20 +113,32 @@ const ProductCard = ({ p }) => {
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${loading ? "" : "invisible"}`}>
             <Eos3DotsLoading />
           </div>
-          <div className={loading ? "invisible" : ""}>Add to Cart</div>
+          <span className={`hidden md:block ${loading ? "invisible" : ""}`}>Add to Cart</span>
+          <span className={`block md:hidden ${loading ? "invisible" : ""}`}><CartIcon /></span>
         </button>
         <Link
           href={`tel:${STORE_CONTACT}`}
           className="text-xs border-2 border-theme-600 text-theme-700 dark:text-theme-400 font-bold py-2 px-2.5 rounded-xl hover:bg-theme-50 dark:hover:bg-theme-950 transition-colors whitespace-nowrap"
         >
-          Call
+          <span className="hidden md:block">Call</span>
+          <span className="block md:hidden">
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </span>
         </Link>
       </div>
 
       {/* Found it cheaper */}
       <div className="px-3 pb-3">
         <FicDropDown contact_number={STORE_CONTACT}>
-          <div className="text-xs text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
+          <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             Found It Cheaper?
             <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
               <ICRoundPhone width={14} height={14} />
