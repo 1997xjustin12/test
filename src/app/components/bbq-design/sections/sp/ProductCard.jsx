@@ -86,20 +86,22 @@ const ProductCard = ({ p }) => {
         <StarRating rating={p?.ratings} showCount count={p?.reviews} />
 
         {/* Price */}
-        <div className="flex items-baseline gap-1.5 pt-3 mt-auto border-t border-grate dark:border-white/10">
+        <div className="flex flex-col md:flex-row items-baseline gap-1.5 pt-3 mt-auto border-t border-grate dark:border-white/10">
           <span className="font-oswald font-bold text-base text-ember-deep dark:text-ember">
             ${formatPrice(p?.price)}
           </span>
-          {!!p?.was && (
-            <span className="text-xs text-char/40 dark:text-ash/30 line-through">
-              ${formatPrice(p.was)}
-            </span>
-          )}
-          {!!p?.save_amt && (
-            <span className="font-oswald text-[10px] font-bold text-bbq-green">
-              −${formatPrice(p.save_amt)}
-            </span>
-          )}
+          <div>
+            {!!p?.was && (
+              <span className="text-xs text-char/40 dark:text-ash/30 line-through">
+                ${formatPrice(p.was)}
+              </span>
+            )}
+            {!!p?.save_amt && (
+              <span className="font-oswald text-[10px] font-bold text-bbq-green">
+                −${formatPrice(p.save_amt)}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

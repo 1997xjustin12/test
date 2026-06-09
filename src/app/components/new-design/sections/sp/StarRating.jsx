@@ -16,7 +16,7 @@ const StarRating = ({ rating, size = "sm", showCount, count }) => {
       </span>
       {showCount && (
         <span className="text-xs text-gray-500 dark:text-gray-400">
-          ({count})
+          {!!count && `(${count})`}
         </span>
       )}
     </span>
