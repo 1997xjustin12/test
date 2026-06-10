@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
-import CartListItem from "@/app/components/atom/CartListItem";
-import CartOrderSummary from "@/app/components/atom/CartOrderSummary";
+import CartListItem from "@/app/components/bbq-design/sections/cart/CartListItem";
+import CartOrderSummary from "@/app/components/bbq-design/sections/cart/CartOrderSummary";
 import YouMayAlsoLike from "@/app/components/bbq-design/ui/YouMayAlsoLike";
 import { BASE_URL, mapOrderItems } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
