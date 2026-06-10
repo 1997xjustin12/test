@@ -1125,7 +1125,8 @@ export function formatProduct(product, mod = "pdp") {
   const variant = product?.variants?.[0];
   const rating = product?.ratings;
   const price = variant?.price;
-  const was = variant?.compare_at_price || 0;
+  const compare_price = variant?.compare_at_price || 0;
+  const was = compare_price < price ? 0: compare_price;
   const save_amt = was ? was - price : 0;
   const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
   const category = product?.accentuate_data?.category || "uncategorized";
@@ -1167,6 +1168,18 @@ export function formatProduct(product, mod = "pdp") {
       label: "Free Accessory Bundle",
     },
   ];
+
+  if(mod === "cart_item"){
+    return {
+      ...product,
+      price,
+      was,
+      save_amt,
+      save_pct,
+      url,
+      image: main_image
+    }
+  }
 
   if(mod==="fbt_bundle"){
     return {

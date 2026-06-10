@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice, BASE_URL } from "@/app/lib/helpers";
+import { formatPrice, formatProduct, BASE_URL } from "@/app/lib/helpers";
 import { pixelInitiateCheckout } from "@/app/lib/pixel";
 import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
@@ -25,9 +25,23 @@ const SavingsBanner = ({ savings, shipping_cost }) => (
 function CartOrderSummary({ checkoutButton = true }) {
   const { loading, user } = useAuth();
   const { cartObject, cartItems } = useCart();
-  const [originalPrice, setOriginalPrice] = useState(0);
-  const [salePrice, setSalePrice] = useState(0);
-  const [savings, setSavings] = useState(0);
+
+  const order_summary = useMemo(() => {
+    const items = (cartObject?.items || []).map(i => formatProduct(i, "cart_item"));
+    const origPriceSum = items.reduce((t, i) => t + (i?.was || i?.price || 0) * (i.quantity || 0), 0);
+    const salePriceSum = items.reduce((t, i) => t + (i?.price || 0) * (i.quantity || 0), 0);
+    const shipAmt = cartObject?.total_shipping
+      ? `$${formatPrice(cartObject.total_shipping)}`
+      : cartItems.length > 0
+      ? "FREE"
+      : "$0.00";
+    return {
+      origPriceSum,
+      salePriceSum,
+      saveAmtSum: origPriceSum - salePriceSum,
+      shipAmt,
+    };
+  }, [cartObject, cartItems.length]);
 
   const handleCheckout = (e) => {
     e.preventDefault();
@@ -35,49 +49,16 @@ function CartOrderSummary({ checkoutButton = true }) {
       alert("You don't have items in your cart yet.");
       return;
     }
-    pixelInitiateCheckout({ value: salePrice, numItems: cartItems.length });
+    pixelInitiateCheckout({ value: order_summary.salePriceSum, numItems: cartItems.length });
     window.location.href = `${BASE_URL}/checkout`;
   };
-
-  const getPriceSum = (items) => {
-    if (!Array.isArray(items)) return 0;
-    return items.reduce(
-      (total, item) => total + (item?.variants?.[0]?.price || 0) * (item.quantity || 0),
-      0
-    );
-  };
-
-  const getOriginalPriceSum = (items) => {
-    if (!Array.isArray(items)) return 0;
-    return items.reduce(
-      (total, item) =>
-        total +
-        (item?.variants?.[0]?.compare_at_price || item?.variants?.[0]?.price || 0) *
-          (item.quantity || 0),
-      0
-    );
-  };
-
-  useEffect(() => {
-    const _originalPrice = getOriginalPriceSum(cartItems);
-    const _salePrice = getPriceSum(cartItems);
-    setOriginalPrice(_originalPrice);
-    setSalePrice(_salePrice);
-    setSavings(_originalPrice - _salePrice);
-  }, [cartItems]);
-
-  const shippingDisplay = cartObject?.total_shipping
-    ? `$${formatPrice(cartObject.total_shipping)}`
-    : cartItems.length > 0
-    ? "FREE"
-    : "$0.00";
 
   const shippingIsFree = cartObject && !cartObject?.total_shipping && cartItems.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
-      {cartObject && savings > 0 && (
-        <SavingsBanner savings={savings} shipping_cost={cartObject?.total_shipping} />
+      {order_summary?.saveAmtSum > 0 && (
+        <SavingsBanner savings={order_summary.saveAmtSum} shipping_cost={cartObject?.total_shipping} />
       )}
 
       <div className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-5">
@@ -89,15 +70,15 @@ function CartOrderSummary({ checkoutButton = true }) {
           <div className="flex justify-between items-center">
             <span className="text-xs text-char/50 dark:text-ash/40">Original price</span>
             <span className="text-xs font-semibold text-char dark:text-ash">
-              ${formatPrice(originalPrice)}
+              ${formatPrice(order_summary?.origPriceSum)}
             </span>
           </div>
 
-          {savings > 0 && (
+          {order_summary?.saveAmtSum > 0 && (
             <div className="flex justify-between items-center">
               <span className="text-xs text-char/50 dark:text-ash/40">Savings</span>
               <span className="text-xs font-semibold text-bbq-green">
-                −${formatPrice(savings)}
+                −${formatPrice(order_summary.saveAmtSum)}
               </span>
             </div>
           )}
@@ -109,7 +90,7 @@ function CartOrderSummary({ checkoutButton = true }) {
                 shippingIsFree ? "text-bbq-green" : "text-char dark:text-ash"
               }`}
             >
-              {shippingDisplay}
+              {order_summary?.shipAmt}
             </span>
           </div>
 

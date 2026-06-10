@@ -3,16 +3,14 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/app/context/cart";
 import Link from "next/link";
 import Image from "next/image";
-import { BASE_URL, formatPrice, createSlug } from "@/app/lib/helpers";
+import { formatPrice, formatProduct, createSlug } from "@/app/lib/helpers";
 
 export default function CartListItem({ item, onItemCountUpdate }) {
   const { removeCartItem } = useCart();
-  const [thumbnail, setThumbnail] = useState(null);
+  const [product, setProduct] = useState(item);
 
   useEffect(() => {
-    if (item?.images) {
-      setThumbnail(item.images.find(({ position }) => position === 1)?.src);
-    }
+    setProduct(formatProduct(item, "cart_item"));
   }, [item]);
 
   const handleRemoveItem = () => {
@@ -25,24 +23,15 @@ export default function CartListItem({ item, onItemCountUpdate }) {
     onItemCountUpdate({ product: item, increment });
   };
 
-  const price = item?.variants?.[0]?.price || item?.variant_data?.price || 0;
-  const compareAtPrice = item?.variants?.[0]?.compare_at_price || item?.variant_data?.compare_at_price || 0;
-  const qty = item?.quantity || 1;
-  const hasDiscount = Number(compareAtPrice) > 0 && Number(compareAtPrice) > Number(price);
-  const discountPct = hasDiscount ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : 0;
-  const savings = hasDiscount ? (compareAtPrice - price) * qty : 0;
-  const productUrl = `${BASE_URL}/${createSlug(item?.brand || "")}/product/${item?.handle}` || "#";
-  const imgSrc = thumbnail || item?.product_image_url;
-
   return (
     <div className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-4">
       <div className="flex gap-4">
-        <Link prefetch={false} href={productUrl} className="flex-shrink-0">
+        <Link prefetch={false} href={product?.url || "#"} className="flex-shrink-0">
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 overflow-hidden bg-white dark:bg-char">
-            {imgSrc && (
+            {product?.image && (
               <Image
-                src={imgSrc}
-                alt={createSlug(item?.title || item?.product_title || "")}
+                src={product.image}
+                alt={createSlug(product?.title || "")}
                 fill
                 className="object-contain"
                 sizes="(max-width: 640px) 96px, 112px"
@@ -54,23 +43,23 @@ export default function CartListItem({ item, onItemCountUpdate }) {
         <div className="flex-1 min-w-0 flex flex-col gap-2">
           <Link
             prefetch={false}
-            href={productUrl}
+            href={product?.url || "#"}
             className="font-sora text-sm font-semibold text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors line-clamp-2 leading-snug"
           >
-            {item?.title || item?.product_title}
+            {product?.title}
           </Link>
 
           <div className="flex items-center flex-wrap gap-2">
             <span className="font-oswald font-bold text-sm text-ember-deep dark:text-ember">
-              ${formatPrice(price)}
+              ${formatPrice(product?.price || 0)}
             </span>
-            {hasDiscount && (
+            {!!product?.was && (
               <>
                 <span className="text-xs text-char/40 dark:text-ash/30 line-through">
-                  ${formatPrice(compareAtPrice)}
+                  ${formatPrice(product.was)}
                 </span>
                 <span className="font-oswald text-[10px] font-semibold text-white bg-bbq-green px-1.5 py-0.5 uppercase tracking-wide rounded-sm">
-                  {discountPct}% off
+                  {product.save_pct}% off
                 </span>
               </>
             )}
@@ -88,7 +77,7 @@ export default function CartListItem({ item, onItemCountUpdate }) {
                 </svg>
               </button>
               <span className="w-8 text-center font-oswald text-sm font-semibold text-char dark:text-ash select-none">
-                {qty}
+                {product?.quantity}
               </span>
               <button
                 onClick={() => handleCount(true)}
@@ -102,13 +91,13 @@ export default function CartListItem({ item, onItemCountUpdate }) {
             </div>
 
             <div className="flex items-center gap-3">
-              {savings > 0 && (
+              {product?.save_amt > 0 && (
                 <span className="font-oswald text-xs font-semibold text-bbq-green">
-                  Save ${formatPrice(savings)}
+                  Save ${formatPrice(product.save_amt * (product?.quantity || 1))}
                 </span>
               )}
               <span className="font-oswald font-bold text-sm text-char dark:text-ash">
-                ${formatPrice(price * qty)}
+                ${formatPrice((product?.price || 0) * (product?.quantity || 1))}
               </span>
               <button
                 type="button"
