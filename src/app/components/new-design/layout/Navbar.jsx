@@ -188,6 +188,9 @@ export default function Navbar({ logo }) {
           {NAV_LINKS.map(({ name, children, id, url }) => {
             const isLocked = lockedMenu === id;
             const isOpen = isLocked || hoveredMenu === id;
+            const cols = children.length > 16 ? 3 : children.length > 8 ? 2 : 1;
+            const colClass = cols === 3 ? "columns-3" : cols === 2 ? "columns-2" : "columns-1";
+            const minWClass = cols === 3 ? "min-w-[540px]" : cols === 2 ? "min-w-[380px]" : "min-w-[200px]";
             return (
               <div
                 key={`desktop-nav-item-${id}`}
@@ -219,7 +222,7 @@ export default function Navbar({ logo }) {
                 absolute top-[calc(100%+4px)] left-0
                 bg-white dark:bg-stone-900
                 border border-stone-100 dark:border-stone-700
-                rounded-xl shadow-2xl min-w-[200px] overflow-hidden
+                rounded-xl shadow-2xl overflow-hidden ${minWClass}
                 transition-all duration-200 z-30
                 ${
                   isOpen
@@ -244,7 +247,7 @@ export default function Navbar({ logo }) {
                     </span>
                   </Link>
                   {/* Children */}
-                  <div className="p-2">
+                  <div className={`p-2 ${colClass}`}>
                     {children.map((c) => (
                       <Link
                         key={`desktop-child-nav-item-${c.id}`}
@@ -253,7 +256,7 @@ export default function Navbar({ logo }) {
                           if (`/${c?.url}` === pathname) { setLockedMenu(null); setHoveredMenu(null); return; }
                           setLoadingHref(`${BASE_URL}/${c?.url}`);
                         }}
-                        className="flex items-center justify-between px-4 py-2 rounded-lg text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-theme-500 transition-colors"
+                        className="break-inside-avoid flex items-center justify-between px-4 py-2 rounded-lg text-[12px] text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-theme-500 transition-colors"
                       >
                         <span>{c.name}</span>
                         <NavSpinner className={loadingHref === `${BASE_URL}/${c?.url}` ? "visible" : "invisible"} />

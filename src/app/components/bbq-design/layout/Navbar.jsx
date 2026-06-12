@@ -180,6 +180,9 @@ export default function Navbar({ logo }) {
           {NAV_LINKS.map(({ name, children, id, url }) => {
             const isLocked = lockedMenu === id;
             const isOpen = isLocked || hoveredMenu === id;
+            const cols = children.length > 16 ? 3 : children.length > 8 ? 2 : 1;
+            const colClass = cols === 3 ? "columns-3" : cols === 2 ? "columns-2" : "columns-1";
+            const minWClass = cols === 3 ? "min-w-[540px]" : cols === 2 ? "min-w-[380px]" : "min-w-[200px]";
             return (
               <div
                 key={`desktop-nav-item-${id}`}
@@ -215,7 +218,7 @@ export default function Navbar({ logo }) {
                 bg-paper dark:bg-smoke
                 border border-grate dark:border-white/10
                 shadow-xl shadow-char/15 dark:shadow-black/40
-                rounded-sm min-w-[200px] overflow-hidden
+                rounded-sm overflow-hidden ${minWClass}
                 transition-all duration-200 z-30
                 ${
                   isOpen
@@ -254,7 +257,7 @@ export default function Navbar({ logo }) {
                     </span>
                   </Link>
                   {/* Children */}
-                  <div className="p-2">
+                  <div className={`p-2 ${colClass}`}>
                     {children.map((c) => (
                       <Link
                         key={`desktop-child-nav-item-${c.id}`}
@@ -267,7 +270,7 @@ export default function Navbar({ logo }) {
                           }
                           setLoadingHref(`${BASE_URL}/${c?.url}`);
                         }}
-                        className="flex items-center justify-between px-4 py-2 text-xs text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+                        className="break-inside-avoid flex items-center justify-between px-4 py-2 text-[12px] text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
                       >
                         <span>{c.name}</span>
                         <NavSpinner

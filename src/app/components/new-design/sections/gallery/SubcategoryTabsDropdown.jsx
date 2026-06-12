@@ -35,7 +35,7 @@ function SubcategoryTabsDropdown({ subs }) {
     }`;
 
   const badgeClass = (url, hot) =>
-    `text-xs px-2 py-0.5 rounded-full font-medium ${
+    `text-[12px] px-2 py-0.5 rounded-full font-medium ${
       active_url === url
         ? "bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400"
         : hot
@@ -63,41 +63,48 @@ function SubcategoryTabsDropdown({ subs }) {
           </Link>
         ))}
 
-        {overflow.length > 0 && (
-          <div className="relative flex-shrink-0" ref={dropdownRef}>
-            <button
-              onClick={() => setOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                activeInOverflow
-                  ? "border-orange-500 text-orange-600 dark:text-orange-400"
-                  : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300"
-              }`}
-            >
-              {activeInOverflow ? "More •" : `More (${overflow.length})`}
-              <span className="inline-block w-[0.625rem] text-center text-[10px] leading-none">{open ? "▲" : "▼"}</span>
-            </button>
+        {overflow.length > 0 && (() => {
+          const cols = overflow.length > 16 ? 3 : overflow.length > 8 ? 2 : 1;
+          const colClass = cols === 3 ? "columns-3" : cols === 2 ? "columns-2" : "columns-1";
+          const minWClass = cols === 3 ? "min-w-[540px]" : cols === 2 ? "min-w-[380px]" : "min-w-[200px]";
+          return (
+            <div className="relative flex-shrink-0" ref={dropdownRef}>
+              <button
+                onClick={() => setOpen((v) => !v)}
+                className={`flex items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  activeInOverflow
+                    ? "border-orange-500 text-orange-600 dark:text-orange-400"
+                    : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:border-neutral-300"
+                }`}
+              >
+                {activeInOverflow ? "More •" : `More (${overflow.length})`}
+                <span className="inline-block w-[0.625rem] text-center text-[10px] leading-none">{open ? "▲" : "▼"}</span>
+              </button>
 
-            {open && (
-              <div className="absolute top-full left-0 mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-20 min-w-[200px] py-1">
-                {overflow.map((s, i) => (
-                  <Link
-                    key={`desk-overflow-${i}`}
-                    href={s?.url || "#"}
-                    onClick={() => setOpen(false)}
-                    className={`flex items-center justify-between gap-3 px-4 py-2.5 text-sm font-medium transition-colors ${
-                      active_url === s?.url
-                        ? "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30"
-                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"
-                    }`}
-                  >
-                    {s?.name}
-                    <span className={badgeClass(s?.url, s?.hot)}>{s?.count}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+              {open && (
+                <div className={`absolute top-full left-0 mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg z-20 ${minWClass} py-1`}>
+                  <div className={colClass}>
+                    {overflow.map((s, i) => (
+                      <Link
+                        key={`desk-overflow-${i}`}
+                        href={s?.url || "#"}
+                        onClick={() => setOpen(false)}
+                        className={`break-inside-avoid flex items-center justify-between gap-3 px-4 py-2.5 text-[12px] font-medium transition-colors ${
+                          active_url === s?.url
+                            ? "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/30"
+                            : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100"
+                        }`}
+                      >
+                        {s?.name}
+                        <span className={`${badgeClass(s?.url, s?.hot)}`}>{s?.count}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
     </>
   );
