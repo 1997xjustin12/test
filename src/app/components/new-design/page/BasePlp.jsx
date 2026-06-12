@@ -6,6 +6,10 @@ import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap
 import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
+function getNavImage(slug){
+  return `/images/nav-item-images/${slug}.webp`;
+}
+
 function BasePlp({ page_details }) {
   if (!page_details) return notFound();
 
@@ -76,11 +80,11 @@ function BasePlp({ page_details }) {
                   href={`${BASE_URL}/${item?.url}`}
                   className="group flex flex-col overflow-hidden border rounded-2xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-slate-400 dark:hover:border-gray-500 hover:shadow-md transition-all duration-200"
                 >
-                  <div className={`w-full p-4 ${item?.feature_image ? "bg-white dark:bg-gray-900" : "bg-gray-100 dark:bg-gray-800"}`}>
+                  <div className={`w-full p-4 ${item?.slug ? "bg-white dark:bg-gray-900" : "bg-gray-100 dark:bg-gray-800"}`}>
                     <div className="aspect-1 relative w-full overflow-hidden">
-                      {item?.feature_image && (
+                      {item?.slug && (
                         <Image
-                          src={item.feature_image}
+                          src={getNavImage(item?.slug)}
                           alt={`category-${item?.slug}`}
                           fill
                           className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
