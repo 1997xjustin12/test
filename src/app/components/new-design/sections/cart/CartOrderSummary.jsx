@@ -111,14 +111,14 @@ function CartOrderSummary({ checkoutButton = true }) {
           <>
             <button
               onClick={handleCheckout}
-              className="w-full py-2.5 bg-fire hover:bg-orange-600 text-white text-sm font-semibold rounded-xl transition-colors mb-3"
+              className="w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-xl transition-colors mb-3"
             >
               Proceed to Checkout
             </button>
             <Link
               href={`${BASE_URL}/fireplaces`}
               prefetch={false}
-              className="flex items-center justify-center text-xs font-medium text-gray-400 hover:text-fire dark:text-gray-500 dark:hover:text-orange-400 transition-colors"
+              className="flex items-center justify-center text-xs font-medium text-gray-400 hover:text-theme-600 dark:text-gray-500 dark:hover:text-orange-400 transition-colors"
             >
               or continue shopping
             </Link>
