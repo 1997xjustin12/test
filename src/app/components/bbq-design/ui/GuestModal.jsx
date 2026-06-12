@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { STORE_DOMAIN } from "@/app/lib/store_constants";
+import { STORE_DOMAIN, STORE_NAME } from "@/app/lib/store_constants";
 
 const initial_info = {
   billing_first_name: null,
@@ -32,7 +32,7 @@ export default function GuestModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [visible, setVisible] = useState(false); // controls CSS transition
+  const [visible, setVisible] = useState(false);
   const [forage, setForage] = useState(null);
   const [infoEmail, setInfoEmail] = useState(null);
 
@@ -41,7 +41,6 @@ export default function GuestModal({ isOpen, onClose }) {
   // Sync open → visible with a tiny delay so the enter transition fires
   useEffect(() => {
     if (isOpen) {
-      // Mount first, then trigger transition on next frame
       requestAnimationFrame(() =>
         requestAnimationFrame(() => setVisible(true)),
       );
@@ -70,7 +69,6 @@ export default function GuestModal({ isOpen, onClose }) {
 
   const handleClose = () => {
     setVisible(false);
-    // Wait for exit transition before unmounting
     setTimeout(() => {
       onClose();
       setEmail("");
@@ -93,7 +91,6 @@ export default function GuestModal({ isOpen, onClose }) {
         billing_email: email,
         shipping_email: email,
       });
-      //   setInfoEmail(email);
       setSubmitted(true);
       setToggle(false);
     } catch (err) {
@@ -108,8 +105,6 @@ export default function GuestModal({ isOpen, onClose }) {
 
     import("@/app/lib/localForage").then(async (module) => {
       if (!mounted) return;
-      //   const info = await module.getItem("checkout_info");
-      //   setInfoEmail(info?.billing_email || null);
       setForage(module);
     });
 
@@ -136,8 +131,8 @@ export default function GuestModal({ isOpen, onClose }) {
         onClick={(e) => e.stopPropagation()}
         className={`
           relative w-full max-w-[860px] max-h-[90vh]
-          bg-white dark:bg-stone-900
-          rounded-2xl overflow-hidden shadow-2xl
+          bg-white dark:bg-char
+          rounded-sm overflow-hidden shadow-2xl shadow-char/20 dark:shadow-black/50
           flex flex-col sm:flex-row
           transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
           ${visible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4"}
@@ -152,26 +147,23 @@ export default function GuestModal({ isOpen, onClose }) {
             sizes="100vw"
             className="object-cover transition-opacity duration-500"
           />
-          {/* Fallback gradient behind image */}
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-stone-700 via-stone-800 to-stone-900 opacity-50" /> */}
-          {/* Brand watermark */}
           <div className="absolute bottom-3 left-3 z-10">
-            <span className="text-black/60 text-xs font-serif">
-              Solana Fireplaces
+            <span className="font-oswald text-[10px] uppercase tracking-widest text-white/60">
+              {STORE_NAME}
             </span>
           </div>
         </div>
 
         {/* ── Right: Form ── */}
-        <div className="flex-1 p-7 sm:p-9 flex flex-col justify-center">
+        <div className="flex-1 p-7 sm:p-9 flex flex-col justify-center font-sora">
           {/* Close button */}
           <button
             onClick={handleClose}
             aria-label="Close"
             className="
-              absolute top-4 right-4 w-8 h-8 rounded-full
-              bg-stone-100 dark:bg-stone-800
-              text-stone-400 hover:text-stone-700 dark:hover:text-white
+              absolute top-4 right-4 w-8 h-8 rounded-sm
+              bg-ash dark:bg-white/10
+              text-char/40 dark:text-ash/40 hover:text-char dark:hover:text-ash
               flex items-center justify-center text-lg leading-none
               transition-colors duration-150
             "
@@ -181,14 +173,14 @@ export default function GuestModal({ isOpen, onClose }) {
 
           {!submitted ? (
             <>
-              <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mb-6">
+              <p className="text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 mb-6">
                 Enter your email to continue as a guest, or create an account to
                 save your cart across devices.
               </p>
 
               {/* Email field */}
               <form onSubmit={handleSubmit} noValidate>
-                <label className="block text-xs font-semibold text-charcoal dark:text-white mb-1.5">
+                <label className="block text-xs font-semibold font-oswald uppercase tracking-wide text-stone-600 dark:text-stone-400 mb-1.5">
                   <span className="text-fire mr-0.5">*</span> Email
                 </label>
                 <div className="flex gap-0 mb-1">
@@ -202,15 +194,15 @@ export default function GuestModal({ isOpen, onClose }) {
                       setError("");
                     }}
                     className={`
-                      flex-1 px-4 py-3 text-sm rounded-l-lg border-2 border-r-0 outline-none
+                      flex-1 px-3.5 py-2.5 text-sm rounded-l-sm border border-r-0 outline-none
                       bg-white dark:bg-stone-800
                       text-charcoal dark:text-white
-                      placeholder-stone-300 dark:placeholder-stone-600
+                      placeholder:text-stone-400 dark:placeholder:text-stone-500
                       transition-colors duration-200
                       ${
                         error
                           ? "border-red-400 focus:border-red-500"
-                          : "border-stone-200 dark:border-stone-700 focus:border-fire"
+                          : "border-stone-200 dark:border-stone-700 focus:border-fire focus:ring-2 focus:ring-fire/20"
                       }
                     `}
                   />
@@ -218,29 +210,29 @@ export default function GuestModal({ isOpen, onClose }) {
                     type="submit"
                     aria-label="Submit email"
                     className="
-                      px-5 py-3 rounded-r-lg
-                      bg-charcoal dark:bg-stone-700 hover:bg-stone-800 dark:hover:bg-stone-600
+                      px-5 py-2.5 rounded-r-sm flex-shrink-0
+                      bg-theme-600 hover:bg-theme-700
                       text-white font-bold text-lg
-                      transition-colors duration-200 flex-shrink-0
+                      transition-colors duration-200
                     "
                   >
                     →
                   </button>
                 </div>
                 {error && (
-                  <p className="text-red-500 text-xs mt-1.5 animate-[fadeIn_.2s_ease]">
-                    {error}
-                  </p>
+                  <div className="flex items-start gap-2.5 px-3.5 py-3 rounded-sm bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 mt-1.5">
+                    <p className="text-xs text-red-600 dark:text-red-400 font-medium">{error}</p>
+                  </div>
                 )}
               </form>
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 border-t border-dashed border-stone-200 dark:border-stone-700" />
-                <span className="text-xs text-stone-400 font-medium tracking-widest">
+                <div className="flex-1 border-t border-dashed border-grate dark:border-white/10" />
+                <span className="text-xs font-oswald uppercase tracking-widest text-char/40 dark:text-ash/40">
                   OR
                 </span>
-                <div className="flex-1 border-t border-dashed border-stone-200 dark:border-stone-700" />
+                <div className="flex-1 border-t border-dashed border-grate dark:border-white/10" />
               </div>
 
               {/* Action buttons */}
@@ -248,10 +240,10 @@ export default function GuestModal({ isOpen, onClose }) {
                 <Link
                   href="/login"
                   className="
-                    w-full py-3.5 rounded-xl font-bold text-sm text-white
-                    bg-fire hover:bg-fire-light
-                    transition-all duration-200 hover:-translate-y-0.5
-                    shadow-md hover:shadow-lg hover:shadow-fire/30 text-center
+                    w-full py-3 text-center rounded-sm
+                    font-oswald font-semibold text-sm uppercase tracking-wide text-white
+                    bg-theme-600 hover:bg-theme-700
+                    transition-all duration-200 hover:-translate-y-0.5 active:scale-[.98]
                   "
                 >
                   Signup
@@ -259,10 +251,11 @@ export default function GuestModal({ isOpen, onClose }) {
                 <button
                   onClick={handleClose}
                   className="
-                    w-full py-3.5 rounded-xl font-bold text-sm
-                    bg-stone-600 hover:bg-stone-700 dark:bg-stone-700 dark:hover:bg-stone-600
-                    text-white
-                    transition-all duration-200 hover:-translate-y-0.5
+                    w-full py-3 rounded-sm
+                    font-oswald font-semibold text-sm uppercase tracking-wide
+                    bg-ash dark:bg-white/10 border border-grate dark:border-white/10
+                    text-char dark:text-ash hover:bg-grate dark:hover:bg-white/20
+                    transition-all duration-200 hover:-translate-y-0.5 active:scale-[.98]
                   "
                 >
                   Continue Shopping
@@ -272,15 +265,15 @@ export default function GuestModal({ isOpen, onClose }) {
           ) : (
             /* ── Success state ── */
             <div className="text-center py-4 animate-[fadeIn_.4s_ease]">
-              <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-3xl mx-auto mb-4">
+              <div className="w-16 h-16 bg-bbq-green/10 dark:bg-bbq-green/20 flex items-center justify-center text-3xl mx-auto mb-4 text-bbq-green">
                 ✓
               </div>
-              <h3 className="font-serif text-2xl text-charcoal dark:text-white mb-2">
+              <h3 className="font-oswald font-bold text-2xl uppercase text-char dark:text-ash mb-2">
                 You're in!
               </h3>
-              <p className="text-stone-500 dark:text-stone-400 text-sm mb-6">
+              <p className="text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 mb-6">
                 We've noted{" "}
-                <strong className="text-charcoal dark:text-white">
+                <strong className="font-semibold text-char dark:text-ash">
                   {email}
                 </strong>
                 .<br />
@@ -288,7 +281,7 @@ export default function GuestModal({ isOpen, onClose }) {
               </p>
               <button
                 onClick={handleClose}
-                className="px-8 py-3 rounded-xl font-semibold text-sm bg-fire hover:bg-fire-light text-white transition-all duration-200 hover:-translate-y-0.5"
+                className="px-8 py-2.5 rounded-sm font-oswald font-semibold text-sm uppercase tracking-wide bg-theme-600 hover:bg-theme-700 text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-[.98]"
               >
                 Continue Shopping
               </button>
