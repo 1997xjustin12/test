@@ -8,11 +8,12 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-import AddedToCartDialog from "@/app/components/atom/AddedToCartDialog";
+import NewAddedToCart from "@/app/components/new-design/ui/AddedToCartDialog"
+import BBQAddedToCart from "@/app/components/bbq-design/ui/AddedToCartDialog"
 import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog";
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
-import { store_domain, mapOrderItems, createSlug } from "@/app/lib/helpers";
+import { ISBBQ, store_domain, mapOrderItems, createSlug } from "@/app/lib/helpers";
 import { sendAbandonedCart, redisGet, redisSet } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
 
@@ -196,6 +197,12 @@ function applyQuantityChange(cart_items, product_id, delta) {
       return { ...item, quantity, custom_fields: { ...item.custom_fields, quantity } };
     })
     .filter((item) => item.quantity > 0);
+}
+
+// ─── Component ──────────────────────────────────────────────────────────────────
+function AddedToCartDialog({data, onClose}) {
+  if(ISBBQ) return <BBQAddedToCart data={data} onClose={onClose}/>
+  return <NewAddedToCart data={data} onClose={onClose}/>
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
