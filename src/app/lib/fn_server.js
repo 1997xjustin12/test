@@ -670,32 +670,37 @@ export async function fetchSearchResults(searchTerm) {
   }
 }
 
-export async function fetchCollectionsCount(collection_ids) {
-  try {
-    if (!collection_ids) return null;
-
-    const query = {
-      size: 0,
-      query: publishedQuery,
-      aggs: {
-        counts_per_collection: {
-          terms: {
-            field: "collections.id",
-            // This forces ES to ONLY bucket the IDs in your list
-            include: Array.isArray(collection_ids)
-              ? collection_ids
-              : [collection_ids],
-            size: Array.isArray(collection_ids) ? collection_ids.length : 10,
-          },
+async function _fetchCollectionsCount(collection_ids) {
+  const query = {
+    size: 0,
+    query: publishedQuery,
+    aggs: {
+      counts_per_collection: {
+        terms: {
+          field: "collections.id",
+          include: Array.isArray(collection_ids) ? collection_ids : [collection_ids],
+          size: Array.isArray(collection_ids) ? collection_ids.length : 10,
         },
       },
-    };
+    },
+  };
+  return await esSearch(query);
+}
 
-    // 3. Ensure esSearch is set up to handle the next.revalidate object
-    return await esSearch(query, { next: { revalidate: 86400 } });
+export async function fetchCollectionsCount(collection_ids) {
+  if (!collection_ids) return null;
+  try {
+    const key = Array.isArray(collection_ids)
+      ? collection_ids.join(",")
+      : String(collection_ids);
+    return unstable_cache(
+      () => _fetchCollectionsCount(collection_ids),
+      [`collections-count-${key}`],
+      { tags: ["collections-count"], revalidate: 86400 },
+    )();
   } catch (err) {
     console.error("ES Search Error:", err);
-    return null; // Return null so the UI doesn't crash
+    return null;
   }
 }
 

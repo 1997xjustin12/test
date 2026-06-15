@@ -13,9 +13,11 @@ export async function GET(request) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
   }
 
-  revalidateTag("plp-initial-hits");   // PLP page initial products
-  revalidateTag("home-products");      // Homepage featured products
-  revalidateTag("layout-data");        // Menu, logo, theme, categories (layout)
+  revalidateTag("plp-initial-hits");    // PLP page initial products
+  revalidateTag("home-products");       // Homepage featured products
+  revalidateTag("layout-data");         // Menu, logo, theme, categories (layout)
+  revalidateTag("collections-count");   // Collection product counts
+  revalidateTag("nav-menu");   // Collection product counts
 
   // Pre-warm the homepage immediately so the ISR-regenerated HTML is cached
   // at this edge node before the response is returned. Without this, the first
@@ -27,7 +29,7 @@ export async function GET(request) {
   return NextResponse.json({
     revalidated: true,
     timestamp: new Date().toISOString(),
-    tags: ["plp-initial-hits", "home-products", "layout-data"],
+    tags: ["plp-initial-hits", "home-products", "layout-data", "collections-count", "nav-menu"],
     message: "All caches cleared and homepage pre-warmed.",
   });
 }

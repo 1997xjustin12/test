@@ -158,6 +158,9 @@ export default async function GenericCategoryPage({ params }) {
     .map((item) => item?.collection_display?.id)
     .filter(Boolean);
 
+  console.log("collection_ids", collection_ids);
+
+
   const filterString = computeFilterString(pageData);
 
   // Always prefetch page-0 hits. ProductsSectionV2 checks window.location
@@ -173,6 +176,8 @@ export default async function GenericCategoryPage({ params }) {
     collection_aggs?.aggregations?.counts_per_collection?.buckets || [];
 
   const countMap = new Map(buckets.map((b) => [String(b.key), b.doc_count]));
+
+  console.log("countMap", countMap);
 
   const subs = children.map((item) => {
     const col_id = item?.collection_display?.id;
