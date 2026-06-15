@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { useCart } from "@/app/context/cart";
 
@@ -67,6 +67,10 @@ function ProductCard({ hit, page_details, onCompare }) {
       console.log("[ERROR]", err);
     }
   }
+
+  useEffect(()=>{
+    console.log(hit?.title)
+  },[])
 
   return (
     <article className="group bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-neutral-200/60 dark:hover:shadow-black/40 hover:-translate-y-1 transition-all duration-300">

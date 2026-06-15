@@ -582,7 +582,9 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
                     key={hit.objectID || hit.product_id}
                     className="ais-Hits-item"
                   >
-                    <SPProductCard hit={hit} page_details={page_details} />
+                    {
+                      ISBBQ ? <BBQProductCard hit={hit} page_details={page_details} /> : <SPProductCard hit={hit} page_details={page_details} />
+                    }
                   </li>
                 ))}
               </ol>
