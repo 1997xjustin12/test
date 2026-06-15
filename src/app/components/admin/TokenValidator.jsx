@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import { useTokenValidation } from '@/app/hooks/useTokenValidation';
 
 /**
@@ -88,13 +87,10 @@ export default function TokenValidator({
     );
   }
 
-  // Valid state - render children with storeData (or without if direct access)
+  // Valid state - render children (storeData is available via sessionStorage)
   return (
     <div data-store-id={storeData?.storeId}>
-      {React.isValidElement(children) 
-        ? React.cloneElement(children, { storeData }) 
-        : children
-      }
+      {children}
     </div>
   );
 }
