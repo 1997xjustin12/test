@@ -14,7 +14,7 @@ export default function MobileCategoryGrid({ children, gridClassName }) {
         {items.map((item, i) => (
           <div
             key={i}
-            className={i >= MOBILE_INITIAL && !expanded ? "hidden sm:flex" : "flex"}
+            className={i >= MOBILE_INITIAL && !expanded ? "hidden sm:block" : "block w-full"}
           >
             {item}
           </div>

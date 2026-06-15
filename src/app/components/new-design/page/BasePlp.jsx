@@ -94,8 +94,8 @@ function BasePlp({ page_details }) {
                       )}
                     </div>
                   </div>
-                  <div className="px-3 py-2.5 border-t border-gray-100 dark:border-gray-800">
-                    <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 text-center group-hover:text-theme-600 transition-colors leading-snug">
+                  <div className="px-3 py-2.5 border-t border-gray-100 dark:border-gray-800 flex items-center justify-center h-[54px]">
+                    <p className="line-clamp-2 text-xs font-semibold text-gray-800 dark:text-gray-200 text-center group-hover:text-theme-600 transition-colors leading-snug">
                       {item?.name}
                     </p>
                   </div>
