@@ -4,6 +4,7 @@ import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
+import MobileCategoryGrid from "@/app/components/atom/MobileCategoryGrid";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
 function getNavImage(slug){
@@ -72,7 +73,7 @@ function BasePlp({ page_details }) {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Category cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <MobileCategoryGrid gridClassName="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {children.map((item) => (
                 <Link
                   key={`category-link-${item?.slug}`}
@@ -100,7 +101,7 @@ function BasePlp({ page_details }) {
                   </div>
                 </Link>
               ))}
-            </div>
+            </MobileCategoryGrid>
 
             {/* Category collection carousels */}
             {page_details.cat_collections?.length > 0 && (

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
+import MobileCategoryGrid from "@/app/components/atom/MobileCategoryGrid";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
 function BasePlp({ page_details }) {
@@ -35,7 +36,7 @@ function BasePlp({ page_details }) {
         </h1>
 
         {/* Category cards — wider grid, no sidebar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+        <MobileCategoryGrid gridClassName="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
           {children.map((item) => (
             <Link
               key={`category-link-${item?.slug}`}
@@ -43,11 +44,11 @@ function BasePlp({ page_details }) {
               href={`${BASE_URL}/${item?.url}`}
               className="group flex flex-col overflow-hidden bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
             >
-              <div className={`w-full p-3 ${item?.feature_image ? "bg-white dark:bg-char" : "bg-ash dark:bg-char"}`}>
+              <div className={`w-full p-3 ${item?.slug ? "bg-white dark:bg-char" : "bg-ash dark:bg-char"}`}>
                 <div className="aspect-1 relative w-full overflow-hidden">
-                  {item?.feature_image && (
+                  {item?.slug && (
                     <Image
-                      src={item.feature_image}
+                      src={`/images/nav-item-images/${item.slug}.webp`}
                       alt={`category-${item?.slug}`}
                       fill
                       className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
@@ -63,7 +64,7 @@ function BasePlp({ page_details }) {
               </div>
             </Link>
           ))}
-        </div>
+        </MobileCategoryGrid>
 
         {/* Category collection carousels */}
         {page_details.cat_collections?.length > 0 && (
