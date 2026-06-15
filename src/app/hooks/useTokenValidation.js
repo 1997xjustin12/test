@@ -36,6 +36,13 @@ export const useTokenValidation = () => {
         );
 
         if (!token) {
+          // Dev environment bypass: allow admin access on localhost without a token
+          if (window.location.hostname === "localhost") {
+            setIsValid(true);
+            setLoading(false);
+            return;
+          }
+
           console.log("[TOKEN VALIDATION] No token provided");
           setError("No authentication token provided");
           setIsValid(false);
