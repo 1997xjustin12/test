@@ -137,53 +137,11 @@ function ProductCard({ product }) {
             </p>
           )}
         </div>
-
-        {/* <p className={`text-xs mt-1.5 flex items-center gap-1 ${lowStock ? 'text-ember-deep' : 'text-bbq-green'}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${lowStock ? 'bg-ember-deep' : 'bg-bbq-green'}`} />
-          {stock}
-        </p> */}
-
-        <button className="mt-3 w-full py-2.5 bg-theme-600 text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-theme-700 transition-colors">
-          Add to Cart
-        </button>
-
-        {/* Price + Button */}
-        {/* <div className="mt-auto">
-          {onSale ? (
-            <div className="flex items-end justify-between gap-2">
-              <div>
-                <s className="text-xs text-stone-400 block leading-none mb-0.5">
-                  ${formatPrice(product?.was)}
-                </s>
-                <span className="text-lg font-bold text-red-500">
-                  ${formatPrice(product?.price)}
-                </span>
-              </div>
-              <AddToCartButtonWrap product={product}>
-                <button
-                  aria-label={`Add ${product.title} to cart`}
-                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
-                >
-                  +
-                </button>
-              </AddToCartButtonWrap>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-charcoal dark:text-white">
-                ${formatPrice(product?.price)}
-              </span>
-              <AddToCartButtonWrap product={product}>
-                <button
-                  aria-label={`Add ${product?.title} to cart`}
-                  className="flex-shrink-0 w-9 h-9 rounded-lg bg-theme-500 hover:bg-theme-500-light text-white flex items-center justify-center text-lg font-light transition-colors duration-200"
-                >
-                  +
-                </button>
-              </AddToCartButtonWrap>
-            </div>
-          )}
-        </div> */}
+        <AddToCartButtonWrap product={product}>
+          <button className="mt-3 w-full py-2.5 bg-theme-600 text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-theme-700 transition-colors">
+            Add to Cart
+          </button>
+        </AddToCartButtonWrap>
       </div>
     </article>
   );
