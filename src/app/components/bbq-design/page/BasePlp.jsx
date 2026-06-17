@@ -7,6 +7,10 @@ import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollec
 import MobileCategoryGrid from "@/app/components/atom/MobileCategoryGrid";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
+function getNavImage(item){
+  return item?.feature_image || `/images/nav-item-images/${item?.slug}.webp`; 
+}
+
 function BasePlp({ page_details }) {
   if (!page_details) return notFound();
 
@@ -42,13 +46,13 @@ function BasePlp({ page_details }) {
               key={`category-link-${item?.slug}`}
               prefetch={false}
               href={`${BASE_URL}/${item?.url}`}
-              className="group flex flex-col overflow-hidden bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
+              className="group flex flex-col overflow-hidden h-full bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
             >
               <div className={`w-full p-3 ${item?.slug ? "bg-white dark:bg-char" : "bg-ash dark:bg-char"}`}>
                 <div className="aspect-1 relative w-full overflow-hidden">
                   {item?.slug && (
                     <Image
-                      src={`/images/nav-item-images/${item.slug}.webp`}
+                      src={getNavImage(item)}
                       alt={`category-${item?.slug}`}
                       fill
                       className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
@@ -57,8 +61,8 @@ function BasePlp({ page_details }) {
                   )}
                 </div>
               </div>
-              <div className="px-3 py-2.5 border-t border-grate dark:border-white/10">
-                <p className="font-oswald text-[11px] font-semibold uppercase tracking-wide text-char dark:text-ash text-center group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors leading-snug">
+              <div className="px-3 py-2.5 border-t border-grate dark:border-white/10 flex items-center justify-center h-[54px]">
+                <p className="line-clamp-2 font-oswald text-[11px] font-semibold uppercase tracking-wide text-char dark:text-ash text-center group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors leading-snug">
                   {item?.name}
                 </p>
               </div>

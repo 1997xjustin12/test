@@ -7,8 +7,8 @@ import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollec
 import MobileCategoryGrid from "@/app/components/atom/MobileCategoryGrid";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
 
-function getNavImage(slug){
-  return `/images/nav-item-images/${slug}.webp`;
+function getNavImage(item){
+  return item?.feature_image || `/images/nav-item-images/${item?.slug}.webp`; 
 }
 
 function BasePlp({ page_details }) {
@@ -85,7 +85,7 @@ function BasePlp({ page_details }) {
                     <div className="aspect-1 relative w-full overflow-hidden">
                       {item?.slug && (
                         <Image
-                          src={getNavImage(item?.slug)}
+                          src={getNavImage(item)}
                           alt={`category-${item?.slug}`}
                           fill
                           className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
