@@ -44,6 +44,16 @@ const connectDomains = [
 
 const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohocdn.com"];
 
+// Origins allowed to embed this app in an iframe (the Django admin that hosts
+// the store-page configurator). Opt-in: set ADMIN_FRAME_ANCESTORS to a
+// space-separated origin list to restrict embedding, e.g.
+//   ADMIN_FRAME_ANCESTORS="http://localhost https://admin.solanabbqgrills.com"
+// When unset, no frame-ancestors directive is emitted (embedding stays open,
+// as before) so dev/staging aren't accidentally blocked.
+const adminFrameAncestors = (process.env._NEXT_ADMIN_FRAME_ANCESTORS || "")
+  .split(/\s+/)
+  .filter(Boolean);
+
 const frameSrcDomains = [
   "https://tag.trovo-tag.com",
   "https://assets.braintreegateway.com",
@@ -104,7 +114,8 @@ const config: NextConfig = {
 
       connect-src 'self' ${connectDomains.join(" ")};
 
-      frame-src 'self' ${frameSrcDomains.join(" ")}; 
+      frame-src 'self' ${frameSrcDomains.join(" ")};
+      ${adminFrameAncestors.length ? `frame-ancestors 'self' ${adminFrameAncestors.join(" ")};` : ""}
     `;
 
     return [
