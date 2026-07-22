@@ -20,13 +20,14 @@ function HomePage({ heroBg, initialProducts }) {
     <div>
       <Hero background={heroBg} />
       <Features />
-      {/* <div className="hidden md:block"><Brands /></div> */}
+      <div className="hidden md:block"><Brands /></div>
       <Categories />
       <Products initialProducts={initialProducts} />
       <div className="hidden md:block"><Promo /></div>
       <Reviews />
       <Faqs />
-      {/* <Cta /> */}
+      <Blog />
+      <Cta />
       <NewsLetter />
     </div>
   );

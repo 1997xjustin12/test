@@ -1,4 +1,4 @@
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import Link from "next/link";
 
 export default function Topbar() {
@@ -7,8 +7,8 @@ export default function Topbar() {
       🔥{' '}
       <strong className="text-ember">FREE SHIPPING</strong> on orders $499+
       &nbsp;·&nbsp; Price-Match Guarantee &nbsp;·&nbsp;
-      <a href={`tel:${PHONE}`} className="underline underline-offset-2 hover:text-ember transition-colors">
-        Call {PHONE}
+      <a href={`tel:${STORE_CONTACT}`} className="underline underline-offset-2 hover:text-ember transition-colors">
+        Call {STORE_CONTACT}
       </a>
     </div>
   );

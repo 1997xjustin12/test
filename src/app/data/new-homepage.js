@@ -310,6 +310,42 @@ export const BLOG_POSTS = [
   },
 ];
 
+// Real posts from the shared WordPress blog feed (bbq-blog.onsitestorage.com,
+// category 2) — hand-picked for grill/outdoor-kitchen relevance for the BBQ
+// homepage teaser, since that feed isn't branded/filtered by ISBBQ itself.
+export const BBQ_BLOG_POSTS = [
+  {
+    tag: "Buying Guide",
+    title: "Blaze Built-In Grill: The Ultimate Outdoor Kitchen Centerpiece",
+    readTime: "7 min read",
+    date: "Jul 2025",
+    url: "/blogs/blaze-built-in-grill-outdoor-kitchen",
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/blaze-built-in-grill.webp",
+    content:
+      "When building your dream outdoor kitchen, one centerpiece appliance consistently stands out: the Blaze Built-In Grill, known for its commercial-grade performance.",
+  },
+  {
+    tag: "Buying Guide",
+    title: "Best Outdoor Kitchen Islands 2025: Compare Top-Rated Models",
+    readTime: "9 min read",
+    date: "Jul 2025",
+    url: "/blogs/best-outdoor-kitchen-islands-2025",
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/best-outdoor-kitchen.webp",
+    content:
+      "If you're passionate about grilling, entertaining, and outdoor dining, investing in one of the best outdoor kitchen islands can elevate your backyard.",
+  },
+  {
+    tag: "Buying Guide",
+    title: "Bull BBQ Grills for Sale: Best Models, Features and Deals",
+    readTime: "6 min read",
+    date: "Sep 2025",
+    url: "/blogs/bull-bbq-grills-for-sale",
+    img: "https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/bull-bbq-grills-for-sale.png",
+    content:
+      "If you're in the market for Bull BBQ grills, you're investing in one of the most trusted names in outdoor cooking.",
+  },
+];
+
 export const PAYMENT_METHODS = [
   "Visa",
   "Mastercard",

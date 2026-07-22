@@ -4,7 +4,6 @@ import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
 import {
   PhoneIcon,
   CartIcon,
@@ -15,7 +14,7 @@ import SearchBox from "@/app/components/bbq-design/ui/SearchBox";
 
 import { useSolanaCategories } from "@/app/context/category";
 import MyAccountButton from "@/app/components/bbq-design/ui/MyAccountButton";
-import { STORE_NAME } from "@/app/lib/store_constants";
+import { STORE_NAME, STORE_CONTACT } from "@/app/lib/store_constants";
 
 function NavSpinner({ className = "" }) {
   return (
@@ -133,13 +132,13 @@ export default function Navbar({ logo }) {
           <div className="flex items-center gap-1 sm:gap-2 flex-none">
             {/* Phone — hidden on mobile/tablet */}
             <Link
-              href={PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               className="hidden lg:flex items-center gap-1.5 font-oswald text-xs uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors whitespace-nowrap"
             >
               <span className="text-theme-600">
                 <PhoneIcon />
               </span>
-              {PHONE}
+              {STORE_CONTACT}
             </Link>
             {/* Account */}
             <MyAccountButton />
@@ -356,14 +355,14 @@ export default function Navbar({ logo }) {
               Current Deals 🔥
             </Link>
             <Link
-              href={PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               onClick={() => setMenuOpen(false)}
               className="mt-1 flex items-center gap-2 px-3 py-2.5 font-oswald text-xs uppercase tracking-wide font-semibold text-char dark:text-ash border-t border-grate dark:border-white/10"
             >
               <span className="text-theme-600">
                 <PhoneIcon />
               </span>
-              {PHONE}
+              {STORE_CONTACT}
             </Link>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 import { useReveal } from "@/app/hooks/useReveal";
-import { PROMO_CARDS, PHONE_HREF } from "@/app/data/new-homepage";
+import { PROMO_CARDS } from "@/app/data/new-homepage";
 import { BASE_URL } from "@/app/lib/helpers";
 
 

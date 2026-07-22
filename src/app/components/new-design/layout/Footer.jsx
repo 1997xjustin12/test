@@ -4,6 +4,7 @@ import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_con
 import Link from "next/link";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
+import PaymentIcons from "@/app/components/atom/PaymentIcons";
 
 export const FOOTER_COLS = [
   {
@@ -75,8 +76,7 @@ export default function Footer({ logo }) {
                 <div className="relative w-[130px] aspect-1 rounded-md">
                   {
                     <Image
-                      // src={logo}
-                      src="/solana-new-logo-orig-white.png"
+                      src={logo}
                       alt={`${STORE_NAME} logo`}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -143,16 +143,11 @@ export default function Footer({ logo }) {
           </p>
           <div className="text-center sm:text-right">
             <p className="text-white/60 text-[11px] mb-1.5">We Accept:</p>
-            <div className="flex gap-1.5 flex-wrap justify-center sm:justify-end">
-              {PAYMENT_METHODS.map((m) => (
-                <span
-                  key={m}
-                  className="bg-white/10 rounded px-2 py-1 text-[11px] text-white/70"
-                >
-                  {m}
-                </span>
-              ))}
-            </div>
+            <PaymentIcons
+              methods={PAYMENT_METHODS}
+              className="justify-center sm:justify-end"
+              walletIconClassName="text-white/70"
+            />
           </div>
         </div>
       </div>

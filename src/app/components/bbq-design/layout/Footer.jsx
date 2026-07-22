@@ -3,6 +3,7 @@ import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT } from "@/ap
 import Link from "next/link";
 import Image from "next/image";
 import { createSlug, BASE_URL } from "@/app/lib/helpers";
+import PaymentIcons from "@/app/components/atom/PaymentIcons";
 
 export const FOOTER_COLS = [
   {
@@ -118,16 +119,7 @@ export default function Footer({ logo }) {
             </div>
 
             {/* Payment methods */}
-            <div className="flex flex-wrap gap-1.5">
-              {(PAYMENT_METHODS || []).map((p) => (
-                <span
-                  key={p}
-                  className="bg-smoke dark:bg-smoke border border-white/10 text-[9px] font-oswald uppercase tracking-wide px-2 py-1 text-ash/40"
-                >
-                  {p}
-                </span>
-              ))}
-            </div>
+            <PaymentIcons methods={PAYMENT_METHODS} walletIconClassName="text-ash/60" />
           </div>
 
           {/* Link columns */}

@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useReveal } from "@/app/hooks/useReveal";
-import { BLOG_POSTS } from "@/app/data/new-homepage";
+import { BBQ_BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
+import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 
 function BlogCard({ tag, title, readTime, date, img, url }) {
@@ -33,7 +34,7 @@ function BlogCard({ tag, title, readTime, date, img, url }) {
           <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-2">
             {tag}
           </p>
-          <h3 className="font-serif text-base sm:text-[1.05rem] text-charcoal dark:text-white mb-2 leading-snug">
+          <h3 className="font-oswald text-base sm:text-[1.05rem] text-charcoal dark:text-white mb-2 leading-snug">
             {title}
           </h3>
           <div className="flex gap-2 text-xs text-stone-500 dark:text-stone-400">
@@ -64,12 +65,12 @@ export default function Blog() {
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 dark:text-theme-600 mb-2">
               Learning Center
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white leading-tight">
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase text-charcoal dark:text-white leading-tight">
               Guides, Tips & Inspiration
             </h2>
           </div>
-          <a
-            href="#"
+          <Link
+            href={`${BASE_URL}/blogs`}
             className="
             inline-flex items-center gap-2 px-7 py-3 rounded-lg
             border-2 border-theme-600 text-theme-600 dark:text-theme-600 hover:bg-theme-600 hover:text-white
@@ -77,26 +78,26 @@ export default function Blog() {
           "
           >
             All Articles
-          </a>
+          </Link>
         </div>
 
         {/* Mobile: first post only as compact horizontal card */}
-        {BLOG_POSTS[0] && (
-          <Link href={BLOG_POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
+        {BBQ_BLOG_POSTS[0] && (
+          <Link href={BBQ_BLOG_POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
             <div className="relative w-28 flex-shrink-0">
-              <Image src={BLOG_POSTS[0].img} alt={BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
+              <Image src={BBQ_BLOG_POSTS[0].img} alt={BBQ_BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
             </div>
             <div className="p-4 min-w-0">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-1">{BLOG_POSTS[0].tag}</p>
-              <h3 className="font-serif text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BLOG_POSTS[0].title}</h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{BLOG_POSTS[0].readTime}</p>
+              <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-1">{BBQ_BLOG_POSTS[0].tag}</p>
+              <h3 className="font-oswald text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BBQ_BLOG_POSTS[0].title}</h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{BBQ_BLOG_POSTS[0].readTime}</p>
             </div>
           </Link>
         )}
 
         {/* Tablet+: full grid */}
         <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {BLOG_POSTS.map((p,index) => (
+          {BBQ_BLOG_POSTS.map((p,index) => (
             <BlogCard key={`home-blogs-${index}`} {...p} />
           ))}
         </div>

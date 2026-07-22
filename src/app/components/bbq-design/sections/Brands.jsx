@@ -10,7 +10,7 @@ export default function Brands() {
       {/* Mobile: static wrap grid — no animation, no repaints */}
       <div className="md:hidden flex flex-wrap justify-center gap-x-6 gap-y-3 px-6">
         {BRANDS.slice(0, 12).map((b) => (
-          <span key={b} className="font-serif text-sm font-semibold text-stone-400 dark:text-stone-600">
+          <span key={b} className="font-oswald text-sm font-semibold text-stone-400 dark:text-stone-600">
             {b}
           </span>
         ))}
@@ -20,7 +20,7 @@ export default function Brands() {
       <div className="hidden md:flex relative">
         <div className="flex animate-marquee gap-16 whitespace-nowrap">
           {[...BRANDS, ...BRANDS].map((b, i) => (
-            <span key={i} className="font-serif text-base font-semibold text-stone-400 dark:text-stone-600 cursor-default">
+            <span key={i} className="font-oswald text-base font-semibold text-stone-400 dark:text-stone-600 cursor-default">
               {b}
             </span>
           ))}
