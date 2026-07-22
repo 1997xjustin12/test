@@ -33,8 +33,6 @@ export default function Reviews() {
   const avgRating = reviewDetails?.summary?.average_rating || 0;
   const totalReviews = reviewDetails?.summary?.total_reviews;
 
-  console.log("reviewDetails", reviewDetails);
-
   return (
     <section className="py-14 sm:py-16 bg-ash">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">

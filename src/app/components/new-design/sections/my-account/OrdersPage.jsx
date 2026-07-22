@@ -68,9 +68,9 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
   const [form, setForm] = useState({
     id: null,
     product: product?.product_id,
-    rating: 4,
-    title: "Good value for the price",
-    comment: "A few scratches on the exterior but nothing major. Still a great deal for the price.",
+    rating: 0,
+    title: "",
+    comment: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -113,7 +113,11 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
   }, [product]);
 
   useEffect(() => {
-    setForm((prev) => ({ ...initForm } || { ...prev, rating: 3, title: "", comment: "", id: null }));
+    setForm(
+      initForm
+        ? { ...initForm }
+        : { id: null, product: product?.product_id, rating: 0, title: "", comment: "" },
+    );
   }, [initForm, user]);
 
   return (

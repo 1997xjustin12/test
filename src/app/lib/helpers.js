@@ -593,15 +593,18 @@ export const formatToInches = (items) => {
 };
 
 export const decimalToFraction = (decimal) => {
-  if (decimal === null || decimal === undefined) return "";
+  if (decimal === null || decimal === undefined || decimal === "") return "";
+
+  const num = Number(decimal);
+  if (Number.isNaN(num)) return "";
 
   // 1. Handle whole numbers immediately
-  if (decimal % 1 === 0) return decimal.toString();
+  if (num % 1 === 0) return num.toString();
 
-  const wholeNumber = Math.floor(decimal);
+  const wholeNumber = Math.floor(num);
 
   // 2. Work only with the fractional part
-  let fractionalPart = decimal - wholeNumber;
+  let fractionalPart = num - wholeNumber;
 
   // 3. Use a fixed precision (e.g., 10^8) to avoid floating point errors
   // instead of trying to count string length
@@ -673,7 +676,8 @@ export const transformFilterNumberDoors = (items) => {
 
 export const transformNumberSize = (value = "") => {
   if (!value) return "";
-  return decimalToFraction(Number(value)) + " Inches";
+  const fraction = decimalToFraction(Number(value));
+  return fraction ? `${fraction} Inches` : "";
 };
 
 export const transformFilterNumberSize = (items) => {
@@ -685,7 +689,8 @@ export const transformFilterNumberSize = (items) => {
 
 export const transformNumberDrawers = (value) => {
   if (!value) return "";
-  return decimalToFraction(Number(value)) + "-Drawer";
+  const fraction = decimalToFraction(Number(value));
+  return fraction ? `${fraction}-Drawer` : "";
 };
 
 export const transformFilterNumberDrawers = (items) => {
@@ -697,7 +702,8 @@ export const transformFilterNumberDrawers = (items) => {
 
 export const transformNumberRacks = (value) => {
   if (!value) return "";
-  return decimalToFraction(Number(value)) + "-Rack";
+  const fraction = decimalToFraction(Number(value));
+  return fraction ? `${fraction}-Rack` : "";
 };
 
 export const transformFilterNumberRacks = (items) => {
@@ -721,6 +727,7 @@ export const transformDimension = (value) => {
       if (trimmed === "") return "";
 
       const fraction = decimalToFraction(trimmed);
+      if (!fraction) return "";
 
       // Only attach a suffix if we have one defined for this index
       const label = suf[index] ? ` ${suf[index]}` : "";

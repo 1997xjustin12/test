@@ -8,12 +8,11 @@ export const FOOTER_COLS = [
   {
     heading: "Products",
     links: [
-      { name: "Fireplaces",              url: "/fireplaces" },
-      { name: "Patio Heaters",           url: "/patio-heaters" },
+      { name: "All Grills",              url: "/grills" },
       { name: "Built-In Grills",         url: "/built-in-grills" },
       { name: "Freestanding Grills",     url: "/freestanding-grills" },
-      { name: "Outdoor Refrigeration",   url: "/outdoor-refrigeration" },
-      { name: "Outdoor Storage",         url: "/outdoor-storage" },
+      { name: "Accessories",             url: "/accessories" },
+      { name: "Open Box Deals",          url: "/open-box" },
     ],
   },
   {
@@ -64,7 +63,7 @@ export default function Footer({ logo }) {
             {logo ? (
               <div className="relative w-[130px] h-[52px] mb-4">
                 <Image
-                  src="/solana-new-logo-orig-white.png"
+                  src={logo}
                   alt={`${STORE_NAME} logo`}
                   fill
                   sizes="130px"

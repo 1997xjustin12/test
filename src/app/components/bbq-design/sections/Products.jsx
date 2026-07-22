@@ -9,35 +9,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
 
-const PRODUCT_TABS = [
-  {
-    name: "All",
-    collection_id: 137,
-  },
-  {
-    name: "Fireplaces",
-    collection_id: 953,
-  },
-  {
-    name: "Built-In Grills",
-    collection_id: 954,
-  },
-  {
-    name: "Freestanding Grills",
-    collection_id: 955,
-  },
-  {
-    name: "Accessories",
-    collection_id: 78,
-  },
-  {
-    name: "Open Box",
-    collection_id: 480,
-  },
-];
-
-const VIEW_ALL_URL = "/blaze-outdoor-products";
-
 async function getProductsByCollectionId(id) {
   // Use a full URL if calling from the server, or relative if client-side
   const res = await fetch(`/api/collections/collection-products/${id}`, {

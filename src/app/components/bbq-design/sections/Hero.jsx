@@ -4,31 +4,6 @@ import Image from "next/image";
 import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 
-const STATS = [
-  { num: "6K+", label: "Products" },
-  { num: "4.4★", label: "122 Reviews" },
-  { num: "20+", label: "Brands" },
-];
-const TRUST = [
-  "Free Shipping Available",
-  "Expert Consultations",
-  "Contractor Pricing",
-];
-const CARDS = [
-  {
-    image: "/images/banner/home-gas-fireplace.webp",
-    url: "/gas-fireplaces",
-    title: "Gas Fireplaces",
-    sub: "Instant Warmth & Modern Ambiance",
-  },
-  {
-    image: "/images/banner/home-built-in-grills.webp",
-    url: "/built-in-grills",
-    title: "Built-In Grills",
-    sub: "Elevate Your Outdoor Kitchen Luxury",
-  },
-];
-
 // CTA OPTIONS — delete the two you don't want, then remove this comment block
 // Option A: "Call Now & Start Saving →"
 // Option B: "Call. Tell Us Your Budget. Save. →"
