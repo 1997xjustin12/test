@@ -3,12 +3,7 @@ import Image from "next/image";
 
 import { BASE_URL } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
-
-const STATS = [
-  { num: "6K+", label: "Products" },
-  { num: "4.4★", label: "122 Reviews" },
-  { num: "20+", label: "Brands" },
-];
+import HeroStats from "@/app/components/new-design/sections/HeroReviewStat";
 const TRUST = [
   "Free Shipping Available",
   "Expert Consultations",
@@ -116,18 +111,7 @@ export default function Hero({ background }) {
             </div>
 
             {/* Stats */}
-            <div className="flex justify-center md:justify-start gap-8 mb-5">
-              {STATS.map(({ num, label }) => (
-                <div key={label}>
-                  <div className="font-serif text-3xl font-bold text-white">
-                    {num}
-                  </div>
-                  <div className="text-[11px] tracking-widest uppercase text-white/60 mt-0.5">
-                    {label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <HeroStats />
 
             {/* Trust badges */}
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
