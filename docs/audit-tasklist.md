@@ -28,12 +28,12 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 - [ ] **[Shared]** Expand social presence beyond Facebook + Pinterest
 - [ ] **[Shared]** Add courier/shipment tracking (carrier + tracking number) to Order History — currently only shows internal status (pending/paid/shipped/etc.)
 - [ ] **[Shared]** Connect newsletter signup to a recognized ESP (Klaviyo/Mailchimp), or confirm the custom backend (`NEXT_SOLANA_BACKEND_URL`) covers full lifecycle marketing
-- [ ] **[Solana]** Clean up unused placeholder constants left in `new-design/page/SingleProductPage.jsx` (`STATIC_SPECS`, `STATIC_SHIPPING`, `RELATED`, `RECENT`) — defined but never rendered
+- [x] **[Solana]** Clean up unused placeholder constants left in `new-design/page/SingleProductPage.jsx` (`STATIC_SPECS`, `STATIC_SHIPPING`, `RELATED`, `RECENT`) — deleted; all four were module-local and never referenced anywhere in the file
 - [x] **[BBQ]** Remove stray `console.log("reviewDetails", ...)` in `bbq-design/sections/Reviews.jsx` — *fixed in `fca6e76`*
 - [x] **[BBQ]** Delete dead `WhySolana.jsx` component (still named/worded for Solana, was one accidental un-comment away from shipping) — *fixed in `fca6e76`*
 - [x] **[BBQ]** Clean dead Solana-referencing constants in `Hero.jsx` (`CARDS`) and `Products.jsx` (`PRODUCT_TABS`, `VIEW_ALL_URL`) — *fixed in `fca6e76`*
-- [ ] **[Solana]** Move/duplicate the homepage newsletter signup into the Footer itself (currently only a separate homepage section, not in the footer)
-- [ ] **[Shared]** Add a mini-cart drawer — currently Add to Cart routes to the full `/cart` page only, no slide-out preview
+- [x] **[Solana]** Move/duplicate the homepage newsletter signup into the Footer itself — new client component `new-design/layout/FooterNewsletter.jsx` renders a compact signup row above the footer's bottom bar on **every** page, reusing the same `subscribe()` API and `useAuth()` subscription state as the homepage section (which stays as-is); already-subscribed users see a confirmation line instead of the form
+- [x] **[Shared]** Add a mini-cart drawer — new `MiniCartDrawer` in both `new-design/ui/` and `bbq-design/ui/`, rendered globally by `CartProvider` (brand-switched on `ISBBQ`, same pattern as `AddedToCartDialog`) and opened from the navbar cart button. Slides in from the right with line items, qty steppers, remove, subtotal, and Checkout / View Cart. New `miniCartOpen` / `openMiniCart` / `closeMiniCart` on the cart context. The cart button stays a real `<Link href="/cart">` — modifier- and middle-clicks still open the full page, only a plain left-click opens the drawer
 
 ## P3 — Future Enhancements
 
@@ -54,7 +54,28 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 
 ## Progress
 
-- **Fixed this session (2026-07-22):** 15 of 28 in-scope tasks (9 in commit `fca6e76`, plus payment icons, the Solana footer logo bug, the BBQ brand carousel, the BBQ Cta/Blog sections, and a site-wide BBQ phone-number leak — all found/fixed during item-by-item review)
-- **Remaining:** 13 — 1 in P1 (blocked on client for Braintree production credentials), 7 in P2 (including a new open decision on the shared `/blogs` content pool), 5 in P3
+**18 of 28 in-scope tasks complete (64%) · 10 remaining**
+
+- **Session 1 (2026-07-22):** 15 fixed — 9 in commit `fca6e76`, plus payment icons, the Solana footer logo bug, the BBQ brand carousel, the BBQ Cta/Blog sections, and a site-wide BBQ phone-number leak (all found/fixed during item-by-item review)
+- **Session 2 (2026-07-23):** 3 fixed — Solana `SingleProductPage.jsx` dead-constant cleanup, the site-wide Solana footer newsletter signup, and the shared mini-cart drawer
+
+### What's left, by what unblocks it
+
+**Nothing in the remaining 10 is buildable by us today** — every one needs a client answer, backend work, or a scoping decision first.
+
+| # | Task | P | Blocked by |
+|---|------|---|-----------|
+| 1 | Braintree production credentials + one live settled transaction | P1 | client (credentials) |
+| 2 | `/blogs` shared content pool — one blog for both brands, or split? | P2 | client decision |
+| 3 | Expand social presence beyond Facebook + Pinterest | P2 | client (needs the actual accounts to link) |
+| 4 | Courier/shipment tracking in Order History | P2 | backend — API must return carrier + tracking number first |
+| 5 | Newsletter → Klaviyo/Mailchimp, or confirm custom backend covers lifecycle | P2 | client decision + backend |
+| 6 | Confirm order confirmation/receipt email flow end-to-end | P3 | external service, not verifiable from this codebase |
+| 7 | Core Web Vitals / image optimization audit for large galleries | P3 | scoping — post-launch; see `docs/pagespeed-homepage.md` |
+| 8 | Programmatic SEO for 6,000+ products | P3 | scoping — needs a template + content strategy decision |
+| 9 | Loyalty / rewards program | P3 | client (product decision) |
+| 10 | Fate of legacy `/brand/bbq-grill-outlet` + `/brand/solana-bbq-grills` microsites | P3 | client decision |
+
+**Six of these are client questions** (items 1, 2, 3, 5, 9, 10) — drafted and ready to send as one batch in [`audit-client-questions.md`](./audit-client-questions.md). Answering them converts most of the remaining backlog into buildable work.
 
 *Source audits: `solana_ecommerce_audit_2026-07-22.pdf`, `bbq_ecommerce_audit_2026-07-22.pdf` — both will be re-rendered with these corrections (Braintree blocked status, wishlist removed) once the full item-by-item review is done.*

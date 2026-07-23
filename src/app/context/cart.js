@@ -10,6 +10,8 @@ import React, {
 } from "react";
 import NewAddedToCart from "@/app/components/new-design/ui/AddedToCartDialog"
 import BBQAddedToCart from "@/app/components/bbq-design/ui/AddedToCartDialog"
+import NewMiniCart from "@/app/components/new-design/ui/MiniCartDrawer"
+import BBQMiniCart from "@/app/components/bbq-design/ui/MiniCartDrawer"
 import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog";
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
@@ -205,6 +207,11 @@ function AddedToCartDialog({data, onClose}) {
   return <NewAddedToCart data={data} onClose={onClose}/>
 }
 
+function MiniCartDrawer({open, onClose}) {
+  if(ISBBQ) return <BBQMiniCart open={open} onClose={onClose}/>
+  return <NewMiniCart open={open} onClose={onClose}/>
+}
+
 // ─── Context ──────────────────────────────────────────────────────────────────
 
 const CartContext = createContext();
@@ -231,6 +238,7 @@ export const CartProvider = ({ children }) => {
   const [addedToCart,       setAddedToCart]       = useState(null);
   const [addToCartLoading,  setAddToCartLoading]  = useState(false);
   const [abandonedCartUser, setAbandonedCartUser] = useState(null);
+  const [miniCartOpen,      setMiniCartOpen]      = useState(false);
 
   // Refs hold current values for event callbacks that must not re-subscribe on every render
   const cartRef                = useRef(cart);
@@ -617,6 +625,11 @@ export const CartProvider = ({ children }) => {
     notifyCartUpdate();
   }, [isLoggedIn, user, userCartClose, saveCart, notifyCartUpdate]);
 
+  // ── Mini-cart drawer ───────────────────────────────────────────────────────
+
+  const openMiniCart  = useCallback(() => setMiniCartOpen(true),  []);
+  const closeMiniCart = useCallback(() => setMiniCartOpen(false), []);
+
   // ── Dev helpers ────────────────────────────────────────────────────────────
 
   /** Marks the persisted guest cart as active. Used during development/testing only. */
@@ -746,12 +759,16 @@ export const CartProvider = ({ children }) => {
         loadCart,
         addToCartLoading,
         abandonedCartUser,
+        miniCartOpen,
+        openMiniCart,
+        closeMiniCart,
         // dev only
         guestCartToActive,
       }}
     >
       {children}
       <AddedToCartDialog data={addedToCart} onClose={() => setAddedToCart(null)} />
+      <MiniCartDrawer open={miniCartOpen} onClose={closeMiniCart} />
       <GuestEmailDialog />
     </CartContext.Provider>
   );

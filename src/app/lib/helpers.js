@@ -6,10 +6,17 @@ export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
 // export const ISBBQ = true;
 
-// export const ES_INDEX = "solana_updated_product_index_flat";
-// export const ES_INDEX = "solana_suggest_v2"; // did_you_mean
-// export const ES_INDEX = "solana_suggest_v3"; // autocomplete sku
-export const ES_INDEX = "solana_updated_product_index";
+// The Elasticsearch index every catalog read resolves through — PDP, category
+// and collection pages, search/searchkit, autocomplete, and the sitemap.
+// Override via NEXT_PUBLIC_ES_INDEX in .env.local to point at a test index;
+// the fallback is always production, so an unset env can never serve test data.
+// Other indexes used during development:
+//   solana_updated_product_test_index  — test catalog
+//   solana_updated_product_index_flat
+//   solana_suggest_v2                  — did_you_mean
+//   solana_suggest_v3                  — autocomplete sku
+export const ES_INDEX =
+  process.env.NEXT_PUBLIC_ES_INDEX || "solana_updated_product_index";
 
 // Keywords that trigger main product priority sorting
 export const MAIN_PRODUCT_KEYWORDS = [

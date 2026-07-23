@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
+import FooterNewsletter from "@/app/components/new-design/layout/FooterNewsletter";
 
 export const FOOTER_COLS = [
   {
@@ -129,6 +130,9 @@ export default function Footer({ logo }) {
             </div>
           ))}
         </div>
+
+        {/* Newsletter — site-wide counterpart to the homepage section */}
+        <FooterNewsletter />
 
         {/* Bottom bar */}
         <div
