@@ -145,6 +145,41 @@ const config: NextConfig = {
         ],
       },
       {
+        // Product pages — edge-cache the SSR response.
+        //
+        // This route is server-rendered on every request: it is a dynamic
+        // segment with no generateStaticParams, so Next emits
+        // `Cache-Control: private, no-cache, no-store` and its
+        // `export const revalidate = 86400` never takes effect. Measured
+        // 2026-07-23: PDP TTFB 0.72-2.48s vs 0.32s on the cached /fireplaces.
+        //
+        // The natural fix — adding generateStaticParams so the route becomes
+        // ISR — is not usable here: under static prerendering this page emits
+        // zero <img> tags (A/B tested on one build: 35 with on-demand SSR, 0
+        // when prerendered, navbar logo included), which would strip product
+        // imagery from 6,000+ indexed pages. So instead of changing how the
+        // page renders, we keep the correct SSR output and cache it at the CDN.
+        //
+        // Safe to cache: product pages carry no per-user content. src/proxy.js
+        // only matches /checkout, the auth routes, /my-account, /logout and
+        // /admin, so cart and auth state never affect this response — they are
+        // read client-side after hydration.
+        //
+        // TTL is deliberately short. A CDN cache is invisible to
+        // revalidatePath/revalidateTag, so /api/revalidate-pdp cannot flush it;
+        // 5 minutes bounds how long a price or stock edit can be stale while
+        // still absorbing effectively all repeat traffic. stale-while-
+        // revalidate serves instantly from cache for a day while refreshing in
+        // the background.
+        source: "/:slug/product/:product_path",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=300, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
         // All other pages — CSP only, no HTML caching
         source: "/((?!_next).*)",
         headers: [

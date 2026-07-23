@@ -39,7 +39,7 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 
 - [ ] **[Shared]** Confirm the order confirmation/receipt email flow end-to-end — dispatched by an external backend service, not verifiable from this codebase
 - [x] **[Shared]** Core Web Vitals / image optimization audit for large product galleries — *done in `12e7316`*. Audited the live site (not just source) and fixed: (1) **Next 16 `images.qualities` regression** — `quality` is restricted to that list and silently coerced to 75, so the `quality={40}` on both brands' category cards had been inert since the upgrade, and because the preload URLs are hand-built with `&q=40` while `<Image>` requested `&q=75` they were different cache entries — every category card, incl. the homepage LCP image, was **downloading twice**; (2) category preloads moved out of `(market)/layout.jsx` onto the homepage — every product/category/cart/checkout page was preloading 4 unused images and giving the `fetchPriority="high"` slot to a category tile instead of its own LCP element; (3) `sizes` declared `100vw` on 2-col mobile grids in 3 ProductCards across both brands (~2× oversized fetches) and an invalid `(max-w-768px)` media condition in `DescriptionSection`; (4) gallery `quality` 75→60 main / →50 thumbs, both brands; (5) `getYMALProducts` + PDP FAQ Redis reads now cached, removing an ES query and a Redis round-trip from every product view
-- [ ] **[Shared]** *(found during the Core Web Vitals pass — new)* **Product pages are not edge-cached.** PDP ships `Cache-Control: private, no-cache, no-store` and `X-Vercel-Cache: MISS` on every request; measured TTFB 0.72–2.48s vs 0.32s on the cached `/fireplaces`. `export const revalidate = 86400` is present but has nothing to attach to, because a dynamic segment with no `generateStaticParams` export is treated as pure SSR and appears in neither `routes` nor `dynamicRoutes` in the prerender manifest. **The obvious fix is a trap:** adding `generateStaticParams` does fix caching (verified — `s-maxage=3600`, warm TTFB ~9ms) but drops every product `<img>` from the server-rendered HTML — A/B tested on one build, **35 tags vs 0**, gallery stops server-rendering entirely. Not worth taking on 6,000+ indexed pages. Needs the SSR loss solved first; trade-off recorded in a comment at the top of the PDP page. **This is the single biggest remaining CWV lever.**
+- [x] **[Shared]** *(found during the Core Web Vitals pass)* **Product pages are not edge-cached.** PDP ships `Cache-Control: private, no-cache, no-store` and `X-Vercel-Cache: MISS` on every request; measured TTFB 0.72–2.48s vs 0.32s on the cached `/fireplaces`. `export const revalidate = 86400` is present but has nothing to attach to, because a dynamic segment with no `generateStaticParams` export is treated as pure SSR and appears in neither `routes` nor `dynamicRoutes` in the prerender manifest. **The obvious fix is a trap:** adding `generateStaticParams` does fix caching (verified — `s-maxage=3600`, warm TTFB ~9ms) but drops every product `<img>` from the server-rendered HTML — A/B tested on one build, **35 tags vs 0**, gallery stops server-rendering entirely. Not worth taking on 6,000+ indexed pages. **Solved a different way** — rather than change how the page renders, a `Cache-Control: public, s-maxage=300, stale-while-revalidate=86400` rule on `/:slug/product/:product_path` in `next.config.ts` edge-caches the SSR output that is already correct. Verified on a local production build: header applied (it overrides Next's `no-store`), `<img>` still 35, gallery still server-rendered, CSP header still present, and `/fireplaces` `/cart` `/about` unaffected. Safe to cache because `src/proxy.js` never matches product paths, so no per-user content reaches the response. TTL is deliberately 5 minutes, not 24h: a CDN cache is invisible to `revalidatePath`, so `/api/revalidate-pdp` cannot flush it — 5 min bounds how long a price edit can be stale while still absorbing effectively all repeat traffic.
 - [ ] **[Shared]** Programmatic SEO — unique meta titles & descriptions at scale for 6,000+ products
 - [ ] **[Shared]** Loyalty / rewards program for repeat customers
 - [ ] **[BBQ]** Decide the fate of the legacy "brand microsite" pages (`/brand/bbq-grill-outlet`, `/brand/solana-bbq-grills`) — an older system outside the `ISBBQ` theming architecture entirely, with its own hardcoded "Solana BBQ Grills" metadata
@@ -55,16 +55,16 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 
 ## Progress
 
-**19 of 29 in-scope tasks complete (66%) · 10 remaining**
+**20 of 29 in-scope tasks complete (69%) · 9 remaining**
 
 - **Session 1 (2026-07-22):** 15 fixed — 9 in commit `fca6e76`, plus payment icons, the Solana footer logo bug, the BBQ brand carousel, the BBQ Cta/Blog sections, and a site-wide BBQ phone-number leak (all found/fixed during item-by-item review)
-- **Session 2 (2026-07-23):** 4 fixed — Solana `SingleProductPage.jsx` dead-constant cleanup (`644ef05`), the site-wide Solana footer newsletter signup (`644ef05`), the shared mini-cart drawer (`644ef05`), and the Core Web Vitals / image pass (`12e7316`). The CWV work also **surfaced one new open item** (PDP edge caching), so the denominator moved 28 → 29.
+- **Session 2 (2026-07-23):** 5 fixed — Solana `SingleProductPage.jsx` dead-constant cleanup (`644ef05`), the site-wide Solana footer newsletter signup (`644ef05`), the shared mini-cart drawer (`644ef05`), the Core Web Vitals / image pass (`12e7316`), and PDP edge caching (`pending`) — the last of which the CWV work surfaced as a new item, moving the denominator 28 → 29.
 
 > **Not yet measured.** The CWV fixes are verified at the HTML level (emitted `q=` values, preload counts, `<img>` counts, `Cache-Control` headers on a local production build) but **no Lighthouse before/after has been run** — the PageSpeed API rate-limits without a key. Run PageSpeed on the homepage and a PDP after `12e7316` deploys and record it in `pagespeed-homepage.md`.
 
 ### What's left, by what unblocks it
 
-**One of the remaining 10 is buildable by us today** — item 7, PDP edge caching, discovered during the CWV pass. The other nine still need a client answer, backend work, or a scoping decision.
+**Nothing in the remaining 9 is buildable by us today** — every one needs a client answer, backend work, or a scoping decision. (PDP edge caching, discovered during the CWV pass, was found and fixed in the same session.)
 
 | # | Task | P | Blocked by |
 |---|------|---|-----------|
@@ -74,10 +74,9 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 | 4 | Courier/shipment tracking in Order History | P2 | backend — API must return carrier + tracking number first |
 | 5 | Newsletter → Klaviyo/Mailchimp, or confirm custom backend covers lifecycle | P2 | client decision + backend |
 | 6 | Confirm order confirmation/receipt email flow end-to-end | P3 | external service, not verifiable from this codebase |
-| 7 | **PDP edge caching** *(new, from the CWV pass)* | P3 | **nothing external — needs engineering.** Biggest remaining CWV lever; naive fix costs server-rendered product images |
-| 8 | Programmatic SEO for 6,000+ products | P3 | scoping — needs a template + content strategy decision |
-| 9 | Loyalty / rewards program | P3 | client (product decision) |
-| 10 | Fate of legacy `/brand/bbq-grill-outlet` + `/brand/solana-bbq-grills` microsites | P3 | client decision |
+| 7 | Programmatic SEO for 6,000+ products | P3 | scoping — needs a template + content strategy decision |
+| 8 | Loyalty / rewards program | P3 | client (product decision) |
+| 9 | Fate of legacy `/brand/bbq-grill-outlet` + `/brand/solana-bbq-grills` microsites | P3 | client decision |
 
 **Six of these are client questions** (items 1, 2, 3, 5, 9, 10) — drafted and ready to send as one batch in [`audit-client-questions.md`](./audit-client-questions.md). Answering them converts most of the remaining backlog into buildable work.
 

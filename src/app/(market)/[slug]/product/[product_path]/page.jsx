@@ -22,7 +22,15 @@ import SingleProductPage from "@/app/components/new-design/page/SingleProductPag
 import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
 
 /**
- * KNOWN ISSUE — this route is not edge-cached, and the obvious fix is a trap.
+ * WHY THIS ROUTE IS SERVER-RENDERED PER REQUEST (and cached at the CDN instead).
+ *
+ * Resolved 2026-07-23: edge caching for this route is now handled by a
+ * Cache-Control rule on /:slug/product/:product_path in next.config.ts, NOT by
+ * ISR. `export const revalidate = 86400` below is therefore inert — it is kept
+ * only because /api/revalidate-pdp still uses revalidateTag/revalidatePath to
+ * bust the unstable_cache data caches used by the fetches in this file.
+ * The history below explains why ISR was rejected; do not "fix" it by adding
+ * generateStaticParams.
  *
  * Because there is no `generateStaticParams` export, Next treats this dynamic
  * segment as pure SSR: it appears in neither `routes` nor `dynamicRoutes` in
@@ -40,9 +48,11 @@ import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProduct
  * trade is not worth taking on 6,000+ indexed product pages — it removes the
  * LCP image from the initial document and guts the HTML for crawlers.
  *
- * Do not re-add it without solving the SSR loss first. The data fetches below
- * are all cached (unstable_cache), so origin render cost is already much lower
- * than it was; the remaining win is edge caching, which needs more work.
+ * Note the loss is not gallery-specific and not a data failure: the
+ * prerendered file on disk still contained the product title and all 239 image
+ * URLs in its flight data, yet emitted no <img> anywhere — the navbar logo
+ * included. Rather than reverse-engineer that, we kept the SSR output that is
+ * known-correct and cached it at the CDN edge.
  */
 
 
