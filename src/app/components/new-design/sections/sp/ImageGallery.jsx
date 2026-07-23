@@ -49,6 +49,10 @@ const GalleryMainImage = ({
           alt={productTitle || "Product image"}
           fill
           priority={priority}
+          // q=60 rather than Next's default 75. This is the PDP's LCP element,
+          // and product shots on flat backgrounds are visually indistinguishable
+          // at 60 while costing meaningfully fewer bytes on mobile.
+          quality={60}
           sizes="(max-width: 1024px) 100vw, 460px"
           className="w-full h-full object-contain"
         />
@@ -237,7 +241,8 @@ const ImageGallery = ({ images, productTitle }) => {
                   alt={img?.alt || `${productTitle} - image ${i + 1}`}
                   fill
                   loading="lazy"
-                  sizes="(max-width: 640px) 15vw, 80px"
+                  quality={50}
+                  sizes="80px"
                   className="w-full h-full object-contain"
                 />
               )}

@@ -33,6 +33,9 @@ const GalleryMainImage = ({ image, productTitle, imgRef, onMouseMove, onMouseEnt
           alt={productTitle || "Product image"}
           fill
           priority={priority}
+          // q=60 rather than Next's default 75 — this is the PDP's LCP element
+          // and product shots on flat backgrounds are indistinguishable at 60.
+          quality={60}
           sizes="(max-width: 1024px) 100vw, 460px"
           className="w-full h-full object-contain"
         />
@@ -158,7 +161,7 @@ const ImageGallery = ({ images, productTitle }) => {
               }`}
             >
               {img?.src && (
-                <Image src={img.src} alt={img?.alt || `${productTitle} - image ${i + 1}`} fill loading="lazy" sizes="80px" className="object-contain" />
+                <Image src={img.src} alt={img?.alt || `${productTitle} - image ${i + 1}`} fill loading="lazy" quality={50} sizes="80px" className="object-contain" />
               )}
             </button>
           ))}
@@ -195,7 +198,7 @@ const ImageGallery = ({ images, productTitle }) => {
               <button key={`fs-thumb-${i}`} onClick={() => selectThumb(img)} aria-label={`View image ${i + 1}`}
                 className={`relative w-14 h-14 flex-shrink-0 rounded-sm overflow-hidden border-2 transition-all ${img?.src === mainImage ? "border-theme-600 opacity-100" : "border-white/20 opacity-50 hover:opacity-80"}`}
               >
-                {img?.src && <Image src={img.src} alt={`${productTitle} - ${i + 1}`} fill loading="lazy" sizes="56px" className="object-contain" />}
+                {img?.src && <Image src={img.src} alt={`${productTitle} - ${i + 1}`} fill loading="lazy" quality={50} sizes="56px" className="object-contain" />}
               </button>
             ))}
           </div>

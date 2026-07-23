@@ -4,6 +4,7 @@ import "@/app/styles/product-pages.css";
 // revalidation trigger was missed. Primary invalidation is on-demand
 // via /api/revalidate-pdp using revalidatePath + revalidateTag.
 export const revalidate = 86400;
+import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
@@ -19,6 +20,51 @@ import {
 import ProductClient from "@/app/components/molecule/ProductClient";
 import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
 import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
+
+/**
+ * KNOWN ISSUE — this route is not edge-cached, and the obvious fix is a trap.
+ *
+ * Because there is no `generateStaticParams` export, Next treats this dynamic
+ * segment as pure SSR: it appears in neither `routes` nor `dynamicRoutes` in
+ * the prerender manifest, and every response ships
+ * `Cache-Control: private, no-cache, no-store`. That silently defeats the
+ * `export const revalidate = 86400` above — every product view re-renders on
+ * the origin, while the sibling /[slug] route (which does export it) is served
+ * from cache. Measured 2026-07-23: PDP TTFB 0.72–2.48s vs 0.32s on /fireplaces.
+ *
+ * Adding `export async function generateStaticParams() { return [] }` DOES fix
+ * the caching — verified locally, Cache-Control becomes s-maxage=3600 and warm
+ * TTFB drops to ~9ms. But it also drops every product <img> from the
+ * server-rendered HTML: A/B tested on the same build, 35 <img> tags without it
+ * versus 0 with it, and the whole ImageGallery stops server-rendering. That
+ * trade is not worth taking on 6,000+ indexed product pages — it removes the
+ * LCP image from the initial document and guts the HTML for crawlers.
+ *
+ * Do not re-add it without solving the SSR loss first. The data fetches below
+ * are all cached (unstable_cache), so origin render cost is already much lower
+ * than it was; the remaining win is edge caching, which needs more work.
+ */
+
+
+
+/**
+ * The four FAQ blocks are site-wide static copy, identical on every product
+ * page. Reading them straight from Upstash on each render opted this route out
+ * of static generation (the client fetches with `cache: "no-store"`), which
+ * defeated `export const revalidate = 86400` above. Caching the read keeps the
+ * route statically renderable so it can actually be served from the CDN edge.
+ */
+const getFaqContent = unstable_cache(
+  () =>
+    redis.mget([
+      keys.faqs_about_brand.value,
+      keys.faqs_shipping_policy.value,
+      keys.faqs_return_policy.value,
+      keys.faqs_warranty.value,
+    ]),
+  ["pdp-faq-content"],
+  { tags: ["pdp", "pdp-faqs"], revalidate: 86400 },
+);
 
 // Helper function to strip HTML tags
 function stripHtml(html) {
@@ -175,12 +221,7 @@ export default async function ProductPage({ params }) {
   const product_reviews = (await getReviewsByProductId(product_id)) || [];
   const jsonLd = buildJsonLd(product, slug, product_path);
 
-  const [about, shipping_policy, return_policy, warranty] = await redis.mget([
-    keys.faqs_about_brand.value,
-    keys.faqs_shipping_policy.value,
-    keys.faqs_return_policy.value,
-    keys.faqs_warranty.value,
-  ]);
+  const [about, shipping_policy, return_policy, warranty] = await getFaqContent();
 
   const FAQS = [
     { q: `About ${STORE_NAME}`, a: about },

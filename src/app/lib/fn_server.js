@@ -704,9 +704,8 @@ export async function fetchCollectionsCount(collection_ids) {
   }
 }
 
-export async function getYMALProducts() {
+async function _getYMALProducts(seed) {
   try {
-    const seed = Date.now();
     const query = {
       size: 4,
       query: {
@@ -745,10 +744,31 @@ export async function getYMALProducts() {
       },
     };
 
-    const data = await esSearch(query, { cache: "no-store" });
+    const data = await esSearch(query);
     return data?.hits?.hits?.map((item) => formatProduct(item?._source,"card")) || [];
   } catch (error) {
     console.error("getYMALProducts:", error);
     return [];
   }
+}
+
+/**
+ * Public export — "You May Also Like" products, randomised per hour.
+ *
+ * The seed is bucketed to the hour rather than Date.now() so the ES query is
+ * cacheable. Previously this ran an uncached `no-store` fetch on every request,
+ * which marked the whole PDP route dynamic and silently defeated its
+ * `export const revalidate = 86400` — every product page hit the origin and
+ * re-ran Elasticsearch instead of being served from the CDN edge.
+ *
+ * The selection still rotates; it just rotates on an hourly boundary shared by
+ * all visitors, which is what makes it cacheable.
+ */
+export async function getYMALProducts() {
+  const seed = Math.floor(Date.now() / 3_600_000); // hourly bucket
+  return unstable_cache(
+    () => _getYMALProducts(seed),
+    [`ymal-${seed}`],
+    { tags: ["ymal"], revalidate: 3600 },
+  )();
 }

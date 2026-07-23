@@ -47,7 +47,9 @@ const ProductCard = ({ p }) => {
             src={p.image}
             alt={p?.name || "Product Image"}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            // ProductGrid is grid-cols-2 / lg:grid-cols-4 — matches bbq-design's
+            // equivalent card, which already declared these breakpoints correctly.
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
             className="object-contain transition-transform duration-300 group-hover:scale-105"
             priority={false}
           />

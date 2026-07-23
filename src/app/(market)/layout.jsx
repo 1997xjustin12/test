@@ -102,11 +102,12 @@ export default async function MarketLayout({ children }) {
       is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
     })) || [];
 
-  // Preload the first 4 category cards — they're all visible above-the-fold on mobile
-  // (INITIAL_COUNT = 4 in Categories.jsx). Preloading them in the server-rendered <head>
-  // lets the browser fetch in parallel with JS parsing, eliminating the "late-discovered
-  // image" PageSpeed audit. Index 0 is the LCP candidate → fetchPriority="high".
-  const initialCats = (categories || []).slice(0, 4);
+  // NOTE: the first-4-category-card preloads used to live here. They only ever
+  // render on the homepage (Categories.jsx), but this layout wraps every market
+  // route — so product, category, cart and checkout pages were all preloading
+  // four images they never display, one of them at fetchPriority="high",
+  // competing with each page's real LCP element. Moved to the homepage itself;
+  // see (market)/(home)/page.jsx.
 
   return (
     <html lang="en">
@@ -120,20 +121,6 @@ export default async function MarketLayout({ children }) {
           href="https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com"
         />
         <link rel="dns-prefetch" href="https://cdn.shopify.com" />
-        {initialCats.map((cat, i) => {
-          const base = `/_next/image?url=%2Fimages%2Fcategories%2F${cat.slug}.webp&q=40`;
-          return (
-            <link
-              key={cat.slug}
-              rel="preload"
-              as="image"
-              href={`${base}&w=512`}
-              imageSrcSet={`${base}&w=375 375w, ${base}&w=512 512w, ${base}&w=640 640w, ${base}&w=750 750w`}
-              imageSizes="(max-width: 1024px) calc(50vw - 2rem), calc(33vw - 2rem)"
-              fetchPriority={i === 0 ? "high" : undefined}
-            />
-          );
-        })}
         {/* eslint-disable-next-line react/no-danger */}
         <style
           dangerouslySetInnerHTML={{ __html: themeCSS }}

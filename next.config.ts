@@ -78,6 +78,12 @@ const config: NextConfig = {
   images: {
     // Serve AVIF first (smallest), fall back to WebP
     formats: ["image/avif", "image/webp"],
+    // Next 16 restricts `quality` to this list and silently coerces anything
+    // else to 75. Without it, the existing quality={40} on the category cards
+    // was being ignored — and the hand-built `&q=40` preload URLs in
+    // (home)/page.jsx no longer matched what <Image> actually requested, so the
+    // preload was wasted and the browser downloaded each card image twice.
+    qualities: [40, 50, 60, 75],
     // Cache optimized images for 24 h at the edge
     minimumCacheTTL: 86400,
     // Explicit breakpoints so Next.js generates the right srcset for mobile

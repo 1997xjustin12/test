@@ -40,7 +40,9 @@ function FireplaceThumb({ product }) {
       src={mainImage}
       alt={product?.name || "Product Image"}
       fill
-      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      // Grids using this card are 2-col on mobile / 4-col from lg — declaring
+      // 100vw made the browser pick a candidate ~2x wider than needed on phones.
+      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
       className="object-cover transition-transform duration-300 group-hover:scale-105"
       priority={false}
     />

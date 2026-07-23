@@ -85,7 +85,7 @@ const DescriptionSection = ({
                   src={brandImage}
                   alt="Brand Image"
                   fill
-                  sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 50vw, 200px"
                   className="object-contain object-center transition-opacity duration-300"
                 />
               )}
