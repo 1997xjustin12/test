@@ -41,17 +41,6 @@ export default async function handler(req, res) {
       })
     );
 
-    // res.setHeader(
-    //   "Set-Cookie",
-    //   cookie.serialize("refresh_token", data.refresh, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === "production",
-    //     sameSite: "strict",
-    //     path: "/",
-    //     maxAge: 60 * 60 * 24 * 7, // 7 days
-    //   })
-    // );
-
     res.status(200).json(data);
   } catch (err) {
     console.error("Login error:", err);
