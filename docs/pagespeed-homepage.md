@@ -107,6 +107,32 @@
 
 ## Update Log
 
+### 2026-07-23 — Next 16 silently disabled the image `quality` settings ⚠️
+
+**Two entries above were credited as shipped wins but had stopped working.** Found while
+verifying a new `quality={60}` on the PDP gallery: the emitted HTML said `q=75`.
+
+Next 16 restricts the `quality` prop to whatever is listed in `images.qualities`
+(**default `[75]`**) and **silently coerces anything else to 75** — no error, no build warning.
+Nothing in the source looks wrong; only the emitted `<img srcSet>` reveals it.
+
+Consequences:
+
+1. **"Categories.jsx `quality={40}`" was inert** on both brands since the Next 16 upgrade —
+   category card images had quietly reverted to q=75.
+2. **Worse — the category cards were downloading twice.** The preload `<link>`s are hand-built
+   URL strings ending `&q=40`, while `<Image>` was requesting `&q=75`. Different URL, different
+   cache entry, so the preload never matched the actual request. A preload added to *speed up*
+   LCP was doubling the cost of the LCP image.
+
+**Fixed** in `12e7316` by adding `qualities: [40, 50, 60, 75]` to `next.config.ts`. Verified in
+the built HTML: PDP now emits `q=60` (gallery main) and `q=50` (thumbnails); homepage emits
+`q=40` matching its preloads.
+
+**Lesson for this file:** a fix is only shipped once it has been confirmed in production output.
+Several remaining items below were checked off from source alone — treat them as unverified
+until the emitted HTML says otherwise, especially anything touching `next/image`.
+
 ### 2026-05-13 — Initial audit + first round of fixes
 - Baseline score: ~80 (pre-caching changes)
 - Score after caching changes pushed: dropped to ~70 (regression — Zoho was already a problem, now exposed)
