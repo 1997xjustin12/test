@@ -2,6 +2,10 @@ import React from 'react'
 import Link from 'next/link';
 
 function Paginator({ current_page = 1, total_pages = 1 }) {
+  // Nothing to paginate through — WP returns X-WP-TotalPages: 0 for a category
+  // with no posts, which would otherwise render bare disabled arrows.
+  if (!Number.isFinite(parseInt(total_pages)) || parseInt(total_pages) < 2) return null;
+
   const cur = parseInt(current_page);
   const total = parseInt(total_pages);
   const isFirst = cur <= 1;

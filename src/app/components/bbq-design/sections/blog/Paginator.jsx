@@ -4,6 +4,10 @@ import Link from 'next/link';
 function Paginator({ current_page = 1, total_pages = 1 }) {
   const cur = parseInt(current_page);
   const total = parseInt(total_pages);
+
+  // Nothing to paginate through — WP returns X-WP-TotalPages: 0 for a category
+  // with no posts, which would otherwise render bare disabled arrows.
+  if (!Number.isFinite(total) || total < 2) return null;
   const isFirst = cur <= 1;
   const isLast = cur >= total;
 

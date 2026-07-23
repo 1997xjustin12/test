@@ -1,15 +1,19 @@
-const DEFAULT_URL = "https://bbq-blog.onsitestorage.com";
-
 import { ISBBQ } from "@/app/lib/helpers";
+import { BLOG_BASE_URL, getBlogCategoryId } from "@/app/lib/blog";
 import NewBlogPost from "@/app/components/new-design/page/BlogPost";
 import BBQBlogPost from "@/app/components/bbq-design/page/BlogPost";
+
+const DEFAULT_URL = BLOG_BASE_URL;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.digitaloceanspaces.com/uploads/blog-default.png`;
 
+  const categoryId = await getBlogCategoryId();
   const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}`,
+    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}${
+      categoryId ? `&categories=${categoryId}` : ""
+    }`,
     { cache: "no-store" }
   );
 
@@ -43,12 +47,17 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogPost({ params }) {
   const { slug } = await params;
-  const CATEGORY_ID = 2;
+  const CATEGORY_ID = await getBlogCategoryId();
   const PER_PAGE = 5;
   const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;
 
+  // Scoped to this brand's category: without it, a Solana article URL would
+  // still render on the BBQ storefront (and vice versa), which is the same
+  // cross-brand leak the listing filter exists to prevent.
   const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}`,
+    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}${
+      CATEGORY_ID ? `&categories=${CATEGORY_ID}` : ""
+    }`,
     { cache: "no-store" }
   );
 

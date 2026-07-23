@@ -1,14 +1,16 @@
-const DEFAULT_URL = "https://bbq-blog.onsitestorage.com";
 import "@/app/search.css";
 import Link from "next/link";
 import { ISBBQ } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
+import { BLOG_BASE_URL, getBlogCategoryId } from "@/app/lib/blog";
+
+const DEFAULT_URL = BLOG_BASE_URL;
 
 import NewBlogsPage from "@/app/components/new-design/page/Blogs";
 import BBQBlogsPage from "@/app/components/bbq-design/page/Blogs";
 
 export async function generateMetadata() {
-  const CATEGORY_ID = 2;
+  const CATEGORY_ID = await getBlogCategoryId();
   const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.cdn.digitaloceanspaces.com/uploads/blog-default.png`;
   const DEFAULT_DESCRIPTION = `Read the latest blogs about ${STORE_NAME}.`;
   const res = await fetch(
@@ -59,7 +61,7 @@ export default async function Blogs({ searchParams }) {
   const page = urlParams?.page || 1;
   const perPage = urlParams?.per_page || 12;
   const search = urlParams?.search;
-  const CATEGORY_ID = 2;
+  const CATEGORY_ID = await getBlogCategoryId();
   const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;
 
   const res = await fetch(

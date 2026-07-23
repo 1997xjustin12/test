@@ -24,7 +24,8 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 - [x] **[BBQ]** Cta homepage section rewritten and re-enabled — was explicitly fireplace-branded copy ("find the perfect fireplace...") linking to `/fireplaces`; rewrote for BBQ voice and pointed the CTA at `/grills`
 - [x] **[BBQ]** Blog preview homepage section rewritten and re-enabled — was pulling the shared `BLOG_POSTS` array (3 Solana fireplace articles); added a real, hand-picked `BBQ_BLOG_POSTS` array sourced from the same WordPress feed both brands' `/blogs` pages already use (verified live URLs/images), plus fixed the `font-serif`→`font-oswald` mismatch and a dead `href="#"` "All Articles" link
 - [x] **[Shared→BBQ]** *(found during item-by-item review, not in original audit)* Site-wide hardcoded Solana phone number leak — `bbq-design/layout/Topbar.jsx` and `Navbar.jsx` (desktop + mobile menu, visible on every page) used the hardcoded `PHONE`/`PHONE_HREF` constant instead of the env-driven `STORE_CONTACT` that ~30 other bbq-design files already use correctly; also removed an unused `PHONE_HREF` import in `Promo.jsx`
-- [ ] **[Both]** *(found during item-by-item review)* `/blogs` list + detail pages for **both** Solana and BBQ pull from the same unbranded WordPress feed (`bbq-blog.onsitestorage.com`, `categories=2`) — brands only differ in which component renders the results, not the underlying articles. Need a decision: is one shared blog across both brands intentional, or should content be split per brand?
+- [x] **[Both]** *(found during item-by-item review)* `/blogs` list + detail pages for **both** Solana and BBQ pulled from the same unbranded WordPress feed with a hardcoded `categories=2` — which is the **`solana`** category, so BBQ shoppers were served fireplace articles. **Client decision: split per brand.** Implemented via new `src/app/lib/blog.js`: `BLOG_CATEGORY_SLUG` is `ISBBQ ? "bbq" : "solana"`, resolved slug→ID against the WP categories endpoint (cached 24h, with verified fallback IDs) so the mapping survives a category being recreated in WP. Applied to the listing, its `generateMetadata`, the detail page **and** its "other posts" — the detail fetch is scoped too, otherwise a Solana article URL would still render on the BBQ storefront. Both paginators now return `null` below 2 pages, since WP sends `X-WP-TotalPages: 0` for an empty category.
+  - ⚠️ **BBQ blog is empty until content is categorised.** Verified live 2026-07-23: `solana` (id 2) = **50 posts**, `bbq` (id 4) = **0 posts**. The filter is correct, but nothing is tagged `bbq` yet, so `bbq-design`'s `/blogs` will show its "No blog posts available" empty state. **Action for the client: assign posts to the `bbq` category in WordPress** (or write new ones). No code change needed once they exist. Deliberately no fallback to the Solana feed — that would silently recreate the cross-brand leak this fixes.
 - [ ] **[Shared]** Expand social presence beyond Facebook + Pinterest
 - [ ] **[Shared]** Add courier/shipment tracking (carrier + tracking number) to Order History — currently only shows internal status (pending/paid/shipped/etc.)
 - [ ] **[Shared]** Connect newsletter signup to a recognized ESP (Klaviyo/Mailchimp), or confirm the custom backend (`NEXT_SOLANA_BACKEND_URL`) covers full lifecycle marketing
@@ -55,7 +56,7 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 
 ## Progress
 
-**20 of 29 in-scope tasks complete (69%) · 9 remaining**
+**21 of 29 in-scope tasks complete (72%) · 8 remaining**
 
 - **Session 1 (2026-07-22):** 15 fixed — 9 in commit `fca6e76`, plus payment icons, the Solana footer logo bug, the BBQ brand carousel, the BBQ Cta/Blog sections, and a site-wide BBQ phone-number leak (all found/fixed during item-by-item review)
 - **Session 2 (2026-07-23):** 5 fixed — Solana `SingleProductPage.jsx` dead-constant cleanup (`644ef05`), the site-wide Solana footer newsletter signup (`644ef05`), the shared mini-cart drawer (`644ef05`), the Core Web Vitals / image pass (`12e7316`), and PDP edge caching (`pending`) — the last of which the CWV work surfaced as a new item, moving the denominator 28 → 29.
@@ -64,20 +65,19 @@ Tags: **[Shared]** = same code/backend for both brands · **[Solana]** = new-des
 
 ### What's left, by what unblocks it
 
-**Nothing in the remaining 9 is buildable by us today** — every one needs a client answer, backend work, or a scoping decision. (PDP edge caching, discovered during the CWV pass, was found and fixed in the same session.)
+**Nothing in the remaining 8 is buildable by us today** — every one needs a client answer, backend work, or a scoping decision. (PDP edge caching, discovered during the CWV pass, was found and fixed in the same session.)
 
 | # | Task | P | Blocked by |
 |---|------|---|-----------|
 | 1 | Braintree production credentials + one live settled transaction | P1 | client (credentials) |
-| 2 | `/blogs` shared content pool — one blog for both brands, or split? | P2 | client decision |
-| 3 | Expand social presence beyond Facebook + Pinterest | P2 | client (needs the actual accounts to link) |
-| 4 | Courier/shipment tracking in Order History | P2 | backend — API must return carrier + tracking number first |
-| 5 | Newsletter → Klaviyo/Mailchimp, or confirm custom backend covers lifecycle | P2 | client decision + backend |
-| 6 | Confirm order confirmation/receipt email flow end-to-end | P3 | external service, not verifiable from this codebase |
-| 7 | Programmatic SEO for 6,000+ products | P3 | scoping — needs a template + content strategy decision |
-| 8 | Loyalty / rewards program | P3 | client (product decision) |
-| 9 | Fate of legacy `/brand/bbq-grill-outlet` + `/brand/solana-bbq-grills` microsites | P3 | client decision |
+| 2 | Expand social presence beyond Facebook + Pinterest | P2 | client (needs the actual accounts to link) |
+| 3 | Courier/shipment tracking in Order History | P2 | backend — API must return carrier + tracking number first |
+| 4 | Newsletter → Klaviyo/Mailchimp, or confirm custom backend covers lifecycle | P2 | client decision + backend |
+| 5 | Confirm order confirmation/receipt email flow end-to-end | P3 | external service, not verifiable from this codebase |
+| 6 | Programmatic SEO for 6,000+ products | P3 | scoping — needs a template + content strategy decision |
+| 7 | Loyalty / rewards program | P3 | client (product decision) |
+| 8 | Fate of legacy `/brand/bbq-grill-outlet` + `/brand/solana-bbq-grills` microsites | P3 | client decision |
 
-**Six of these are client questions** (items 1, 2, 3, 5, 9, 10) — drafted and ready to send as one batch in [`audit-client-questions.md`](./audit-client-questions.md). Answering them converts most of the remaining backlog into buildable work.
+**Five of these are client questions** (items 1, 2, 4, 7, 8) — drafted and ready to send as one batch in [`audit-client-questions.md`](./audit-client-questions.md). Answering them converts most of the remaining backlog into buildable work.
 
 *Source audits: `solana_ecommerce_audit_2026-07-22.pdf`, `bbq_ecommerce_audit_2026-07-22.pdf` — both will be re-rendered with these corrections (Braintree blocked status, wishlist removed) once the full item-by-item review is done.*
