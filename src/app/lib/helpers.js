@@ -5,12 +5,12 @@ export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
 
 // Outdoor Kitchen Outlet (OKO) — third brand/theme.
-// ⚠️ TEMP(oko): forced ON while the OKO theme is being built on feat/oko-theme,
-// because OKO has no production domain yet. With this true, EVERY deployment
-// renders OKO and shadows ISBBQ/Solana. DO NOT MERGE TO main like this — before
-// merge, switch to a real domain check, e.g.:
-//   export const ISOKO = store_domain === "https://www.<oko-domain>.com";
-export const ISOKO = true;
+// Gated on an explicit env flag rather than a domain check (the way ISBBQ works)
+// because OKO has no production domain yet: it runs as a separate Vercel project
+// off this same repo, distinguished only by its env vars. Set
+// NEXT_PUBLIC_STORE_THEME=oko on that project to enable the theme. Leaving it
+// unset is the safe default — Solana and BBQ Grill Outlet keep their own themes.
+export const ISOKO = process.env.NEXT_PUBLIC_STORE_THEME === "oko";
 // export const ISBBQ = true;
 
 // The Elasticsearch index every catalog read resolves through — PDP, category
