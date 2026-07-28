@@ -5,10 +5,10 @@ import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
 
 const inputClass =
-  "w-full px-3.5 py-2.5 pr-11 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
+  "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 pr-11 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
 
 const labelClass =
-  "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
+  "block font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone mb-1.5";
 
 const EyeIcon = ({ open }) =>
   open ? (
@@ -25,7 +25,7 @@ const EyeIcon = ({ open }) =>
 const PasswordField = ({ id, name, label, value, onChange, show, onToggle }) => (
   <div>
     <label htmlFor={id} className={labelClass}>
-      {label} <span className="text-fire">*</span>
+      {label} <span className="text-oko-barn dark:text-oko-barn-light">*</span>
     </label>
     <div className="relative">
       <input
@@ -41,7 +41,7 @@ const PasswordField = ({ id, name, label, value, onChange, show, onToggle }) => 
         type="button"
         onClick={onToggle}
         aria-label={show ? "Hide password" : "Show password"}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300 transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
       >
         <EyeIcon open={show} />
       </button>
@@ -103,12 +103,12 @@ export default function ChangePasswordPage() {
   if (!isLoggedIn) return null;
 
   return (
-    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-6 sm:p-8">
-      <h2 className="text-lg font-bold text-charcoal dark:text-white tracking-tight mb-1">
-        Change Password
+    <div className="bg-white dark:bg-oko-night-2 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark p-6 sm:p-8">
+      <h2 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream mb-1">
+        Change password.
       </h2>
-      <p className="text-sm text-stone-500 dark:text-stone-400 mb-7">
-        Choose a strong password you haven't used before.
+      <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark mb-7">
+        Choose a strong password you haven&apos;t used before.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 max-w-sm">
@@ -142,22 +142,22 @@ export default function ChangePasswordPage() {
 
         {notif.message && (
           <div
-            className={`flex items-start gap-2.5 px-3.5 py-3 rounded-lg border ${
+            className={`flex items-start gap-2.5 px-4 py-3 rounded-[2px] bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark border-l-4 ${
               notif.status === "success"
-                ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800/50"
-                : "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800/50"
+                ? "border-l-oko-sage dark:border-l-oko-sage"
+                : "border-l-oko-barn dark:border-l-oko-barn-light"
             }`}
           >
             {notif.status === "success" ? (
-              <svg className="w-4 h-4 text-green-500 shrink-0 mt-px" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-oko-sage shrink-0 mt-px" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-red-500 shrink-0 mt-px" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-oko-barn dark:text-oko-barn-light shrink-0 mt-px" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
               </svg>
             )}
-            <p className={`text-xs font-medium ${notif.status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+            <p className="font-inter text-[13.5px] leading-[1.5] text-oko-char-soft dark:text-oko-ondark">
               {notif.message}
             </p>
           </div>
@@ -166,9 +166,9 @@ export default function ChangePasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-fire hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {loading ? "Updating…" : "Update Password"}
+          {loading ? "Updating…" : "Update password"}
         </button>
       </form>
     </div>

@@ -10,36 +10,36 @@ export default function LoginPage() {
   const isLogin = tab === "login";
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-stone-50 dark:bg-stone-950 py-10 px-4 sm:px-6">
+    <div className="min-h-[calc(100vh-64px)] bg-oko-cream dark:bg-oko-night py-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         {/* Page header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-charcoal dark:text-white tracking-tight font-oswald">
-            Your Account
+          <h1 className="font-oko-display font-semibold text-[27px] sm:text-[29px] leading-[1.2] text-oko-char dark:text-oko-cream">
+            Your account.
           </h1>
-          <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
-            Sign in or create an account to get started
+          <p className="mt-2 font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark">
+            Sign in or create an account to get started.
           </p>
         </div>
 
-        {/* Mobile tab switcher */}
-        <div className="flex md:hidden p-1 rounded-sm bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 mb-6">
+        {/* Mobile tab switcher — §8.3 nav treatment, 2px barn underline */}
+        <div className="flex md:hidden border-b border-oko-stone-line dark:border-oko-line-dark mb-6">
           <button
             onClick={() => setTab("login")}
-            className={`font-oswald flex-1 py-2 text-sm font-semibold rounded-sm transition-all ${
+            className={`flex-1 py-2.5 font-inter text-[12.5px] font-semibold uppercase tracking-[0.05em] border-b-2 transition-colors ${
               isLogin
-                ? "bg-white dark:bg-char text-charcoal dark:text-white shadow-sm"
-                : "text-stone-500 dark:text-stone-400"
+                ? "border-oko-barn text-oko-barn dark:border-oko-barn-light dark:text-oko-barn-light"
+                : "border-transparent text-oko-stone hover:text-oko-char dark:hover:text-oko-cream"
             }`}
           >
-            Sign In
+            Sign in
           </button>
           <button
             onClick={() => setTab("register")}
-            className={`font-oswald flex-1 py-2 text-sm font-semibold rounded-sm transition-all ${
+            className={`flex-1 py-2.5 font-inter text-[12.5px] font-semibold uppercase tracking-[0.05em] border-b-2 transition-colors ${
               !isLogin
-                ? "bg-white dark:bg-char text-charcoal dark:text-white shadow-sm"
-                : "text-stone-500 dark:text-stone-400"
+                ? "border-oko-barn text-oko-barn dark:border-oko-barn-light dark:text-oko-barn-light"
+                : "border-transparent text-oko-stone hover:text-oko-char dark:hover:text-oko-cream"
             }`}
           >
             Register
@@ -57,7 +57,7 @@ export default function LoginPage() {
             </div>
 
             {/* Divider — desktop only */}
-            <div className="hidden md:block w-px bg-stone-100 dark:bg-stone-800 my-8" />
+            <div className="hidden md:block w-px bg-oko-stone-line dark:bg-oko-line-dark my-8" />
 
             {/* Register panel */}
             <div

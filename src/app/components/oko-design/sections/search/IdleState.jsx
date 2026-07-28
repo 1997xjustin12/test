@@ -7,34 +7,25 @@ export default async function IdleState({categories, populars}) {
   
 
   return (
-    <div className="max-w-[1240] mx-auto px-6 py-8">
-      {/* Promo */}
-      <div
-        className="rounded-2xl p-6 mb-8 flex flex-wrap items-center justify-between gap-4 relative overflow-hidden"
-        style={{ background: "linear-gradient(120deg,#1a0600,#3d1208)" }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `radial-gradient(ellipse at 80% 50%, color-mix(in srgb, var(--theme-primary-500), transparent 80%), transparent 65%)`,
-          }}
-        />
-        <div className="relative z-10">
-          <p className="text-white font-bold text-lg mb-1">
-            🔥 Spring Sale — Up to 30% off
+    <div className="max-w-[1240px] mx-auto px-6 py-8">
+      {/* Promo — charcoal band, barn action button (8.4) */}
+      <div className="rounded-[2px] p-6 mb-8 flex flex-wrap items-center justify-between gap-4 bg-oko-char dark:bg-oko-night-3 border border-oko-char dark:border-oko-line-dark">
+        <div>
+          <p className="font-oko-display font-semibold text-[21px] leading-[1.2] text-white mb-1">
+            Spring sale — up to 30% off.
           </p>
-          <p className="text-orange-200 text-sm">
+          <p className="text-[13.5px] text-oko-ondark-muted">
             Limited-time deals on top fireplace brands
           </p>
         </div>
-        <button className="relative z-10 shrink-0 bg-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-orange-50 transition-colors text-theme-500">
-          Shop Sale
+        <button className="shrink-0 font-inter font-semibold text-[13.5px] px-5 py-2.5 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white transition-colors">
+          Shop sale
         </button>
       </div>
 
       {/* Trending */}
       <div className="mb-7">
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+        <p className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-3">
           Trending searches
         </p>
         <div className="flex flex-wrap gap-2">
@@ -42,9 +33,9 @@ export default async function IdleState({categories, populars}) {
             <Link
               key={`idle-state-popular-${t}`}
               href={`${BASE_URL}/search?query=${t}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-[12.5px] font-inter bg-oko-cream-dim dark:bg-oko-night-3 text-oko-char-soft dark:text-oko-ondark border border-oko-stone-line dark:border-oko-line-dark hover:border-oko-barn hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
             >
-              <span className="text-[10px] text-gray-300 font-mono">
+              <span className="font-oko-mono text-[10px] text-oko-stone">
                 {String(i + 1).padStart(2, "0")}
               </span>
               {t}
@@ -55,7 +46,7 @@ export default async function IdleState({categories, populars}) {
 
       {/* Categories */}
       <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+        <p className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-3">
           Browse by category
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -64,24 +55,24 @@ export default async function IdleState({categories, populars}) {
               prefetch={false}
               href={`${BASE_URL}/category/${c.slug}`}
               key={`idle-search-category-${c.slug}`}
-              className="flex flex-col items-center gap-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-orange-400 hover:shadow-md transition-all group overflow-hidden pb-2"
+              className="flex flex-col items-center gap-1.5 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night-2 hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors group overflow-hidden pb-2"
             >
-              <div className="relative aspect-1 w-full">
+              <div className="relative aspect-1 w-full bg-oko-cream-dim dark:bg-oko-night-3 overflow-hidden">
                 {c?.image && (
                   <Image
                     src={c.image} // or your specific object path
                     alt={c.name || "Category search result thumbnail"}
                     fill
                     sizes="(max-width: 768px) 100vw, 64px"
-                    className="object-cover"
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
                     priority={false}
                   />
                 )}
               </div>
-              <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center leading-tight group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors px-2">
+              <div className="text-[12.5px] font-medium text-oko-char dark:text-oko-cream text-center leading-tight group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors px-2">
                 {c.name}
               </div>
-              <div className="text-[10px] text-gray-400 px-2">
+              <div className="text-[10px] text-oko-stone px-2">
                 {c.count} product{c.count > 1 ? "s" : ""}
               </div>
             </Link>

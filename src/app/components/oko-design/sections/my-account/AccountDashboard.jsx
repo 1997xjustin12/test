@@ -5,6 +5,12 @@ import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 import { subscribe, unsubscribe } from "@/app/lib/api";
 
+const cardCls =
+  "bg-white dark:bg-oko-night-2 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark";
+
+const inlineLink =
+  "font-inter font-semibold text-oko-sage hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors";
+
 // ─── Newsletter ───────────────────────────────────────────────────────────────
 
 function NewsletterSection({ email }) {
@@ -32,9 +38,9 @@ function NewsletterSection({ email }) {
 
   if (user?.is_subscribed)
     return (
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-6">
+      <div className={`${cardCls} p-6`}>
         <div className="flex items-center gap-3 mb-4">
-          <span className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-500 flex-shrink-0">
+          <span className="w-8 h-8 rounded-[2px] bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark flex items-center justify-center text-oko-char-soft dark:text-oko-ondark flex-shrink-0">
             <svg
               className="w-4 h-4"
               fill="none"
@@ -49,10 +55,10 @@ function NewsletterSection({ email }) {
               />
             </svg>
           </span>
-          <h3 className="text-sm font-bold text-charcoal dark:text-white">
+          <h3 className="font-oko-display font-semibold text-[15.5px] text-oko-char dark:text-oko-cream">
             Newsletter
           </h3>
-          <span className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-[10px] font-semibold">
+          <span className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-[2px] border border-oko-sage/30 bg-oko-sage/10 text-oko-sage font-inter text-[10px] font-semibold uppercase tracking-[0.06em]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -69,10 +75,10 @@ function NewsletterSection({ email }) {
           </span>
         </div>
 
-        <p className="text-sm font-semibold text-charcoal dark:text-white mb-1">
-          You&rsquo;re all caught up!
+        <p className="font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream mb-1">
+          You&rsquo;re all caught up.
         </p>
-        <p className="text-xs text-stone-500 dark:text-stone-400 mb-5 leading-relaxed">
+        <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mb-5 leading-[1.55]">
           You&rsquo;ll keep receiving product drops, seasonal discounts, and
           outdoor living inspiration.
         </p>
@@ -89,7 +95,7 @@ function NewsletterSection({ email }) {
             }
           }}
           disabled={loading}
-          className="px-4 py-2 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-500 dark:text-stone-400 hover:border-red-300 hover:text-red-500 dark:hover:border-red-800 dark:hover:text-red-400 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="px-4 py-2 border border-oko-stone-line dark:border-oko-line-dark font-inter text-[12.5px] font-semibold text-oko-char-soft dark:text-oko-ondark hover:border-oko-barn hover:text-oko-barn dark:hover:border-oko-barn-light dark:hover:text-oko-barn-light rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Updating…" : "Unsubscribe"}
         </button>
@@ -97,9 +103,9 @@ function NewsletterSection({ email }) {
     );
 
   return (
-    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-6">
+    <div className={`${cardCls} p-6`}>
       <div className="flex items-center gap-3 mb-4">
-        <span className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-500 flex-shrink-0">
+        <span className="w-8 h-8 rounded-[2px] bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark flex items-center justify-center text-oko-char-soft dark:text-oko-ondark flex-shrink-0">
           <svg
             className="w-4 h-4"
             fill="none"
@@ -114,40 +120,40 @@ function NewsletterSection({ email }) {
             />
           </svg>
         </span>
-        <h3 className="text-sm font-bold text-charcoal dark:text-white">
+        <h3 className="font-oko-display font-semibold text-[15.5px] text-oko-char dark:text-oko-cream">
           Newsletter
         </h3>
       </div>
 
       {isSubscribed ? (
         <>
-          <p className="text-sm font-semibold text-charcoal dark:text-white mb-1">
-            You're subscribed!
+          <p className="font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream mb-1">
+            You&rsquo;re subscribed.
           </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mb-5 leading-relaxed">
-            You'll keep receiving product drops, seasonal discounts, and outdoor
+          <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mb-5 leading-[1.55]">
+            You&rsquo;ll keep receiving product drops, seasonal discounts, and outdoor
             living inspiration.
           </p>
           <button
             onClick={handleToggle}
             disabled={loading}
-            className="px-4 py-2 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-500 dark:text-stone-400 hover:border-red-300 hover:text-red-500 dark:hover:border-red-800 dark:hover:text-red-400 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="px-4 py-2 border border-oko-stone-line dark:border-oko-line-dark font-inter text-[12.5px] font-semibold text-oko-char-soft dark:text-oko-ondark hover:border-oko-barn hover:text-oko-barn dark:hover:border-oko-barn-light dark:hover:text-oko-barn-light rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Updating…" : "Unsubscribe"}
           </button>
         </>
       ) : (
         <>
-          <p className="text-sm font-semibold text-charcoal dark:text-white mb-1">
+          <p className="font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream mb-1">
             Make every weekend feel like vacation.
           </p>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mb-5 leading-relaxed">
+          <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mb-5 leading-[1.55]">
             Join now for bundle deals and outdoor living inspiration.
           </p>
           <button
             onClick={handleToggle}
             disabled={loading || !email}
-            className="px-4 py-2 bg-fire hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter text-[12.5px] font-semibold rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Updating…" : "Subscribe"}
           </button>
@@ -161,7 +167,7 @@ function NewsletterSection({ email }) {
 
 const quickLinks = [
   {
-    label: "My Orders",
+    label: "My orders",
     description: "View your order history",
     href: `${BASE_URL}/my-account/orders`,
     icon: (
@@ -201,7 +207,7 @@ const quickLinks = [
     ),
   },
   {
-    label: "Change Password",
+    label: "Change password",
     description: "Update your password",
     href: `${BASE_URL}/my-account/change-password`,
     icon: (
@@ -234,26 +240,26 @@ export default function AccountDashboard() {
   return (
     <div className="flex flex-col gap-4">
       {/* Welcome card */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-6">
+      <div className={`${cardCls} p-6`}>
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-lg font-bold flex-shrink-0 select-none">
+          <div className="w-12 h-12 rounded-full bg-oko-char dark:bg-oko-cream-dim flex items-center justify-center text-oko-cream dark:text-oko-char font-oko-display text-lg font-semibold flex-shrink-0 select-none">
             {initial}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-base font-bold text-charcoal dark:text-white">
-              Hello, {fullName}!
+            <p className="font-oko-display font-semibold text-[16px] text-oko-char dark:text-oko-cream">
+              Hello, {fullName}.
             </p>
             {user?.email && (
-              <p className="text-xs text-stone-400 dark:text-stone-500 mt-0.5 truncate">
+              <p className="font-inter text-[12px] text-oko-stone mt-0.5 truncate">
                 {user.email}
               </p>
             )}
-            <p className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">
+            <p className="font-inter text-[12px] text-oko-stone mt-0.5">
               Not {fullName}?{" "}
               <Link
                 prefetch={false}
                 href={`${BASE_URL}/logout`}
-                className="text-fire hover:text-orange-600 font-semibold transition-colors"
+                className={`${inlineLink} text-[12px]`}
               >
                 Sign out
               </Link>
@@ -261,12 +267,12 @@ export default function AccountDashboard() {
           </div>
         </div>
 
-        <p className="text-xs text-stone-500 dark:text-stone-400 mt-5 leading-relaxed">
+        <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mt-5 leading-[1.55]">
           From your dashboard you can view your recent{" "}
           <Link
             prefetch={false}
             href={`${BASE_URL}/my-account/orders`}
-            className="text-fire hover:text-orange-600 font-semibold transition-colors"
+            className={`${inlineLink} text-[13px]`}
           >
             orders
           </Link>
@@ -274,7 +280,7 @@ export default function AccountDashboard() {
           <Link
             prefetch={false}
             href={`${BASE_URL}/my-account/profile`}
-            className="text-fire hover:text-orange-600 font-semibold transition-colors"
+            className={`${inlineLink} text-[13px]`}
           >
             shipping and billing addresses
           </Link>
@@ -282,7 +288,7 @@ export default function AccountDashboard() {
           <Link
             prefetch={false}
             href={`${BASE_URL}/my-account/change-password`}
-            className="text-fire hover:text-orange-600 font-semibold transition-colors"
+            className={`${inlineLink} text-[13px]`}
           >
             password
           </Link>
@@ -297,16 +303,16 @@ export default function AccountDashboard() {
             key={href}
             prefetch={false}
             href={href}
-            className="flex items-center gap-3 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-4 hover:border-orange-200 dark:hover:border-orange-800/50 hover:shadow-sm transition-all group"
+            className={`flex items-center gap-3 ${cardCls} p-4 hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors group`}
           >
-            <span className="w-8 h-8 rounded-xl bg-stone-50 dark:bg-stone-800 flex items-center justify-center text-stone-400 group-hover:bg-orange-50 dark:group-hover:bg-orange-900/30 group-hover:text-fire transition-colors flex-shrink-0">
+            <span className="w-8 h-8 rounded-[2px] bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark flex items-center justify-center text-oko-char-soft dark:text-oko-ondark group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors flex-shrink-0">
               {icon}
             </span>
             <div className="min-w-0">
-              <p className="text-xs font-semibold text-charcoal dark:text-white group-hover:text-fire transition-colors truncate">
+              <p className="font-inter text-[13px] font-semibold text-oko-char dark:text-oko-cream group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors truncate">
                 {label}
               </p>
-              <p className="text-[10px] text-stone-400 dark:text-stone-500 truncate">
+              <p className="font-inter text-[11px] text-oko-stone truncate">
                 {description}
               </p>
             </div>

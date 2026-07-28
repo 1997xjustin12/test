@@ -28,14 +28,14 @@ export default function BBQLogoutPage() {
   }, [loading, user, abandonedCartUser, cartObject]);
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center px-4 font-sora">
+    <div className="min-h-[60vh] flex items-center justify-center px-4 bg-oko-cream dark:bg-oko-night">
       <div className="flex flex-col items-center gap-4 text-center">
-        <div className="w-10 h-10 rounded-full border-2 border-grate dark:border-white/10 border-t-fire animate-spin" />
+        <div className="w-10 h-10 rounded-full border-2 border-oko-stone-line dark:border-oko-line-dark border-t-oko-barn dark:border-t-oko-barn-light animate-spin" />
         <div>
-          <h2 className="font-oswald font-bold text-base uppercase tracking-tight text-char dark:text-ash mb-1">
+          <h2 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream mb-1">
             Signing out…
           </h2>
-          <p className="text-xs text-stone-500 dark:text-stone-400">
+          <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark">
             Please wait a moment.
           </p>
         </div>

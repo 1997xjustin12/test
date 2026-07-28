@@ -9,21 +9,20 @@ import { isValidPassword } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
 
 const inputClass =
-  "w-full px-3.5 py-2.5 rounded-sm border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
+  "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
 
 const labelClass =
-  "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
+  "block font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone mb-1.5";
 
 const buttonClass =
-  "w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+  "w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
 const UsernameGuide = () => {
   return (
-    <section className="text-sm ml-2">
-      {/* <h3 className="text-base">Username Guidelines</h3> */}
-      <p className="text-stone-500 dark:text-stone-400">
+    <section className="font-inter text-[13px] leading-[1.55] ml-1">
+      <p className="text-oko-char-soft dark:text-oko-ondark">
         Follow these rules when choosing a username.
       </p>
-      <ul className="mt-3 list-disc list-inside space-y-2 marker:text-red-500 text-stone-500 dark:text-stone-400">
+      <ul className="mt-3 list-disc list-inside space-y-2 marker:text-oko-barn text-oko-char-soft dark:text-oko-ondark">
         <li>Must be 3-20 characters long.</li>
         <li>Can contain letters, numbers, dots (.), or underscores (_).</li>
         <li>Must start with a letter or number.</li>
@@ -176,25 +175,25 @@ function RegisterForm() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-charcoal dark:text-white tracking-tight mb-1 font-oswald">
-        Ignite Your Journey
+      <h2 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream mb-1">
+        Create your account.
       </h2>
-      <p className="text-sm text-stone-500 dark:text-stone-400 mb-7">
-        Join today to unlock exclusive offers, whether you're heating up the
-        backyard or cozying up by the fire.
+      <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark mb-7">
+        Join today to unlock exclusive offers, whether you&apos;re building out
+        the backyard kitchen or gearing up for grilling season.
       </p>
       <div className="mb-10">
-        <div className="text-sm font-bold mb-3 text-stone-500 dark:text-stone-400">
+        <div className="font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone mb-3">
           Benefits
         </div>
-        <ul className="list-disc list-inside space-y-2 marker:text-red-500">
+        <ul className="list-disc list-inside space-y-2 marker:text-oko-barn">
           {accountBenefits &&
             Array.isArray(accountBenefits) &&
             accountBenefits.length > 0 &&
             accountBenefits.map((item, index) => (
               <li
                 key={`li-acc-benefit-${index}`}
-                className="text-sm text-stone-500 dark:text-stone-400"
+                className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark"
               >
                 {item}
               </li>
@@ -204,11 +203,11 @@ function RegisterForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="first_name" className={labelClass}>
-            <span className="text-theme-700">*</span> First Name
+            First name <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="first_name"
-            placeholder="First Name"
+            placeholder="First name"
             value={form.first_name}
             onChange={handleChange}
             required
@@ -217,11 +216,11 @@ function RegisterForm() {
         </div>
         <div>
           <label htmlFor="last_name" className={labelClass}>
-            <span className="text-theme-700">*</span> Last Name
+            Last name <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="last_name"
-            placeholder="Last Name"
+            placeholder="Last name"
             value={form.last_name}
             onChange={handleChange}
             required
@@ -230,7 +229,7 @@ function RegisterForm() {
         </div>
         <div>
           <label htmlFor="email" className={labelClass}>
-            <span className="text-theme-700">*</span> Email
+            Email <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="email"
@@ -244,7 +243,7 @@ function RegisterForm() {
         </div>
         <div>
           <label htmlFor="username" className={labelClass}>
-            <span className="text-theme-700">*</span> Username
+            Username <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="username"
@@ -257,7 +256,7 @@ function RegisterForm() {
         <UsernameGuide />
         <div>
           <label htmlFor="password" className={labelClass}>
-            <span className="text-theme-700">*</span> Password
+            Password <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="password"
@@ -270,44 +269,44 @@ function RegisterForm() {
         </div>
         <div>
           <label htmlFor="password2" className={labelClass}>
-            <span className="text-theme-700">*</span> Confirm Password
+            Confirm password <span className="text-oko-barn dark:text-oko-barn-light">*</span>
           </label>
           <input
             name="password2"
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirm password"
             onChange={handleChange}
             required
             className={inputClass}
           />
         </div>
 
-        <div className="flex items-start text-sm text-neutral-600">
+        <div className="flex items-start font-inter text-[13px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark">
           <input
             id="terms"
             name="terms"
             type="checkbox"
             required
-            className="mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-red-500 focus:ring-red-500"
+            className="mt-1 mr-2 h-4 w-4 rounded-[2px] border-oko-stone-line accent-oko-barn"
           />
           <label
             htmlFor="terms"
-            className="text-sm text-stone-500 dark:text-stone-400"
+            className="font-inter text-[13px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark"
           >
-            <span className="text-theme-700" aria-hidden="true">
+            <span className="text-oko-barn dark:text-oko-barn-light" aria-hidden="true">
               *
             </span>{" "}
-            By checking this box, I agree to {STORE_NAME2}'{" "}
-            <Link prefetch={false} href={`#`} className="underline">
-              Terms and Conditions
+            By checking this box, I agree to {STORE_NAME2}&apos;{" "}
+            <Link prefetch={false} href={`#`} className="text-oko-sage hover:text-oko-barn dark:hover:text-oko-barn-light underline transition-colors">
+              Terms and conditions
             </Link>
             ,{" and "}
             <Link
               prefetch={false}
               href={`${BASE_URL}/privacy-policy`}
-              className="underline"
+              className="text-oko-sage hover:text-oko-barn dark:hover:text-oko-barn-light underline transition-colors"
             >
-              Privacy Policy
+              Privacy policy
             </Link>
           </label>
         </div>
@@ -317,25 +316,29 @@ function RegisterForm() {
           disabled={loading}
           className={buttonClass}
         >
-          {loading ? "Registering…" : "Create Account"}
+          {loading ? "Creating account…" : "Create account"}
         </button>
 
         {message && (
-          <p
-            className={`text-sm mb-4 text-center font-medium ${
-              message.type === "error" ? "text-theme-700" : "text-green-600"
+          <div
+            className={`flex items-start gap-2.5 px-4 py-3 rounded-[2px] bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark border-l-4 ${
+              message.type === "error"
+                ? "border-l-oko-barn dark:border-l-oko-barn-light"
+                : "border-l-oko-sage dark:border-l-oko-sage"
             }`}
           >
-            {message.text}
-          </p>
+            <p className="font-inter text-[13.5px] leading-[1.5] text-oko-char-soft dark:text-oko-ondark">
+              {message.text}
+            </p>
+          </div>
         )}
       </form>
-      <p className="mt-10 text-stone-500 dark:text-stone-400 text-sm">
+      <p className="mt-10 font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark">
         Are you a <b>PRO</b>? Join our{" "}
         <Link
           prefetch={false}
           href={`${BASE_URL}/professional-program`}
-          className="text-sm underline"
+          className="text-oko-sage hover:text-oko-barn dark:hover:text-oko-barn-light underline transition-colors"
         >
           {STORE_NAME2} Professional Program
         </Link>{" "}

@@ -6,7 +6,7 @@ import ProductsSection from "@/app/components/molecule/ProductsSectionV2";
 import { BASE_URL } from "@/app/lib/helpers";
 
 const PageWrapper = ({ children }) => (
-  <div className="min-h-screen text-char dark:text-ash font-sora">
+  <div className="min-h-screen bg-oko-cream dark:bg-oko-night text-oko-char dark:text-oko-cream font-inter">
     <div className="max-w-[1240px] mx-auto">{children}</div>
   </div>
 );
@@ -14,15 +14,15 @@ const PageWrapper = ({ children }) => (
 function CategoryResults({ searchResult }) {
   return (
     <div className="max-w-[1240px] mx-auto px-4 pb-6">
-      <div className="divide-y divide-grate dark:divide-white/10">
+      <div className="divide-y divide-oko-stone-line dark:divide-oko-line-dark">
         {searchResult.map((c, i) => (
           <Link
             prefetch={false}
             key={`category-search-result-${c?.slug}-${i}`}
             href={`${BASE_URL}/category/${c?.slug}`}
-            className="flex gap-3 px-2 py-4 hover:bg-paper dark:hover:bg-smoke transition-colors group"
+            className="flex gap-3 px-2 py-4 hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 transition-colors group"
           >
-            <div className="rounded-sm min-w-32 min-h-32 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
+            <div className="rounded-[2px] min-w-32 min-h-32 bg-white dark:bg-oko-night relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark">
               {c?.image && (
                 <Image
                   src={c.image}
@@ -34,15 +34,15 @@ function CategoryResults({ searchResult }) {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <div className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors">
+              <div className="font-inter font-medium text-[14px] leading-[1.3] text-oko-char dark:text-oko-cream group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors">
                 {c.name}
               </div>
-              <div className="text-sm font-light text-stone-500 dark:text-stone-400">{c.sub}</div>
+              <div className="text-[13.5px] text-oko-stone">{c.sub}</div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-char/40 dark:text-ash/40">
+                <span className="text-[12px] text-oko-stone">
                   {c.count} product{c.count > 1 ? "s" : ""}
                 </span>
-                <svg className="w-4 h-4 text-grate dark:text-white/20 group-hover:text-theme-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-oko-stone-line dark:text-oko-line-dark group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors" fill="none" stroke="currentColor" strokeWidth="1.6" viewBox="0 0 24 24">
                   <path d="M9 18l6-6-6-6" />
                 </svg>
               </div>
@@ -63,9 +63,9 @@ function BrandResults({ searchResult }) {
             prefetch={false}
             key={`search-brand-result-${b.url}`}
             href={b.url || "#"}
-            className="flex items-center gap-4 p-4 rounded-sm border border-grate dark:border-white/10 bg-paper dark:bg-smoke hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200 group"
+            className="flex items-center gap-4 p-4 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night-2 hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors group"
           >
-            <div className="rounded-sm min-w-32 min-h-32 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
+            <div className="rounded-[2px] min-w-32 min-h-32 bg-white dark:bg-oko-night relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark">
               {b?.image && (
                 <Image
                   src={b.image}
@@ -77,11 +77,11 @@ function BrandResults({ searchResult }) {
               )}
             </div>
             <div>
-              <p className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors">
+              <p className="font-oko-display text-[15px] font-semibold text-oko-char dark:text-oko-cream group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors">
                 {b.name}
               </p>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">{b.desc}</p>
-              <p className="font-oswald text-xs font-semibold uppercase tracking-wide mt-1 text-theme-600">
+              <p className="text-[12px] text-oko-stone mt-0.5">{b.desc}</p>
+              <p className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] mt-1 text-oko-barn dark:text-oko-barn-light">
                 {b.count} product{b.count > 1 ? "s" : ""}
               </p>
             </div>
@@ -122,29 +122,35 @@ export default function BBQSearchPage({
   return (
     <PageWrapper>
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-6">
-        <p className="text-sm text-char/50 dark:text-ash/40 mb-3">
+        <p className="text-[13px] text-oko-char-soft dark:text-oko-ondark mb-3">
           Results found for{" "}
-          <span className="font-oswald font-semibold uppercase tracking-wide text-theme-600">{query}</span>
+          <span className="font-inter font-semibold text-oko-barn dark:text-oko-barn-light">{query}</span>
         </p>
       </div>
 
-      <div className="w-full border-b border-grate dark:border-white/10 mb-0 sticky top-[64px] lg:top-[105px] bg-ash dark:bg-char z-10 overflow-x-auto">
+      <div className="w-full border-b border-oko-stone-line dark:border-oko-line-dark mb-0 sticky top-[64px] lg:top-[105px] bg-white dark:bg-oko-night-2 z-10 overflow-x-auto">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-          <div className="flex">
+          <div className="flex -mb-px">
             {searchResults.map((t) => (
               <Link
                 key={`search-tab-${t.prop}`}
                 prefetch={false}
                 href={t?.url || "#"}
-                className={`px-6 py-3.5 font-oswald text-sm font-semibold uppercase tracking-wide border-b-2 transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 py-3.5 whitespace-nowrap border-b-2 transition-colors font-inter font-semibold text-[12.5px] uppercase tracking-[0.05em] ${
                   ACTIVE_TAB === t?.prop
-                    ? "border-theme-600 text-theme-600 dark:text-theme-500"
-                    : "border-transparent text-char/40 dark:text-ash/40 hover:text-char dark:hover:text-ash"
+                    ? "border-oko-barn dark:border-oko-barn-light text-oko-barn dark:text-oko-barn-light"
+                    : "border-transparent text-oko-char-soft dark:text-oko-ondark hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light"
                 }`}
               >
-                {t.label}{" "}
-                <span className={`ml-1 text-xs ${ACTIVE_TAB === t.prop ? "text-theme-600 dark:text-theme-500" : "text-char/30 dark:text-ash/30"}`}>
-                  ({t.total || 0})
+                {t.label}
+                <span
+                  className={`font-oko-mono text-[11px] px-1.5 py-0.5 rounded-[2px] ${
+                    ACTIVE_TAB === t.prop
+                      ? "bg-oko-barn/10 text-oko-barn dark:bg-oko-barn-light/15 dark:text-oko-barn-light"
+                      : "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone"
+                  }`}
+                >
+                  {t.total || 0}
                 </span>
               </Link>
             ))}

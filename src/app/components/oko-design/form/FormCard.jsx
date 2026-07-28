@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
-function FormCard({children}) {
+function FormCard({ children }) {
   return (
-    <div className="bg-white dark:bg-char rounded-sm border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">{children}</div>
-  )
+    <div className="bg-white dark:bg-oko-night-2 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+      {children}
+    </div>
+  );
 }
 
-export default FormCard
+export default FormCard;

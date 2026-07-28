@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import FormCard from "@/app/components/oko-design/form/FormCard";
 
 const inputClass =
-  "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
+  "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
 
 const labelClass =
-  "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
+  "block font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone mb-1.5";
 
-const buttonClass = "w-full py-2.5 bg-theme-600 hover:bg-theme-600 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+const buttonClass =
+  "w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
 
 
 function ResetPassword({token, uid}) {
@@ -33,7 +34,7 @@ function ResetPassword({token, uid}) {
     e.preventDefault();
 
     const validatePassword = isValidPassword(form?.password);
-    
+
     if(!validatePassword?.valid){
         setNotif({
           status: "error",
@@ -80,7 +81,7 @@ function ResetPassword({token, uid}) {
         message: "Network error, please try again.",
       });
       console.log("err", err);
-    } 
+    }
   };
 
   const handleChange = (e) => {
@@ -93,7 +94,7 @@ function ResetPassword({token, uid}) {
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-[20px] p-8 lg:p-10">
       <div>
         <label htmlFor="password" className={labelClass}>
-          <span className="text-theme-600">*</span> New password
+          New password <span className="text-oko-barn dark:text-oko-barn-light">*</span>
         </label>
         <input
           placeholder="Password"
@@ -108,10 +109,10 @@ function ResetPassword({token, uid}) {
 
       <div>
         <label htmlFor="password2" className={labelClass}>
-          <span className="text-theme-600">*</span> Confirm new password
+          Confirm new password <span className="text-oko-barn dark:text-oko-barn-light">*</span>
         </label>
         <input
-          placeholder="Confirm Password"
+          placeholder="Confirm password"
           name="password2"
           type="password"
           value={form?.password2 || ""}
@@ -124,25 +125,23 @@ function ResetPassword({token, uid}) {
       <button
         type="submit"
         disabled={loading}
-        className={`${buttonClass} ${
-          loading
-            ? "bg-theme-500 cursor-not-allowed text-theme-900"
-            : "bg-theme-600 hover:bg-theme-700 text-white"
-        }`}
+        className={buttonClass}
       >
-        { loading ? "Submitting..." : "Submit"}
+        { loading ? "Submitting…" : "Submit"}
       </button>
-      <div className="mt-1 text-center min-h-[20px]">
-        {notif?.message && (
-          <p
-            className={`text-sm mb-4 font-medium ${
-              notif?.status === "success" ? "text-green-600" : "text-theme-600"
-            }`}
-          >
+      {notif?.message && (
+        <div
+          className={`flex items-start gap-2.5 px-4 py-3 rounded-[2px] bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark border-l-4 ${
+            notif?.status === "success"
+              ? "border-l-oko-sage dark:border-l-oko-sage"
+              : "border-l-oko-barn dark:border-l-oko-barn-light"
+          }`}
+        >
+          <p className="font-inter text-[13.5px] leading-[1.5] text-oko-char-soft dark:text-oko-ondark">
             {notif?.message}
           </p>
-        )}
-      </div>
+        </div>
+      )}
     </form>
     </FormCard>
   );

@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import FormCard from "@/app/components/oko-design/form/FormCard.jsx";
 
 const inputClass =
-  "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
+  "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
 
 const labelClass =
-  "block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5";
+  "block font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone mb-1.5";
 
 const buttonClass =
-  "w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white text-sm font-semibold rounded-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+  "w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -62,18 +62,18 @@ function ForgotPassword() {
   return (
     <FormCard>
       <div className="p-8 lg:p-10">
-        <h2 className="text-xl font-oswald font-bold text-charcoal dark:text-white tracking-tight mb-1">
-          Reset Your Password
+        <h2 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream mb-1">
+          Reset your password.
         </h2>
-        <p className="text-sm text-stone-500 dark:text-stone-400 mb-7">
-          Enter the email linked to your account and we'll send you reset
+        <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark mb-7">
+          Enter the email linked to your account and we&apos;ll send you reset
           instructions.
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
             <label htmlFor="email" className={labelClass}>
-              Email address <span className="text-theme-600">*</span>
+              Email address <span className="text-oko-barn dark:text-oko-barn-light">*</span>
             </label>
             <input
               id="email"
@@ -90,15 +90,15 @@ function ForgotPassword() {
 
           {notif.message && (
             <div
-              className={`flex items-start gap-2.5 px-3.5 py-3 rounded-lg border ${
+              className={`flex items-start gap-2.5 px-4 py-3 rounded-[2px] bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark border-l-4 ${
                 notif.status === "success"
-                  ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800/50"
-                  : "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800/50"
+                  ? "border-l-oko-sage dark:border-l-oko-sage"
+                  : "border-l-oko-barn dark:border-l-oko-barn-light"
               }`}
             >
               {notif.status === "success" ? (
                 <svg
-                  className="w-4 h-4 text-green-500 shrink-0 mt-px"
+                  className="w-4 h-4 text-oko-sage shrink-0 mt-px"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -112,7 +112,7 @@ function ForgotPassword() {
                 </svg>
               ) : (
                 <svg
-                  className="w-4 h-4 text-red-500 shrink-0 mt-px"
+                  className="w-4 h-4 text-oko-barn dark:text-oko-barn-light shrink-0 mt-px"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -124,13 +124,7 @@ function ForgotPassword() {
                   />
                 </svg>
               )}
-              <p
-                className={`text-xs font-medium ${
-                  notif.status === "success"
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-red-600 dark:text-red-400"
-                }`}
-              >
+              <p className="font-inter text-[13.5px] leading-[1.5] text-oko-char-soft dark:text-oko-ondark">
                 {notif.message}
               </p>
             </div>
@@ -141,7 +135,7 @@ function ForgotPassword() {
               ? `Resend in ${cooldown}s`
               : loading
                 ? "Sending…"
-                : "Send Reset Link"}
+                : "Send reset link"}
           </button>
         </form>
       </div>

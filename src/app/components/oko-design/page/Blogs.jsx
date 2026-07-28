@@ -5,64 +5,68 @@ import Paginator from '@/app/components/oko-design/sections/blog/Paginator';
 
 function Blogs({ postsWithImages = [], totalPages = 1, page = 1 }) {
   return (
-    <section className="bg-ash dark:bg-char py-14 sm:py-16 font-sora">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
+    <section className="bg-oko-cream dark:bg-oko-night py-16">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
 
-        <div className="mb-8 md:mb-10">
-          <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
-            Our Blog
-          </p>
-          <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
-            Latest Articles
+        {/* Section header (8.7) */}
+        <div className="mb-8">
+          <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+            Our blog
+          </span>
+          <h2 className="font-oko-display font-semibold text-[27px] leading-[1.2] text-oko-char dark:text-oko-cream">
+            Latest articles
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Article card grid (8.10 / rule 6) */}
+        <div className="grid grid-cols-1 min-[560px]:grid-cols-2 lg:grid-cols-3 gap-[22px]">
           {postsWithImages.length > 0 ? (
             postsWithImages.map((post) => (
               <article
                 key={post.id}
-                className="group bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-1 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200 flex flex-col"
+                className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden"
               >
                 <Link
                   href={`/blogs/${post.slug}`}
-                  className="block relative h-48 overflow-hidden bg-white dark:bg-char"
+                  className="block relative h-48 overflow-hidden bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark"
                 >
                   <img
                     src={post.featuredImage}
                     alt={he.decode(post.title.rendered)}
                     title={he.decode(post.title.rendered)}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-[opacity,transform] duration-300 group-hover:opacity-90 group-hover:scale-[1.03]"
                   />
                 </Link>
 
-                <div className="p-4 flex flex-col flex-1 gap-1.5">
+                <div className="flex flex-1 flex-col gap-2 p-5">
                   <Link href={`/blogs/${post.slug}`} title={he.decode(post.title.rendered)}>
-                    <h3 className="font-sora text-sm font-semibold text-char dark:text-ash leading-snug line-clamp-2 hover:text-theme-600 dark:hover:text-theme-500 transition-colors">
+                    <h3 className="font-oko-display font-semibold text-[19px] leading-[1.3] text-oko-char dark:text-oko-cream line-clamp-2 hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors">
                       {he.decode(post.title.rendered)}
                     </h3>
                   </Link>
 
-                  <p className="text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 line-clamp-3 flex-1">
+                  <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark line-clamp-3 flex-1">
                     {he.decode(post.excerpt.rendered.replace(/<[^>]*>?/gm, ""))}
                   </p>
 
                   <Link
                     href={`/blogs/${post.slug}`}
                     title={he.decode(post.title.rendered)}
-                    className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-theme-600 hover:text-theme-700 transition-colors"
+                    className="mt-1 inline-flex items-center gap-1 self-start font-inter text-[13px] font-semibold text-oko-sage dark:text-oko-sage-light border-b border-transparent hover:border-oko-sage dark:hover:border-oko-sage-light hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
                   >
-                    Read more
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
+                    Read more →
                   </Link>
                 </div>
               </article>
             ))
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 px-4 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm text-center">
-              <p className="text-sm font-light text-stone-500 dark:text-stone-400">No blog posts available.</p>
+            <div className="col-span-full flex flex-col items-center justify-center gap-2 py-20 px-4 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] text-center">
+              <p className="font-oko-display font-semibold text-[21px] text-oko-char dark:text-oko-cream">
+                No articles yet
+              </p>
+              <p className="font-inter text-[13.5px] text-oko-stone">
+                Check back soon for guides, tips and inspiration.
+              </p>
             </div>
           )}
         </div>

@@ -1,103 +1,81 @@
 "use client";
 
 import Image from "next/image";
-import { useReveal } from "@/app/hooks/useReveal";
-import { BBQ_BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
+import { BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
 import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 
+// OKO article card (rule 6 / 8.10): white/night-2, stone-line border, cream-dim
+// image well with bottom border, no shadow, hover = image opacity/scale only.
 function BlogCard({ tag, title, readTime, date, img, url }) {
-  const ref = useReveal();
   return (
-    <Link href={url}>
-      <article
-        ref={ref}
-        className="
-        opacity-0 translate-y-6 transition-all duration-700
-        rounded-2xl overflow-hidden bg-white dark:bg-stone-900
-        border border-stone-100 dark:border-stone-800
-        hover:shadow-[0_12px_48px_rgba(0,0,0,.15)] dark:hover:shadow-[0_12px_48px_rgba(0,0,0,.5)]
-        hover:-translate-y-1 group
-      "
-      >
-        <div className="relative h-48 overflow-hidden bg-stone-200 dark:bg-stone-800">
-          <Image
-            src={img}
-            alt={title}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
+    <Link href={url} className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden">
+      <div className="relative h-48 overflow-hidden bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark">
+        <Image
+          src={img}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-[opacity,transform] duration-300 group-hover:opacity-90 group-hover:scale-[1.03]"
+          loading="lazy"
+        />
+      </div>
+      <div className="flex flex-col gap-2 p-5">
+        <p className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light">
+          {tag}
+        </p>
+        <h3 className="font-oko-display font-semibold text-[19px] leading-[1.3] text-oko-char dark:text-oko-cream line-clamp-2">
+          {title}
+        </h3>
+        <div className="flex gap-2 font-inter text-[11.5px] text-oko-stone">
+          <span>{readTime}</span>
+          <span aria-hidden="true">·</span>
+          <span>{date}</span>
         </div>
-        <div className="p-5">
-          <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-2">
-            {tag}
-          </p>
-          <h3 className="font-oswald text-base sm:text-[1.05rem] text-charcoal dark:text-white mb-2 leading-snug">
-            {title}
-          </h3>
-          <div className="flex gap-2 text-xs text-stone-500 dark:text-stone-400">
-            <span>{readTime}</span>
-            <span>·</span>
-            <span>{date}</span>
-          </div>
-        </div>
-      </article>
+      </div>
     </Link>
   );
 }
 
 export default function Blog() {
-  const hdrRef = useReveal();
   return (
-    <section id="blog" className="py-20 md:py-24 bg-white dark:bg-stone-950">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div
-          ref={hdrRef}
-          className="
-            opacity-0 translate-y-6 transition-all duration-700
-            flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10
-          "
-        >
+    <section id="blog" className="py-16 bg-oko-cream dark:bg-oko-night">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
+        {/* Section header (8.7) */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 dark:text-theme-600 mb-2">
-              Learning Center
-            </p>
-            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase text-charcoal dark:text-white leading-tight">
-              Guides, Tips & Inspiration
+            <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+              Learning center
+            </span>
+            <h2 className="font-oko-display font-semibold text-[27px] leading-[1.2] text-oko-char dark:text-oko-cream">
+              Guides, tips & inspiration
             </h2>
           </div>
           <Link
             href={`${BASE_URL}/blogs`}
-            className="
-            inline-flex items-center gap-2 px-7 py-3 rounded-lg
-            border-2 border-theme-600 text-theme-600 dark:text-theme-600 hover:bg-theme-600 hover:text-white
-            font-semibold text-sm transition-all duration-200 self-start sm:self-auto flex-shrink-0
-          "
+            className="inline-flex items-center gap-1 self-start sm:self-auto flex-shrink-0 font-inter text-[13px] font-semibold text-oko-sage dark:text-oko-sage-light border-b border-transparent hover:border-oko-sage dark:hover:border-oko-sage-light hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
           >
-            All Articles
+            All articles →
           </Link>
         </div>
 
         {/* Mobile: first post only as compact horizontal card */}
         {BBQ_BLOG_POSTS[0] && (
-          <Link href={BBQ_BLOG_POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
-            <div className="relative w-28 flex-shrink-0">
-              <Image src={BBQ_BLOG_POSTS[0].img} alt={BBQ_BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
+          <Link href={BBQ_BLOG_POSTS[0].url} className="group sm:hidden flex gap-4 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden">
+            <div className="relative w-28 flex-shrink-0 bg-oko-cream-dim dark:bg-oko-night-3 border-r border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+              <Image src={BBQ_BLOG_POSTS[0].img} alt={BBQ_BLOG_POSTS[0].title} fill sizes="112px" className="object-cover transition-[opacity,transform] duration-300 group-hover:opacity-90 group-hover:scale-[1.03]" loading="lazy" />
             </div>
             <div className="p-4 min-w-0">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-1">{BBQ_BLOG_POSTS[0].tag}</p>
-              <h3 className="font-oswald text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BBQ_BLOG_POSTS[0].title}</h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{BBQ_BLOG_POSTS[0].readTime}</p>
+              <p className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-1">{BBQ_BLOG_POSTS[0].tag}</p>
+              <h3 className="font-oko-display font-semibold text-[15.5px] leading-[1.3] text-oko-char dark:text-oko-cream line-clamp-3">{BBQ_BLOG_POSTS[0].title}</h3>
+              <p className="font-inter text-[11.5px] text-oko-stone mt-2">{BBQ_BLOG_POSTS[0].readTime}</p>
             </div>
           </Link>
         )}
 
         {/* Tablet+: full grid */}
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {BBQ_BLOG_POSTS.map((p,index) => (
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-[22px]">
+          {BBQ_BLOG_POSTS.map((p, index) => (
             <BlogCard key={`home-blogs-${index}`} {...p} />
           ))}
         </div>
