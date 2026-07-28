@@ -1,66 +1,52 @@
-"use client";
-
-import React, { useState, useEffect, useMemo } from "react";
-import { formatPrice, formatProduct } from "@/app/lib/helpers";
-import { useReveal } from "@/app/hooks/useReveal";
-import { useSolanaCategories } from "@/app/context/category";
-import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import Link from "next/link";
 import Image from "next/image";
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, formatPrice, formatProduct } from "@/app/lib/helpers";
+import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 
-async function getProductsByCollectionId(id) {
-  // Use a full URL if calling from the server, or relative if client-side
-  const res = await fetch(`/api/collections/collection-products/${id}`, {
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch products");
-  }
-
-  return res.json();
+// 8.10 Product card — white, bordered, 2px radius. Barn SALE badge top-left,
+// sage FREE SHIPPING top-right (shipping moves to top-left when there's no
+// sale). Brand eyebrow → name → review line → three-part price block + a 34px
+// outline "+" button that inverts to char on hover.
+function Stars({ rating }) {
+  const rounded = Math.round(rating);
+  return (
+    <span className="text-oko-brass tracking-[1px]" aria-hidden="true">
+      {"★".repeat(rounded)}
+      {"☆".repeat(Math.max(0, 5 - rounded))}
+    </span>
+  );
 }
 
 function ProductCard({ product }) {
-  const ref = useReveal();
-
-  const onSale = !!product.was && product?.save_amt > 0;
+  const onSale = !!product?.was && product?.save_amt > 0;
+  const hasReviews = product?.reviews > 0;
+  const freeShipBadge = (
+    <span className="font-inter font-medium text-[9.5px] uppercase tracking-[0.03em] px-2 py-1 bg-oko-sage text-white rounded-[2px]">
+      Free shipping
+    </span>
+  );
 
   return (
-    <article
-      ref={ref}
-      className="
-        bg-white dark:bg-stone-900 border border-grate dark:border-stone-700 rounded overflow-hidden flex flex-col hover:shadow-lg hover:-translate-y-1 hover:border-stone-300 dark:hover:border-stone-500 transition-all group
-      "
-    >
-      {/* Image */}
-      <Link
-        href={product?.url || "#"}
-        aria-label={product?.title}
-        title={product?.title}
-      >
-        <div className="relative h-48 bg-white dark:bg-stone-800">
-          {/* Flags */}
-          <div className="absolute top-2 left-2 flex flex-col gap-1.5">
-            {product?.badge && (
-              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-gold uppercase tracking-wide rounded-sm z-[1]">
-                {product?.badge}
-              </span>
-            )}
-            {product?.save_pct && (
-              <span className="font-oswald text-[10px] font-semibold px-2 py-1 text-white bg-theme-600 uppercase tracking-wide rounded-sm z-[1]">
-                -{product?.save_pct}%
-              </span>
-            )}
-          </div>
+    <article className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px]">
+      {/* Media */}
+      <Link href={product?.url || "#"} tabIndex={-1} aria-hidden="true" className="block">
+        <div className="relative aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+          {/* Badges */}
+          {onSale && (
+            <span className="absolute top-2.5 left-2.5 z-[1] font-inter font-semibold text-[10px] uppercase tracking-[0.04em] px-2 py-1 bg-oko-barn text-white rounded-[2px]">
+              Sale
+            </span>
+          )}
+          <span className={`absolute top-2.5 z-[1] ${onSale ? "right-2.5" : "left-2.5"}`}>
+            {freeShipBadge}
+          </span>
           {product?.image && (
             <Image
-              src={product?.image}
-              alt={product?.title}
+              src={product.image}
+              alt={product?.name || product?.title || "Product"}
               fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 560px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-contain p-4 group-hover:scale-[1.03] transition-transform duration-300"
               loading="lazy"
             />
           )}
@@ -69,95 +55,90 @@ function ProductCard({ product }) {
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="text-[10px] text-stone-400 dark:text-stone-500 tracking-widest uppercase font-medium line-clamp-1">
+        <p className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] text-oko-barn dark:text-oko-barn-light line-clamp-1">
           {product?.brand}
         </p>
-        <Link
-          href={product?.url || "#"}
-          aria-label={product?.title}
-          title={product?.title}
-        >
-          <h3 className="font-sora font-medium text-sm leading-snug mt-1 mb-2 flex-1 text-stone-900 dark:text-ash hover:text-theme-600 transition-colors line-clamp-2">
-            {product?.title}
+        <Link href={product?.url || "#"} className="mt-1.5">
+          <h3 className="font-inter font-medium text-[14px] leading-[1.3] text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors line-clamp-2">
+            {product?.name || product?.title}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 mb-2">
-          <span className="text-gold tracking-wider">
-            {"★".repeat(Math.round(product?.ratings))}
-            {"☆".repeat(5 - Math.round(product?.ratings))}
-          </span>
-          {product?.ratings}
-          {/* ({reviewCount}) */}
+        {/* Review line */}
+        <div className="mt-1.5 text-[11.5px] text-oko-stone">
+          {hasReviews ? (
+            <>
+              <Stars rating={product?.ratings} />
+              <span className="ml-1.5">{product.reviews} reviews</span>
+              <span className="sr-only">
+                Rated {product?.ratings} out of 5, {product.reviews} reviews
+              </span>
+            </>
+          ) : (
+            "No reviews"
+          )}
         </div>
 
-        <div className="min-h-[46px]">
-          <div className="flex items-baseline gap-2">
-            <span className="font-oswald font-bold text-xl text-stone-900 dark:text-ash">
+        {/* Price row */}
+        <div className="mt-auto pt-3.5 flex items-end justify-between gap-3">
+          <div>
+            {product?.was ? (
+              <span className="text-[12px] text-oko-stone line-through mr-1.5">
+                ${formatPrice(product.was)}
+              </span>
+            ) : null}
+            <span className="font-inter font-semibold text-[16px] text-oko-char dark:text-oko-cream">
               ${formatPrice(product?.price)}
             </span>
-            {product?.was && (
-              <span className="text-xs text-stone-400 dark:text-stone-500 line-through">
-                ${formatPrice(product.was)}
+            {onSale && (
+              <span className="block font-inter font-semibold text-[11px] text-oko-sage dark:text-oko-sage-light mt-0.5">
+                Save ${formatPrice(product.save_amt)}
               </span>
             )}
           </div>
-          {product?.save_amt && (
-            <p className="text-xs font-semibold text-bbq-green mt-0.5">
-              Save ${formatPrice(product.save_amt)}
-            </p>
-          )}
+
+          <AddToCartButtonWrap product={product}>
+            <button
+              type="button"
+              aria-label={`Add ${product?.name || product?.title} to cart`}
+              className="flex-shrink-0 w-[34px] h-[34px] flex items-center justify-center border border-oko-char dark:border-oko-cream rounded-[2px] text-oko-char dark:text-oko-cream text-[18px] leading-none hover:bg-oko-char hover:text-oko-cream dark:hover:bg-oko-cream dark:hover:text-oko-char transition-colors"
+            >
+              +
+            </button>
+          </AddToCartButtonWrap>
         </div>
-        <AddToCartButtonWrap product={product}>
-          <button className="mt-3 w-full py-2.5 bg-theme-600 text-white font-oswald font-semibold text-xs uppercase tracking-wide rounded-sm hover:bg-theme-700 transition-colors">
-            Add to Cart
-          </button>
-        </AddToCartButtonWrap>
       </div>
     </article>
   );
 }
 
-const MOBILE_INITIAL = 2;
-
 export default function Products({ initialProducts = [] }) {
-  const [products, setProducts] = useState(
-    (initialProducts || []).map((i) => formatProduct(i)),
-  );
-  const [active, setActive] = useState("All");
-  const [showAll, setShowAll] = useState(false);
-  const hdrRef = useReveal();
-
-  const handleChangeTab = async (tab) => {
-    setActive(tab?.name);
-    setShowAll(false);
-    const newProducts = await getProductsByCollectionId(tab?.collection_id);
-    setProducts((newProducts || []).map((i) => formatProduct(i)));
-  };
+  const products = (initialProducts || []).map((i) => formatProduct(i)).filter(Boolean);
 
   return (
-    <section id="products" className="py-20 md:py-24 bg-ash dark:bg-stone-950">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-        <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
+    <section id="products" className="py-16 bg-oko-cream-dim dark:bg-oko-night-2">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
+        {/* Section header (8.7) */}
+        <div className="flex items-end justify-between gap-4 mb-8">
           <div>
-            <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
-              Limited Quantities
-            </p>
-            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
-              Open-Box &amp; Clearance Deals
+            <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+              Today&apos;s deals
+            </span>
+            <h2 className="font-oko-display font-semibold text-[27px] leading-[1.2] text-oko-char dark:text-oko-cream">
+              Best sellers on sale
             </h2>
           </div>
           <Link
             href={`${BASE_URL}/open-box`}
-            className="font-oswald font-semibold text-sm tracking-wide border-b-2 border-theme-600 pb-0.5 hover:text-theme-600 transition-colors"
+            className="font-inter font-semibold text-[13px] text-oko-sage dark:text-oko-sage-light border-b border-oko-sage dark:border-oko-sage-light pb-0.5 hover:text-oko-barn hover:border-oko-barn dark:hover:text-oko-barn-light transition-colors whitespace-nowrap"
           >
-            Shop All Open Box →
+            See all deals →
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {(products || []).slice(0, 4).map((p) => (
-            <ProductCard key={p.name} product={p} />
+        <div className="grid grid-cols-1 min-[560px]:grid-cols-2 lg:grid-cols-4 gap-[22px]">
+          {products.slice(0, 4).map((p) => (
+            <ProductCard key={p.url || p.name} product={p} />
           ))}
         </div>
       </div>

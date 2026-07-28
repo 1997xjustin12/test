@@ -3,35 +3,26 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/context/auth";
 import { BASE_URL } from "@/app/lib/helpers";
-import { UserIcon } from "@/app/components/oko-design/ui/Icons";
 
 export default function MyAccountButton({ className }) {
   const { isLoggedIn, logout, myAccountLinks, accountBenefits } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={`relative inline-block ${className}`}>
-      {/* Trigger */}
+    <div className={`relative inline-block ${className || ""}`}>
+      {/* Trigger — icon over label */}
       <button
+        type="button"
         onClick={() => setIsOpen((o) => !o)}
         aria-label="My account"
-        className="flex flex-col items-center justify-center w-10 h-10 text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+        aria-expanded={isOpen}
+        className="flex flex-col items-center justify-center gap-1 w-11 text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-[18px] h-[18px]"
-        >
-          <path d="M5 6 H19 L17 16 L12 21 L7 16 Z" />
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
         </svg>
-        <span className="font-oswald text-[10px] uppercase tracking-wide hidden sm:block leading-none mt-0.5">
-          Account
-        </span>
+        <span className="font-inter text-[10.5px] tracking-[0.06em] leading-none">Account</span>
       </button>
 
       {isOpen && (
@@ -40,20 +31,20 @@ export default function MyAccountButton({ className }) {
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
           {/* Dropdown */}
-          <div className="absolute right-0 mt-2 w-[220px] bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-xl shadow-char/10 dark:shadow-black/40 overflow-hidden z-50">
-
+          <div className="absolute right-0 mt-2 w-[220px] bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden z-50">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-ash dark:bg-char border-b border-grate dark:border-white/10">
-              <span className="font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash">
-                My Account
+            <div className="flex items-center justify-between px-4 py-3 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark">
+              <span className="font-inter text-[11px] font-semibold uppercase tracking-[0.06em] text-oko-char dark:text-oko-cream">
+                My account
               </span>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
-                aria-label="Close"
-                className="p-1 text-char/40 dark:text-ash/40 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+                aria-label="Close account menu"
+                className="p-1 text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M18 6 6 18M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -67,16 +58,17 @@ export default function MyAccountButton({ className }) {
                     prefetch={false}
                     href={item?.url}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 text-xs font-oswald uppercase tracking-wide text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors rounded-sm"
+                    className="flex items-center px-3 py-2 text-[12.5px] text-oko-char-soft dark:text-oko-ondark hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors rounded-[2px]"
                   >
                     {item?.label}
                   </Link>
                 ))}
                 <button
+                  type="button"
                   onClick={() => { logout(); setIsOpen(false); }}
-                  className="w-full mt-1 flex items-center gap-2 px-3 py-2 text-xs font-oswald uppercase tracking-wide text-char/40 dark:text-ash/30 hover:bg-ash dark:hover:bg-white/5 hover:text-ember dark:hover:text-ember transition-colors rounded-sm"
+                  className="w-full mt-1 flex items-center px-3 py-2 text-[12.5px] text-oko-stone hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors rounded-[2px]"
                 >
-                  Sign Out
+                  Sign out
                 </button>
               </div>
             )}
@@ -87,20 +79,20 @@ export default function MyAccountButton({ className }) {
                 <Link
                   href={`${BASE_URL}/login`}
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-2 font-oswald font-semibold text-xs uppercase tracking-wide bg-theme-600 hover:bg-theme-700 text-white rounded-sm transition-colors"
+                  className="w-full text-center py-2.5 font-inter font-semibold text-[12.5px] bg-oko-barn hover:bg-oko-barn-dark text-white rounded-[2px] transition-colors"
                 >
-                  Login / Register
+                  Login / register
                 </Link>
 
                 {accountBenefits?.length > 0 && (
                   <div>
-                    <p className="font-oswald text-[10px] font-semibold uppercase tracking-widest text-char/40 dark:text-ash/30 mb-2">
+                    <p className="font-inter text-[11px] font-semibold uppercase tracking-[0.06em] text-oko-stone mb-2">
                       Benefits
                     </p>
                     <ul className="flex flex-col gap-1.5">
                       {accountBenefits.map((item, i) => (
-                        <li key={`acc-benefit-${i}`} className="flex items-center gap-2 text-xs text-char/60 dark:text-ash/50">
-                          <span className="font-oswald font-bold text-[10px] text-theme-600">✓</span>
+                        <li key={`acc-benefit-${i}`} className="flex items-center gap-2 text-[12.5px] text-oko-char-soft dark:text-oko-ondark">
+                          <span className="text-oko-barn dark:text-oko-barn-light font-bold text-[11px]">✓</span>
                           {item}
                         </li>
                       ))}

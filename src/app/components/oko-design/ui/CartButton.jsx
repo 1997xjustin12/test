@@ -19,15 +19,17 @@ function CartButton() {
       href="/cart"
       prefetch={false}
       onClick={handleClick}
-      aria-label="View cart"
-      className="relative flex flex-col items-center justify-center w-10 h-10 text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+      aria-label={`View cart, ${cartItemsCount} ${cartItemsCount === 1 ? "item" : "items"}`}
+      className="relative flex flex-col items-center justify-center gap-1 w-11 text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
     >
-      <span className="text-lg leading-none">🛒</span>
-      <span className="font-oswald text-[10px] uppercase tracking-wide hidden sm:block leading-none mt-0.5">
-        Cart
-      </span>
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <path d="M3 6h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6" />
+        <circle cx="9" cy="21" r="1" />
+        <circle cx="18" cy="21" r="1" />
+      </svg>
+      <span className="font-inter text-[10.5px] tracking-[0.06em] leading-none">Cart</span>
       {cartItemsCount > 0 && (
-        <span className="absolute top-1 right-1 w-[18px] h-[18px] flex items-center justify-center bg-ember text-white text-[9px] font-oswald font-bold rounded-sm leading-none">
+        <span className="absolute -top-1.5 right-1 min-w-[16px] h-4 px-1 flex items-center justify-center bg-oko-barn text-white font-oko-mono text-[9px] leading-none rounded-full">
           {cartItemsCount > 9 ? "9+" : cartItemsCount}
         </span>
       )}

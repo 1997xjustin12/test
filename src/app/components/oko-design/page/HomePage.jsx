@@ -1,34 +1,29 @@
-import dynamic from "next/dynamic";
-
-// Above the fold — load immediately
+import Promo from "@/app/components/oko-design/sections/Promo";
 import Hero from "@/app/components/oko-design/sections/Hero";
-import Features from "@/app/components/oko-design/sections/Features";
+import Trust from "@/app/components/oko-design/sections/Trust";
 import Categories from "@/app/components/oko-design/sections/Categories";
+import Brands from "@/app/components/oko-design/sections/Brands";
+import Products from "@/app/components/oko-design/sections/Products";
+import WhyCall from "@/app/components/oko-design/sections/WhyCall";
+import Reviews from "@/app/components/oko-design/sections/Reviews";
+import SeoBlock from "@/app/components/oko-design/sections/SeoBlock";
 
-// Below the fold — lazy loaded to reduce initial JS parse/execution
-const Brands      = dynamic(() => import("@/app/components/oko-design/sections/Brands"));
-const Products    = dynamic(() => import("@/app/components/oko-design/sections/Products"));
-const Promo       = dynamic(() => import("@/app/components/oko-design/sections/Promo"));
-const Reviews     = dynamic(() => import("@/app/components/oko-design/sections/Reviews"));
-const Blog        = dynamic(() => import("@/app/components/oko-design/sections/Blog"));
-const Cta         = dynamic(() => import("@/app/components/oko-design/sections/Cta"));
-const NewsLetter  = dynamic(() => import("@/app/components/oko-design/sections/NewsLetter"));
-const Faqs  = dynamic(() => import("@/app/components/oko-design/sections/Faqs"));
-
+// Homepage section order per the OKO design system / oko-homepage.html:
+// PromoStrip → Hero → Trust → Categories → BrandStrip → Products(deals)
+// → WhyCall (dark feature band) → Testimonials → SeoBlock.
+// (Announcement bar, header/nav and footer are rendered by (market)/layout.jsx.)
 function HomePage({ heroBg, initialProducts }) {
   return (
     <div>
+      <Promo />
       <Hero background={heroBg} />
-      <Features />
-      <div className="hidden md:block"><Brands /></div>
+      <Trust />
       <Categories />
+      <Brands />
       <Products initialProducts={initialProducts} />
-      <div className="hidden md:block"><Promo /></div>
+      <WhyCall />
       <Reviews />
-      <Faqs />
-      <Blog />
-      <Cta />
-      <NewsLetter />
+      <SeoBlock />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { unstable_cache } from "next/cache";
 import "@/app/globals.css";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { redis, keys } from "@/app/lib/redis";
-import { Inter, Playfair_Display, Oswald, Sora } from "next/font/google";
+import { Inter, Playfair_Display, Oswald, Sora, Zilla_Slab, IBM_Plex_Mono } from "next/font/google";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
@@ -63,7 +63,28 @@ export const sora = Sora({
   display: 'swap',
 })
 
-const bodyClass = `${(ISBBQ || ISOKO) ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`: `${InterFont.variable} ${playfairDisplay.variable}`}`
+// OKO display + mono. Slab serif for the workshop-catalog headings (moves
+// away from the generic Fraunces-on-cream default; see design system §14),
+// IBM Plex Mono for eyebrows/counters. OKO body copy reuses Inter.
+export const zillaSlab = Zilla_Slab({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-oko-display',
+  display: 'swap',
+})
+
+export const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['500'],
+  variable: '--font-oko-mono',
+  display: 'swap',
+})
+
+const bodyClass = ISOKO
+  ? `${zillaSlab.variable} ${InterFont.variable} ${plexMono.variable} bg-oko-cream dark:bg-oko-night outdoorkitchenoutlet`
+  : ISBBQ
+    ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`
+    : `${InterFont.variable} ${playfairDisplay.variable}`
 
 export const metadata = await generateMetadata();
 

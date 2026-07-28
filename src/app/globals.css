@@ -38,6 +38,37 @@
   }
 }
 
+/* ── OKO (Outdoor Kitchen Outlet) theme base ──────────────────────────────
+   Warm workshop catalog. Body copy is Inter; headings use the slab display
+   via the `font-oko-display` utility. Accessibility floor from the design
+   system: a visible focus ring on everything interactive, and full
+   reduced-motion support. Scoped to `.outdoorkitchenoutlet` so it never
+   touches the BBQ or Solana themes. */
+@layer base {
+  .outdoorkitchenoutlet {
+    font-family: var(--font-inter);
+    line-height: 1.55;
+  }
+  .outdoorkitchenoutlet :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid #9C3B34; /* --oko-barn */
+    outline-offset: 2px;
+  }
+  /* On dark surfaces the ring switches to barn-light for contrast. */
+  @media (prefers-color-scheme: dark) {
+    .outdoorkitchenoutlet :where(a, button, input, select, textarea):focus-visible {
+      outline-color: #C0564C; /* --oko-barn-light */
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .outdoorkitchenoutlet *,
+    .outdoorkitchenoutlet *::before,
+    .outdoorkitchenoutlet *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
 
 .text-pallete-green { color: #089e1b; }
 .text-pallete-dark { color: #2e2e2e; }

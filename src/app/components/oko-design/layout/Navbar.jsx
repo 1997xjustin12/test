@@ -1,41 +1,22 @@
 "use client";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import {
-  PhoneIcon,
-  CartIcon,
-  UserIcon,
-} from "@/app/components/oko-design/ui/Icons";
 import CartButton from "@/app/components/oko-design/ui/CartButton";
 import SearchBox from "@/app/components/oko-design/ui/SearchBox";
-
-import { useSolanaCategories } from "@/app/context/category";
 import MyAccountButton from "@/app/components/oko-design/ui/MyAccountButton";
-import { STORE_NAME, STORE_CONTACT } from "@/app/lib/store_constants";
+import { useSolanaCategories } from "@/app/context/category";
 
-function NavSpinner({ className = "" }) {
+// Phone is a first-class OKO brand element — always this exact literal (spec §10).
+const OKO_PHONE = "888-667-4986";
+const OKO_PHONE_HREF = "tel:8886674986";
+
+function SearchGlyph() {
   return (
-    <svg
-      className={`animate-spin w-3 h-3 text-theme-500 flex-shrink-0 ${className}`}
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   );
 }
@@ -43,53 +24,25 @@ function NavSpinner({ className = "" }) {
 export default function Navbar({ logo }) {
   const { solana_categories: solana_menu_object } = useSolanaCategories();
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [showDrop, setShowDrop] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lockedMenu, setLockedMenu] = useState(null);
-  const [hoveredMenu, setHoveredMenu] = useState(null);
-  const [loadingHref, setLoadingHref] = useState(null);
-  const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
-  const [galleryOnFullscreen, setGalleryOnFullscreen] = useState(false);
-  const searchRef = useRef(null);
-  const navRowRef = useRef(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
+  // Close the mobile menu / search on navigation.
   useEffect(() => {
-    const handleGallery = (e) => {
-      setGalleryOnFullscreen(e.detail.isFullscreen);
-    };
-
-    window.addEventListener("galleryStatus", handleGallery);
-    return () => window.removeEventListener("galleryStatus", handleGallery);
-  }, []);
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  useEffect(() => {
-    const fn = (e) => {
-      if (!searchRef.current?.contains(e.target)) setShowDrop(false);
-    };
-    document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
-  }, []);
-
-  useEffect(() => {
-    const fn = (e) => {
-      if (!navRowRef.current?.contains(e.target)) setLockedMenu(null);
-    };
-    document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
-  }, []);
-
-  useEffect(() => {
-    setLoadingHref(null);
-    setLockedMenu(null);
-    setHoveredMenu(null);
+    setMenuOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
+
+  // Lock body scroll while the full-screen mobile menu is open.
+  useEffect(() => {
+    if (menuOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [menuOpen]);
 
   const NAV_LINKS = useMemo(() => {
     return solana_menu_object.filter(
@@ -99,274 +52,177 @@ export default function Navbar({ logo }) {
   }, [solana_menu_object]);
 
   return (
-    <nav
-      className={`
-      sticky top-0
-      bg-paper dark:bg-char md:bg-paper/95 md:dark:bg-char/95
-      md:backdrop-blur-md
-      border-b border-grate dark:border-white/10
-      transition-shadow duration-300
-      ${scrolled ? "shadow-md shadow-char/10 dark:shadow-black/30" : ""}
-      ${galleryOnFullscreen ? "" : "z-20"}
-    `}
-    >
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-        {/* ── Row 1: Logo + Search + Actions ── */}
-        <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
-          <Link
-            href="/"
-            className="font-bold text-2xl tracking-wide shrink-0 font-oswald text-char dark:text-ash"
-          >
-            BBQGrill<span className="text-theme-600 font-oswald">Outlet</span>
-            <small className="block font-sora font-normal text-[9px] tracking-[.35em] text-char/40 dark:text-ash/30 uppercase">
-              Outdoor Kitchen Experts
-            </small>
-          </Link>
-
-          {/* Search — desktop only inside Row 1 */}
-          <div className="hidden lg:flex flex-1 min-w-0">
-            <SearchBox />
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-none">
-            {/* Phone — hidden on mobile/tablet */}
+    <>
+      <header className="sticky top-0 z-30 bg-white dark:bg-oko-night border-b border-oko-stone-line dark:border-oko-line-dark">
+        <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
+          {/* ── Header row (96px desktop / 64px mobile) ── */}
+          <div className="flex items-center gap-4 lg:gap-7 h-16 lg:h-24">
+            {/* Logo lockup — bordered box, 1.5px barn */}
             <Link
-              href={`tel:${STORE_CONTACT}`}
-              className="hidden lg:flex items-center gap-1.5 font-oswald text-xs uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors whitespace-nowrap"
+              href="/"
+              aria-label="Outdoor Kitchen Outlet home"
+              className="flex flex-col items-center leading-none border-[1.5px] border-oko-barn rounded-[2px] px-3.5 py-2 sm:px-5 sm:py-2.5 shrink-0"
             >
-              <span className="text-theme-600">
-                <PhoneIcon />
+              <span className="font-oko-display font-semibold text-[15px] sm:text-[19px] tracking-[0.04em] text-oko-char dark:text-oko-cream whitespace-nowrap">
+                OUTDOOR <span className="text-oko-barn dark:text-oko-barn-light">⌂</span> KITCHEN
               </span>
-              {STORE_CONTACT}
+              <span className="font-inter text-[8px] sm:text-[10px] tracking-[0.32em] text-oko-stone dark:text-oko-ondark-faint mt-0.5">
+                OUTLET
+              </span>
             </Link>
-            {/* Account */}
-            <MyAccountButton />
-            {/* Cart */}
-            <CartButton />
-            {/* Hamburger — mobile only */}
-            <button
-              className="lg:hidden w-10 h-10 bg-ash dark:bg-white/10 flex flex-col items-center justify-center gap-1.5"
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-label="Toggle menu"
-              aria-expanded={menuOpen}
-            >
-              <span
-                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
-              />
-              <span
-                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`w-5 h-0.5 bg-char dark:bg-ash transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-              />
-            </button>
-          </div>
-        </div>
 
-        {/* ── Row 1b: Search — mobile only ── */}
-        <div className="lg:hidden pb-3">
-          <SearchBox />
-        </div>
-      </div>
+            {/* Search pill — inline on desktop */}
+            <div className="hidden lg:flex flex-1 min-w-0 max-w-[460px]">
+              <SearchBox />
+            </div>
 
-      {/* ── Row 2: Nav Links — desktop only ── */}
-      <div className="border-y border-grate dark:border-white/10">
-        <div
-          ref={navRowRef}
-          className="max-w-[1240px] mx-auto sm:px-6 hidden lg:flex items-center gap-0.5"
-        >
-          {NAV_LINKS.map(({ name, children, id, url }) => {
-            const isLocked = lockedMenu === id;
-            const isOpen = isLocked || hoveredMenu === id;
-            const cols = children.length > 16 ? 3 : children.length > 8 ? 2 : 1;
-            const colClass = cols === 3 ? "columns-3" : cols === 2 ? "columns-2" : "columns-1";
-            const minWClass = cols === 3 ? "min-w-[540px]" : cols === 2 ? "min-w-[380px]" : "min-w-[200px]";
-            return (
-              <div
-                key={`desktop-nav-item-${id}`}
-                className="relative flex items-center"
-                onMouseEnter={() => setHoveredMenu(id)}
-                onMouseLeave={() => setHoveredMenu(null)}
+            {/* Right cluster */}
+            <div className="flex items-center gap-3 sm:gap-6 ml-auto">
+              {/* Phone block */}
+              <Link
+                href={OKO_PHONE_HREF}
+                className="hidden lg:block text-right group"
               >
+                <span className="block font-oko-display font-bold text-[12px] leading-[1.15] text-oko-char dark:text-oko-cream">
+                  Best prices<br />by phone
+                </span>
+                <span className="block font-inter font-semibold text-[16px] text-oko-barn dark:text-oko-barn-light group-hover:text-oko-barn-dark transition-colors">
+                  {OKO_PHONE}
+                </span>
+              </Link>
+
+              {/* Account + Cart */}
+              <MyAccountButton />
+              <CartButton />
+
+              {/* Mobile: search toggle */}
+              <button
+                type="button"
+                onClick={() => setSearchOpen((o) => !o)}
+                aria-label="Search"
+                aria-expanded={searchOpen}
+                className="lg:hidden flex items-center justify-center w-10 h-10 text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
+              >
+                <SearchGlyph />
+              </button>
+
+              {/* Mobile: hamburger */}
+              <button
+                type="button"
+                onClick={() => setMenuOpen((o) => !o)}
+                aria-label="Toggle menu"
+                aria-expanded={menuOpen}
+                className="lg:hidden flex flex-col items-center justify-center gap-[5px] w-10 h-10 text-oko-char dark:text-oko-cream"
+              >
+                <span className={`block w-5 h-[1.6px] bg-current transition-all ${menuOpen ? "translate-y-[6.6px] rotate-45" : ""}`} />
+                <span className={`block w-5 h-[1.6px] bg-current transition-all ${menuOpen ? "opacity-0" : ""}`} />
+                <span className={`block w-5 h-[1.6px] bg-current transition-all ${menuOpen ? "-translate-y-[6.6px] -rotate-45" : ""}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile: expandable search row */}
+          {searchOpen && (
+            <div className="lg:hidden pb-3">
+              <SearchBox />
+            </div>
+          )}
+        </div>
+
+        {/* ── Primary nav row (52px) — desktop only ── */}
+        <div className="hidden lg:block border-t border-oko-stone-line dark:border-oko-line-dark">
+          <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
+            <nav className="flex items-center gap-[34px] h-[52px]">
+              {NAV_LINKS.map(({ name, url, id }) => (
                 <Link
+                  key={`oko-nav-${id}`}
                   href={`${BASE_URL}/${url}`}
                   prefetch={false}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setLockedMenu(isLocked ? null : id);
-                  }}
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  className={`px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2
-                  ${isOpen
-                    ? "bg-theme-600/5 dark:bg-theme-600/10 text-theme-600 dark:text-theme-500 border-theme-600"
-                    : "text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 border-transparent"
-                  }`}
+                  className="font-inter text-[12.5px] font-semibold uppercase tracking-[0.05em] text-oko-char dark:text-oko-ondark border-b-2 border-transparent py-[6px] hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors"
                 >
-                  {name}{" "}
-                  <span
-                    className={`text-[10px] opacity-60 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
-                  >
-                    ▾
-                  </span>
+                  {name}
                 </Link>
-                <div
-                  className={`
-                absolute top-[calc(100%+4px)] left-0
-                bg-paper dark:bg-smoke
-                border border-grate dark:border-white/10
-                shadow-xl shadow-char/15 dark:shadow-black/40
-                rounded-sm overflow-hidden ${minWClass}
-                transition-all duration-200 z-30
-                ${
-                  isOpen
-                    ? "opacity-100 pointer-events-auto translate-y-0"
-                    : "opacity-0 pointer-events-none translate-y-2"
-                }
-              `}
-                >
-                  {/* Parent category link */}
-                  <Link
-                    href={`${BASE_URL}/${url}`}
-                    onClick={() => {
-                      if (`/${url}` === pathname) {
-                        setLockedMenu(null);
-                        setHoveredMenu(null);
-                        return;
-                      }
-                      setLoadingHref(`${BASE_URL}/${url}`);
-                    }}
-                    className="flex items-center justify-between px-4 py-2.5 bg-ash dark:bg-char/60 border-b border-grate dark:border-white/10 font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 transition-colors group/parent"
-                  >
-                    <span>All {name}</span>
-                    <span className="relative w-3 h-3 flex-shrink-0 flex items-center justify-center">
-                      <span
-                        className={`absolute text-theme-600 text-xs transition-opacity ${loadingHref === `${BASE_URL}/${url}` ? "invisible" : "opacity-0 group-hover/parent:opacity-100"}`}
-                      >
-                        →
-                      </span>
-                      <NavSpinner
-                        className={
-                          loadingHref === `${BASE_URL}/${url}`
-                            ? "visible"
-                            : "invisible"
-                        }
-                      />
-                    </span>
-                  </Link>
-                  {/* Children */}
-                  <div className={`p-2 ${colClass}`}>
-                    {children.map((c) => (
-                      <Link
-                        key={`desktop-child-nav-item-${c.id}`}
-                        href={`${BASE_URL}/${c?.url}`}
-                        onClick={() => {
-                          if (`/${c?.url}` === pathname) {
-                            setLockedMenu(null);
-                            setHoveredMenu(null);
-                            return;
-                          }
-                          setLoadingHref(`${BASE_URL}/${c?.url}`);
-                        }}
-                        className="break-inside-avoid flex items-center justify-between px-4 py-2 text-[12px] text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
-                      >
-                        <span>{c.name}</span>
-                        <NavSpinner
-                          className={
-                            loadingHref === `${BASE_URL}/${c?.url}`
-                              ? "visible"
-                              : "invisible"
-                          }
-                        />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-          <Link
-            href={`${BASE_URL}/brand/eloquence`}
-            className="px-3 py-3 text-[12px] font-medium transition-all duration-150 flex items-center gap-0.5 font-oswald uppercase border-b-2 border-transparent text-theme-600 dark:text-theme-500 hover:bg-ash dark:hover:bg-white/5"
-          >
-            Current Deals 🔥
-          </Link>
+              ))}
+              {/* Sale — permanently barn */}
+              <Link
+                href={`${BASE_URL}/open-box`}
+                prefetch={false}
+                className="font-inter text-[12.5px] font-semibold uppercase tracking-[0.05em] text-oko-barn dark:text-oko-barn-light border-b-2 border-transparent py-[6px] hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors"
+              >
+                Sale
+              </Link>
+            </nav>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* ── Mobile Menu ── */}
+      {/* ── Mobile full-screen menu panel ── */}
       {menuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-paper dark:bg-smoke border-b border-grate dark:border-white/10 shadow-lg shadow-char/10 dark:shadow-black/30 z-30 max-h-[75vh] overflow-y-auto">
-          <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-3 flex flex-col gap-0.5">
-            {NAV_LINKS.map(({ name, url, id, children }) => {
-              const isExpanded = expandedMobileMenu === id;
-              return (
-                <div key={`mobile-nav-item-${id}`}>
-                  <button
-                    onClick={() =>
-                      setExpandedMobileMenu(isExpanded ? null : id)
-                    }
-                    aria-expanded={isExpanded}
-                    className="w-full flex items-center justify-between px-3 py-2.5 font-oswald text-xs font-semibold uppercase tracking-wide text-char dark:text-ash hover:text-theme-600 dark:hover:text-theme-500 hover:bg-ash dark:hover:bg-white/5 transition-colors"
-                  >
-                    <span>{name}</span>
-                    <span
-                      className={`text-[11px] opacity-50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                    >
-                      ▾
-                    </span>
-                  </button>
-                  <div
-                    className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-                  >
-                    <div className="overflow-hidden">
-                      <div className="ml-3 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-theme-600/20 dark:border-theme-600/20 pl-3">
-                        <Link
-                          href={`${BASE_URL}/${url}`}
-                          prefetch={false}
-                          onClick={() => setMenuOpen(false)}
-                          className="px-3 py-2 font-oswald text-xs font-semibold uppercase tracking-wide text-theme-600 dark:text-theme-500 hover:bg-theme-600/10 dark:hover:bg-theme-600/10 transition-colors"
-                        >
-                          All {name}
-                        </Link>
-                        {children?.map((c) => (
-                          <Link
-                            key={`mobile-child-nav-item-${c.id}`}
-                            href={`${BASE_URL}/${c?.url}`}
-                            prefetch={false}
-                            onClick={() => setMenuOpen(false)}
-                            className="px-3 py-2 text-xs text-char/60 dark:text-ash/50 hover:text-theme-600 dark:hover:text-theme-500 hover:bg-ash dark:hover:bg-white/5 transition-colors"
-                          >
-                            {c.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-            <Link
-              href={`${BASE_URL}/brand/eloquence`}
+        <div className="lg:hidden fixed inset-0 z-40 bg-oko-cream dark:bg-oko-night flex flex-col">
+          <div className="flex items-center justify-between h-16 px-5 border-b border-oko-stone-line dark:border-oko-line-dark shrink-0">
+            <span className="font-oko-display font-semibold text-[16px] uppercase tracking-[0.04em] text-oko-char dark:text-oko-cream">
+              Menu
+            </span>
+            <button
+              type="button"
               onClick={() => setMenuOpen(false)}
-              className="font-oswald uppercase px-3 py-2.5 text-sm font-semibold text-theme-600 dark:text-theme-500"
+              aria-label="Close menu"
+              className="flex items-center justify-center w-10 h-10 text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
             >
-              Current Deals 🔥
-            </Link>
-            <Link
-              href={`tel:${STORE_CONTACT}`}
-              onClick={() => setMenuOpen(false)}
-              className="mt-1 flex items-center gap-2 px-3 py-2.5 font-oswald text-xs uppercase tracking-wide font-semibold text-char dark:text-ash border-t border-grate dark:border-white/10"
-            >
-              <span className="text-theme-600">
-                <PhoneIcon />
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
+            <nav className="flex flex-col">
+              {NAV_LINKS.map(({ name, url, id }) => (
+                <Link
+                  key={`oko-mnav-${id}`}
+                  href={`${BASE_URL}/${url}`}
+                  prefetch={false}
+                  onClick={() => setMenuOpen(false)}
+                  className="px-5 py-4 font-inter text-[15px] font-semibold uppercase tracking-[0.04em] text-oko-char dark:text-oko-cream border-b border-oko-stone-line dark:border-oko-line-dark hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
+                >
+                  {name}
+                </Link>
+              ))}
+              <Link
+                href={`${BASE_URL}/open-box`}
+                prefetch={false}
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-4 font-inter text-[15px] font-semibold uppercase tracking-[0.04em] text-oko-barn dark:text-oko-barn-light border-b border-oko-stone-line dark:border-oko-line-dark"
+              >
+                Sale
+              </Link>
+            </nav>
+
+            <div className="px-5 py-5">
+              <span className="block font-oko-mono text-[11px] uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-1">
+                Best prices by phone
               </span>
-              {STORE_CONTACT}
-            </Link>
+              <Link
+                href={OKO_PHONE_HREF}
+                className="font-oko-display font-bold text-[22px] text-oko-char dark:text-oko-cream"
+              >
+                {OKO_PHONE}
+              </Link>
+            </div>
           </div>
         </div>
       )}
-    </nav>
+
+      {/* ── Sticky bottom call bar — mobile only ── */}
+      <Link
+        href={OKO_PHONE_HREF}
+        className="lg:hidden fixed bottom-0 inset-x-0 z-30 h-[52px] flex items-center justify-center gap-2 bg-oko-barn text-white font-inter font-semibold text-[14px] tracking-[0.02em] hover:bg-oko-barn-dark transition-colors"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        Call {OKO_PHONE}
+      </Link>
+    </>
   );
 }

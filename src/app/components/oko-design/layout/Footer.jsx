@@ -1,39 +1,40 @@
 import { PAYMENT_METHODS } from "@/app/data/new-homepage";
-import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_constants";
 import Link from "next/link";
 import Image from "next/image";
 import { createSlug, BASE_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
 
+// Phone is a first-class OKO brand element — always this exact literal (spec §10).
+const OKO_PHONE = "888-667-4986";
+const OKO_PHONE_HREF = "tel:8886674986";
+
 export const FOOTER_COLS = [
   {
-    heading: "Products",
+    heading: "Shop",
     links: [
-      { name: "All Grills",              url: "/grills" },
-      { name: "Built-In Grills",         url: "/built-in-grills" },
-      { name: "Freestanding Grills",     url: "/freestanding-grills" },
-      { name: "Accessories",             url: "/accessories" },
-      { name: "Open Box Deals",          url: "/open-box" },
+      { name: "BBQ grills and smokers", url: "/grills" },
+      { name: "Built-in grills", url: "/built-in-grills" },
+      { name: "Freestanding grills", url: "/freestanding-grills" },
+      { name: "Accessories", url: "/accessories" },
     ],
   },
   {
-    heading: "Customer Service",
+    heading: "Deals",
     links: [
-      { name: "Contact Us",      url: "/contact" },
-      { name: "Returns & Refunds", url: "/return-policy" },
-      { name: "Shipping Policy", url: "/shipping-policy" },
-      { name: "Privacy Policy",  url: "/privacy-policy" },
+      { name: "Open box", url: "/open-box" },
+      { name: "Package deals", url: "/package-deals" },
+      { name: "Clearance sale", url: "/clearance-sale" },
+      { name: "Promotions", url: "/grill-promotions" },
     ],
   },
   {
-    heading: "Company",
+    heading: "Support",
     links: [
-      { name: "About Us",            url: "/about" },
-      { name: "Our Brands",          url: "/brands" },
-      { name: "Open Box",            url: "/open-box" },
-      { name: "Package Deals",       url: "/package-deals" },
-      { name: "Clearance Sale",      url: "/clearance-sale" },
-      { name: "Contractor Program",  url: "/professional-program" },
+      { name: "Refund & return policy", url: "/return-policy" },
+      { name: "Shipping policy", url: "/shipping-policy" },
+      { name: "Contact us", url: "/contact" },
+      { name: "About us", url: "/about" },
     ],
   },
 ];
@@ -52,45 +53,54 @@ const PinterestIcon = () => (
 
 export default function Footer({ logo }) {
   return (
-    <footer className="bg-char dark:bg-char text-ash/50 dark:text-ash/50 border-t-2 border-ember/50 dark:border-ember/60">
-
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 pt-12 pb-7">
-
-        {/* Main grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-
+    <footer className="bg-oko-char text-oko-ondark">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 pt-[52px] pb-[88px] lg:pb-9">
+        {/* 5-column grid: brand block spans 2 on tablet */}
+        <div className="grid grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1.2fr] gap-8 mb-10">
           {/* Brand column */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             {logo ? (
-              <div className="relative w-[130px] h-[52px] mb-4">
+              <div className="relative w-[150px] h-[46px] mb-3">
                 <Image
                   src={logo}
                   alt={`${STORE_NAME} logo`}
                   fill
-                  sizes="130px"
+                  sizes="150px"
                   className="object-contain object-left"
                   priority={false}
                 />
               </div>
             ) : (
-              <Link href="/" className="font-oswald font-bold text-xl text-ash dark:text-ash inline-block mb-4">
-                BBQ Grill<span className="text-ember">Outlet</span>
+              <Link
+                href="/"
+                className="font-oko-display font-semibold text-[19px] text-white inline-block mb-3"
+              >
+                Outdoor Kitchen Outlet
               </Link>
             )}
 
-            <p className="text-sm leading-relaxed mb-3">
-              Premium outdoor kitchen equipment at outlet prices. Authorized dealer for every brand we carry.
+            <p className="text-[12.5px] leading-[1.5] text-oko-ondark-faint max-w-[280px] mb-4">
+              Best prices on built-in BBQ grills and outdoor kitchen equipment from 30+ top brands — guaranteed to match or beat any competitor.
             </p>
 
-            <a
-              href={`tel:${STORE_CONTACT}`}
-              className="inline-flex items-center gap-2 text-sm text-ash/70 dark:text-ash/70 hover:text-ember transition-colors mb-4"
-            >
-              <svg className="w-3.5 h-3.5 text-ember flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.36 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-              </svg>
-              {STORE_CONTACT}
-            </a>
+            {/* Inline newsletter form — bordered container, transparent input, solid barn button, no gap */}
+            <div className="flex border border-[rgba(246,242,234,0.22)] rounded-[2px] max-w-[280px] mb-5">
+              <label htmlFor="oko-newsletter-email" className="sr-only">
+                Your email
+              </label>
+              <input
+                id="oko-newsletter-email"
+                type="email"
+                placeholder="Your email"
+                className="flex-1 min-w-0 bg-transparent border-none px-3 py-2.5 text-[12.5px] text-white placeholder-oko-ondark-faint outline-none"
+              />
+              <button
+                type="button"
+                className="bg-oko-barn hover:bg-oko-barn-dark text-white font-semibold text-[12px] px-4 transition-colors"
+              >
+                Sign up
+              </button>
+            </div>
 
             {/* Social links */}
             <div className="flex items-center gap-2 mb-5">
@@ -100,7 +110,7 @@ export default function Footer({ logo }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="w-8 h-8 flex items-center justify-center bg-smoke dark:bg-smoke border border-white/10 text-ash/50 hover:text-white hover:border-ember hover:bg-ember transition-all"
+                  className="w-8 h-8 flex items-center justify-center border border-[rgba(246,242,234,0.16)] rounded-[2px] text-oko-ondark-faint hover:text-white hover:border-oko-barn-light hover:bg-oko-barn transition-colors"
                 >
                   <FacebookIcon />
                 </Link>
@@ -111,30 +121,29 @@ export default function Footer({ logo }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Pinterest"
-                  className="w-8 h-8 flex items-center justify-center bg-smoke dark:bg-smoke border border-white/10 text-ash/50 hover:text-white hover:border-ember hover:bg-ember transition-all"
+                  className="w-8 h-8 flex items-center justify-center border border-[rgba(246,242,234,0.16)] rounded-[2px] text-oko-ondark-faint hover:text-white hover:border-oko-barn-light hover:bg-oko-barn transition-colors"
                 >
                   <PinterestIcon />
                 </Link>
               )}
             </div>
 
-            {/* Payment methods */}
-            <PaymentIcons methods={PAYMENT_METHODS} walletIconClassName="text-ash/60" />
+            <PaymentIcons methods={PAYMENT_METHODS} walletIconClassName="text-oko-ondark-faint" />
           </div>
 
           {/* Link columns */}
           {FOOTER_COLS.map(({ heading, links }) => (
             <div key={heading}>
-              <h4 className="font-oswald text-ash dark:text-ash text-xs font-semibold tracking-[.14em] uppercase mb-4">
+              <h4 className="font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-barn-light mb-3.5">
                 {heading}
               </h4>
               <ul className="flex flex-col gap-2.5">
                 {links.map((item, index) => (
                   <li key={`foot-link-${createSlug(heading)}-${index}`}>
                     <Link
-                      href={`${BASE_URL}${item?.url}` || "#"}
+                      href={`${BASE_URL}${item?.url}`}
                       prefetch={false}
-                      className="text-xs text-ash/40 dark:text-ash/40 hover:text-ember dark:hover:text-ember transition-colors"
+                      className="text-[12.5px] text-oko-ondark-muted hover:text-white transition-colors"
                     >
                       {item?.name}
                     </Link>
@@ -143,19 +152,46 @@ export default function Footer({ logo }) {
               </ul>
             </div>
           ))}
+
+          {/* Talk to sales */}
+          <div>
+            <h4 className="font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-barn-light mb-3.5">
+              Talk to sales
+            </h4>
+            <ul className="flex flex-col gap-2.5">
+              <li>
+                <Link
+                  href={OKO_PHONE_HREF}
+                  className="font-oko-display font-bold text-[18px] text-white hover:text-oko-barn-light transition-colors"
+                >
+                  {OKO_PHONE}
+                </Link>
+              </li>
+              <li className="text-[12.5px] text-oko-ondark-muted">Sales: Mon–Fri 4am–6pm PST</li>
+              <li className="text-[12.5px] text-oko-ondark-muted">Support: Mon–Fri, closed weekends</li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <span className="font-oswald text-[10px] uppercase tracking-widest text-ash/30">
-            © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
+        <div className="border-t border-[rgba(246,242,234,0.14)] pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <span className="text-[11.5px] text-oko-ondark-faint">
+            © {new Date().getFullYear()} {STORE_NAME || "Outdoor Kitchen Outlet"}. All rights reserved.
           </span>
-          <div className="flex items-center gap-3 flex-wrap">
-            {["Authorized Dealer", "Secure Checkout", "Price-Match Guarantee"].map((item) => (
-              <span key={item} className="flex items-center gap-1.5 font-oswald text-[10px] uppercase tracking-wide text-ash/30">
-                <span className="w-1 h-1 rounded-full bg-ember flex-shrink-0" />
-                {item}
-              </span>
+          <div className="flex items-center gap-4 flex-wrap">
+            {[
+              { name: "Privacy", url: "/privacy-policy" },
+              { name: "Terms", url: "/terms" },
+              { name: "Sitemap", url: "/sitemap" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={`${BASE_URL}${item.url}`}
+                prefetch={false}
+                className="text-[11.5px] text-oko-ondark-faint hover:text-white transition-colors"
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
         </div>

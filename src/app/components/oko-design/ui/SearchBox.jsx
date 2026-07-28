@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import Image from "next/image";
@@ -14,7 +14,7 @@ function highlight(text, query) {
   return (
     <>
       {text.slice(0, idx)}
-      <span className="text-ember font-bold">
+      <span className="text-oko-barn font-semibold">
         {text.slice(idx, idx + query.length)}
       </span>
       {text.slice(idx + query.length)}
@@ -22,88 +22,9 @@ function highlight(text, query) {
   );
 }
 
-function ProductThumb({ color, accent, size = "sm" }) {
-  const w = size === "lg" ? 80 : 52;
-  const h = size === "lg" ? 62 : 42;
-  return (
-    <svg
-      viewBox={`0 0 ${w} ${h}`}
-      width={w}
-      height={h}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width={w} height={h} fill={color} rx="2" />
-      <rect
-        x={w * 0.15}
-        y={h * 0.18}
-        width={w * 0.7}
-        height={h * 0.55}
-        rx="2"
-        fill="#050100"
-        opacity=".9"
-      />
-      <ellipse
-        cx={w / 2}
-        cy={h * 0.74}
-        rx={w * 0.27}
-        ry={h * 0.14}
-        fill={accent}
-        opacity=".5"
-      />
-      <ellipse
-        cx={w / 2}
-        cy={h * 0.71}
-        rx={w * 0.17}
-        ry={h * 0.1}
-        fill={accent}
-        opacity=".55"
-      />
-    </svg>
-  );
-}
-
-function CategoryIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
-    </svg>
-  );
-}
-function BrandIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M8 21v-2a4 4 0 018 0v2" />
-    </svg>
-  );
-}
 function CollectionIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   );
@@ -111,10 +32,10 @@ function CollectionIcon() {
 
 function Tag({ type }) {
   const styles = {
-    product:    "bg-ember/10 dark:bg-ember/20 text-ember",
-    category:   "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600",
-    brand:      "bg-bbq-green/10 dark:bg-bbq-green/20 text-bbq-green",
-    collection: "bg-gold/10 dark:bg-gold/20 text-gold",
+    product: "bg-oko-barn/10 text-oko-barn",
+    category: "bg-oko-sage/10 text-oko-sage",
+    brand: "bg-oko-char/10 dark:bg-white/10 text-oko-char-soft dark:text-oko-ondark",
+    collection: "bg-oko-brass/10 text-oko-brass",
   };
   const labels = {
     product: "Product",
@@ -124,7 +45,7 @@ function Tag({ type }) {
   };
   return (
     <span
-      className={`font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm flex-shrink-0 ${styles[type]}`}
+      className={`font-inter text-[10px] font-semibold uppercase tracking-[0.05em] px-2 py-0.5 rounded-[2px] flex-shrink-0 ${styles[type]}`}
     >
       {labels[type]}
     </span>
@@ -134,7 +55,7 @@ function Tag({ type }) {
 function SectionHeader({ label, children }) {
   return (
     <div className="flex items-center justify-between px-3 sm:px-4 pt-2.5 sm:pt-3 pb-1 sm:pb-1.5">
-      <span className="font-oswald text-[10px] font-semibold tracking-widest uppercase text-char/40 dark:text-ash/40">
+      <span className="font-oko-mono text-[10.5px] font-medium tracking-[0.12em] uppercase text-oko-stone">
         {label}
       </span>
       {children}
@@ -143,31 +64,18 @@ function SectionHeader({ label, children }) {
 }
 
 function Divider() {
-  return (
-    <div className="mx-3 sm:mx-4 border-t border-grate dark:border-white/10" />
-  );
+  return <div className="mx-3 sm:mx-4 border-t border-oko-stone-line dark:border-oko-line-dark" />;
 }
 
 function SearchSpinner({ className = "" }) {
   return (
     <svg
-      className={`animate-spin w-3 h-3 text-char/40 dark:text-ash/40 flex-shrink-0 ${className}`}
+      className={`animate-spin w-3 h-3 text-oko-stone flex-shrink-0 ${className}`}
       fill="none"
       viewBox="0 0 24 24"
     >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      />
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
     </svg>
   );
 }
@@ -193,7 +101,6 @@ function SearchBox() {
     searchQuery,
     searchResults,
     loading,
-    setMainIsActive,
     redirectToSearchPage,
   } = useSearch();
 
@@ -226,7 +133,6 @@ function SearchBox() {
   const wrapRef = useRef(null);
 
   // Keep localInput in sync when searchQuery changes externally
-  // (e.g. user clicks a popular search link → URL changes → context syncs)
   useEffect(() => {
     if (isSearchPage) {
       setLocalInput(searchQuery);
@@ -273,15 +179,9 @@ function SearchBox() {
     setOpen(false);
 
     if (isSearchPage) {
-      // 1. Initialize with the existing string to preserve other filters
       const params = new URLSearchParams(searchParams.toString());
-
-      // 2. Update the query key
       params.set("query", localInput);
-
-      // 3. Construct the path (Relative path is faster for Next.js)
       const url = `/search?${params.toString()}`;
-
       router.push(url);
     } else {
       redirectToSearchPage();
@@ -300,7 +200,6 @@ function SearchBox() {
     setOpen(false);
     const url = e?.target?.href;
     router.push(url);
-    // if (!isSearchPage) inputRef.current?.focus();
   }
 
   useEffect(() => {
@@ -329,10 +228,12 @@ function SearchBox() {
     }
     inputRef.current?.focus();
   }
+
   return (
-    <div ref={wrapRef} className="flex-1 min-w-0 relative max-w-2xl mx-auto">
+    <div ref={wrapRef} className="flex-1 min-w-0 relative">
+      {/* Search pill */}
       <div
-        className={`flex items-center rounded-sm p-1 gap-2 transition-all duration-200 ${focused ? "bg-paper dark:bg-smoke ring-2 ring-theme-600 shadow-sm" : "bg-ash dark:bg-smoke ring-1 ring-grate dark:ring-white/10"}`}
+        className={`flex items-center gap-2.5 rounded-[2px] px-4 py-3 bg-oko-cream-dim dark:bg-oko-night-2 border transition-colors ${focused ? "border-oko-barn dark:border-oko-barn-light" : "border-oko-stone-line dark:border-oko-line-dark"}`}
       >
         <input
           ref={inputRef}
@@ -341,53 +242,43 @@ function SearchBox() {
           onChange={handleChange}
           onFocus={handleFocus}
           onKeyDown={handleKeyDown}
-          placeholder="Search grills, brands, parts…"
-          className="flex-1 bg-transparent outline-none text-sm text-char dark:text-ash placeholder-char/40 dark:placeholder-ash/30 min-w-0 px-2 py-1"
+          aria-label="Search grills, brands, accessories"
+          placeholder="Search grills, brands, accessories…"
+          className="flex-1 bg-transparent outline-none text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone min-w-0"
         />
 
         {(isSearchPage ? localInput : searchQuery) && (
           <button
+            type="button"
             onClick={clearSearch}
-            className="flex-shrink-0 w-5 h-5 flex items-center justify-center bg-grate dark:bg-white/15 text-char/50 dark:text-ash/40 hover:bg-char/20 dark:hover:bg-white/25 transition-colors"
+            aria-label="Clear search"
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
           >
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </button>
         )}
 
-        {/* Search button */}
+        {/* Search submit — trailing stroke icon */}
         <button
+          type="button"
           onClick={handleSubmit}
-          className="flex-shrink-0 w-10 bg-theme-600 hover:bg-theme-700 text-white rounded-sm flex items-center justify-center aspect-1 transition-colors"
+          aria-label="Search"
+          className="flex-shrink-0 flex items-center justify-center text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </button>
       </div>
 
       {/* ── DROPDOWN ── */}
       {open && (
-        <div className="absolute top-[calc(100%+4px)] sm:top-[calc(100%+8px)] left-0 right-0 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-2xl overflow-hidden z-50 flex flex-col">
-          {/* Loading progress bar — always mounted so transition is smooth */}
+        <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden z-50 flex flex-col">
           <div
-            className={`h-0.5 flex-shrink-0 bg-theme-600 transition-opacity duration-300 ${loading ? "opacity-100 animate-pulse" : "opacity-0"}`}
+            className={`h-0.5 flex-shrink-0 bg-oko-barn transition-opacity duration-300 ${loading ? "opacity-100 animate-pulse" : "opacity-0"}`}
           />
           <div
             className={`transition-opacity duration-150 ${loading ? "opacity-60 pointer-events-none select-none" : ""}`}
@@ -396,25 +287,21 @@ function SearchBox() {
             {/* TOP RESULT */}
             {top && (
               <>
-                <SectionHeader label="Top Result">
-                  <span className="font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm bg-ember/10 dark:bg-ember/20 text-ember">
-                    Direct Match
+                <SectionHeader label="Top result">
+                  <span className="font-inter text-[10px] font-semibold uppercase tracking-[0.05em] px-2 py-0.5 rounded-[2px] bg-oko-barn/10 text-oko-barn">
+                    Direct match
                   </span>
                 </SectionHeader>
                 <Link
                   prefetch={false}
                   href={getProductUrl(top)}
                   onClick={() => handleItemClick(getProductUrl(top))}
-                  className="mx-2 sm:mx-3 mb-1 rounded-sm border border-grate dark:border-white/10 bg-ash dark:bg-char/60 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 cursor-pointer hover:bg-paper dark:hover:bg-smoke hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-md hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200 group"
+                  className="mx-2 sm:mx-3 mb-1 rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark bg-oko-cream-dim dark:bg-oko-night-3 flex items-center gap-2 sm:gap-3 p-2 sm:p-3 cursor-pointer hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors group"
                 >
-                  <div className="rounded-sm min-w-14 min-h-14 sm:min-w-20 sm:min-h-20 relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10 bg-white dark:bg-char">
-                    {top?.images?.find(({ position }) => position == 1)
-                      ?.src && (
+                  <div className="rounded-[2px] min-w-14 min-h-14 sm:min-w-20 sm:min-h-20 relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night">
+                    {top?.images?.find(({ position }) => position == 1)?.src && (
                       <Image
-                        src={
-                          top?.images?.find(({ position }) => position == 1)
-                            ?.src
-                        }
+                        src={top?.images?.find(({ position }) => position == 1)?.src}
                         alt={top.title || "Top search result thumbnail"}
                         fill
                         sizes="(max-width: 768px) 100vw, 64px"
@@ -424,28 +311,28 @@ function SearchBox() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-oswald text-[10px] uppercase tracking-widest text-theme-600 mb-0.5">
+                    <div className="font-inter text-[10px] font-semibold uppercase tracking-[0.05em] text-oko-barn mb-0.5">
                       {top.brand}
                     </div>
-                    <div className="text-sm font-semibold text-char dark:text-ash leading-snug truncate">
+                    <div className="text-[14px] font-medium text-oko-char dark:text-oko-cream leading-snug truncate">
                       {highlight(top.title, searchQuery)}
                     </div>
                     {top.tag && (
-                      <span className="mt-1 inline-block font-oswald text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm bg-ember/10 dark:bg-ember/20 text-ember">
+                      <span className="mt-1 inline-block font-inter text-[10px] font-semibold uppercase tracking-[0.05em] px-2 py-0.5 rounded-[2px] bg-oko-barn/10 text-oko-barn">
                         {top.tag}
                       </span>
                     )}
-                    <div className="sm:hidden font-oswald font-bold text-xs mt-1 text-ember-deep dark:text-ember">
+                    <div className="sm:hidden font-inter font-semibold text-[14px] mt-1 text-oko-char dark:text-oko-cream">
                       ${formatPrice(top.price)}
                     </div>
                   </div>
                   <div className="hidden sm:flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="font-oswald font-bold text-base text-ember-deep dark:text-ember">
+                    <span className="font-inter font-semibold text-[16px] text-oko-char dark:text-oko-cream">
                       ${formatPrice(top.price)}
                     </span>
                     <span className="relative">
                       <span
-                        className={`font-oswald text-xs font-semibold uppercase tracking-wide text-white px-2 py-1 rounded-sm bg-ember transition ${loadingHref === getProductUrl(top) ? "invisible" : "opacity-0 group-hover:opacity-100"}`}
+                        className={`font-inter text-[11px] font-semibold uppercase tracking-[0.04em] text-white px-2 py-1 rounded-[2px] bg-oko-barn transition ${loadingHref === getProductUrl(top) ? "invisible" : "opacity-0 group-hover:opacity-100"}`}
                       >
                         View →
                       </span>
@@ -463,10 +350,11 @@ function SearchBox() {
             <Divider />
             {trends.length > 0 && (
               <>
-                <SectionHeader label="Popular Searches">
+                <SectionHeader label="Popular searches">
                   <button
+                    type="button"
                     onClick={() => setShowAllPopular((v) => !v)}
-                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
+                    className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] rounded-[2px] px-2 py-0.5 text-oko-sage hover:text-oko-barn transition-colors"
                   >
                     {showAllPopular ? "See less ↑" : "See all ↓"}
                   </button>
@@ -480,20 +368,8 @@ function SearchBox() {
                         href={`${BASE_URL}/search?query=${p}`}
                         key={`popular-search-${p}`}
                         onClick={handleChip}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium font-sora bg-ash dark:bg-smoke text-char dark:text-ash border border-grate dark:border-white/10 hover:border-theme-600 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-[12.5px] font-inter bg-oko-cream-dim dark:bg-oko-night-3 text-oko-char-soft dark:text-oko-ondark border border-oko-stone-line dark:border-oko-line-dark hover:border-oko-barn hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
                       >
-                        <svg
-                          width="11"
-                          height="11"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="opacity-40"
-                        >
-                          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                          <polyline points="17 6 23 6 23 12" />
-                        </svg>
                         {p}
                       </Link>
                     ))}
@@ -506,10 +382,11 @@ function SearchBox() {
                 <Divider />
                 <SectionHeader label="Products">
                   <button
+                    type="button"
                     onClick={() => setShowAllProducts((v) => !v)}
-                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
+                    className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] rounded-[2px] px-2 py-0.5 text-oko-sage hover:text-oko-barn transition-colors"
                   >
-                    {showAllPopular ? "See less ↑" : "See all ↓"}
+                    {showAllProducts ? "See less ↑" : "See all ↓"}
                   </button>
                 </SectionHeader>
                 <div className="px-2 sm:px-3 pb-1">
@@ -521,9 +398,9 @@ function SearchBox() {
                         href={getProductUrl(p)}
                         key={`product-${p.product_id}-${index}`}
                         onClick={() => handleItemClick(getProductUrl(p))}
-                        className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition group"
+                        className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-[2px] cursor-pointer hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 transition-colors group"
                       >
-                        <div className="rounded-sm min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
+                        <div className="rounded-[2px] min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-oko-night relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark">
                           {p?.image && (
                             <Image
                               src={p.image}
@@ -536,10 +413,10 @@ function SearchBox() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-char dark:text-ash truncate">
+                          <div className="text-[14px] font-medium text-oko-char dark:text-oko-cream truncate">
                             {highlight(p.title, searchQuery)}
                           </div>
-                          <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">
+                          <div className="text-[12px] text-oko-stone mt-0.5">
                             {p.brand} · ${formatPrice(p.price)}
                           </div>
                         </div>
@@ -559,8 +436,9 @@ function SearchBox() {
                 <Divider />
                 <SectionHeader label="Categories">
                   <button
+                    type="button"
                     onClick={() => setShowAllCategories((v) => !v)}
-                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
+                    className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] rounded-[2px] px-2 py-0.5 text-oko-sage hover:text-oko-barn transition-colors"
                   >
                     {showAllCategories ? "See less ↑" : "See all ↓"}
                   </button>
@@ -576,15 +454,13 @@ function SearchBox() {
                           href={href}
                           key={`category-${c.slug}-${index}`}
                           onClick={() => handleItemClick(href)}
-                          className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
+                          className="flex items-center gap-2 sm:gap-3 px-2 py-1.5 sm:py-2 rounded-[2px] cursor-pointer hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 transition-colors"
                         >
-                          <div className="rounded-sm min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
+                          <div className="rounded-[2px] min-w-12 min-h-12 sm:min-w-16 sm:min-h-16 bg-white dark:bg-oko-night relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark">
                             {c?.image && (
                               <Image
                                 src={c.image}
-                                alt={
-                                  c.name || "Category search result thumbnail"
-                                }
+                                alt={c.name || "Category search result thumbnail"}
                                 fill
                                 sizes="(max-width: 768px) 100vw, 64px"
                                 className="object-cover"
@@ -593,10 +469,10 @@ function SearchBox() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-char dark:text-ash">
+                            <div className="text-[14px] font-medium text-oko-char dark:text-oko-cream">
                               {c.name}
                             </div>
-                            <div className="text-xs text-stone-400 dark:text-stone-500">
+                            <div className="text-[12px] text-oko-stone">
                               {c.count + ` item` + (!!(c.count > 1) ? "s" : "")}
                             </div>
                           </div>
@@ -617,8 +493,9 @@ function SearchBox() {
                 <Divider />
                 <SectionHeader label="Brands">
                   <button
+                    type="button"
                     onClick={() => setShowAllBrands((v) => !v)}
-                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
+                    className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] rounded-[2px] px-2 py-0.5 text-oko-sage hover:text-oko-barn transition-colors"
                   >
                     {showAllBrands ? "See less ↑" : "See all ↓"}
                   </button>
@@ -634,9 +511,9 @@ function SearchBox() {
                           href={href}
                           key={`brand-${b.name}-${index}`}
                           onClick={() => handleItemClick(href)}
-                          className="flex items-center gap-3 px-2 py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
+                          className="flex items-center gap-3 px-2 py-2 rounded-[2px] cursor-pointer hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 transition-colors"
                         >
-                          <div className="rounded-sm min-w-16 min-h-16 bg-white dark:bg-char relative overflow-hidden flex-shrink-0 border border-grate dark:border-white/10">
+                          <div className="rounded-[2px] min-w-16 min-h-16 bg-white dark:bg-oko-night relative overflow-hidden flex-shrink-0 border border-oko-stone-line dark:border-oko-line-dark">
                             {b?.image && (
                               <Image
                                 src={b.image}
@@ -649,10 +526,10 @@ function SearchBox() {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
+                            <div className="font-oko-display text-[15px] font-semibold text-oko-char dark:text-oko-cream">
                               {b.name}
                             </div>
-                            <div className="text-xs text-stone-400 dark:text-stone-500">
+                            <div className="text-[12px] text-oko-stone">
                               {b.count + ` item` + (!!(b.count > 1) ? "s" : "")}
                             </div>
                           </div>
@@ -673,8 +550,9 @@ function SearchBox() {
                 <Divider />
                 <SectionHeader label="Collections">
                   <button
+                    type="button"
                     onClick={() => setShowAllCollections((v) => !v)}
-                    className="font-oswald text-[11px] font-semibold uppercase tracking-wide rounded-sm px-2 py-0.5 text-theme-600 hover:bg-theme-600/10 dark:hover:bg-theme-600/20 transition"
+                    className="font-inter text-[11px] font-semibold uppercase tracking-[0.04em] rounded-[2px] px-2 py-0.5 text-oko-sage hover:text-oko-barn transition-colors"
                   >
                     {showAllCollections ? "See less ↑" : "See all ↓"}
                   </button>
@@ -685,16 +563,16 @@ function SearchBox() {
                     .map((col, index) => (
                       <div
                         key={`collection-search-${col.name}-${index}`}
-                        className="flex items-center gap-3 px-2 py-2 rounded-sm cursor-pointer hover:bg-ash dark:hover:bg-smoke transition"
+                        className="flex items-center gap-3 px-2 py-2 rounded-[2px] cursor-pointer hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 transition-colors"
                       >
-                        <div className="w-8 h-8 bg-theme-600/10 dark:bg-theme-600/20 flex items-center justify-center flex-shrink-0 text-theme-600">
+                        <div className="w-8 h-8 bg-oko-brass/10 flex items-center justify-center flex-shrink-0 text-oko-brass rounded-[2px]">
                           <CollectionIcon />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
+                          <div className="font-oko-display text-[15px] font-semibold text-oko-char dark:text-oko-cream">
                             {col.name}
                           </div>
-                          <div className="text-xs text-stone-400 dark:text-stone-500">
+                          <div className="text-[12px] text-oko-stone">
                             {col.count}
                           </div>
                         </div>
@@ -706,28 +584,10 @@ function SearchBox() {
             )}
 
             {/* FOOTER */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-grate dark:border-white/10 bg-ash dark:bg-smoke">
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark bg-oko-cream-dim dark:bg-oko-night-3">
               {loading ? (
-                <span className="flex items-center gap-1.5 text-[11px] text-char/40 dark:text-ash/40 font-sora">
-                  <svg
-                    className="animate-spin w-3 h-3 flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    />
-                  </svg>
+                <span className="flex items-center gap-1.5 text-[11px] text-oko-stone font-inter">
+                  <SearchSpinner />
                   Updating…
                 </span>
               ) : (
@@ -736,29 +596,14 @@ function SearchBox() {
               {localInput.trim() !== "" && (
                 <Link
                   prefetch={false}
-                  href={
-                    searchQuery
-                      ? `${BASE_URL}/search?query=${searchQuery}`
-                      : "#"
-                  }
-                  className="font-oswald text-xs font-semibold uppercase tracking-wide flex items-center gap-1 text-theme-600 hover:text-theme-700 transition"
+                  href={searchQuery ? `${BASE_URL}/search?query=${searchQuery}` : "#"}
+                  className="font-inter text-[12px] font-semibold uppercase tracking-[0.04em] flex items-center gap-1 text-oko-sage hover:text-oko-barn transition-colors"
                 >
-                  View all results
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  View all results →
                 </Link>
               )}
             </div>
           </div>
-          {/* end content wrapper */}
         </div>
       )}
     </div>
