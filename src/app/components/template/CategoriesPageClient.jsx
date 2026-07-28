@@ -2,11 +2,7 @@
 import React, { useState } from "react";
 import { useSolanaCategories } from "@/app/context/category";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
-import { UIV2 } from "@/app/lib/helpers";
-// const CONTAINER_CLASS = "max-w-7xl";
-const CONTAINER_CLASS = UIV2
-  ? "max-w-[1240px]"
-  : "container";
+const CONTAINER_CLASS = "max-w-[1240px]";
 
 const TRENDING = [
   { label: "Linear Gas Fireplaces", badge: "🔥 Hot" },

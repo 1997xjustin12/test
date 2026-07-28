@@ -17,7 +17,6 @@ import {
   getYMALProducts,
 } from "@/app/lib/fn_server";
 
-import ProductClient from "@/app/components/molecule/ProductClient";
 import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
 import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
 import OKOSingleProductPage from "@/app/components/oko-design/page/SingleProductPage";

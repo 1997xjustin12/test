@@ -1,7 +1,6 @@
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
-export const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
 
