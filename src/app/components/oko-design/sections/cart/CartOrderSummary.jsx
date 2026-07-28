@@ -7,16 +7,20 @@ import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import { useAuth } from "@/app/context/auth";
 
+// Phone is a first-class OKO brand element — always this exact literal (§10).
+const OKO_PHONE = "888-667-4986";
+
+// Sage-bordered savings alert (§ alerts: success uses a 4px sage left border).
 const SavingsBanner = ({ savings, shipping_cost }) => (
-  <div className="flex items-center gap-2.5 px-4 py-3 bg-bbq-green/10 dark:bg-bbq-green/5 border border-bbq-green/30 dark:border-bbq-green/20 rounded-sm">
-    <svg className="w-4 h-4 text-bbq-green flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+  <div className="flex items-center gap-2.5 px-4 py-3 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark border-l-4 border-l-oko-sage dark:border-l-oko-sage-light rounded-[2px]">
+    <svg className="w-4 h-4 text-oko-sage dark:text-oko-sage-light flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
-    <p className="text-xs font-medium text-bbq-green">
-      You're saving{" "}
-      <span className="font-bold">${formatPrice(savings)}</span>
+    <p className="font-inter text-[13.5px] text-oko-char-soft dark:text-oko-ondark">
+      You&apos;re saving{" "}
+      <span className="font-semibold text-oko-sage dark:text-oko-sage-light">${formatPrice(savings)}</span>
       {shipping_cost === 0 && (
-        <> + <span className="font-bold">FREE</span> shipping</>
+        <> plus <span className="font-semibold text-oko-sage dark:text-oko-sage-light">free</span> shipping</>
       )}
     </p>
   </div>
@@ -33,7 +37,7 @@ function CartOrderSummary({ checkoutButton = true }) {
     const shipAmt = cartObject?.total_shipping
       ? `$${formatPrice(cartObject.total_shipping)}`
       : cartItems.length > 0
-      ? "FREE"
+      ? "Free"
       : "$0.00";
     return {
       origPriceSum,
@@ -55,83 +59,93 @@ function CartOrderSummary({ checkoutButton = true }) {
 
   const shippingIsFree = cartObject && !cartObject?.total_shipping && cartItems.length > 0;
 
+  const rowLabel = "font-inter text-[13.5px] text-oko-char-soft dark:text-oko-ondark";
+  const rowValue = "font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream";
+
   return (
     <div className="flex flex-col gap-3">
       {order_summary?.saveAmtSum > 0 && (
         <SavingsBanner savings={order_summary.saveAmtSum} shipping_cost={cartObject?.total_shipping} />
       )}
 
-      <div className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-5">
-        <h2 className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash mb-4">
-          Order Summary
+      <div className="bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] p-5">
+        <h2 className="font-oko-display font-semibold text-[19px] leading-[1.2] text-oko-char dark:text-oko-cream mb-4">
+          Order summary
         </h2>
 
-        <div className="flex flex-col gap-3 mb-4">
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-char/50 dark:text-ash/40">Original price</span>
-            <span className="text-xs font-semibold text-char dark:text-ash">
-              ${formatPrice(order_summary?.origPriceSum)}
-            </span>
+        <div className="flex flex-col">
+          <div className="flex justify-between items-center py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark">
+            <span className={rowLabel}>Original price</span>
+            <span className={rowValue}>${formatPrice(order_summary?.origPriceSum)}</span>
           </div>
 
           {order_summary?.saveAmtSum > 0 && (
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-char/50 dark:text-ash/40">Savings</span>
-              <span className="text-xs font-semibold text-bbq-green">
+            <div className="flex justify-between items-center py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark">
+              <span className={rowLabel}>Savings</span>
+              <span className="font-inter text-[14px] font-semibold text-oko-sage dark:text-oko-sage-light">
                 −${formatPrice(order_summary.saveAmtSum)}
               </span>
             </div>
           )}
 
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-char/50 dark:text-ash/40">Shipping</span>
+          <div className="flex justify-between items-center py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark">
+            <span className={rowLabel}>Shipping</span>
             <span
-              className={`text-xs font-semibold ${
-                shippingIsFree ? "text-bbq-green" : "text-char dark:text-ash"
-              }`}
+              className={
+                shippingIsFree
+                  ? "font-inter text-[14px] font-semibold text-oko-sage dark:text-oko-sage-light"
+                  : rowValue
+              }
             >
               {order_summary?.shipAmt}
             </span>
           </div>
 
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-char/50 dark:text-ash/40">Tax</span>
-            <span className="text-xs text-char/30 dark:text-ash/30 italic">
-              Calculated at checkout
+          <div className="flex justify-between items-center py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark">
+            <span className={rowLabel}>Tax</span>
+            <span className="font-inter text-[13px] text-oko-stone">Calculated at checkout</span>
+          </div>
+
+          <div className="flex justify-between items-baseline pt-3.5 border-t border-oko-stone-line dark:border-oko-line-dark">
+            <span className="font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream">Total</span>
+            <span className="font-oko-display font-semibold text-[21px] leading-none text-oko-char dark:text-oko-cream">
+              ${formatPrice(cartObject?.total_price || 0)}
             </span>
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-3 border-t border-grate dark:border-white/10 mb-5">
-          <span className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
-            Total
-          </span>
-          <span className="font-oswald text-sm font-bold text-char dark:text-ash">
-            ${formatPrice(cartObject?.total_price || 0)}
-          </span>
-        </div>
-
         {checkoutButton && (
-          <>
+          <div className="mt-5">
             <button
               onClick={handleCheckout}
-              className="w-full py-2.5 bg-theme-600 hover:bg-theme-700 text-white font-oswald font-semibold text-sm uppercase tracking-wide rounded-sm transition-colors mb-3"
+              className="w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors"
             >
-              Proceed to Checkout
+              Proceed to checkout
             </button>
+
+            <p className="mt-3.5 text-center font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark">
+              Call for a lower price —{" "}
+              <a
+                href={`tel:${OKO_PHONE}`}
+                className="font-semibold text-oko-barn dark:text-oko-barn-light hover:text-oko-barn-dark transition-colors"
+              >
+                {OKO_PHONE}
+              </a>
+            </p>
+
             <Link
-              href={`${BASE_URL}/fireplaces`}
+              href={`${BASE_URL}/grills`}
               prefetch={false}
-              className="flex items-center justify-center font-oswald text-xs uppercase tracking-wide text-char/40 dark:text-ash/30 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+              className="mt-3 flex items-center justify-center font-inter text-[13px] text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
             >
               or continue shopping
             </Link>
-          </>
+          </div>
         )}
       </div>
 
       {loading ? (
-        <div className="h-10 bg-grate/60 dark:bg-white/5 rounded-sm animate-pulse" />
+        <div className="h-10 bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px]" />
       ) : (
         !user && (
           <div className="w-full flex items-center justify-center">

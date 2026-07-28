@@ -44,5 +44,5 @@ export default function YouMayAlsoLike({ displayItems = 4 }) {
     fetchRandomProducts();
   }, []);
 
-  return <ProductGrid title="You May Also Like" items={products} />;
+  return <ProductGrid eyebrow="More to consider" title="You may also like" items={products} />;
 }
