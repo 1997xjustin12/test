@@ -36,7 +36,7 @@ const CollectionStrip = ({ product }) => {
             className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden"
           >
             <Link prefetch={false} href={p?.url || "#"} tabIndex={-1} aria-hidden="true" className="block">
-              <div className="relative aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+              <div className="relative aspect-1 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
                 {p?.image && (
                   <Image src={p.image} alt={p?.title || "Product"} fill className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03]" />
                 )}

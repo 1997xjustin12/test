@@ -30,7 +30,7 @@ function ProductCard({ product }) {
     <article className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px]">
       {/* Media */}
       <Link href={product?.url || "#"} tabIndex={-1} aria-hidden="true" className="block">
-        <div className="relative aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+        <div className="relative aspect-1 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
           {/* Badges */}
           {onSale && (
             <span className="absolute top-2.5 left-2.5 z-[1] font-inter font-semibold text-[10px] uppercase tracking-[0.04em] px-2 py-1 bg-oko-barn text-white rounded-[2px]">

@@ -59,7 +59,7 @@ function ProductCardToCart({ item }) {
       <Link
         prefetch={false}
         href={item?.url || "#"}
-        className="w-full aspect-square relative mb-2.5 overflow-hidden bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px]"
+        className="w-full aspect-1 relative mb-2.5 overflow-hidden bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px]"
       >
         {item?.image && (
           <Image

@@ -49,7 +49,7 @@ const DescriptionSection = ({ brand, brandDescription, brandHref = "#", brandIma
               </span>
               <p className="font-inter text-[13px] text-oko-ondark-muted leading-[1.55]">{brandDescription}</p>
             </div>
-            <div className="w-full aspect-square bg-white rounded-[2px] relative">
+            <div className="w-full aspect-1 bg-white rounded-[2px] relative">
               {brandImage && (
                 <Image src={brandImage} alt="Brand Image" fill sizes="280px" className="object-contain object-center p-3" />
               )}

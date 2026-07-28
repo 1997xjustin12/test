@@ -10,7 +10,7 @@ function SkeletonCard() {
   return (
     <div className="flex flex-col overflow-hidden border border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night-2 rounded-[2px]">
       {/* Image well */}
-      <div className="aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark" />
+      <div className="aspect-1 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark" />
 
       {/* Body */}
       <div className="p-4">

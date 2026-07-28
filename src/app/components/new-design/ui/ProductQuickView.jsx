@@ -105,7 +105,7 @@ function ProductQuickView({ data, onClose }) {
                   )}
 
                   {/* Image */}
-                  <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-white/5">
+                  <div className="relative aspect-1 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-white/5">
                     {image && <Image src={image} alt={data?.title || "Product"} fill className="object-contain p-3" />}
                   </div>
 

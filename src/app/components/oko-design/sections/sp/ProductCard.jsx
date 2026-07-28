@@ -54,7 +54,7 @@ const ProductCard = ({ p }) => {
         title={p?.title}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden block"
+        className="relative aspect-1 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden block"
       >
         {p?.image && (
           <Image

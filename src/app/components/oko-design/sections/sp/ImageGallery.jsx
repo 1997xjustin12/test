@@ -97,7 +97,7 @@ const ImageGallery = ({ images, productTitle }) => {
     <>
       <div className="flex flex-col gap-3">
         {/* Primary image — cream-dim well */}
-        <div className="relative bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden aspect-square lg:aspect-auto lg:h-[460px]">
+        <div className="relative bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden aspect-1 lg:aspect-auto lg:h-[460px]">
           <GalleryMainImage
             image={mainImage}
             productTitle={productTitle}
@@ -158,7 +158,7 @@ const ImageGallery = ({ images, productTitle }) => {
         <div className="hidden sm:grid grid-cols-6 gap-2">
           {images.map((img, i) => (
             <button key={`thumb-${i}`} onClick={() => selectThumb(img)} aria-label={`View image ${i + 1}`}
-              className={`relative aspect-square rounded-[2px] overflow-hidden border transition-colors duration-200 bg-oko-cream-dim dark:bg-oko-night-3 ${
+              className={`relative aspect-1 rounded-[2px] overflow-hidden border transition-colors duration-200 bg-oko-cream-dim dark:bg-oko-night-3 ${
                 img?.src === mainImage
                   ? "border-oko-barn"
                   : "border-oko-stone-line dark:border-oko-line-dark hover:border-oko-char dark:hover:border-oko-cream"
@@ -190,7 +190,7 @@ const ImageGallery = ({ images, productTitle }) => {
             <IconBtn onClick={prev} title="Previous image" className="absolute left-4 w-11 h-11 rounded-[2px] bg-white/10 hover:bg-white/20 border border-white/15 text-oko-cream">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg>
             </IconBtn>
-            <div className="w-full max-w-2xl aspect-square relative">
+            <div className="w-full max-w-2xl aspect-1 relative">
               {mainImage && <Image src={mainImage} alt={`${productTitle} - fullscreen ${activeIndex + 1}`} fill sizes="672px" className="object-contain" />}
             </div>
             <IconBtn onClick={next} title="Next image" className="absolute right-4 w-11 h-11 rounded-[2px] bg-white/10 hover:bg-white/20 border border-white/15 text-oko-cream">
