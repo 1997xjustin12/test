@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { BASE_URL, ISBBQ } from "@/app/lib/helpers";
+import { BASE_URL, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import CollectionCarouselWrap from "@/app/components/atom/CollectionCarouselWrap";
 import CategoryCollectionCarouselWrap from "@/app/components/atom/CategoryCollectionCarouselWrap";
 import ProductsSectionV2 from "@/app/components/molecule/ProductsSectionV2";
@@ -23,21 +23,21 @@ function BaseNavItemPage({ page_details }) {
           >
             Home
           </Link>
-          <span className="text-xs text-gray-300">{ISBBQ ? "❯" : "/"}</span>
+          <span className="text-xs text-gray-300">{(ISBBQ || ISOKO) ? "❯" : "/"}</span>
           <span className="text-xs text-gray-600 font-medium">
             {page_details.name}
           </span>
         </nav>
 
         <h1
-          className={`text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-8 ${ISBBQ ? "uppercase font-oswald" : ""}`}
+          className={`text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-8 ${(ISBBQ || ISOKO) ? "uppercase font-oswald" : ""}`}
         >
           {page_details.name}
         </h1>
 
         <div className="flex gap-8">
           {/* Sidebar */}
-          {!!!ISBBQ && (
+          {!!!(ISBBQ || ISOKO) && (
             <aside className="w-[210px] shrink-0 hidden md:block">
               <div className="sticky top-[140px] flex flex-col gap-5">
                 {children.map((item) => (
@@ -71,16 +71,16 @@ function BaseNavItemPage({ page_details }) {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Category cards */}
-            <div className={`grid grid-cols-2  gap-3 sm:gap-4 ${ISBBQ ? "sm:grid-cols-4 lg:grid-cols-6":"sm:grid-cols-3 lg:grid-cols-4"}`}>
+            <div className={`grid grid-cols-2  gap-3 sm:gap-4 ${(ISBBQ || ISOKO) ? "sm:grid-cols-4 lg:grid-cols-6":"sm:grid-cols-3 lg:grid-cols-4"}`}>
               {children.map((item) => (
                 <Link
                   key={`category-link-${item?.slug}`}
                   prefetch={false}
                   href={`${BASE_URL}/${item?.url}`}
-                  className={`group flex flex-col overflow-hidden transition-all duration-200 ${ISBBQ ? "" : "border rounded-2xl border-gray-200 bg-white hover:border-slate-400 hover:shadow-md"}`}
+                  className={`group flex flex-col overflow-hidden transition-all duration-200 ${(ISBBQ || ISOKO) ? "" : "border rounded-2xl border-gray-200 bg-white hover:border-slate-400 hover:shadow-md"}`}
                 >
                   <div
-                    className={`w-full p-4 ${item?.feature_image ? "bg-white" : "bg-gray-100"} ${ISBBQ ? "border border-grate" : ""}`}
+                    className={`w-full p-4 ${item?.feature_image ? "bg-white" : "bg-gray-100"} ${(ISBBQ || ISOKO) ? "border border-grate" : ""}`}
                   >
                     <div className="aspect-1 relative w-full overflow-hidden">
                       {item?.feature_image && (
@@ -96,7 +96,7 @@ function BaseNavItemPage({ page_details }) {
                   </div>
                   <div className="px-3 py-2.5 border-t border-gray-100">
                     <p
-                      className={`text-xs font-semibold text-gray-800 text-center group-hover:text-theme-600 transition-colors leading-snug ${ISBBQ ? "font-oswald uppercase" : ""}`}
+                      className={`text-xs font-semibold text-gray-800 text-center group-hover:text-theme-600 transition-colors leading-snug ${(ISBBQ || ISOKO) ? "font-oswald uppercase" : ""}`}
                     >
                       {item?.name}
                     </p>

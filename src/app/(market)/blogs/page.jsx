@@ -1,6 +1,6 @@
 import "@/app/search.css";
 import Link from "next/link";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { BLOG_BASE_URL, getBlogCategoryId } from "@/app/lib/blog";
 
@@ -8,6 +8,7 @@ const DEFAULT_URL = BLOG_BASE_URL;
 
 import NewBlogsPage from "@/app/components/new-design/page/Blogs";
 import BBQBlogsPage from "@/app/components/bbq-design/page/Blogs";
+import OKOBlogsPage from "@/app/components/oko-design/page/Blogs";
 
 export async function generateMetadata() {
   const CATEGORY_ID = await getBlogCategoryId();
@@ -96,6 +97,16 @@ export default async function Blogs({ searchParams }) {
       return { ...post, featuredImage };
     }),
   );
+
+  if (ISOKO) {
+    return (
+      <OKOBlogsPage
+        postsWithImages={postsWithImages}
+        totalPages={totalPages}
+        page={page}
+      />
+    );
+  }
 
   if (ISBBQ) {
     return (

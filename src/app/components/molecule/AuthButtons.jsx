@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BASE_URL, ISBBQ } from "@/app/lib/helpers";
+import { BASE_URL, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import NewLoginForm from "@/app/components/new-design/form/Login";
 import BBQLoginForm from "@/app/components/bbq-design/form/Login";
+import OKOLoginForm from "@/app/components/oko-design/form/Login";
 
 const LoginForm = () => {
+  if(ISOKO) {
+    return <OKOLoginForm />
+  }
   if(ISBBQ) {
     return <BBQLoginForm />
   }

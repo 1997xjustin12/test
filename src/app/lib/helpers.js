@@ -4,6 +4,16 @@ export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const UIV2 = process.env.NEXT_PUBLIC_UIV2;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
+
+// Outdoor Kitchen Outlet (OKO) — third brand/theme.
+// TODO(oko): replace the placeholder domain with OKO's real
+// NEXT_PUBLIC_STORE_DOMAIN before this can activate in production. Until then
+// ISOKO is only ever true when NEXT_PUBLIC_FORCE_OKO=true is set locally, so
+// the OKO branches can be developed and previewed without a live OKO deploy.
+const OKO_STORE_DOMAIN = "https://www.outdoorkitchenoutlet.com"; // PLACEHOLDER — confirm
+export const ISOKO =
+  process.env.NEXT_PUBLIC_FORCE_OKO === "true" ||
+  store_domain === OKO_STORE_DOMAIN;
 // export const ISBBQ = true;
 
 // The Elasticsearch index every catalog read resolves through — PDP, category

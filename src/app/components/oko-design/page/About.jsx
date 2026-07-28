@@ -1,0 +1,228 @@
+import Link from "next/link";
+import { BASE_URL } from "@/app/lib/helpers";
+import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
+
+import Breadcrumb from "@/app/components/oko-design/utility/Breadcrumb";
+import PageHero from "@/app/components/oko-design/utility/PageHero";
+import InfoCard from "@/app/components/oko-design/utility/InfoCard";
+import SectionLabel from "@/app/components/oko-design/utility/SectionLabel";
+import Divider from "@/app/components/oko-design/utility/Divider";
+
+const stats = [
+  { n: "20+", label: "Years in Business" },
+  { n: "5K+", label: "Happy Customers" },
+  { n: "40+", label: "Brand Partners" },
+  { n: "98%", label: "Satisfaction Rate" },
+];
+
+const values = [
+  { icon: "🔥", title: "Passion for Fire",   desc: "We believe every home deserves the warmth and beauty of a world-class fireplace. It's not just a product — it's an experience." },
+  { icon: "🏆", title: "Expert Knowledge",   desc: "Our team of certified specialists has decades of combined experience across gas, electric, and wood-burning systems." },
+  { icon: "🤝", title: "Customer First",     desc: "From first click to final install, we're your partner. Found it cheaper? We'll match it. Not satisfied? We'll make it right." },
+  { icon: "🌿", title: "Sustainability",     desc: "We actively source and promote energy-efficient products and partner with brands committed to reducing environmental impact." },
+  { icon: "⚡", title: "Fast & Reliable",    desc: "Same-day shipping on in-stock items, white-glove delivery options, and real-time order tracking from warehouse to door." },
+  { icon: "🛡️", title: "Trusted Quality",   desc: "Every product we carry is vetted by our team. If we wouldn't put it in our own homes, it doesn't make our shelves." },
+];
+
+const team = [
+  { name: "Marcus Rivera", role: "Founder & CEO",      initials: "MR", color: "#E85D26" },
+  { name: "Sandra Lee",    role: "Head of Product",    initials: "SL", color: "#1d4ed8" },
+  { name: "Derek Okafor",  role: "Lead Specialist",    initials: "DO", color: "#16a34a" },
+  { name: "Priya Nair",    role: "Customer Success",   initials: "PN", color: "#7c3aed" },
+];
+
+const brands = [
+  "Napoleon", "Dimplex", "Blaze Outdoor", "Eloquence",
+  "Gradeur", "Bromic", "Twin Eagles", "Bull Outdoor",
+];
+
+const trustBadges = ["Licensed & Insured", "Price Match Guarantee", "Free Expert Advice", "Authorized Dealer"];
+
+const services = [
+  { e: "🏠", t: "Home Fireplaces" },
+  { e: "🏢", t: "Commercial Projects" },
+  { e: "🌲", t: "Outdoor Living" },
+  { e: "🔧", t: "Installation Support" },
+];
+
+export default function About() {
+  return (
+    <div className="bg-ash dark:bg-char min-h-screen font-sora">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-10">
+
+        <Breadcrumb items={["Home", "About Us"]} />
+        <PageHero
+          eyebrow="Our Story"
+          title="America's Fireplace Specialists"
+          subtitle={`At ${STORE_NAME2}, we are focused on providing the best prices on the largest selection of fireplaces and outdoor products. We've been selling fireplaces and accessories for over 20 years, striving to be the most trusted source for all home heating needs.`}
+        />
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-6 text-center hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
+            >
+              <p className="font-oswald text-3xl font-bold mb-1 text-theme-600">{s.n}</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Mission */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14 items-center">
+          <div>
+            <SectionLabel>Our Mission</SectionLabel>
+            <h2 className="font-oswald font-bold text-2xl sm:text-3xl uppercase text-char dark:text-ash mb-4">
+              Bringing warmth to every home, one fireplace at a time.
+            </h2>
+            <p className="text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 mb-4">
+              At{" "}
+              <Link prefetch={false} href={`${BASE_URL}`} className="text-theme-600 font-semibold underline">
+                {STORE_NAME2}
+              </Link>
+              , we are focused on providing the best prices on the largest selection of
+              fireplaces and outdoor products. We&apos;ve been selling fireplaces and
+              accessories for over 20 years and strive to become the most trusted source
+              for all home heating needs.
+            </p>
+            <p className="text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 mb-6">
+              Not only do we provide the most complete collection of high-quality fireplaces
+              and heating products, but our customer service is the best in the business. Our
+              specialists guide customers throughout their shopping experience to ensure they
+              get the fireplace that best suits their needs — and even after installation, our
+              door is always open for questions about features, setup, or making the most of
+              your space.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {trustBadges.map((b) => (
+                <span
+                  key={b}
+                  className="px-3 py-1.5 border border-grate dark:border-white/10 bg-paper dark:bg-smoke rounded-sm font-oswald text-[11px] font-semibold uppercase tracking-wide text-char dark:text-ash"
+                >
+                  {b}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {services.map((i) => (
+              <div
+                key={i.t}
+                className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-5 flex flex-col items-start gap-2 hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <span className="text-3xl">{i.e}</span>
+                <span className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">{i.t}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Divider />
+
+        {/* Values */}
+        <div className="mb-14">
+          <div className="text-center mb-8">
+            <SectionLabel>What We Stand For</SectionLabel>
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
+              Our Core Values
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {values.map((v) => (
+              <InfoCard key={v.title} icon={v.icon} title={v.title}>{v.desc}</InfoCard>
+            ))}
+          </div>
+        </div>
+
+        <Divider />
+
+        {/* Team */}
+        <div className="mb-14">
+          <div className="text-center mb-8">
+            <SectionLabel>Meet the Team</SectionLabel>
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
+              The Experts Behind {STORE_NAME2}
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {team.map((t) => (
+              <div
+                key={t.name}
+                className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-6 flex flex-col items-center text-center hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200 group"
+              >
+                <div
+                  className="w-16 h-16 rounded-sm flex items-center justify-center text-white font-oswald font-bold text-xl mb-4 group-hover:scale-105 transition-transform"
+                  style={{ background: t.color }}
+                >
+                  {t.initials}
+                </div>
+                <p className="font-sora font-semibold text-sm text-char dark:text-ash">{t.name}</p>
+                <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">{t.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Divider />
+
+        {/* Brands */}
+        <div className="mb-14">
+          <div className="text-center mb-6">
+            <SectionLabel>Our Partners</SectionLabel>
+            <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
+              Authorized Dealer for 200+ Brands
+            </h2>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {brands.map((b) => (
+              <span
+                key={b}
+                className="px-5 py-2.5 border border-grate dark:border-white/10 bg-paper dark:bg-smoke rounded-sm font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash hover:border-theme-600 dark:hover:border-theme-600/60 hover:text-theme-600 dark:hover:text-theme-500 transition-all cursor-pointer"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div
+          className="rounded-sm p-8 text-center relative overflow-hidden border border-white/10"
+          style={{ background: "linear-gradient(120deg,#1a0600,#3d1208)" }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{ background: `radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--theme-primary-700), transparent 60%), transparent 60%)` }}
+          />
+          <div className="relative z-10">
+            <p className="font-oswald font-bold text-2xl text-white mb-2">
+              Ready to find your perfect fireplace?
+            </p>
+            <p className="text-sm font-light text-theme-200 dark:text-theme-100 mb-6">
+              Talk to a specialist today — free, no obligation advice.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link
+                href={`tel:${STORE_CONTACT}`}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-sm font-oswald font-semibold text-sm uppercase tracking-wide bg-white/5 border border-white/15 text-ash hover:border-theme-600 hover:text-theme-500 transition-colors"
+              >
+                {STORE_CONTACT}
+              </Link>
+              <Link
+                prefetch={false}
+                href={`${BASE_URL}/fireplaces`}
+                className="px-6 py-3 rounded-sm font-oswald font-semibold text-sm uppercase tracking-wide bg-theme-600 hover:bg-theme-700 text-white transition-colors"
+              >
+                Browse Fireplaces
+              </Link>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}

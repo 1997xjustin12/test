@@ -17,7 +17,7 @@ import LazyZohoLoader from "@/app/components/widget/LazyZohoLoader";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import Script from "next/script";
 
 // SOLANA COMPONENTS
@@ -29,6 +29,11 @@ import Footer from "@/app/components/new-design/layout/Footer";
 import BBQTopbar from "@/app/components/bbq-design/layout/Topbar";
 import BBQNavbar from "@/app/components/bbq-design/layout/Navbar";
 import BBQFooter from "@/app/components/bbq-design/layout/Footer";
+
+// OKO COMPONENTS
+import OKOTopbar from "@/app/components/oko-design/layout/Topbar";
+import OKONavbar from "@/app/components/oko-design/layout/Navbar";
+import OKOFooter from "@/app/components/oko-design/layout/Footer";
 
 const InterFont = Inter({
   subsets: ["latin"],
@@ -58,7 +63,7 @@ export const sora = Sora({
   display: 'swap',
 })
 
-const bodyClass = `${ISBBQ ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`: `${InterFont.variable} ${playfairDisplay.variable}`}`
+const bodyClass = `${(ISBBQ || ISOKO) ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`: `${InterFont.variable} ${playfairDisplay.variable}`}`
 
 export const metadata = await generateMetadata();
 
@@ -141,12 +146,12 @@ export default async function MarketLayout({ children }) {
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        { ISBBQ ? <BBQTopbar /> : <Topbar />}
-                        { ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
+                        { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
+                        { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
-                        { ISBBQ ? <BBQFooter logo={redisLogo} />: <Footer logo={redisLogo} />}
+                        { ISOKO ? <OKOFooter logo={redisLogo} /> : ISBBQ ? <BBQFooter logo={redisLogo} />: <Footer logo={redisLogo} />}
                         <ConditionalZohoButton />
                         <LazyZohoLoader />
                         {process.env.NEXT_PUBLIC_GA_ID && (

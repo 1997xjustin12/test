@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import NewGuestModal from "@/app/components/new-design/ui/GuestModal";
 import BBQGuestModal from "@/app/components/bbq-design/ui/GuestModal";
+import OKOGuestModal from "@/app/components/oko-design/ui/GuestModal";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -14,7 +15,8 @@ import {
   createSlug,
   formatPrice,
   parseRatingCount,
-  ISBBQ
+  ISBBQ,
+  ISOKO
 } from "@/app/lib/helpers";
 
 function GuestEmailCaptureDialog() {
@@ -131,8 +133,10 @@ function GuestEmailCaptureDialog() {
     return () => window.removeEventListener("guestEmailRequired", handler);
   }, [infoEmail, pathname]);
 
+  if(ISOKO) return <OKOGuestModal isOpen={toggle} onClose={handleClose} />;
+
   if(ISBBQ) return <BBQGuestModal isOpen={toggle} onClose={handleClose} />;
-  
+
   return <NewGuestModal isOpen={toggle} onClose={handleClose} />;
 }
 

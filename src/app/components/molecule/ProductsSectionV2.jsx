@@ -6,9 +6,11 @@ import { useSearch } from "@/app/context/search";
 import { usePathname } from "next/navigation";
 import SPProductCard from "@/app/components/new-design/ui/ProductCard";
 import BBQProductCard from "@/app/components/bbq-design/ui/ProductCard";
+import OKOProductCard from "@/app/components/oko-design/ui/ProductCard";
 import NewDesignProductsSectionLoader from "@/app/components/new-design/sections/gallery/ProductsSectionLoader";
 import BBQProductsSectionLoader from "@/app/components/bbq-design/sections/gallery/ProductsSectionLoader";
-import { ISBBQ } from "@/app/lib/helpers";
+import OKOProductsSectionLoader from "@/app/components/oko-design/sections/gallery/ProductsSectionLoader";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 
 import {
   InstantSearch,
@@ -231,7 +233,7 @@ const FilterContent = memo(({ filters }) => (
 FilterContent.displayName = "FilterContent";
 
 const CollapsedIcon = () => {
-  if (ISBBQ) {
+  if (ISBBQ || ISOKO) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +263,7 @@ const CollapsedIcon = () => {
 };
 
 const ExpandedIcon = () => {
-  if (ISBBQ) {
+  if (ISBBQ || ISOKO) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -298,7 +300,7 @@ const FilterGroup = ({ header, children }) => {
     <div className="panel">
       <button
         onClick={() => setExpanded((prev) => !prev)}
-        className={`w-full flex items-center gap-[20px] justify-between px-4 py-2 ${expanded ? "border-y" : "border-t"} ${ISBBQ ? "border-grate" : ""}`}
+        className={`w-full flex items-center gap-[20px] justify-between px-4 py-2 ${expanded ? "border-y" : "border-t"} ${(ISBBQ || ISOKO) ? "border-grate" : ""}`}
       >
         <h5 className=" font-semibold text-[13px] text-stone-800">{header}</h5>
         {expanded ? <ExpandedIcon /> : <CollapsedIcon />}
@@ -430,7 +432,7 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
 
   // Memoized so Hits doesn't remount all 30 cards on unrelated InnerUI re-renders
   const hitComponent = useCallback(
-    (props) => ISBBQ ? <BBQProductCard {...props} page_details={page_details} />:<SPProductCard {...props} page_details={page_details} />,
+    (props) => ISOKO ? <OKOProductCard {...props} page_details={page_details} /> : ISBBQ ? <BBQProductCard {...props} page_details={page_details} />:<SPProductCard {...props} page_details={page_details} />,
     [page_details],
   );
 
@@ -504,10 +506,10 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
         {/* Desktop filter sidebar */}
         <div className="search-panel__filters pfd-filter-section relative">
           <div
-            className={`overflow-hidden ${ISBBQ ? "border border-grate bg-white" : "border rounded-xl bg-white"}`}
+            className={`overflow-hidden ${(ISBBQ || ISOKO) ? "border border-grate bg-white" : "border rounded-xl bg-white"}`}
           >
             <div
-              className={`text-sm font-semibold p-4 ${ISBBQ ? "font-oswald text-white bg-charcoal" : ""}`}
+              className={`text-sm font-semibold p-4 ${(ISBBQ || ISOKO) ? "font-oswald text-white bg-charcoal" : ""}`}
             >
               Filters
             </div>
@@ -583,7 +585,7 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
                     className="ais-Hits-item"
                   >
                     {
-                      ISBBQ ? <BBQProductCard hit={hit} page_details={page_details} /> : <SPProductCard hit={hit} page_details={page_details} />
+                      ISOKO ? <OKOProductCard hit={hit} page_details={page_details} /> : ISBBQ ? <BBQProductCard hit={hit} page_details={page_details} /> : <SPProductCard hit={hit} page_details={page_details} />
                     }
                   </li>
                 ))}
@@ -790,7 +792,7 @@ function ProductsSectionV2({
   return (
     <>
       <div className={`${!dataLoaded ? "w-full" : "hidden"}`}>
-        {ISBBQ ? <BBQProductsSectionLoader /> : <NewDesignProductsSectionLoader />}
+        {ISOKO ? <OKOProductsSectionLoader /> : ISBBQ ? <BBQProductsSectionLoader /> : <NewDesignProductsSectionLoader />}
       </div>
 
       <div

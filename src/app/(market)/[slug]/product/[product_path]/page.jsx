@@ -8,7 +8,7 @@ import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
-import { BASE_URL, ES_INDEX, ISBBQ } from "@/app/lib/helpers";
+import { BASE_URL, ES_INDEX, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 import {
@@ -20,6 +20,7 @@ import {
 import ProductClient from "@/app/components/molecule/ProductClient";
 import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
 import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
+import OKOSingleProductPage from "@/app/components/oko-design/page/SingleProductPage";
 
 /**
  * WHY THIS ROUTE IS SERVER-RENDERED PER REQUEST (and cached at the CDN instead).
@@ -202,6 +203,14 @@ function buildJsonLd(product, slug, product_path) {
 }
 
 function MainSection({ ...props }) {
+  if (ISOKO) {
+    return (
+      <OKOSingleProductPage
+        {...props}
+      />
+    );
+  }
+
   if (ISBBQ) {
     return (
       <BBQSingleProductPage
@@ -247,7 +256,7 @@ export default async function ProductPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className={`min-h-svh ${ISBBQ ? "bg-ash dark:bg-char" : "bg-white dark:bg-gray-950"}`}>
+      <div className={`min-h-svh ${(ISBBQ || ISOKO) ? "bg-ash dark:bg-char" : "bg-white dark:bg-gray-950"}`}>
         <MainSection
           product={product}
           slug={slug}

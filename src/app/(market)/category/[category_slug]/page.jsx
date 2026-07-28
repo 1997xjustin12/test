@@ -1,9 +1,10 @@
 import "@/app/styles/product-pages.css";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { BASE_URL } from "@/app/lib/helpers";
 import NewCategory from "@/app/components/new-design/page/Category";
 import BBQCategory from "@/app/components/bbq-design/page/Category";
+import OKOCategory from "@/app/components/oko-design/page/Category";
 
 function toTitleCase(slug) {
   return slug
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }) {
 async function page({ params }) {
   const { category_slug } = await params;
 
+  if (ISOKO) return <OKOCategory category_slug={category_slug} />;
   if (ISBBQ) return <BBQCategory category_slug={category_slug} />;
   return <NewCategory category_slug={category_slug} />;
 }

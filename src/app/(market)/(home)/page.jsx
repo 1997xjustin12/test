@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { getCollectionProducts, fetchUniqueCategories } from "@/app/lib/fn_server";
 
 // SOLANA COMPONENTS
@@ -8,6 +8,9 @@ import NewHomePage from "@/app/components/new-design/page/HomePage";
 // BBQ COMPONENTS
 import BBQHeroBackground from "@/app/components/bbq-design/sections/HeroBackground";
 import BBQNewHomePage from "@/app/components/bbq-design/page/HomePage";
+// OKO COMPONENTS
+import OKOHeroBackground from "@/app/components/oko-design/sections/HeroBackground";
+import OKONewHomePage from "@/app/components/oko-design/page/HomePage";
 // Cache the full rendered page at Vercel's CDN edge for 24h (ISR).
 // TTFB drops to ~50ms globally instead of hitting the origin server.
 // revalidateTag("home-products") from /api/revalidate-all also busts this.
@@ -59,8 +62,15 @@ async function CategoryCardPreloads() {
 
 export default async function HomePage() {
   // const ISBBQ = true;
-  const initColId = ISBBQ ? 252: 137;
+  const initColId = (ISBBQ || ISOKO) ? 252: 137;
   const initialProducts = await getCachedCollectionProducts(initColId);
+
+  if(ISOKO) return (
+    <>
+      <CategoryCardPreloads />
+      <OKONewHomePage heroBg={<OKOHeroBackground />} initialProducts={initialProducts} />
+    </>
+  );
 
   if(ISBBQ) return (
     <>

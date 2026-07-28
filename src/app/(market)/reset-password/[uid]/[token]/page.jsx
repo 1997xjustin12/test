@@ -1,10 +1,11 @@
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 import { notFound } from "next/navigation";
 
 import NewResetPassword from "@/app/components/new-design/page/ResetPassword";
 import BBQResetPassword from "@/app/components/bbq-design/page/ResetPassword";
+import OKOResetPassword from "@/app/components/oko-design/page/ResetPassword";
 
 export const metadata = {
   title: `Reset Password | ${STORE_NAME}`,
@@ -13,6 +14,13 @@ export const metadata = {
 const wrapperClass = "min-h-svh py-10 px-4 sm:px-6";
 
 const ThemeComponent = ({ token, uid }) => {
+  if (ISOKO) {
+    return (
+      <div className={`${wrapperClass} bg-stone-50 dark:bg-stone-950`}>
+        <OKOResetPassword token={token} uid={uid} />
+      </div>
+    );
+  }
   if (ISBBQ) {
     return (
       <div className={`${wrapperClass} bg-stone-50 dark:bg-stone-950`}>

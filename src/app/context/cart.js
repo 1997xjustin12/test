@@ -10,12 +10,14 @@ import React, {
 } from "react";
 import NewAddedToCart from "@/app/components/new-design/ui/AddedToCartDialog"
 import BBQAddedToCart from "@/app/components/bbq-design/ui/AddedToCartDialog"
+import OKOAddedToCart from "@/app/components/oko-design/ui/AddedToCartDialog"
 import NewMiniCart from "@/app/components/new-design/ui/MiniCartDrawer"
 import BBQMiniCart from "@/app/components/bbq-design/ui/MiniCartDrawer"
+import OKOMiniCart from "@/app/components/oko-design/ui/MiniCartDrawer"
 import GuestEmailDialog from "@/app/components/atom/GuestEmailCaptureDialog";
 import Cookies from "js-cookie";
 import { getOrCreateSessionId } from "@/app/lib/session";
-import { ISBBQ, store_domain, mapOrderItems, createSlug } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO, store_domain, mapOrderItems, createSlug } from "@/app/lib/helpers";
 import { sendAbandonedCart, redisGet, redisSet } from "@/app/lib/api";
 import { useAuth } from "@/app/context/auth";
 
@@ -203,11 +205,13 @@ function applyQuantityChange(cart_items, product_id, delta) {
 
 // ─── Component ──────────────────────────────────────────────────────────────────
 function AddedToCartDialog({data, onClose}) {
+  if(ISOKO) return <OKOAddedToCart data={data} onClose={onClose}/>
   if(ISBBQ) return <BBQAddedToCart data={data} onClose={onClose}/>
   return <NewAddedToCart data={data} onClose={onClose}/>
 }
 
 function MiniCartDrawer({open, onClose}) {
+  if(ISOKO) return <OKOMiniCart open={open} onClose={onClose}/>
   if(ISBBQ) return <BBQMiniCart open={open} onClose={onClose}/>
   return <NewMiniCart open={open} onClose={onClose}/>
 }

@@ -9,13 +9,15 @@ import { unstable_cache } from "next/cache";
 
 import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
-import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX, ISBBQ } from "@/app/lib/helpers";
+import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { fetchCollectionsCount } from "@/app/lib/fn_server";
 
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 import BBQProductGallery from "@/app/components/bbq-design/page/ProductGallery";
+import OKOProductGallery from "@/app/components/oko-design/page/ProductGallery";
 import NewDesignBasePlp from "@/app/components/new-design/page/BasePlp";
 import BBQBasePlp from "@/app/components/bbq-design/page/BasePlp";
+import OKOBasePlp from "@/app/components/oko-design/page/BasePlp";
 
 // Computes the Elasticsearch filter string from page metadata.
 // Mirrors the same logic in ProductsSectionV2 so V2 can receive the correct
@@ -136,6 +138,13 @@ export default async function GenericCategoryPage({ params }) {
 
   if (!pageData || !url) return notFound();
   if (pageData.is_base_nav) {
+    if (ISOKO) {
+      return (
+        <div className="min-h-svh bg-ash dark:bg-char">
+          <OKOBasePlp page_details={pageData} />
+        </div>
+      );
+    }
     if (ISBBQ) {
       return (
         <div className="min-h-svh bg-ash dark:bg-char">
@@ -188,6 +197,20 @@ export default async function GenericCategoryPage({ params }) {
       url: `${BASE_URL}/${item?.url}`,
     };
   });
+
+  if (ISOKO) {
+    return (
+      <div className="min-h-svh bg-ash dark:bg-char">
+        <OKOProductGallery
+          slug={slug}
+          config={{ root: rootNav, url, subs }}
+          filterType={pageData?.filter_type ?? null}
+          initialFilterString={filterString}
+          initialHits={initialHits}
+        />
+      </div>
+    );
+  }
 
   if (ISBBQ) {
     return (

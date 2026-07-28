@@ -1,7 +1,8 @@
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { BLOG_BASE_URL, getBlogCategoryId } from "@/app/lib/blog";
 import NewBlogPost from "@/app/components/new-design/page/BlogPost";
 import BBQBlogPost from "@/app/components/bbq-design/page/BlogPost";
+import OKOBlogPost from "@/app/components/oko-design/page/BlogPost";
 
 const DEFAULT_URL = BLOG_BASE_URL;
 
@@ -102,6 +103,16 @@ export default async function BlogPost({ params }) {
       return { ...otherPost, imageUrl };
     })
   );
+
+  if (ISOKO) {
+    return (
+      <OKOBlogPost
+        post={post}
+        featuredImage={featuredImage}
+        otherPostsWithImages={otherPostsWithImages}
+      />
+    );
+  }
 
   if (ISBBQ) {
     return (

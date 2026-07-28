@@ -2,10 +2,11 @@ import {
   fetchSearchResults as SSR_fetchSearchResults,
   fetchUniqueCategories,
 } from "@/app/lib/fn_server";
-import { BASE_URL, ISBBQ } from "@/app/lib/helpers";
+import { BASE_URL, ISBBQ, ISOKO } from "@/app/lib/helpers";
 
 import NewSearchPage from "@/app/components/new-design/page/Search";
 import BBQSearchPage from "@/app/components/bbq-design/page/Search";
+import OKOSearchPage from "@/app/components/oko-design/page/Search";
 
 const STATIC_POPULARS = [
   "Napoleon Ascent",
@@ -26,8 +27,8 @@ export default async function SearchPage({ searchParams }) {
   const query = urlParams?.query || "";
   const ACTIVE_TAB = urlParams?.tab || "product";
 
-  const ThemePage = ISBBQ ? BBQSearchPage : NewSearchPage;
-  const wrapperClass = ISBBQ ? bbqWrapperClass : newDesignWrapperClass;
+  const ThemePage = ISOKO ? OKOSearchPage : ISBBQ ? BBQSearchPage : NewSearchPage;
+  const wrapperClass = (ISBBQ || ISOKO) ? bbqWrapperClass : newDesignWrapperClass;
 
   if (query === "") {
     const categories = await fetchUniqueCategories();

@@ -1,0 +1,571 @@
+Content is user-generated and unverified.
+
+
+3
+Learn how to customize
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Outdoor Kitchen Outlet — Built-In Grills, Outdoor Kitchens & Accessories</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Shop built-in BBQ grills, outdoor kitchens, refrigeration and accessories from 30+ top brands. Price match guaranteed, free shipping, and best prices by phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char:#26221F;
+    --char-soft:#3A332E;
+    --cream:#F6F2EA;
+    --cream-dim:#EBE4D6;
+    --barn:#9C3B34;
+    --barn-dark:#7A2C27;
+    --barn-light:#C0564C;
+    --sage:#5C6B4F;
+    --stone:#8C8478;
+    --stone-line:#DAD2C0;
+    --brass:#B08A3E;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:var(--font-body); color:var(--char); background:var(--cream); line-height:1.55;}
+  h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:600;}
+  a{color:inherit; text-decoration:none;}
+  ul{margin:0; padding:0; list-style:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1260px; margin:0 auto; padding:0 32px;}
+
+  /* ---- top promo bar ---- */
+  .promo-top{background:var(--cream-dim); border-bottom:1px solid var(--stone-line); font-size:13px;}
+  .promo-top .wrap{display:flex; justify-content:center; align-items:center; height:38px; gap:6px; text-align:center;}
+  .promo-top strong{color:var(--barn); font-weight:600;}
+  .promo-top .amz{font-family:var(--font-display); font-weight:700; font-style:italic; color:var(--char);}
+
+  /* ---- header ---- */
+  header.main{background:#fff; border-bottom:1px solid var(--stone-line);}
+  header.main .wrap{display:flex; align-items:center; justify-content:space-between; height:96px; gap:28px;}
+  .logo-box{border:1.5px solid var(--barn); padding:10px 22px; display:flex; flex-direction:column; align-items:center; line-height:1.1;}
+  .logo-box .l1{font-family:var(--font-display); font-size:19px; letter-spacing:0.04em; font-weight:600;}
+  .logo-box .l1 .flame{color:var(--barn);}
+  .logo-box .l2{font-family:var(--font-body); font-size:10px; letter-spacing:0.32em; color:var(--stone); margin-top:2px;}
+  .search-pill{flex:1; max-width:460px; display:flex; align-items:center; gap:10px; border:1px solid var(--stone-line); background:var(--cream-dim); border-radius:2px; padding:12px 16px;}
+  .search-pill input{border:none; outline:none; font-family:var(--font-body); font-size:14px; width:100%; background:transparent;}
+  .head-right{display:flex; align-items:center; gap:26px;}
+  .phone-block{text-align:right;}
+  .phone-block .tag{font-family:var(--font-display); font-size:12px; font-weight:700; line-height:1.2; color:var(--char);}
+  .phone-block .num{font-family:var(--font-body); font-weight:600; font-size:16px; color:var(--barn); margin-top:2px;}
+  .head-icons{display:flex; align-items:center; gap:20px;}
+  .head-icon{display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10.5px; letter-spacing:0.06em; color:var(--char-soft); position:relative;}
+  .cart-count{position:absolute; top:-6px; right:-10px; background:var(--barn); color:#fff; font-family:var(--font-mono); font-size:9px; border-radius:50%; width:15px; height:15px; display:flex; align-items:center; justify-content:center;}
+
+  /* ---- primary nav ---- */
+  nav.primary{background:#fff; border-bottom:1px solid var(--stone-line);}
+  nav.primary .wrap{display:flex; gap:34px; height:52px; align-items:center;}
+  nav.primary a{font-size:12.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--char); padding:6px 0; border-bottom:2px solid transparent;}
+  nav.primary a:hover{border-color:var(--barn); color:var(--barn);}
+
+  /* ---- black promo strip ---- */
+  .promo-strip{background:var(--char); color:#fff;}
+  .promo-strip .wrap{display:flex; align-items:center; justify-content:center; gap:18px; height:46px; font-family:var(--font-body); font-size:13.5px;}
+  .promo-strip strong{font-weight:600;}
+  .promo-strip .call-btn{background:#fff; color:var(--char); font-weight:600; font-size:12px; padding:6px 16px; letter-spacing:0.03em;}
+
+  /* ---- hero ---- */
+  .hero{position:relative; background:var(--char);}
+  .hero-media{position:relative; height:520px;}
+  .hero-media img{width:100%; height:100%; object-fit:cover; opacity:0.9;}
+  .hero-media::after{content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(38,34,31,0.88) 0%, rgba(38,34,31,0.62) 42%, rgba(38,34,31,0.08) 72%);}
+  .hero-copy{position:absolute; top:0; left:0; height:100%; display:flex; align-items:center; width:100%;}
+  .hero-copy .wrap{max-width:640px; margin:0; padding-left:32px;}
+  .hero h1{font-size:42px; line-height:1.12; color:#fff;}
+  .hero h1 em{font-style:italic; color:var(--barn-light);}
+  .hero p.lede{font-family:var(--font-body); font-size:15.5px; color:#DCD5C8; max-width:460px; margin-top:18px;}
+  .hero-points{margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:8px 24px;}
+  .hero-points li{font-size:13.5px; color:#EDE8DD; display:flex; gap:8px;}
+  .hero-points li::before{content:'✓'; color:var(--barn-light); font-weight:600;}
+  .hero-ctas{display:flex; gap:14px; margin-top:30px;}
+  .btn{font-family:var(--font-body); font-weight:600; font-size:13.5px; padding:14px 26px; border:1px solid transparent; cursor:pointer; display:inline-block; letter-spacing:0.01em;}
+  .btn-primary{background:var(--barn); color:#fff;}
+  .btn-primary:hover{background:var(--barn-dark);}
+  .btn-outline{border-color:rgba(255,255,255,0.5); color:#fff;}
+  .discount-tag{position:absolute; bottom:28px; right:32px; background:var(--barn); color:#fff; font-family:var(--font-body); font-weight:600; font-size:14px; padding:14px 20px;}
+
+  /* ---- trust strip ---- */
+  .trust{background:#fff; border-bottom:1px solid var(--stone-line);}
+  .trust .wrap{display:grid; grid-template-columns:repeat(4,1fr); padding:20px 32px;}
+  .trust-item{display:flex; align-items:center; gap:12px; font-size:12.5px; font-weight:500; color:var(--char-soft); border-left:1px solid var(--stone-line); padding-left:20px;}
+  .trust-item:first-child{border-left:none; padding-left:0;}
+  .trust-item svg{flex-shrink:0;}
+
+  section{padding:64px 0;}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;}
+  .section-head .eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; color:var(--barn); margin-bottom:8px; display:block; text-transform:uppercase;}
+  .section-head h2{font-size:27px; color:var(--char);}
+  .section-head a.view-all{font-family:var(--font-body); font-weight:600; font-size:13px; color:var(--sage); border-bottom:1px solid var(--sage);}
+
+  /* ---- category grid ---- */
+  .cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  .cat-card{position:relative; aspect-ratio:4/3; overflow:hidden; background:var(--char); border-radius:2px;}
+  .cat-card img{width:100%; height:100%; object-fit:cover; opacity:0.8; transition:opacity .25s, transform .3s;}
+  .cat-card:hover img{opacity:0.6; transform:scale(1.03);}
+  .cat-card .label{position:absolute; bottom:0; left:0; right:0; padding:18px;}
+  .cat-card .label span{font-family:var(--font-display); color:#fff; font-size:16px; font-weight:600;}
+  .cat-card .label small{display:block; font-family:var(--font-body); color:#E6DFCF; font-size:11.5px; margin-top:4px;}
+
+  /* ---- brand strip ---- */
+  .brand-strip{background:#fff; border-top:1px solid var(--stone-line); border-bottom:1px solid var(--stone-line); padding:36px 0;}
+  .brand-strip .wrap{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px 36px;}
+  .brand-strip .name{font-family:var(--font-display); font-size:18px; font-weight:600; color:var(--stone); letter-spacing:0.02em;}
+  .brand-strip .name:hover{color:var(--barn);}
+
+  /* ---- product grid ---- */
+  .prod-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
+  .prod-card{background:#fff; border:1px solid var(--stone-line); border-radius:2px;}
+  .prod-media{position:relative; aspect-ratio:1/1; background:var(--cream-dim); border-bottom:1px solid var(--stone-line);}
+  .prod-media img{width:100%; height:100%; object-fit:cover;}
+  .sale-badge{position:absolute; top:10px; left:10px; background:var(--barn); color:#fff; font-family:var(--font-body); font-weight:600; font-size:10px; letter-spacing:0.04em; padding:4px 9px; text-transform:uppercase;}
+  .ship-badge{position:absolute; top:10px; right:10px; background:var(--sage); color:#fff; font-family:var(--font-body); font-weight:500; font-size:9.5px; letter-spacing:0.03em; padding:4px 8px; text-transform:uppercase;}
+  .prod-body{padding:16px 16px 18px;}
+  .prod-brand{font-family:var(--font-body); font-size:11px; font-weight:600; letter-spacing:0.04em; color:var(--barn); text-transform:uppercase;}
+  .prod-name{font-family:var(--font-body); font-weight:500; font-size:14px; margin-top:6px; color:var(--char); line-height:1.3;}
+  .prod-reviews{font-size:11.5px; color:var(--stone); margin-top:6px;}
+  .prod-reviews .stars{color:var(--brass); letter-spacing:1px; margin-right:5px;}
+  .prod-meta{display:flex; justify-content:space-between; align-items:center; margin-top:14px;}
+  .prod-price .was{color:var(--stone); text-decoration:line-through; font-size:12px; margin-right:6px;}
+  .prod-price .now{font-family:var(--font-body); font-weight:600; font-size:16px; color:var(--char);}
+  .prod-price .save{display:block; font-size:11px; color:var(--sage); font-weight:600; margin-top:2px;}
+  .add-btn{width:34px; height:34px; border:1px solid var(--char); background:transparent; font-family:var(--font-body); font-size:17px; cursor:pointer; border-radius:2px;}
+  .add-btn:hover{background:var(--char); color:var(--cream);}
+
+  /* ---- why call section ---- */
+  .why-call{background:var(--char-soft); color:var(--cream);}
+  .why-call .wrap{display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:center;}
+  .why-call .eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; color:var(--barn-light); display:block; margin-bottom:14px; text-transform:uppercase;}
+  .why-call h2{font-size:29px; color:#fff; max-width:400px; line-height:1.18;}
+  .why-call p{font-size:14.5px; color:#D8D1C3; max-width:400px; margin-top:16px;}
+  .why-call .phone-cta{margin-top:26px; display:inline-flex; align-items:center; gap:12px; background:var(--barn); padding:14px 22px;}
+  .why-call .phone-cta .num{font-family:var(--font-display); font-weight:700; font-size:20px; color:#fff;}
+  .call-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .call-item{border:1px solid rgba(246,242,234,0.16); padding:20px;}
+  .call-item strong{display:block; font-family:var(--font-body); font-weight:600; font-size:14.5px; color:#fff; margin-bottom:6px;}
+  .call-item p{font-size:13px; color:#C9C2B3; margin:0;}
+
+  /* ---- testimonials ---- */
+  .testimonials .wrap > .prod-grid,
+  .t-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .t-card{border:1px solid var(--stone-line); background:#fff; padding:24px;}
+  .t-card .stars{color:var(--brass); font-size:14px; letter-spacing:2px;}
+  .t-card p{font-size:13.5px; color:var(--char-soft); margin-top:12px;}
+  .t-card .who{font-family:var(--font-body); font-weight:600; font-size:12px; color:var(--stone); margin-top:14px;}
+
+  /* ---- seo block ---- */
+  .seo-block{background:var(--cream-dim); border-top:1px solid var(--stone-line); border-bottom:1px solid var(--stone-line);}
+  .seo-block .wrap{display:grid; grid-template-columns:1.15fr 0.85fr; gap:52px;}
+  .seo-block h2{font-size:21px; color:var(--char); margin-bottom:12px;}
+  .seo-block p{font-size:13.5px; color:var(--char-soft); margin:0 0 12px;}
+  .brand-links{display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:14px;}
+  .brand-links a{font-family:var(--font-body); font-weight:500; font-size:12.5px; color:var(--sage); border-bottom:1px solid transparent;}
+  .brand-links a:hover{border-color:var(--sage);}
+  .link-cols{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .link-cols h4{font-size:11.5px; color:var(--stone); margin-bottom:10px; letter-spacing:0.08em; text-transform:uppercase;}
+  .link-cols a{display:block; font-size:12.5px; color:var(--char-soft); padding:5px 0;}
+  .link-cols a:hover{color:var(--barn);}
+
+  /* ---- footer ---- */
+  footer{background:var(--char); color:#D8D1C3;}
+  .footer-top .wrap{display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr 1.2fr; gap:32px; padding:52px 32px 36px;}
+  footer h4{font-family:var(--font-body); font-weight:600; font-size:11px; letter-spacing:0.08em; color:var(--barn-light); margin-bottom:14px; text-transform:uppercase;}
+  footer ul li{padding:5px 0;}
+  footer a{font-size:12.5px; color:#C9C2B3;}
+  footer a:hover{color:#fff;}
+  .footer-logo{font-family:var(--font-display); font-size:19px; color:#fff; font-weight:600;}
+  footer p.desc{font-size:12.5px; color:#A79F8D; margin-top:12px; max-width:280px;}
+  .newsletter{display:flex; margin-top:14px; border:1px solid rgba(246,242,234,0.22);}
+  .newsletter input{flex:1; background:transparent; border:none; padding:10px 12px; color:#fff; font-size:12.5px; outline:none;}
+  .newsletter button{background:var(--barn); border:none; color:#fff; font-weight:600; font-size:12px; padding:0 16px; cursor:pointer;}
+  .footer-bottom{border-top:1px solid rgba(246,242,234,0.14);}
+  .footer-bottom .wrap{display:flex; justify-content:space-between; align-items:center; padding:18px 32px; font-size:11.5px; color:#8A8272;}
+  .footer-bottom a{color:#8A8272; margin-left:16px;}
+
+  /* ---- floating chat + exit popup mock ---- */
+  .chat-bubble{position:fixed; bottom:24px; right:24px; width:52px; height:52px; border-radius:50%; background:var(--sage); display:flex; align-items:center; justify-content:center; z-index:20;}
+  .exit-popup{position:fixed; bottom:24px; left:24px; background:var(--char); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:14px; z-index:20; max-width:280px;}
+  .exit-popup strong{font-family:var(--font-display); color:var(--barn-light); font-size:15px; display:block;}
+  .exit-popup span{font-size:11.5px; color:#C9C2B3;}
+  .exit-popup .x{margin-left:auto; cursor:pointer; color:#8A8272; font-size:16px;}
+
+  @media (max-width:1024px){
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .prod-grid{grid-template-columns:repeat(2,1fr);}
+    .hero .wrap, .why-call .wrap, .seo-block .wrap{grid-template-columns:1fr;}
+    .trust .wrap{grid-template-columns:repeat(2,1fr); row-gap:14px;}
+    .footer-top .wrap{grid-template-columns:repeat(2,1fr);}
+    nav.primary{display:none;}
+    .hero-points{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Top promo bar -->
+<div class="promo-top">
+  <div class="wrap">
+    <span>Price match guaranteed on all competitor pricing, including <span class="amz">amazon</span> — call <strong>(888) 667-4986</strong> for current promotions</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="main">
+  <div class="wrap">
+    <a href="/" class="logo-box">
+      <span class="l1">OUTDOOR <span class="flame">⌂</span> KITCHEN</span>
+      <span class="l2">OUTLET</span>
+    </a>
+    <div class="search-pill">
+      <input type="text" placeholder="Search grills, brands, accessories…">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C8478" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="head-right">
+      <div class="phone-block">
+        <div class="tag">Best prices<br>by phone</div>
+        <div class="num">888-667-4986</div>
+      </div>
+      <div class="head-icons">
+        <a href="/account" class="head-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#26221F" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          Account
+        </a>
+        <a href="/cart" class="head-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#26221F" stroke-width="1.6"><path d="M3 6h2l2.4 12.2a2 2 0 0 0 2 1.8h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+          <span class="cart-count">0</span>
+          Cart
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Primary nav -->
+<nav class="primary">
+  <div class="wrap">
+    <a href="/collections/bbq-grills-and-smokers">BBQ Grills and Smokers</a>
+    <a href="/collections/outdoor-kitchen-appliances">Outdoor Kitchen</a>
+    <a href="/collections/grill-accessories">BBQ Grilling Tools and Accessories</a>
+    <a href="/collections/outdoor-living">Outdoor Living</a>
+    <a href="/collections/appliances">Appliances</a>
+    <a href="/collections/open-box" style="color:var(--barn);">Sale</a>
+    <a href="/collections/shop-all-brands">Brands</a>
+    <a href="/pages/contact-us">Customer Support</a>
+  </div>
+</nav>
+
+<!-- Black promo strip -->
+<div class="promo-strip">
+  <div class="wrap">
+    <span><strong>50% off Eloquence built-in grills</strong> — 888-667-4986</span>
+    <a href="tel:888-667-4986" class="call-btn">Call now</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-media">
+    <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=1600&auto=format&fit=crop" alt="Built-in stainless BBQ grill on an outdoor kitchen patio island">
+  </div>
+  <div class="hero-copy">
+    <div class="wrap">
+      <h1>The best prices on built-in BBQ grills & accessories — <em>guaranteed.</em></h1>
+      <p class="lede">Looking for the best deal on outdoor kitchen equipment? At Outdoor Kitchen Outlet, we price match every competitor, including Amazon. Call for exclusive discounts you won't find listed online.</p>
+      <ul class="hero-points">
+        <li>We beat any competitor's price, including Amazon</li>
+        <li>Free shipping on every order</li>
+        <li>Exclusive phone-only discounts</li>
+        <li>Expert design help & concierge service</li>
+      </ul>
+      <div class="hero-ctas">
+        <a href="tel:888-667-4986" class="btn btn-primary">Call 888-667-4986</a>
+        <a href="/collections/bbq-grills-and-smokers" class="btn btn-outline">Shop grills</a>
+      </div>
+    </div>
+  </div>
+  <div class="discount-tag">Call now for exclusive discount →</div>
+</div>
+
+<!-- Trust strip -->
+<div class="trust">
+  <div class="wrap">
+    <div class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9C3B34" stroke-width="2"><path d="M12 2l2.4 6.6L21 10l-5 4.3L17.5 21 12 17.3 6.5 21 8 14.3 3 10l6.6-1.4z"/></svg> Price match guaranteed</div>
+    <div class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9C3B34" stroke-width="2"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg> Free shipping sitewide</div>
+    <div class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9C3B34" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 30+ top brands in stock</div>
+    <div class="trust-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9C3B34" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Concierge phone ordering</div>
+  </div>
+</div>
+
+<main>
+
+<!-- Shop by category -->
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Shop by category</span><h2>Find your equipment</h2></div>
+      <a href="/collections/bbq-grills-and-smokers" class="view-all">View all categories →</a>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="/collections/bbq-grills-and-smokers"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" alt="Built-in gas grill"><div class="label"><span>BBQ grills and smokers</span><small>Gas, pellet, charcoal, kamado</small></div></a>
+      <a class="cat-card" href="/collections/outdoor-kitchen-appliances"><img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=600&auto=format&fit=crop" alt="Outdoor kitchen island"><div class="label"><span>Outdoor kitchen</span><small>Storage, sinks, vent hoods, islands</small></div></a>
+      <a class="cat-card" href="/collections/outdoor-living"><img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=600&auto=format&fit=crop" alt="Patio fire pit and furniture"><div class="label"><span>Outdoor living</span><small>Fire pits, heaters, patio furniture</small></div></a>
+      <a class="cat-card" href="/collections/appliances"><img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?q=80&w=600&auto=format&fit=crop" alt="Outdoor refrigerator"><div class="label"><span>Appliances</span><small>Refrigeration, ranges, cooktops</small></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- Brand strip -->
+<div class="brand-strip">
+  <div class="wrap">
+    <a href="/collections/blaze" class="name">Blaze</a>
+    <a href="/collections/bull-outdoor-products" class="name">Bull</a>
+    <a href="/collections/aog" class="name">AOG</a>
+    <a href="/collections/napoleon" class="name">Napoleon</a>
+    <a href="/collections/fire-magic" class="name">Fire Magic</a>
+    <a href="/collections/lion-premium-grills" class="name">Lion</a>
+    <a href="/collections/sunstone" class="name">Sunstone</a>
+    <a href="/collections/shop-all-brands" class="name" style="color:var(--barn);">All 30+ brands →</a>
+  </div>
+</div>
+
+<!-- Featured deals -->
+<section style="background:var(--cream-dim);">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Today's deals</span><h2>Best sellers on sale</h2></div>
+      <a href="/collections/open-box" class="view-all">See all deals →</a>
+    </div>
+    <div class="prod-grid">
+
+      <div class="prod-card">
+        <div class="prod-media">
+          <span class="sale-badge">Sale</span>
+          <span class="ship-badge">Free shipping</span>
+          <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=600&auto=format&fit=crop" alt="Blaze built-in propane gas grill">
+        </div>
+        <div class="prod-body">
+          <div class="prod-brand">Blaze Outdoor Products</div>
+          <div class="prod-name">Professional LUX 34" 3-Burner Built-In Grill — Propane</div>
+          <div class="prod-reviews"><span class="stars">★★★★★</span>2 reviews</div>
+          <div class="prod-meta">
+            <div class="prod-price"><span class="was">$5,571.50</span><span class="now">$4,299.00</span><span class="save">Save $1,272.50</span></div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-media">
+          <span class="sale-badge">Sale</span>
+          <span class="ship-badge">Free shipping</span>
+          <img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?q=80&w=600&auto=format&fit=crop" alt="Outdoor rated refrigerator">
+        </div>
+        <div class="prod-body">
+          <div class="prod-brand">Blaze Outdoor Products</div>
+          <div class="prod-name">20-Inch 4.3 Cu. Ft. Outdoor Rated Refrigerator w/ Lock</div>
+          <div class="prod-reviews">No reviews</div>
+          <div class="prod-meta">
+            <div class="prod-price"><span class="was">$1,662.01</span><span class="now">$1,549.00</span><span class="save">Save $113.01</span></div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-media">
+          <span class="ship-badge" style="left:10px; right:auto;">Free shipping</span>
+          <img src="https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=600&auto=format&fit=crop" alt="Ceramic kamado grill on cradle">
+        </div>
+        <div class="prod-body">
+          <div class="prod-brand">Primo Ceramic Grills</div>
+          <div class="prod-name">Cradle and Side Tables for LG 300 AIO</div>
+          <div class="prod-reviews">No reviews</div>
+          <div class="prod-meta">
+            <div class="prod-price"><span class="was">$468.00</span><span class="now">$390.00</span><span class="save">Save $78</span></div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="prod-media">
+          <span class="sale-badge">Sale</span>
+          <span class="ship-badge">Free shipping</span>
+          <img src="https://images.unsplash.com/photo-1615887023544-ffa1c72fb5ec?q=80&w=600&auto=format&fit=crop" alt="Stainless steel side burner">
+        </div>
+        <div class="prod-body">
+          <div class="prod-brand">Lion Premium Grills</div>
+          <div class="prod-name">Stainless Steel Drop-In Natural Gas Single Side Burner</div>
+          <div class="prod-reviews"><span class="stars">★★★★★</span>2 reviews</div>
+          <div class="prod-meta">
+            <div class="prod-price"><span class="was">$749.00</span><span class="now">$429.00</span><span class="save">Save $320</span></div>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Why call section -->
+<div class="why-call">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Why call instead of checkout online</span>
+      <h2>Listed prices aren't always our best price.</h2>
+      <p>Our online prices already beat most competitors — but phone-only discounts, bundle pricing on islands, and open-box deals are usually reserved for direct calls.</p>
+      <div class="phone-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span class="num">888-667-4986</span>
+      </div>
+    </div>
+    <div class="call-grid">
+      <div class="call-item"><strong>Price match, always</strong><p>Send us a competitor's listing, including Amazon, and we'll match or beat it before you order.</p></div>
+      <div class="call-item"><strong>Bundle & island pricing</strong><p>Building a full outdoor kitchen? Phone orders get package pricing not shown at checkout.</p></div>
+      <div class="call-item"><strong>Open box & closeout access</strong><p>Our reps can check floor models and scratch-and-dent stock not listed on the site yet.</p></div>
+      <div class="call-item"><strong>Free layout support</strong><p>Send your patio dimensions and get help sizing a grill, island, or vent hood before you buy.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<section class="testimonials">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:28px;">
+      <div><span class="eyebrow">Customer reviews</span><h2>What buyers are saying</h2></div>
+    </div>
+    <div class="t-grid">
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p>Called before ordering and they beat the Amazon price by $400 on the same Blaze grill. Shipped free too.</p>
+        <div class="who">D. Ferraro — Scottsdale, AZ</div>
+      </div>
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p>Got a phone-only discount on our whole island package that wasn't listed anywhere on the site.</p>
+        <div class="who">M. Okafor — Charlotte, NC</div>
+      </div>
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p>Support helped me pick the right side burner for our layout before I bought the wrong size.</p>
+        <div class="who">J. Whitfield — Austin, TX</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO content block -->
+<div class="seo-block">
+  <div class="wrap">
+    <div>
+      <h2>Built-in BBQ grills and outdoor kitchen equipment, direct from 30+ brands</h2>
+      <p>Outdoor Kitchen Outlet carries built-in and freestanding grills, griddles, kamados and pellet grills from Blaze, Bull, American Outdoor Grill, Napoleon, Fire Magic, Lion, Sunstone, TEC and more — alongside the storage, ventilation, refrigeration and side burners needed to finish a full outdoor kitchen build.</p>
+      <p>Every listed price is already price-matched against major retailers, including Amazon. Call for phone-only bundle pricing on islands and package deals.</p>
+      <div class="brand-links">
+        <a href="/collections/blaze">Blaze</a>
+        <a href="/collections/bull-outdoor-products">Bull</a>
+        <a href="/collections/napoleon">Napoleon</a>
+        <a href="/collections/fire-magic">Fire Magic</a>
+        <a href="/collections/twin-eagles">Twin Eagles</a>
+        <a href="/collections/shop-all-brands">View all brands →</a>
+      </div>
+    </div>
+    <div class="link-cols">
+      <div>
+        <h4>Shop by grill type</h4>
+        <a href="/collections/gas-grills-1">Gas grills</a>
+        <a href="/collections/pellet-grill">Pellet grills</a>
+        <a href="/collections/kamado-grill">Kamado grills</a>
+        <a href="/collections/charcoal-grill">Charcoal grills</a>
+      </div>
+      <div>
+        <h4>Deals</h4>
+        <a href="/collections/open-box">Open box</a>
+        <a href="/collections/bbq-grill-package">Package deals</a>
+        <a href="/collections/scratch-and-dent-bbq-grills">Scratch and dent</a>
+        <a href="/collections/grill-clearance-sale">Clearance</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-top">
+    <div class="wrap">
+      <div>
+        <div class="footer-logo">Outdoor Kitchen Outlet</div>
+        <p class="desc">Best prices on built-in BBQ grills and outdoor kitchen equipment from 30+ top brands — guaranteed to match or beat any competitor.</p>
+        <div class="newsletter">
+          <input type="email" placeholder="Your email">
+          <button>Sign up</button>
+        </div>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="/collections/bbq-grills-and-smokers">BBQ grills and smokers</a></li>
+          <li><a href="/collections/outdoor-kitchen-appliances">Outdoor kitchen</a></li>
+          <li><a href="/collections/outdoor-living">Outdoor living</a></li>
+          <li><a href="/collections/appliances">Appliances</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Deals</h4>
+        <ul>
+          <li><a href="/collections/open-box">Open box</a></li>
+          <li><a href="/collections/bbq-grill-package">Package deals</a></li>
+          <li><a href="/collections/grill-clearance-sale">Clearance sale</a></li>
+          <li><a href="/collections/grill-promotions">Promotions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/pages/return-policy">Refund & return policy</a></li>
+          <li><a href="/pages/contact-us">Contact us</a></li>
+          <li><a href="/pages/about-us">About us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Talk to sales</h4>
+        <ul>
+          <li><a href="tel:8886674986">888-667-4986</a></li>
+          <li>Sales: Mon–Fri 4am–6pm PST</li>
+          <li>Support: Mon–Fri, closed weekends</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="wrap">
+      <span>© 2026 Outdoor Kitchen Outlet. All rights reserved.</span>
+      <div><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/sitemap">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<div class="exit-popup">
+  <div>
+    <strong>Save $200 instantly</strong>
+    <span>Call 888-667-4986 before you check out.</span>
+  </div>
+  <span class="x">×</span>
+</div>
+
+<div class="chat-bubble">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</div>
+
+</body>
+</html>

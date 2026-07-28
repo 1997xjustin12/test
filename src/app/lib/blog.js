@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 
 /**
  * Shared WordPress blog config.
@@ -17,7 +17,8 @@ import { ISBBQ } from "@/app/lib/helpers";
 export const BLOG_BASE_URL = "https://bbq-blog.onsitestorage.com";
 
 /** Category slug this storefront's blog is filtered to. */
-export const BLOG_CATEGORY_SLUG = ISBBQ ? "bbq" : "solana";
+// TODO(oko): OKO shares BBQ's blog category for now
+export const BLOG_CATEGORY_SLUG = (ISBBQ || ISOKO) ? "bbq" : "solana";
 
 /**
  * Fallback IDs, used only if the categories endpoint is unreachable.

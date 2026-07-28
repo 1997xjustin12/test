@@ -1,7 +1,8 @@
 "use client";
 import React, { createContext, useState, useContext } from "react";
-import { ISBBQ } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import BBQQuickView from "@/app/components/bbq-design/ui/ProductQuickView";
+import OKOQuickView from "@/app/components/oko-design/ui/ProductQuickView";
 import NewDesignQuickView from "@/app/components/new-design/ui/ProductQuickView";
 
 const QuickViewContext = createContext();
@@ -14,7 +15,7 @@ export const QuickViewProvider = ({ children }) => {
   const handleOnClose = () => setItem(null);
   const viewItem = (product) => setItem(product);
 
-  const QuickView = ISBBQ ? BBQQuickView : NewDesignQuickView;
+  const QuickView = ISOKO ? OKOQuickView : ISBBQ ? BBQQuickView : NewDesignQuickView;
 
   return (
     <QuickViewContext.Provider value={{ viewItem }}>
