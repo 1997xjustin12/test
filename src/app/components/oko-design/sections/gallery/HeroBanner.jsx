@@ -28,23 +28,25 @@ function HeroBanner({config}) {
   const breadcrumbs = generateBreadcrumbs(config?.root, config?.url);
   
   return (
-    <div className="relative min-h-[256px] bg-char overflow-hidden flex items-center">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-ember-deep/40 to-transparent"/>
-        <div className="absolute bottom-0 right-1/4 w-64 h-32 bg-ember rounded-full blur-3xl opacity-20"/>
-      </div>
-      <div className="relative max-w-[1240px] mx-auto px-4 sm:px-6 w-full">
-        <nav className="flex items-center gap-1.5 text-xs text-ash/40 mb-3">
-          <Link href="/" className="hover:text-ash transition-colors">Home</Link>
+    <div className="bg-oko-cream-dim dark:bg-oko-night-2 border-b border-oko-stone-line dark:border-oko-line-dark">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 py-10 sm:py-12 w-full">
+        {/* Breadcrumb (spec §9) — 12px stone, "/" separators, current in char-soft */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-5 font-inter text-[12px]">
+          <Link
+            href="/"
+            className="text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
+          >
+            Home
+          </Link>
           {!!breadcrumbs && breadcrumbs.map((crumb, index) => (
                 <React.Fragment key={crumb.url}>
-                <span>❯</span>
+                <span className="text-oko-stone-line dark:text-oko-line-dark" aria-hidden="true">/</span>
                 {index === breadcrumbs.length - 1 ? (
-                    <span className="text-ash">{crumb.name}</span>
+                    <span className="text-oko-char-soft dark:text-oko-ondark font-medium">{crumb.name}</span>
                 ) : (
                     <Link
                     href={`/${crumb.url}`}
-                    className="hover:text-ash transition-colors"
+                    className="text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
                     >
                     {crumb.name}
                     </Link>
@@ -52,7 +54,7 @@ function HeroBanner({config}) {
                 </React.Fragment>
             ))}
         </nav>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 uppercase font-oswald">{breadcrumbs?.[breadcrumbs.length - 1]?.name}</h1>
+        <h1 className="font-oko-display font-semibold text-[clamp(26px,5vw,42px)] leading-[1.12] text-oko-char dark:text-oko-cream">{breadcrumbs?.[breadcrumbs.length - 1]?.name}</h1>
       </div>
     </div>
   );}

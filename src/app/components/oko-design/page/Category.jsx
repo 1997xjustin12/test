@@ -3,48 +3,61 @@ import { useState } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useSolanaCategories } from "@/app/context/category";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
 import ProductsSection from "@/app/components/molecule/ProductsSectionV2";
 
+// Phone is a first-class OKO brand element — always this exact literal (spec §10).
+const OKO_PHONE = "888-667-4986";
+const OKO_PHONE_HREF = "tel:8886674986";
+
+// CategoryHero — OKO breadcrumb band: cream-dim surface, 12px stone breadcrumb
+// with "/" separators (current in char-soft), mono barn eyebrow (product count),
+// slab display H1 (sentence case), char-soft descriptor, and a barn phone CTA.
+// No glows, no shadows (spec §1, §9 breadcrumb).
 function CategoryHero({ category }) {
   return (
-    <section className="relative overflow-hidden bg-[#080200] min-h-[300px] sm:min-h-[340px] flex items-center">
-      {/* Ambient glows */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 75% 60%, rgba(232,93,38,0.26) 0%, transparent 65%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 15% 50%, rgba(249,115,22,0.14) 0%, transparent 60%)" }} />
-      </div>
-
-      <div className="relative max-w-[1240px] mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
+    <section className="bg-oko-cream-dim dark:bg-oko-night-2 border-b border-oko-stone-line dark:border-oko-line-dark">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 py-10 sm:py-14">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 mb-5">
-          <a href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors">Home</a>
-          <span className="text-xs text-white/20">❯</span>
-          <a href="/categories" className="text-xs text-white/30 hover:text-white/60 transition-colors">Category</a>
-          <span className="text-xs text-white/20">❯</span>
-          <span className="text-xs text-white/75 font-medium">{category?.name}</span>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 font-inter text-[12px]">
+          <Link
+            href="/"
+            className="text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
+          >
+            Home
+          </Link>
+          <span className="text-oko-stone-line dark:text-oko-line-dark" aria-hidden="true">/</span>
+          <span className="text-oko-char-soft dark:text-oko-ondark font-medium">
+            {category?.name}
+          </span>
         </nav>
 
-        <div className="max-w-xl">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-theme-600/15 border border-theme-600/30 text-theme-500 font-oswald text-[10px] font-semibold tracking-[.12em] uppercase px-3 py-1 rounded-sm mb-5">
-            🔥 {category?.count} Products
-          </div>
+        <div className="max-w-[640px]">
+          {/* Product-count eyebrow */}
+          <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+            {category?.count} products
+          </span>
 
-          <h1 className="font-oswald font-bold text-4xl sm:text-5xl uppercase text-white mb-4 leading-tight">
+          <h1 className="font-oko-display font-semibold text-[clamp(26px,5vw,42px)] leading-[1.12] text-oko-char dark:text-oko-cream">
             {category?.name}
           </h1>
-          <p className="text-sm font-light leading-relaxed text-white/60 mb-8 max-w-lg">
-            {category?.sub}
-          </p>
 
-          <div className="flex flex-wrap gap-3">
-            <button className="px-6 py-3 rounded-sm bg-theme-600 hover:bg-theme-700 text-white font-oswald font-semibold text-sm uppercase tracking-wide transition-all hover:-translate-y-0.5">
-              Shop All →
-            </button>
-            <button className="px-6 py-3 rounded-sm bg-white/5 border border-white/15 text-ash font-oswald font-semibold text-sm uppercase tracking-wide hover:border-theme-600 hover:text-theme-500 transition-colors">
-              Get Expert Help
-            </button>
+          {category?.sub && (
+            <p className="font-inter text-[15.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark mt-4 max-w-[560px]">
+              {category?.sub}
+            </p>
+          )}
+
+          {/* Barn phone CTA — matches the homepage hero */}
+          <div className="mt-7">
+            <Link
+              href={OKO_PHONE_HREF}
+              className="inline-flex items-center gap-2 font-inter font-semibold text-[13.5px] px-6 py-3.5 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Call {OKO_PHONE}
+            </Link>
           </div>
         </div>
       </div>
@@ -52,22 +65,63 @@ function CategoryHero({ category }) {
   );
 }
 
+// Trust strip (spec §8.6) — white, four items, 1px stone-line dividers, barn
+// stroke icons, 12.5px labels. Inline stroke SVGs only (§6, no emoji).
 function BenefitsBar() {
   const BENEFITS = [
-    { icon: "🚚", title: "Free Shipping",   sub: "On orders over $1,999" },
-    { icon: "🛡️", title: "5-Year Warranty", sub: "Full parts & labor" },
-    { icon: "📞", title: "Expert Support",  sub: "Mon–Sat 8am–6pm PST" },
-    { icon: "↩️", title: "30-Day Returns",  sub: "Hassle-free policy" },
+    {
+      title: "Free shipping",
+      sub: "On orders over $1,999",
+      icon: (
+        <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7M5.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM18.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+      ),
+    },
+    {
+      title: "5-year warranty",
+      sub: "Full parts & labor",
+      icon: <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" />,
+    },
+    {
+      title: "Expert support",
+      sub: "Mon–Sat 8am–6pm PST",
+      icon: (
+        <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+      ),
+    },
+    {
+      title: "30-day returns",
+      sub: "Hassle-free policy",
+      icon: <path d="M3 12a9 9 0 019-9 9 9 0 016.7 3H15m6-3v6h-6M21 12a9 9 0 01-9 9 9 9 0 01-6.7-3H9m-6 3v-6h6" />,
+    },
   ];
   return (
-    <div className="bg-ash dark:bg-char border-b border-grate dark:border-white/10">
-      <div className="max-w-[1240px] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-grate dark:divide-white/10">
-        {BENEFITS.map((b) => (
-          <div key={b.title} className="flex items-center gap-3 px-5 sm:px-7 py-4">
-            <span className="text-2xl flex-shrink-0">{b.icon}</span>
+    <div className="bg-white dark:bg-oko-night-2 border-b border-oko-stone-line dark:border-oko-line-dark">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 grid grid-cols-2 md:grid-cols-4">
+        {BENEFITS.map((b, i) => (
+          <div
+            key={b.title}
+            className={`flex items-center gap-3 py-4 md:px-6
+              ${i % 2 === 1 ? "border-l border-oko-stone-line dark:border-oko-line-dark pl-5 md:pl-6" : "md:pl-6"}
+              ${i >= 2 ? "border-t border-oko-stone-line dark:border-oko-line-dark md:border-t-0" : ""}
+              ${i === 2 ? "md:border-l md:border-oko-stone-line dark:md:border-oko-line-dark" : ""}`}
+          >
+            <svg
+              className="w-[18px] h-[18px] flex-shrink-0 text-oko-barn dark:text-oko-barn-light"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              {b.icon}
+            </svg>
             <div>
-              <p className="font-oswald font-semibold text-sm uppercase tracking-wide text-char dark:text-ash">{b.title}</p>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">{b.sub}</p>
+              <p className="font-inter font-semibold text-[12.5px] uppercase tracking-[0.03em] text-oko-char dark:text-oko-cream leading-tight">
+                {b.title}
+              </p>
+              <p className="font-inter text-[11.5px] text-oko-stone mt-0.5">{b.sub}</p>
             </div>
           </div>
         ))}
@@ -76,39 +130,55 @@ function BenefitsBar() {
   );
 }
 
+// FAQ accordion (spec §9) — section header pattern, rows separated by stone-line
+// with a stroke chevron, no shadow.
 function FAQSection({ category }) {
   const [open, setOpen] = useState(null);
   const FAQS = [
     { q: "What's the difference between direct vent and natural vent?", a: "Direct vent fireplaces draw combustion air from outside and exhaust through a sealed flue — highly efficient and safe for any room. Natural vent units use interior air and require a traditional chimney." },
-    { q: "Can I convert a natural gas unit to propane?",                 a: "Most of our gas fireplaces include a conversion kit or offer one as an accessory. Always consult a licensed technician for the conversion." },
-    { q: "Do gas fireplaces need electricity to operate?",               a: "Models with electronic ignition require electricity. Many units include a millivolt system allowing operation without power — ideal during outages." },
+    { q: "Can I convert a natural gas unit to propane?", a: "Most of our gas fireplaces include a conversion kit or offer one as an accessory. Always consult a licensed technician for the conversion." },
+    { q: "Do gas fireplaces need electricity to operate?", a: "Models with electronic ignition require electricity. Many units include a millivolt system allowing operation without power — ideal during outages." },
   ];
 
   return (
-    <section className="bg-ash dark:bg-char py-14 sm:py-16">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-10">
-          <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase mb-1">
-            Got Questions?
-          </p>
-          <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase mt-1 text-stone-900 dark:text-ash">
+    <section className="bg-oko-cream dark:bg-oko-night py-16">
+      <div className="max-w-[720px] mx-auto px-5 sm:px-8">
+        {/* Section header (8.7) */}
+        <div className="mb-8">
+          <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+            Got questions?
+          </span>
+          <h2 className="font-oko-display font-semibold text-[27px] leading-[1.2] text-oko-char dark:text-oko-cream">
             {category?.name} FAQ
           </h2>
         </div>
-        <div className="flex flex-col gap-3">
+
+        <div className="border-t border-oko-stone-line dark:border-oko-line-dark">
           {FAQS.map((f, i) => (
-            <div key={i} className="bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden">
+            <div key={i} className="border-b border-oko-stone-line dark:border-oko-line-dark">
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-5 sm:px-6 py-4 text-left gap-4 bg-transparent"
+                aria-expanded={open === i}
+                className="w-full flex items-center justify-between gap-4 py-4 text-left bg-transparent"
               >
-                <span className="font-oswald font-semibold text-base uppercase tracking-wide text-char dark:text-ash leading-snug">
+                <span className="font-inter font-medium text-[15.5px] text-oko-char dark:text-oko-cream leading-snug">
                   {f.q}
                 </span>
-                <span className="text-2xl text-theme-600 shrink-0 ml-3">{open === i ? "−" : "+"}</span>
+                <svg
+                  className={`w-4 h-4 flex-shrink-0 text-oko-barn dark:text-oko-barn-light transition-transform duration-200 ${open === i ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
               {open === i && (
-                <p className="px-5 sm:px-6 pb-5 text-sm font-light leading-relaxed text-stone-600 dark:text-stone-400 border-t border-grate dark:border-white/10">
+                <p className="pb-5 font-inter text-[14.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark max-w-[600px]">
                   {f.a}
                 </p>
               )}
@@ -120,35 +190,30 @@ function FAQSection({ category }) {
   );
 }
 
+// CTA — the single dark feature band (spec §8.11): char-soft surface,
+// barn-light eyebrow, white slab H2, and a solid barn phone block.
 function CTABanner() {
   return (
-    <section className="relative overflow-hidden bg-[#080200] py-16 sm:py-24 text-center">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 25% 50%, rgba(232,93,38,0.22) 0%, transparent 60%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 75% 50%, rgba(249,115,22,0.14) 0%, transparent 60%)" }} />
-      </div>
-      <div className="relative max-w-lg mx-auto px-4 sm:px-6">
-        <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase mb-3">
-          Need Help Choosing?
-        </p>
-        <h2 className="font-oswald font-bold text-3xl sm:text-4xl uppercase text-white mb-4 leading-tight">
-          Talk to a Fireplace Expert
+    <section className="bg-oko-char-soft dark:bg-oko-night-3 py-16">
+      <div className="max-w-[560px] mx-auto px-5 sm:px-8 text-center">
+        <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn-light mb-3">
+          Need help choosing?
+        </span>
+        <h2 className="font-oko-display font-semibold text-[29px] leading-[1.18] text-white mb-4">
+          Talk to a fireplace expert.
         </h2>
-        <p className="text-sm font-light leading-relaxed text-white/60 mb-8 max-w-md mx-auto">
-          Our certified specialists will help you find the perfect gas fireplace — free of charge.
+        <p className="font-inter text-[14.5px] leading-[1.55] text-oko-ondark mb-8 max-w-[440px] mx-auto">
+          Our certified specialists will help you find the perfect gas fireplace — free of charge, with prices we can only give by phone.
         </p>
-        <div className="flex flex-wrap gap-3 justify-center">
-          <Link
-            prefetch={false}
-            href={`tel:${STORE_CONTACT}`}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-sm bg-theme-600 hover:bg-theme-700 text-white font-oswald font-semibold text-sm uppercase tracking-wide transition-all hover:-translate-y-0.5"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-            </svg>
-            {STORE_CONTACT}
-          </Link>
-        </div>
+        <Link
+          href={OKO_PHONE_HREF}
+          className="inline-flex items-center gap-2.5 bg-oko-barn hover:bg-oko-barn-dark text-white rounded-[2px] px-6 py-4 transition-colors"
+        >
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+          <span className="font-oko-display font-bold text-[20px] leading-none">{OKO_PHONE}</span>
+        </Link>
       </div>
     </section>
   );
@@ -160,10 +225,10 @@ export default function Category({ category_slug }) {
   if (!category_slug || !category) notFound();
 
   return (
-    <div className="bg-ash dark:bg-char font-sora">
+    <div className="bg-oko-cream dark:bg-oko-night font-inter">
       <CategoryHero category={category} />
       <BenefitsBar />
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 py-10 sm:py-14">
         <ProductsSection category={category_slug} />
       </div>
       <FAQSection category={category} />

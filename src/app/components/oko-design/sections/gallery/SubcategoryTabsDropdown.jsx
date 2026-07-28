@@ -28,19 +28,17 @@ function SubcategoryTabsDropdown({ subs }) {
   }, []);
 
   const tabClass = (url) =>
-    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-oswald uppercase tracking-wide ${
+    `flex items-center gap-2 px-4 py-3.5 whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-inter font-semibold text-[12.5px] uppercase tracking-[0.05em] ${
       active_url === url
-        ? "border-theme-600 text-theme-600 dark:text-theme-500"
-        : "border-transparent text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate dark:hover:border-white/20"
+        ? "border-oko-barn dark:border-oko-barn-light text-oko-barn dark:text-oko-barn-light"
+        : "border-transparent text-oko-char-soft dark:text-oko-ondark hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light"
     }`;
 
   const badgeClass = (url, hot) =>
-    `text-[12px] px-2 py-0.5 font-medium font-oswald ${
-      active_url === url
-        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-        : hot
-        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-        : "bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40"
+    `font-oko-mono text-[11px] px-1.5 py-0.5 rounded-[2px] ${
+      active_url === url || hot
+        ? "bg-oko-barn/10 text-oko-barn dark:bg-oko-barn-light/15 dark:text-oko-barn-light"
+        : "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone"
     }`;
 
   return (
@@ -71,10 +69,10 @@ function SubcategoryTabsDropdown({ subs }) {
             <div className="relative flex-shrink-0" ref={dropdownRef}>
               <button
                 onClick={() => setOpen((v) => !v)}
-                className={`flex font-oswald uppercase tracking-wide items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                className={`flex font-inter uppercase tracking-[0.05em] items-center gap-1.5 px-4 py-3.5 text-[12.5px] font-semibold whitespace-nowrap border-b-2 transition-colors ${
                   activeInOverflow
-                    ? "border-theme-600 text-theme-600 dark:text-theme-500"
-                    : "border-transparent text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate"
+                    ? "border-oko-barn dark:border-oko-barn-light text-oko-barn dark:text-oko-barn-light"
+                    : "border-transparent text-oko-char-soft dark:text-oko-ondark hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light"
                 }`}
               >
                 {activeInOverflow ? "More •" : `More (${overflow.length})`}
@@ -82,17 +80,17 @@ function SubcategoryTabsDropdown({ subs }) {
               </button>
 
               {open && (
-                <div className={`absolute top-full left-0 mt-1 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-lg shadow-char/10 dark:shadow-black/30 z-20 ${minWClass} py-1`}>
+                <div className={`absolute top-full left-0 mt-1 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] z-20 ${minWClass} py-1`}>
                   <div className={colClass}>
                     {overflow.map((s, i) => (
                       <Link
                         key={`desk-overflow-${i}`}
                         href={s?.url || "#"}
                         onClick={() => setOpen(false)}
-                        className={`break-inside-avoid flex items-center justify-between gap-3 px-4 py-2.5 text-[12px] font-medium transition-colors font-oswald uppercase tracking-wide ${
+                        className={`break-inside-avoid flex items-center justify-between gap-3 px-4 py-2.5 text-[12px] font-semibold transition-colors font-inter uppercase tracking-[0.05em] ${
                           active_url === s?.url
-                            ? "text-theme-600 dark:text-theme-500 bg-theme-600/5 dark:bg-theme-600/10"
-                            : "text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-char dark:hover:text-ash"
+                            ? "text-oko-barn dark:text-oko-barn-light bg-oko-barn/5 dark:bg-oko-barn-light/10"
+                            : "text-oko-char-soft dark:text-oko-ondark hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 hover:text-oko-barn dark:hover:text-oko-barn-light"
                         }`}
                       >
                         {s?.name}

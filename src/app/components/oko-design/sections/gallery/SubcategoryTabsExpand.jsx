@@ -23,19 +23,17 @@ function SubcategoryTabsExpand({ subs }) {
   const displayed = expanded ? (subs ?? []) : visible;
 
   const tabClass = (url) =>
-    `flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-oswald uppercase tracking-wide ${
+    `flex items-center gap-2 px-4 py-3.5 whitespace-nowrap border-b-2 transition-colors flex-shrink-0 font-inter font-semibold text-[12.5px] uppercase tracking-[0.05em] ${
       active_url === url
-        ? "border-theme-600 text-theme-600 dark:text-theme-500"
-        : "border-transparent text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate dark:hover:border-white/20"
+        ? "border-oko-barn dark:border-oko-barn-light text-oko-barn dark:text-oko-barn-light"
+        : "border-transparent text-oko-char-soft dark:text-oko-ondark hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light"
     }`;
 
   const badgeClass = (url, hot) =>
-    `font-oswald text-xs px-2 py-0.5 font-medium ${
-      active_url === url
-        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-        : hot
-        ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-        : "bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40"
+    `font-oko-mono text-[11px] px-1.5 py-0.5 rounded-[2px] ${
+      active_url === url || hot
+        ? "bg-oko-barn/10 text-oko-barn dark:bg-oko-barn-light/15 dark:text-oko-barn-light"
+        : "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone"
     }`;
 
   return (
@@ -54,7 +52,7 @@ function SubcategoryTabsExpand({ subs }) {
       {overflow.length > 0 && (
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="flex items-center gap-1.5 px-4 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 border-transparent font-oswald uppercase tracking-wide text-char/60 dark:text-ash/50 hover:text-char dark:hover:text-ash hover:border-grate transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 px-4 py-3.5 whitespace-nowrap border-b-2 border-transparent font-inter font-semibold text-[12.5px] uppercase tracking-[0.05em] text-oko-char-soft dark:text-oko-ondark hover:text-oko-barn dark:hover:text-oko-barn-light hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors flex-shrink-0"
         >
           {expanded ? (
             <>Show less <span className="text-[10px]">▲</span></>

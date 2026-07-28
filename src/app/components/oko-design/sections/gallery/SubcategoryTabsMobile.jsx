@@ -25,18 +25,18 @@ function SubcategoryTabsMobile({ subs }) {
       {/* Trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-3 px-3 py-2 border border-grate dark:border-white/10 bg-ash dark:bg-char hover:border-theme-600 dark:hover:border-theme-600/50 transition-colors rounded-sm"
+        className="w-full flex items-center justify-between gap-3 px-3 py-2.5 border border-oko-stone-line dark:border-oko-line-dark bg-oko-cream-dim dark:bg-oko-night-3 hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors rounded-[2px]"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <span className="font-oswald text-sm font-medium uppercase tracking-wide text-char dark:text-ash truncate">
+          <span className="font-inter text-[13px] font-semibold uppercase tracking-[0.04em] text-oko-char dark:text-oko-cream truncate">
             {active?.name ?? "Select category"}
           </span>
-          <span className="font-oswald text-xs px-2 py-0.5 font-medium bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500 flex-shrink-0">
+          <span className="font-oko-mono text-[11px] px-1.5 py-0.5 rounded-[2px] bg-oko-barn/10 text-oko-barn dark:bg-oko-barn-light/15 dark:text-oko-barn-light flex-shrink-0">
             {active?.count}
           </span>
         </div>
         <svg
-          className={`w-4 h-4 text-char/40 dark:text-ash/30 flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-oko-stone flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -48,7 +48,7 @@ function SubcategoryTabsMobile({ subs }) {
 
       {/* Dropdown list */}
       {open && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm shadow-lg shadow-char/10 dark:shadow-black/30 z-20 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] z-20 overflow-hidden">
           {subs?.map((s, i) => {
             const isActive = active_url === s?.url;
             return (
@@ -56,20 +56,18 @@ function SubcategoryTabsMobile({ subs }) {
                 key={`mob-drop-${i}`}
                 href={s?.url || "#"}
                 onClick={() => setOpen(false)}
-                className={`flex items-center justify-between gap-3 px-4 py-3 text-sm font-medium transition-colors font-oswald uppercase tracking-wide ${
+                className={`flex items-center justify-between gap-3 px-4 py-3 text-[12.5px] font-semibold transition-colors font-inter uppercase tracking-[0.05em] ${
                   isActive
-                    ? "bg-theme-600/5 dark:bg-theme-600/10 text-theme-600 dark:text-theme-500"
-                    : "text-char/70 dark:text-ash/60 hover:bg-ash dark:hover:bg-white/5 hover:text-char dark:hover:text-ash"
-                } ${i > 0 ? "border-t border-grate dark:border-white/10" : ""}`}
+                    ? "bg-oko-barn/5 dark:bg-oko-barn-light/10 text-oko-barn dark:text-oko-barn-light"
+                    : "text-oko-char-soft dark:text-oko-ondark hover:bg-oko-cream-dim dark:hover:bg-oko-night-3 hover:text-oko-barn dark:hover:text-oko-barn-light"
+                } ${i > 0 ? "border-t border-oko-stone-line dark:border-oko-line-dark" : ""}`}
               >
                 <span className="truncate">{s?.name}</span>
                 <span
-                  className={`font-oswald text-xs px-2 py-0.5 font-medium flex-shrink-0 ${
-                    isActive
-                      ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-                      : s?.hot
-                      ? "bg-theme-600/10 dark:bg-theme-600/20 text-theme-600 dark:text-theme-500"
-                      : "bg-ash dark:bg-white/10 text-char/50 dark:text-ash/40"
+                  className={`font-oko-mono text-[11px] px-1.5 py-0.5 rounded-[2px] flex-shrink-0 ${
+                    isActive || s?.hot
+                      ? "bg-oko-barn/10 text-oko-barn dark:bg-oko-barn-light/15 dark:text-oko-barn-light"
+                      : "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone"
                   }`}
                 >
                   {s?.count}

@@ -17,25 +17,25 @@ function BasePlp({ page_details }) {
   const children = page_details.children ?? [];
 
   return (
-    <div className="font-sora">
-      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 py-6">
+    <div className="font-inter">
+      <div className="w-full max-w-[1260px] mx-auto px-5 sm:px-8 py-6">
 
-        {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="flex items-center gap-1.5 mb-6">
+        {/* Breadcrumb (spec §9) — 12px stone, "/" separators, current in char-soft */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 font-inter text-[12px]">
           <Link
             prefetch={false}
             href={BASE_URL}
-            className="text-xs text-char/40 dark:text-ash/40 hover:text-theme-600 dark:hover:text-theme-500 transition-colors"
+            className="text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
           >
             Home
           </Link>
-          <span className="text-xs text-grate dark:text-white/20">❯</span>
-          <span className="text-xs text-char dark:text-ash font-medium">
+          <span className="text-oko-stone-line dark:text-oko-line-dark" aria-hidden="true">/</span>
+          <span className="text-oko-char-soft dark:text-oko-ondark font-medium">
             {page_details.name}
           </span>
         </nav>
 
-        <h1 className="font-oswald font-bold text-2xl sm:text-3xl uppercase tracking-tight text-char dark:text-ash mb-8">
+        <h1 className="font-oko-display font-semibold text-[clamp(26px,5vw,42px)] leading-[1.12] text-oko-char dark:text-oko-cream mb-8">
           {page_details.name}
         </h1>
 
@@ -46,9 +46,9 @@ function BasePlp({ page_details }) {
               key={`category-link-${item?.slug}`}
               prefetch={false}
               href={`${BASE_URL}/${item?.url}`}
-              className="group flex flex-col overflow-hidden h-full bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
+              className="group flex flex-col overflow-hidden h-full bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] hover:border-oko-char dark:hover:border-oko-cream transition-colors duration-200"
             >
-              <div className={`w-full p-3 ${item?.slug ? "bg-white dark:bg-char" : "bg-ash dark:bg-char"}`}>
+              <div className={`w-full p-3 ${item?.slug ? "bg-oko-cream-dim dark:bg-oko-night-3" : "bg-oko-cream dark:bg-oko-night-3"}`}>
                 <div className="aspect-1 relative w-full overflow-hidden">
                   {item?.slug && (
                     <Image
@@ -61,8 +61,8 @@ function BasePlp({ page_details }) {
                   )}
                 </div>
               </div>
-              <div className="px-3 py-2.5 border-t border-grate dark:border-white/10 flex items-center justify-center h-[54px]">
-                <p className="line-clamp-2 font-oswald text-[11px] font-semibold uppercase tracking-wide text-char dark:text-ash text-center group-hover:text-theme-600 dark:group-hover:text-theme-500 transition-colors leading-snug">
+              <div className="px-3 py-2.5 border-t border-oko-stone-line dark:border-oko-line-dark flex items-center justify-center h-[54px]">
+                <p className="line-clamp-2 font-inter text-[12px] font-medium text-oko-char dark:text-oko-cream text-center group-hover:text-oko-barn dark:group-hover:text-oko-barn-light transition-colors leading-snug">
                   {item?.name}
                 </p>
               </div>
@@ -75,7 +75,7 @@ function BasePlp({ page_details }) {
           <div className="flex flex-col gap-10 mt-12">
             {page_details.cat_collections.map((collection) => (
               <div key={`cat-collection-display-${collection?.id}`} className="flex flex-col gap-4">
-                <h3 className="font-oswald font-bold text-lg uppercase tracking-wide text-char dark:text-ash">
+                <h3 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream">
                   {collection?.label}
                 </h3>
                 <CategoryCollectionCarouselWrap data={collection?.links} />
@@ -97,8 +97,8 @@ function BasePlp({ page_details }) {
         )}
       </div>
 
-      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6">
-        <div className="border-t border-grate dark:border-white/10 my-[30px]" />
+      <div className="w-full max-w-[1260px] mx-auto px-5 sm:px-8">
+        <div className="border-t border-oko-stone-line dark:border-oko-line-dark my-[30px]" />
       </div>
 
       {page_details?.name !== "Brands" && (

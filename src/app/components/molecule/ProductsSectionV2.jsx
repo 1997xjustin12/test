@@ -270,7 +270,7 @@ const ExpandedIcon = () => {
         width="24"
         height="24"
         viewBox="0 0 24 24"
-        className="text-smoke"
+        className={ISOKO ? "text-oko-char-soft dark:text-oko-ondark" : "text-smoke"}
       >
         <path d="M0 0h24v24H0z" fill="none" />
         <path fill="currentColor" d="m7 15l5-5l5 5z" />
@@ -300,9 +300,9 @@ const FilterGroup = ({ header, children }) => {
     <div className="panel">
       <button
         onClick={() => setExpanded((prev) => !prev)}
-        className={`w-full flex items-center gap-[20px] justify-between px-4 py-2 ${expanded ? "border-y" : "border-t"} ${(ISBBQ || ISOKO) ? "border-grate" : ""}`}
+        className={`w-full flex items-center gap-[20px] justify-between px-4 py-2 ${expanded ? "border-y" : "border-t"} ${ISOKO ? "border-oko-stone-line dark:border-oko-line-dark" : ISBBQ ? "border-grate" : ""}`}
       >
-        <h5 className=" font-semibold text-[13px] text-stone-800">{header}</h5>
+        <h5 className={`font-semibold text-[13px] ${ISOKO ? "font-inter uppercase tracking-[0.06em] text-[11px] text-oko-stone" : "text-stone-800"}`}>{header}</h5>
         {expanded ? <ExpandedIcon /> : <CollapsedIcon />}
       </button>
       <div className={`pl-4 py-1 ${expanded ? "" : "hidden"}`}>{children}</div>
@@ -506,10 +506,10 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
         {/* Desktop filter sidebar */}
         <div className="search-panel__filters pfd-filter-section relative">
           <div
-            className={`overflow-hidden ${(ISBBQ || ISOKO) ? "border border-grate bg-white" : "border rounded-xl bg-white"}`}
+            className={`overflow-hidden ${ISOKO ? "border border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night-2 rounded-[2px]" : ISBBQ ? "border border-grate bg-white" : "border rounded-xl bg-white"}`}
           >
             <div
-              className={`text-sm font-semibold p-4 ${(ISBBQ || ISOKO) ? "font-oswald text-white bg-charcoal" : ""}`}
+              className={`text-sm font-semibold p-4 ${ISOKO ? "font-oko-display text-white bg-oko-char" : ISBBQ ? "font-oswald text-white bg-charcoal" : ""}`}
             >
               Filters
             </div>
@@ -540,7 +540,7 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
         >
           <div className="flex flex-col gap-1.5 md:flex-row md:items-center justify-between mb-5">
             <button
-              className="md:hidden flex items-center gap-2 self-start px-3.5 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:border-orange-400 hover:text-orange-500 transition-colors"
+              className={`md:hidden flex items-center gap-2 self-start px-3.5 py-2 transition-colors ${ISOKO ? "border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] text-[13px] font-semibold uppercase tracking-[0.04em] text-oko-char-soft dark:text-oko-ondark hover:border-oko-barn dark:hover:border-oko-barn-light hover:text-oko-barn dark:hover:text-oko-barn-light" : "border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:border-orange-400 hover:text-orange-500"}`}
               onClick={() => setMobileFiltersOpen(true)}
             >
               <svg
@@ -555,7 +555,7 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
               </svg>
               Filters
               {activeCount > 0 && (
-                <span className="bg-orange-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">
+                <span className={`text-[10px] rounded-full px-1.5 py-0.5 leading-none ${ISOKO ? "bg-oko-barn text-white font-oko-mono" : "bg-orange-500 text-white font-bold"}`}>
                   {activeCount}
                 </span>
               )}
@@ -563,6 +563,14 @@ const InnerUI = ({ category, page_details, onDataLoaded, initialHits }) => {
 
             {!!isSearchPage && <DisplayedItems />}
             <SortBy
+              classNames={
+                ISOKO
+                  ? {
+                      select:
+                        "!bg-oko-cream-dim dark:!bg-oko-night-3 !border !border-oko-stone-line dark:!border-oko-line-dark !rounded-[2px] !text-oko-char-soft dark:!text-oko-ondark !font-inter focus:!border-oko-barn dark:focus:!border-oko-barn-light",
+                    }
+                  : undefined
+              }
               items={[
                 { label: "Most Popular", value: `${es_index}_popular` },
                 { label: "Newest", value: `${es_index}_newest` },
