@@ -1,27 +1,23 @@
 import SectionHeading from "@/app/components/oko-design/sections/sp/SectionHeading";
 import ProductCard from "@/app/components/oko-design/sections/sp/ProductCard";
 
+// Static placeholder (no shimmer — spec §7 forbids loading skeletons).
 const SkeletonCard = () => (
-  <div className="flex flex-col bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden animate-pulse">
-    <div className="aspect-[16/9] bg-grate/60 dark:bg-white/5" />
-    <div className="flex flex-col gap-2 p-3 flex-1">
-      <div className="h-2 w-12 bg-grate/60 dark:bg-white/5 rounded-sm" />
-      <div className="h-3 w-full bg-grate/60 dark:bg-white/5 rounded-sm" />
-      <div className="h-3 w-2/3 bg-grate/60 dark:bg-white/5 rounded-sm" />
-      <div className="h-2.5 w-20 bg-grate/60 dark:bg-white/5 rounded-sm mt-1" />
-      <div className="h-4 w-14 bg-grate/60 dark:bg-white/5 rounded-sm mt-1" />
-    </div>
-    <div className="px-3 pb-3 flex gap-2">
-      <div className="h-8 flex-1 bg-grate/60 dark:bg-white/5 rounded-sm" />
-      <div className="h-8 w-12 bg-grate/60 dark:bg-white/5 rounded-sm" />
+  <div className="flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden">
+    <div className="aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark" />
+    <div className="flex flex-col gap-2 p-4 flex-1">
+      <div className="h-2 w-12 bg-oko-cream-dim dark:bg-oko-night-3 rounded-[2px]" />
+      <div className="h-3 w-full bg-oko-cream-dim dark:bg-oko-night-3 rounded-[2px]" />
+      <div className="h-3 w-2/3 bg-oko-cream-dim dark:bg-oko-night-3 rounded-[2px]" />
+      <div className="h-4 w-14 bg-oko-cream-dim dark:bg-oko-night-3 rounded-[2px] mt-1" />
     </div>
   </div>
 );
 
-const ProductGrid = ({ title, items, action, loading = false, skeletonCount = 4 }) => (
-  <section className="mb-6">
-    <SectionHeading action={action}>{title}</SectionHeading>
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+const ProductGrid = ({ title, eyebrow, items, action, loading = false, skeletonCount = 4 }) => (
+  <section className="mb-12">
+    <SectionHeading eyebrow={eyebrow} action={action}>{title}</SectionHeading>
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-[22px]">
       {loading || !items?.length
         ? Array.from({ length: skeletonCount }, (_, i) => <SkeletonCard key={`skeleton-${title}-${i}`} />)
         : items.map((p, i) => <ProductCard key={`prod-grid-${title}-${p?.title}-${i}`} p={p} />)}

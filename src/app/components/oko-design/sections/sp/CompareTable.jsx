@@ -28,10 +28,10 @@ const ItemValue = ({ specs, specKey, isActive }) => {
   const specsObject = Object.fromEntries(specs.map((item) => [item.key, item.value]));
   const value = specsObject?.[specKey] || "—";
   return (
-    <td className={`px-5 py-3.5 border-b border-grate dark:border-white/5 text-xs text-center font-sora ${
+    <td className={`px-5 py-3.5 border-b border-oko-stone-line dark:border-oko-line-dark font-inter text-[13px] text-center ${
       isActive
-        ? "bg-theme-600/5 dark:bg-theme-600/10 border-x border-theme-600/20 dark:border-theme-600/15 text-char dark:text-ash font-medium"
-        : "text-char/60 dark:text-ash/50"
+        ? "bg-oko-barn/5 dark:bg-oko-barn/15 border-x border-oko-barn/25 text-oko-char dark:text-oko-cream font-medium"
+        : "text-oko-char-soft dark:text-oko-ondark"
     }`}>
       {value}
     </td>
@@ -41,12 +41,12 @@ const ItemValue = ({ specs, specKey, isActive }) => {
 const ProductTableHeadItem = ({ product, activeId }) => {
   const isActive = product?.product_id === activeId;
   return (
-    <th className={`min-w-[220px] sm:min-w-[260px] border-b border-grate dark:border-white/10 align-top ${
-      isActive ? "bg-theme-600/5 dark:bg-theme-600/10 border-x border-theme-600/20 dark:border-theme-600/15" : ""
+    <th className={`min-w-[220px] sm:min-w-[260px] border-b border-oko-stone-line dark:border-oko-line-dark align-top ${
+      isActive ? "bg-oko-barn/5 dark:bg-oko-barn/15 border-x border-oko-barn/25" : ""
     }`}>
       {/* Product image */}
       <Link prefetch={false} href={product?.url || "#"} title={product?.title}>
-        <div className="relative aspect-[16/9] bg-white dark:bg-char">
+        <div className="relative aspect-[16/9] bg-oko-cream-dim dark:bg-oko-night-3">
           {product?.image && (
             <Image
               src={product.image}
@@ -64,23 +64,23 @@ const ProductTableHeadItem = ({ product, activeId }) => {
           prefetch={false}
           href={product?.url || "#"}
           title={product?.title}
-          className="font-sora text-xs text-theme-600 hover:text-theme-500 line-clamp-2 hover:underline leading-snug"
+          className="font-inter text-[13px] font-medium text-oko-char dark:text-oko-cream hover:text-oko-barn dark:hover:text-oko-barn-light line-clamp-2 leading-snug transition-colors"
         >
           {product?.name}
         </Link>
 
         <StarRating rating={product?.ratings || 0} />
 
-        <p className="font-oswald font-bold text-base text-ember-deep dark:text-ember">
+        <p className="font-inter font-semibold text-[16px] text-oko-char dark:text-oko-cream">
           ${formatPrice(product?.price)}
         </p>
 
         {isActive ? (
-          <div className="h-9 flex items-center justify-center font-oswald font-semibold text-xs uppercase tracking-wide px-3 text-theme-600 border border-theme-600 bg-theme-600/10 rounded-sm">
-            Current Product
+          <div className="h-9 flex items-center justify-center font-inter font-semibold text-[13px] px-3 text-oko-barn dark:text-oko-barn-light border border-oko-barn/40 bg-oko-barn/10 rounded-[2px]">
+            Current product
           </div>
         ) : (
-          <CompareItemAddToCart product={product} label="Add to Cart" />
+          <CompareItemAddToCart product={product} label="Add to cart" />
         )}
       </div>
     </th>
@@ -95,15 +95,15 @@ const CompareTable = ({ products, activeProductId }) => {
   const specKeys = (orderedSpecs?.[0]?.compare_specs || []).map(({ label, key }) => ({ label, key }));
 
   return (
-    <section className="mb-6">
-      <SectionHeading>Compare Product Options</SectionHeading>
+    <section className="mb-12">
+      <SectionHeading eyebrow="Side by side">Compare product options</SectionHeading>
 
-      <div className="overflow-x-auto rounded-sm border border-grate dark:border-white/10">
-        <table className="w-full text-left border-collapse bg-paper dark:bg-smoke">
+      <div className="overflow-x-auto rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark">
+        <table className="w-full text-left border-collapse bg-white dark:bg-oko-night-2">
           <thead>
             <tr>
               {/* Features column header */}
-              <th className="sticky left-0 z-[1] min-w-[180px] sm:min-w-[210px] p-4 border-b border-grate dark:border-white/10 bg-ash dark:bg-char font-oswald text-xs font-semibold uppercase tracking-wide text-char/60 dark:text-ash/40">
+              <th className="sticky left-0 z-[1] min-w-[180px] sm:min-w-[210px] p-4 border-b border-oko-stone-line dark:border-oko-line-dark bg-oko-cream-dim dark:bg-oko-night-3 font-inter text-[11px] font-semibold uppercase tracking-[0.08em] text-oko-stone">
                 Features
               </th>
               {orderedProducts.map((product, i) => (
@@ -116,13 +116,10 @@ const CompareTable = ({ products, activeProductId }) => {
             </tr>
           </thead>
           <tbody>
-            {specKeys.map(({ label, key }, rowIdx) => (
-              <tr
-                key={`tr-${key}`}
-                className={rowIdx % 2 === 0 ? "bg-paper dark:bg-smoke" : "bg-ash/60 dark:bg-char/20"}
-              >
+            {specKeys.map(({ label, key }) => (
+              <tr key={`tr-${key}`}>
                 {/* Spec label — sticky */}
-                <td className="sticky left-0 z-[1] px-4 py-3 border-b border-grate/60 dark:border-white/5 font-oswald text-xs font-semibold uppercase tracking-wide text-char/50 dark:text-ash/40 bg-ash dark:bg-char min-w-[180px] sm:min-w-[210px]">
+                <td className="sticky left-0 z-[1] px-4 py-3 border-b border-oko-stone-line dark:border-oko-line-dark font-inter text-[11px] font-semibold uppercase tracking-[0.06em] text-oko-stone bg-oko-cream-dim dark:bg-oko-night-3 min-w-[180px] sm:min-w-[210px]">
                   {label}
                 </td>
                 {orderedSpecs.map((product) => (

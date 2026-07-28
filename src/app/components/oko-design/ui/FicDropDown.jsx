@@ -20,12 +20,13 @@ function FicDropDown({ children, contact_number }) {
 
   if (isMobile) {
     return (
-      <Link href={`tel:${STORE_CONTACT}`} prefetch={false}>
+      <Link href={`tel:${contact_number || STORE_CONTACT}`} prefetch={false}>
         {children}
       </Link>
     );
   }
 
+  // §5: floating surfaces use a solid --char background + border, never a shadow.
   return (
     <Popover>
       <PopoverButton className="focus:outline-none">{children}</PopoverButton>
@@ -33,31 +34,31 @@ function FicDropDown({ children, contact_number }) {
       <PopoverPanel
         transition
         anchor="bottom"
-        className="z-50 w-60 bg-paper dark:bg-char border border-grate dark:border-white/10 shadow-xl shadow-char/20 dark:shadow-black/50 text-sm transition duration-150 ease-out data-[closed]:-translate-y-1 data-[closed]:opacity-0 [--anchor-gap:6px]"
+        className="z-50 w-60 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] text-sm transition duration-150 ease-out data-[closed]:-translate-y-1 data-[closed]:opacity-0 [--anchor-gap:6px]"
       >
         {/* Header */}
-        <div className="flex items-center gap-2 px-4 py-3 bg-ash dark:bg-smoke border-b border-grate dark:border-white/10">
-          <span className="w-1 h-4 bg-ember flex-shrink-0" />
-          <p className="font-oswald text-[10px] font-semibold uppercase tracking-widest text-char/60 dark:text-ash/50">
-            Contact Us
+        <div className="flex items-center gap-2 px-4 py-3 bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark">
+          <span className="w-1 h-4 bg-oko-barn flex-shrink-0" />
+          <p className="font-oko-mono text-[10px] font-medium uppercase tracking-[0.14em] text-oko-stone">
+            Contact us
           </p>
         </div>
 
         {/* Links */}
-        <div className="px-2 py-2 border-b border-grate dark:border-white/10">
+        <div className="px-2 py-2 border-b border-oko-stone-line dark:border-oko-line-dark">
           <Link
             href={`tel:${contact_number || STORE_CONTACT}`}
-            className="flex items-center gap-3 px-2 py-2.5 text-char dark:text-ash hover:bg-ash dark:hover:bg-white/5 transition-colors"
+            className="flex items-center gap-3 px-2 py-2.5 text-oko-char dark:text-oko-cream hover:bg-oko-cream-dim dark:hover:bg-white/5 transition-colors"
           >
-            <ICRoundPhone className="w-4 h-4 text-char/40 dark:text-ash/30 flex-shrink-0" />
-            <span className="font-oswald text-xs uppercase tracking-wide">{contact_number || STORE_CONTACT}</span>
+            <ICRoundPhone className="w-4 h-4 text-oko-barn flex-shrink-0" />
+            <span className="font-inter text-xs font-semibold">{contact_number || STORE_CONTACT}</span>
           </Link>
           <Link
             href="mailto:info@solanafireplaces.com"
-            className="flex items-center gap-3 px-2 py-2.5 text-char dark:text-ash hover:bg-ash dark:hover:bg-white/5 transition-colors"
+            className="flex items-center gap-3 px-2 py-2.5 text-oko-char dark:text-oko-cream hover:bg-oko-cream-dim dark:hover:bg-white/5 transition-colors"
           >
-            <MDIEmailOutline className="w-4 h-4 text-char/40 dark:text-ash/30 flex-shrink-0" />
-            <span className="font-oswald text-xs uppercase tracking-wide">Email Us</span>
+            <MDIEmailOutline className="w-4 h-4 text-oko-barn flex-shrink-0" />
+            <span className="font-inter text-xs">Email us</span>
           </Link>
         </div>
 
@@ -65,11 +66,11 @@ function FicDropDown({ children, contact_number }) {
         <div className="px-4 py-3 space-y-3">
           {[{ label: "Sales" }, { label: "Support" }].map(({ label }) => (
             <div key={label}>
-              <p className="font-oswald text-[10px] font-semibold uppercase tracking-wide text-char/50 dark:text-ash/50 mb-1">
+              <p className="font-oko-mono text-[10px] font-medium uppercase tracking-[0.08em] text-oko-stone mb-1">
                 {label}
               </p>
-              <p className="text-xs text-char/50 dark:text-ash/40">Mon – Fri &nbsp; 5:00am – 5:00pm PST</p>
-              <p className="text-xs text-char/30 dark:text-ash/25">Sat – Sun &nbsp; Closed</p>
+              <p className="text-xs text-oko-char-soft dark:text-oko-ondark">Mon – Fri &nbsp; 5:00am – 5:00pm PST</p>
+              <p className="text-xs text-oko-stone">Sat – Sun &nbsp; Closed</p>
             </div>
           ))}
         </div>

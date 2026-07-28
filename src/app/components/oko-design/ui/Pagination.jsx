@@ -32,16 +32,19 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
   const rangeStart = (currentPage - 1) * results_per_page + 1;
   const rangeEnd = Math.min(currentPage * results_per_page, total_count);
 
+  // §9 pagination: square 34px bordered cells matching the card "+" button;
+  // current page is filled --char (inverts in dark mode).
   const btnBase =
-    "h-9 flex items-center justify-center font-oswald font-semibold text-xs uppercase tracking-wide border transition-all duration-150 rounded-sm";
-  const btnActive = "bg-theme-600 border-theme-600 text-white";
+    "h-[34px] flex items-center justify-center font-inter font-semibold text-xs border transition-colors duration-200 rounded-[2px]";
+  const btnActive =
+    "bg-oko-char border-oko-char text-oko-cream dark:bg-oko-cream dark:border-oko-cream dark:text-oko-char";
   const btnIdle =
-    "bg-paper dark:bg-smoke border-grate dark:border-white/10 text-char/60 dark:text-ash/40 hover:border-theme-600 hover:text-theme-600 dark:hover:text-theme-500 disabled:opacity-30 disabled:pointer-events-none";
+    "bg-white dark:bg-oko-night-2 border-oko-stone-line dark:border-oko-line-dark text-oko-char-soft dark:text-oko-ondark hover:border-oko-char dark:hover:border-oko-cream disabled:opacity-30 disabled:pointer-events-none";
 
   return (
     <div className="pt-5">
       {/* Count line */}
-      <p className="font-oswald text-[10px] uppercase tracking-widest text-char/40 dark:text-ash/30 mb-3">
+      <p className="font-oko-mono text-[10px] uppercase tracking-[0.14em] text-oko-stone mb-3">
         Showing {rangeStart}–{rangeEnd} of {total_count} reviews
       </p>
 
@@ -54,7 +57,7 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
         >
           ← Prev
         </button>
-        <span className="font-oswald text-xs text-char/50 dark:text-ash/40 uppercase tracking-wide">
+        <span className="font-oko-mono text-xs text-oko-stone uppercase tracking-wide">
           {currentPage} / {totalPages}
         </span>
         <button
@@ -85,7 +88,7 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
               1
             </button>
             {getPageNumbers()[0] > 2 && (
-              <span className="font-oswald text-xs text-char/30 dark:text-ash/20 px-1">…</span>
+              <span className="font-oko-mono text-xs text-oko-stone px-1">…</span>
             )}
           </>
         )}
@@ -106,7 +109,7 @@ const Pagination = ({ total_count, results_per_page, onChange }) => {
         {getPageNumbers().at(-1) < totalPages && (
           <>
             {getPageNumbers().at(-1) < totalPages - 1 && (
-              <span className="font-oswald text-xs text-char/30 dark:text-ash/20 px-1">…</span>
+              <span className="font-oko-mono text-xs text-oko-stone px-1">…</span>
             )}
             <button onClick={() => handlePageChange(totalPages)} className={`${btnBase} ${btnIdle} w-9`}>
               {totalPages}

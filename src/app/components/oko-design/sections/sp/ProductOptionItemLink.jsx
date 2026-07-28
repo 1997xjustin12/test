@@ -14,14 +14,14 @@ function useGalleryFullscreen() {
   return isFullscreen;
 }
 
-const UpsellPriceDisplay = ({ mod, value, inverted = false }) => {
+const UpsellPriceDisplay = ({ mod, value }) => {
   if (mod === "less") return (
-    <span className="font-oswald text-[10px] tracking-wide text-bbq-green">
+    <span className="font-inter text-[10.5px] font-semibold text-oko-sage dark:text-oko-sage-light">
       Save ${formatPrice(value)}
     </span>
   );
   if (mod === "add") return (
-    <span className={`font-oswald text-[10px] tracking-wide ${inverted ? "text-ember" : "text-ember-deep"}`}>
+    <span className="font-inter text-[10.5px] font-semibold text-oko-stone">
       +${formatPrice(value)}
     </span>
   );
@@ -37,21 +37,17 @@ function ProductOptionItemLink({ product }) {
       prefetch={false}
       href={product?.url || "#"}
       title={product?.title}
-      className={`product-option-item-link group relative flex items-center overflow-hidden rounded-sm border-l-4 transition-all duration-200 ${
+      className={`product-option-item-link group relative flex items-center overflow-hidden rounded-[2px] border transition-colors duration-200 ${
         active
-          ? "border-l-theme-600 border border-theme-600/30 bg-char dark:bg-smoke"
-          : "border-l-grate dark:border-l-white/15 border border-grate dark:border-white/10 bg-paper dark:bg-smoke hover:border-l-theme-600/60 hover:border-theme-600/20 hover:bg-ash dark:hover:bg-white/5"
+          ? "border-oko-barn bg-oko-cream-dim dark:bg-oko-night-3"
+          : "border-oko-stone-line dark:border-oko-line-dark bg-white dark:bg-oko-night-2 hover:border-oko-char dark:hover:border-oko-cream"
       } ${galleryOnFullscreen ? "-z-[1]" : ""}`}
     >
-      {/* Active square dot */}
-      {active && (
-        <span className="absolute top-1.5 right-1.5 z-[2] w-1.5 h-1.5 bg-theme-600 flex-shrink-0" />
-      )}
+      {/* Active left accent bar */}
+      <span className={`self-stretch w-[3px] flex-shrink-0 ${active ? "bg-oko-barn" : "bg-transparent"}`} />
 
       {/* Image */}
-      <div className={`flex-shrink-0 w-[44px] min-h-[50px] sm:w-[52px] sm:min-h-[56px] h-full relative overflow-hidden p-1.5 ${
-        active ? "bg-white/10 dark:bg-char" : "bg-white dark:bg-char"
-      }`}>
+      <div className="flex-shrink-0 w-[44px] min-h-[50px] sm:w-[52px] sm:min-h-[56px] h-full relative overflow-hidden p-1.5 bg-white dark:bg-oko-night-3">
         {product?.image && (
           <Image
             src={product.image}
@@ -64,23 +60,20 @@ function ProductOptionItemLink({ product }) {
       </div>
 
       {/* Vertical divider */}
-      <div className={`self-stretch w-px flex-shrink-0 ${
-        active ? "bg-theme-600/25" : "bg-grate dark:bg-white/10"
-      }`} />
+      <div className="self-stretch w-px flex-shrink-0 bg-oko-stone-line dark:bg-oko-line-dark" />
 
       {/* Label + upsell */}
       <div className="flex flex-col gap-0.5 min-w-0 flex-1 px-2 sm:px-2.5 py-1.5 sm:py-2">
-        <span className={`font-oswald text-[10px] sm:text-[11px] font-semibold uppercase tracking-wide line-clamp-2 leading-snug transition-colors ${
+        <span className={`font-inter text-[11px] font-medium uppercase tracking-[0.03em] line-clamp-2 leading-snug transition-colors ${
           active
-            ? "text-ash"
-            : "text-char/60 dark:text-ash/50 group-hover:text-char dark:group-hover:text-ash"
+            ? "text-oko-char dark:text-oko-cream"
+            : "text-oko-char-soft dark:text-oko-ondark group-hover:text-oko-char dark:group-hover:text-oko-cream"
         }`}>
           {product?.label}
         </span>
         <UpsellPriceDisplay
           mod={product?.upsell?.mod}
           value={product?.upsell?.value}
-          inverted={active}
         />
       </div>
     </Link>

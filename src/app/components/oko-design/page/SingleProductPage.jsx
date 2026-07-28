@@ -61,11 +61,11 @@ function SingleProductPage({
   const price = parseFloat(firstVariant?.price) || 0;
 
   return (
-    <div className="text-char dark:text-ash font-sora">
+    <div className="bg-oko-cream dark:bg-oko-night text-oko-char-soft dark:text-oko-ondark font-inter">
       <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />
 
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-6 pb-28 lg:pb-20">
+      <div className="max-w-[1260px] mx-auto px-5 sm:px-8 py-6 pb-28 lg:pb-20">
         <Breadcrumb crumbs={product?.breadcrumbs} />
 
         {/* HERO: GALLERY + INFO */}
@@ -113,12 +113,13 @@ function SingleProductPage({
         {Array.isArray(product?.fbt_carousel) &&
           product.fbt_carousel?.length > 0 && (
             <ProductGrid
-              title="Frequently Bought Together"
+              eyebrow="Complete the setup"
+              title="Frequently bought together"
               items={product.fbt_carousel.map((i) => formatProduct(i, "card"))}
             />
           )}
         {ymalProducts && (
-          <ProductGrid title="You May Also Like" items={ymalProducts} />
+          <ProductGrid eyebrow="Recommended" title="You may also like" items={ymalProducts} />
         )}
         <RecentViews product_id={product?.product_id} />
       </div>

@@ -1,12 +1,16 @@
-const StarRating = ({ rating, size = "sm", showCount, count }) => {
-  const s = size === "lg" ? "w-5 h-5" : "w-3.5 h-3.5";
+// Brass stars only (spec §2 — brass is ratings-exclusive). Carries an sr-only
+// text equivalent and shows the literal "No reviews" state (§12 accessibility).
+const StarRating = ({ rating = 0, size = "sm", showCount, count }) => {
+  const s = size === "lg" ? "w-5 h-5" : size === "md" ? "w-4 h-4" : "w-3.5 h-3.5";
+  const rounded = Math.round(rating);
+  const hasCount = typeof count === "number";
   return (
-    <span className="inline-flex items-center gap-1">
-      <span className="inline-flex gap-0.5">
+    <span className="inline-flex items-center gap-1.5">
+      <span className="inline-flex gap-0.5" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((i) => (
           <svg
             key={i}
-            className={`${s} ${i <= Math.round(rating) ? "text-amber-400" : "text-gray-200 dark:text-gray-600"}`}
+            className={`${s} ${i <= rounded ? "text-oko-brass" : "text-oko-stone-line dark:text-oko-line-dark"}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -15,10 +19,15 @@ const StarRating = ({ rating, size = "sm", showCount, count }) => {
         ))}
       </span>
       {showCount && (
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          {!!count && `(${count})`}
+        <span className="font-inter text-[11.5px] text-oko-stone">
+          {count ? `${count} review${count !== 1 ? "s" : ""}` : "No reviews"}
         </span>
       )}
+      <span className="sr-only">
+        {rating > 0
+          ? `Rated ${rating} out of 5${hasCount ? `, ${count} reviews` : ""}`
+          : "No reviews"}
+      </span>
     </span>
   );
 };

@@ -36,26 +36,28 @@ function Reviews({ reviews, reviewCount, product_id }) {
   };
 
   return (
-    <div ref={reviewsTopRef} className="flex flex-col divide-y divide-grate dark:divide-white/10">
+    <div ref={reviewsTopRef} className="flex flex-col divide-y divide-oko-stone-line dark:divide-oko-line-dark">
       {reviewList.map((review, i) => (
         <div key={review.id ?? i} className="py-5 first:pt-0">
           <div className="flex items-start justify-between gap-3 mb-2">
             <div>
-              <p className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash">
-                {review?.user?.username || review.name || "Verified Buyer"}
+              <p className="font-inter text-[13.5px] font-semibold text-oko-char dark:text-oko-cream">
+                {review?.user?.username || review.name || "Verified buyer"}
               </p>
-              <StarRating rating={review.rating} size="sm" />
+              <div className="mt-1">
+                <StarRating rating={review.rating} size="sm" />
+              </div>
             </div>
-            <span className="font-oswald text-xs text-char/40 dark:text-ash/30 whitespace-nowrap">
+            <span className="font-inter text-[12px] text-oko-stone whitespace-nowrap">
               {formatDate(review.created_at)}
             </span>
           </div>
           {review.title && (
-            <p className="font-oswald text-sm font-semibold uppercase tracking-wide text-char dark:text-ash mb-1">
+            <p className="font-inter text-[14px] font-semibold text-oko-char dark:text-oko-cream mb-1">
               {review.title}
             </p>
           )}
-          <p className="text-sm text-char/60 dark:text-ash/50 leading-relaxed">
+          <p className="font-inter text-[13.5px] text-oko-char-soft dark:text-oko-ondark leading-[1.55]">
             {review.comment || review.content || ""}
           </p>
         </div>

@@ -1,20 +1,22 @@
-const Badge = ({ children, variant = "orange" }) => {
+// Small bordered label, 2px radius (no pills — spec §5). Barn = action/urgency,
+// sage = savings/logistics, stone = neutral meta.
+const Badge = ({ children, variant = "barn" }) => {
   const variants = {
-    orange:
-      "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
-    green:
-      "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-    blue: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-    gray: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
+    barn: "bg-oko-barn/10 text-oko-barn dark:text-oko-barn-light border-oko-barn/25",
+    orange: "bg-oko-barn/10 text-oko-barn dark:text-oko-barn-light border-oko-barn/25",
+    sage: "bg-oko-sage/10 text-oko-sage dark:text-oko-sage-light border-oko-sage/25",
+    green: "bg-oko-sage/10 text-oko-sage dark:text-oko-sage-light border-oko-sage/25",
+    stone: "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone border-oko-stone-line dark:border-oko-line-dark",
+    gray: "bg-oko-cream-dim dark:bg-oko-night-3 text-oko-stone border-oko-stone-line dark:border-oko-line-dark",
+    blue: "bg-oko-sage/10 text-oko-sage dark:text-oko-sage-light border-oko-sage/25",
   };
   return (
     <span
-      className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide uppercase ${variants[variant]}`}
+      className={`inline-block font-inter text-[10px] font-semibold px-2 py-0.5 rounded-[2px] border tracking-[0.06em] uppercase ${variants[variant] || variants.stone}`}
     >
       {children}
     </span>
   );
 };
-
 
 export default Badge;

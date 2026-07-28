@@ -6,7 +6,6 @@ import { getProductsByCollectionId } from "@/app/lib/api";
 import { formatPrice, formatProduct } from "@/app/lib/helpers";
 import SectionHeading from "@/app/components/oko-design/sections/sp/SectionHeading";
 import StarRating from "@/app/components/oko-design/sections/sp/StarRating";
-import GrillMockSVG from "@/app/components/oko-design/sections/sp/GrillMockSVG";
 
 const CollectionStrip = ({ product }) => {
   const [collectionProducts, setCollectionProducts] = useState([]);
@@ -28,36 +27,42 @@ const CollectionStrip = ({ product }) => {
   if (!Array.isArray(collectionProducts) || collectionProducts.length === 0) return null;
 
   return (
-    <section className="mb-6">
-      <SectionHeading>Shop This Collection</SectionHeading>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <section className="mb-12">
+      <SectionHeading eyebrow="From this brand">Shop this collection</SectionHeading>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-[22px]">
         {collectionProducts.slice(0, 4).map((p, i) => (
-          <Link
+          <article
             key={`collection-${p?.title}-${i}`}
-            prefetch={false}
-            href={p?.url || "#"}
-            className="group relative bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden hover:border-theme-600 dark:hover:border-theme-600 hover:-translate-y-1 transition-all duration-200"
+            className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden"
           >
-            <div className="h-28 bg-white dark:bg-char overflow-hidden relative">
-              {p?.image && (
-                <Image src={p.image} alt={p?.title || "Product"} fill className="object-contain transition-transform duration-300 group-hover:scale-105" />
-              )}
-            </div>
-            <div className="p-3 flex flex-col gap-1">
-              <p className="font-sora text-xs font-semibold text-char dark:text-ash line-clamp-2 min-h-[32px]">
+            <Link prefetch={false} href={p?.url || "#"} tabIndex={-1} aria-hidden="true" className="block">
+              <div className="relative aspect-square bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark overflow-hidden">
+                {p?.image && (
+                  <Image src={p.image} alt={p?.title || "Product"} fill className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03]" />
+                )}
+              </div>
+            </Link>
+            <div className="p-4 flex flex-col gap-1.5">
+              <Link
+                prefetch={false}
+                href={p?.url || "#"}
+                className="font-inter text-[14px] font-medium text-oko-char dark:text-oko-cream leading-[1.3] line-clamp-2 min-h-[36px] hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
+              >
                 {p?.title}
-              </p>
-              <StarRating rating={p?.ratings} />
-              <p className="font-oswald font-bold text-sm text-ember-deep dark:text-ember">
-                ${formatPrice(p?.price || 0)}
+              </Link>
+              <StarRating rating={p?.ratings || 0} showCount count={p?.reviews || 0} />
+              <p className="mt-1">
+                <span className="font-inter font-semibold text-[16px] text-oko-char dark:text-oko-cream">
+                  ${formatPrice(p?.price || 0)}
+                </span>
                 {p?.was && (
-                  <span className="ml-1.5 text-xs text-char/30 dark:text-ash/30 line-through font-normal">
+                  <span className="ml-1.5 font-inter text-[12px] text-oko-stone line-through">
                     ${formatPrice(p.was)}
                   </span>
                 )}
               </p>
             </div>
-          </Link>
+          </article>
         ))}
       </div>
     </section>

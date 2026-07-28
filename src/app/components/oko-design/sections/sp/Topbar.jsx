@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
+
+// Phone is a first-class OKO brand element — always this exact literal (spec §10).
+const OKO_PHONE = "888-667-4986";
+const OKO_PHONE_HREF = "tel:8886674986";
 
 const links = [
   { name: "Learning Center", url: `${BASE_URL}/blogs` },
@@ -11,6 +14,7 @@ const links = [
   { name: "Support", url: `${BASE_URL}/contact` },
 ];
 
+// Promo strip (spec §8.4) — charcoal band, one loud offer + the phone in barn.
 const Topbar = () => {
   const [galleryOnFullscreen, setGalleryOnFullscreen] = useState(false);
 
@@ -21,23 +25,23 @@ const Topbar = () => {
   }, []);
 
   return (
-    <div className={`bg-charcoal hidden md:block sticky top-[64px] lg:top-[105px] ${galleryOnFullscreen ? "" : "z-10"}`}>
-      <div className="max-w-[1240] py-2 px-4 sm:px-6 mx-auto flex items-center justify-between gap-3 flex-wrap">
-        <span className="text-xs text-gray-400">
-          🔥 Free Shipping on Selected Orders —{" "}
+    <div className={`bg-oko-char hidden md:block sticky top-[64px] lg:top-[105px] ${galleryOnFullscreen ? "" : "z-10"}`}>
+      <div className="max-w-[1260px] py-2.5 px-5 sm:px-8 mx-auto flex items-center justify-between gap-3 flex-wrap">
+        <span className="font-inter text-[12.5px] text-oko-ondark-muted">
+          Free shipping on selected orders —{" "}
           <Link
-            href={`tel:${STORE_CONTACT}`}
-            className="text-orange-400 font-semibold hover:text-orange-300"
+            href={OKO_PHONE_HREF}
+            className="text-oko-barn-light font-semibold hover:text-white transition-colors"
           >
-            Call now ↗
+            Call {OKO_PHONE} →
           </Link>
         </span>
-        <div className="hidden sm:flex gap-5">
+        <div className="hidden sm:flex gap-6">
           {links.map((l) => (
             <Link
               key={`links-redirect-${l?.url}`}
               href={l?.url || "#"}
-              className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              className="font-inter text-[12.5px] text-oko-ondark-faint hover:text-oko-cream transition-colors"
             >
               {l?.name}
             </Link>

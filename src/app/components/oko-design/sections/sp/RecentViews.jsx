@@ -54,7 +54,7 @@ function RecentViews({ product_id }) {
 
   if (!Array.isArray(products) || products.length === 0) return null;
 
-  return <ProductGrid title="Recently Viewed" items={products} />;
+  return <ProductGrid eyebrow="Your history" title="Recently viewed" items={products} />;
 }
 
 export default RecentViews;
