@@ -987,7 +987,14 @@ export function mapCategoryResults(cat) {
     name: cat.key,
     count: cat.doc_count,
     slug: slug,
-    url: `${BASE_URL}/category/${slug}`,
+    // Root-relative on purpose — never interpolate BASE_URL here. This object is
+    // stored by unstable_cache (layout "layout-categories", 24h) and in Vercel's
+    // Data Cache, which outlives a deployment. Baking an env-derived absolute URL
+    // into cached data means one build with NEXT_PUBLIC_SITE_BASE_URL unset writes
+    // "undefined/category/..." and keeps serving it for a day after the env is
+    // fixed — a cache purge is the only way out. A relative path has no such
+    // dependency, and every consumer uses this value directly as an href.
+    url: `/category/${slug}`,
     image: `/images/categories/${slug}.webp`, // insert images which are named base on slug
     type: getCategoryType(cat.key),
     description: getCategoryDescription(cat.key),
