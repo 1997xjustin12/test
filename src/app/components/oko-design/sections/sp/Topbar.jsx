@@ -3,10 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const links = [
   { name: "Learning Center", url: `${BASE_URL}/blogs` },
@@ -30,10 +27,10 @@ const Topbar = () => {
         <span className="font-inter text-[12.5px] text-oko-ondark-muted">
           Free shipping on selected orders —{" "}
           <Link
-            href={OKO_PHONE_HREF}
+            href={`tel:${STORE_CONTACT}`}
             className="text-oko-barn-light font-semibold hover:text-white transition-colors"
           >
-            Call {OKO_PHONE} →
+            Call {STORE_CONTACT} →
           </Link>
         </span>
         <div className="hidden sm:flex gap-6">

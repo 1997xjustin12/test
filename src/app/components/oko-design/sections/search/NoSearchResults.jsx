@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 export default function NoSearchResults({ categories, query, populars }) {
   return (
@@ -30,10 +31,10 @@ export default function NoSearchResults({ categories, query, populars }) {
       </p>
 
       <a
-        href="tel:8886674986"
+        href={`tel:${STORE_CONTACT}`}
         className="inline-flex items-center font-inter font-semibold text-[13.5px] px-5 py-2.5 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white transition-colors mb-10"
       >
-        Call 888-667-4986
+        Call {STORE_CONTACT}
       </a>
 
       {/* Suggest searches */}

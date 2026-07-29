@@ -2,9 +2,7 @@
 import Link from "next/link";
 import { formatPrice } from "@/app/lib/helpers";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // Floating bar on a solid char surface (spec §5) — sits above the nav's own
 // mobile call bar, so it carries the price + add-to-cart action.
@@ -25,7 +23,7 @@ const MobileStickyCTA = ({ product }) => {
         )}
       </div>
       <Link
-        href={OKO_PHONE_HREF}
+        href={`tel:${STORE_CONTACT}`}
         aria-label="Call for a lower price"
         className="flex items-center gap-1.5 border border-oko-barn-light text-oko-barn-light text-[13px] font-inter font-semibold py-2.5 px-3 rounded-[2px] hover:bg-oko-barn-light/10 transition-colors whitespace-nowrap flex-shrink-0"
       >

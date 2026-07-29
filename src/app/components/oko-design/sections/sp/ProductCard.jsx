@@ -9,10 +9,7 @@ import StarRating from "@/app/components/oko-design/sections/sp/StarRating";
 import { formatPrice } from "@/app/lib/helpers";
 import { useCart } from "@/app/context/cart";
 import { useQuickView } from "@/app/context/quickview";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const BADGE_STYLES = {
   bestseller: "bg-oko-char text-white",
@@ -142,8 +139,8 @@ const ProductCard = ({ p }) => {
 
         {/* Call */}
         <Link
-          href={OKO_PHONE_HREF}
-          aria-label={`Call ${OKO_PHONE}`}
+          href={`tel:${STORE_CONTACT}`}
+          aria-label={`Call ${STORE_CONTACT}`}
           className="h-9 px-2.5 flex items-center justify-center border border-oko-barn dark:border-oko-barn-light text-oko-barn dark:text-oko-barn-light font-inter font-semibold text-[13px] hover:bg-oko-barn/10 rounded-[2px] transition-colors whitespace-nowrap"
         >
           <span className="hidden md:block">Call</span>
@@ -157,12 +154,12 @@ const ProductCard = ({ p }) => {
 
       {/* Found it cheaper */}
       <div className="px-4 pb-4 -mt-1">
-        <FicDropDown contact_number={OKO_PHONE}>
+        <FicDropDown contact_number={STORE_CONTACT}>
           <div className="font-inter text-[12px] text-oko-sage dark:text-oko-sage-light flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             Found it cheaper?
             <div className="hover:underline flex items-center gap-[3px] cursor-pointer">
               <ICRoundPhone width={14} height={14} />
-              <span>{OKO_PHONE}</span>
+              <span>{STORE_CONTACT}</span>
             </div>
           </div>
         </FicDropDown>

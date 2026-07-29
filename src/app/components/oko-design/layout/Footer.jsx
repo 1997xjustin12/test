@@ -1,13 +1,9 @@
 import { PAYMENT_METHODS } from "@/app/data/new-homepage";
-import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_constants";
+import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT } from "@/app/lib/store_constants";
 import Link from "next/link";
 import Image from "next/image";
 import { createSlug, BASE_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
 
 export const FOOTER_COLS = [
   {
@@ -161,10 +157,10 @@ export default function Footer({ logo }) {
             <ul className="flex flex-col gap-2.5">
               <li>
                 <Link
-                  href={OKO_PHONE_HREF}
+                  href={`tel:${STORE_CONTACT}`}
                   className="font-oko-display font-bold text-[18px] text-white hover:text-oko-barn-light transition-colors"
                 >
-                  {OKO_PHONE}
+                  {STORE_CONTACT}
                 </Link>
               </li>
               <li className="text-[12.5px] text-oko-ondark-muted">Sales: Mon–Fri 4am–6pm PST</li>

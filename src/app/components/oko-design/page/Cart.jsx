@@ -7,9 +7,7 @@ import YouMayAlsoLike from "@/app/components/oko-design/ui/YouMayAlsoLike";
 import { BASE_URL, mapOrderItems } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
-
-// Phone is a first-class OKO brand element — always this exact literal (§10).
-const OKO_PHONE = "888-667-4986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const PhoneIcon = ({ className = "w-4 h-4" }) => (
   <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
@@ -31,11 +29,11 @@ const ShoppingAssistance = () => (
     </p>
     <Link
       prefetch={false}
-      href={`tel:${OKO_PHONE}`}
+      href={`tel:${STORE_CONTACT}`}
       className="flex items-center justify-center gap-2 w-full py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors"
     >
       <PhoneIcon className="w-4 h-4" />
-      Call {OKO_PHONE}
+      Call {STORE_CONTACT}
     </Link>
   </div>
 );

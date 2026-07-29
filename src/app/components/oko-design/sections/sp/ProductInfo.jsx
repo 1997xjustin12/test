@@ -4,9 +4,7 @@ import AddToCartWidget from "@/app/components/oko-design/sections/sp/AddToCartWi
 import ProductOptionItemLink from "@/app/components/oko-design/sections/sp/ProductOptionItemLink";
 import FicDropDown from "@/app/components/oko-design/ui/FicDropDown";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const ProductCategoryChip = ({ category, url = "#" }) => {
   if (!category)
@@ -148,14 +146,14 @@ const ProductInfo = ({ product }) => (
     <AddToCartWidget product={product} />
 
     {/* Call for a lower price — cream-dim panel repeating the phone (§9) */}
-    <FicDropDown contact_number={OKO_PHONE}>
+    <FicDropDown contact_number={STORE_CONTACT}>
       <div className="w-full text-left flex items-center justify-between gap-3 bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3.5 hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors">
         <div>
           <p className="font-inter text-[11px] font-semibold uppercase tracking-[0.06em] text-oko-stone">
             Call for a lower price
           </p>
           <p className="font-oko-display font-bold text-[22px] leading-tight text-oko-char dark:text-oko-cream">
-            {OKO_PHONE}
+            {STORE_CONTACT}
           </p>
         </div>
         <span className="flex items-center justify-center w-10 h-10 rounded-full bg-oko-barn text-white flex-shrink-0">

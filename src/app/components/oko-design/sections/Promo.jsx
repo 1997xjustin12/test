@@ -1,9 +1,8 @@
 import Link from "next/link";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // 8.4 Promo strip — 46px charcoal band, centered offer + white rectangular
 // "Call now" button. Stays dark in both light/dark modes (designed dark band).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
 
 export default function Promo() {
   return (
@@ -13,10 +12,10 @@ export default function Promo() {
           <span className="text-[13.5px] font-inter">
             <strong className="font-semibold">50% off Eloquence built-in grills</strong>
             {" — "}
-            {OKO_PHONE}
+            {STORE_CONTACT}
           </span>
           <Link
-            href={OKO_PHONE_HREF}
+            href={`tel:${STORE_CONTACT}`}
             className="bg-white text-oko-char font-inter font-semibold text-[12px] tracking-[0.03em] px-4 py-1.5 rounded-[2px] hover:bg-oko-cream-dim transition-colors"
           >
             Call now

@@ -4,10 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useSolanaCategories } from "@/app/context/category";
 import ProductsSection from "@/app/components/molecule/ProductsSectionV2";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // CategoryHero — OKO breadcrumb band: cream-dim surface, 12px stone breadcrumb
 // with "/" separators (current in char-soft), mono barn eyebrow (product count),
@@ -50,13 +47,13 @@ function CategoryHero({ category }) {
           {/* Barn phone CTA — matches the homepage hero */}
           <div className="mt-7">
             <Link
-              href={OKO_PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               className="inline-flex items-center gap-2 font-inter font-semibold text-[13.5px] px-6 py-3.5 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              Call {OKO_PHONE}
+              Call {STORE_CONTACT}
             </Link>
           </div>
         </div>
@@ -206,13 +203,13 @@ function CTABanner() {
           Our certified specialists will help you find the perfect gas fireplace — free of charge, with prices we can only give by phone.
         </p>
         <Link
-          href={OKO_PHONE_HREF}
+          href={`tel:${STORE_CONTACT}`}
           className="inline-flex items-center gap-2.5 bg-oko-barn hover:bg-oko-barn-dark text-white rounded-[2px] px-6 py-4 transition-colors"
         >
           <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
-          <span className="font-oko-display font-bold text-[20px] leading-none">{OKO_PHONE}</span>
+          <span className="font-oko-display font-bold text-[20px] leading-none">{STORE_CONTACT}</span>
         </Link>
       </div>
     </section>

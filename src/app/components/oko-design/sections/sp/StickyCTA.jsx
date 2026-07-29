@@ -2,9 +2,7 @@
 import Link from "next/link";
 import { formatPrice } from "@/app/lib/helpers";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // Floating bars use a solid char surface for contrast rather than a shadow
 // (spec §5). Barn stays the primary action; sage marks the chat/secondary path.
@@ -24,7 +22,7 @@ const StickyCTA = ({ product }) => {
         )}
       </div>
       <Link
-        href={OKO_PHONE_HREF}
+        href={`tel:${STORE_CONTACT}`}
         className="flex items-center gap-1.5 border border-oko-barn-light text-oko-barn-light text-[13px] font-inter font-semibold py-2 px-3 rounded-[2px] hover:bg-oko-barn-light/10 transition-colors whitespace-nowrap"
       >
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">

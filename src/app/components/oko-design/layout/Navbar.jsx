@@ -7,10 +7,7 @@ import CartButton from "@/app/components/oko-design/ui/CartButton";
 import SearchBox from "@/app/components/oko-design/ui/SearchBox";
 import MyAccountButton from "@/app/components/oko-design/ui/MyAccountButton";
 import { useSolanaCategories } from "@/app/context/category";
-
-// Phone is a first-class OKO brand element — always this exact literal (spec §10).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 function SearchGlyph() {
   return (
@@ -80,14 +77,14 @@ export default function Navbar({ logo }) {
             <div className="flex items-center gap-3 sm:gap-6 ml-auto">
               {/* Phone block */}
               <Link
-                href={OKO_PHONE_HREF}
+                href={`tel:${STORE_CONTACT}`}
                 className="hidden lg:block text-right group"
               >
                 <span className="block font-oko-display font-bold text-[12px] leading-[1.15] text-oko-char dark:text-oko-cream">
                   Best prices<br />by phone
                 </span>
                 <span className="block font-inter font-semibold text-[16px] text-oko-barn dark:text-oko-barn-light group-hover:text-oko-barn-dark transition-colors">
-                  {OKO_PHONE}
+                  {STORE_CONTACT}
                 </span>
               </Link>
 
@@ -203,10 +200,10 @@ export default function Navbar({ logo }) {
                 Best prices by phone
               </span>
               <Link
-                href={OKO_PHONE_HREF}
+                href={`tel:${STORE_CONTACT}`}
                 className="font-oko-display font-bold text-[22px] text-oko-char dark:text-oko-cream"
               >
-                {OKO_PHONE}
+                {STORE_CONTACT}
               </Link>
             </div>
           </div>
@@ -215,13 +212,13 @@ export default function Navbar({ logo }) {
 
       {/* ── Sticky bottom call bar — mobile only ── */}
       <Link
-        href={OKO_PHONE_HREF}
+        href={`tel:${STORE_CONTACT}`}
         className="lg:hidden fixed bottom-0 inset-x-0 z-30 h-[52px] flex items-center justify-center gap-2 bg-oko-barn text-white font-inter font-semibold text-[14px] tracking-[0.02em] hover:bg-oko-barn-dark transition-colors"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
         </svg>
-        Call {OKO_PHONE}
+        Call {STORE_CONTACT}
       </Link>
     </>
   );

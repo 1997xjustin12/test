@@ -1,9 +1,5 @@
 import Link from "next/link";
-
-// OKO phone number is a first-class brand element and, per the design system,
-// always renders as this exact literal — never abbreviated (see spec §10, rule 5).
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // 8.1 Announcement bar — cream-dim, bottom border, ~38px, centered 13px.
 // One promise + the phone in barn. Competitor name in display italic.
@@ -19,10 +15,10 @@ export default function Topbar() {
             </span>{" "}
             — call{" "}
             <Link
-              href={OKO_PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               className="font-semibold text-oko-barn dark:text-oko-barn-light hover:text-oko-barn-dark dark:hover:text-oko-barn-light transition-colors"
             >
-              {OKO_PHONE}
+              {STORE_CONTACT}
             </Link>{" "}
             for current promotions
           </span>

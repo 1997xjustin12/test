@@ -6,9 +6,7 @@ import { pixelInitiateCheckout } from "@/app/lib/pixel";
 import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import { useAuth } from "@/app/context/auth";
-
-// Phone is a first-class OKO brand element — always this exact literal (§10).
-const OKO_PHONE = "888-667-4986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 // Sage-bordered savings alert (§ alerts: success uses a 4px sage left border).
 const SavingsBanner = ({ savings, shipping_cost }) => (
@@ -126,10 +124,10 @@ function CartOrderSummary({ checkoutButton = true }) {
             <p className="mt-3.5 text-center font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark">
               Call for a lower price —{" "}
               <a
-                href={`tel:${OKO_PHONE}`}
+                href={`tel:${STORE_CONTACT}`}
                 className="font-semibold text-oko-barn dark:text-oko-barn-light hover:text-oko-barn-dark transition-colors"
               >
-                {OKO_PHONE}
+                {STORE_CONTACT}
               </a>
             </p>
 

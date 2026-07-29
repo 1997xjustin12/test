@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-
-const OKO_PHONE = "888-667-4986";
-const OKO_PHONE_HREF = "tel:8886674986";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const HERO_POINTS = [
   "We beat any competitor's price, including Amazon",
@@ -40,7 +38,7 @@ export default function Hero({ background }) {
         />
         {/* Corner tag */}
         <Link
-          href={OKO_PHONE_HREF}
+          href={`tel:${STORE_CONTACT}`}
           className="absolute bottom-6 right-5 sm:right-8 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[14px] px-5 py-3.5 rounded-[2px] transition-colors z-10"
         >
           Call now for exclusive discount →
@@ -73,10 +71,10 @@ export default function Hero({ background }) {
             </ul>
             <div className="flex flex-wrap gap-3.5 mt-[30px]">
               <Link
-                href={OKO_PHONE_HREF}
+                href={`tel:${STORE_CONTACT}`}
                 className="font-inter font-semibold text-[13.5px] px-6 py-3.5 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white transition-colors"
               >
-                Call {OKO_PHONE}
+                Call {STORE_CONTACT}
               </Link>
               <Link
                 href="/grills"
