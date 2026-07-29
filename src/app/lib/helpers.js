@@ -10,8 +10,7 @@ export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
 // off this same repo, distinguished only by its env vars. Set
 // NEXT_PUBLIC_STORE_THEME=oko on that project to enable the theme. Leaving it
 // unset is the safe default — Solana and BBQ Grill Outlet keep their own themes.
-export const ISOKO = process.env.NEXT_PUBLIC_SITE_BASE_URL === "https://oko-dev-gamma.vercel.app";
-// export const ISBBQ = true;
+export const ISOKO = process.env.NEXT_PUBLIC_STORE_THEME === "oko";
 
 // The Elasticsearch index every catalog read resolves through — PDP, category
 // and collection pages, search/searchkit, autocomplete, and the sitemap.
