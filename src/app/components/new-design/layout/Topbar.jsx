@@ -1,4 +1,4 @@
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import Link from "next/link";
 
 export default function Topbar() {
@@ -8,8 +8,8 @@ export default function Topbar() {
       <div className="flex md:hidden items-center justify-center gap-2 px-4">
         <span>🔥 Free Shipping on Select Orders</span>
         <span className="text-gray-600">·</span>
-        <a href={PHONE_HREF} className="text-theme-500 font-semibold whitespace-nowrap">
-          {PHONE}
+        <a href={`tel:${STORE_CONTACT}`} className="text-theme-500 font-semibold whitespace-nowrap">
+          {STORE_CONTACT}
         </a>
       </div>
 
@@ -19,8 +19,8 @@ export default function Topbar() {
         <span className="text-gray-600">|</span>
         <span className="px-3.5">
           Expert Support:{" "}
-          <a href={PHONE_HREF} className="text-theme-500 font-semibold hover:underline">
-            {PHONE}
+          <a href={`tel:${STORE_CONTACT}`} className="text-theme-500 font-semibold hover:underline">
+            {STORE_CONTACT}
           </a>
         </span>
         <span className="text-gray-600">|</span>

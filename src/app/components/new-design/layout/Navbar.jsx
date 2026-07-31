@@ -4,7 +4,7 @@ import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import {
   PhoneIcon,
   CartIcon,
@@ -143,13 +143,13 @@ export default function Navbar({ logo }) {
           <div className="flex items-center gap-1 sm:gap-2 flex-none">
             {/* Phone — hidden on mobile/tablet */}
             <Link
-              href={PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-charcoal dark:text-white whitespace-nowrap"
             >
               <span className="text-theme-500">
                 <PhoneIcon />
               </span>
-              {PHONE}
+              {STORE_CONTACT}
             </Link>
             {/* Account */}
             <MyAccountButton />
@@ -330,12 +330,12 @@ export default function Navbar({ logo }) {
               Current Deals 🔥
             </Link>
             <Link
-              href={PHONE_HREF}
+              href={`tel:${STORE_CONTACT}`}
               onClick={() => setMenuOpen(false)}
               className="mt-1 flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-charcoal dark:text-white border-t border-stone-100 dark:border-stone-800"
             >
               <span className="text-theme-500"><PhoneIcon /></span>
-              {PHONE}
+              {STORE_CONTACT}
             </Link>
           </div>
         </div>

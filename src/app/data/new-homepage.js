@@ -1,6 +1,4 @@
 import { BASE_URL } from "@/app/lib/helpers";
-export const PHONE = "(888) 575-9720";
-export const PHONE_HREF = "tel:8885759720";
 
 export const NAV_LINKS = [
   {

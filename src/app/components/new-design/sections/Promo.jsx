@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link";
 import { useReveal } from "@/app/hooks/useReveal";
-import { PROMO_CARDS, PHONE_HREF } from "@/app/data/new-homepage";
+import { PROMO_CARDS } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { BASE_URL } from "@/app/lib/helpers";
 
 
@@ -27,7 +28,7 @@ export default function Promo() {
               From open box savings to close-out deals, we make luxury heating accessible. Talk to an expert and discover your best deal today.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link prefetch={false} href={PHONE_HREF} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-white font-semibold transition-all duration-200 hover:-translate-y-0.5">
+              <Link prefetch={false} href={`tel:${STORE_CONTACT}`} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-white font-semibold transition-all duration-200 hover:-translate-y-0.5">
                 Call to Save Now
               </Link>
               <Link prefetch={false} href={`${BASE_URL}/close-out-deals`} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border-2 border-white/60 text-white hover:bg-white/10 font-semibold transition-all duration-200">

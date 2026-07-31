@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { useReveal } from "@/app/hooks/useReveal";
-import { PHONE, PHONE_HREF } from "@/app/data/new-homepage";
+import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { PhoneIcon } from "@/app/components/new-design/ui/Icons";
 import { BASE_URL } from "@/app/lib/helpers"
 import Link from "next/link";
@@ -32,9 +32,9 @@ export default function Cta() {
                 Get a Free Quote
               </Link>
             </div>
-            <a href={PHONE_HREF} className="inline-flex items-center gap-2 text-white font-semibold text-lg mt-7">
+            <a href={`tel:${STORE_CONTACT}`} className="inline-flex items-center gap-2 text-white font-semibold text-lg mt-7">
               <span className="text-theme-500"><PhoneIcon size={18} /></span>
-              {PHONE}
+              {STORE_CONTACT}
             </a>
           </div>
         </div>
