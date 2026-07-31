@@ -201,7 +201,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                             href={`tel:${STORE_CONTACT}`}
                             className="text-theme-600 font-medium hover:underline"
                           >
-                            (888) 575-9720
+                            {STORE_CONTACT}
                           </Link>
                         </p>
                       </div>
