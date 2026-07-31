@@ -2,7 +2,7 @@ import { ES_INDEX, createSlug, exclude_brands, exclude_collections } from "./lib
 
 export const revalidate = 3600;
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL || "https://yourdomain.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ESURL = process.env.NEXT_ES_URL;
 const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
@@ -137,14 +137,31 @@ async function fetchAllCategories() {
 }
 
 export default async function sitemap() {
-  // Static routes with priorities
+  // Every URL here is absolute. Publishing them against a placeholder domain
+  // would hand Google thousands of dead links and they would be cached and
+  // crawled before anyone noticed, so an unset base URL yields an empty
+  // sitemap instead. Empty is recoverable; wrong is not. Deliberately not a
+  // throw: that would fail the whole build, and this variable is scoped to
+  // production on some projects, which would take preview deploys down with it.
+  if (!BASE_URL) {
+    console.error(
+      "sitemap: NEXT_PUBLIC_SITE_BASE_URL is not set; emitting an empty sitemap " +
+        "rather than URLs on a placeholder domain.",
+    );
+    return [];
+  }
+
+  // Static routes with priorities.
+  //
+  // /cart and /search are intentionally absent. robots.js disallows /cart, so
+  // submitting it asked Google to crawl a path we had already blocked — a
+  // contradiction Search Console reports as a coverage error. /search is a
+  // thin-content results page with no crawl value.
   const staticRoutes = [
     { url: "", priority: 1.0, changeFrequency: "daily" },
     { url: "/about", priority: 0.8, changeFrequency: "monthly" },
     { url: "/contact", priority: 0.8, changeFrequency: "monthly" },
     { url: "/blogs", priority: 0.7, changeFrequency: "weekly" },
-    { url: "/search", priority: 0.6, changeFrequency: "weekly" },
-    { url: "/cart", priority: 0.5, changeFrequency: "always" },
     { url: "/professional-program", priority: 0.7, changeFrequency: "monthly" },
     { url: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
     { url: "/return-policy", priority: 0.5, changeFrequency: "monthly" },
