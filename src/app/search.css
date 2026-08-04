@@ -729,3 +729,211 @@ label.ais-RefinementList-label .ais-RefinementList-count {
     border-color:rgba(255, 255, 255, 0.1);
   }
 }
+
+/* ═══════════════════════════════════════════
+   OKO theme overrides (.outdoorkitchenoutlet scope)
+   ═══════════════════════════════════════════
+
+   Counterpart to the BBQ block above. The InstantSearch widgets render their
+   own markup, so the PLP filter rail can only be themed from CSS — Tailwind
+   classes on our components never reach .ais-* internals. Solana and BBQ each
+   had a block here; OKO did not, so it inherited Solana's blue-grey filter
+   chrome on a cream/barn storefront.
+
+   Design system: 2px radius, 1px stone-line borders, no shadows, barn reserved
+   for action (submit, active state, refinement tags), Inter for body copy,
+   slab display for group headings, mono for counts. */
+
+/* ─── Checkbox ─── */
+.outdoorkitchenoutlet input[type="checkbox"].ais-RefinementList-checkbox {
+  border-color: #DAD2C0; /* --oko-stone-line */
+  border-radius: 2px;
+}
+.outdoorkitchenoutlet input[type="checkbox"].ais-RefinementList-checkbox:hover {
+  border-color: #9C3B34; /* --oko-barn */
+}
+.outdoorkitchenoutlet input[type="checkbox"].ais-RefinementList-checkbox:checked {
+  background-color: #9C3B34;
+  border-color: #9C3B34;
+}
+
+/* ─── Label & count ─── */
+.outdoorkitchenoutlet label.ais-RefinementList-label {
+  color: #3A332E; /* --oko-char-soft; --oko-stone fails contrast at this size */
+  font-size: 12.5px;
+}
+.outdoorkitchenoutlet .ais-RefinementList-count {
+  color: #8C8478; /* --oko-stone */
+  font-family: var(--font-oko-mono), monospace;
+  font-size: 11px;
+}
+
+/* ─── List items ─── */
+.outdoorkitchenoutlet .ais-RefinementList-item {
+  padding: 7px 18px 7px 5px;
+}
+.outdoorkitchenoutlet .ais-RefinementList-item:hover {
+  background: #EBE4D6; /* --oko-cream-dim */
+}
+
+/* ─── Search box ─── */
+.outdoorkitchenoutlet .ais-SearchBox-input {
+  border: 1px solid #DAD2C0;
+  border-radius: 2px;
+  font-family: var(--font-inter), sans-serif;
+}
+.outdoorkitchenoutlet .ais-SearchBox-input:focus {
+  border-color: #9C3B34;
+  box-shadow: none;
+}
+
+/* ─── Price range inputs ─── */
+.outdoorkitchenoutlet .ais-RangeInput-form input {
+  border: 1px solid #DAD2C0;
+  border-radius: 2px;
+  font-family: var(--font-inter), sans-serif;
+}
+.outdoorkitchenoutlet .ais-RangeInput-form input:focus {
+  border-color: #9C3B34;
+  box-shadow: none;
+}
+.outdoorkitchenoutlet .ais-RangeInput-input {
+  width: 112px;
+}
+
+/* ─── Apply button ─── */
+.outdoorkitchenoutlet .ais-RangeInput-submit {
+  background-color: #9C3B34;
+  border-radius: 2px;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.outdoorkitchenoutlet .ais-RangeInput-submit:hover {
+  background-color: #7A2C27; /* --oko-barn-dark */
+}
+
+/* ─── Current refinement tags ─── */
+.outdoorkitchenoutlet .ais-CurrentRefinements-category {
+  border: 1px solid #DAD2C0;
+  border-radius: 2px;
+  background: #fff;
+}
+.outdoorkitchenoutlet .ais-CurrentRefinements-categoryLabel {
+  color: #9C3B34;
+}
+.outdoorkitchenoutlet .ais-CurrentRefinements-delete {
+  color: #9C3B34;
+}
+.outdoorkitchenoutlet .ais-CurrentRefinements-delete:hover {
+  color: #26221F; /* --oko-char */
+}
+
+/* ─── Pagination ─── */
+.outdoorkitchenoutlet .ais-Pagination-link {
+  border-radius: 2px;
+  border-color: #DAD2C0;
+  color: #3A332E;
+}
+.outdoorkitchenoutlet .ais-Pagination-link:hover {
+  border-color: #9C3B34;
+  color: #9C3B34;
+}
+.outdoorkitchenoutlet .ais-Pagination-item--selected .ais-Pagination-link {
+  background-color: #9C3B34;
+  border-color: #9C3B34;
+  color: #fff;
+}
+
+/* ─── Typography ─── */
+.outdoorkitchenoutlet .facet-wrapper button h5,
+.outdoorkitchenoutlet .panel button {
+  font-family: var(--font-oko-display), serif;
+}
+.outdoorkitchenoutlet .ais-RefinementList-list .ais-RefinementList-label {
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* ─── SortBy ─── */
+.outdoorkitchenoutlet .ais-SortBy-select {
+  border: 1px solid #DAD2C0;
+  border-radius: 2px;
+  font-family: var(--font-inter), sans-serif;
+  background-color: #fff;
+}
+.outdoorkitchenoutlet .ais-SortBy-select:focus {
+  border-color: #9C3B34;
+}
+
+/* ═══════════════════════════════════════════
+   OKO dark-mode overrides (OS preference)
+   ═══════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  .outdoorkitchenoutlet .ais-Hits-item {
+    border: 0 solid #3A332C !important;
+  }
+
+  .outdoorkitchenoutlet .pfd-filter-section * {
+    color: #D8D1C3; /* --oko-ondark */
+  }
+
+  .outdoorkitchenoutlet .pfd-filter-section > div {
+    background-color: #221D18; /* --oko-night-2 */
+    border: 1px solid #3A332C; /* --oko-line-dark */
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .outdoorkitchenoutlet .panel button {
+    background-color: #1E1914; /* --oko-night-3 */
+    border-color: #3A332C;
+  }
+
+  .outdoorkitchenoutlet .ais-RefinementList-item:hover {
+    background: #1E1914;
+  }
+
+  .outdoorkitchenoutlet label.ais-RefinementList-label {
+    color: #D8D1C3;
+  }
+  .outdoorkitchenoutlet .ais-RefinementList-count {
+    color: #A79F8D; /* --oko-ondark-faint */
+  }
+
+  /* Barn lightens on dark surfaces to hold contrast. */
+  .outdoorkitchenoutlet input[type="checkbox"].ais-RefinementList-checkbox:checked {
+    background-color: #C0564C; /* --oko-barn-light */
+    border-color: #C0564C;
+  }
+  .outdoorkitchenoutlet .ais-CurrentRefinements-category {
+    background-color: #1E1914;
+    border-color: #3A332C;
+  }
+  .outdoorkitchenoutlet .ais-CurrentRefinements-categoryLabel,
+  .outdoorkitchenoutlet .ais-CurrentRefinements-delete {
+    color: #C0564C;
+  }
+  .outdoorkitchenoutlet .ais-CurrentRefinements-delete:hover {
+    color: #D8D1C3;
+  }
+  .outdoorkitchenoutlet .ais-CurrentRefinements-item {
+    border: 1px solid #3A332C;
+  }
+  .outdoorkitchenoutlet .ais-Pagination-link {
+    color: #D8D1C3;
+    border-color: #3A332C;
+  }
+  .outdoorkitchenoutlet .ais-Pagination-item--selected .ais-Pagination-link {
+    background-color: #C0564C;
+    border-color: #C0564C;
+    color: #17130F;
+  }
+  .outdoorkitchenoutlet .ais-SearchBox-input,
+  .outdoorkitchenoutlet .ais-RangeInput-form input,
+  .outdoorkitchenoutlet .ais-SortBy-select {
+    background-color: #1E1914;
+    border-color: #3A332C;
+    color: #D8D1C3;
+  }
+}
