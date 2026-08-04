@@ -22,7 +22,7 @@ export async function GET(request) {
   // Pre-warm the homepage immediately so the ISR-regenerated HTML is cached
   // at this edge node before the response is returned. Without this, the first
   // PageSpeed / real-user request after revalidation triggers SSR and gets a
-  // slow TTFB (external API calls to admin.solanabbqgrills.com + Elasticsearch).
+  // slow TTFB (external API calls to the Solana backend + Elasticsearch).
   const origin = request.nextUrl.origin;
   fetch(`${origin}/`, { cache: "no-store" }).catch(() => {});
 

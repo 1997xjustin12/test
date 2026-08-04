@@ -18,8 +18,14 @@ const imageDomains = [
 ];
 
 // 2. Define all external hosts your application fetches/connects to (client-side)
+//
+// The Solana backend and Elasticsearch entries are belt-and-braces: both are
+// reached only from server code (NEXT_SOLANA_BACKEND_URL and NEXT_ES_URL carry
+// no NEXT_PUBLIC_ prefix, so the browser never sees them and connect-src does
+// not apply). They are kept, and kept current, so that a future client-side
+// call is not blocked by a stale allowlist.
 const connectDomains = [
-  "https://admin.solanabbqgrills.com",
+  "https://be-admin.solanabbqgrills.com", // Solana backend
   "https://*.zoho.com", // Zoho SalesIQ
   "https://*.zohopublic.com", // Zoho SalesIQ (EU/IN/AU)
   "https://*.zohocdn.com", // Zoho SalesIQ CDN
@@ -39,7 +45,7 @@ const connectDomains = [
   "https://www.paypal.com",
   "https://www.google.com", // reCAPTCHA
   "https://www.gstatic.com", // reCAPTCHA
-  "https://es.solanabbqgrills.com", // ES
+  "https://elasticsearch.solanabbqgrills.com", // ES
 ];
 
 const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohocdn.com"];
@@ -47,7 +53,7 @@ const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohoc
 // Origins allowed to embed this app in an iframe (the Django admin that hosts
 // the store-page configurator). Opt-in: set ADMIN_FRAME_ANCESTORS to a
 // space-separated origin list to restrict embedding, e.g.
-//   ADMIN_FRAME_ANCESTORS="http://localhost https://admin.solanabbqgrills.com"
+//   ADMIN_FRAME_ANCESTORS="http://localhost https://be-admin.solanabbqgrills.com"
 // When unset, no frame-ancestors directive is emitted (embedding stays open,
 // as before) so dev/staging aren't accidentally blocked.
 const adminFrameAncestors = (process.env._NEXT_ADMIN_FRAME_ANCESTORS || "")
