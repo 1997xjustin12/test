@@ -50,6 +50,14 @@ const ES_PAGE_SIZE = 500;
 const SHOPIFY_PAGE_SIZE = 250;
 // Guard against an unbounded loop if a store keeps returning products.
 const SHOPIFY_MAX_PAGES = 60;
+// products.json is rate limited. Walking ~18 pages back to back reliably trips
+// it, which failed the whole feed with a 429 and dropped the route from static
+// to on-demand. Pace the requests and retry with backoff rather than give up.
+const SHOPIFY_PAGE_DELAY_MS = 600;
+const SHOPIFY_RETRY_ATTEMPTS = 4;
+const SHOPIFY_RETRY_BASE_MS = 1500;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Drop anything outside the XML 1.0 legal character range. Product copy is
 // pasted from manufacturer sources and occasionally carries stray control
@@ -118,19 +126,48 @@ function imageTags(sources) {
 
 // ─── Shopify mode ────────────────────────────────────────────────────────────
 
+// Retries throttling and transient server errors; anything else is a real
+// failure and is surfaced immediately rather than retried pointlessly.
+async function fetchShopifyPage(url) {
+  let lastError;
+
+  for (let attempt = 0; attempt < SHOPIFY_RETRY_ATTEMPTS; attempt++) {
+    const res = await fetch(url, {
+      next: { revalidate: 3600 },
+      headers: { Accept: "application/json" },
+    });
+
+    if (res.ok) return res;
+    if (res.status !== 429 && res.status < 500) {
+      throw new Error(`${url} responded ${res.status}`);
+    }
+
+    lastError = new Error(`${url} responded ${res.status}`);
+    // Honour Retry-After when the server sends it, else exponential backoff.
+    const retryAfter = Number(res.headers.get("retry-after"));
+    const waitMs =
+      Number.isFinite(retryAfter) && retryAfter > 0
+        ? retryAfter * 1000
+        : SHOPIFY_RETRY_BASE_MS * 2 ** attempt;
+    console.warn(
+      `products_sitemap: ${res.status} from Shopify, retrying in ${waitMs}ms ` +
+        `(attempt ${attempt + 1}/${SHOPIFY_RETRY_ATTEMPTS})`,
+    );
+    await sleep(waitMs);
+  }
+
+  throw lastError;
+}
+
 async function fetchShopifyProducts(domain) {
   const products = [];
 
   for (let page = 1; page <= SHOPIFY_MAX_PAGES; page++) {
-    const res = await fetch(
-      `${domain}/products.json?limit=${SHOPIFY_PAGE_SIZE}&page=${page}`,
-      {
-        next: { revalidate: 3600 },
-        headers: { Accept: "application/json" },
-      },
-    );
+    if (page > 1) await sleep(SHOPIFY_PAGE_DELAY_MS);
 
-    if (!res.ok) throw new Error(`${domain}/products.json responded ${res.status}`);
+    const res = await fetchShopifyPage(
+      `${domain}/products.json?limit=${SHOPIFY_PAGE_SIZE}&page=${page}`,
+    );
 
     const data = await res.json();
     const batch = data?.products || [];
