@@ -2,15 +2,44 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
-export const ISBBQ = store_domain === "https://www.bbqgrilloutlet.com";
 
-// Outdoor Kitchen Outlet (OKO) — third brand/theme.
-// Gated on an explicit env flag rather than a domain check (the way ISBBQ works)
-// because OKO has no production domain yet: it runs as a separate Vercel project
-// off this same repo, distinguished only by its env vars. Set
-// NEXT_PUBLIC_STORE_THEME=oko on that project to enable the theme. Leaving it
-// unset is the safe default — Solana and BBQ Grill Outlet keep their own themes.
-export const ISOKO = process.env.NEXT_PUBLIC_STORE_THEME === "oko";
+// Which brand this deployment is. Every theme swap, metadata block and brand
+// conditional in the app keys off these two flags, so getting them wrong is not
+// a cosmetic problem — it serves one brand's copy on another brand's domain.
+//
+// NEXT_PUBLIC_STORE_THEME is the explicit, unambiguous switch: "bbq" or "oko".
+// Prefer it. The domain check is kept as a fallback so bbqgrilloutlet.com keeps
+// working without an env change.
+const STORE_THEME = process.env.NEXT_PUBLIC_STORE_THEME?.trim().toLowerCase();
+
+// Reduce a configured store URL to a bare host for comparison.
+//
+// This exists because the old check was an exact string match against
+// "https://www.bbqgrilloutlet.com", and production had NEXT_PUBLIC_STORE_DOMAIN
+// set without the www. That single missing prefix made ISBBQ false across the
+// whole BBQ deployment, which shipped Solana's title and "wood, gas, and
+// electric designs" meta description on a grill store. The theme itself is
+// applied in the layout via a different code path, so the site still *looked*
+// like BBQ and the mismatch went unnoticed. Comparing hosts rather than exact
+// URLs means a trailing slash, a missing www, http:// or stray whitespace can
+// no longer silently flip a storefront onto another brand.
+const normalizeHost = (value) =>
+  (value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/[/?#].*$/, "");
+
+export const ISBBQ =
+  STORE_THEME === "bbq" || normalizeHost(store_domain) === "bbqgrilloutlet.com";
+
+// Outdoor Kitchen Outlet (OKO) — third brand/theme. Flag-only, with no domain
+// fallback: OKO has no production domain of its own. It runs as a separate
+// Vercel project off this same repo, distinguished only by its env vars, so the
+// project must set NEXT_PUBLIC_STORE_THEME=oko. Unset is the safe default —
+// Solana and BBQ Grill Outlet keep their own themes.
+export const ISOKO = STORE_THEME === "oko";
 
 // The Elasticsearch index every catalog read resolves through — PDP, category
 // and collection pages, search/searchkit, autocomplete, and the sitemap.
