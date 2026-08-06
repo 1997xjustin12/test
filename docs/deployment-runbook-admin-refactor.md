@@ -10,20 +10,41 @@ adds the Page SEO and XML Feeds admin screens, and rebuilds the menu editor.
 
 ## ⚠️ Read this first
 
-**Do not add `STORE_ID` to the BBQ or OKO deployments.**
+**Every deployment sets its own `STORE_ID`:** `solana`, `bbq`, `oko`.
 
-No `bbq_*` or `oko_*` keys exist in Redis, yet those sites have working themes and
-favicons — so both are running on `STORE_REDIS_PREFIX=solana` and share Solana's
-key namespace. Setting `STORE_ID=bbq` flips that deployment to the `bbq_*`
-namespace, which is **completely empty**. It would lose theme colour, favicon,
-page SEO and store settings on the next deploy.
+This was not always safe. Originally no `bbq_*` or `oko_*` keys existed — both
+brands ran on `STORE_REDIS_PREFIX=solana` and shared Solana's namespace, so
+setting `STORE_ID=bbq` would have pointed that deployment at an empty namespace
+and lost its theme, favicon and FAQs.
 
-Splitting namespaces later requires copying the keys first, then setting
-`STORE_ID`.
+**That has been resolved.** 22 keys were copied from `solana_*` into `bbq_*` and
+`oko_*` (nothing overwritten; the two irregular shapes `admin_<id>_market_logo`
+and `<id>_faqs_about_<id>` were mapped correctly). All three namespaces now hold
+identical values, so behaviour is unchanged — but each brand can now be edited
+independently.
 
-Because brands share a namespace, the theme is derived **only from an explicitly
-set `STORE_ID`**, never from the `STORE_REDIS_PREFIX` fallback. If it were, a
-shared namespace would serve Solana's entire storefront on bbqgrilloutlet.com.
+`page_seo` and `store_settings` were empty at the source and were not copied;
+they get populated per brand through the admin. `feed_status` was deliberately
+excluded — it is run history, and copying it would show a brand a "last
+generated" result for a run that never happened there.
+
+The theme is derived **only from an explicitly set `STORE_ID`**, never from the
+`STORE_REDIS_PREFIX` fallback. Brands may legitimately share a namespace, and if
+the prefix could pick the theme, a shared namespace would serve Solana's entire
+storefront on bbqgrilloutlet.com.
+
+### Local testing per brand
+
+```bash
+npm run solana-dev      # or bbq-dev / oko-dev
+npm run solana-build    # or bbq-build / oko-build
+```
+
+`scripts/run-brand.js` copies `.env.<brand>` over `.env.local`, clears
+`.next/cache` when the brand changes, and prints the active store id, Redis
+namespace and feed mode before Next boots. Only one `next dev` can run per
+checkout (Next holds a lock at `.next/dev/lock`), and the script swaps the
+shared `.env.local`, so brands cannot run side by side from one folder.
 
 ---
 
@@ -46,8 +67,21 @@ Vercel → Solana project → Settings → Environment Variables.
 | **Remove** | `MERCHANT_FEED_SHOPIFY_DOMAIN` | Fully migrated — no code reads it. Now Store Settings → Catalog. |
 | Keep | everything else | Including `STORE_REDIS_PREFIX`; still imported by two components. |
 
-**BBQ and OKO: change nothing.** They keep resolving `solana_*` keys and their
-theme from `NEXT_PUBLIC_STORE_THEME` / the domain check, exactly as today.
+## 1b. Environment variables — BBQ and OKO
+
+Now that their namespaces are populated, both get their own id:
+
+| Project | Add |
+| --- | --- |
+| BBQ | `STORE_ID=bbq` |
+| OKO | `STORE_ID=oko` |
+
+`NEXT_PUBLIC_STORE_THEME` becomes redundant on both (`STORE_ID` takes
+precedence) but is harmless to leave. OKO keeps its
+`MERCHANT_FEED_SHOPIFY_DOMAIN` until the value is entered in Store Settings.
+
+Verified locally: each brand builds and serves its own title, palette and feed
+mode with `STORE_ID` set.
 
 ---
 

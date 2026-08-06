@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useReveal } from "@/app/hooks/useReveal";
-import { BBQ_BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
+import { BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
 import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 

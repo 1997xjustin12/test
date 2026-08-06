@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "solana-dev": "node scripts/run-brand.js solana dev",
+    "bbq-dev": "node scripts/run-brand.js bbq dev",
+    "oko-dev": "node scripts/run-brand.js oko dev",
+    "solana-build": "node scripts/run-brand.js solana build",
+    "bbq-build": "node scripts/run-brand.js bbq build",
+    "oko-build": "node scripts/run-brand.js oko build"
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",
