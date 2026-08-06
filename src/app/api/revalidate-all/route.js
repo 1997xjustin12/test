@@ -17,7 +17,8 @@ export async function GET(request) {
   revalidateTag("home-products");       // Homepage featured products
   revalidateTag("layout-data");         // Menu, logo, theme, categories (layout)
   revalidateTag("collections-count");   // Collection product counts
-  revalidateTag("nav-menu");   // Collection product counts
+  revalidateTag("nav-menu");            // Menu tree (PLP metadata + nav)
+  revalidateTag("page-seo");            // Per-route SEO overrides
 
   // Pre-warm the homepage immediately so the ISR-regenerated HTML is cached
   // at this edge node before the response is returned. Without this, the first
@@ -29,7 +30,7 @@ export async function GET(request) {
   return NextResponse.json({
     revalidated: true,
     timestamp: new Date().toISOString(),
-    tags: ["plp-initial-hits", "home-products", "layout-data", "collections-count", "nav-menu"],
+    tags: ["plp-initial-hits", "home-products", "layout-data", "collections-count", "nav-menu", "page-seo"],
     message: "All caches cleared and homepage pre-warmed.",
   });
 }

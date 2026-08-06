@@ -5,6 +5,7 @@ import {
   exclude_brands,
   exclude_collections,
 } from "@/app/lib/helpers";
+import { getStoreSettings } from "@/app/lib/store-settings";
 
 // Google Merchant Center product feed, served at /products_sitemap.xml.
 //
@@ -385,8 +386,12 @@ function xmlResponse(channelTitle, channelLink, items) {
 }
 
 export async function GET() {
-  const shopifyDomain = process.env.MERCHANT_FEED_SHOPIFY_DOMAIN?.replace(/\/+$/, "");
-  const storeName = process.env.NEXT_PUBLIC_STORE_NAME || "Product feed";
+  // Mode and store name now come from this brand's Redis settings, with the
+  // old env vars as fallback. Keeping the switch in env meant a stray variable
+  // could silently repoint one brand's whole feed at another brand's catalog.
+  const settings = await getStoreSettings();
+  const shopifyDomain = settings.merchant_feed_domain?.trim().replace(/\/+$/, "");
+  const storeName = settings.name || "Product feed";
 
   if (shopifyDomain) {
     let products;

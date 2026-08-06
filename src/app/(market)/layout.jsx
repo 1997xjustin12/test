@@ -9,6 +9,8 @@ import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
 import { SearchProvider } from "@/app/context/search";
 import { CategoriesProvider } from "@/app/context/category";
+import { StoreSettingsProvider } from "@/app/context/store-settings";
+import { getStoreSettings } from "@/app/lib/store-settings";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
@@ -106,9 +108,10 @@ const getCachedCategories = unstable_cache(
 );
 
 export default async function MarketLayout({ children }) {
-  const [initData, categories] = await Promise.all([
+  const [initData, categories, storeSettings] = await Promise.all([
     getInitData(),
     getCachedCategories(),
+    getStoreSettings(),
   ]);
 
   if (!initData) {
@@ -156,7 +159,8 @@ export default async function MarketLayout({ children }) {
       <body
         className={`antialiased ${bodyClass}`}
       >
-        <AuthProvider>
+        <StoreSettingsProvider settings={storeSettings}>
+          <AuthProvider>
           <CategoriesProvider
             menu_items={formattedMenuItems}
             categories={categories}
@@ -205,7 +209,8 @@ export default async function MarketLayout({ children }) {
               </CompareProductsProvider>
             </CartProvider>
           </CategoriesProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </StoreSettingsProvider>
       </body>
     </html>
   );

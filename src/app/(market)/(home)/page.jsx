@@ -11,6 +11,9 @@ import BBQNewHomePage from "@/app/components/bbq-design/page/HomePage";
 // OKO COMPONENTS
 import OKOHeroBackground from "@/app/components/oko-design/sections/HeroBackground";
 import OKONewHomePage from "@/app/components/oko-design/page/HomePage";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/");
 // Cache the full rendered page at Vercel's CDN edge for 24h (ISR).
 // TTFB drops to ~50ms globally instead of hitting the origin server.
 // revalidateTag("home-products") from /api/revalidate-all also busts this.

@@ -1,6 +1,16 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
 export default {
+  // Dark mode follows the OS by default (so existing `dark:` utilities in the
+  // storefront keep working) but can be forced either way by putting `.dark`
+  // or `.light` on <html> - used by the admin theme switcher.
+  darkMode: [
+    "variant",
+    [
+      "@media (prefers-color-scheme: dark) { &:not(.light *) }",
+      "&:is(.dark *)",
+    ],
+  ],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",

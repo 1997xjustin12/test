@@ -7,6 +7,9 @@ import { BASE_URL, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import NewSearchPage from "@/app/components/new-design/page/Search";
 import BBQSearchPage from "@/app/components/bbq-design/page/Search";
 import OKOSearchPage from "@/app/components/oko-design/page/Search";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/search");
 
 const STATIC_POPULARS = [
   "Napoleon Ascent",

@@ -1,4 +1,5 @@
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_THEME } from "@/app/lib/store";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
@@ -7,39 +8,17 @@ export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 // conditional in the app keys off these two flags, so getting them wrong is not
 // a cosmetic problem — it serves one brand's copy on another brand's domain.
 //
-// NEXT_PUBLIC_STORE_THEME is the explicit, unambiguous switch: "bbq" or "oko".
-// Prefer it. The domain check is kept as a fallback so bbqgrilloutlet.com keeps
-// working without an env change.
-const STORE_THEME = process.env.NEXT_PUBLIC_STORE_THEME?.trim().toLowerCase();
-
-// Reduce a configured store URL to a bare host for comparison.
+// Resolution now lives in lib/store.js and is derived from STORE_ID, so one
+// deployment identity drives both the Redis key namespace and the theme
+// instead of two env vars that could disagree. NEXT_PUBLIC_STORE_THEME and the
+// bbqgrilloutlet.com domain check survive there as fallbacks.
 //
-// This exists because the old check was an exact string match against
-// "https://www.bbqgrilloutlet.com", and production had NEXT_PUBLIC_STORE_DOMAIN
-// set without the www. That single missing prefix made ISBBQ false across the
-// whole BBQ deployment, which shipped Solana's title and "wood, gas, and
-// electric designs" meta description on a grill store. The theme itself is
-// applied in the layout via a different code path, so the site still *looked*
-// like BBQ and the mismatch went unnoticed. Comparing hosts rather than exact
-// URLs means a trailing slash, a missing www, http:// or stray whitespace can
-// no longer silently flip a storefront onto another brand.
-const normalizeHost = (value) =>
-  (value || "")
-    .trim()
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
-    .replace(/[/?#].*$/, "");
+// Deliberately still synchronous: ~69 call sites branch on these during render,
+// and awaiting a Redis read in those paths would break static generation.
 
-export const ISBBQ =
-  STORE_THEME === "bbq" || normalizeHost(store_domain) === "bbqgrilloutlet.com";
-
-// Outdoor Kitchen Outlet (OKO) — third brand/theme. Flag-only, with no domain
-// fallback: OKO has no production domain of its own. It runs as a separate
-// Vercel project off this same repo, distinguished only by its env vars, so the
-// project must set NEXT_PUBLIC_STORE_THEME=oko. Unset is the safe default —
-// Solana and BBQ Grill Outlet keep their own themes.
+export const ISBBQ = STORE_THEME === "bbq";
 export const ISOKO = STORE_THEME === "oko";
+export const ISSOLANA = STORE_THEME === "solana";
 
 // The Elasticsearch index every catalog read resolves through — PDP, category
 // and collection pages, search/searchkit, autocomplete, and the sitemap.

@@ -1,21 +1,20 @@
 import { Redis } from "@upstash/redis";
-import { STORE_REDIS_PREFIX } from "@/app/lib/store_constants";
+import { STORE_ID, storeKey } from "@/app/lib/store";
 
 export const redis = new Redis({
   url: process.env.NEXT_UPSTASH_REDIS_REST_URL,
   token: process.env.NEXT_UPSTASH_REDIS_REST_TOKEN,
 });
 
-const brand_prefix = STORE_REDIS_PREFIX;
 
 export const keys = {
   menu_lists: {
     description: "used to retreive list of menu keys for bigcommerce.",
-    value: `${brand_prefix}_menu_list`,
+    value: storeKey("menu_list"),
   },
   menu_list_shopify: {
     description: "used to retreive list of menu keys for shopify structure.",
-    value: `${brand_prefix}_shopify_menu_list`,
+    value: storeKey("shopify_menu_list"),
   },
   default_menu: {
     description: "default menu for bigcommerce product",
@@ -36,40 +35,53 @@ export const keys = {
   active_menu: {
     description:
       "used to retreive the key of the active or currently used menu (bigcommerce).",
-    value: `${brand_prefix}_active_menu`,
+    value: storeKey("active_menu"),
   },
   active_shopify_menu: {
     description:
       "used to retreive the key of the active or currently used menu (shopify).",
-    value: `${brand_prefix}_shopify_active_menu`,
+    value: storeKey("shopify_active_menu"),
   },
   logo: {
     description: "used to retreive image_url of the logo",
-    value: `admin_${brand_prefix}_market_logo`,
+    // Irregular shape (prefix in the middle) - kept verbatim so the existing
+    // key keeps resolving. e.g. "admin_solana_market_logo"
+    value: `admin_${STORE_ID}_market_logo`,
   },
   favicon: {
     description: "used to retreive image_url of the favicon",
-    value: `${brand_prefix}_favicon`,
+    value: storeKey("favicon"),
   },
   theme: {
     description: "used to retreive theme color",
-    value: `${brand_prefix}_theme`,
+    value: storeKey("theme"),
+  },
+  feed_status: {
+    description:
+      "last merchant-feed generation result (mode, source, item count, duration, error). Store-scoped.",
+    value: storeKey("feed_status"),
+  },
+  page_seo: {
+    description:
+      "per-route SEO overrides for the app's own pages (home, cart, legal, account...). Store-scoped, so each brand keeps its own copy.",
+    value: storeKey("page_seo"),
   },
   faqs_about_brand: {
     description: "section faqs about brand on single product page",
-    value: `${brand_prefix}_faqs_about_${brand_prefix}`,
+    // Prefix appears twice by design. e.g. "solana_faqs_about_solana"
+    value: `${STORE_ID}_faqs_about_${STORE_ID}`,
   },
   faqs_shipping_policy: {
     description: "section faqs shipping policy on single product page",
-    value: `${brand_prefix}_faqs_shipping_policy`,
+    value: storeKey("faqs_shipping_policy"),
   },
   faqs_return_policy: {
     description: "section faqs return policy on single product page",
-    value: `${brand_prefix}_faqs_return_policy`,
+    value: storeKey("faqs_return_policy"),
   },
   faqs_warranty: {
     description: "section faqs warranty on single product page",
-    value: `${brand_prefix}_faqs_warranty`,
+    value: storeKey("faqs_warranty"),
   },
 };
 

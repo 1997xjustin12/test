@@ -25,13 +25,13 @@ export default function TokenValidator({
     }
 
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <div className="text-center p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 dark:border-indigo-400 mx-auto mb-4"></div>
+          <h2 className="text-2xl font-semibold text-zinc-900 dark:text-white mb-2">
             Validating Access...
           </h2>
-          <p className="text-gray-600">
+          <p className="text-zinc-600 dark:text-zinc-400">
             Please wait while we verify your credentials.
           </p>
         </div>
@@ -46,11 +46,11 @@ export default function TokenValidator({
     }
 
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+      <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <div className="text-center p-8 max-w-md">
-          <div className="bg-red-100 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4">
-            <svg 
-              className="h-8 w-8 text-red-600" 
+          <div className="bg-red-100 dark:bg-red-500/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="h-8 w-8 text-red-600 dark:text-red-400"
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
@@ -63,23 +63,23 @@ export default function TokenValidator({
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-red-600 mb-4">
+          <h1 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">
             Access Denied
           </h1>
-          <p className="text-gray-700 mb-4">
+          <p className="text-zinc-700 dark:text-zinc-300 mb-4">
             {error || 'Invalid or expired authentication token'}
           </p>
-          <div className="bg-gray-100 rounded-lg p-4 text-left">
-            <p className="text-sm text-gray-600 mb-2">
+          <div className="bg-zinc-100 dark:bg-white/5 rounded-lg p-4 text-left">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
               <strong>Possible reasons:</strong>
             </p>
-            <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
+            <ul className="text-sm text-zinc-600 dark:text-zinc-400 list-disc list-inside space-y-1">
               <li>The access link has expired (tokens are valid for 24 hours)</li>
               <li>The token has been tampered with</li>
               <li>You don't have permission to access this page</li>
             </ul>
           </div>
-          <p className="text-sm text-gray-500 mt-4">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-4">
             Please request a new access link from your administrator.
           </p>
         </div>

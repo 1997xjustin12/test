@@ -3,10 +3,9 @@ import { STORE_NAME } from "@/app/lib/store_constants";
 import NewAbout from "@/app/components/new-design/page/About";
 import BBQAbout from "@/app/components/bbq-design/page/About";
 import OKOAbout from "@/app/components/oko-design/page/About";
+import { pageMetadata } from "@/app/lib/page-seo";
 
-export const metadata = {
-  title: `About | ${STORE_NAME}`,
-};
+export const generateMetadata = () => pageMetadata("/about");
 
 const wrapperClass = "min-h-svh py-10 px-4 sm:px-6";
 

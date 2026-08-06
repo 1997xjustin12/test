@@ -7,10 +7,9 @@ import { STORE_NAME } from "@/app/lib/store_constants";
 import NewForgotPasswordPage from "@/app/components/new-design/page/ForgotPassword";
 import BBQForgotPasswordPage from "@/app/components/bbq-design/page/ForgotPassword";
 import OKOForgotPasswordPage from "@/app/components/oko-design/page/ForgotPassword";
+import { pageMetadata } from "@/app/lib/page-seo";
 
-export const metadata = {
-  title: `Forgot Password | ${STORE_NAME}`,
-};
+export const generateMetadata = () => pageMetadata("/forgot-password");
 
 const wrapperClass = "min-h-svh py-10 px-4 sm:px-6";
 

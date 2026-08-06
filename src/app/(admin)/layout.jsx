@@ -23,8 +23,16 @@ export default async function AdminLayout({ children }) {
   const [menu_items] = await redis.mget(mgetKeys);
 
   return (
-    <html lang="en">
-      <body className={`${MontserratFont.className}`}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Applies the stored colour scheme before first paint (no flash). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("admin-theme");if(t==="dark"||t==="light"){document.documentElement.classList.add(t)}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className={`${MontserratFont.className} bg-zinc-50 dark:bg-zinc-950`}>
         <CategoriesProvider menu_items={menu_items}>
           <AdminContent>
             {children}

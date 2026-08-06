@@ -2,6 +2,9 @@ import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import NewShippingPolicyPage from "@/app/components/new-design/page/ShippingPolicy";
 import BBQShippingPolicyPage from "@/app/components/bbq-design/page/ShippingPolicy";
 import OKOShippingPolicyPage from "@/app/components/oko-design/page/ShippingPolicy";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/shipping-policy");
 
 export default function ShippingPolicyPage() {
   if (ISOKO) {

@@ -2,6 +2,9 @@ import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import NewSubscribePage from "@/app/components/new-design/page/Subscribe";
 import BBQSubscribePage from "@/app/components/bbq-design/page/Subscribe";
 import OKOSubscribePage from "@/app/components/oko-design/page/Subscribe";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/subscribe");
 
 export default function SubscribePage() {
   if (ISOKO) {

@@ -3,6 +3,9 @@ import { fetchBrands } from "@/app/lib/fn_server";
 import NewCategories from "@/app/components/new-design/page/Categories";
 import BBQCategories from "@/app/components/bbq-design/page/Categories";
 import OKOCategories from "@/app/components/oko-design/page/Categories";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/categories");
 
 async function CategoriesPage() {
   const BRANDS = await fetchBrands();

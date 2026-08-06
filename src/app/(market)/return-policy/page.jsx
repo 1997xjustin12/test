@@ -2,6 +2,9 @@ import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import NewReturnPolicyPage from "@/app/components/new-design/page/ReturnPolicy";
 import BBQReturnPolicyPage from "@/app/components/bbq-design/page/ReturnPolicy";
 import OKOReturnPolicyPage from "@/app/components/oko-design/page/ReturnPolicy";
+import { pageMetadata } from "@/app/lib/page-seo";
+
+export const generateMetadata = () => pageMetadata("/return-policy");
 
 export default function ReturnPolicyPage() {
   if (ISOKO) {
