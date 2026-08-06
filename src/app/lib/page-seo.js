@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { BASE_URL } from "@/app/lib/helpers";
+import { STORE_ID } from "@/app/lib/store";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 /**
@@ -81,7 +82,8 @@ export const emptyPageSeo = () => ({
  */
 export const getPageSeoMap = unstable_cache(
   async () => (await redis.get(keys.page_seo.value)) || {},
-  ["page-seo"],
+  // Store-scoped read needs a store-scoped cache key — see store-settings.js.
+  ["page-seo", STORE_ID],
   { revalidate: 86400, tags: ["page-seo"] },
 );
 

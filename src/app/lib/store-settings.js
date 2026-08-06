@@ -95,6 +95,9 @@ export const getStoreSettings = unstable_cache(
       return defaults;
     }
   },
-  ["store-settings"],
+  // STORE_ID is part of the cache key: this read is store-scoped, so its cache
+  // entry must be too. Without it one brand's settings can be served from a
+  // cache entry populated by another (or by an older env).
+  ["store-settings", STORE_ID],
   { revalidate: 86400, tags: ["store-settings"] },
 );
