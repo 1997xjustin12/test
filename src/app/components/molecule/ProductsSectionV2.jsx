@@ -30,6 +30,7 @@ import {
   useCurrentRefinements,
   useRefinementList,
 } from "react-instantsearch";
+import { InstantSearchNext } from "react-instantsearch-nextjs";
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
@@ -807,7 +808,7 @@ function ProductsSectionV2({
         className={`${dataLoaded ? "max-w-7xl mx-auto w-full px-4 sm:px-6" : "hidden"}`}
       >
         <div className="mt-5">
-          <InstantSearch
+          <InstantSearchNext
             indexName={es_index}
             searchClient={searchClient}
             initialUiState={initialUiState.current}
@@ -852,7 +853,7 @@ function ProductsSectionV2({
               onDataLoaded={handleDataLoaded}
               initialHits={activeHits}
             />
-          </InstantSearch>
+          </InstantSearchNext>
         </div>
       </div>
     </>
