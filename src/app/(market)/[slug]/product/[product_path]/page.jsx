@@ -17,6 +17,13 @@ import {
   getYMALProducts,
 } from "@/app/lib/fn_server";
 
+import {
+  buildBreadcrumbs,
+  buildFaqPage,
+  buildProduct,
+  serializeJsonLd,
+} from "@/app/lib/structured-data";
+
 import SingleProductPage from "@/app/components/new-design/page/SingleProductPage";
 import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProductPage";
 import OKOSingleProductPage from "@/app/components/oko-design/page/SingleProductPage";
@@ -153,54 +160,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-function buildJsonLd(product, slug, product_path) {
-  const variant = product?.variants?.[0];
-  const price = variant?.price;
-  const availability = product?.published
-    ? "https://schema.org/InStock"
-    : "https://schema.org/OutOfStock";
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    description: stripHtml(product?.body_html || ""),
-    image: product.images?.map((img) => img.src).filter(Boolean) || [],
-    sku: variant?.sku || "",
-    brand: {
-      "@type": "Brand",
-      name: product.vendor || STORE_NAME,
-    },
-    offers: {
-      "@type": "Offer",
-      url: `${BASE_URL}/${slug}/product/${product_path}`,
-      priceCurrency: "USD",
-      price: price || "0",
-      availability,
-      seller: {
-        "@type": "Organization",
-        name: STORE_NAME,
-      },
-    },
-  };
-
-  if (product?.ratings) {
-    const ratingValue = parseFloat(product.ratings) || 0;
-    const reviewCount = product.reviews;
-    if (ratingValue > 0 && reviewCount > 0) {
-      jsonLd.aggregateRating = {
-        "@type": "AggregateRating",
-        ratingValue: ratingValue.toFixed(1),
-        bestRating: "5",
-        worstRating: "1",
-        reviewCount,
-      };
-    }
-  }
-
-  return jsonLd;
-}
-
 function MainSection({ ...props }) {
   if (ISOKO) {
     return (
@@ -237,7 +196,6 @@ export default async function ProductPage({ params }) {
   }
 
   const product_reviews = (await getReviewsByProductId(product_id)) || [];
-  const jsonLd = buildJsonLd(product, slug, product_path);
 
   const [about, shipping_policy, return_policy, warranty] = await getFaqContent();
 
@@ -248,13 +206,32 @@ export default async function ProductPage({ params }) {
     { q: `Warranty`, a: warranty },
   ];
 
+  // Product + BreadcrumbList + FAQPage in one block. The FAQ content is the
+  // same shipping/returns/warranty copy already rendered below — marking it up
+  // costs nothing and is exactly what an agent reads to answer "does this ship
+  // free" without loading the page. See docs/agentic-ai-readiness.md.
+  const jsonLd = serializeJsonLd(
+    buildProduct({
+      product,
+      url: `/${slug}/product/${product_path}`,
+    }),
+    buildBreadcrumbs([
+      { name: product?.brand || product?.vendor || slug, url: `/${slug}` },
+      { name: product?.title, url: `/${slug}/product/${product_path}` },
+    ]),
+    buildFaqPage(FAQS),
+  );
+
   return (
     <>
       <RatingStyles />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {jsonLd && (
+        // eslint-disable-next-line react/no-danger
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
+      )}
       <div className={`min-h-svh ${(ISBBQ || ISOKO) ? "bg-ash dark:bg-char" : "bg-white dark:bg-gray-950"}`}>
         <MainSection
           product={product}

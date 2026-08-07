@@ -192,6 +192,83 @@ export function buildFaqPage(faqs = []) {
 }
 
 /**
+ * A product, with the fields shopping surfaces actually filter on.
+ *
+ * The original PDP schema carried name/description/image/sku/brand/offers only.
+ * Google and the AI shopping surfaces built on the same feed data also read
+ * itemCondition, priceValidUntil, shippingDetails and hasMerchantReturnPolicy —
+ * a missing return policy or shipping block is a common reason an otherwise
+ * valid Product is dropped from rich results.
+ *
+ * Anything not genuinely known is omitted rather than guessed: asserting
+ * "free shipping" or a return window that does not match the published policy
+ * is worse than staying silent, because merchants get penalised for feed data
+ * that contradicts the storefront.
+ */
+export function buildProduct({
+  product,
+  url,
+  shipping,
+  returnPolicy,
+} = {}) {
+  if (!product) return null;
+
+  const variant = product?.variants?.[0];
+  const price = variant?.price;
+
+  const rating = parseFloat(product?.ratings) || 0;
+  const reviewCount = Number(product?.reviews) || 0;
+
+  // Offers must carry a validity horizon or consumers treat the price as
+  // indefinite. One year out matches the 24h PDP revalidate cycle comfortably.
+  const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
+  return compact({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: stripHtml(product?.body_html || ""),
+    image: (product.images || []).map((img) => img?.src).filter(Boolean),
+    sku: variant?.sku || null,
+    // Shopify stores the barcode as GTIN-12/13/14; schema.org accepts the
+    // generic `gtin` and infers the length. mpn falls back to the SKU, which is
+    // what the merchant feed already sends.
+    gtin: variant?.barcode || null,
+    mpn: variant?.sku || null,
+    brand: {
+      "@type": "Brand",
+      name: product.vendor || product.brand || STORE_NAME,
+    },
+    offers: compact({
+      "@type": "Offer",
+      url: absUrl(url),
+      priceCurrency: "USD",
+      price: price != null ? String(price) : null,
+      priceValidUntil,
+      itemCondition: "https://schema.org/NewCondition",
+      availability: product?.published
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      seller: { "@type": "Organization", name: STORE_NAME },
+      shippingDetails: shipping || null,
+      hasMerchantReturnPolicy: returnPolicy || null,
+    }),
+    aggregateRating:
+      rating > 0 && reviewCount > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: rating.toFixed(1),
+            bestRating: "5",
+            worstRating: "1",
+            reviewCount,
+          }
+        : null,
+  });
+}
+
+/**
  * Serialises one or more schema objects for a single <script> tag.
  * Nulls are dropped, so callers can pass builders that opted out.
  *
