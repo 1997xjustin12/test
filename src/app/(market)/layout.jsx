@@ -20,6 +20,11 @@ import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
+import {
+  buildOrganization,
+  buildWebSite,
+  serializeJsonLd,
+} from "@/app/lib/structured-data";
 import Script from "next/script";
 
 // SOLANA COMPONENTS
@@ -154,6 +159,17 @@ export default async function MarketLayout({ children }) {
         <style
           dangerouslySetInnerHTML={{ __html: themeCSS }}
           suppressHydrationWarning
+        />
+        {/* Store + site identity for crawlers and AI agents. Emitted once here
+            rather than per page; page-level schema (Product, ItemList,
+            BreadcrumbList) references the same @id. See
+            docs/agentic-ai-readiness.md. */}
+        {/* eslint-disable-next-line react/no-danger */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(buildOrganization(), buildWebSite()),
+          }}
         />
       </head>
       <body
