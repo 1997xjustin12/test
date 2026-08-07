@@ -126,6 +126,17 @@ cheaper and delivers most of the agent benefit.
       which fetches after mount, so no product reaches the server HTML. Three
       ways out, in order of preference:
 
+      > **SPIKE RESULT 2026-08-07 — option (a) works.** Branch
+      > `spike/instantsearch-ssr`. Server HTML went from **0 → 30 product links**
+      > on `/category/grills-and-smokers`, `/broilmaster` **and `/fireplaces`**,
+      > so it closes 2.1c at the same time. Titles, hrefs and prices are all in
+      > the markup. Hydration is intact: 14 facets, filter clicks work, URL
+      > refinements apply, no new JS errors. Warm SSR latency 143–218ms
+      > (category) and 362–473ms (brand). Two costs: it needs
+      > `react-instantsearch` upgraded **7.15.5 → 7.42.0**, and installs need
+      > `--legacy-peer-deps` (pre-existing — `react-html-parser@2.0.2` peers
+      > React 16 against this project's React 19). Details in the section below.
+
       **(a) `react-instantsearch-nextjs` — the real fix.** Algolia's official
       App Router SSR package. `<InstantSearchNext>` replaces `<InstantSearch>`
       and server-renders the whole widget tree including `<Hits>`. One rendering
