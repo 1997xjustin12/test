@@ -119,15 +119,48 @@ cheaper and delivers most of the agent benefit.
       needs the same treatment — see note (4).
 - [ ] **2.1d `ItemList` on `/categories`.** Should list the categories
       themselves, not products.
-- [ ] **2.2 Server-render the first page of results as real HTML.** The
-      interactive `<InstantSearch>` grid stays; the server emits a semantic
-      product list that hydration replaces. Must render the *same* products the
-      user sees — a hidden list that differs from the visible one is cloaking.
-      **Biggest remaining item.**
-- [ ] **2.3 Server-render category identity** — `<h1>`, description and product
-      count on `/category/[category_slug]` still come from client context. The
-      category is now resolved server-side in the route, so this is just a matter
-      of passing it down as a prop and having the client component prefer it.
+- [ ] **2.2 Server-render the product grid. The single remaining structural
+      item**, and the only thing still missing from category HTML.
+
+      Every listing grid runs through `<InstantSearch>` in `ProductsSectionV2`,
+      which fetches after mount, so no product reaches the server HTML. Three
+      ways out, in order of preference:
+
+      **(a) `react-instantsearch-nextjs` — the real fix.** Algolia's official
+      App Router SSR package. `<InstantSearchNext>` replaces `<InstantSearch>`
+      and server-renders the whole widget tree including `<Hits>`. One rendering
+      path, no drift, and it fixes category pages, brand PLPs, base-nav PLPs
+      (2.1c) and `/search` in a single change. Costs: a new dependency, and it
+      touches `ProductsSectionV2`, which all three themes and every listing page
+      share. **Needs a spike first** — the package is built for Algolia and this
+      app uses `@searchkit/instantsearch-client`. Encouraging sign: the
+      `searchClient` in `ProductsSectionV2` already switches to an absolute URL
+      when `window` is undefined, with a comment naming `getServerState`, so
+      someone has been down this path. `getServerState` is present in the
+      installed `react-instantsearch-core@7.15.5`; `react-instantsearch-nextjs`
+      is not installed.
+
+      **(b) A parallel server-rendered list. Do not do this.** Rendering the 30
+      products from `getListingHits()` as a static list that hydration replaces
+      needs no new dependency and is contained — but it creates a second
+      rendering path that will drift from the InstantSearch one, which is
+      precisely the cloaking risk in note (6). It also flashes on hydration.
+      Listed only so nobody re-derives it and thinks it is clever.
+
+      **(c) Accept it.** The `ItemList` JSON-LD already gives agents and crawlers
+      the same 30 products with names, prices and URLs. Google executes JS and
+      sees the real grid regardless. This is a defensible stopping point if
+      budget is tight — the machine-readable layer is covered, only the raw HTML
+      is not.
+- [x] **2.3 Server-render category identity** — **already true, no work needed.**
+      Verified 2026-08-07: `/category/grills-and-smokers` server HTML contains
+      `<h1>Grills &amp; Smokers</h1>`, the `1087` product count and the
+      breadcrumb `<nav aria-label="Breadcrumb">`. The earlier assumption that
+      these were client-only was wrong. `page/Category.jsx` is `"use client"`,
+      but client components still server-render in the App Router, and
+      `CategoriesProvider` is handed its `categories` as a server prop from the
+      market layout — so `useSolanaCategories()` already has data during SSR.
+      **The only thing missing from category HTML is the product grid.**
 - [x] **2.4 Real `generateMetadata` for categories** — now uses the resolved
       category's name, `sub` descriptor and product count, falling back to
       `toTitleCase(slug)` if Elasticsearch is unavailable.
