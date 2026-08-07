@@ -16,6 +16,7 @@ import {
   Palette,
   Rss,
   Settings,
+  Trash2,
   X,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -49,6 +50,10 @@ const NAV_GROUPS = [
   {
     label: "Configuration",
     items: [{ name: "Store Settings", url: "/admin/settings", icon: Settings }],
+  },
+  {
+    label: "Maintenance",
+    items: [{ name: "Cache", url: "/admin/cache", icon: Trash2 }],
   },
 ];
 

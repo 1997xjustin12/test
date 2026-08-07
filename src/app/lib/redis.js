@@ -66,6 +66,11 @@ export const keys = {
       "per-route SEO overrides for the app's own pages (home, cart, legal, account...). Store-scoped, so each brand keeps its own copy.",
     value: storeKey("page_seo"),
   },
+  cache_status: {
+    description:
+      "last cache-clear result (groups, tags, paths, Redis keys deleted, duration, error). Store-scoped.",
+    value: storeKey("cache_status"),
+  },
   faqs_about_brand: {
     description: "section faqs about brand on single product page",
     // Prefix appears twice by design. e.g. "solana_faqs_about_solana"
