@@ -183,12 +183,26 @@ export default async function MarketLayout({ children }) {
           >
             <CartProvider>
               <CompareProductsProvider>
-                <Suspense fallback={null}>
+                {/* No Suspense boundary here on purpose.
+                    It used to wrap this entire subtree, because SearchProvider
+                    called useSearchParams(). React streams suspended content
+                    into a `<div hidden>` at the end of <body> and moves it into
+                    place with an inline script on hydration — so with
+                    JavaScript disabled the whole storefront rendered blank.
+                    The markup was in the HTML but never became visible, which
+                    is precisely what AI agents and text-extraction crawlers
+                    read. The boundary now lives inside SearchProvider around a
+                    non-rendering leaf, and around the header below, so <main>
+                    reaches the document body as ordinary HTML.
+                    See docs/agentic-ai-readiness.md. */}
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
-                        { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
+                        {/* The nav contains SearchBox, which reads the URL query. */}
+                        <Suspense fallback={null}>
+                          { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
+                          { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
+                        </Suspense>
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
@@ -221,7 +235,6 @@ export default async function MarketLayout({ children }) {
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
-                </Suspense>
               </CompareProductsProvider>
             </CartProvider>
           </CategoriesProvider>

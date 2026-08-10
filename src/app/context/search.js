@@ -1,6 +1,7 @@
 "use client";
 import React, {
   createContext,
+  Suspense,
   useState,
   useContext,
   useEffect,
@@ -36,6 +37,32 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 min client-side ES response cache
 // ============================================================================
 const SearchContext = createContext();
 
+/**
+ * Reads the URL query string and reports it upward. Nothing else.
+ *
+ * useSearchParams() forces every ancestor into a Suspense boundary. Previously
+ * the provider called it directly, so the boundary had to live in the market
+ * layout — where it wrapped the entire storefront. React streams suspended
+ * content into a `<div hidden>` at the end of <body> and relocates it with an
+ * inline script on hydration, which meant that with JavaScript disabled the
+ * whole site rendered as a blank page: the markup was present in the HTML but
+ * never moved into view. That is exactly the failure mode AI agents and
+ * text-extraction crawlers hit.
+ *
+ * Isolating the read here keeps the boundary a leaf. The provider, the header
+ * and the page content all render into the document body as normal HTML.
+ */
+function SearchParamsBridge({ onChange }) {
+  const searchParams = useSearchParams();
+  const value = searchParams.toString();
+
+  useEffect(() => {
+    onChange(value);
+  }, [value, onChange]);
+
+  return null;
+}
+
 export const useSearch = () => {
   const context = useContext(SearchContext);
   if (!context) {
@@ -53,7 +80,16 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+
+  // Fed by <SearchParamsBridge> below rather than read directly, so this
+  // provider does not drag a Suspense boundary around the whole app.
+  // setParamsString is a useState setter, so it is referentially stable and
+  // safe as the bridge's effect dependency.
+  const [paramsString, setParamsString] = useState("");
+  const searchParams = useMemo(
+    () => new URLSearchParams(paramsString),
+    [paramsString],
+  );
 
   // ---------------------------------------------------------------------------
   // STATE - UI
@@ -925,6 +961,11 @@ export const SearchProvider = ({ children }) => {
 
   return (
     <SearchContext.Provider value={contextValue}>
+      {/* The only Suspense boundary the search stack needs, and it wraps
+          nothing that renders. Keeps {children} in the document body. */}
+      <Suspense fallback={null}>
+        <SearchParamsBridge onChange={setParamsString} />
+      </Suspense>
       {children}
     </SearchContext.Provider>
   );
