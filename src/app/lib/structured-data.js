@@ -213,6 +213,20 @@ export function buildProduct({
 } = {}) {
   if (!product) return null;
 
+  // Specs are {label, value} pairs rendered as a table on the page. As
+  // additionalProperty they become filterable facts — an agent answering
+  // "4-burner, at least 50,000 BTU, under 34 inches" can read them directly
+  // instead of parsing the description prose. Capped at 60 so an outlier
+  // product cannot bloat the page; the table remains the complete view.
+  const specs = (product?.product_specs || [])
+    .filter((s) => s?.label && s?.value != null && String(s.value).trim() !== "")
+    .slice(0, 60)
+    .map((s) => ({
+      "@type": "PropertyValue",
+      name: String(s.label).trim(),
+      value: String(s.value).trim(),
+    }));
+
   const variant = product?.variants?.[0];
   const price = variant?.price;
 
@@ -241,6 +255,7 @@ export function buildProduct({
       "@type": "Brand",
       name: product.vendor || product.brand || STORE_NAME,
     },
+    additionalProperty: specs,
     offers: compact({
       "@type": "Offer",
       url: absUrl(url),
