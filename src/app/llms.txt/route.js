@@ -63,8 +63,9 @@ export async function GET() {
 
 ## Machine-readable data
 
-Prefer these over scraping HTML. Both are server-rendered and always current.
+Prefer these over scraping HTML. All are server-rendered and always current.
 
+- [Full context](${BASE_URL}/llms-full.txt): policies, shipping, warranty, and the full category and brand structure in one file.
 - [Product feed](${BASE_URL}/products_sitemap.xml): full catalog with price, availability, brand and images (Google Merchant Center format).
 - [Sitemap](${BASE_URL}/sitemap.xml): every indexable URL.
 
