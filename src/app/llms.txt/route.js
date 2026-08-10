@@ -1,6 +1,26 @@
+import { unstable_cache } from "next/cache";
 import { STORE_NAME, STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
 import { BASE_URL } from "@/app/lib/helpers";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
+
+/**
+ * fetchUniqueCategories() fetches with `cache: "no-store"`, which is
+ * incompatible with the `revalidate` below: during the build Next throws
+ * DYNAMIC_SERVER_USAGE to bail this route out to dynamic rendering, but
+ * fetchUniqueCategories catches its own errors and returns [] — swallowing that
+ * signal. The result shipped a statically rendered llms.txt with the category
+ * list missing entirely, while dev looked correct because dev renders per
+ * request. Caught by `next build`, not by dev.
+ *
+ * Wrapping in unstable_cache gives the read its own cache scope, so it neither
+ * bails the route out nor re-hits Elasticsearch on every request. Same pattern
+ * the market layout uses for the identical call.
+ */
+const getCachedCategories = unstable_cache(
+  () => fetchUniqueCategories(),
+  ["llms-txt-categories"],
+  { revalidate: 86400, tags: ["layout-data"] },
+);
 
 /**
  * /llms.txt — a plain-language map of the site for LLM-based agents.
@@ -19,7 +39,7 @@ export const revalidate = 86400;
 export async function GET() {
   let categories = [];
   try {
-    categories = (await fetchUniqueCategories()) || [];
+    categories = (await getCachedCategories()) || [];
   } catch {
     // A failed category read should degrade this file, not 500 it.
     categories = [];
