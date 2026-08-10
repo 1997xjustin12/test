@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { ES_INDEX, createSlug } from "@/app/lib/helpers";
+import { internalHeaders } from "@/app/lib/rate-limit";
 
 /**
  * Server-side product reads for listing pages.
@@ -103,7 +104,8 @@ export const getListingHits = unstable_cache(
     try {
       const res = await fetch(`${base}/api/es/searchkit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // Marks this as the app's own SSR call so it is exempt from rate limiting.
+        headers: { "Content-Type": "application/json", ...internalHeaders() },
         body: JSON.stringify([
           {
             indexName: ES_INDEX,

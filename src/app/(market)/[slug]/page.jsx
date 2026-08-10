@@ -11,6 +11,7 @@ import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { fetchCollectionsCount } from "@/app/lib/fn_server";
+import { internalHeaders } from "@/app/lib/rate-limit";
 
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 import BBQProductGallery from "@/app/components/bbq-design/page/ProductGallery";
@@ -67,7 +68,8 @@ const getInitialHits = unstable_cache(
       `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // App's own SSR call - exempt from rate limiting.
+        headers: { "Content-Type": "application/json", ...internalHeaders() },
         body: JSON.stringify(body),
       },
     );

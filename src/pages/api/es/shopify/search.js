@@ -1,4 +1,5 @@
 import { ES_INDEX, formatProduct } from "../../../../app/lib/helpers";
+import { withRateLimit } from "@/app/lib/rate-limit";
 
 // Module-level cache — survives across requests, resets on server restart.
 // Keyed by the serialised query body so every unique ES query gets its own entry.
@@ -6,7 +7,7 @@ import { ES_INDEX, formatProduct } from "../../../../app/lib/helpers";
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const cache = new Map(); // bodyKey → { data, ts }
 
-export default async function handler(req, res) {
+async function autocompleteSearch(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
@@ -59,3 +60,7 @@ export default async function handler(req, res) {
     res.status(500).json({ message: "Failed to fetch products", error: error.message });
   }
 }
+
+// Public read endpoint: throttled with 429 + Retry-After so agents can
+// back off gracefully. See lib/rate-limit.js.
+export default withRateLimit(autocompleteSearch, "search");
