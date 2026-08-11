@@ -42,13 +42,27 @@ export const LIMITS = {
  * bucket rather than failing open per-request, so a missing header cannot be
  * used to bypass the limit entirely.
  */
+/**
+ * Reads a header from either request shape.
+ *
+ * pages/api hands us a Node request whose headers are a plain object; App
+ * Router hands us a web Request whose headers are a Headers instance with
+ * .get(). The limiter is used from both, so it has to cope with both rather
+ * than silently reading undefined and treating every caller as anonymous.
+ */
+function header(req, name) {
+  const h = req?.headers;
+  if (!h) return null;
+  if (typeof h.get === "function") return h.get(name);
+  const v = h[name];
+  return Array.isArray(v) ? v[0] : v ?? null;
+}
+
 export function clientKey(req) {
-  const fwd = req.headers?.["x-forwarded-for"];
-  const ip =
-    (Array.isArray(fwd) ? fwd[0] : fwd)?.split(",")[0]?.trim() ||
-    req.headers?.["x-real-ip"] ||
-    null;
-  return ip;
+  const fwd = header(req, "x-forwarded-for");
+  return (
+    fwd?.split(",")[0]?.trim() || header(req, "x-real-ip") || null
+  );
 }
 
 /** Header the app sets on its own server-to-server calls. */
@@ -74,8 +88,7 @@ export const INTERNAL_HEADER = "x-internal-request";
 export function isInternalRequest(req) {
   const secret = process.env.REVALIDATE_SECRET;
   if (!secret) return false;
-  const sent = req.headers?.[INTERNAL_HEADER];
-  return (Array.isArray(sent) ? sent[0] : sent) === secret;
+  return header(req, INTERNAL_HEADER) === secret;
 }
 
 /** Headers for the app's own server-side fetches. Spread into fetch init. */
@@ -143,5 +156,50 @@ export function withRateLimit(handler, group = "search") {
     }
 
     return handler(req, res);
+  };
+}
+
+/**
+ * App Router flavour of withRateLimit.
+ *
+ * Route handlers return a Response rather than mutating `res`, so this wraps
+ * the handler and attaches the RateLimit-* headers to whatever comes back.
+ * Same limits, same buckets, same internal exemption as the pages/api version —
+ * the public catalogue endpoints and the older search endpoints must not be
+ * able to drift apart on throttling policy.
+ */
+export function withRouteRateLimit(handler, group = "search") {
+  return async function rateLimitedRoute(req, ctx) {
+    const { ok, limit, remaining, resetSeconds } = await rateLimit(req, group);
+
+    if (!ok) {
+      return Response.json(
+        {
+          error: "Too Many Requests",
+          message:
+            "Rate limit of " +
+            limit +
+            " requests per minute exceeded. Retry after " +
+            resetSeconds +
+            "s.",
+          retryAfter: resetSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(resetSeconds),
+            "RateLimit-Limit": String(limit),
+            "RateLimit-Remaining": "0",
+            "RateLimit-Reset": String(resetSeconds),
+          },
+        },
+      );
+    }
+
+    const res = await handler(req, ctx);
+    res.headers.set("RateLimit-Limit", String(limit));
+    res.headers.set("RateLimit-Remaining", String(remaining));
+    res.headers.set("RateLimit-Reset", String(resetSeconds));
+    return res;
   };
 }

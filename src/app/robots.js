@@ -1,5 +1,14 @@
 // Private or transactional paths. No crawler benefits from these, and several
 // are user-specific, so they are denied to everyone including AI agents.
+// The catalogue API is the one part of /api meant to be found. Allow entries
+// are listed before the blanket /api/* disallow because more specific rules win
+// — without this carve-out the endpoints exist but every crawler is told not to
+// fetch them, which defeats the point of publishing them.
+const PUBLIC_API_PATHS = [
+  "/api/catalog/",
+  "/api/catalog/*",
+];
+
 const PRIVATE_PATHS = [
   "/api/*",
   "/admin/*",
@@ -78,14 +87,14 @@ export default function robots() {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", ...PUBLIC_API_PATHS],
         disallow: PRIVATE_PATHS,
       },
       ...(ALLOWED_AI_CRAWLERS.length
         ? [
             {
               userAgent: ALLOWED_AI_CRAWLERS,
-              allow: "/",
+              allow: ["/", ...PUBLIC_API_PATHS],
               disallow: PRIVATE_PATHS,
             },
           ]

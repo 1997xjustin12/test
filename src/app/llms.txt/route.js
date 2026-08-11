@@ -73,7 +73,16 @@ Product pages carry schema.org \`Product\` JSON-LD with price, availability,
 brand, SKU and aggregate rating. The site root carries \`Organization\` and
 \`WebSite\` JSON-LD.
 
-## Search
+## Catalogue API — prefer this over scraping
+
+A read-only JSON API. Rate limited; responses carry RateLimit-* headers and
+answer 429 with Retry-After, so back off rather than retrying immediately.
+
+- Search: \`${BASE_URL}/api/catalog/search?q={terms}&brand=&category=&min_price=&max_price=&limit=20\`
+- Product: \`${BASE_URL}/api/catalog/product/{handle}\` — handles come from search
+- [OpenAPI specification](${BASE_URL}/openapi.json)
+
+## Search (human-facing)
 
 - Product search: \`${BASE_URL}/search?query={terms}\`
 
