@@ -11,6 +11,7 @@ import { keys, redis } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { getRootByUrl, getPageData, BASE_URL, BaseNavKeys, ES_INDEX, ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { fetchCollectionsCount } from "@/app/lib/fn_server";
+import { internalHeaders } from "@/app/lib/rate-limit";
 
 import NewProductGallery from "@/app/components/new-design/page/ProductGallery";
 import BBQProductGallery from "@/app/components/bbq-design/page/ProductGallery";
@@ -18,6 +19,12 @@ import OKOProductGallery from "@/app/components/oko-design/page/ProductGallery";
 import NewDesignBasePlp from "@/app/components/new-design/page/BasePlp";
 import BBQBasePlp from "@/app/components/bbq-design/page/BasePlp";
 import OKOBasePlp from "@/app/components/oko-design/page/BasePlp";
+import { toListingProducts } from "@/app/lib/listing-data";
+import {
+  buildBreadcrumbs,
+  buildItemList,
+  serializeJsonLd,
+} from "@/app/lib/structured-data";
 
 // Computes the Elasticsearch filter string from page metadata.
 // Mirrors the same logic in ProductsSectionV2 so V2 can receive the correct
@@ -61,13 +68,21 @@ const getInitialHits = unstable_cache(
       `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // App's own SSR call - exempt from rate limiting.
+        headers: { "Content-Type": "application/json", ...internalHeaders() },
         body: JSON.stringify(body),
       },
     );
     if (!res.ok) throw new Error(`Searchkit prefetch failed: ${res.status}`);
     const data = await res.json();
-    const hits = data?.[0]?.hits;
+    // The endpoint returns { results: [ { hits, ... } ] }. This previously read
+    // data?.[0]?.hits — indexing the object, not the array — which is always
+    // undefined, so the prefetch threw on every request and the caller's
+    // .catch(() => null) hid it. unstable_cache does not cache a thrown error,
+    // so every PLP render also paid for a wasted Elasticsearch round-trip.
+    // data?.[0] is kept as a fallback in case the endpoint is ever changed to
+    // return the bare array this code originally assumed.
+    const hits = data?.results?.[0]?.hits ?? data?.[0]?.hits;
     if (!hits?.length) throw new Error("No hits returned");
     return hits;
   },
@@ -198,9 +213,31 @@ export default async function GenericCategoryPage({ params }) {
     };
   });
 
+  // The gallery below renders client-side, so these products appear in no
+  // server HTML. The ItemList describes the same first page of hits the user
+  // sees once hydrated - see docs/agentic-ai-readiness.md (Tier 2.1).
+  const jsonLd = serializeJsonLd(
+    buildBreadcrumbs([{ name: rootNav?.name || slug, url: `/${url}` }]),
+    buildItemList({
+      name: rootNav?.name || slug,
+      url: `/${url}`,
+      products: toListingProducts(initialHits || []),
+    }),
+  );
+
+  const ListingJsonLd = () =>
+    jsonLd ? (
+      // eslint-disable-next-line react/no-danger
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd }}
+      />
+    ) : null;
+
   if (ISOKO) {
     return (
       <div className="min-h-svh bg-ash dark:bg-char">
+        <ListingJsonLd />
         <OKOProductGallery
           slug={slug}
           config={{ root: rootNav, url, subs }}
@@ -215,6 +252,7 @@ export default async function GenericCategoryPage({ params }) {
   if (ISBBQ) {
     return (
       <div className="min-h-svh bg-ash dark:bg-char">
+        <ListingJsonLd />
         <BBQProductGallery
           slug={slug}
           config={{ root: rootNav, url, subs }}
@@ -228,6 +266,7 @@ export default async function GenericCategoryPage({ params }) {
 
   return (
     <div className="min-h-svh bg-white dark:bg-gray-950">
+      <ListingJsonLd />
       <NewProductGallery
         slug={slug}
         config={{ root: rootNav, url, subs }}

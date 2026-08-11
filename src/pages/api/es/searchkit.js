@@ -18,6 +18,7 @@ import {
 } from "../../../app/lib/filter-helper";
 import { fixObservableSubclass } from "@apollo/client/utilities";
 import { redis } from "../../../app/lib/redis";
+import { withRateLimit } from "@/app/lib/rate-limit";
 
 const CACHE_TTL = 60; // seconds for filtered/paginated requests
 const INITIAL_PAGE_TTL = 86400; // 24h for page-0, unfiltered requests
@@ -72,7 +73,7 @@ const mainItemsScriptSort = {
   },
 };
 
-export default async function handler(req, res) {
+async function searchkit(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method Not Allowed" });
     return;
@@ -441,3 +442,7 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Searchkit failed", details: err.message });
   }
 }
+
+// Public read endpoint: throttled with 429 + Retry-After so agents can
+// back off gracefully. See lib/rate-limit.js.
+export default withRateLimit(searchkit, "search");

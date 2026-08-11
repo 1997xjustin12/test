@@ -30,6 +30,7 @@ import {
   useCurrentRefinements,
   useRefinementList,
 } from "react-instantsearch";
+import { InstantSearchNext } from "react-instantsearch-nextjs";
 import Client from "@searchkit/instantsearch-client";
 import Link from "next/link";
 import Image from "next/image";
@@ -736,8 +737,16 @@ function ProductsSectionV2({
   // wrong-results flash before InstantSearch resolves the filtered query.
   const activeHits =
     initialHits?.length && !urlHasActiveParams() ? initialHits : null;
-  // Start loaded immediately when we have server-prefetched hits — no skeleton shown.
-  const [dataLoaded, setDataLoaded] = useState(!!activeHits?.length);
+  // Start loaded. The grid below is server-rendered by <InstantSearchNext>, so
+  // the first paint already contains real products on every listing route —
+  // there is nothing for a skeleton to stand in for.
+  //
+  // This used to start false unless the route passed `initialHits`, which only
+  // /[slug] did. Category pages therefore rendered the skeleton into the server
+  // HTML and hid the real grid behind `hidden`, so anything that does not run
+  // JavaScript — AI agents, text-extraction crawlers — saw placeholder boxes
+  // instead of 30 products. See docs/agentic-ai-readiness.md.
+  const [dataLoaded, setDataLoaded] = useState(true);
   // initialFilterString comes from the server so InstantSearch has the right
   // filter on the very first render — before the context useEffect resolves.
   const [filterString, setFilterString] = useState(initialFilterString);
@@ -807,7 +816,7 @@ function ProductsSectionV2({
         className={`${dataLoaded ? "max-w-7xl mx-auto w-full px-4 sm:px-6" : "hidden"}`}
       >
         <div className="mt-5">
-          <InstantSearch
+          <InstantSearchNext
             indexName={es_index}
             searchClient={searchClient}
             initialUiState={initialUiState.current}
@@ -852,7 +861,7 @@ function ProductsSectionV2({
               onDataLoaded={handleDataLoaded}
               initialHits={activeHits}
             />
-          </InstantSearch>
+          </InstantSearchNext>
         </div>
       </div>
     </>

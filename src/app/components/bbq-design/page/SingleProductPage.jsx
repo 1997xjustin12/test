@@ -61,7 +61,11 @@ function SingleProductPage({
   const price = parseFloat(firstVariant?.price) || 0;
 
   return (
-    <div className="text-char dark:text-ash font-sora">
+    // <article> rather than <div>: this page is one self-contained product, and
+    // the landmark plus the labelled sections below are how a browsing agent
+    // works out the page hierarchy without guessing from class names.
+    // See docs/agentic-ai-readiness.md.
+    <article aria-label={product?.title || "Product"} className="text-char dark:text-ash font-sora">
       <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />
 
@@ -69,7 +73,10 @@ function SingleProductPage({
         <Breadcrumb crumbs={product?.breadcrumbs} />
 
         {/* HERO: GALLERY + INFO */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-12 lg:items-start">
+        <section
+          aria-label="Product overview"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-12 lg:items-start"
+        >
           <div className="lg:sticky lg:top-[140px]">
             <ImageGallery
               images={product?.images || []}
@@ -77,22 +84,26 @@ function SingleProductPage({
             />
           </div>
           <ProductInfo product={product} />
-        </div>
+        </section>
 
         {/* BELOW-FOLD SECTIONS */}
         <FrequentlyBoughtTogether product={product} />
         <CollectionStrip product={product} />
-        <DescriptionSection
+        <section aria-label="Product description">
+          <DescriptionSection
           brand={product?.brand}
           brandHref={product?.brand_url}
           brandImage={product?.brand_image}
           description={product?.body_html}
         />
-        <SpecsShipping
+        </section>
+        <section aria-label="Specifications and shipping">
+          <SpecsShipping
           specs={product?.product_specs}
           shipping={product?.shipping_info}
           isFreeshipping={product?.is_freeshipping || false}
         />
+        </section>
         {product?.sp_product_options &&
           Array.isArray(product?.sp_product_options) &&
           product?.sp_product_options.length > 1 && (
@@ -101,14 +112,18 @@ function SingleProductPage({
               activeProductId={product?.product_id}
             />
           )}
-        <ReviewsSection
+        <section aria-label="Customer reviews">
+          <ReviewsSection
           rating={reviews?.summary?.average_rating || 0}
           reviewCount={reviews?.summary?.total_reviews || reviews?.results?.length || 0}
           reviews={reviews?.results || []}
           summary={reviews?.summary || null}
           product_id={product?.product_id}
         />
-        <FAQSection faqs={faqs} />
+        </section>
+        <section aria-label="Shipping, returns and warranty">
+          <FAQSection faqs={faqs} />
+        </section>
         <SupportCTA />
         {Array.isArray(product?.fbt_carousel) &&
           product.fbt_carousel?.length > 0 && (
@@ -125,7 +140,7 @@ function SingleProductPage({
 
       <StickyCTA product={product} />
       <MobileStickyCTA product={product} />
-    </div>
+    </article>
   );
 }
 
