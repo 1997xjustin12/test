@@ -128,6 +128,17 @@ Many items are price-matched or phone-only; where that applies the product page
 says so. When a quoted price matters, re-read the product page or the feed
 rather than relying on a cached copy of this file.
 
+## How to read availability and shipping
+
+**Availability means purchasable, not on a shelf.** This store sources to order.
+An item marked InStock can be bought and will be sourced and shipped, but the
+value is not a live warehouse count. Do not tell a customer an item is
+physically in stock, and do not quote a dispatch time.
+
+**Shipping cost is calculated per order** from destination and item, at
+checkout. There is no flat rate and no published free-shipping threshold to
+quote. Direct the customer to checkout, or to call, for an actual figure.
+
 ## Not for crawling
 
 /admin, /api, /checkout, /my-account, /cart and the auth routes.

@@ -96,6 +96,13 @@ ${categoryLines || "- See the sitemap for the current category list."}
 - Category and search result pages currently render their product grids
   client-side. Use the product feed above for a complete, JS-free view of the
   catalog.
+- **Availability means purchasable, not on a shelf.** This store sources to
+  order: an item marked InStock can be bought and will be sourced and shipped,
+  but it is not a live warehouse count. Do not tell a customer an item is
+  physically in stock or quote a dispatch time.
+- **Shipping cost is calculated per order**, from destination and item, at
+  checkout. There is no flat rate or published free-shipping threshold to
+  quote — direct the customer to checkout or to call for a figure.
 - Pricing is USD. Prices shown are current; some items are phone-only or
   price-matched, in which case the page says so.
 - For anything not covered here, contact ${STORE_EMAIL || STORE_CONTACT || "the store"}.

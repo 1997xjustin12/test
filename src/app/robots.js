@@ -75,8 +75,18 @@ const AI_CRAWLERS = {
   ],
 };
 
-const ALLOWED_AI_CRAWLERS = [...AI_CRAWLERS.search, ...AI_CRAWLERS.training];
-const DISALLOWED_AI_CRAWLERS = [];
+// Client decision, 11 Aug 2026: allow search, block training.
+//
+// "Agentic AI friendly" means being visible in AI answers, and that is driven
+// entirely by the search crawlers. The training crawlers send no traffic back —
+// they consume product photography and copy to train models that may then
+// recommend a competitor. Vendors run the two as separate bots precisely so
+// this split is possible (OAI-SearchBot vs GPTBot, Googlebot vs
+// Google-Extended), so blocking training costs nothing in shopping visibility.
+//
+// Reversible: move an array, no other change.
+const ALLOWED_AI_CRAWLERS = [...AI_CRAWLERS.search];
+const DISALLOWED_AI_CRAWLERS = [...AI_CRAWLERS.training];
 
 export default function robots() {
   // No placeholder fallback: pointing crawlers at a sitemap on a domain we do

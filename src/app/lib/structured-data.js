@@ -204,6 +204,23 @@ export function buildFaqPage(faqs = []) {
  * "free shipping" or a return window that does not match the published policy
  * is worse than staying silent, because merchants get penalised for feed data
  * that contradicts the storefront.
+ *
+ * `shippingDetails` is deliberately never populated. Confirmed with the client
+ * 11 Aug 2026: shipping is calculated per order at checkout from destination
+ * and item. schema.org expects a stated rate or a free-shipping threshold, and
+ * we have neither — publishing one would be a promise checkout cannot keep.
+ * (Note the storefront currently advertises both "$499+" and "over $1,999" for
+ * free shipping in different components; that copy contradicts itself and the
+ * calculated model, and is a separate issue for whoever owns it.)
+ *
+ * `hasMerchantReturnPolicy` stays available but unset until someone confirms
+ * the return window, who pays return postage, and any restocking fee. The
+ * storefront says "30-Day Returns" but that has not been verified as the
+ * complete policy.
+ *
+ * `availability` is derived from the published flag. The store sources to
+ * order, so this correctly means "purchasable" rather than "on a shelf" —
+ * see the note in llms.txt that tells agents not to over-claim it.
  */
 export function buildProduct({
   product,
