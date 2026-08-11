@@ -2,9 +2,25 @@
 
 import Image from "next/image";
 import { useReveal } from "@/app/hooks/useReveal";
-import { BBQ_BLOG_POSTS } from "@/app/data/new-homepage";
+// Namespace import, not a named one, and with a fallback.
+//
+// BBQ production died with `ReferenceError: BBQ_BLOG_POSTS is not defined`
+// while the identical build ran fine locally. Both BLOG_POSTS and
+// BBQ_BLOG_POSTS live in new-homepage.js; the one Solana uses survived and
+// this one did not, which is the signature of the bundler tree-shaking the
+// export away while leaving a reference to it behind. A named import then
+// resolves to a binding that was never initialised - hence "not defined"
+// rather than "undefined", and hence a guard like BBQ_BLOG_POSTS?.[0]
+// cannot help: the ReferenceError fires on access, before optional chaining.
+//
+// A namespace import cannot become a dangling binding, and ?? [] means the
+// worst case is an empty blog strip instead of a white screen on the whole
+// homepage.
+import * as HomeData from "@/app/data/new-homepage";
 import { BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
+
+const POSTS = HomeData.BBQ_BLOG_POSTS ?? [];
 
 function BlogCard({ tag, title, readTime, date, img, url }) {
   const ref = useReveal();
@@ -82,22 +98,22 @@ export default function Blog() {
         </div>
 
         {/* Mobile: first post only as compact horizontal card */}
-        {BBQ_BLOG_POSTS[0] && (
-          <Link href={BBQ_BLOG_POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
+        {POSTS[0] && (
+          <Link href={POSTS[0].url} className="sm:hidden flex gap-4 rounded-2xl overflow-hidden bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:shadow-lg transition-shadow">
             <div className="relative w-28 flex-shrink-0">
-              <Image src={BBQ_BLOG_POSTS[0].img} alt={BBQ_BLOG_POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
+              <Image src={POSTS[0].img} alt={POSTS[0].title} fill sizes="112px" className="object-cover" loading="lazy" />
             </div>
             <div className="p-4 min-w-0">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-1">{BBQ_BLOG_POSTS[0].tag}</p>
-              <h3 className="font-oswald text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{BBQ_BLOG_POSTS[0].title}</h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{BBQ_BLOG_POSTS[0].readTime}</p>
+              <p className="text-[10px] font-bold tracking-widest uppercase text-theme-600 dark:text-theme-600 mb-1">{POSTS[0].tag}</p>
+              <h3 className="font-oswald text-sm text-charcoal dark:text-white leading-snug line-clamp-3">{POSTS[0].title}</h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">{POSTS[0].readTime}</p>
             </div>
           </Link>
         )}
 
         {/* Tablet+: full grid */}
         <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {BBQ_BLOG_POSTS.map((p,index) => (
+          {POSTS.map((p,index) => (
             <BlogCard key={`home-blogs-${index}`} {...p} />
           ))}
         </div>
