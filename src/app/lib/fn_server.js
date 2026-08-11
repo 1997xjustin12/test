@@ -229,7 +229,9 @@ export async function fetchUniqueCategories() {
           },
         },
       },
-      { cache: "no-store" },
+      // See fetchBrands: no-store conflicts with route-level revalidate and the
+      // catch below hides the resulting bailout. Tagged revalidate instead.
+      { next: { revalidate: 86400, tags: ["layout-data"] } },
     );
     return (
       data?.aggregations?.unique_categories?.buckets?.map(mapCategoryResults) ||
@@ -257,7 +259,16 @@ export async function fetchBrands() {
           },
         },
       },
-      { cache: "no-store" },
+      // Was `cache: "no-store"`, which is incompatible with any route that
+      // sets `revalidate`. During a build Next throws DYNAMIC_SERVER_USAGE to
+      // bail such a route out to dynamic rendering — but the catch below
+      // swallows that signal and returns [], so /categories shipped
+      // statically with an empty brand list while the build log filled with
+      // "couldn't be rendered statically" noise. Same failure that emptied
+      // llms.txt. A tagged revalidate keeps the data fresh, keeps the route
+      // statically renderable, and the tag lets the admin cache control and
+      // /api/revalidate-all bust it on demand.
+      { next: { revalidate: 86400, tags: ["layout-data"] } },
     );
     return (
       data?.aggregations?.unique_brands?.buckets?.map((b) => ({
@@ -284,7 +295,7 @@ export async function getCollectionProducts(id) {
           "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
           Authorization: `Api-Key ${process.env.NEXT_SOLANA_COLLECTIONS_KEY}`,
         },
-        cache: "no-store",
+        next: { revalidate: 86400, tags: ["home-products"] },
       },
     );
     if (!response.ok) throw new Error("Backend failed to respond");
@@ -306,7 +317,9 @@ export async function getCollectionProducts(id) {
           },
         },
       },
-      { cache: "no-store" },
+      // See fetchBrands: no-store conflicts with route-level revalidate and the
+      // catch below hides the resulting bailout. Tagged revalidate instead.
+      { next: { revalidate: 86400, tags: ["home-products"] } },
     );
     return data?.hits?.hits?.map((item) => item?._source) || [];
   } catch (error) {
