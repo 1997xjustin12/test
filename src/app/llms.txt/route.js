@@ -81,6 +81,7 @@ answer 429 with Retry-After, so back off rather than retrying immediately.
 - Search: \`${BASE_URL}/api/catalog/search?q={terms}&brand=&category=&min_price=&max_price=&limit=20\`
 - Product: \`${BASE_URL}/api/catalog/product/{handle}\` — handles come from search
 - [OpenAPI specification](${BASE_URL}/openapi.json)
+- MCP endpoint: \`${BASE_URL}/api/mcp\` — Model Context Protocol, JSON-RPC 2.0 over POST. Tools: search_products, get_product.
 
 ## Search (human-facing)
 

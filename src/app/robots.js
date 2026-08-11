@@ -7,6 +7,7 @@
 const PUBLIC_API_PATHS = [
   "/api/catalog/",
   "/api/catalog/*",
+  "/api/mcp",
 ];
 
 const PRIVATE_PATHS = [
