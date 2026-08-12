@@ -1,5 +1,5 @@
 const TRUST_ITEMS = [
-  { icon: '🚚', title: 'Free Shipping $499+',         sub: 'Ships in 1–2 business days' },
+  { icon: '🚚', title: 'Free Shipping $79.99+',         sub: 'Ships in 1–2 business days' },
   { icon: '🏷️', title: 'Price-Match Guarantee',       sub: 'Found it cheaper? We\'ll match it' },
   { icon: '🛡️', title: 'Full Manufacturer Warranty',  sub: 'Authorized dealer on every brand' },
   { icon: '↩️', title: 'Easy 30-Day Returns',         sub: 'Hassle-free refund policy' },

@@ -68,7 +68,7 @@ function BenefitsBar() {
   const BENEFITS = [
     {
       title: "Free shipping",
-      sub: "On orders over $1,999",
+      sub: "On orders over $79.99",
       icon: (
         <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7M5.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM18.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
       ),

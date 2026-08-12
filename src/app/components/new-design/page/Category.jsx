@@ -54,7 +54,7 @@ function CategoryHero({ category }) {
 
 function BenefitsBar() {
   const BENEFITS = [
-    { icon: "🚚", title: "Free Shipping",   sub: "On orders over $1,999" },
+    { icon: "🚚", title: "Free Shipping",   sub: "On orders over $79.99" },
     { icon: "🛡️", title: "5-Year Warranty", sub: "Full parts & labor" },
     { icon: "📞", title: "Expert Support",  sub: "Mon–Sat 8am–6pm PST" },
     { icon: "↩️", title: "30-Day Returns",  sub: "Hassle-free policy" },
