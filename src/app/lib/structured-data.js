@@ -209,24 +209,70 @@ export function buildFaqPage(faqs = []) {
  * 11 Aug 2026: shipping is calculated per order at checkout from destination
  * and item. schema.org expects a stated rate or a free-shipping threshold, and
  * we have neither — publishing one would be a promise checkout cannot keep.
- * (Note the storefront currently advertises both "$499+" and "over $1,999" for
- * free shipping in different components; that copy contradicts itself and the
- * calculated model, and is a separate issue for whoever owns it.)
  *
- * `hasMerchantReturnPolicy` stays available but unset until someone confirms
- * the return window, who pays return postage, and any restocking fee. The
- * storefront says "30-Day Returns" but that has not been verified as the
- * complete policy.
+ * The storefront copy was standardised on "free over $79.99" on 12 Aug, which
+ * settles a contradiction between three different figures ($499+, over $1,999,
+ * over $79.99) but does NOT unblock this field. A consistent claim on the page
+ * is still not the same as a rate checkout will honour, and structured data is
+ * read as a commitment. Populate this only once someone confirms that checkout
+ * genuinely charges free over $79.99 and $9.99 below it.
+ *
+ * `hasMerchantReturnPolicy` is populated from RETURN_POLICY below, which mirrors
+ * the return policy the storefront already publishes. See that constant for
+ * what is asserted and what is deliberately left out.
  *
  * `availability` is derived from the published flag. The store sources to
  * order, so this correctly means "purchasable" rather than "on a shelf" —
  * see the note in llms.txt that tells agents not to over-claim it.
  */
+/**
+ * The published return policy, expressed as schema.org.
+ *
+ * Source of truth is the /return-policy page — components/*-design/page/
+ * ReturnPolicy.jsx, identical across all three brands — not the shorter FAQ
+ * blurb on the product page. Where the two disagree the page is more specific
+ * and is the one a customer is actually shown when they go looking:
+ *
+ *   window          30 calendar days from receipt
+ *   condition       unused, in original packaging, RMA required first
+ *   restocking fee  20% on ALL items  (the FAQ says only opened items)
+ *   return postage  the customer's responsibility, deducted from the refund
+ *                   (the FAQ does not say who pays)
+ *
+ * Asserted rather than omitted because it matches what the site already tells
+ * shoppers. The penalty risk that kept this empty runs the other way — it comes
+ * from publishing terms *better* than the real ones, so a buyer arrives
+ * expecting free returns and meets a fee.
+ *
+ * `returnFees` takes one value but two charges apply here, so it carries the
+ * one a shopper cannot avoid — return postage is theirs regardless — while
+ * `restockingFee` quantifies the 20% on top. Encoding only the restocking fee
+ * would imply returns ship free.
+ *
+ * `returnShippingFeesAmount` is left out: the customer pays, but the amount
+ * depends on the item and the destination and is nowhere stated.
+ *
+ * If the /return-policy page changes, change this with it. Structured data that
+ * disagrees with the page it sits beside is worse than none.
+ */
+export const RETURN_POLICY = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "US",
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: 30,
+  returnMethod: "https://schema.org/ReturnByMail",
+  returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+  // A bare number is read as a percentage of the product price. A
+  // MonetaryAmount here would instead assert a flat $20 fee, which on a $3,000
+  // grill understates the real charge by two orders of magnitude.
+  restockingFee: 20,
+};
+
 export function buildProduct({
   product,
   url,
   shipping,
-  returnPolicy,
+  returnPolicy = RETURN_POLICY,
 } = {}) {
   if (!product) return null;
 

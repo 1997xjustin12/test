@@ -236,12 +236,39 @@ main nav pages (`/fireplaces`, `/patio-heaters`, `/open-box`, …) get no
 `ItemList`. These are the highest-traffic PLPs on the site, so 2.1c matters more
 than its position in this list suggests.
 
-**(5) Two Product fields are deliberately left empty.** `shippingDetails` and
-`hasMerchantReturnPolicy` are accepted by `buildProduct()` but nothing passes
-them yet. They need the *real* published policy — shipping thresholds and the
-return window — and asserting a policy that contradicts the storefront or the
-merchant feed is worse than omitting it, because that mismatch is exactly what
-gets a merchant penalised. Wire them once someone confirms the actual numbers.
+**(5) One Product field is deliberately left empty; the other is now populated.**
+
+`hasMerchantReturnPolicy` is wired, from `RETURN_POLICY` in
+`lib/structured-data.js`. Its source is the **/return-policy page**
+(`components/*-design/page/ReturnPolicy.jsx`, identical on all three brands),
+not the shorter FAQ blurb on the product page. The two disagree, and the page
+wins because it is more specific and is what a customer is shown when they go
+looking:
+
+| | FAQ blurb | /return-policy page |
+|---|---|---|
+| Window | 30 days | 30 calendar days |
+| Restocking fee | 20%, *opened items only* | **20% on all items** |
+| Return postage | not stated | **customer's responsibility** |
+
+That resolved both fields that were previously left unstated. `returnFees`
+carries `ReturnFeesCustomerResponsibility` — one enum has to cover two charges,
+so it states the one a shopper cannot avoid — and `restockingFee: 20` adds the
+percentage on top. `returnShippingFeesAmount` stays out: the customer pays, but
+the amount varies by item and destination and is nowhere published.
+
+`shippingDetails` stays empty. The client confirmed on 11 Aug 2026 that shipping
+is calculated per order at checkout, so there is no rate to state.
+
+**Storefront shipping copy was standardised on "free over $79.99" on 12 Aug.**
+It previously claimed three different thresholds in different components —
+`$499+` (4 places, including the BBQ meta description), `over $1,999` (4 places,
+the category hero cards) and `over $79.99` (the FAQ). All now read $79.99.
+
+This settles the copy but **does not unblock `shippingDetails`**. A consistent
+claim on the page is still not a rate checkout will honour, and structured data
+is read as a commitment. Populate it only once someone confirms checkout really
+does charge free over $79.99 and $9.99 below.
 
 **(6) Never emit an `ItemList` that disagrees with the rendered grid.** The
 schema must describe the products the user actually sees. That is why
