@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { redis, keys } from "@/app/lib/redis";
 import { getStoreSettings } from "@/app/lib/store-settings";
+import { isAuthorizedAdminRequest } from "@/app/lib/admin-auth";
 
 // Regenerates the Google Merchant Center feed on demand, and (optionally) the
 // crawl sitemap.
@@ -36,6 +37,14 @@ function countItems(xml, target) {
 }
 
 export async function POST(request) {
+  // Gated before anything else runs. In SHOPIFY mode this walks an external
+  // storefront's whole catalogue under rate limiting for up to five minutes,
+  // so an open endpoint is an invitation to burn the function budget and the
+  // upstream rate limit with a one-line request.
+  if (!(await isAuthorizedAdminRequest(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const target = request.nextUrl.searchParams.get("target") === "sitemap"
     ? "sitemap"
     : "feed";
@@ -106,7 +115,13 @@ export async function POST(request) {
   return NextResponse.json(result, { status: result.status === "ok" ? 200 : 502 });
 }
 
-export async function GET() {
+export async function GET(request) {
+  // Reports the feed source, which on some brands is another storefront's
+  // domain. Admin-only, like the screen that reads it.
+  if (!(await isAuthorizedAdminRequest(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const stored = (await redis.get(keys.feed_status.value)) || {};
   const settings = await getStoreSettings();
   const shopifyDomain = settings.merchant_feed_domain?.trim().replace(/\/+$/, "");

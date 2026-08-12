@@ -7,6 +7,7 @@ import {
   CACHE_STORE_ID,
   getGroups,
 } from "@/app/lib/cache-registry";
+import { isAuthorizedAdminRequest } from "@/app/lib/admin-auth";
 
 /**
  * Single cache-clear entry point, driven by lib/cache-registry.js.
@@ -16,25 +17,23 @@ import {
  *   POST /api/cache/clear?warm=0          -> skip the homepage pre-warm
  *   GET  /api/cache/clear                 -> registry + last run, for the admin UI
  *
- * Auth mirrors the rest of the admin API surface: a same-origin call (the admin
- * screen) or an explicit ?secret= matching REVALIDATE_SECRET for external
- * callers such as the Django admin. Note that an Origin header is client-
- * supplied and therefore not a real authorization boundary — if this needs to
- * be genuinely locked down, add /api/cache/:path* to the proxy.js matcher and
- * gate it the same way /admin is gated.
+ * Auth mirrors the rest of the admin API surface: the admin's signed session
+ * cookie, or an explicit ?secret= matching REVALIDATE_SECRET for external
+ * callers such as the Django admin.
+ *
+ * This previously also accepted any request whose Origin header was absent or
+ * same-origin, with a comment noting that was not a real authorization
+ * boundary. It was not: Origin is client-supplied, and curl sends none at all,
+ * so the check passed for anyone who simply asked.
  */
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-function authorize(request) {
-  const secret = request.nextUrl.searchParams.get("secret");
-  if (secret && secret === process.env.REVALIDATE_SECRET) return null;
-
-  const origin = request.headers.get("origin");
-  if (!origin || origin === request.nextUrl.origin) return null;
+async function authorize(request) {
+  if (await isAuthorizedAdminRequest(request)) return null;
 
   return NextResponse.json(
-    { status: "error", error: "Invalid secret" },
+    { status: "error", error: "Unauthorized" },
     { status: 401 },
   );
 }
@@ -64,7 +63,7 @@ async function deleteByPattern(pattern) {
 }
 
 export async function POST(request) {
-  const denied = authorize(request);
+  const denied = await authorize(request);
   if (denied) return denied;
 
   const requested = (request.nextUrl.searchParams.get("groups") || "")
@@ -159,7 +158,12 @@ export async function POST(request) {
   });
 }
 
-export async function GET() {
+export async function GET(request) {
+  // The inventory names every cache tag and Redis pattern this app uses. That
+  // is a map of the system, and it is only ever read by the admin screen.
+  const denied = await authorize(request);
+  if (denied) return denied;
+
   let last = null;
   try {
     last = (await redis.get(keys.cache_status.value)) || null;
