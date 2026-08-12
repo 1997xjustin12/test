@@ -1,6 +1,9 @@
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
+import { cookies, headers } from "next/headers";
+import { notFound } from "next/navigation";
 import AdminContent from "@/app/components/admin/AdminContent";
+import { getAdminUser, isDevBypass } from "@/app/lib/admin-auth";
 import { redis, keys } from "@/app/lib/redis";
 import { CategoriesProvider } from "@/app/context/category";
 
@@ -16,7 +19,16 @@ export const metadata = {
   title: "Page Configurator",
 };
 export default async function AdminLayout({ children }) {
-  
+  // Second, independent gate. proxy.js already refuses non-admins at the edge;
+  // this repeats the check where it cannot be bypassed by a matcher change or a
+  // route that sidesteps the proxy. It runs before the menu read, so a rejected
+  // request costs nothing.
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const isAdmin =
+    isDevBypass(headerStore.get("host")) ||
+    Boolean(await getAdminUser({ cookies: cookieStore }));
+  if (!isAdmin) notFound();
+
   // const defaultKey = keys.default_shopify_menu.value;
   const defaultKey = keys.dev_shopify_menu.value;
   const mgetKeys = [defaultKey];

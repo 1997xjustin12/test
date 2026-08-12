@@ -1,46 +1,46 @@
 import { NextResponse } from "next/server";
+import { getAdminUser, isDevBypass, requestHost } from "@/app/lib/admin-auth";
 
 /**
  * Next.js request proxy (the Next 16 rename of "middleware").
  *
  * In addition to the existing cart/auth routing rules, this gates the store
- * admin (/admin) surface. Previously /admin was reachable only through Django's
- * server-side proxy, which injected a secret X-Admin-Proxy header that an nginx
- * edge rule checked. The direct-iframe approach instead loads /admin straight
- * from this origin and authorizes access with the same signed token the Django
- * admin already mints (see app/stores/views.py::generate_token).
+ * admin (/admin) surface. Two credentials are accepted:
  *
- * The admin gate is inert by default: it only enforces when
- * ENABLE_ADMIN_TOKEN_GATE === "true", so this can ship ahead of the cut-over
- * without changing behavior. Flip the env var once the edge secret-header rule
- * is relaxed.
+ *   1. The signed admin cookie minted by /api/login for a username listed in
+ *      ADMIN_USERNAMES. This is the normal way in — an operator signs in on the
+ *      storefront and /admin simply works.
+ *   2. A signed token in the query string, minted by the Django admin
+ *      (app/stores/views.py::generate_token). Kept so the existing iframe entry
+ *      point continues to work.
+ *
+ * Denials return 404, not 401 or 403. A 403 confirms there is something at
+ * /admin worth finding; a 404 says nothing at all, and the difference costs us
+ * nothing because anyone entitled to be here has a working way in.
+ *
+ * Unlike the previous version this is always on. It used to sit behind
+ * ENABLE_ADMIN_TOKEN_GATE and was inert unless that was set to "true", which
+ * meant production served the admin HTML to anyone who asked and relied on a
+ * client-side component to hide it.
  */
 
 const BACKEND_URL =
   process.env.NEXT_SOLANA_BACKEND_URL || "http://localhost:8000";
-const ADMIN_GATE_ENABLED = process.env.ENABLE_ADMIN_TOKEN_GATE === "true";
-
-function deny(status, message) {
-  return new NextResponse(message, {
-    status,
-    headers: { "Content-Type": "text/plain" },
-  });
-}
 
 /**
- * Returns a denial response if the request is not allowed, or null to continue.
+ * Uniform denial. Self-contained rather than rewritten to a page, so a denied
+ * request does not run any of the admin layout's data loading on its way to
+ * being refused.
  */
-async function guardAdmin(request) {
-  if (!ADMIN_GATE_ENABLED) return null;
+function notFound() {
+  return new NextResponse(
+    "<!doctype html><title>404</title><h1>404</h1><p>This page could not be found.</p>",
+    { status: 404, headers: { "Content-Type": "text/html; charset=utf-8" } },
+  );
+}
 
-  const { searchParams, hostname } = request.nextUrl;
-
-  // Dev bypass on localhost (mirrors useTokenValidation's existing behavior)
-  if (hostname === "localhost" || hostname === "127.0.0.1") return null;
-
-  const token = searchParams.get("token");
-  if (!token) return deny(401, "Missing access token");
-
+/** True if the Django-minted token is currently valid. */
+async function hasValidBackendToken(token) {
   try {
     const res = await fetch(`${BACKEND_URL}/api/stores/validate-token/`, {
       method: "POST",
@@ -48,14 +48,29 @@ async function guardAdmin(request) {
       body: JSON.stringify({ token }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.valid) {
-      return deny(403, "Invalid or expired access token");
-    }
+    return res.ok && Boolean(data.valid);
   } catch {
-    return deny(502, "Unable to validate access token");
+    // Backend unreachable. Refuse rather than fall open.
+    return false;
   }
+}
 
-  return null;
+/**
+ * Returns a denial response if the request is not allowed, or null to continue.
+ */
+async function guardAdmin(request) {
+  const { searchParams } = request.nextUrl;
+
+  // Dev bypass on localhost, matching the previous behaviour here and in the
+  // client-side validator this replaces. Never true on a deployed brand.
+  if (isDevBypass(requestHost(request))) return null;
+
+  if (await getAdminUser(request)) return null;
+
+  const token = searchParams.get("token");
+  if (token && (await hasValidBackendToken(token))) return null;
+
+  return notFound();
 }
 
 export async function proxy(request) {
