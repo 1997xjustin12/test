@@ -28,15 +28,21 @@ const BACKEND_URL =
   process.env.NEXT_SOLANA_BACKEND_URL || "http://localhost:8000";
 
 /**
- * Uniform denial. Self-contained rather than rewritten to a page, so a denied
- * request does not run any of the admin layout's data loading on its way to
- * being refused.
+ * Uniform denial: rewrite to a path that does not exist, so Next renders its own
+ * 404 exactly as it would for any other missing URL.
+ *
+ * Rewriting rather than returning hand-written HTML matters for more than
+ * tidiness. A bespoke page is a second 404 to keep in step with the real one,
+ * and any difference between them — wording, markup, headers — is a signal that
+ * tells a prober /admin is special. Deferring to the framework means the denial
+ * is indistinguishable from a genuine miss because it *is* the genuine miss.
+ *
+ * The target stays inside /admin so the rewrite resolves in the admin group
+ * rather than falling through to the storefront's catch-all route, which would
+ * fetch page data just to render a 404.
  */
-function notFound() {
-  return new NextResponse(
-    "<!doctype html><title>404</title><h1>404</h1><p>This page could not be found.</p>",
-    { status: 404, headers: { "Content-Type": "text/html; charset=utf-8" } },
-  );
+function notFound(request) {
+  return NextResponse.rewrite(new URL("/admin/_not-found", request.url));
 }
 
 /** True if the Django-minted token is currently valid. */
@@ -70,7 +76,7 @@ async function guardAdmin(request) {
   const token = searchParams.get("token");
   if (token && (await hasValidBackendToken(token))) return null;
 
-  return notFound();
+  return notFound(request);
 }
 
 export async function proxy(request) {
