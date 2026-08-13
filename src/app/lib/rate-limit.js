@@ -34,6 +34,11 @@ export const LIMITS = {
   search: { limit: 120, windowSeconds: 60 },
   // Cheap Redis reads. Cached at the CDN for 5 minutes anyway.
   light: { limit: 300, windowSeconds: 60 },
+  // The assistant proxy. Tighter than everything else because each request
+  // costs the backend a model call — this is the one bucket that exists to
+  // bound spend rather than load. Someone having a real conversation sends a
+  // handful of messages a minute; anything past 20 is a script.
+  chat: { limit: 20, windowSeconds: 60 },
 };
 
 /**
