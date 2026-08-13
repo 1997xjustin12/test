@@ -87,6 +87,15 @@ async function handler(request) {
     return fail("The assistant is not configured for this store.", 503);
   }
 
+  // The assistant authenticates with the collections key, same as the blogs
+  // API. The general backend key returns 401 here — verified against the live
+  // endpoint, so this is not interchangeable.
+  const apiKey = process.env.NEXT_SOLANA_COLLECTIONS_KEY;
+  if (!apiKey) {
+    console.error("chat: NEXT_SOLANA_COLLECTIONS_KEY is unset — refusing to proxy");
+    return fail("The assistant is not configured.", 503);
+  }
+
   const payload = { message };
   // Sent only from the second message onward. The backend issues session_id
   // with the first reply; the client echoes it back and we forward it. Never
@@ -100,12 +109,15 @@ async function handler(request) {
   const timeout = setTimeout(() => controller.abort(), BACKEND_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${base}/api/chat`, {
+    // Trailing slash is required. Django's route is `api/chat/`, and a POST to
+    // the slashless form is a plain 404 rather than the redirect a GET gets.
+    const res = await fetch(`${base}/api/chat/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "X-Store-Domain": storeDomain,
+        Authorization: `Api-Key ${apiKey}`,
       },
       body: JSON.stringify(payload),
       cache: "no-store",

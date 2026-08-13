@@ -28,6 +28,43 @@ function getSpeechRecognition() {
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
+/**
+ * Renders a reply, turning bare URLs into links.
+ *
+ * The assistant answers with product URLs inline in its prose ("You can view it
+ * here: https://…"), so without this the single most useful part of the reply
+ * is un-clickable text the shopper has to select and copy.
+ *
+ * Built as React elements rather than injected HTML — the reply is model
+ * output, and handing that to dangerouslySetInnerHTML would make any future
+ * prompt injection a scripting hole. Links open in a new tab so the
+ * conversation survives the click.
+ */
+// Split keeps the capture group, so each URL arrives as its own part. The test
+// below is deliberately a separate, non-global regex: calling .test() on a /g
+// pattern advances lastIndex between calls and would match every other link.
+const URL_SPLIT = /(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
+const IS_URL = /^https?:\/\//;
+
+function RichText({ text }) {
+  const parts = String(text).split(URL_SPLIT);
+  return parts.map((part, i) =>
+    IS_URL.test(part) ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline decoration-current/40 underline-offset-2 hover:decoration-current break-all"
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 function ChatIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
@@ -299,7 +336,7 @@ export default function AiChatWidget() {
                         : "rounded-bl-sm bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100"
                     }`}
                   >
-                    {m.text}
+                    <RichText text={m.text} />
                     {m.typing && (
                       <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-current align-middle" />
                     )}
