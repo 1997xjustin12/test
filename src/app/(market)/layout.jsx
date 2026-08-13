@@ -16,6 +16,7 @@ import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ConditionalZohoButton from "@/app/components/widget/ConditionalZohoButton";
 import LazyZohoLoader from "@/app/components/widget/LazyZohoLoader";
+import AiChatWidget from "@/app/components/widget/AiChatWidget";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -209,6 +210,9 @@ export default async function MarketLayout({ children }) {
                         { ISOKO ? <OKOFooter logo={redisLogo} /> : ISBBQ ? <BBQFooter logo={redisLogo} />: <Footer logo={redisLogo} />}
                         <ConditionalZohoButton />
                         <LazyZohoLoader />
+                        {/* Bottom-left: Zoho's live-chat button owns
+                            bottom-right on every page it renders. */}
+                        <AiChatWidget />
                         {process.env.NEXT_PUBLIC_GA_ID && (
                           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
                         )}
