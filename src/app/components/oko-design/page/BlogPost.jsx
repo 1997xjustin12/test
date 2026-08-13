@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { blogImage } from "@/app/lib/blogs";
 
 // Article body prose (rule 8): Inter 14.5px / 1.55, headings in slab. Styled via
 // arbitrary variants so the OKO look + full dark mode are self-contained (the
@@ -18,7 +19,7 @@ const PROSE =
   "[&_blockquote]:border-l-2 [&_blockquote]:border-oko-stone-line dark:[&_blockquote]:border-oko-line-dark [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-oko-char-soft dark:[&_blockquote]:text-oko-ondark-muted " +
   "[&_img]:rounded-[2px] [&_img]:my-4 [&_img]:border [&_img]:border-oko-stone-line dark:[&_img]:border-oko-line-dark";
 
-function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
+function BlogPost({ post, featuredImage, otherPosts = [] }) {
   return (
     <section className="bg-oko-cream dark:bg-oko-night py-16 min-h-screen">
       <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
@@ -41,13 +42,13 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
             <div className="relative w-full overflow-hidden rounded-[2px] border border-oko-stone-line dark:border-oko-line-dark bg-oko-cream-dim dark:bg-oko-night-3 mb-6">
               <img
                 src={featuredImage}
-                alt={post.title.rendered}
+                alt={post.title}
                 className="w-full object-cover"
               />
             </div>
 
             <p className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-3">
-              {new Date(post.date).toLocaleDateString("en-US", {
+              {new Date(post.published_at).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -55,12 +56,12 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
             </p>
 
             <h1 className="font-oko-display font-semibold text-[27px] sm:text-[29px] leading-[1.18] text-oko-char dark:text-oko-cream mb-6">
-              {post.title.rendered}
+              {post.title}
             </h1>
 
             <div
               className={PROSE}
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </article>
 
@@ -71,9 +72,9 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
                 More articles
               </h2>
 
-              {otherPostsWithImages.length > 0 ? (
+              {otherPosts.length > 0 ? (
                 <div className="flex flex-col gap-3">
-                  {otherPostsWithImages.map((otherPost) => (
+                  {otherPosts.map((otherPost) => (
                     <article
                       key={otherPost.id}
                       className="group flex flex-col bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] overflow-hidden"
@@ -83,19 +84,19 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
                         className="block relative h-36 overflow-hidden bg-oko-cream-dim dark:bg-oko-night-3 border-b border-oko-stone-line dark:border-oko-line-dark"
                       >
                         <img
-                          src={otherPost.imageUrl}
-                          alt={otherPost.title.rendered}
+                          src={blogImage(otherPost)}
+                          alt={otherPost.title}
                           className="w-full h-full object-cover transition-[opacity,transform] duration-300 group-hover:opacity-90 group-hover:scale-[1.03]"
                         />
                       </Link>
                       <div className="flex flex-col gap-1.5 p-4">
                         <Link href={`/blogs/${otherPost.slug}`}>
                           <h3 className="font-oko-display font-semibold text-[15.5px] leading-[1.3] text-oko-char dark:text-oko-cream line-clamp-2 hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors">
-                            {otherPost.title.rendered}
+                            {otherPost.title}
                           </h3>
                         </Link>
                         <p className="font-inter text-[12.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark line-clamp-2">
-                          {otherPost.excerpt.rendered.replace(/<[^>]*>?/gm, "").substring(0, 100)}...
+                          {(otherPost.excerpt || "").substring(0, 100)}...
                         </p>
                         <Link
                           href={`/blogs/${otherPost.slug}`}

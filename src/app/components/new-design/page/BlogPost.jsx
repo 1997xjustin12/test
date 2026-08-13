@@ -1,4 +1,5 @@
-function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
+import { blogImage } from "@/app/lib/blogs";
+function BlogPost({ post, featuredImage, otherPosts = [] }) {
   return (
     <section className="bg-gray-50 dark:bg-gray-950 py-10 md:py-14 antialiased">
       <div className="mx-auto max-w-screen-lg px-4 2xl:px-0">
@@ -17,12 +18,12 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
           <article className="md:w-2/3">
             <img
               src={featuredImage}
-              alt={post.title.rendered}
+              alt={post.title}
               className="w-full rounded-2xl mb-6 shadow-sm object-cover"
             />
             <div className="mb-2">
               <span className="text-xs font-semibold uppercase tracking-widest text-theme-600">
-                {new Date(post.date).toLocaleDateString("en-US", {
+                {new Date(post.published_at).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -30,11 +31,11 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-snug mb-6">
-              {post.title.rendered}
+              {post.title}
             </h1>
             <div
               className="prose prose-sm sm:prose max-w-none text-gray-700 dark:text-gray-300 pdp-description-wrapper"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </article>
 
@@ -44,17 +45,17 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
               <h2 className="text-base font-bold text-gray-900 dark:text-white mb-4 pb-2 border-b-2 border-theme-500">
                 More Articles
               </h2>
-              {otherPostsWithImages.length > 0 ? (
+              {otherPosts.length > 0 ? (
                 <div className="space-y-4">
-                  {otherPostsWithImages.map((otherPost) => (
+                  {otherPosts.map((otherPost) => (
                     <div
                       key={otherPost.id}
                       className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-sm transition-shadow"
                     >
                       <a href={`/blogs/${otherPost.slug}`} className="block overflow-hidden">
                         <img
-                          src={otherPost.imageUrl}
-                          alt={otherPost.title.rendered}
+                          src={blogImage(otherPost)}
+                          alt={otherPost.title}
                           className="w-full h-36 object-cover hover:scale-105 transition-transform duration-300"
                         />
                       </a>
@@ -64,11 +65,11 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
                             href={`/blogs/${otherPost.slug}`}
                             className="hover:text-theme-600 transition-colors line-clamp-2"
                           >
-                            {otherPost.title.rendered}
+                            {otherPost.title}
                           </a>
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400 text-xs mt-1 line-clamp-2">
-                          {otherPost.excerpt.rendered.replace(/<[^>]*>?/gm, "").substring(0, 100)}...
+                          {(otherPost.excerpt || "").substring(0, 100)}...
                         </p>
                         <a
                           href={`/blogs/${otherPost.slug}`}

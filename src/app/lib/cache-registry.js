@@ -82,11 +82,11 @@ export const CACHE_GROUPS = [
   {
     id: "blog",
     label: "Blog",
-    blurb: "Resolved blog category id used to list posts.",
-    tags: ["blog-category"],
+    blurb: "Post lists and individual posts read from the backend blogs API.",
+    tags: ["blogs"],
     paths: [],
     redis: [],
-    ttl: "24h",
+    ttl: "1h",
     shared: false,
   },
   {

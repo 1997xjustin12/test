@@ -1,134 +1,71 @@
+import { notFound } from "next/navigation";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
-import { BLOG_BASE_URL, getBlogCategoryId } from "@/app/lib/blog";
+import { DEFAULT_BLOG_IMAGE, blogImage, getBlog, getBlogs } from "@/app/lib/blogs";
+
 import NewBlogPost from "@/app/components/new-design/page/BlogPost";
 import BBQBlogPost from "@/app/components/bbq-design/page/BlogPost";
 import OKOBlogPost from "@/app/components/oko-design/page/BlogPost";
 
-const DEFAULT_URL = BLOG_BASE_URL;
+/**
+ * Single blog post.
+ *
+ * Reads from the backend blogs API. The post carries its own `seo` object, so
+ * metadata no longer has to be dug out of WordPress's yoast_head_json, and the
+ * body arrives as `html` — note `content` is a structured object, not markup,
+ * so it is the wrong field to render.
+ *
+ * Brand scoping is preserved: lib/blogs.js sends `store`, and the backend 404s
+ * a slug belonging to another brand. Without that, a Solana article URL would
+ * render on the BBQ storefront.
+ */
+
+const RELATED_COUNT = 5;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const DEFAULT_BLOG_IMAGE = `https://bbq-spaces.sfo3.digitaloceanspaces.com/uploads/blog-default.png`;
+  const post = await getBlog(slug);
 
-  const categoryId = await getBlogCategoryId();
-  const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}${
-      categoryId ? `&categories=${categoryId}` : ""
-    }`,
-    { cache: "no-store" }
-  );
+  if (!post) return { title: "Blog Not Found" };
 
-  if (!res.ok) return { title: "Blog Not Found" };
-
-  const posts = await res.json();
-  const post = posts[0] || {};
+  const seo = post.seo || {};
+  const title = seo.title || post.title || "Blog Post";
+  const description = seo.description || post.excerpt || "";
+  const image = seo.og_image?.trim() || blogImage(post);
 
   return {
-    title: post.yoast_head_json?.title || post.title?.rendered || "Blog Post",
-    description:
-      post.yoast_head_json?.description ||
-      post.excerpt?.rendered?.replace(/<[^>]*>?/gm, "").substring(0, 150),
+    title,
+    description,
+    ...(seo.canonical_url ? { alternates: { canonical: seo.canonical_url } } : {}),
     openGraph: {
-      title: post.yoast_head_json?.og_title || post.title?.rendered || "Blog Post",
-      description:
-        post.yoast_head_json?.og_description ||
-        post.excerpt?.rendered?.replace(/<[^>]*>?/gm, "").substring(0, 150),
-      images: [post.yoast_head_json?.og_image?.[0]?.url || DEFAULT_BLOG_IMAGE],
-      url: `${DEFAULT_URL}/blogs/${post.slug}`,
+      title: seo.og_title || title,
+      description: seo.og_description || description,
+      images: [image],
+      type: "article",
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at,
     },
     twitter: {
-      title: post.yoast_head_json?.twitter_title || post.title?.rendered || "Blog Post",
-      description:
-        post.yoast_head_json?.twitter_description ||
-        post.excerpt?.rendered?.replace(/<[^>]*>?/gm, "").substring(0, 150),
-      images: [post.yoast_head_json?.twitter_image || DEFAULT_BLOG_IMAGE],
+      title: seo.og_title || title,
+      description: seo.og_description || description,
+      images: [image],
     },
   };
 }
 
-export default async function BlogPost({ params }) {
+export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const CATEGORY_ID = await getBlogCategoryId();
-  const PER_PAGE = 5;
-  const DEFAULT_BLOG_IMAGE = `${DEFAULT_URL}/wp-content/uploads/2025/03/blog-default.png`;
 
-  // Scoped to this brand's category: without it, a Solana article URL would
-  // still render on the BBQ storefront (and vice versa), which is the same
-  // cross-brand leak the listing filter exists to prevent.
-  const res = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&slug=${slug}${
-      CATEGORY_ID ? `&categories=${CATEGORY_ID}` : ""
-    }`,
-    { cache: "no-store" }
-  );
+  const post = await getBlog(slug);
+  // A missing slug — or one belonging to another brand — is a genuine 404
+  // rather than a page that renders "no content available" with a 200.
+  if (!post) notFound();
 
-  if (!res.ok) return <p className="text-red-500 p-8">Post not found.</p>;
+  const { results } = await getBlogs({ pageSize: RELATED_COUNT + 1 });
+  const otherPosts = results.filter((p) => p.slug !== post.slug).slice(0, RELATED_COUNT);
 
-  const posts = await res.json();
-  const post = posts[0];
+  const props = { post, featuredImage: blogImage(post), otherPosts };
 
-  if (!post) return <p className="text-gray-500 p-8">No content available.</p>;
-
-  let featuredImage = DEFAULT_BLOG_IMAGE;
-  if (post.featured_media !== 0) {
-    const mediaRes = await fetch(
-      `${DEFAULT_URL}/wp-json/wp/v2/media/${post.featured_media}`
-    );
-    if (mediaRes.ok) {
-      const media = await mediaRes.json();
-      featuredImage = media.source_url || DEFAULT_BLOG_IMAGE;
-    }
-  }
-
-  const otherPostsRes = await fetch(
-    `${DEFAULT_URL}/index.php?rest_route=/wp/v2/posts&categories=${CATEGORY_ID}&per_page=${PER_PAGE}`,
-    { cache: "no-store" }
-  );
-
-  let otherPosts = await otherPostsRes.json();
-  otherPosts = otherPosts.filter((p) => p.id !== post.id);
-
-  const otherPostsWithImages = await Promise.all(
-    otherPosts.map(async (otherPost) => {
-      let imageUrl = DEFAULT_BLOG_IMAGE;
-      if (otherPost.featured_media !== 0) {
-        const mediaRes = await fetch(
-          `${DEFAULT_URL}/wp-json/wp/v2/media/${otherPost.featured_media}`
-        );
-        if (mediaRes.ok) {
-          const media = await mediaRes.json();
-          imageUrl = media.source_url || DEFAULT_BLOG_IMAGE;
-        }
-      }
-      return { ...otherPost, imageUrl };
-    })
-  );
-
-  if (ISOKO) {
-    return (
-      <OKOBlogPost
-        post={post}
-        featuredImage={featuredImage}
-        otherPostsWithImages={otherPostsWithImages}
-      />
-    );
-  }
-
-  if (ISBBQ) {
-    return (
-      <BBQBlogPost
-        post={post}
-        featuredImage={featuredImage}
-        otherPostsWithImages={otherPostsWithImages}
-      />
-    );
-  }
-
-  return (
-    <NewBlogPost
-      post={post}
-      featuredImage={featuredImage}
-      otherPostsWithImages={otherPostsWithImages}
-    />
-  );
+  if (ISOKO) return <OKOBlogPost {...props} />;
+  if (ISBBQ) return <BBQBlogPost {...props} />;
+  return <NewBlogPost {...props} />;
 }

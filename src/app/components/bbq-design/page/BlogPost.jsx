@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { blogImage } from "@/app/lib/blogs";
 
-function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
+function BlogPost({ post, featuredImage, otherPosts = [] }) {
   return (
     <section className="bg-ash dark:bg-char py-14 sm:py-16 font-sora">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
@@ -22,14 +23,14 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
             <div className="relative w-full overflow-hidden rounded-sm mb-6">
               <img
                 src={featuredImage}
-                alt={post.title.rendered}
+                alt={post.title}
                 className="w-full object-cover"
               />
             </div>
 
             <div className="mb-3">
               <p className="font-oswald text-xs font-semibold text-theme-600 tracking-[.14em] uppercase">
-                {new Date(post.date).toLocaleDateString("en-US", {
+                {new Date(post.published_at).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -38,12 +39,12 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
             </div>
 
             <h1 className="font-oswald font-bold text-2xl sm:text-3xl uppercase tracking-tight text-char dark:text-ash leading-snug mb-6">
-              {post.title.rendered}
+              {post.title}
             </h1>
 
             <div
               className="prose prose-sm sm:prose max-w-none dark:prose-invert text-char/80 dark:text-ash/80 pdp-description-wrapper"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.html }}
             />
           </article>
 
@@ -54,9 +55,9 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
                 More Articles
               </h2>
 
-              {otherPostsWithImages.length > 0 ? (
+              {otherPosts.length > 0 ? (
                 <div className="flex flex-col gap-3">
-                  {otherPostsWithImages.map((otherPost) => (
+                  {otherPosts.map((otherPost) => (
                     <article
                       key={otherPost.id}
                       className="group bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm overflow-hidden hover:border-theme-600 dark:hover:border-theme-600/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-char/10 dark:hover:shadow-black/30 transition-all duration-200"
@@ -66,19 +67,19 @@ function BlogPost({ post, featuredImage, otherPostsWithImages = [] }) {
                         className="block relative h-36 overflow-hidden bg-white dark:bg-char"
                       >
                         <img
-                          src={otherPost.imageUrl}
-                          alt={otherPost.title.rendered}
+                          src={blogImage(otherPost)}
+                          alt={otherPost.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </Link>
                       <div className="p-3 flex flex-col gap-1.5">
                         <Link href={`/blogs/${otherPost.slug}`}>
                           <h3 className="font-sora text-xs font-semibold text-char dark:text-ash leading-snug line-clamp-2 hover:text-theme-600 dark:hover:text-theme-500 transition-colors">
-                            {otherPost.title.rendered}
+                            {otherPost.title}
                           </h3>
                         </Link>
                         <p className="text-xs font-light text-stone-500 dark:text-stone-400 line-clamp-2">
-                          {otherPost.excerpt.rendered.replace(/<[^>]*>?/gm, "").substring(0, 100)}...
+                          {(otherPost.excerpt || "").substring(0, 100)}...
                         </p>
                         <Link
                           href={`/blogs/${otherPost.slug}`}
