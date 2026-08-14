@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useCart } from "@/app/context/cart";
 
 /**
  * Storefront AI assistant — floating button plus a centred modal.
@@ -46,6 +47,46 @@ function getSpeechRecognition() {
 const URL_SPLIT = /(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g;
 const IS_URL = /^https?:\/\//;
 
+/**
+ * Product URLs the assistant writes are broken: it emits /product/{handle}
+ * while this storefront serves /{brand}/product/{handle}, so every one 404s.
+ * They are pulled out of the prose and replaced by real cards resolved from the
+ * catalogue — so the text keeps its sentence and loses the dead link.
+ */
+const PRODUCT_URL = /https?:\/\/[^\s<>()]*\/product\/([^\s<>()/?#]+)/gi;
+
+/** Handles the assistant referenced, in the order it mentioned them. */
+function extractHandles(text) {
+  const handles = [];
+  for (const [, handle] of String(text).matchAll(PRODUCT_URL)) {
+    let decoded = handle;
+    try {
+      decoded = decodeURIComponent(handle);
+    } catch {
+      // Malformed escape — the raw value is still worth trying.
+    }
+    if (decoded && !handles.includes(decoded)) handles.push(decoded);
+  }
+  return handles;
+}
+
+/**
+ * Drops product URLs from the prose; the cards carry them instead.
+ *
+ * Removing a URL leaves the punctuation that introduced it and a hole where it
+ * sat, so the leftovers are tidied too — an empty "( )", a dangling "here:",
+ * and the run of blank lines that a stripped list of links turns into.
+ */
+const stripProductUrls = (text) =>
+  String(text)
+    .replace(PRODUCT_URL, "")
+    .replace(/[ \t]+/g, " ")
+    .replace(/[ \t]*\n[ \t]*/g, "\n")
+    .replace(/\(\s*\)|\[\s*\]/g, "")
+    .replace(/[ \t]*([:\-–—])[ \t]*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
 function RichText({ text }) {
   const parts = String(text).split(URL_SPLIT);
   return parts.map((part, i) =>
@@ -65,6 +106,71 @@ function RichText({ text }) {
   );
 }
 
+const money = (value) =>
+  typeof value === "number" && Number.isFinite(value)
+    ? value.toLocaleString("en-US", { style: "currency", currency: "USD" })
+    : null;
+
+/**
+ * A product the assistant recommended, resolved from the catalogue.
+ *
+ * Price, title and image come from the catalogue rather than from the reply
+ * text, so a card can never show a figure the model invented — and the link is
+ * the canonical /{brand}/product/{handle} URL, not the /product/{handle} one
+ * the assistant writes, which 404s.
+ */
+function ProductCard({ product, onAdd, adding, added }) {
+  const price = money(product.price);
+  const was = money(product.was);
+
+  return (
+    <div className="flex gap-3 rounded-xl border border-zinc-200 bg-white p-2.5 dark:border-zinc-700 dark:bg-zinc-800">
+      <a href={product.url} className="shrink-0" aria-label={product.title}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={product.image || "/images/placeholder.webp"}
+          alt=""
+          loading="lazy"
+          className="h-16 w-16 rounded-lg bg-zinc-100 object-contain dark:bg-zinc-900"
+        />
+      </a>
+
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5">
+        <a
+          href={product.url}
+          className="line-clamp-2 text-[13px] font-medium leading-snug text-zinc-900 hover:text-theme-600 dark:text-zinc-100 dark:hover:text-theme-500"
+        >
+          {product.title}
+        </a>
+
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-baseline gap-1.5">
+            {price && (
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                {price}
+              </span>
+            )}
+            {was && (
+              <span className="text-[11px] text-zinc-400 line-through dark:text-zinc-500">
+                {was}
+              </span>
+            )}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => onAdd(product)}
+            disabled={adding || added}
+            className="shrink-0 rounded-lg bg-theme-600 px-2.5 py-1.5 text-[11px] font-semibold text-white transition hover:bg-theme-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-theme-400 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {added ? "Added ✓" : adding ? "Adding…" : "Add to cart"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChatIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
@@ -79,6 +185,10 @@ function ChatIcon(props) {
 }
 
 export default function AiChatWidget() {
+  // The same cart the rest of the storefront uses, so an item added here shows
+  // up in the header count and survives to checkout like any other.
+  const { addToCart } = useCart() || {};
+
   // Rendered only after mount. The storefront is deliberately readable without
   // JavaScript (see docs/agentic-ai-readiness.md) and a chat button that cannot
   // work without it is noise in that HTML — for crawlers and for anyone with
@@ -86,11 +196,25 @@ export default function AiChatWidget() {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([{ role: "assistant", text: GREETING }]);
+  // Ids live on a ref, not a module-level counter. Fast Refresh reloads the
+  // module while component state survives, which reset a module counter to 0
+  // and handed a new message the same id as the greeting — products then
+  // attached to the greeting and rendered above the question.
+  const messageSeq = useRef(0);
+  const nextMessageId = useCallback(() => `m${++messageSeq.current}`, []);
+
+  const [messages, setMessages] = useState(() => [
+    { id: "m0", role: "assistant", text: GREETING },
+  ]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [listening, setListening] = useState(false);
+  // Keyed by handle so two cards for different products don't share a spinner.
+  const [addingHandle, setAddingHandle] = useState(null);
+  const [addedHandles, setAddedHandles] = useState([]);
+  // The current recommendation shelf, kept out of the transcript entirely.
+  const [suggestions, setSuggestions] = useState([]);
   const [speechSupported, setSpeechSupported] = useState(false);
 
   const scrollRef = useRef(null);
@@ -98,6 +222,9 @@ export default function AiChatWidget() {
   const buttonRef = useRef(null);
   const recognitionRef = useRef(null);
   const typingTimerRef = useRef(null);
+  // Which reply the shelf belongs to, so a slow lookup for an older answer
+  // cannot land after a newer one.
+  const latestReplyRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -107,41 +234,111 @@ export default function AiChatWidget() {
   // Clear any in-flight typing animation when the widget goes away.
   useEffect(() => () => clearInterval(typingTimerRef.current), []);
 
-  /** Reveals a reply a character at a time. Skipped for reduced-motion users. */
-  const typeOut = useCallback((text) => {
-    clearInterval(typingTimerRef.current);
+  const handleAddToCart = useCallback(
+    async (product) => {
+      if (!addToCart || !product?.cartItem) {
+        setError("Couldn't add that to the cart. Open the product page instead.");
+        return;
+      }
+      setAddingHandle(product.handle);
+      setError(null);
+      try {
+        const result = await addToCart({ ...product.cartItem, quantity: 1 });
+        if (result?.status === "error") {
+          setError("Couldn't add that to the cart. Please try again.");
+          return;
+        }
+        setAddedHandles((prev) => [...prev, product.handle]);
+      } catch {
+        setError("Couldn't add that to the cart. Please try again.");
+      } finally {
+        setAddingHandle(null);
+      }
+    },
+    [addToCart],
+  );
 
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  /**
+   * Resolves the handles the latest reply mentioned into real products.
+   *
+   * The cards are deliberately NOT part of the transcript. They are a single
+   * shelf at the foot of the panel showing what the assistant is currently
+   * recommending, so the conversation above stays a plain back-and-forth and
+   * the products are always in the same place rather than buried at whatever
+   * scroll position their reply happens to sit at.
+   *
+   * Runs alongside the type-out rather than blocking it, so the text appears
+   * immediately and the shelf fills in beneath.
+   */
+  const attachProducts = useCallback(async (requestId, text) => {
+    const handles = extractHandles(text);
+    if (!handles.length) return;
 
-    if (reduced) {
-      setMessages((prev) => [...prev, { role: "assistant", text }]);
-      return;
+    try {
+      const res = await fetch(
+        `/api/chat/products?handles=${encodeURIComponent(handles.join(","))}`,
+      );
+      if (!res.ok) return;
+      const { products } = await res.json();
+      if (!products?.length) return;
+
+      // Ignore a slow lookup whose reply has already been superseded, so an
+      // earlier answer cannot overwrite the suggestions for a later one.
+      if (latestReplyRef.current !== requestId) return;
+      setSuggestions(products);
+    } catch {
+      // The shelf is an enhancement — the reply text still stands without it.
     }
-
-    setMessages((prev) => [...prev, { role: "assistant", text: "", typing: true }]);
-
-    let i = 0;
-    typingTimerRef.current = setInterval(() => {
-      // Reveal several characters per tick so long replies don't crawl.
-      i = Math.min(text.length, i + 3);
-      const slice = text.slice(0, i);
-      const done = i >= text.length;
-
-      setMessages((prev) => {
-        const next = [...prev];
-        next[next.length - 1] = {
-          role: "assistant",
-          text: slice,
-          typing: !done,
-        };
-        return next;
-      });
-
-      if (done) clearInterval(typingTimerRef.current);
-    }, TYPING_SPEED_MS);
   }, []);
+
+  /** Reveals a reply a character at a time. Skipped for reduced-motion users. */
+  const typeOut = useCallback(
+    (raw) => {
+      clearInterval(typingTimerRef.current);
+
+      // The prose keeps its sentences; the dead product URLs come out and are
+      // replaced by cards.
+      const text = stripProductUrls(raw);
+
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+      // Identify the message by id, not by position. Reading prev.length from
+      // inside the updater looks like it yields the new index, but React runs
+      // updaters during render rather than at call time — so the value escaped
+      // as 0 and the cards were attached to messages[0], the greeting, which is
+      // why they rendered above the question instead of under the reply.
+      const id = nextMessageId();
+      latestReplyRef.current = id;
+
+      setMessages((prev) => [
+        ...prev,
+        reduced
+          ? { id, role: "assistant", text }
+          : { id, role: "assistant", text: "", typing: true },
+      ]);
+
+      attachProducts(id, raw);
+
+      if (reduced) return;
+
+      let i = 0;
+      typingTimerRef.current = setInterval(() => {
+        // Reveal several characters per tick so long replies don't crawl.
+        i = Math.min(text.length, i + 3);
+        const slice = text.slice(0, i);
+        const done = i >= text.length;
+
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? { ...m, text: slice, typing: !done } : m)),
+        );
+
+        if (done) clearInterval(typingTimerRef.current);
+      }, TYPING_SPEED_MS);
+    },
+    [attachProducts],
+  );
 
   const send = useCallback(
     async (raw) => {
@@ -150,7 +347,11 @@ export default function AiChatWidget() {
 
       setError(null);
       setInput("");
-      setMessages((prev) => [...prev, { role: "user", text: message }]);
+      // The shelf describes the answer on screen, so it clears the moment a new
+      // question is asked rather than showing the previous reply's products
+      // next to a reply that has not arrived yet.
+      setSuggestions([]);
+      setMessages((prev) => [...prev, { id: nextMessageId(), role: "user", text: message }]);
       setSending(true);
 
       try {
@@ -188,7 +389,10 @@ export default function AiChatWidget() {
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, sending, error]);
+    // `suggestions` is in here too: the shelf lands after the reply has
+    // rendered, and without it the panel would stay put and leave the cards
+    // below the fold.
+  }, [messages, sending, error, suggestions]);
 
   // Escape closes; focus moves into the input on open and back to the button on
   // close, so the modal is usable from the keyboard alone.
@@ -266,6 +470,18 @@ export default function AiChatWidget() {
     if (!open && listening) recognitionRef.current?.stop();
   }, [open, listening]);
 
+  // Adding to the cart as a guest makes the cart ask for an email, and that
+  // dialog sits at z-100 while this panel is at z-999999 — so it would open
+  // *behind* the chat, greyed out and unreachable. Step aside when it fires.
+  // The conversation is component state, not modal state, so reopening the
+  // widget brings the whole thread back.
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const stepAside = () => setOpen(false);
+    window.addEventListener("guestEmailRequired", stepAside);
+    return () => window.removeEventListener("guestEmailRequired", stepAside);
+  }, []);
+
   if (!mounted) return null;
 
   return (
@@ -326,7 +542,7 @@ export default function AiChatWidget() {
             >
               {messages.map((m, i) => (
                 <div
-                  key={i}
+                  key={m.id ?? i}
                   className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
@@ -362,6 +578,27 @@ export default function AiChatWidget() {
                 <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-500/10 dark:text-red-400">
                   {error}
                 </p>
+              )}
+
+              {/* Recommendation shelf — deliberately the last thing in the
+                  panel and outside the transcript, so products always appear
+                  in one predictable place rather than wherever their reply
+                  happens to have scrolled to. */}
+              {suggestions.length > 0 && (
+                <section aria-label="Suggested products" className="space-y-2 pt-1">
+                  <h3 className="px-0.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                    Suggested products
+                  </h3>
+                  {suggestions.map((p) => (
+                    <ProductCard
+                      key={p.handle}
+                      product={p}
+                      onAdd={handleAddToCart}
+                      adding={addingHandle === p.handle}
+                      added={addedHandles.includes(p.handle)}
+                    />
+                  ))}
+                </section>
               )}
             </div>
 
