@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { STORE_ID } from "@/app/lib/store";
-import { withRouteRateLimit } from "@/app/lib/rate-limit";
+import { clientKey, withRouteRateLimit } from "@/app/lib/rate-limit";
 
 /**
  * POST /api/chat — proxy to the Django backend's assistant.
@@ -37,6 +37,59 @@ const MAX_MESSAGE_LENGTH = 2000;
 
 const fail = (message, status) =>
   NextResponse.json({ error: true, message }, { status });
+
+/** Addresses that mean "this machine", not a visitor. */
+const isLoopback = (ip) =>
+  !ip || ip === "::1" || ip === "127.0.0.1" || ip.startsWith("127.");
+
+/**
+ * Public address of the machine running the dev server. Resolved once and
+ * remembered, so the lookup costs one request per process, not one per chat.
+ */
+let devPublicIp;
+
+/**
+ * The visitor's address.
+ *
+ * In production this is the client IP the edge put in x-forwarded-for, full
+ * stop. In local development there is no network hop — the browser and the
+ * server are the same machine — so the honest answer is ::1, and that is what
+ * the backend was being told.
+ *
+ * That is correct but useless for checking the logging works end to end, so in
+ * development only, a loopback address is swapped for this machine's real
+ * public IP. Guarded on NODE_ENV so it cannot run on a deployed build, where
+ * doing so would be actively wrong: every visitor would be logged under the
+ * server's own address.
+ */
+async function resolveClientIp(request) {
+  const ip = clientKey(request);
+
+  if (process.env.NODE_ENV === "production" || !isLoopback(ip)) return ip;
+
+  if (devPublicIp !== undefined) return devPublicIp || ip;
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch("https://api.ipify.org?format=json", {
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    const data = res.ok ? await res.json() : null;
+    devPublicIp = typeof data?.ip === "string" ? data.ip : null;
+  } catch {
+    // Offline, or the lookup is blocked. Fall back to the loopback address —
+    // this is a development convenience, not something to fail a request over.
+    devPublicIp = null;
+  }
+
+  if (devPublicIp) {
+    console.info(`chat: dev build — reporting public IP ${devPublicIp} instead of ${ip}`);
+  }
+  return devPublicIp || ip;
+}
 
 /**
  * Canned reply for local UI work while the backend route is missing.
@@ -105,6 +158,14 @@ async function handler(request) {
     payload.session_id = body.session_id.trim();
   }
 
+  // Reuses the rate limiter's notion of the client so the address the backend
+  // is told about is the same one we throttle on — two definitions of "who is
+  // asking" would eventually disagree.
+  const clientIp = await resolveClientIp(request);
+  if (!clientIp) {
+    console.warn("chat: could not determine client IP — sending without X-Client-IP");
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), BACKEND_TIMEOUT_MS);
 
@@ -118,6 +179,13 @@ async function handler(request) {
         Accept: "application/json",
         "X-Store-Domain": storeDomain,
         Authorization: `Api-Key ${apiKey}`,
+        // The real visitor's address, not this server's. Everything the backend
+        // sees comes from here, so without it every conversation would appear
+        // to originate from one deployment IP.
+        //
+        // Omitted rather than sent empty when it cannot be determined: a blank
+        // value is not a fallback, it is a wrong answer that looks like one.
+        ...(clientIp ? { "X-Client-IP": clientIp } : {}),
       },
       body: JSON.stringify(payload),
       cache: "no-store",

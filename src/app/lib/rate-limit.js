@@ -63,10 +63,43 @@ function header(req, name) {
   return Array.isArray(v) ? v[0] : v ?? null;
 }
 
+/**
+ * Tidies an address into the form you would want to read in a log.
+ *
+ * Proxies hand these over in several shapes for the same client: bracketed
+ * (`[::1]`), IPv4-mapped IPv6 (`::ffff:203.0.113.42`), or with a source port
+ * appended (`203.0.113.42:54321`). Left alone, one visitor can appear under two
+ * or three different strings — which splits their rate-limit bucket and makes
+ * the backend's request log harder to read than it needs to be.
+ *
+ * Note ::1 is not a failure to detect the client; it is the IPv6 loopback, and
+ * it is the correct answer when the request really did come from this machine.
+ */
+export function normalizeIp(value) {
+  if (!value) return null;
+  let ip = String(value).trim();
+  if (!ip) return null;
+
+  // [::1]:8080 or [::1]
+  const bracketed = ip.match(/^\[(.+?)\](?::\d+)?$/);
+  if (bracketed) ip = bracketed[1];
+
+  // IPv4 with a source port. Only IPv4 — an IPv6 address is full of colons.
+  const withPort = ip.match(/^(\d{1,3}(?:\.\d{1,3}){3}):\d+$/);
+  if (withPort) ip = withPort[1];
+
+  // ::ffff:203.0.113.42 is that IPv4 address wearing an IPv6 hat.
+  const mapped = ip.match(/^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i);
+  if (mapped) ip = mapped[1];
+
+  return ip || null;
+}
+
 export function clientKey(req) {
   const fwd = header(req, "x-forwarded-for");
+  // Left-most entry is the client; everything after it is the proxy chain.
   return (
-    fwd?.split(",")[0]?.trim() || header(req, "x-real-ip") || null
+    normalizeIp(fwd?.split(",")[0]) || normalizeIp(header(req, "x-real-ip")) || null
   );
 }
 
