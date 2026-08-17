@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { STORE_ID } from "@/app/lib/store";
 import { clientKey, withRouteRateLimit } from "@/app/lib/rate-limit";
+import { allowedCountries, chatRegion, REGION_MESSAGE } from "@/app/lib/chat-region";
 
 /**
  * POST /api/chat — proxy to the Django backend's assistant.
@@ -108,6 +109,15 @@ function mockReply(message) {
 }
 
 async function handler(request) {
+  // Checked before anything else, including reading the body. Each message
+  // costs the backend a model call, so a request we are going to refuse should
+  // cost as close to nothing as possible.
+  const region = chatRegion(request);
+  if (!region.allowed) {
+    console.info(`chat: refused — country ${region.country ?? "unknown"}`);
+    return fail(REGION_MESSAGE, 403);
+  }
+
   let body;
   try {
     body = await request.json();
@@ -242,5 +252,7 @@ export async function GET() {
     store: STORE_ID,
     request: { message: "string (required)", session_id: "string (optional)" },
     response: { reply: "string", session_id: "string", took_ms: "number" },
+    availability: "/api/chat/availability",
+    regions: allowedCountries(),
   });
 }

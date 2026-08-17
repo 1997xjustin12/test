@@ -20,6 +20,12 @@ import { useCart } from "@/app/context/cart";
  */
 
 const TYPING_SPEED_MS = 12; // per character
+/**
+ * Session-scoped cache of the region check. Session rather than local storage
+ * on purpose: a visitor who travels, or drops a VPN, gets a fresh answer on
+ * their next visit instead of being stuck with a stale one indefinitely.
+ */
+const AVAILABILITY_KEY = "sf:chat-available";
 const GREETING =
   "Hi! Ask me anything about the products here — what fits your space, what's in your budget, or how two models compare.";
 
@@ -194,6 +200,10 @@ export default function AiChatWidget() {
   // work without it is noise in that HTML — for crawlers and for anyone with
   // scripting off.
   const [mounted, setMounted] = useState(false);
+  // null until the region check answers. The trigger stays hidden meanwhile:
+  // showing a button and taking it away a moment later is worse than showing it
+  // a moment late.
+  const [available, setAvailable] = useState(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   // Ids live on a ref, not a module-level counter. Fast Refresh reloads the
@@ -229,6 +239,57 @@ export default function AiChatWidget() {
   useEffect(() => {
     setMounted(true);
     setSpeechSupported(Boolean(getSpeechRecognition()));
+  }, []);
+
+  /**
+   * Is the assistant offered where this visitor is?
+   *
+   * The answer can only come from the server — the layout that mounts this is
+   * static across the whole storefront, so nothing in the page knows the
+   * visitor's country. Cached for the session so this costs one small request
+   * on the first page view and nothing on any navigation after it.
+   *
+   * Purely presentational. POST /api/chat applies the same rule itself, so this
+   * failing open is safe: the worst case is a button that explains why it can't
+   * help, which is what happens today anyway.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    try {
+      const cached = window.sessionStorage.getItem(AVAILABILITY_KEY);
+      if (cached !== null) {
+        setAvailable(cached === "1");
+        return undefined;
+      }
+    } catch {
+      // Private browsing, or storage is disabled. Just ask again.
+    }
+
+    fetch("/api/chat/availability")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        if (typeof data?.available !== "boolean") {
+          setAvailable(true);
+          return;
+        }
+        setAvailable(data.available);
+        try {
+          window.sessionStorage.setItem(AVAILABILITY_KEY, data.available ? "1" : "0");
+        } catch {
+          /* nothing to cache into — the request just repeats next page */
+        }
+      })
+      .catch(() => {
+        // Offline or blocked. Show the widget rather than silently removing it
+        // over a transient network fault; the server still has the last word.
+        if (!cancelled) setAvailable(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Clear any in-flight typing animation when the widget goes away.
@@ -482,7 +543,9 @@ export default function AiChatWidget() {
     return () => window.removeEventListener("guestEmailRequired", stepAside);
   }, []);
 
-  if (!mounted) return null;
+  // `available` is null until the region check answers, so this also covers the
+  // brief window before it lands.
+  if (!mounted || !available) return null;
 
   return (
     <>
