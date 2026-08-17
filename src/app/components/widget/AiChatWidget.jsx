@@ -1,7 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/app/context/cart";
+import { useAuth } from "@/app/context/auth";
+import {
+  clearAccountHistories,
+  clearHistory,
+  loadHistory,
+  pruneExpiredHistory,
+  saveHistory,
+} from "@/app/lib/chat-history";
 
 /**
  * Storefront AI assistant — floating button plus a centred modal.
@@ -195,6 +203,18 @@ export default function AiChatWidget() {
   // up in the header count and survives to checkout like any other.
   const { addToCart } = useCart() || {};
 
+  // Who the conversation belongs to. `loading` is the important one: auth
+  // starts every page as logged-out and resolves a moment later, so acting
+  // before it settles would read a signed-in visitor as a guest and hand them
+  // the wrong thread.
+  const { user, isLoggedIn, loading: authLoading } = useAuth() || {};
+  const identity = useMemo(() => {
+    if (!isLoggedIn || !user) return null;
+    // Never the email — see historyKey.
+    const id = user.id ?? user.pk ?? user.username;
+    return id == null ? null : String(id);
+  }, [isLoggedIn, user]);
+
   // Rendered only after mount. The storefront is deliberately readable without
   // JavaScript (see docs/agentic-ai-readiness.md) and a chat button that cannot
   // work without it is noise in that HTML — for crawlers and for anyone with
@@ -331,9 +351,8 @@ export default function AiChatWidget() {
    * Runs alongside the type-out rather than blocking it, so the text appears
    * immediately and the shelf fills in beneath.
    */
-  const attachProducts = useCallback(async (requestId, text) => {
-    const handles = extractHandles(text);
-    if (!handles.length) return;
+  const attachProducts = useCallback(async (requestId, handles) => {
+    if (!handles?.length) return;
 
     try {
       const res = await fetch(
@@ -373,14 +392,20 @@ export default function AiChatWidget() {
       const id = nextMessageId();
       latestReplyRef.current = id;
 
+      // `full` and `handles` exist for persistence, not for rendering. The
+      // displayed `text` is a growing slice during the animation, and the
+      // product URLs are stripped out of the prose — so neither the complete
+      // answer nor the products it recommended could be recovered from what is
+      // on screen when the conversation is written to storage.
+      const handles = extractHandles(raw);
+      const base = { id, role: "assistant", full: text, handles };
+
       setMessages((prev) => [
         ...prev,
-        reduced
-          ? { id, role: "assistant", text }
-          : { id, role: "assistant", text: "", typing: true },
+        reduced ? { ...base, text } : { ...base, text: "", typing: true },
       ]);
 
-      attachProducts(id, raw);
+      attachProducts(id, handles);
 
       if (reduced) return;
 
@@ -443,6 +468,157 @@ export default function AiChatWidget() {
     },
     [sending, sessionId, typeOut],
   );
+
+  // ── Conversation history ───────────────────────────────────────────────────
+  //
+  // Registered users are getting server-side history; that endpoint does not
+  // exist yet. Guests never will have one, so their conversation is kept in
+  // this browser for seven days, scoped to who they are — see chat-history.js.
+
+  // Read inside the transition effect, which must not re-run whenever a message
+  // is typed. Refs rather than dependencies, so the effect fires on identity
+  // changes only.
+  const messagesRef = useRef(messages);
+  messagesRef.current = messages;
+  const sessionIdRef = useRef(sessionId);
+  sessionIdRef.current = sessionId;
+
+  // How many messages the stored copy holds. Guards against re-writing an
+  // unchanged conversation on every page view, which would keep pushing the
+  // seven-day expiry out and make it "seven days since you last visited"
+  // rather than "seven days since you last asked something".
+  const savedCountRef = useRef(0);
+
+  /** Back to an empty conversation, in memory. */
+  const startFresh = useCallback(() => {
+    clearInterval(typingTimerRef.current);
+    latestReplyRef.current = null;
+    messageSeq.current = 0;
+    savedCountRef.current = 0;
+    setMessages([{ id: "m0", role: "assistant", text: GREETING }]);
+    setSessionId(null);
+    setSuggestions([]);
+    setAddedHandles([]);
+    setError(null);
+  }, []);
+
+  /** Puts a stored conversation back on screen. Returns whether there was one. */
+  const restore = useCallback(
+    (who) => {
+      const saved = loadHistory(who);
+      if (!saved) return false;
+
+      // Continue the id sequence past everything restored. Starting from zero
+      // again would hand a new reply the id of an old one, and the product
+      // shelf would attach itself to the wrong message — the same failure that
+      // once put the cards above the question.
+      messageSeq.current = saved.messages.reduce((max, m) => {
+        const n = /^m(\d+)$/.exec(m.id ?? "")?.[1];
+        return n ? Math.max(max, Number(n)) : max;
+      }, 0);
+
+      setMessages(saved.messages);
+      setSessionId(saved.sessionId);
+      savedCountRef.current = saved.messages.length;
+
+      // The shelf is rebuilt from stored handles rather than stored products,
+      // so a conversation reopened next week shows today's prices and stock
+      // instead of what was true when the answer was given.
+      setSuggestions([]);
+      const lastWithProducts = [...saved.messages]
+        .reverse()
+        .find((m) => m.role === "assistant" && m.handles?.length);
+      if (lastWithProducts) {
+        latestReplyRef.current = lastWithProducts.id;
+        attachProducts(lastWithProducts.id, lastWithProducts.handles);
+      }
+      return true;
+    },
+    [attachProducts],
+  );
+
+  // `undefined` until auth settles — distinct from `null`, which means guest.
+  const identityRef = useRef(undefined);
+
+  /**
+   * Signing in and out moves the conversation between identities.
+   *
+   * Gated on authLoading because auth reports logged-out on every first render
+   * and resolves a moment later. Acting on that would read a signed-in visitor
+   * as a guest, and the fix below would then "sign them out" a tick later and
+   * wipe the thread.
+   */
+  useEffect(() => {
+    if (authLoading) return;
+
+    const previous = identityRef.current;
+    if (previous === identity) return;
+    identityRef.current = identity;
+
+    // First settle on this page load: pick up whatever belongs to this visitor.
+    if (previous === undefined) {
+      pruneExpiredHistory();
+      // Loaded signed-out, so no account's conversation belongs in this
+      // browser. The logout path below clears it, but only when the widget was
+      // mounted at the time — a full navigation to /logout, a closed tab, or a
+      // logout in another tab all miss it. Signed out has to mean gone however
+      // it happened.
+      if (!identity) clearAccountHistories();
+      restore(identity);
+      return;
+    }
+
+    // Guest → signed in. They were mid-conversation, so it comes with them
+    // rather than disappearing at the moment they log in. It moves under their
+    // identity and the guest copy is deleted, so the next guest on this browser
+    // cannot pick up where a signed-in person left off.
+    //
+    // SERVER HISTORY SEAM: when the account-history endpoint lands, this is
+    // where the carried thread is POSTed to it, and where the account's stored
+    // conversation should be fetched and take precedence over the local copy.
+    if (previous === null && identity) {
+      const carried = messagesRef.current;
+      clearHistory(null);
+      if (carried.length > 1) {
+        saveHistory(identity, { messages: carried, sessionId: sessionIdRef.current });
+        savedCountRef.current = carried.length;
+      } else {
+        restore(identity);
+      }
+      return;
+    }
+
+    // Signed out, or switched account. The previous person's conversation is
+    // removed from this browser and the panel starts over. A logged-in thread
+    // that survived a logout would be readable by whoever uses the computer
+    // next, and "continue where you left off" is not worth that.
+    clearHistory(previous);
+    startFresh();
+    restore(identity);
+  }, [authLoading, identity, restore, startFresh]);
+
+  /**
+   * Persists on each new message.
+   *
+   * Keyed on the message count, not the messages themselves: the stored text
+   * comes from `full`, which is set once when a reply is created, so the
+   * content being saved does not change as that reply types itself out —
+   * watching the array would mean a write every few milliseconds for nothing.
+   */
+  useEffect(() => {
+    if (authLoading || identityRef.current === undefined) return;
+    if (messages.length <= 1 || messages.length <= savedCountRef.current) return;
+    if (saveHistory(identity, { messages, sessionId })) {
+      savedCountRef.current = messages.length;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages.length, sessionId, identity, authLoading]);
+
+  /** Discards the conversation here and in storage. */
+  const handleNewChat = useCallback(() => {
+    clearHistory(identityRef.current === undefined ? identity : identityRef.current);
+    startFresh();
+  }, [identity, startFresh]);
 
   // Keep the newest message in view as it types.
   useEffect(() => {
@@ -586,6 +762,27 @@ export default function AiChatWidget() {
                   Answers about products and availability
                 </p>
               </div>
+              {/* A conversation that persists for a week needs a way to be
+                  forgotten — on a shared computer, that is the only control the
+                  person actually has. */}
+              {messages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={handleNewChat}
+                  aria-label="Start a new conversation"
+                  title="New conversation"
+                  className="rounded-md p-1.5 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-theme-400 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+                    <path
+                      d="M12 5v14M5 12h14"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setOpen(false)}
