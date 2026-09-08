@@ -50,15 +50,26 @@ const connectDomains = [
 
 const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohocdn.com"];
 
-// Origins allowed to embed this app in an iframe (the Django admin that hosts
-// the store-page configurator). Opt-in: set ADMIN_FRAME_ANCESTORS to a
-// space-separated origin list to restrict embedding, e.g.
-//   ADMIN_FRAME_ANCESTORS="http://localhost https://be-admin.solanabbqgrills.com"
-// When unset, no frame-ancestors directive is emitted (embedding stays open,
-// as before) so dev/staging aren't accidentally blocked.
+// Origins allowed to embed this app in an iframe.
+//
+// This used to be opt-in: unset meant no frame-ancestors directive at all, so
+// embedding stayed open to anyone. That was for the Django admin's store-page
+// configurator, which is no longer in use (confirmed 8 Sep 2026), and secsuite
+// run 41 flagged the open default as a clickjacking risk.
+//
+// The default is now 'none' — nothing may frame the storefront. Setting
+//   _NEXT_ADMIN_FRAME_ANCESTORS="https://be-admin.solanabbqgrills.com"
+// reopens it to 'self' plus those origins, should an embedding integration
+// ever come back.
+//
+// Note this constrains who may frame *us*. Embedding others — Braintree's
+// payment fields, brand videos — is frame-src, which is untouched.
 const adminFrameAncestors = (process.env._NEXT_ADMIN_FRAME_ANCESTORS || "")
   .split(/\s+/)
   .filter(Boolean);
+
+/** True when embedding is deliberately reopened; drives both CSP and X-Frame-Options. */
+const framingAllowed = adminFrameAncestors.length > 0;
 
 const frameSrcDomains = [
   "https://tag.trovo-tag.com",
@@ -127,10 +138,52 @@ const config: NextConfig = {
       connect-src 'self' ${connectDomains.join(" ")};
 
       frame-src 'self' ${frameSrcDomains.join(" ")};
-      ${adminFrameAncestors.length ? `frame-ancestors 'self' ${adminFrameAncestors.join(" ")};` : ""}
+      frame-ancestors ${framingAllowed ? `'self' ${adminFrameAncestors.join(" ")}` : "'none'"};
     `;
 
     return [
+      {
+        // Baseline security headers, on every response including static assets.
+        //
+        // Added 8 Sep 2026 after secsuite run 41 flagged both as missing on the
+        // live storefront. Neither takes an argument that could break a page —
+        // they constrain how the browser treats a response we already control.
+        //
+        // HSTS is deliberately absent here: the platform already sends
+        // `Strict-Transport-Security: max-age=63072000`, and a second, weaker
+        // value emitted by the app would be the one browsers see on any route
+        // this matched first.
+        source: "/:path*",
+        headers: [
+          {
+            // Stops the browser second-guessing a declared Content-Type. Without
+            // it, a file we serve as text/plain can be sniffed as HTML or
+            // JavaScript and executed — the whole point of the header is that
+            // our Content-Type is the final word.
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            // Full URL to our own origin, origin-only when crossing to HTTPS,
+            // nothing at all when downgrading to HTTP. Keeps product paths and
+            // any query string out of third-party Referer logs while leaving
+            // internal analytics intact. This is also the modern browser
+            // default; sending it explicitly means we do not depend on that.
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          // Legacy counterpart to frame-ancestors, for browsers that predate
+          // CSP Level 2. Where both are understood the CSP directive wins, so
+          // these must not contradict each other — hence the shared flag rather
+          // than two independent conditions. Omitted entirely when embedding is
+          // deliberately reopened, because X-Frame-Options has no allowlist:
+          // it could only say DENY or SAMEORIGIN, and either would block the
+          // cross-origin embed that frame-ancestors was just told to permit.
+          ...(framingAllowed
+            ? []
+            : [{ key: "X-Frame-Options", value: "DENY" }]),
+        ],
+      },
       {
         source: "/",
         headers: [
