@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { STORE_ID } from "@/app/lib/store";
 import { clientKey, withRouteRateLimit } from "@/app/lib/rate-limit";
-import { allowedCountries, chatRegion, REGION_MESSAGE } from "@/app/lib/chat-region";
+import { allowedCountries, chatRegion, regionMessage } from "@/app/lib/chat-region";
 import { userTokenOf } from "@/app/lib/chat-user";
 
 /**
@@ -113,10 +113,10 @@ async function handler(request) {
   // Checked before anything else, including reading the body. Each message
   // costs the backend a model call, so a request we are going to refuse should
   // cost as close to nothing as possible.
-  const region = chatRegion(request);
+  const region = await chatRegion(request);
   if (!region.allowed) {
     console.info(`chat: refused — country ${region.country ?? "unknown"}`);
-    return fail(REGION_MESSAGE, 403);
+    return fail(await regionMessage(), 403);
   }
 
   let body;
@@ -270,6 +270,6 @@ export async function GET() {
     auth: "Authorization: Bearer <access token> — optional; identifies a signed-in visitor so the conversation is stored against them",
     availability: "/api/chat/availability",
     history: "/api/chat/history?limit=10 (signed-in visitors only)",
-    regions: allowedCountries(),
+    regions: await allowedCountries(),
   });
 }

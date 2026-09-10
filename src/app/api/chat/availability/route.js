@@ -23,7 +23,7 @@ import { withRouteRateLimit } from "@/app/lib/rate-limit";
 export const dynamic = "force-dynamic";
 
 async function handler(request) {
-  const { allowed, country } = chatRegion(request);
+  const { allowed, country } = await chatRegion(request);
 
   return NextResponse.json(
     { available: allowed, country },

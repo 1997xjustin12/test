@@ -1,10 +1,25 @@
+import { unstable_cache } from "next/cache";
+import { redis } from "@/app/lib/redis";
+
 /**
  * Where the AI assistant is allowed to be used.
  *
  * The assistant costs money per message and is only useful to people who can
- * actually buy — the catalogue ships to the US and Canada — so it is restricted
- * to those two countries in production and left open everywhere else, so it can
- * be developed and demonstrated from anywhere.
+ * actually buy — the catalogue ships to the US and Canada — so production is
+ * restricted to the served markets, with the Philippines addable for demos and
+ * testing from the team there.
+ *
+ * The list used to come from two environment variables, CHAT_ALLOWED_COUNTRIES
+ * and CHAT_REGION_LOCK. Both are gone: changing either meant editing three
+ * Vercel projects, and lifting the restriction for a demo in August was done
+ * with a hardcoded `return false` that then sat in production for three weeks
+ * because a code edit has to be remembered. It is now one switch in the admin,
+ * and turning it back on takes a click.
+ *
+ * DELIBERATELY GLOBAL, not store-scoped. One switch serves Solana, BBQ and OKO,
+ * so enabling the Philippines for a demo is one flip rather than three — and,
+ * more to the point, one thing to remember to turn off. The admin screen says
+ * that it affects all three.
  *
  * This is IP geolocation. A VPN defeats it in both directions: someone in the
  * US on a UK exit node is refused, and someone in the UK on a US exit node is
@@ -13,8 +28,17 @@
  * downstream should treat it as one.
  */
 
-/** Countries served when CHAT_ALLOWED_COUNTRIES says nothing else. */
-const DEFAULT_ALLOWED = ["US", "CA"];
+/** Shared by all brands — no storeKey(). See the note above. */
+export const CHAT_REGION_KEY = "chat_region_settings";
+
+/** Cache tag, so a save from the admin takes effect immediately. */
+export const CHAT_REGION_TAG = "chat-region";
+
+/** The markets the catalogue actually ships to. Always served. */
+export const CORE_COUNTRIES = ["US", "CA"];
+
+/** Added when the switch is off, for demos and testing from the team there. */
+export const EXTRA_COUNTRY = "PH";
 
 /**
  * Vercel's geolocation header. Present on every request into a function on the
@@ -40,15 +64,41 @@ const clean = (value) => {
   return /^[A-Z]{2}$/.test(code) && code !== "XX" ? code : null;
 };
 
+/**
+ * Is the assistant limited to the US and Canada?
+ *
+ * Defaults to true when nothing is stored or Redis is unreachable, because the
+ * safe direction for a spend control is the tighter list. A hiccup should never
+ * silently widen who can run up a bill.
+ */
+export const isUsCaOnly = unstable_cache(
+  async () => {
+    try {
+      const stored = await redis.get(CHAT_REGION_KEY);
+      if (!stored || typeof stored !== "object") return true;
+      // Only an explicit false widens the list; anything unusable reads as true.
+      return stored.usCaOnly !== false;
+    } catch (error) {
+      console.error("chat-region: settings read failed:", error?.message || error);
+      return true;
+    }
+  },
+  // No STORE_ID in the key: one switch serves every brand, so one cache entry
+  // should too.
+  ["chat-region-settings"],
+  { revalidate: 86400, tags: [CHAT_REGION_TAG] },
+);
+
 /** The served countries, as uppercase ISO codes. */
-export function allowedCountries() {
-  const configured = String(process.env.CHAT_ALLOWED_COUNTRIES ?? "")
-    .split(",")
-    .map(clean)
-    .filter(Boolean);
-  // An empty or malformed value means "not configured", not "serve nobody".
-  // Locking every visitor out is not a sane reading of a typo.
-  return configured.length ? configured : DEFAULT_ALLOWED;
+export async function allowedCountries() {
+  return (await isUsCaOnly()) ? [...CORE_COUNTRIES] : [...CORE_COUNTRIES, EXTRA_COUNTRY];
+}
+
+/** Writes the switch. Callers are responsible for busting the cache tag. */
+export async function saveRegionSettings(usCaOnly) {
+  const record = { usCaOnly: Boolean(usCaOnly), updatedAt: new Date().toISOString() };
+  await redis.set(CHAT_REGION_KEY, record);
+  return record;
 }
 
 /**
@@ -60,32 +110,14 @@ export function allowedCountries() {
  * environment we test in. VERCEL_ENV distinguishes production / preview /
  * development, so only the real thing is gated.
  *
- * CHAT_REGION_LOCK overrides both ways: `on` to reproduce the restriction
- * locally, `off` to lift it in production from the dashboard without shipping
- * a code change.
+ * Local and preview stay open on purpose. The switch decides *which* list
+ * production serves, not whether a developer can use the assistant on their own
+ * machine — otherwise turning it on would lock the team in the Philippines out
+ * of their own dev servers. Use X-Debug-Country to exercise the refusal path
+ * locally.
  */
 export function isRegionLocked() {
-  const override = String(process.env.CHAT_REGION_LOCK ?? "").trim().toLowerCase();
-  if (override === "on" || override === "true" || override === "1") return true;
-  if (override === "off" || override === "false" || override === "0") return false;
-
-  // ───────────────────────────────────────────────────────────────────────────
-  // TEMPORARILY DISABLED — 18 Aug 2026, for demo and testing from the
-  // Philippines. With this commented out the assistant is open to every country
-  // on production, which is the spend the US/CA restriction exists to bound.
-  //
-  // TO RESTORE: delete the `return false` below and uncomment the line under
-  // it. Nothing else in this file changed, so that single edit puts the
-  // restriction back exactly as it was.
-  //
-  // NOTE: a code change was not actually required for this. Setting
-  // CHAT_REGION_LOCK=off in the Vercel dashboard lifts the restriction with no
-  // deploy and is reversed just as quickly — which is what the override above
-  // is for. Prefer that next time; this edit has to be remembered, and an env
-  // var does not.
-  // ───────────────────────────────────────────────────────────────────────────
-  return false;
-  // return process.env.VERCEL_ENV === "production";
+  return process.env.VERCEL_ENV === "production";
 }
 
 /**
@@ -107,9 +139,9 @@ export function countryOf(request) {
 /**
  * Whether this request may use the assistant.
  *
- * Returns { allowed, country, locked } — the country comes back so callers can
- * log or report *why* something was refused, rather than leaving a support
- * question that can only be answered by guessing.
+ * Returns { allowed, country, locked, countries } — the country comes back so
+ * callers can log or report *why* something was refused, rather than leaving a
+ * support question that can only be answered by guessing.
  *
  * An unknown country is refused when the lock is on. "US and Canada only" means
  * denying what cannot be placed; admitting unknowns would make the restriction
@@ -117,14 +149,37 @@ export function countryOf(request) {
  * wrong is bounded and visible: if the platform ever stopped sending the
  * header, the assistant would be off for everyone rather than quietly open to
  * everyone, which is the failure you find out about immediately.
+ *
+ * Async now that the list comes from Redis. All three callers are route
+ * handlers, and the read behind it is cached and tagged, so this costs a map
+ * lookup rather than a round trip on all but the first call after a change.
  */
-export function chatRegion(request) {
+export async function chatRegion(request) {
   const country = countryOf(request);
   const locked = isRegionLocked();
-  if (!locked) return { allowed: true, country, locked };
-  return { allowed: Boolean(country) && allowedCountries().includes(country), country, locked };
+  const countries = await allowedCountries();
+
+  if (!locked) return { allowed: true, country, locked, countries };
+  return {
+    allowed: Boolean(country) && countries.includes(country),
+    country,
+    locked,
+    countries,
+  };
 }
 
-/** Message shown to a refused visitor. Same words wherever the refusal lands. */
-export const REGION_MESSAGE =
-  "The AI assistant is only available in the US and Canada.";
+/**
+ * Message shown to a refused visitor.
+ *
+ * Built from the live list rather than hardcoded, so it cannot tell someone the
+ * assistant is "US and Canada only" while the switch is actually serving the
+ * Philippines too.
+ */
+export async function regionMessage() {
+  const countries = await allowedCountries();
+  const names = { US: "the US", CA: "Canada", PH: "the Philippines" };
+  const parts = countries.map((c) => names[c] || c);
+  const list =
+    parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0];
+  return `The AI assistant is only available in ${list}.`;
+}

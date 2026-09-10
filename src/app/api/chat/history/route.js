@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { chatRegion, REGION_MESSAGE } from "@/app/lib/chat-region";
+import { chatRegion, regionMessage } from "@/app/lib/chat-region";
 import { userTokenOf } from "@/app/lib/chat-user";
 import { withRouteRateLimit } from "@/app/lib/rate-limit";
 
@@ -138,8 +138,8 @@ function normalize(data) {
 async function handler(request) {
   // Same rule as the rest of the assistant. A visitor who cannot use it has no
   // conversation to read, and one gate is easier to reason about than two.
-  const region = chatRegion(request);
-  if (!region.allowed) return fail(REGION_MESSAGE, 403);
+  const region = await chatRegion(request);
+  if (!region.allowed) return fail(await regionMessage(), 403);
 
   // Guests have no server-side history by design — theirs lives in their own
   // browser. This is "no history for you", not a fault, but it is still a 401:

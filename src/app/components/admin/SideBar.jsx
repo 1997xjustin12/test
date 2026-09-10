@@ -17,6 +17,7 @@ import {
   Rss,
   Settings,
   Trash2,
+  Bot,
   EyeOff,
   X,
 } from "lucide-react";
@@ -53,6 +54,7 @@ const NAV_GROUPS = [
     items: [
       { name: "Store Settings", url: "/admin/settings", icon: Settings },
       { name: "Catalogue Exclusions", url: "/admin/catalog-exclusions", icon: EyeOff },
+      { name: "AI Assistant", url: "/admin/ai-assistant", icon: Bot },
     ],
   },
   {
