@@ -164,7 +164,7 @@ export default async function MarketLayout({ children }) {
         {/* Store + site identity for crawlers and AI agents. Emitted once here
             rather than per page; page-level schema (Product, ItemList,
             BreadcrumbList) references the same @id. See
-            docs/agentic-ai-readiness.md. */}
+            docs/agentic-ai/agentic-ai-readiness.md. */}
         {/* eslint-disable-next-line react/no-danger */}
         <script
           type="application/ld+json"
@@ -195,7 +195,7 @@ export default async function MarketLayout({ children }) {
                     read. The boundary now lives inside SearchProvider around a
                     non-rendering leaf, and around the header below, so <main>
                     reaches the document body as ordinary HTML.
-                    See docs/agentic-ai-readiness.md. */}
+                    See docs/agentic-ai/agentic-ai-readiness.md. */}
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>

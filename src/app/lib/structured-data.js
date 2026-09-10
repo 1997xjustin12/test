@@ -14,7 +14,7 @@ import {
  * without executing JavaScript. That matters more than usual for this app:
  * every listing surface renders its products client-side, so JSON-LD is
  * currently the *only* way a non-JS consumer can see what a category contains.
- * See docs/agentic-ai-readiness.md for the measured baseline.
+ * See docs/agentic-ai/agentic-ai-readiness.md for the measured baseline.
  *
  * One module rather than per-page literals so the three brand themes cannot
  * drift into three different shapes of the same schema.

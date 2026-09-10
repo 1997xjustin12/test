@@ -209,7 +209,7 @@ export default async function ProductPage({ params }) {
   // Product + BreadcrumbList + FAQPage in one block. The FAQ content is the
   // same shipping/returns/warranty copy already rendered below — marking it up
   // costs nothing and is exactly what an agent reads to answer "does this ship
-  // free" without loading the page. See docs/agentic-ai-readiness.md.
+  // free" without loading the page. See docs/agentic-ai/agentic-ai-readiness.md.
   const jsonLd = serializeJsonLd(
     buildProduct({
       product,

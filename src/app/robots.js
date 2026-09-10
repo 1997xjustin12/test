@@ -45,7 +45,7 @@ const PRIVATE_PATHS = [
  * it. To adopt it, move the `training` entries into DISALLOWED_AI_CRAWLERS.
  *
  * Current policy: allow both, matching the site's existing effective behaviour.
- * See docs/agentic-ai-readiness.md → "Open decisions".
+ * See docs/agentic-ai/agentic-ai-readiness.md → "Open decisions".
  */
 const AI_CRAWLERS = {
   search: [

@@ -317,7 +317,7 @@ export const BaseNavKeys = Object.keys(BaseNavObj);
  *
  * Note the menu is stored under one global Redis key shared by all three
  * brands, so hiding an item hides it on every storefront. See
- * docs/brand-isolation.md.
+ * docs/reference/brand-isolation.md.
  */
 export const isNavVisible = (item) => item?.nav_visibility !== false;
 

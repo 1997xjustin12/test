@@ -34,7 +34,7 @@ async function CategoriesPage() {
 
   // This page indexes categories, not products, so the ItemList describes the
   // categories themselves. It is the last listing surface that carried no
-  // structured data — see docs/agentic-ai-readiness.md (Tier 2.1d).
+  // structured data — see docs/agentic-ai/agentic-ai-readiness.md (Tier 2.1d).
   const jsonLd = serializeJsonLd(
     buildBreadcrumbs([{ name: "Categories", url: "/categories" }]),
     buildItemList({

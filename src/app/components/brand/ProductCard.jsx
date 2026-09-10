@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import {CartIcon, HeartIcon} from "@/app/components/icons/lib"
+import { formatPrice } from "@/app/lib/helpers"
 
 const ProductSalePrice = ({price, sale_price}) => {
     return <div className="flex h-[53px]">
@@ -9,14 +10,14 @@ const ProductSalePrice = ({price, sale_price}) => {
                 {
                     price > sale_price && 
                     <div>
-                        <div className="text-lg font-bold text-orange-700">${sale_price.toFixed(2)} <span className="text-base line-through font-normal text-black">${price.toFixed(2)}</span></div>
-                        <div className="font-medium text-orange-700">Sale ${(price - sale_price).toFixed(2)}</div>
+                        <div className="text-lg font-bold text-orange-700">${formatPrice(sale_price)} <span className="text-base line-through font-normal text-black">${formatPrice(price)}</span></div>
+                        <div className="font-medium text-orange-700">Sale ${formatPrice(price - sale_price)}</div>
                     </div>
                 }
                 {
                     price === sale_price && 
                     <div>
-                        <div className="text-lg font-bold text-orange-700">${sale_price.toFixed(2)}</div>
+                        <div className="text-lg font-bold text-orange-700">${formatPrice(sale_price)}</div>
                     </div>
                 }
                 

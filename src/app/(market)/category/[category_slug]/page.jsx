@@ -73,7 +73,7 @@ async function page({ params }) {
   // The visible grid is still rendered by <InstantSearch> on the client, so
   // this page has no server-rendered products. Describing the same first page
   // of results in JSON-LD is what makes the category legible to crawlers and
-  // AI agents — see docs/agentic-ai-readiness.md (Tier 2.1).
+  // AI agents — see docs/agentic-ai/agentic-ai-readiness.md (Tier 2.1).
   const category = await resolveCategory(category_slug);
 
   const { hits } = category

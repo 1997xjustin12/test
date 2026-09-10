@@ -41,3 +41,9 @@ next-env.d.ts
 
 # Claude Code
 .claude
+
+# Documentation — local only, deliberately untracked (10 Sep 2026).
+# Reports, audits and guides live on the maintainer's machine rather than in
+# the repo. Note this stops future changes being tracked; it does not remove
+# what is already in git history. See docs/README.md.
+/docs/

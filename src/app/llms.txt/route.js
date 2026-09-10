@@ -32,7 +32,7 @@ const getCachedCategories = unstable_cache(
  *
  * Kept honest on purpose: it points at the product feed and sitemap, which are
  * fully server-rendered, and does not oversell the category pages while their
- * listings are still client-rendered (see docs/agentic-ai-readiness.md).
+ * listings are still client-rendered (see docs/agentic-ai/agentic-ai-readiness.md).
  */
 export const revalidate = 86400;
 

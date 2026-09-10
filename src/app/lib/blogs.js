@@ -20,7 +20,7 @@ import { STORE_ID } from "@/app/lib/store";
  * brand and already knows which via STORE_ID, so it is filled in here. Taking
  * it from the caller would mean a URL like ?store=solana on the BBQ storefront
  * returns Solana's posts — the same cross-brand leak documented in
- * docs/brand-isolation.md, but reachable by anyone who can edit a query string.
+ * docs/reference/brand-isolation.md, but reachable by anyone who can edit a query string.
  */
 
 const BASE = () => process.env.NEXT_SOLANA_BACKEND_URL;
@@ -113,7 +113,7 @@ async function backendFetch(path) {
       // Freshness comes from unstable_cache at the call site, not from here —
       // a no-store fetch inside a route that sets `revalidate` is what silently
       // bailed several routes out of static rendering before (see
-      // docs/agentic-ai-readiness.md).
+      // docs/agentic-ai/agentic-ai-readiness.md).
       next: { revalidate: 3600, tags: [BLOGS_TAG] },
     });
 

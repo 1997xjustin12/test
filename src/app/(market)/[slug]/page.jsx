@@ -254,9 +254,6 @@ export default async function GenericCategoryPage({ params }) {
     .map((item) => item?.collection_display?.id)
     .filter(Boolean);
 
-  console.log("collection_ids", collection_ids);
-
-
   const filterString = computeFilterString(pageData);
 
   // Always prefetch page-0 hits. ProductsSectionV2 checks window.location
@@ -273,8 +270,6 @@ export default async function GenericCategoryPage({ params }) {
 
   const countMap = new Map(buckets.map((b) => [String(b.key), b.doc_count]));
 
-  console.log("countMap", countMap);
-
   const subs = children.map((item) => {
     const col_id = item?.collection_display?.id;
     return {
@@ -287,7 +282,7 @@ export default async function GenericCategoryPage({ params }) {
 
   // The gallery below renders client-side, so these products appear in no
   // server HTML. The ItemList describes the same first page of hits the user
-  // sees once hydrated - see docs/agentic-ai-readiness.md (Tier 2.1).
+  // sees once hydrated - see docs/agentic-ai/agentic-ai-readiness.md (Tier 2.1).
   const jsonLd = serializeJsonLd(
     buildBreadcrumbs([{ name: rootNav?.name || slug, url: `/${url}` }]),
     buildItemList({

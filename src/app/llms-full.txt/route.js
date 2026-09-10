@@ -22,7 +22,7 @@ import { stripHtml } from "@/app/lib/structured-data";
  * product feed for the catalogue itself, which is already machine-readable and
  * always current.
  *
- * See docs/agentic-ai-readiness.md, "Points we are challenging".
+ * See docs/agentic-ai/agentic-ai-readiness.md, "Points we are challenging".
  */
 export const revalidate = 86400;
 

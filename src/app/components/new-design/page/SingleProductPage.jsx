@@ -70,7 +70,7 @@ function SingleProductPage({
     // <article> rather than <div>: this page is one self-contained product, and
     // the landmark plus the labelled sections below are how a browsing agent
     // works out the page hierarchy without guessing from class names.
-    // See docs/agentic-ai-readiness.md.
+    // See docs/agentic-ai/agentic-ai-readiness.md.
     <article aria-label={product?.title || "Product"} className="font-sans">
       <PixelViewContent id={product?.id} name={product?.title} price={price} />
       <Topbar />

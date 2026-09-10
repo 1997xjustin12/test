@@ -259,7 +259,7 @@ export default function AiChatWidget() {
   tokenRef.current = accessToken || null;
 
   // Rendered only after mount. The storefront is deliberately readable without
-  // JavaScript (see docs/agentic-ai-readiness.md) and a chat button that cannot
+  // JavaScript (see docs/agentic-ai/agentic-ai-readiness.md) and a chat button that cannot
   // work without it is noise in that HTML — for crawlers and for anyone with
   // scripting off.
   const [mounted, setMounted] = useState(false);

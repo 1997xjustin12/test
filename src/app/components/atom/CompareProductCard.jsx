@@ -31,7 +31,10 @@ function PriceDisplay({ price, compare_at_price }) {
       compare_at_price !== 0 &&
       compare_at_price !== "0"
     ) {
-      return parseFloat(compare_at_price)?.toFixed(2);
+      // formatPrice, not toFixed: toFixed omits the thousands separator, so a
+      // struck-through $1,300.00 rendered as $1300.00 right next to a sale
+      // price that did have one.
+      return formatPrice(parseFloat(compare_at_price));
     }
     return null;
   }, [compare_at_price]);

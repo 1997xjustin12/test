@@ -8,7 +8,7 @@ import { internalHeaders } from "@/app/lib/rate-limit";
  * Listing grids (category, brand, collection) are rendered by <InstantSearch>
  * on the client, so a crawler or AI agent sees an empty page. These helpers let
  * a server component fetch the same first page of results the user will see, so
- * it can be described in JSON-LD. See docs/agentic-ai-readiness.md.
+ * it can be described in JSON-LD. See docs/agentic-ai/agentic-ai-readiness.md.
  *
  * The filter string format mirrors computeFilterString() in [slug]/page.jsx and
  * the useMemo in ProductsSectionV2 — that is deliberate. The ItemList we emit

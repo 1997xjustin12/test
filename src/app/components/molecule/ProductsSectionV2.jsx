@@ -745,7 +745,7 @@ function ProductsSectionV2({
   // /[slug] did. Category pages therefore rendered the skeleton into the server
   // HTML and hid the real grid behind `hidden`, so anything that does not run
   // JavaScript — AI agents, text-extraction crawlers — saw placeholder boxes
-  // instead of 30 products. See docs/agentic-ai-readiness.md.
+  // instead of 30 products. See docs/agentic-ai/agentic-ai-readiness.md.
   const [dataLoaded, setDataLoaded] = useState(true);
   // initialFilterString comes from the server so InstantSearch has the right
   // filter on the very first render — before the context useEffect resolves.
