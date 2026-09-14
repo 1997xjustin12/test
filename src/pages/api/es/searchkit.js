@@ -18,6 +18,7 @@ import {
 import { fixObservableSubclass } from "@apollo/client/utilities";
 import { redis } from "../../../app/lib/redis";
 import { withRateLimit } from "@/app/lib/rate-limit";
+import { exactMatchClauses } from "@/app/lib/search-exact-match";
 
 const CACHE_TTL = 60; // seconds for filtered/paginated requests
 const INITIAL_PAGE_TTL = 86400; // 24h for page-0, unfiltered requests
@@ -356,6 +357,7 @@ async function searchkit(req, res) {
                     must: {
                       bool: {
                         should: [
+                          ...exactMatchClauses(searchQuery),
                           {
                             multi_match: {
                               query: searchQuery,

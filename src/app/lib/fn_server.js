@@ -9,6 +9,7 @@ import {
 import { accentuateSpecLabels } from "@/app/lib/filter-helper";
 import { unstable_cache } from "next/cache";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
+import { exactMatchClauses } from "@/app/lib/search-exact-match";
 
 // ─── Private: Elasticsearch ──────────────────────────────────────────────────
 
@@ -615,6 +616,7 @@ export async function fetchSearchResults(searchTerm) {
             {
               bool: {
                 should: [
+                  ...exactMatchClauses(searchTerm),
                   {
                     // Fuzzy search is fine for these standard fields
                     multi_match: {

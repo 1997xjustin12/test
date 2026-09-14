@@ -19,6 +19,11 @@ import {
 } from "@/app/lib/helpers";
 import { popular_keywords } from "@/app/lib/filter-helpers";
 import { mapCategoryResults } from "../lib/helpers";
+import {
+  collapseDuplicateListings,
+  exactMatchClauses,
+  findExactMatch,
+} from "@/app/lib/search-exact-match";
 
 // ============================================================================
 // CONSTANTS
@@ -182,6 +187,7 @@ export const SearchProvider = ({ children }) => {
           must: {
             bool: {
               should: [
+                ...exactMatchClauses(trimmedQuery),
                 {
                   multi_match: {
                     query: trimmedQuery,
@@ -467,60 +473,37 @@ export const SearchProvider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // FUNCTION: Process Products Search Result
   // ---------------------------------------------------------------------------
-  const processProductSearchResult = useCallback(
-    (query, products) => {
-      if (!query || query.trim() === "") {
-        return { exactMatch: null, products };
-      }
-
-      const queryWords = query.toLowerCase().trim().split(" ");
-
-      const exactLastSubstringMatches = products.filter((product) => {
-        const titleTokens = (product?.title || "")
-          .toLowerCase()
-          .trim()
-          .split(/\s+/);
-        const lastToken = titleTokens[titleTokens.length - 1];
-        return queryWords.some((word) => word === lastToken);
-      });
-
-      const productsByTitle = new Map(
-        products.map((product) => [
-          (product?.title || "").toLowerCase(),
-          product,
-        ]),
-      );
-
-      const matchingTitles = products
-        .map((p) => (p?.title || "").toLowerCase())
-        .filter((title) => matchesQueryWords(title, queryWords));
-
-      const mergedNames = [
-        ...new Set([
-          ...matchingTitles,
-          ...products.map((p) => (p?.title || "").toLowerCase()),
-        ]),
-      ];
-
-      const mergedProducts = mergedNames
-        .map((item) => productsByTitle.get(item))
-        .filter(Boolean);
-
-      const exactMatchTitles = new Set(
-        exactLastSubstringMatches.map((p) => (p?.title || "").toLowerCase()),
-      );
-
-      const otherProducts = mergedProducts.filter(
-        (p) => !exactMatchTitles.has((p?.title || "").toLowerCase()),
-      );
-
-      return {
-        exactMatch: exactLastSubstringMatches[0] || null,
-        products: [...exactLastSubstringMatches, ...otherProducts],
-      };
-    },
-    [matchesQueryWords],
-  );
+  const processProductSearchResult = useCallback((query, products) => {
+    // A top result is shown only when the query unambiguously names one
+    // product: its SKU (with or without punctuation), its title (with or
+    // without the SKU it ends in), or its handle or a pasted product link.
+    // Anything short of that gets no top result. See lib/search-exact-match.js.
+    //
+    // Products otherwise keep Elasticsearch's relevance order. The previous
+    // logic promoted any product whose last title word equalled any query word
+    // and hoisted those above everything else — so "revillution 2" made
+    // "Sunpak Black Front Fascia Kit - 12020 2" (relevance rank 34) the top
+    // result and pushed it above the Revillusion products that actually
+    // matched. It assumed every title ends in its SKU; 11% of live titles do
+    // not, and a bare word like "2" defeats the rest.
+    //
+    // Duplicate listings — same title AND same SKUs — are collapsed to the
+    // highest-ranked one, so the dropdown doesn't show identical rows. Products
+    // that merely share a title stay, which the old title-only collapse did not
+    // allow.
+    //
+    // Judged on the full list, THEN collapsed — never the other way round. Some
+    // duplicates disagree on price, and they must still count as two candidates;
+    // collapsing first would invent a confident top result out of an ambiguous
+    // query.
+    const { match } = findExactMatch(query, products);
+    const listed = collapseDuplicateListings(products);
+    if (!match) return { exactMatch: null, products: listed };
+    return {
+      exactMatch: match,
+      products: [match, ...listed.filter((product) => product !== match)],
+    };
+  }, []);
 
   // ---------------------------------------------------------------------------
   // FUNCTION: Get Search Results (Recent, Popular, Categories, Brands)
