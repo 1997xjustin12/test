@@ -116,10 +116,12 @@ export default async function CheckoutLayout({ children }) {
             <CartProvider>
               <Header logo={redisLogo} />
               <div className="flex flex-col min-h-screen">{children}</div>
+              {/* Inside the providers: FooterNewsletter calls useAuth(), and
+                  outside AuthProvider that returns null and crashes the page. */}
+              <Footer />
             </CartProvider>
           </AuthProvider>
         </GoogleReCaptchaProvider>
-        <Footer />
       </body>
     </html>
   );

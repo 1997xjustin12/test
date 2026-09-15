@@ -325,23 +325,6 @@ export function AuthProvider({ children }) {
     return res.json();
   }, [accessToken]);
 
-  const userOrderCreate = useCallback(async (order) => {
-    if (loading) return null;
-    try {
-      return fetch("/api/orders/checkout", {
-        method:  "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: JSON.stringify(order),
-      });
-    } catch (err) {
-      console.error("[userOrderCreate]", err);
-      return null;
-    }
-  }, [loading, accessToken]);
-
   // ── Profile API ────────────────────────────────────────────────────────────
 
   const updateProfile = useCallback(async (updatedData) => {
@@ -425,7 +408,6 @@ export function AuthProvider({ children }) {
         accountBenefits,
         forage,
         fullName,
-        userOrderCreate,
         userOrdersGet,
         userCartClose,
         userCartCreate,

@@ -17,9 +17,9 @@ import {
 } from "@/app/lib/helpers";
 import {
   STORE_EMAIL,
-  STORE_DOMAIN,
   STORE_CONTACT,
 } from "@/app/lib/store_constants";
+import { lookupPostalCode } from "@/app/lib/postal-code";
 
 const initialForm = {
   status: null,
@@ -263,7 +263,7 @@ function CheckoutComponent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [forage, setForage] = useState(null);
-  const { isLoggedIn, user, loading, updateProfile, userOrderCreate } = useAuth();
+  const { isLoggedIn, user, loading, updateProfile, accessToken } = useAuth();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter();
 
@@ -280,51 +280,13 @@ function CheckoutComponent() {
     }
   };
 
-  async function createOrder(orderData) {
-    try {
-      const response = await userOrderCreate(orderData);
-      const contentType = response.headers.get("content-type");
-      const result = contentType?.includes("application/json")
-        ? await response.json()
-        : { success: false, message: "Invalid JSON response from server" };
-
-      if (!response?.ok || result.success === false) {
-        return { success: false, message: result.message || "Failed to create order" };
-      }
-      return { success: true, data: result.data || result.order || result };
-    } catch (error) {
-      console.error("Order creation failed:", error.message || error);
-      return { success: false, message: error.message || "Unexpected error while creating order" };
-    }
-  }
-
   const debouncedGetOrderTotal = useMemo(() => debounce(getOrderTotal, 300), []);
 
-  const zipQuery = async (zip) => {
-    try {
-      const response = await fetch(`https://api.zippopotam.us/us/${zip}`);
-      if (!response?.ok) return { error: "Invalid Zip Code" };
-      const data = await response.json();
-      const place = data.places[0];
-      return {
-        error: false,
-        data: {
-          city: place["place name"],
-          state: place["state"],
-          province: place["state abbreviation"],
-          country: data["country"],
-          country_abbr: data["country abbreviation"],
-        },
-      };
-    } catch (err) {
-      return { error: err };
-    }
-  };
-
+  // US ZIPs and Canadian postal codes — see lib/postal-code.js.
   const debouncedZipQuery = useMemo(
     () =>
       debounce(async (zip, callback) => {
-        const result = await zipQuery(zip);
+        const result = await lookupPostalCode(zip);
         callback(result);
       }, 500),
     []
@@ -514,68 +476,80 @@ function CheckoutComponent() {
         return;
       }
 
-      const total_amount = parseFloat(cartTotal?.total_price || 0).toFixed(2);
+      const customer = { ...form };
+      delete customer.items;
 
-      const response = await fetch("/api/braintree_checkout", {
+      // One request does the rest on the server: re-price the cart, hold the
+      // payment, create the order, capture. No amount is sent — expectedTotal
+      // only lets the server refuse to charge a total the shopper wasn't shown.
+      const response = await fetch("/api/checkout/place-order", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nonce, amount: `${total_amount}`, recaptchaToken }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: JSON.stringify({
+          nonce,
+          recaptchaToken,
+          expectedTotal: Number(cartTotal?.total_price || 0),
+          customer,
+          items: cartItems.map(({ product_id, quantity, product_link }) => ({
+            product_id,
+            quantity,
+            product_link,
+          })),
+        }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
-      if (result.success) {
-        const orders = {
-          ...form,
-          status: "paid",
-          payment_status: true,
-          payment_details: result?.transaction?.id,
-          store_domain: STORE_DOMAIN,
-          items: mapOrderItems(cartItems),
-        };
+      if (!response.ok || !result?.success) {
+        console.error("[Checkout] Order not placed:", result);
 
-        const order_response = await createOrder(orders);
-
-        if (order_response.success) {
-          const orderSummary = {
-            orderId: order_response.data?.order_number || null,
-            transactionId: result?.transaction?.id || null,
-            email: form?.shipping_email || "",
-            firstName: form?.shipping_first_name || "",
-            lastName: form?.shipping_last_name || "",
-            items: cartItems.map((item) => ({
-              title: item.title,
-              quantity: item.quantity,
-              price: item?.variants?.[0]?.price,
-              image: item.images?.find((img) => img.position === 1)?.src || null,
-            })),
-            cartTotal,
-            shipping: {
-              name: `${form.shipping_first_name} ${form.shipping_last_name}`.trim(),
-              address: form.shipping_address,
-              city: form.shipping_city,
-              state: form.shipping_province,
-              zip: form.shipping_zip_code,
-              country: form.shipping_country,
-            },
-            isLoggedIn,
-          };
-          sessionStorage.setItem("order_summary", JSON.stringify(orderSummary));
-          instance.teardown();
-          setInstance(null);
-          clearCartItems();
-          saveInformation(form?.save_information);
-          router.push(`${BASE_URL}/payment_success`);
+        if (result?.code === "TOTAL_CHANGED" && result.totals) {
+          setCartTotal((prev) => ({ ...result.totals, allowPay: prev?.allowPay }));
+          setFormError(
+            `Your order total is now $${formatPrice(result.totals.total_price)}. Your card has not been charged — please review your order and press Complete Payment again.`
+          );
         } else {
-          console.error("[Checkout] Order creation failed:", order_response);
-          setFormError("Something went wrong creating your order. Please contact support.");
-          setIsSubmitting(false);
+          setFormError(result?.error || "Payment failed. Please try again.");
         }
-      } else {
-        console.error("[Checkout] Payment failed:", result.error);
-        setFormError(result.error || "Payment failed. Please try again.");
+
+        // The server already used this card nonce; Braintree won't accept it twice.
+        if (result?.nonceUsed) instance.clearSelectedPaymentMethod();
         setIsSubmitting(false);
+        return;
       }
+
+      const orderSummary = {
+        orderId: result.order_number || null,
+        transactionId: result.transaction_id || null,
+        email: form?.shipping_email || "",
+        firstName: form?.shipping_first_name || "",
+        lastName: form?.shipping_last_name || "",
+        items: cartItems.map((item) => ({
+          title: item.title,
+          quantity: item.quantity,
+          price: item?.variants?.[0]?.price,
+          image: item.images?.find((img) => img.position === 1)?.src || null,
+        })),
+        cartTotal: { ...cartTotal, ...result.totals },
+        shipping: {
+          name: `${form.shipping_first_name} ${form.shipping_last_name}`.trim(),
+          address: form.shipping_address,
+          city: form.shipping_city,
+          state: form.shipping_province,
+          zip: form.shipping_zip_code,
+          country: form.shipping_country,
+        },
+        isLoggedIn,
+      };
+      sessionStorage.setItem("order_summary", JSON.stringify(orderSummary));
+      instance.teardown();
+      setInstance(null);
+      clearCartItems();
+      saveInformation(form?.save_information);
+      router.push(`${BASE_URL}/payment_success`);
     } catch (error) {
       console.error("[Checkout] Unexpected error:", error);
       setFormError("An unexpected error occurred. Please try again.");
