@@ -31,7 +31,7 @@ import {
   useRefinementList,
 } from "react-instantsearch";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
-import Client from "@searchkit/instantsearch-client";
+import { createSearchClient } from "@/app/lib/searchkit-client";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -45,14 +45,10 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 const es_index = ES_INDEX;
 const hitsPerPage = 30;
 
-// Server-side: use absolute URL (window is undefined during SSR/getServerState).
-// Client-side: use relative URL (avoids CORS issues and is cleaner).
-const searchClient = Client({
-  url:
-    typeof window === "undefined"
-      ? `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`
-      : "/api/es/searchkit",
-});
+// Absolute URL and internal header on the server, relative URL in the browser,
+// and never a cached error — see lib/searchkit-client.js for why the last part
+// matters (listing pages hanging under load).
+const searchClient = createSearchClient();
 
 // Registers a single attribute with InstantSearch via the hook connector —
 // same effect as a hidden <RefinementList> but with no DOM output.
