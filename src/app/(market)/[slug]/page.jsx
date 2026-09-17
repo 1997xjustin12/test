@@ -195,6 +195,11 @@ export async function generateMetadata({ params }) {
   if (!pageData || !isNavVisible(pageData)) return {};
 
   return {
+    // Pagination, sorting and filters live in the query string and are applied
+    // client-side, so /electric-fireplaces?page=2, ?sort=… and ?filter:…=…
+    // all server-render page one's HTML. Without a canonical each was a
+    // separate, duplicate URL. Product and /category pages already set theirs.
+    alternates: { canonical: `${BASE_URL}/${slug}` },
     title:
       pageData.meta_title ||
       pageData.name ||
