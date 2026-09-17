@@ -13,6 +13,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import {
   BASE_URL,
+  brandLogoPath,
   createSlug,
   main_products,
   shouldApplyMainProductSort,
@@ -531,7 +532,7 @@ export const SearchProvider = ({ children }) => {
         );
 
         const brand_searches = processBrandSearchResult(query, brands).map(
-          (b) => ({ ...b, image: `/images/brand-logo/${b.url}.webp` }),
+          (b) => ({ ...b, image: brandLogoPath(b.url) }),
         );
         setBrandResults(brand_searches);
 

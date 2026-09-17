@@ -1031,6 +1031,24 @@ export function mapCategoryResults(cat) {
   };
 }
 
+/**
+ * Brand logos present in public/images/brand-logo, listed by next.config.ts at
+ * build time. Referenced as a literal so it is inlined into client bundles too.
+ */
+const BRAND_LOGOS = new Set(
+  (process.env.NEXT_PUBLIC_BRAND_LOGOS || "").split(",").filter(Boolean),
+);
+
+/**
+ * The logo path for a brand slug, or null when there is no logo file — every
+ * place that renders one already skips a falsy src. Without this, brands with
+ * no file (Sunstone: ~200 products) rendered a broken image on every product
+ * page, and a wrongly-cased file (Infratech-grills.webp) worked on Windows and
+ * broke on the case-sensitive production filesystem.
+ */
+export const brandLogoPath = (slug) =>
+  slug && BRAND_LOGOS.has(slug) ? `/images/brand-logo/${slug}.webp` : null;
+
 export function mapBrandResults(brand) {
   if (!brand) return null;
   const slug = createSlug(brand.key);
@@ -1039,7 +1057,7 @@ export function mapBrandResults(brand) {
     count: brand.doc_count,
     slug: slug,
     url: `${BASE_URL}/${slug}`,
-    image: `/images/brand-logo/${slug}.webp`,
+    image: brandLogoPath(slug),
   };
 }
 
@@ -1189,7 +1207,7 @@ export function formatProduct(product, mod = "pdp") {
   const category_url = `${BASE_URL}/category/${createSlug(category)}`;
   const brand_slug = createSlug(product?.brand);
   const brand_url = `${BASE_URL}/${brand_slug}`;
-  const brand_image = `/images/brand-logo/${brand_slug}.webp`;
+  const brand_image = brandLogoPath(brand_slug);
   const main_image = (product?.images?.find((i) => i?.position == 1)?.src || "").split('?')[0];
   const secondary_image = (product?.images?.find((i) => i?.position == 2)?.src || "").split('?')[0];
   const fallback_image = (product?.images?.[0]?.src || "").split('?')[0];

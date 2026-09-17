@@ -1,5 +1,23 @@
 // next.config.ts
 import type { NextConfig } from "next";
+import { readdirSync } from "node:fs";
+import path from "node:path";
+
+// Brand logos that actually exist, read once at build time and exposed as
+// NEXT_PUBLIC_BRAND_LOGOS for brandLogoPath() in lib/helpers.js. Pages used to
+// request /images/brand-logo/<slug>.webp for every brand whether or not the
+// file was there; Sunstone has none, so its ~200 product pages each rendered a
+// broken image (the September SEO audit's 586). Adding a logo file is all it
+// takes for it to appear — no list to maintain by hand.
+const brandLogos = (() => {
+  try {
+    return readdirSync(path.join(process.cwd(), "public", "images", "brand-logo"))
+      .filter((file) => file.endsWith(".webp"))
+      .map((file) => file.slice(0, -".webp".length));
+  } catch {
+    return [];
+  }
+})();
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
@@ -83,6 +101,9 @@ const frameSrcDomains = [
 const config: NextConfig = {
   compress: true,
   poweredByHeader: false,
+  env: {
+    NEXT_PUBLIC_BRAND_LOGOS: brandLogos.join(","),
+  },
   experimental: {
     optimizeCss: true,
     optimizePackageImports: [
