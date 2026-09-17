@@ -1,5 +1,6 @@
-import { ES_INDEX, createSlug } from "./lib/helpers";
+import { ES_INDEX, createSlug, isNavVisible } from "./lib/helpers";
 import { getCatalogExclusions } from "./lib/catalog-exclusions";
+import { keys, redis } from "./lib/redis";
 
 export const revalidate = 3600;
 
@@ -93,36 +94,43 @@ async function fetchAllProducts({ excludedBrands = [], excludedCollections = [] 
   }
 }
 
-// Fetch all brands
-async function fetchAllBrands() {
+/**
+ * Listing pages — /fireplaces, /electric-fireplaces, /napoleon and the rest —
+ * from the navigation menu, which is exactly what /[slug] renders from.
+ *
+ * The sitemap used to guess these instead: one /{brand} URL per brand in
+ * Elasticsearch, and no collection pages at all. So /fireplaces, the page the
+ * September SEO audit found unknown to Google, was never submitted, while
+ * /outdoorkitchenoutlet and /handles were submitted and answer 404 — brands in
+ * the catalogue with no page of their own.
+ *
+ * Same rules as /[slug]: an item hidden in the menu 404s, so it is left out,
+ * as is an excluded brand. Only single-segment URLs, because that is all
+ * /[slug] serves.
+ */
+async function fetchMenuPages(excludedBrands = []) {
   try {
-    const fetchConfig = {
-      method: "POST",
-      next: { revalidate: 3600 },
-      headers: {
-        Authorization: ESApiKey,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        size: 0,
-        aggs: {
-          brands: {
-            terms: {
-              field: "brand.keyword",
-              size: 1000,
-            },
-          },
-        },
-      }),
+    const stored = await redis.get(keys.dev_shopify_menu.value);
+    const menu = typeof stored === "string" ? JSON.parse(stored) : stored;
+    if (!Array.isArray(menu)) throw new Error("menu is not a list");
+
+    const pages = new Map();
+    const walk = (items = [], depth = 0) => {
+      for (const item of items) {
+        const excluded =
+          excludedBrands.includes(item?.name) || excludedBrands.includes(item?.origin_name);
+        const url = typeof item?.url === "string" ? item.url.trim() : "";
+        if (url && !/[/:?#\s]/.test(url) && isNavVisible(item) && !excluded && !pages.has(url)) {
+          pages.set(url, depth);
+        }
+        walk(item?.children, depth + 1);
+      }
     };
+    walk(menu);
 
-    const response = await fetch(`${ESURL}/${ES_INDEX}/_search`, fetchConfig);
-    const data = await readSearchResponse(response, "brands");
-
-    return data.aggregations?.brands?.buckets?.map((bucket) => bucket.key) || [];
+    return [...pages].map(([url, depth]) => ({ url, depth }));
   } catch (error) {
-    console.error("sitemap: brand fetch FAILED — the sitemap will contain no brand URLs.", error);
+    console.error("sitemap: menu fetch FAILED — the sitemap will contain no listing pages.", error);
     return [];
   }
 }
@@ -201,9 +209,9 @@ export default async function sitemap() {
   }));
 
   // Fetch dynamic data
-  const [products, brands, categories] = await Promise.all([
+  const [products, menuPages, categories] = await Promise.all([
     fetchAllProducts({ excludedBrands, excludedCollections }),
-    fetchAllBrands(),
+    fetchMenuPages(excludedBrands),
     fetchAllCategories(),
   ]);
 
@@ -215,15 +223,13 @@ export default async function sitemap() {
     priority: 0.9,
   }));
 
-  // Brand URLs
-  const brandUrls = brands
-    .filter((brand) => brand && !excludedBrands.includes(brand))
-    .map((brand) => ({
-      url: `${BASE_URL}/${createSlug(brand)}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    }));
+  // Listing pages from the menu; top-level ones rank with products.
+  const listingUrls = menuPages.map(({ url, depth }) => ({
+    url: `${BASE_URL}/${url}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: "weekly",
+    priority: depth === 0 ? 0.9 : 0.8,
+  }));
 
   // Category URLs
   const categoryUrls = categories
@@ -238,7 +244,7 @@ export default async function sitemap() {
   // Combine all URLs
   return [
     ...staticRoutes,
-    ...brandUrls,
+    ...listingUrls,
     ...categoryUrls,
     ...productUrls,
   ];
