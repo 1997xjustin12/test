@@ -99,8 +99,16 @@ const CompareTable = ({ products, activeProductId }) => {
     (p) => p.product_id !== activeProductId,
   );
 
+  // A product is not always listed among its own options. When it is not,
+  // activeProduct is undefined and used to render as a blank column whose image
+  // and title links had no text - the September SEO audit's "links with no
+  // anchor text". Drop missing entries; with fewer than two there is nothing to
+  // compare.
   const orderedProducts = [activeProduct, ...otherProducts]
+    .filter(Boolean)
     .map((op) => formatProduct(op, "card"))
+    .filter(Boolean);
+  if (orderedProducts.length < 2) return null;
 
   const orderedSpecs = orderedProducts
     .map((op) => ({ ...op, compare_specs: extractProductSpecs(op) }));
