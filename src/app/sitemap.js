@@ -7,8 +7,32 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ESURL = process.env.NEXT_ES_URL;
 const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 
-// Fetch all products from Elasticsearch
-async function fetchAllProducts() {
+/**
+ * Parse an Elasticsearch response, throwing when it is not a result.
+ *
+ * Elasticsearch reports a bad query as a JSON body with an `error` key, and
+ * `data?.hits?.hits || []` turns that into an empty list — indistinguishable
+ * from a catalogue with nothing in it. Each fetch below still degrades to an
+ * empty section rather than failing the whole sitemap, but now says so loudly.
+ */
+async function readSearchResponse(response, label) {
+  const data = await response.json();
+  if (!response.ok || data?.error) {
+    const reason = data?.error?.reason || data?.error?.type || `HTTP ${response.status}`;
+    throw new Error(`${label}: ${reason}`);
+  }
+  return data;
+}
+
+/**
+ * Fetch all published products from Elasticsearch.
+ *
+ * The exclusions are passed in. They used to be read here as bare variables
+ * that only existed inside sitemap(), so this threw a ReferenceError, the catch
+ * below swallowed it, and from 31 August 2026 the sitemap shipped with no
+ * product URLs at all.
+ */
+async function fetchAllProducts({ excludedBrands = [], excludedCollections = [] } = {}) {
   try {
     const fetchConfig = {
       method: "POST",
@@ -60,11 +84,11 @@ async function fetchAllProducts() {
     };
 
     const response = await fetch(`${ESURL}/${ES_INDEX}/_search`, fetchConfig);
-    const data = await response.json();
+    const data = await readSearchResponse(response, "products");
 
-    return data?.hits?.hits?.map((hit) => hit._source) || [];
+    return data.hits?.hits?.map((hit) => hit._source) || [];
   } catch (error) {
-    console.error("Error fetching products for sitemap:", error);
+    console.error("sitemap: product fetch FAILED — the sitemap will contain no product URLs.", error);
     return [];
   }
 }
@@ -94,11 +118,11 @@ async function fetchAllBrands() {
     };
 
     const response = await fetch(`${ESURL}/${ES_INDEX}/_search`, fetchConfig);
-    const data = await response.json();
+    const data = await readSearchResponse(response, "brands");
 
-    return data?.aggregations?.brands?.buckets?.map((bucket) => bucket.key) || [];
+    return data.aggregations?.brands?.buckets?.map((bucket) => bucket.key) || [];
   } catch (error) {
-    console.error("Error fetching brands for sitemap:", error);
+    console.error("sitemap: brand fetch FAILED — the sitemap will contain no brand URLs.", error);
     return [];
   }
 }
@@ -128,17 +152,18 @@ async function fetchAllCategories() {
     };
 
     const response = await fetch(`${ESURL}/${ES_INDEX}/_search`, fetchConfig);
-    const data = await response.json();
+    const data = await readSearchResponse(response, "categories");
 
-    return data?.aggregations?.categories?.buckets?.map((bucket) => bucket.key) || [];
+    return data.aggregations?.categories?.buckets?.map((bucket) => bucket.key) || [];
   } catch (error) {
-    console.error("Error fetching categories for sitemap:", error);
+    console.error("sitemap: category fetch FAILED — the sitemap will contain no category URLs.", error);
     return [];
   }
 }
 
 export default async function sitemap() {
-  const { brands: excludedBrands } = await getCatalogExclusions();
+  const { brands: excludedBrands, collections: excludedCollections } =
+    await getCatalogExclusions();
   // Every URL here is absolute. Publishing them against a placeholder domain
   // would hand Google thousands of dead links and they would be cached and
   // crawled before anyone noticed, so an unset base URL yields an empty
@@ -177,7 +202,7 @@ export default async function sitemap() {
 
   // Fetch dynamic data
   const [products, brands, categories] = await Promise.all([
-    fetchAllProducts(),
+    fetchAllProducts({ excludedBrands, excludedCollections }),
     fetchAllBrands(),
     fetchAllCategories(),
   ]);
