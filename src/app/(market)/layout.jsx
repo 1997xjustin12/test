@@ -113,6 +113,33 @@ const getCachedCategories = unstable_cache(
   { revalidate: 86400, tags: ["layout-data"] },
 );
 
+/**
+ * A menu item as the client providers need it.
+ *
+ * The menu is serialised into every storefront page for hydration, and at
+ * 286KB it was most of the page data on pages with little of their own — the
+ * main reason the September SEO audit flagged 100% of pages for a low
+ * text-to-HTML ratio. Two things in it are never read in the browser:
+ *
+ *   collection_display   only .id and .name are read (context/category.js,
+ *                        ProductsSectionV2); description, image, tags and
+ *                        timestamps made up ~100KB
+ *   meta_title,          read only by /[slug]'s generateMetadata, on the
+ *   meta_description     server, from its own Redis read
+ *
+ * Everything else is kept as-is. The admin layout passes the full menu, which
+ * the menu editor needs.
+ */
+const clientMenuItem = ({ children, collection_display, meta_title, meta_description, ...item }) => ({
+  ...item,
+  ...(collection_display && typeof collection_display === "object"
+    ? { collection_display: { id: collection_display.id, name: collection_display.name } }
+    : collection_display !== undefined
+      ? { collection_display }
+      : {}),
+  ...(Array.isArray(children) ? { children: children.map(clientMenuItem) } : {}),
+});
+
 export default async function MarketLayout({ children }) {
   const [initData, categories, storeSettings] = await Promise.all([
     getInitData(),
@@ -133,7 +160,7 @@ export default async function MarketLayout({ children }) {
 
   const formattedMenuItems =
     menu?.map((i) => ({
-      ...i,
+      ...clientMenuItem(i),
       is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
     })) || [];
 
