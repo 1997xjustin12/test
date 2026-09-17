@@ -150,6 +150,27 @@ const flattenNav = (navItems) => {
   return result;
 };
 
+/**
+ * BreadcrumbList + ItemList for a listing page, serialized, or null.
+ *
+ * The product grid hydrates client-side, so the ItemList is what describes the
+ * first page of products to a crawler — see
+ * docs/agentic-ai/agentic-ai-readiness.md (Tier 2.1).
+ */
+const listingJsonLd = ({ name, url, hits }) =>
+  serializeJsonLd(
+    buildBreadcrumbs([{ name, url: `/${url}` }]),
+    buildItemList({ name, url: `/${url}`, products: toListingProducts(hits || []) }),
+  );
+
+function ListingJsonLd({ json }) {
+  if (!json) return null;
+  return (
+    // eslint-disable-next-line react/no-danger
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
+  );
+}
+
 export async function generateStaticParams() {
   const menuData = await getMenuData();
   const flatData = flattenNav(menuData);
@@ -221,23 +242,43 @@ export default async function GenericCategoryPage({ params }) {
   };
 
   if (pageData.is_base_nav) {
+    // Top-level pages — /fireplaces and its siblings — used to render their
+    // product grid without the filter or first page the gallery routes below
+    // pass in. ProductsSectionV2 only works the filter out in a useEffect, so
+    // the server HTML held the first 30 products of the whole catalogue —
+    // identical on /fireplaces, /patio-heaters, /built-in-grills,
+    // /freestanding-grills and /open-box — and crawlers read the five as
+    // duplicates. They also returned before any structured data was built.
+    // Both now match the gallery routes.
+    const baseFilterString = computeFilterString(pageData);
+    const baseHits = await getInitialHits(baseFilterString).catch(() => null);
+    const baseJsonLd = listingJsonLd({ name: pageData.name || slug, url, hits: baseHits });
+    const basePlpProps = {
+      page_details: pageData,
+      initialFilterString: baseFilterString,
+      initialHits: baseHits,
+    };
+
     if (ISOKO) {
       return (
         <div className="min-h-svh bg-ash dark:bg-char">
-          <OKOBasePlp page_details={pageData} />
+          <ListingJsonLd json={baseJsonLd} />
+          <OKOBasePlp {...basePlpProps} />
         </div>
       );
     }
     if (ISBBQ) {
       return (
         <div className="min-h-svh bg-ash dark:bg-char">
-          <BBQBasePlp page_details={pageData} />
+          <ListingJsonLd json={baseJsonLd} />
+          <BBQBasePlp {...basePlpProps} />
         </div>
       );
     }
     return (
       <div className="min-h-svh bg-white dark:bg-gray-950">
-        <NewDesignBasePlp page_details={pageData} />
+        <ListingJsonLd json={baseJsonLd} />
+        <NewDesignBasePlp {...basePlpProps} />
       </div>
     );
   }
@@ -280,31 +321,12 @@ export default async function GenericCategoryPage({ params }) {
     };
   });
 
-  // The gallery below renders client-side, so these products appear in no
-  // server HTML. The ItemList describes the same first page of hits the user
-  // sees once hydrated - see docs/agentic-ai/agentic-ai-readiness.md (Tier 2.1).
-  const jsonLd = serializeJsonLd(
-    buildBreadcrumbs([{ name: rootNav?.name || slug, url: `/${url}` }]),
-    buildItemList({
-      name: rootNav?.name || slug,
-      url: `/${url}`,
-      products: toListingProducts(initialHits || []),
-    }),
-  );
-
-  const ListingJsonLd = () =>
-    jsonLd ? (
-      // eslint-disable-next-line react/no-danger
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLd }}
-      />
-    ) : null;
+  const jsonLd = listingJsonLd({ name: rootNav?.name || slug, url, hits: initialHits });
 
   if (ISOKO) {
     return (
       <div className="min-h-svh bg-ash dark:bg-char">
-        <ListingJsonLd />
+        <ListingJsonLd json={jsonLd} />
         <OKOProductGallery
           slug={slug}
           config={{ root: rootNav, url, subs }}
@@ -319,7 +341,7 @@ export default async function GenericCategoryPage({ params }) {
   if (ISBBQ) {
     return (
       <div className="min-h-svh bg-ash dark:bg-char">
-        <ListingJsonLd />
+        <ListingJsonLd json={jsonLd} />
         <BBQProductGallery
           slug={slug}
           config={{ root: rootNav, url, subs }}
@@ -333,7 +355,7 @@ export default async function GenericCategoryPage({ params }) {
 
   return (
     <div className="min-h-svh bg-white dark:bg-gray-950">
-      <ListingJsonLd />
+      <ListingJsonLd json={jsonLd} />
       <NewProductGallery
         slug={slug}
         config={{ root: rootNav, url, subs }}

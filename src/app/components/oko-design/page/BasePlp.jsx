@@ -11,7 +11,7 @@ function getNavImage(item){
   return item?.feature_image || `/images/nav-item-images/${item?.slug}.webp`; 
 }
 
-function BasePlp({ page_details }) {
+function BasePlp({ page_details, initialFilterString = "", initialHits = null }) {
   if (!page_details) return notFound();
 
   const children = page_details.children ?? [];
@@ -103,7 +103,16 @@ function BasePlp({ page_details }) {
 
       {page_details?.name !== "Brands" && (
         <div className="mb-[30px]">
-          <ProductsSectionV2 category={page_details?.url} />
+          {/* The filter and first page come from the server. Without them the grid
+              rendered its server HTML unfiltered — the same 30 catalogue-wide
+              products on every top-level page — and only filtered after
+              hydration, so crawlers saw /fireplaces and /patio-heaters as
+              duplicates of each other. */}
+          <ProductsSectionV2
+            category={page_details?.url}
+            initialFilterString={initialFilterString}
+            initialHits={initialHits}
+          />
         </div>
       )}
     </div>
