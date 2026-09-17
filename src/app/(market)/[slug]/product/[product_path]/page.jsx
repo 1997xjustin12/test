@@ -8,7 +8,8 @@ import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
-import { BASE_URL, ES_INDEX, ISBBQ, ISOKO } from "@/app/lib/helpers";
+import { BASE_URL, ES_INDEX, ISBBQ, ISOKO, createSlug } from "@/app/lib/helpers";
+import { getMenuPageUrls } from "@/app/lib/menu-pages";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 import {
@@ -195,6 +196,25 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
+  // A brand only has a page if the menu has one. OutdoorKitchenOutlet does not,
+  // so its products linked to /outdoorkitchenoutlet — the stray 404 the
+  // September SEO audit found. Without a page there is no brand link, and no
+  // brand step in the breadcrumb markup. If the menu cannot be read, the links
+  // stay as they were rather than disappearing sitewide.
+  const menuPageUrls = await getMenuPageUrls().catch(() => null);
+  const hasBrandPage = menuPageUrls ? menuPageUrls.includes(createSlug(product?.brand)) : true;
+  // The visible breadcrumb's brand step carries the same URL; it keeps the name
+  // but points nowhere, since every non-final step renders as a <Link>.
+  const pageProduct = hasBrandPage
+    ? product
+    : {
+        ...product,
+        brand_url: undefined,
+        breadcrumbs: product?.breadcrumbs?.map((crumb) =>
+          crumb?.url === product?.brand_url ? { ...crumb, url: "#" } : crumb,
+        ),
+      };
+
   const product_reviews = (await getReviewsByProductId(product_id)) || [];
 
   const [about, shipping_policy, return_policy, warranty] = await getFaqContent();
@@ -216,7 +236,9 @@ export default async function ProductPage({ params }) {
       url: `/${slug}/product/${product_path}`,
     }),
     buildBreadcrumbs([
-      { name: product?.brand || product?.vendor || slug, url: `/${slug}` },
+      ...(hasBrandPage
+        ? [{ name: product?.brand || product?.vendor || slug, url: `/${slug}` }]
+        : []),
       { name: product?.title, url: `/${slug}/product/${product_path}` },
     ]),
     buildFaqPage(FAQS),
@@ -234,7 +256,7 @@ export default async function ProductPage({ params }) {
       )}
       <div className={`min-h-svh ${(ISBBQ || ISOKO) ? "bg-ash dark:bg-char" : "bg-white dark:bg-gray-950"}`}>
         <MainSection
-          product={product}
+          product={pageProduct}
           slug={slug}
           reviews={product_reviews}
           faqs={FAQS}
