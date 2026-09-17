@@ -1,6 +1,22 @@
 import { ES_INDEX, createSlug, isNavVisible } from "./lib/helpers";
 import { getCatalogExclusions } from "./lib/catalog-exclusions";
 import { keys, redis } from "./lib/redis";
+import { getAllBlogPosts } from "./lib/blogs";
+
+/**
+ * Every blog post for this brand. The sitemap listed /blogs but never the
+ * posts, so articles were discoverable only by crawling the index pages —
+ * including the two the September SEO audit tied to 49,500 and 33,100 monthly
+ * searches. getAllBlogPosts covers the backend and the WordPress fallback.
+ */
+async function fetchBlogPosts() {
+  try {
+    return await getAllBlogPosts();
+  } catch (error) {
+    console.error("sitemap: blog fetch FAILED — the sitemap will contain no blog posts.", error);
+    return [];
+  }
+}
 
 export const revalidate = 3600;
 
@@ -209,10 +225,11 @@ export default async function sitemap() {
   }));
 
   // Fetch dynamic data
-  const [products, menuPages, categories] = await Promise.all([
+  const [products, menuPages, categories, blogPosts] = await Promise.all([
     fetchAllProducts({ excludedBrands, excludedCollections }),
     fetchMenuPages(excludedBrands),
     fetchAllCategories(),
+    fetchBlogPosts(),
   ]);
 
   // Product URLs
@@ -245,6 +262,14 @@ export default async function sitemap() {
   return [
     ...staticRoutes,
     ...listingUrls,
+    ...blogPosts
+      .filter((post) => typeof post?.slug === "string" && post.slug)
+      .map((post) => ({
+        url: `${BASE_URL}/blogs/${post.slug}`,
+        lastModified: post.updated_at || post.published_at || new Date().toISOString(),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })),
     ...categoryUrls,
     ...productUrls,
   ];
