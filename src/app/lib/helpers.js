@@ -1204,7 +1204,13 @@ export function formatProduct(product, mod = "pdp") {
   const save_amt = was ? was - price : 0;
   const save_pct = was > 0 ? Math.round(((was - price) / was) * 100) : 0;
   const category = product?.accentuate_data?.category || "uncategorized";
-  const category_url = `${BASE_URL}/category/${createSlug(category)}`;
+  // No link without a real category. The "uncategorized" fallback label is kept
+  // for display, but linking it produced /category/uncategorized — a page that
+  // does not exist, which the September SEO audit reported as a stray 404.
+  // undefined (not null) so the category chip falls back to its "#" default.
+  const category_url = product?.accentuate_data?.category
+    ? `${BASE_URL}/category/${createSlug(category)}`
+    : undefined;
   const brand_slug = createSlug(product?.brand);
   const brand_url = `${BASE_URL}/${brand_slug}`;
   const brand_image = brandLogoPath(brand_slug);
