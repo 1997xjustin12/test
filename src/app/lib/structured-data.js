@@ -129,7 +129,13 @@ export function buildBreadcrumbs(trail = []) {
  * with the rendered result set is cloaking, not optimisation.
  */
 export function buildItemList({ name, url, products = [], offset = 0 }) {
-  const entries = (products || []).filter(Boolean);
+  // Products without an image are left out. Google requires `image` on a
+  // Product, and every listing page the September SEO audit flagged for
+  // "ItemList element markup errors" (/summit-refrigeration,
+  // /shop-all-patio-heaters, /pgl-fire-pit-logs, …) had exactly one image-less
+  // product in its list, while unflagged pages had none. The list stays a
+  // subset of what is on the page, so positions remain sequential.
+  const entries = (products || []).filter((p) => p && p.image);
   if (!entries.length) return null;
 
   return compact({
@@ -276,6 +282,14 @@ export function buildProduct({
 } = {}) {
   if (!product) return null;
 
+  // No image, no Product markup. Google requires `image`, so a Product without
+  // one is reported as invalid (the audit's "Product-level markup error" on an
+  // image-less Summit freezer) and is ineligible for rich results anyway. A
+  // placeholder would describe the product with a picture that is not of it.
+  // The page's breadcrumb and FAQ markup are unaffected.
+  const images = (product.images || []).map((img) => img?.src).filter(Boolean);
+  if (!images.length) return null;
+
   // Specs are {label, value} pairs rendered as a table on the page. As
   // additionalProperty they become filterable facts — an agent answering
   // "4-burner, at least 50,000 BTU, under 34 inches" can read them directly
@@ -307,7 +321,7 @@ export function buildProduct({
     "@type": "Product",
     name: product.title,
     description: stripHtml(product?.body_html || ""),
-    image: (product.images || []).map((img) => img?.src).filter(Boolean),
+    image: images,
     sku: variant?.sku || null,
     // Shopify stores the barcode as GTIN-12/13/14; schema.org accepts the
     // generic `gtin` and infers the length. mpn falls back to the SKU, which is
