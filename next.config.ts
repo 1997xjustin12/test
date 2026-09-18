@@ -19,6 +19,30 @@ const brandLogos = (() => {
   }
 })();
 
+// Which brand's fonts to compile in. next/font preloads every family declared
+// in a module that reaches the page, so the three brands' families sharing one
+// module made every page preload 8 font files (202KB at high priority) for the
+// two or three a brand renders — on mobile they starved the render-blocking
+// stylesheet and held first paint at 2.07s. "brand-fonts" resolves to one
+// brand's module, and nothing else resolves that specifier: a build with this
+// alias missing fails rather than shipping no fonts.
+//
+// Mirrors lib/store.js's STORE_ID-first resolution. (market)/layout.jsx
+// compares the module's THEME with the running store, so a wrong answer here
+// is a build error, not another brand's typeface on the page.
+const storeTheme = (() => {
+  const id = (
+    process.env.STORE_ID ||
+    process.env.NEXT_PUBLIC_STORE_ID ||
+    process.env.NEXT_PUBLIC_STORE_THEME ||
+    process.env.STORE_REDIS_PREFIX ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+  return ["solana", "bbq", "oko"].includes(id) ? id : "solana";
+})();
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -103,6 +127,11 @@ const config: NextConfig = {
   poweredByHeader: false,
   env: {
     NEXT_PUBLIC_BRAND_LOGOS: brandLogos.join(","),
+  },
+  turbopack: {
+    resolveAlias: {
+      "brand-fonts": `./src/app/fonts/${storeTheme}.js`,
+    },
   },
   experimental: {
     optimizeCss: true,

@@ -2,7 +2,7 @@ import { unstable_cache } from "next/cache";
 import "@/app/globals.css";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { redis, keys } from "@/app/lib/redis";
-import { Inter, Playfair_Display, Oswald, Sora, Zilla_Slab, IBM_Plex_Mono } from "next/font/google";
+import { bodyClass, THEME as FONTS_THEME } from "brand-fonts";
 import { AuthProvider } from "@/app/context/auth";
 import { CartProvider } from "@/app/context/cart";
 import { QuickViewProvider } from "@/app/context/quickview";
@@ -20,6 +20,7 @@ import { fetchUniqueCategories } from "@/app/lib/fn_server";
 import { notFound } from "next/navigation";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
+import { STORE_THEME } from "@/app/lib/store";
 import {
   buildOrganization,
   buildWebSite,
@@ -42,56 +43,17 @@ import OKOTopbar from "@/app/components/oko-design/layout/Topbar";
 import OKONavbar from "@/app/components/oko-design/layout/Navbar";
 import OKOFooter from "@/app/components/oko-design/layout/Footer";
 
-const InterFont = Inter({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-  variable: "--font-inter",
-});
-
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "optional",
-  variable: "--font-playfair-display",
-});
-
-export const oswald = Oswald({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-oswald',
-  display: 'swap',
-})
-
-export const sora = Sora({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-sora',
-  display: 'swap',
-})
-
-// OKO display + mono. Slab serif for the workshop-catalog headings (moves
-// away from the generic Fraunces-on-cream default; see design system §14),
-// IBM Plex Mono for eyebrows/counters. OKO body copy reuses Inter.
-export const zillaSlab = Zilla_Slab({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-oko-display',
-  display: 'swap',
-})
-
-export const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['500'],
-  variable: '--font-oko-mono',
-  display: 'swap',
-})
-
-const bodyClass = ISOKO
-  ? `${zillaSlab.variable} ${InterFont.variable} ${plexMono.variable} bg-oko-cream dark:bg-oko-night outdoorkitchenoutlet`
-  : ISBBQ
-    ? `${oswald.variable} ${sora.variable} bg-paper bbqgrilloutlet`
-    : `${InterFont.variable} ${playfairDisplay.variable}`
+// Fonts come from the brand module next.config.ts resolves for this
+// deployment's STORE_ID. Declaring all three brands' families here made every
+// page preload 8 font files (202KB) to render the two a brand uses — see
+// fonts/solana.js. The check below turns a mis-resolved alias into a build
+// error rather than another brand's typeface on the page.
+if (FONTS_THEME !== STORE_THEME) {
+  throw new Error(
+    `Font bundle is for "${FONTS_THEME}" but this build is "${STORE_THEME}" — ` +
+      `check the brand-fonts alias in next.config.ts`,
+  );
+}
 
 export const metadata = await generateMetadata();
 
