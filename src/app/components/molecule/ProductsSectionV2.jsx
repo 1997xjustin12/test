@@ -37,6 +37,7 @@ import Image from "next/image";
 import {
   BaseNavKeys,
   ES_INDEX,
+  hrefFromSearchParams,
   getInitialUiStateFromUrl,
 } from "@/app/lib/helpers";
 import { priceBucketKeys, getActiveFacets } from "@/app/lib/filter-helper";
@@ -723,6 +724,7 @@ function urlHasActiveParams() {
 function ProductsSectionV2({
   category,
   search = "",
+  initialParams = null,
   filterType = null,
   initialFilterString = "",
   initialHits = null,
@@ -755,9 +757,16 @@ function ProductsSectionV2({
   );
 
   // Computed once from the initial URL — URLHandler takes over after mount
+  // Server and first client render must start from the same state, or React
+  // throws away the server HTML and re-renders (hydration mismatch). The client
+  // reads window.location; the server cannot, so /search hands its own
+  // searchParams down as initialParams and the query as `search`.
   const initialUiState = useRef(
     getInitialUiStateFromUrl(
-      typeof window !== "undefined" ? window.location.href : null,
+      typeof window !== "undefined"
+        ? window.location.href
+        : hrefFromSearchParams(initialParams),
+      { query: search },
     ),
   );
 

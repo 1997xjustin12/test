@@ -154,7 +154,11 @@ export default function BBQSearchPage({
 
       <div className="flex gap-6 mt-5 items-start">
         <div className={`w-full ${ACTIVE_TAB === "product" ? "flex" : "hidden"}`}>
-          <ProductsSection category="search" search={urlParams?.query || ""} />
+          <ProductsSection
+            category="search"
+            search={urlParams?.query || ""}
+            initialParams={urlParams}
+          />
         </div>
         <div className={`w-full ${ACTIVE_TAB === "category" ? "flex" : "hidden"}`}>
           <CategoryResults searchResult={categoryResults} />

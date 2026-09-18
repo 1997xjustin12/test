@@ -519,7 +519,49 @@ export const isValidPassword = (password) => {
   return { valid: true, message: "Password is valid." };
 };
 
-export const getInitialUiStateFromUrl = (url) => {
+/**
+ * A URL built from a Next.js searchParams object, for reading query parameters
+ * on the server the way the client reads window.location.
+ *
+ * The origin is a placeholder — only the query string is ever read. Returns
+ * null when there are no parameters, which callers treat as "no refinements".
+ */
+export const hrefFromSearchParams = (params) => {
+  if (!params || typeof params !== "object") return null;
+
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    for (const entry of Array.isArray(value) ? value : [value]) {
+      if (entry !== undefined && entry !== null) search.append(key, String(entry));
+    }
+  }
+
+  const query = search.toString();
+  return query ? `https://placeholder.invalid/?${query}` : null;
+};
+
+/**
+ * InstantSearch's initial UI state.
+ *
+ * `url` is null during server rendering (there is no window), which used to
+ * throw "Invalid URL" on every listing render and log a warning; an absent URL
+ * is now simply "no refinements from the URL".
+ *
+ * `query` is passed separately because the server knows it from its own props
+ * (the /search page reads it from searchParams) while the client would only
+ * find it in the URL. Seeding both sides with the same query keeps the server
+ * HTML and the first client render in agreement.
+ */
+export const getInitialUiStateFromUrl = (url, { query } = {}) => {
+  if (!url) {
+    return {
+      [ES_INDEX]: {
+        sortBy: `${ES_INDEX}_popular`,
+        ...(query ? { query } : {}),
+      },
+    };
+  }
+
   try {
     const searchParams = new URL(url).searchParams;
     const refinementList = {};
@@ -552,6 +594,9 @@ export const getInitialUiStateFromUrl = (url) => {
         range: Object.keys(range).length ? range : undefined,
         sortBy: sortBy || undefined,
         page: page || undefined,
+        ...(query || searchParams.get("query")
+          ? { query: query || searchParams.get("query") }
+          : {}),
       },
     };
 
