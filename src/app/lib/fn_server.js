@@ -480,12 +480,29 @@ async function fetchRelatedProductData(accentuateData) {
 
   // Note: Ensure API_URL and fetchConfig are accessible in this scope
 
+  // Related handles come from the product's own accentuate data, which is a
+  // list of names — it knows nothing about what is published or suppressed. So
+  // the same rules the rest of the catalogue uses are applied here: without
+  // them an excluded brand reappeared in the compare table, the frequently
+  // bought carousel, the open-box strip and the new-items strip (a Cedar Creek
+  // product on RCS pages), and an unpublished product could be offered for
+  // sale.
+  const { brands: excludedBrands, collections: excludedCollections } =
+    await getCatalogExclusions();
+
   const response = await esSearch(
     {
       size: 100,
       query: {
         bool: {
-          filter: [{ terms: { "handle.keyword": mergedHandles } }],
+          filter: [
+            { terms: { "handle.keyword": mergedHandles } },
+            { term: { published: true } },
+          ],
+          must_not: [
+            { terms: { "brand.keyword": excludedBrands } },
+            { terms: { "collections.name.keyword": excludedCollections } },
+          ],
         },
       },
     },
