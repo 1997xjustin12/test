@@ -46,6 +46,10 @@ export default async function Categories() {
               className="bg-ash dark:bg-stone-900 border border-grate dark:border-stone-700 rounded-sm text-center hover:bg-char hover:text-ash dark:hover:bg-stone-800 hover:-translate-y-1 transition-all group"
             >
               {/* <span className="text-3xl block mb-2">{icon}</span> */}
+              {/* No `priority` on the card image: it was set on the first card
+                  as the LCP candidate, but the LCP element is the hero heading
+                  and this section sits below the hero — the first card measures
+                  1556px down a 412x915 mobile viewport. */}
               <div className="relative w-full aspect-w-3 aspect-h-2 overflow-hidden">
                 {image && (
                   <Image
@@ -55,7 +59,6 @@ export default async function Categories() {
                     sizes="(max-width: 1024px) calc(50vw - 2rem), calc(33vw - 2rem)"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     quality={40}
-                    priority={index === 0}
                   />
                 )}
               </div>

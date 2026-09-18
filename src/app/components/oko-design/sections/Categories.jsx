@@ -59,6 +59,10 @@ export default async function Categories() {
                 href={`${BASE_URL}/category/${slug}`}
                 className="group relative block aspect-[4/3] overflow-hidden rounded-[2px] bg-oko-char"
               >
+                {/* No `priority` on the card image: it was set on the first card
+                    as the LCP candidate, but the LCP element is the hero heading
+                    and this section sits below the hero — the first card measures
+                    1556px down a 412x915 mobile viewport. */}
                 {image && (
                   <Image
                     src={image}
@@ -66,7 +70,6 @@ export default async function Categories() {
                     fill
                     sizes="(max-width: 560px) 100vw, (max-width: 1024px) calc(50vw - 2rem), calc(25vw - 2rem)"
                     quality={40}
-                    priority={index === 0}
                     className="object-cover opacity-80 group-hover:opacity-60 group-hover:scale-[1.03] transition-[opacity,transform] duration-300"
                   />
                 )}

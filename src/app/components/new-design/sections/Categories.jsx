@@ -14,6 +14,11 @@ const getCategoriesCache = unstable_cache(
   { revalidate: 86400, tags: ["layout-data"] },
 );
 
+// The card image carries no `priority`. It used to be set on the first card as
+// the LCP candidate, but the LCP element is the hero heading, and this section
+// sits below the hero on every brand's homepage: the first card measures
+// 1556px down a 412x915 mobile viewport. Priority there asked the browser to
+// fetch a below-the-fold image ahead of what the visitor can actually see.
 function CategoryCard({ name, description, slug, image, index }) {
   return (
     <Link href={slug ? `/category/${slug}` : "#"} aria-label={name} title={name} prefetch={false}>
@@ -35,7 +40,6 @@ function CategoryCard({ name, description, slug, image, index }) {
             sizes="(max-width: 1024px) calc(50vw - 2rem), calc(33vw - 2rem)"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             quality={40}
-            priority={index === 0}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
           <div className="absolute bottom-0 left-0 right-0 z-20 p-4">

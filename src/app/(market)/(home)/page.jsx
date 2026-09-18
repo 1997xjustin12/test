@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
-import { getCollectionProducts, fetchUniqueCategories } from "@/app/lib/fn_server";
+import { getCollectionProducts } from "@/app/lib/fn_server";
 
 // SOLANA COMPONENTS
 import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
@@ -25,44 +25,14 @@ const getCachedCollectionProducts = unstable_cache(
   { revalidate: 86400, tags: ["home-products"] },
 );
 
-/**
- * Preloads the first 4 category card images — all above the fold on mobile
- * (INITIAL_COUNT = 4 in Categories.jsx), with index 0 as the LCP candidate.
- * React hoists these <link> tags into <head>, so the browser fetches them in
- * parallel with JS parsing instead of discovering them after hydration.
- *
- * Lives on the homepage rather than (market)/layout.jsx on purpose: the layout
- * wraps every market route, so preloading there made product and category pages
- * fetch four images they never render — one at fetchPriority="high", competing
- * with those pages' actual LCP element.
- */
-// fetchUniqueCategories fetches with `cache: "no-store"`, so calling it raw
-// would make this page dynamic and lose its edge cache. (market)/layout.jsx
-// wraps it the same way for the same reason.
-const getCachedCategories = unstable_cache(
-  () => fetchUniqueCategories(),
-  ["home-category-preloads"],
-  { revalidate: 86400, tags: ["categories"] },
-);
-
-async function CategoryCardPreloads() {
-  const categories = await getCachedCategories();
-  return (categories || []).slice(0, 4).map((cat, i) => {
-    const base = `/_next/image?url=%2Fimages%2Fcategories%2F${cat.slug}.webp&q=40`;
-    return (
-      <link
-        key={cat.slug}
-        rel="preload"
-        as="image"
-        href={`${base}&w=512`}
-        imageSrcSet={`${base}&w=375 375w, ${base}&w=512 512w, ${base}&w=640 640w, ${base}&w=750 750w`}
-        imageSizes="(max-width: 1024px) calc(50vw - 2rem), calc(33vw - 2rem)"
-        fetchPriority={i === 0 ? "high" : undefined}
-      />
-    );
-  });
-}
-
+// No preload for the category card images. The four cards were preloaded here
+// as "above the fold on mobile", one of them at fetchPriority="high" — they
+// are not: measured on a 412x915 mobile viewport the first card starts at
+// 1556px, and at 1366x900 at 1538px. The URLs did not match the image either.
+// next/image builds ?url=..&w=..&q=.., these were built ?url=..&q=..&w=.., so
+// the browser treated them as different resources: all four preloads were
+// wasted and the first card was downloaded twice (seen on the wire at 613ms
+// and again at 800ms). The cards load lazily on approach, as cards should.
 export default async function HomePage() {
   // const ISBBQ = true;
   const initColId = (ISBBQ || ISOKO) ? 252: 137;
@@ -70,20 +40,17 @@ export default async function HomePage() {
 
   if(ISOKO) return (
     <>
-      <CategoryCardPreloads />
       <OKONewHomePage heroBg={<OKOHeroBackground />} initialProducts={initialProducts} />
     </>
   );
 
   if(ISBBQ) return (
     <>
-      <CategoryCardPreloads />
       <BBQNewHomePage heroBg={<BBQHeroBackground />} initialProducts={initialProducts} />
     </>
   );
   return (
     <>
-      <CategoryCardPreloads />
       <NewHomePage heroBg={<HeroBackground />} initialProducts={initialProducts} />
     </>
   );
