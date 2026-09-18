@@ -75,30 +75,67 @@ const getCachedCategories = unstable_cache(
 );
 
 /**
- * A menu item as the client providers need it.
+ * A menu item as the client actually reads it.
  *
- * The menu is serialised into every storefront page for hydration, and at
- * 286KB it was most of the page data on pages with little of their own — the
- * main reason the September SEO audit flagged 100% of pages for a low
- * text-to-HTML ratio. Two things in it are never read in the browser:
+ * The whole nav tree — 287 nodes — is serialised into every storefront page so
+ * the header, breadcrumbs, price visibility and product URLs can be built in
+ * the browser. It was 163KB of every page, and most of it was never read:
+ * roughly 25 fields per node, of which the browser uses nine.
  *
- *   collection_display   only .id and .name are read (context/category.js,
- *                        ProductsSectionV2); description, image, tags and
- *                        timestamps made up ~100KB
- *   meta_title,          read only by /[slug]'s generateMetadata, on the
- *   meta_description     server, from its own Redis read
+ * So this is a whitelist, not a blacklist: a field is here only because
+ * something in the browser reads it.
  *
- * Everything else is kept as-is. The admin layout passes the full menu, which
- * the menu editor needs.
+ *   name, url, key, id      the links themselves (Navbar, BreadCrumbs,
+ *                           getNameBySlug, getPopularSearchUrl, tui_filter_sort)
+ *   children                the tree the menus and breadcrumbs walk
+ *   origin_name, nav_type,  category and brand resolution in context/category.js
+ *   filter_type             and ProductsSectionV2 (page_category:/page_brand:)
+ *   price_visibility        isPriceVisible()
+ *   searchable              the facet list ProductsSectionV2 registers
+ *   nav_visibility          isNavVisible(), which keeps an item out of the
+ *                           header — dropping it put two hidden brand links
+ *                           back in the nav, which is how it was caught
+ *   collection_display      only .id and .name are read
+ *   banner.img.src/.alt     the category cards on a no-results search
+ *
+ * Dropped because nothing in the browser reads them — checked across every
+ * component that takes the menu on all three brands, and the shared helpers
+ * they call: menu_id, parent_id, parentId, depth, index, isLast, parent,
+ * page_contact_number, order, slug, feature_image, and the banner's own
+ * title and tag_line. BasePlp does read slug and feature_image, but from
+ * the server's own menu read in /[slug]/page.jsx, not from this copy.
+ * meta_title and meta_description are server-side only — /[slug]'s
+ * generateMetadata reads them from its own Redis read.
+ *
+ * The admin layout is untouched: the menu editor gets the full menu.
  */
-const clientMenuItem = ({ children, collection_display, meta_title, meta_description, ...item }) => ({
-  ...item,
-  ...(collection_display && typeof collection_display === "object"
-    ? { collection_display: { id: collection_display.id, name: collection_display.name } }
-    : collection_display !== undefined
-      ? { collection_display }
+const clientMenuItem = (item) => ({
+  id: item?.id,
+  key: item?.key,
+  name: item?.name,
+  url: item?.url,
+  origin_name: item?.origin_name,
+  nav_type: item?.nav_type,
+  filter_type: item?.filter_type,
+  price_visibility: item?.price_visibility,
+  searchable: item?.searchable,
+  nav_visibility: item?.nav_visibility,
+  ...(item?.collection_display && typeof item.collection_display === "object"
+    ? {
+        collection_display: {
+          id: item.collection_display.id,
+          name: item.collection_display.name,
+        },
+      }
+    : item?.collection_display !== undefined
+      ? { collection_display: item.collection_display }
       : {}),
-  ...(Array.isArray(children) ? { children: children.map(clientMenuItem) } : {}),
+  ...(item?.banner?.img?.src
+    ? { banner: { img: { src: item.banner.img.src, alt: item.banner.img.alt } } }
+    : {}),
+  ...(Array.isArray(item?.children)
+    ? { children: item.children.map(clientMenuItem) }
+    : {}),
 });
 
 export default async function MarketLayout({ children }) {

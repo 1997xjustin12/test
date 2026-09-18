@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { getCollectionProducts } from "@/app/lib/fn_server";
+import { toClientHits } from "@/app/lib/listing-data";
 
 // SOLANA COMPONENTS
 import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
@@ -36,7 +37,15 @@ const getCachedCollectionProducts = unstable_cache(
 export default async function HomePage() {
   // const ISBBQ = true;
   const initColId = (ISBBQ || ISOKO) ? 252: 137;
-  const initialProducts = await getCachedCollectionProducts(initColId);
+  // The deals row is a client component, so whatever it is handed is serialised
+  // into the page for hydration — and these were whole Elasticsearch documents:
+  // body_html, seo, accentuate_data, every variant and every image, for ten
+  // products. That payload was 460KB, 74% of the homepage, to render ten cards.
+  // toClientHits keeps the fields the cards render and add-to-cart stores, the
+  // same trim the listing pages use (see lib/listing-data.js).
+  const initialProducts = toClientHits(
+    await getCachedCollectionProducts(initColId),
+  );
 
   if(ISOKO) return (
     <>
