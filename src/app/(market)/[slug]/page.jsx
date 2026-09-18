@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 
 import { keys, redis } from "@/app/lib/redis";
+import { readOrLastKnownGood } from "@/app/lib/upstream";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import {
   getRootByUrl,
@@ -185,7 +186,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const menuData = await getMenuData();
+  const menuData = await readOrLastKnownGood("nav-menu", getMenuData);
   const flatData = flattenNav(menuData);
   const pageData = getPageData(slug, flatData);
 
@@ -212,7 +213,15 @@ export async function generateMetadata({ params }) {
 
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
-  const menuData = await getMenuData();
+  // A listing page is built from the menu, so there is no degraded version of
+  // it to serve — but an unreadable menu must not answer notFound() either: a
+  // 404 for a real URL can be cached and indexed. readOrLastKnownGood serves
+  // the menu this instance last saw, and otherwise throws, which Next answers
+  // with a 500 — retryable, and never cached. See lib/upstream.js.
+  const menuData = await readOrLastKnownGood("nav-menu", getMenuData);
+  if (!Array.isArray(menuData)) {
+    throw new Error(`nav menu unavailable while rendering /${slug}`);
+  }
   const flatData = flattenNav(
     menuData.map((i) => ({
       ...i,

@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import RatingStyles from "@/app/components/atom/RatingStyles";
 import { BASE_URL, ES_INDEX, ISBBQ, ISOKO, createSlug } from "@/app/lib/helpers";
 import { getMenuPageUrls } from "@/app/lib/menu-pages";
+import { readOrDegrade } from "@/app/lib/upstream";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 import {
@@ -217,7 +218,14 @@ export default async function ProductPage({ params }) {
 
   const product_reviews = (await getReviewsByProductId(product_id)) || [];
 
-  const [about, shipping_policy, return_policy, warranty] = await getFaqContent();
+  // The FAQ block is worth losing; the product page is not. Without this, a
+  // Redis blip threw here and the whole page became an HTTP 500 with an empty
+  // body — see lib/upstream.js.
+  const [about, shipping_policy, return_policy, warranty] = await readOrDegrade(
+    "pdp:faq-content",
+    getFaqContent,
+    [null, null, null, null],
+  );
 
   const FAQS = [
     { q: `About ${STORE_NAME}`, a: about },

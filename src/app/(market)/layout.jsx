@@ -17,9 +17,9 @@ import ConditionalZohoButton from "@/app/components/widget/ConditionalZohoButton
 import LazyZohoLoader from "@/app/components/widget/LazyZohoLoader";
 import AiChatWidget from "@/app/components/widget/AiChatWidget";
 import { fetchUniqueCategories } from "@/app/lib/fn_server";
-import { notFound } from "next/navigation";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
+import { readOrDegrade } from "@/app/lib/upstream";
 import { STORE_THEME } from "@/app/lib/store";
 import {
   buildOrganization,
@@ -138,18 +138,25 @@ const clientMenuItem = (item) => ({
     : {}),
 });
 
+// Menu, logo and theme, when Redis cannot be reached. The page still renders:
+// header without its nav, default theme colour, logo from the brand's own
+// static asset. Everything below <main> is the page's own data and unaffected.
+const NO_LAYOUT_DATA = [null, null, null];
+
 export default async function MarketLayout({ children }) {
+  // None of these three may take the storefront down. This layout wraps every
+  // market route, so a thrown read used to return HTTP 500 — with an empty body
+  // — for the entire site, and an empty read called notFound() and published
+  // "page does not exist" for every URL we have. Both were caused by one Redis
+  // blip, and the 404 could be cached and indexed. A degraded header is the
+  // right answer; see lib/upstream.js.
   const [initData, categories, storeSettings] = await Promise.all([
-    getInitData(),
-    getCachedCategories(),
+    readOrDegrade("layout:menu+logo+theme", getInitData, NO_LAYOUT_DATA),
+    readOrDegrade("layout:categories", getCachedCategories, []),
     getStoreSettings(),
   ]);
 
-  if (!initData) {
-    return notFound();
-  }
-
-  const [menu, redisLogo, color] = initData;
+  const [menu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
 
   const activeTheme = THEME_COLORS[color] ?? THEME_COLORS.orange;
   const themeCSS = `:root{${Object.entries(activeTheme)

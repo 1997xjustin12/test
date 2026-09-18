@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { readOrDegrade } from "@/app/lib/upstream";
 import { redis } from "@/app/lib/redis";
 import { exclude_brands, exclude_collections } from "@/app/lib/helpers";
 
@@ -50,29 +51,37 @@ export function normalizeList(value) {
  * record or an unusable one falls back to the defaults, which is why the check
  * is Array.isArray rather than a truthiness test on length.
  */
-export const getCatalogExclusions = unstable_cache(
+const readCatalogExclusions = unstable_cache(
   async () => {
-    try {
-      const stored = await redis.get(CATALOG_EXCLUSIONS_KEY);
-      if (!stored || typeof stored !== "object") return { ...DEFAULT_EXCLUSIONS };
+    const stored = await redis.get(CATALOG_EXCLUSIONS_KEY);
+    if (!stored || typeof stored !== "object") return { ...DEFAULT_EXCLUSIONS };
 
-      return {
-        brands: normalizeList(stored.brands) ?? DEFAULT_EXCLUSIONS.brands,
-        collections:
-          normalizeList(stored.collections) ?? DEFAULT_EXCLUSIONS.collections,
-      };
-    } catch (error) {
-      // Fail safe, not open. Returning empty lists here would republish every
-      // suppressed brand across all three storefronts the moment Redis blinked.
-      console.error("getCatalogExclusions failed:", error?.message || error);
-      return { ...DEFAULT_EXCLUSIONS };
-    }
+    return {
+      brands: normalizeList(stored.brands) ?? DEFAULT_EXCLUSIONS.brands,
+      collections:
+        normalizeList(stored.collections) ?? DEFAULT_EXCLUSIONS.collections,
+    };
   },
   // No STORE_ID in the cache key, unlike store-settings: one list serves every
   // brand, so one cache entry should too.
   ["catalog-exclusions"],
   { revalidate: 86400, tags: [CATALOG_EXCLUSIONS_TAG] },
 );
+
+/**
+ * The exclusion lists, or the safest answer available.
+ *
+ * Failing to the built-in list is deliberate: empty lists would republish every
+ * suppressed brand across all three storefronts the moment Redis blinked. What
+ * changed is where that decision is made. Catching inside unstable_cache stored
+ * the fallback, so one blip ignored the admin's saved lists for 24 hours; now
+ * the read fails out of the cache, nothing is written, and this instance's last
+ * good answer is preferred over the built-in list. See lib/upstream.js.
+ */
+export const getCatalogExclusions = () =>
+  readOrDegrade("catalog-exclusions", readCatalogExclusions, {
+    ...DEFAULT_EXCLUSIONS,
+  });
 
 /** Writes both lists. Callers are responsible for busting the cache tag. */
 export async function saveCatalogExclusions({ brands, collections } = {}) {

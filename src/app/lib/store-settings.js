@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { readOrDegrade } from "@/app/lib/upstream";
 import { redis } from "@/app/lib/redis";
 import { STORE_ID, STORE_THEME, storeKey } from "@/app/lib/store";
 
@@ -78,22 +79,17 @@ export const emptyStoreSettings = () =>
  * Cached read of this store's settings, merged over the env fallbacks.
  * Tagged `store-settings` so a save busts it immediately.
  */
-export const getStoreSettings = unstable_cache(
+const readStoreSettings = unstable_cache(
   async () => {
     const defaults = envDefaults();
-    try {
-      const stored = await redis.get(STORE_SETTINGS_KEY);
-      if (!stored || typeof stored !== "object") return defaults;
-      // Only let non-empty stored values win, so a blank field falls back.
-      const merged = { ...defaults };
-      for (const [k, v] of Object.entries(stored)) {
-        if (v !== undefined && v !== null && v !== "") merged[k] = v;
-      }
-      return merged;
-    } catch (error) {
-      console.error(`getStoreSettings(${STORE_ID}) failed:`, error);
-      return defaults;
+    const stored = await redis.get(STORE_SETTINGS_KEY);
+    if (!stored || typeof stored !== "object") return defaults;
+    // Only let non-empty stored values win, so a blank field falls back.
+    const merged = { ...defaults };
+    for (const [k, v] of Object.entries(stored)) {
+      if (v !== undefined && v !== null && v !== "") merged[k] = v;
     }
+    return merged;
   },
   // STORE_ID is part of the cache key: this read is store-scoped, so its cache
   // entry must be too. Without it one brand's settings can be served from a
@@ -101,3 +97,15 @@ export const getStoreSettings = unstable_cache(
   ["store-settings", STORE_ID],
   { revalidate: 86400, tags: ["store-settings"] },
 );
+
+/**
+ * Settings, or the best available answer if Redis cannot be reached.
+ *
+ * The read above no longer swallows its own errors: catching inside
+ * unstable_cache stored the fallback, so a momentary failure served env
+ * defaults — a phone number, an address — for the next 24 hours. Failing out of
+ * the cache leaves nothing cached, and readOrDegrade answers from the last good
+ * read instead. See lib/upstream.js.
+ */
+export const getStoreSettings = () =>
+  readOrDegrade(`store-settings:${STORE_ID}`, readStoreSettings, envDefaults());

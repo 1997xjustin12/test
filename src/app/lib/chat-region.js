@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { readOrDegrade } from "@/app/lib/upstream";
 import { redis } from "@/app/lib/redis";
 
 /**
@@ -71,23 +72,29 @@ const clean = (value) => {
  * safe direction for a spend control is the tighter list. A hiccup should never
  * silently widen who can run up a bill.
  */
-export const isUsCaOnly = unstable_cache(
+const readUsCaOnly = unstable_cache(
   async () => {
-    try {
-      const stored = await redis.get(CHAT_REGION_KEY);
-      if (!stored || typeof stored !== "object") return true;
-      // Only an explicit false widens the list; anything unusable reads as true.
-      return stored.usCaOnly !== false;
-    } catch (error) {
-      console.error("chat-region: settings read failed:", error?.message || error);
-      return true;
-    }
+    const stored = await redis.get(CHAT_REGION_KEY);
+    if (!stored || typeof stored !== "object") return true;
+    // Only an explicit false widens the list; anything unusable reads as true.
+    return stored.usCaOnly !== false;
   },
   // No STORE_ID in the key: one switch serves every brand, so one cache entry
   // should too.
   ["chat-region-settings"],
   { revalidate: 86400, tags: [CHAT_REGION_TAG] },
 );
+
+/**
+ * Whether the assistant is limited to the US and Canada.
+ *
+ * Still defaults to the tighter list when nothing is stored or Redis is
+ * unreachable — the safe direction for a spend control. The difference is that
+ * the failure is no longer cached: catching inside unstable_cache stored "true"
+ * for a day, so a blip could quietly undo a deliberately widened list until the
+ * cache expired. See lib/upstream.js.
+ */
+export const isUsCaOnly = () => readOrDegrade("chat-region", readUsCaOnly, true);
 
 /** The served countries, as uppercase ISO codes. */
 export async function allowedCountries() {
