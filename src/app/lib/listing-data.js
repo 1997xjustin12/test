@@ -88,6 +88,55 @@ export function toListingProducts(hits = []) {
 }
 
 /**
+ * Reduces raw Elasticsearch hits to what the product grid needs in the browser.
+ *
+ * The grid is a client component, so whatever a server component hands it is
+ * serialised into the page for hydration. It was being handed whole product
+ * documents — body_html, every variant, custom_metafields, recommendations,
+ * frequently_bought_together, region_pricing, the full accentuate_data — 30 of
+ * them per listing page, while the cards read a handful of fields. That payload
+ * is a large part of why the September SEO audit flagged every page for a low
+ * text-to-HTML ratio.
+ *
+ * Kept: what ProductCard renders (name, brand, price, was, badge, ratings,
+ * images, category) and what add-to-cart stores (product_id, handle, title,
+ * brand, images, ratings, variants) — see buildCartItem in context/cart.js.
+ *
+ * The JSON-LD is built from the untrimmed hits, before this.
+ */
+export function toClientHits(hits = []) {
+  return (hits || []).filter(Boolean).map((hit) => {
+    const images = (hit.images || []).filter(Boolean);
+    // Cards use position 1 and 2; the first image is the fallback for products
+    // whose images carry no position.
+    const carded = images.filter((i) => i?.position === 1 || i?.position === 2);
+    const kept = (carded.length ? carded : images.slice(0, 1)).map((i) => ({
+      src: i?.src,
+      position: i?.position,
+      ...(i?.alt ? { alt: i.alt } : {}),
+    }));
+
+    return {
+      id: hit.id,
+      product_id: hit.product_id,
+      handle: hit.handle,
+      title: hit.title,
+      brand: hit.brand,
+      product_category: hit.product_category,
+      published: hit.published,
+      tags: hit.tags,
+      ratings: hit.ratings,
+      variants: hit.variants,
+      collections: (hit.collections || []).map((c) => ({ id: c?.id, name: c?.name })),
+      images: kept,
+      ...(hit.accentuate_data?.category
+        ? { accentuate_data: { category: hit.accentuate_data.category } }
+        : {}),
+    };
+  });
+}
+
+/**
  * First page of hits for a filter string, cached 24h under the same
  * "plp-initial-hits" tag the admin Cache screen and /api/revalidate-plp bust.
  *

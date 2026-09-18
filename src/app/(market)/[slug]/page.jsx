@@ -29,7 +29,7 @@ import OKOProductGallery from "@/app/components/oko-design/page/ProductGallery";
 import NewDesignBasePlp from "@/app/components/new-design/page/BasePlp";
 import BBQBasePlp from "@/app/components/bbq-design/page/BasePlp";
 import OKOBasePlp from "@/app/components/oko-design/page/BasePlp";
-import { toListingProducts } from "@/app/lib/listing-data";
+import { toClientHits, toListingProducts } from "@/app/lib/listing-data";
 import {
   buildBreadcrumbs,
   buildItemList,
@@ -261,7 +261,9 @@ export default async function GenericCategoryPage({ params }) {
     const basePlpProps = {
       page_details: pageData,
       initialFilterString: baseFilterString,
-      initialHits: baseHits,
+      // Trimmed: the grid is a client component, so these are serialised into
+      // the page. The JSON-LD above is built from the untrimmed hits.
+      initialHits: toClientHits(baseHits),
     };
 
     if (ISOKO) {
@@ -327,6 +329,8 @@ export default async function GenericCategoryPage({ params }) {
   });
 
   const jsonLd = listingJsonLd({ name: rootNav?.name || slug, url, hits: initialHits });
+  // Trimmed for the client grid; the JSON-LD above uses the untrimmed hits.
+  const clientHits = toClientHits(initialHits);
 
   if (ISOKO) {
     return (
@@ -337,7 +341,7 @@ export default async function GenericCategoryPage({ params }) {
           config={{ root: rootNav, url, subs }}
           filterType={pageData?.filter_type ?? null}
           initialFilterString={filterString}
-          initialHits={initialHits}
+          initialHits={clientHits}
         />
       </div>
     );
@@ -352,7 +356,7 @@ export default async function GenericCategoryPage({ params }) {
           config={{ root: rootNav, url, subs }}
           filterType={pageData?.filter_type ?? null}
           initialFilterString={filterString}
-          initialHits={initialHits}
+          initialHits={clientHits}
         />
       </div>
     );
@@ -366,7 +370,7 @@ export default async function GenericCategoryPage({ params }) {
         config={{ root: rootNav, url, subs }}
         filterType={pageData?.filter_type ?? null}
         initialFilterString={filterString}
-        initialHits={initialHits}
+        initialHits={clientHits}
       />
     </div>
   );
