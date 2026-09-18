@@ -1,5 +1,41 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
+
+// A build can only render its own brand's design, so it need not carry the
+// others' utilities. The single stylesheet is render-blocking — first paint
+// waits for it — and at 236KB it held first paint back; dropping the two
+// unreachable brands takes it to 196KB and, measured on mobile (Slow 4G, 4x
+// CPU, median of three runs), first paint from 1468ms to 1348ms and LCP from
+// 1948ms to 1792ms.
+//
+// Only the *other* brands' folders are dropped, and only because every import
+// of them outside their own folder is behind an ISBBQ/ISOKO branch that this
+// build cannot take (checked across src/). new-design is never dropped: the
+// checkout layout, the my-account pages and several shared components render
+// its pieces on all three brands.
+//
+// STORE_ID resolution mirrors lib/store.js; next.config.ts resolves the same
+// value for the fonts.
+const storeTheme = (() => {
+  const id = (
+    process.env.STORE_ID ||
+    process.env.NEXT_PUBLIC_STORE_ID ||
+    process.env.NEXT_PUBLIC_STORE_THEME ||
+    process.env.STORE_REDIS_PREFIX ||
+    ""
+  )
+    .trim()
+    .toLowerCase();
+  return ["solana", "bbq", "oko"].includes(id) ? id : "solana";
+})();
+
+const unreachableBrandDirs = [
+  ["bbq", "bbq-design"],
+  ["oko", "oko-design"],
+]
+  .filter(([theme]) => theme !== storeTheme)
+  .map(([, dir]) => `!./src/app/components/${dir}/**`);
+
 export default {
   // Dark mode follows the OS by default (so existing `dark:` utilities in the
   // storefront keep working) but can be forced either way by putting `.dark`
@@ -15,6 +51,7 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    ...unreachableBrandDirs,
   ],
   safelist: [
     "theme-red",
