@@ -1,11 +1,12 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { Suspense, useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { BASE_URL, formatPrice } from "@/app/lib/helpers";
 import Image from "next/image";
 import { useSearch } from "@/app/context/search";
 import { useSolanaCategories } from "@/app/context/category";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import SearchParamsBridge from "@/app/components/atom/SearchParamsBridge";
 
 function highlight(text, query) {
   if (!query) return text;
@@ -107,7 +108,15 @@ function SearchBox() {
   const { getProductUrl } = useSolanaCategories();
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // The URL query, read by a leaf inside its own Suspense boundary (rendered
+  // below) so this component never suspends — and with it the whole header,
+  // which used to arrive late and shift the page down. See
+  // components/atom/SearchParamsBridge.jsx.
+  const [paramsString, setParamsString] = useState("");
+  const searchParams = useMemo(
+    () => new URLSearchParams(paramsString),
+    [paramsString],
+  );
   // On the /search page: typing only updates local input — no live fetch.
   // setSearch (which triggers both pipelines) is called only on explicit submit.
   const isSearchPage = pathname === "/search";
@@ -231,6 +240,9 @@ function SearchBox() {
 
   return (
     <div ref={wrapRef} className="flex-1 min-w-0 relative">
+      <Suspense fallback={null}>
+        <SearchParamsBridge onChange={setParamsString} />
+      </Suspense>
       {/* Search pill */}
       <div
         className={`flex items-center gap-2.5 rounded-[2px] px-4 py-3 bg-oko-cream-dim dark:bg-oko-night-2 border transition-colors ${focused ? "border-oko-barn dark:border-oko-barn-light" : "border-oko-stone-line dark:border-oko-line-dark"}`}

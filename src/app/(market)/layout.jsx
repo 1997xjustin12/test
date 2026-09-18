@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 import "@/app/globals.css";
 import { THEME_COLORS } from "@/app/data/theme-colors";
@@ -226,11 +225,12 @@ export default async function MarketLayout({ children }) {
                   <SearchProvider>
                     <SessionWrapper>
                       <QuickViewProvider>
-                        {/* The nav contains SearchBox, which reads the URL query. */}
-                        <Suspense fallback={null}>
+                        {/* No Suspense boundary: SearchBox reads the URL query
+                            through a leaf of its own (SearchParamsBridge), so the
+                            header renders as server HTML. It used to stream in on
+                            hydration and push the page down — the site's whole CLS. */}
                           { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
                           { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
-                        </Suspense>
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
