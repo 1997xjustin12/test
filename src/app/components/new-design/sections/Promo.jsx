@@ -1,14 +1,11 @@
-"use client"
 import Link from "next/link";
-import { useReveal } from "@/app/hooks/useReveal";
+import Reveal from "@/app/components/atom/Reveal";
 import { PROMO_CARDS } from "@/app/data/new-homepage";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { BASE_URL } from "@/app/lib/helpers";
 
 
 export default function Promo() {
-  const copyRef  = useReveal();
-  const cardsRef = useReveal();
   return (
     <section className="relative overflow-hidden">
       {/* Background */}
@@ -19,7 +16,7 @@ export default function Promo() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center py-20">
 
           {/* Copy */}
-          <div ref={copyRef} className="opacity-0 translate-y-6 transition-all duration-700">
+          <Reveal className="opacity-0 translate-y-6 transition-all duration-700">
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-500 mb-3">Limited-Time Deals</p>
             <h2 className="font-serif text-3xl sm:text-4xl text-white leading-tight mb-4">
               Name Your Budget.<br />We'll Find Your Fireplace.
@@ -35,10 +32,10 @@ export default function Promo() {
                 Browse All Deals
               </Link>
             </div>
-          </div>
+          </Reveal>
 
           {/* Promo cards */}
-          <div ref={cardsRef} className="flex flex-col gap-3 opacity-0 translate-y-6 transition-all duration-700 delay-150">
+          <Reveal className="flex flex-col gap-3 opacity-0 translate-y-6 transition-all duration-700 delay-150">
             {PROMO_CARDS.map(({ icon, title, desc, url }) => (
               <Link key={`promo-back-links-${title}`} className="
                 flex items-center gap-4 px-5 py-4 rounded-xl
@@ -54,7 +51,7 @@ export default function Promo() {
                 </div>
               </Link>
             ))}
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

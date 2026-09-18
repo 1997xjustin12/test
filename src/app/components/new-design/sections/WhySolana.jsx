@@ -1,19 +1,16 @@
-"use client"
 import React from "react";
 import Image from "next/image";
-import { useReveal } from "@/app/hooks/useReveal";
+import Reveal from "@/app/components/atom/Reveal";
 import { WHY_POINTS } from "@/app/data/new-homepage";
 
 export default function WhySolana() {
-  const visRef  = useReveal();
-  const copyRef = useReveal();
   return (
     <section id="why" className="py-20 md:py-24 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* ── Visual column — hidden on mobile to reduce image load cost ── */}
-          <div ref={visRef} className="relative opacity-0 translate-y-6 transition-all duration-700 hidden lg:block">
+          <Reveal className="relative opacity-0 translate-y-6 transition-all duration-700 hidden lg:block">
             {/* Main image */}
             <div className="relative rounded-2xl overflow-hidden h-[420px] md:h-[480px] bg-gradient-to-br from-stone-800 to-stone-900">
               <Image
@@ -53,10 +50,10 @@ export default function WhySolana() {
               <div className="font-serif text-[1.9rem] font-bold text-theme-600 leading-none">98%</div>
               <p className="text-xs text-stone-400 mt-1">Customer Satisfaction</p>
             </div>
-          </div>
+          </Reveal>
 
           {/* ── Copy column ── */}
-          <div ref={copyRef} className="opacity-0 translate-y-6 transition-all duration-700">
+          <Reveal className="opacity-0 translate-y-6 transition-all duration-700">
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-600 mb-2.5">Why Choose Solana</p>
             <h2 className="font-serif text-3xl sm:text-4xl text-charcoal dark:text-white mb-3 leading-tight">
               Your Trusted Partner in Warmth & Style
@@ -84,7 +81,7 @@ export default function WhySolana() {
                 Learn About Us
               </a>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

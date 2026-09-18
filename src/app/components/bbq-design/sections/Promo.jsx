@@ -1,13 +1,9 @@
-"use client"
 import Link from "next/link";
-import { useReveal } from "@/app/hooks/useReveal";
 import { PROMO_CARDS } from "@/app/data/new-homepage";
 import { BASE_URL } from "@/app/lib/helpers";
 
 
 export default function Promo() {
-  const copyRef  = useReveal();
-  const cardsRef = useReveal();
   return (
     <section className="py-14 sm:py-16 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 gap-5">

@@ -1,13 +1,11 @@
-"use client"
 import React from "react";
-import { useReveal } from "@/app/hooks/useReveal";
+import Reveal from "@/app/components/atom/Reveal";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { PhoneIcon } from "@/app/components/bbq-design/ui/Icons";
 import { BASE_URL } from "@/app/lib/helpers"
 import Link from "next/link";
 
 export default function Cta() {
-  const ref = useReveal();
   return (
     <section className="relative overflow-hidden text-center">
       {/* Background */}
@@ -16,7 +14,7 @@ export default function Cta() {
 
       <div className="relative z-10 py-20 md:py-24">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
-          <div ref={ref} className="opacity-0 translate-y-6 transition-all duration-700">
+          <Reveal className="opacity-0 translate-y-6 transition-all duration-700">
             <p className="text-[11px] tracking-[.15em] uppercase font-semibold text-theme-500 mb-3">Ready to Get Grilling?</p>
             <h2 className="font-oswald font-bold text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-tight uppercase">
               Let's Build Your Dream Outdoor Kitchen
@@ -36,7 +34,7 @@ export default function Cta() {
               <span className="text-theme-500"><PhoneIcon size={18} /></span>
               {STORE_CONTACT}
             </a>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

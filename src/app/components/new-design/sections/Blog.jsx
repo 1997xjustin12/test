@@ -1,16 +1,13 @@
-"use client";
-
 import Image from "next/image";
-import { useReveal } from "@/app/hooks/useReveal";
+import Reveal from "@/app/components/atom/Reveal";
 import { BLOG_POSTS } from "@/app/data/new-homepage";
 import Link from "next/link";
 
 function BlogCard({ tag, title, readTime, date, img, url }) {
-  const ref = useReveal();
   return (
     <Link href={url}>
-      <article
-        ref={ref}
+      <Reveal
+        as="article"
         className="
         opacity-0 translate-y-6 transition-all duration-700
         rounded-2xl overflow-hidden bg-white dark:bg-stone-900
@@ -42,19 +39,17 @@ function BlogCard({ tag, title, readTime, date, img, url }) {
             <span>{date}</span>
           </div>
         </div>
-      </article>
+      </Reveal>
     </Link>
   );
 }
 
 export default function Blog() {
-  const hdrRef = useReveal();
   return (
     <section id="blog" className="py-20 md:py-24 bg-white dark:bg-stone-950">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div
-          ref={hdrRef}
+        <Reveal
           className="
             opacity-0 translate-y-6 transition-all duration-700
             flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10
@@ -78,7 +73,7 @@ export default function Blog() {
           >
             All Articles
           </a>
-        </div>
+        </Reveal>
 
         {/* Mobile: first post only as compact horizontal card */}
         {BLOG_POSTS[0] && (
