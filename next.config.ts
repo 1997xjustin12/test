@@ -2,6 +2,7 @@
 import type { NextConfig } from "next";
 import { readdirSync } from "node:fs";
 import path from "node:path";
+import { resolveTheme } from "./src/app/lib/store.js";
 
 // Brand logos that actually exist, read once at build time and exposed as
 // NEXT_PUBLIC_BRAND_LOGOS for brandLogoPath() in lib/helpers.js. Pages used to
@@ -27,21 +28,17 @@ const brandLogos = (() => {
 // brand's module, and nothing else resolves that specifier: a build with this
 // alias missing fails rather than shipping no fonts.
 //
-// Mirrors lib/store.js's STORE_ID-first resolution. (market)/layout.jsx
-// compares the module's THEME with the running store, so a wrong answer here
-// is a build error, not another brand's typeface on the page.
-const storeTheme = (() => {
-  const id = (
-    process.env.STORE_ID ||
-    process.env.NEXT_PUBLIC_STORE_ID ||
-    process.env.NEXT_PUBLIC_STORE_THEME ||
-    process.env.STORE_REDIS_PREFIX ||
-    ""
-  )
-    .trim()
-    .toLowerCase();
-  return ["solana", "bbq", "oko"].includes(id) ? id : "solana";
-})();
+// The brand comes from lib/store.js — the same resolveTheme() the app runs, not
+// a second copy of the rules. A copy lived here and got them wrong twice over:
+// it accepted STORE_REDIS_PREFIX as a brand (store.js refuses to, because the
+// brands can share one Redis namespace) and it had no domain fallback. On a
+// deployment identified by NEXT_PUBLIC_STORE_DOMAIN alone, this file answered
+// "solana" while the app answered "bbq", and the layout's guard failed the
+// build: `Font bundle is for "solana" but this build is "bbq"`. That is the
+// guard working, but the disagreement should not have been possible.
+//
+// store.js reads nothing but process.env, so it imports cleanly here.
+const storeTheme = resolveTheme();
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
