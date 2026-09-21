@@ -22,9 +22,13 @@ export default async function handler(req, res) {
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       const text = await response.text();
+      // The upstream body is a diagnostic, not something to hand back: the
+      // backend answers with Django debug pages, which carry its traceback,
+      // local variables, request headers and settings.
+      console.error("orders/checkout: upstream returned a non-JSON response:", text.slice(0, 500));
       return res
         .status(500)
-        .json({ success: false, message: "Invalid JSON response", raw: text });
+        .json({ success: false, message: "Invalid JSON response" });
     }
 
     const data = await response.json();
