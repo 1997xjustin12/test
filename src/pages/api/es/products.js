@@ -56,13 +56,13 @@ export default async function handler(req, res) {
             ),
           },
         },
-        requestConfig: fetchConfig,
-        requestQuery: req.query,
-        response: response,
+        // Only the data. `requestConfig` carried the Authorization header —
+        // that is, the Elasticsearch API key — straight back to the caller.
       };
       res.status(200).json(bc_formated_data);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch products", error });
+      console.error("products.js: Elasticsearch request failed:", error?.message || error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
   }
 
@@ -217,13 +217,13 @@ export default async function handler(req, res) {
             ),
           },
         },
-        requestConfig: fetchConfig,
-        requestBody: req.body,
-        response: data,
+        // Only the data. `requestConfig` carried the Authorization header —
+        // that is, the Elasticsearch API key — straight back to the caller.
       };
       res.status(200).json(bc_formated_data);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch products", error });
+      console.error("products.js: Elasticsearch request failed:", error?.message || error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
   }
 }

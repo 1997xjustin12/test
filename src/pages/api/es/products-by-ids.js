@@ -42,15 +42,15 @@ export default async function handler(req, res) {
       const data = await response.json();
       const product = data?.hits?.hits.map((i) => i._source);
 
-      const bc_formated_data = {
-        data: product,
-        requestConfig: fetchConfig,
-        requestBody: req.body,
-        response: response,
-      };
+      // Only the products. This used to return `requestConfig: fetchConfig`,
+      // whose Authorization header carries the Elasticsearch API key — so the
+      // endpoint published the key to anyone who called it. `response` (a
+      // Response object) and `requestBody` were debug leftovers too.
+      const bc_formated_data = { data: product };
       res.status(200).json(bc_formated_data);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch products", error });
+      console.error("products-by-ids.js: Elasticsearch request failed:", error?.message || error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
   }
 }

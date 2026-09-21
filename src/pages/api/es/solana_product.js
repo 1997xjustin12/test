@@ -230,15 +230,15 @@ export default async function handler(req, res) {
         product[0]["product_shipping_info"] = shipping_info || null;
       }
 
-      const bc_formated_data = {
-        data: product,
-        requestConfig: fetchConfig,
-        requestBody: req.body,
-        response: response,
-      };
+      // Only the products. This used to return `requestConfig: fetchConfig`,
+      // whose Authorization header carries the Elasticsearch API key — so the
+      // endpoint published the key to anyone who called it. `response` (a
+      // Response object) and `requestBody` were debug leftovers too.
+      const bc_formated_data = { data: product };
       res.status(200).json(bc_formated_data);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch products", error });
+      console.error("solana_product.js: Elasticsearch request failed:", error?.message || error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
   }
 }
