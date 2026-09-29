@@ -325,11 +325,15 @@ export function normalizeSection(raw) {
     }
 
     const str = typeof value === "string" ? value.trim() : "";
-    content[key] = str
-      ? field.maxLength
-        ? str.slice(0, field.maxLength)
-        : str
-      : field.default ?? "";
+    if (str) {
+      content[key] = field.maxLength ? str.slice(0, field.maxLength) : str;
+      continue;
+    }
+    // An empty value is only replaced by the default when the field is
+    // required. Clearing an optional one is a deliberate act — emptying a
+    // button's link is how an operator removes that button — and restoring
+    // the default would put back the very thing they just deleted.
+    content[key] = field.required ? field.default ?? "" : "";
   }
 
   const scheme = (mode) => {

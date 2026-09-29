@@ -1,6 +1,6 @@
 import { STORE_NAME } from "@/app/lib/store_constants";
-import { getHomePage, listBannerImages } from "@/app/lib/home-page/store";
-import HomePageEditor from "@/app/components/admin/home-page/HomePageEditor";
+import { getHomePage } from "@/app/lib/home-page/store";
+import HomePageList from "@/app/components/admin/home-page/HomePageList";
 
 /**
  * Homepage editor.
@@ -17,18 +17,15 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Homepage editor" };
 
 export default async function AdminHomePage() {
-  const [homePage, images] = await Promise.all([
-    getHomePage(),
-    Promise.resolve(listBannerImages()),
-  ]);
+  const homePage = await getHomePage();
 
   return (
     <div className="container mx-auto flex flex-col gap-5 px-2 pb-16">
       <header className="pt-2">
         <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Homepage</h1>
         <p className="mt-1 max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
-          Build {STORE_NAME}&apos;s homepage from sections. Text, links, images and colours are editable;
-          the layout of each section is fixed to its design. Changes apply to this brand only.
+          Build {STORE_NAME}&apos;s homepage from sections. Drag to reorder, open a section to edit its
+          text, links, images and colours. Changes apply to this brand only.
         </p>
         {homePage.updatedAt && (
           <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
@@ -37,7 +34,7 @@ export default async function AdminHomePage() {
         )}
       </header>
 
-      <HomePageEditor initial={homePage} images={images} />
+      <HomePageList initial={homePage} />
     </div>
   );
 }
