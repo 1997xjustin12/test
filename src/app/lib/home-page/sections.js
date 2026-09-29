@@ -102,6 +102,43 @@ export const SECTION_TYPES = {
       secondaryText: { type: "color", label: "Secondary button text", defaultLight: "#ffffff", defaultDark: "#17181a" },
     },
   },
+
+  valueProps: {
+    label: "Value proposition",
+    description:
+      "A band of short promises — delivery, support, returns, price — each with an icon.",
+    // Rendered by components/home-page/sections/ValuePropsSection.jsx
+    content: {
+      items: {
+        type: "list",
+        label: "Items",
+        min: 1,
+        max: 6,
+        addLabel: "Add item",
+        // Each entry in the list is edited with these fields.
+        item: {
+          icon: { type: "icon", label: "Icon", default: "Truck" },
+          label: { type: "text", label: "Label", default: "", maxLength: 40, required: true },
+        },
+        default: [
+          { icon: "Truck", label: "FREE SHIPPING" },
+          { icon: "PhoneCall", label: "EXPERT SUPPORT" },
+          { icon: "PackageOpen", label: "EASY RETURNS" },
+          { icon: "Tag", label: "PRICE MATCH" },
+        ],
+      },
+    },
+    appearance: {
+      background: {
+        type: "color",
+        label: "Band background",
+        defaultLight: "#1a1a1a",
+        defaultDark: "#000000",
+      },
+      iconColor: { type: "color", label: "Icons", default: THEME_COLOR },
+      textColor: { type: "color", label: "Label text", default: THEME_COLOR },
+    },
+  },
 };
 
 /** A colour field's starting value for one scheme. */
@@ -124,7 +161,12 @@ export function newSection(type) {
   if (!def) return null;
 
   const content = Object.fromEntries(
-    Object.entries(def.content).map(([key, field]) => [key, field.default ?? ""]),
+    Object.entries(def.content).map(([key, field]) => [
+      key,
+      field.type === "list"
+        ? (field.default ?? []).map((item) => ({ ...item, id: itemId() }))
+        : field.default ?? "",
+    ]),
   );
   const appearanceFor = (mode) =>
     Object.fromEntries(
@@ -144,6 +186,36 @@ export function newSection(type) {
 
 const isPlainObject = (v) => Boolean(v) && typeof v === "object" && !Array.isArray(v);
 
+/** Identifies one entry of a list, so edits and reorders stay attached to it. */
+export const itemId = () => `i${Math.random().toString(36).slice(2, 9)}`;
+
+/**
+ * Whether a list entry is worth rendering.
+ *
+ * Keyed off the schema's required fields, not off any field being set: an item
+ * with an icon but no label is an empty slot on the page, and the icon alone
+ * kept it alive when this filtered on "something is filled in".
+ */
+function hasContent(entry, itemSchema) {
+  const required = Object.entries(itemSchema).filter(([, f]) => f.required);
+  if (required.length) return required.every(([key]) => String(entry[key] ?? "").trim() !== "");
+  return Object.entries(entry).some(([key, v]) => key !== "id" && String(v ?? "").trim() !== "");
+}
+
+/** One entry of a list, cleaned against the list's item schema. */
+function cleanItem(raw, itemSchema) {
+  const out = { id: typeof raw?.id === "string" && raw.id ? raw.id.slice(0, 32) : itemId() };
+  for (const [key, field] of Object.entries(itemSchema)) {
+    const value = typeof raw?.[key] === "string" ? raw[key].trim() : "";
+    out[key] = value
+      ? field.maxLength
+        ? value.slice(0, field.maxLength)
+        : value
+      : field.default ?? "";
+  }
+  return out;
+}
+
 /**
  * Cleans one stored section against its schema: unknown fields are dropped,
  * missing ones take their default, and text is trimmed to its limit.
@@ -159,6 +231,19 @@ export function normalizeSection(raw) {
   const content = {};
   for (const [key, field] of Object.entries(def.content)) {
     const value = raw.content?.[key];
+
+    if (field.type === "list") {
+      // Each item is cleaned against the list's own item schema, capped at the
+      // list's maximum, and an entry with no label is dropped rather than
+      // rendered as an empty slot on the page.
+      const items = (Array.isArray(value) ? value : [])
+        .map((entry) => cleanItem(entry, field.item))
+        .filter((entry) => hasContent(entry, field.item));
+      content[key] = (items.length ? items : (field.default ?? []).map((i) => ({ ...i, id: itemId() })))
+        .slice(0, field.max ?? 12);
+      continue;
+    }
+
     const str = typeof value === "string" ? value.trim() : "";
     content[key] = str
       ? field.maxLength

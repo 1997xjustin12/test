@@ -25,13 +25,13 @@ export default async function AdminHomePage() {
   return (
     <div className="container mx-auto flex flex-col gap-5 px-2 pb-16">
       <header className="pt-2">
-        <h1 className="text-xl font-semibold text-stone-900">Homepage</h1>
-        <p className="mt-1 max-w-2xl text-sm text-stone-500">
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">Homepage</h1>
+        <p className="mt-1 max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
           Build {STORE_NAME}&apos;s homepage from sections. Text, links, images and colours are editable;
           the layout of each section is fixed to its design. Changes apply to this brand only.
         </p>
         {homePage.updatedAt && (
-          <p className="mt-1 text-xs text-stone-400">
+          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
             Last saved {new Date(homePage.updatedAt).toLocaleString()}
           </p>
         )}
