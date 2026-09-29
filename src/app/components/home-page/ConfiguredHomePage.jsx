@@ -2,6 +2,7 @@ import HeroSection from "./sections/HeroSection";
 import ValuePropsSection from "./sections/ValuePropsSection";
 import OffersSection from "./sections/OffersSection";
 import BrandLineSection from "./sections/BrandLineSection";
+import CategoriesSection from "./sections/CategoriesSection";
 import BrandCarouselSection from "./sections/BrandCarouselSection";
 
 /**
@@ -19,6 +20,7 @@ const COMPONENTS = {
   hero: HeroSection,
   valueProps: ValuePropsSection,
   offers: OffersSection,
+  categories: CategoriesSection,
   brandCarousel: BrandCarouselSection,
   brandLine: BrandLineSection,
 };

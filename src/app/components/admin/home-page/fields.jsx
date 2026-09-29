@@ -88,6 +88,10 @@ export function IconField({ value, onChange }) {
 }
 
 export function ImagePicker({ value, images, onChange }) {
+  // Grouped by folder; the flat list is only for "is this one of ours?".
+  const groups = Array.isArray(images) ? images : [];
+  const known = groups.flatMap((group) => group.images);
+
   return (
     <div className="flex flex-col gap-2">
       <input
@@ -97,17 +101,21 @@ export function ImagePicker({ value, images, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         className={inputClass}
       />
-      {images.length > 0 && (
+      {groups.length > 0 && (
         <select
           className={`${inputClass} text-xs`}
-          value={images.includes(value) ? value : ""}
+          value={known.includes(value) ? value : ""}
           onChange={(e) => e.target.value && onChange(e.target.value)}
         >
-          <option value="">Choose from public/images/banner…</option>
-          {images.map((src) => (
-            <option key={src} value={src}>
-              {src.split("/").pop()}
-            </option>
+          <option value="">Choose from the image library…</option>
+          {groups.map((group) => (
+            <optgroup key={group.label} label={group.label}>
+              {group.images.map((src) => (
+                <option key={src} value={src}>
+                  {src.split("/").pop()}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       )}
@@ -166,6 +174,18 @@ export function ListField({ field, value, onChange, images }) {
                   <div key={key} className="sm:col-span-2">
                     <Field label={sub.label} hint={sub.hint}>
                       <ImagePicker value={item[key]} images={images} onChange={(v) => setItem(item.id, { [key]: v })} />
+                    </Field>
+                  </div>
+                ) : sub.type === "textarea" ? (
+                  <div key={key} className="sm:col-span-2">
+                    <Field label={sub.label} hint={sub.hint}>
+                      <textarea
+                        rows={2}
+                        value={item[key] ?? ""}
+                        maxLength={sub.maxLength}
+                        onChange={(e) => setItem(item.id, { [key]: e.target.value })}
+                        className={inputClass}
+                      />
                     </Field>
                   </div>
                 ) : (

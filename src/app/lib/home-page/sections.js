@@ -201,6 +201,118 @@ export const SECTION_TYPES = {
     },
   },
 
+  categories: {
+    label: "Categories",
+    description:
+      "A pitch, then a grid of category tiles — image, name over it, description beneath.",
+    // Rendered by components/home-page/sections/CategoriesSection.jsx
+    content: {
+      eyebrow: { type: "text", label: "Eyebrow", default: "Browse by Categories", maxLength: 60 },
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Explore Fireplaces & Outdoor Essentials",
+        hint: "Wraps on its own.",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "Find the right fireplace or outdoor product for your space.\nSolana Fireplaces offers 20+ premium brands and free expert guidance.",
+        hint: "A line break here is kept on the page, so the two sentences can sit on their own lines.",
+        maxLength: 320,
+      },
+      items: {
+        type: "list",
+        label: "Categories",
+        min: 1,
+        max: 12,
+        addLabel: "Add category",
+        hint: "Four to a row on a desktop, two on a phone. A category with no link, or a link that goes nowhere, is left off the page.",
+        item: {
+          image: { type: "image", label: "Image", default: "", required: true },
+          name: { type: "text", label: "Name", default: "", maxLength: 60, required: true },
+          href: {
+            type: "url",
+            label: "Link",
+            default: "",
+            hint: "A path such as /gas-fireplaces, or a full https:// address.",
+          },
+          description: { type: "textarea", label: "Description", default: "", maxLength: 240 },
+        },
+        default: [
+          {
+            image: "/images/banner/home-gas-fireplace.webp",
+            name: "Gas Fireplaces",
+            href: "/gas-fireplaces",
+            description:
+              "Browse gas fireplaces in a range of styles and sizes, from classic inserts to modern linear designs.",
+          },
+          {
+            image: "/images/categories/heating-and-fire.webp",
+            name: "Electric Fireplaces",
+            href: "/electric-fireplaces",
+            description:
+              "Explore electric fireplaces with realistic flame technology, perfect for bedrooms, offices, and living spaces.",
+          },
+          {
+            image: "/images/categories/grills-and-smokers.webp",
+            name: "Grills & Smokers",
+            href: "/category/grills-and-smokers",
+            description:
+              "Shop built-in and freestanding grills, smokers, and griddles for every backyard setup.",
+          },
+          {
+            image: "/images/categories/outdoor-refrigeration.webp",
+            name: "Outdoor Refrigeration",
+            href: "/outdoor-refrigeration",
+            description:
+              "Outdoor refrigerators, kegerators, and ice makers built to handle the elements.",
+          },
+          {
+            image: "/images/categories/installation-and-parts.webp",
+            name: "Installation & Parts",
+            href: "/category/installation-and-parts",
+            description:
+              "Essential mounting kits, gas lines, and structural components to ensure a safe and seamless outdoor kitchen setup.",
+          },
+          {
+            image: "/images/categories/accessories.webp",
+            name: "Accessories",
+            href: "/category/accessories",
+            description:
+              "OEM burners, igniters, and grates to maintain your favorite outdoor appliances.",
+          },
+          {
+            image: "/images/categories/outdoor-kitchen-components.webp",
+            name: "Outdoor Kitchen Components",
+            href: "/category/outdoor-kitchen-components",
+            description:
+              "Durable stainless steel storage drawers, access doors, and built-in islands to complete your custom outdoor space.",
+          },
+          {
+            image: "/images/categories/deals.webp",
+            name: "Deals",
+            href: "/current-deals",
+            description:
+              "Shop exclusive deals and open-box fireplaces and outdoor products from premium brands.",
+          },
+        ],
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#d9d9d9", defaultDark: "#0b0b0c" },
+      eyebrowColor: { type: "color", label: "Eyebrow text", default: THEME_COLOR },
+      headingColor: { type: "color", label: "Headline text", default: THEME_COLOR },
+      bodyColor: { type: "color", label: "Supporting text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+      // Sits on the image, so it is white in both schemes unless changed.
+      tileNameColor: { type: "color", label: "Name on the tile", default: "#ffffff" },
+      tileTextColor: { type: "color", label: "Description text", defaultLight: "#3d4045", defaultDark: "#d4d4d8" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:
@@ -353,10 +465,16 @@ export function normalizeSection(raw) {
       content[key] = field.maxLength ? str.slice(0, field.maxLength) : str;
       continue;
     }
-    // An empty value is only replaced by the default when the field is
-    // required. Clearing an optional one is a deliberate act — emptying a
-    // button's link is how an operator removes that button — and restoring
-    // the default would put back the very thing they just deleted.
+    // No key at all means the field was never set — a section built from
+    // nothing, or one saved before this field existed — and it takes its
+    // default. A key that is there and empty means someone emptied it, which
+    // is a deliberate act: emptying a button's link is how an operator removes
+    // that button, and restoring the default would put back the very thing
+    // they just deleted. Only a required field insists on a value.
+    if (value === undefined) {
+      content[key] = field.default ?? "";
+      continue;
+    }
     content[key] = field.required ? field.default ?? "" : "";
   }
 

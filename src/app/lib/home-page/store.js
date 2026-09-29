@@ -76,15 +76,10 @@ export async function saveHomePage({ enabled, sections }) {
   return record;
 }
 
-/**
- * Images an admin can choose from — the same library the menu editor offers,
- * read the same way: the files in public/images/banner.
- *
- * There is no upload in the app. A new image is added to that folder and
- * deployed, or its address is pasted into the field.
- */
-export function listBannerImages() {
-  const dir = "public/images/banner";
+/** The folders the picker offers, in the order it lists them. */
+const IMAGE_DIRS = ["public/images/banner", "public/images/categories"];
+
+const filesIn = (dir) => {
   try {
     return fs
       .readdirSync(path.join(process.cwd(), dir))
@@ -94,4 +89,21 @@ export function listBannerImages() {
   } catch {
     return [];
   }
+}
+
+/**
+ * Images an admin can choose from, grouped by the folder they live in — the
+ * same library the menu editor offers, read the same way.
+ *
+ * Banners and category tiles are different shapes for different places, so the
+ * picker names the folder rather than pooling them into one list.
+ *
+ * There is no upload in the app. A new image is added to one of these folders
+ * and deployed, or its address is pasted into the field.
+ */
+export function listPickableImages() {
+  return IMAGE_DIRS.map((dir) => ({
+    label: dir.replace(/^public\//, ""),
+    images: filesIn(dir),
+  })).filter((group) => group.images.length > 0);
 }

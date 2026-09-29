@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getHomePage, listBannerImages } from "@/app/lib/home-page/store";
+import { getHomePage, listPickableImages } from "@/app/lib/home-page/store";
 import { SECTION_TYPES } from "@/app/lib/home-page/sections";
 import SectionEditor from "@/app/components/admin/home-page/SectionEditor";
 
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
 
 export default async function AdminHomePageSection({ params }) {
   const { sectionId } = await params;
-  const [homePage, images] = await Promise.all([getHomePage(), Promise.resolve(listBannerImages())]);
+  const [homePage, images] = await Promise.all([getHomePage(), Promise.resolve(listPickableImages())]);
 
   const section = homePage.sections.find((s) => s.id === sectionId);
 
