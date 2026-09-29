@@ -7,7 +7,7 @@ import { useAuth } from "@/app/context/auth";
 function MyAccountLinks() {
   const pathname = usePathname();
   const router = useRouter();
-  const { myAccountLinks } = useAuth();
+  const { myAccountLinks, isAdmin } = useAuth();
   const logoutItem = myAccountLinks.find(({ label }) => label === "Logout");
   const [showModal, setShowModal] = useState(false);
 
@@ -48,6 +48,29 @@ function MyAccountLinks() {
               </Link>
             );
           })}
+
+        {/* Only for an admin, and only because the server said so — the admin
+            cookie is httpOnly, so this cannot be decided here. Root-relative
+            rather than through BASE_URL: the other links parse their absolute
+            URLs above, and an env that disagrees with the host would send an
+            admin to another origin. */}
+        {isAdmin && (
+          <Link
+            prefetch={false}
+            href="/admin"
+            className="flex-shrink-0 flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-700 hover:border-orange-200 dark:hover:border-orange-800/50 hover:text-fire dark:hover:text-orange-400"
+          >
+            <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11z"
+                />
+              </svg>
+            </span>
+            <span className="whitespace-nowrap">Store Admin</span>
+          </Link>
+        )}
 
         <button
           onClick={handleLogout}

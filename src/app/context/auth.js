@@ -113,6 +113,7 @@ export function AuthProvider({ children }) {
   const [isLoggedIn,   setIsLoggedIn]   = useState(false);
   const [user,         setUser]         = useState(null);
   const [loading,      setLoading]      = useState(true);
+  const [isAdmin,      setIsAdmin]      = useState(false);
 
   // ── Storage: lazy-load browser-only localForage ────────────────────────────
   // localForage uses browser APIs unavailable during SSR, so it must be
@@ -401,6 +402,32 @@ export function AuthProvider({ children }) {
     getUser();
   }, [accessToken, getUser]);
 
+  // Whether this session may use /admin.
+  //
+  // The admin cookie is httpOnly and signed, so the browser cannot read it —
+  // the server is the only one that can answer. Asked once a profile is loaded,
+  // because the only thing this decides is whether a signed-in person is
+  // offered the link, and re-checked whenever the session changes so that a
+  // revoked admin stops being offered it.
+  useEffect(() => {
+    if (loading || !user) {
+      setIsAdmin(false);
+      return undefined;
+    }
+    let cancelled = false;
+    fetch("/api/admin-session", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : { admin: false }))
+      .then((data) => {
+        if (!cancelled) setIsAdmin(Boolean(data?.admin));
+      })
+      .catch(() => {
+        if (!cancelled) setIsAdmin(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, user]);
+
   // ── Derived state ──────────────────────────────────────────────────────────
 
   // full_name is already injected by injectUserFields — just expose it directly
@@ -421,6 +448,7 @@ export function AuthProvider({ children }) {
         userCartGet,
         userCartUpdate,
         isLoggedIn,
+        isAdmin,
         user,
         myAccountLinks,
         changePassword,
