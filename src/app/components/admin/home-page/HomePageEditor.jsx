@@ -129,7 +129,39 @@ function IconField({ value, onChange }) {
   );
 }
 
-function ListField({ field, value, onChange }) {
+function ImagePicker({ value, images, onChange }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        type="text"
+        value={value ?? ""}
+        spellCheck={false}
+        onChange={(e) => onChange(e.target.value)}
+        className={inputClass}
+      />
+      {images.length > 0 && (
+        <select
+          className={`${inputClass} text-xs`}
+          value={images.includes(value) ? value : ""}
+          onChange={(e) => e.target.value && onChange(e.target.value)}
+        >
+          <option value="">Choose from public/images/banner…</option>
+          {images.map((src) => (
+            <option key={src} value={src}>
+              {src.split("/").pop()}
+            </option>
+          ))}
+        </select>
+      )}
+      {value && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={value} alt="" className="h-28 w-full rounded-xl border border-zinc-200 object-cover dark:border-white/10" />
+      )}
+    </div>
+  );
+}
+
+function ListField({ field, value, onChange, images }) {
   const items = Array.isArray(value) ? value : [];
   const setItem = (id, patch) => onChange(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
 
@@ -161,6 +193,16 @@ function ListField({ field, value, onChange }) {
               {Object.entries(field.item).map(([key, sub]) =>
                 sub.type === "icon" ? (
                   <IconField key={key} value={item[key]} onChange={(v) => setItem(item.id, { [key]: v })} />
+                ) : sub.type === "image" ? (
+                  <div key={key} className="sm:col-span-2">
+                    <Field label={sub.label} hint={sub.hint}>
+                      <ImagePicker
+                        value={item[key]}
+                        images={images}
+                        onChange={(v) => setItem(item.id, { [key]: v })}
+                      />
+                    </Field>
+                  </div>
                 ) : (
                   <Field key={key} label={sub.label} hint={sub.hint}>
                     <input
@@ -199,7 +241,8 @@ function ListField({ field, value, onChange }) {
 }
 
 function ContentField({ name, field, value, images, onChange }) {
-  if (field.type === "list") return <ListField field={field} value={value} onChange={onChange} />;
+  if (field.type === "list")
+    return <ListField field={field} value={value} onChange={onChange} images={images} />;
 
   const common = {
     id: name,
@@ -213,27 +256,7 @@ function ContentField({ name, field, value, images, onChange }) {
       {field.type === "textarea" ? (
         <textarea rows={3} maxLength={field.maxLength} {...common} />
       ) : field.type === "image" ? (
-        <div className="flex flex-col gap-2">
-          <input type="text" spellCheck={false} {...common} />
-          {images.length > 0 && (
-            <select
-              className={`${inputClass} text-xs`}
-              value={images.includes(value) ? value : ""}
-              onChange={(e) => e.target.value && onChange(e.target.value)}
-            >
-              <option value="">Choose from public/images/banner…</option>
-              {images.map((src) => (
-                <option key={src} value={src}>
-                  {src.split("/").pop()}
-                </option>
-              ))}
-            </select>
-          )}
-          {value && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt="" className="h-28 w-full rounded-xl border border-zinc-200 object-cover dark:border-white/10" />
-          )}
-        </div>
+        <ImagePicker value={value} images={images} onChange={onChange} />
       ) : (
         <input type="text" maxLength={field.maxLength} spellCheck={field.type !== "url"} {...common} />
       )}

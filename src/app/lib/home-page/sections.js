@@ -139,6 +139,67 @@ export const SECTION_TYPES = {
       textColor: { type: "color", label: "Label text", default: THEME_COLOR },
     },
   },
+
+  offers: {
+    label: "Limited time offers",
+    description:
+      "A centred pitch — eyebrow, headline, copy and a call to action — above a row of images and a second button.",
+    // Rendered by components/home-page/sections/OffersSection.jsx
+    content: {
+      eyebrow: { type: "text", label: "Eyebrow", default: "Limited Time Offers", maxLength: 60 },
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Name Your Budget. We'll Find Your Fireplace.",
+        hint: "Wraps on its own.",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "From open box savings to close-out deals, we make luxury heating accessible. Talk to an expert and discover your best deal today.",
+        maxLength: 320,
+      },
+      primaryLabel: { type: "text", label: "Top button label", default: "Call to Save More", maxLength: 40 },
+      primaryHref: {
+        type: "url",
+        label: "Top button link",
+        default: "/contact",
+        hint: "A path such as /contact, a full https:// address, or tel:(888) 575-9720.",
+      },
+      images: {
+        type: "list",
+        label: "Images",
+        min: 1,
+        max: 3,
+        addLabel: "Add image",
+        hint: "Three reads as designed — the middle one is shown wider. Fewer share the row evenly.",
+        item: {
+          src: { type: "image", label: "Image", default: "", required: true },
+          alt: { type: "text", label: "Image description", default: "", maxLength: 160 },
+        },
+        default: [
+          { src: "/images/banner/home-gas-fireplace.webp", alt: "" },
+          { src: "/images/banner/solana-home-hero.webp", alt: "" },
+          { src: "/images/banner/home-built-in-grills.webp", alt: "" },
+        ],
+      },
+      secondaryLabel: { type: "text", label: "Bottom button label", default: "Browse All Deals", maxLength: 40 },
+      secondaryHref: { type: "url", label: "Bottom button link", default: "/open-box" },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#ffffff", defaultDark: "#0b0b0c" },
+      eyebrowColor: { type: "color", label: "Eyebrow text", default: THEME_COLOR },
+      headingColor: { type: "color", label: "Headline text", default: THEME_COLOR },
+      bodyColor: { type: "color", label: "Supporting text", defaultLight: "#3d4045", defaultDark: "#d4d4d8" },
+      primaryBg: { type: "color", label: "Top button", default: THEME_COLOR },
+      primaryText: { type: "color", label: "Top button text", default: "#ffffff" },
+      secondaryBg: { type: "color", label: "Bottom button", defaultLight: "#17181a", defaultDark: "#ffffff" },
+      secondaryText: { type: "color", label: "Bottom button text", defaultLight: "#ffffff", defaultDark: "#17181a" },
+    },
+  },
 };
 
 /** A colour field's starting value for one scheme. */

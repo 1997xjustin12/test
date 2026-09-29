@@ -1,5 +1,6 @@
 import HeroSection from "./sections/HeroSection";
 import ValuePropsSection from "./sections/ValuePropsSection";
+import OffersSection from "./sections/OffersSection";
 
 /**
  * Renders a homepage from its saved configuration.
@@ -15,6 +16,7 @@ import ValuePropsSection from "./sections/ValuePropsSection";
 const COMPONENTS = {
   hero: HeroSection,
   valueProps: ValuePropsSection,
+  offers: OffersSection,
 };
 
 export default function ConfiguredHomePage({ sections = [] }) {
