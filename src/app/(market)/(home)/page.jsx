@@ -2,6 +2,8 @@ import { unstable_cache } from "next/cache";
 import { ISBBQ, ISOKO } from "@/app/lib/helpers";
 import { getCollectionProducts } from "@/app/lib/fn_server";
 import { toClientHits } from "@/app/lib/listing-data";
+import { getHomePage } from "@/app/lib/home-page/store";
+import ConfiguredHomePage from "@/app/components/home-page/ConfiguredHomePage";
 
 // SOLANA COMPONENTS
 import HeroBackground from "@/app/components/new-design/sections/HeroBackground";
@@ -35,6 +37,19 @@ const getCachedCollectionProducts = unstable_cache(
 // wasted and the first card was downloaded twice (seen on the wire at 613ms
 // and again at 800ms). The cards load lazily on approach, as cards should.
 export default async function HomePage() {
+  // The configured homepage, when this brand has one and has switched it on.
+  // Off by default and off for a brand with no record, so BBQ and OKO keep
+  // their current pages until their designs exist — and so a half-built page
+  // is never what a visitor lands on. See lib/home-page/store.js.
+  const homePage = await getHomePage();
+  // Counting *visible* sections, not saved ones: hiding every section is a
+  // way to build a page privately, and it must fall back to the existing
+  // homepage rather than serve a blank one.
+  const configured = homePage.sections.filter((s) => s.visible !== false);
+  if (homePage.enabled && configured.length > 0) {
+    return <ConfiguredHomePage sections={configured} />;
+  }
+
   // const ISBBQ = true;
   const initColId = (ISBBQ || ISOKO) ? 252: 137;
   // The deals row is a client component, so whatever it is handed is serialised

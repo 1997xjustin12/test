@@ -1,0 +1,43 @@
+import { STORE_NAME } from "@/app/lib/store_constants";
+import { getHomePage, listBannerImages } from "@/app/lib/home-page/store";
+import HomePageEditor from "@/app/components/admin/home-page/HomePageEditor";
+
+/**
+ * Homepage editor.
+ *
+ * The saved record and the image library are read here, on the server, and
+ * handed to the editor as its starting state — the same shape the storefront
+ * renders from, so what is edited here is exactly what is published.
+ *
+ * Store-scoped: this screen edits the homepage of whichever brand the admin is
+ * running as, and cannot see or change the other two.
+ */
+export const dynamic = "force-dynamic";
+
+export const metadata = { title: "Homepage editor" };
+
+export default async function AdminHomePage() {
+  const [homePage, images] = await Promise.all([
+    getHomePage(),
+    Promise.resolve(listBannerImages()),
+  ]);
+
+  return (
+    <div className="container mx-auto flex flex-col gap-5 px-2 pb-16">
+      <header className="pt-2">
+        <h1 className="text-xl font-semibold text-stone-900">Homepage</h1>
+        <p className="mt-1 max-w-2xl text-sm text-stone-500">
+          Build {STORE_NAME}&apos;s homepage from sections. Text, links, images and colours are editable;
+          the layout of each section is fixed to its design. Changes apply to this brand only.
+        </p>
+        {homePage.updatedAt && (
+          <p className="mt-1 text-xs text-stone-400">
+            Last saved {new Date(homePage.updatedAt).toLocaleString()}
+          </p>
+        )}
+      </header>
+
+      <HomePageEditor initial={homePage} images={images} />
+    </div>
+  );
+}
