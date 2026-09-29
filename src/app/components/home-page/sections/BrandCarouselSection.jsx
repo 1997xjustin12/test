@@ -11,7 +11,8 @@ import { getCarouselBrands } from "@/app/lib/home-page/brands";
  * the first began and the seam never shows. Pure CSS, so this stays a server
  * component — see HeroSection for why that matters on this page. The duplicate
  * is aria-hidden, and prefers-reduced-motion stops it and wraps the logos into
- * rows instead.
+ * rows instead — including the rule that keeps each copy at least a screen
+ * wide, which the menu's 37 brands never need but three brands would.
  *
  * The brands are not configured here. They are the Brands menu, filtered and
  * mapped in lib/home-page/brands.js, which is the same source /brands reads —
@@ -78,10 +79,12 @@ export default async function BrandCarouselSection({ section, index = 0 }) {
     .${scope}:is(.dark *){${vars(appearance?.dark ?? {})}}
     .${scope}:is(.light *){${vars(appearance?.light ?? {})}}
     .${scope}-track{display:flex;width:max-content;animation:${scope}-scroll ${duration}s linear infinite}
+    .${scope}-track>ul{min-width:100vw;justify-content:space-around}
     .${scope}:hover .${scope}-track{animation-play-state:paused}
     @keyframes ${scope}-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     @media (prefers-reduced-motion: reduce){
-      .${scope}-track{animation:none;width:100%;flex-wrap:wrap;justify-content:center}
+      .${scope}-track{animation:none;width:100%}
+      .${scope}-track>ul{min-width:0;width:100%;flex-wrap:wrap;justify-content:center}
       .${scope}-copy{display:none}
     }`;
 

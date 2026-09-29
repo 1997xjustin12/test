@@ -10,6 +10,14 @@ import { THEME_COLOR } from "@/app/lib/home-page/sections";
  * HTML — a JavaScript carousel here would mean shipping and running code to
  * move four words sideways.
  *
+ * Each copy is at least a screen wide. Four promises measure about 860px, so on
+ * anything above that the copy ran out mid-screen and the strip visibly emptied
+ * and started over — at 2560px the gap was 906px. min-width:100vw closes it
+ * whatever the screen: the spare room becomes even spacing between the items
+ * (space-around distributes the ends at half a gap each, so the join between
+ * the two copies is spaced like every other), and below that width there is no
+ * spare room and the items keep their own.
+ *
  * The duplicate is aria-hidden: a screen reader should hear the promises once.
  * With prefers-reduced-motion the animation stops and the row simply centres —
  * a permanently moving strip is the classic vestibular trigger.
@@ -58,10 +66,12 @@ export default function ValuePropsSection({ section }) {
     .${scope}:is(.dark *){${vars(appearance?.dark ?? {})}}
     .${scope}:is(.light *){${vars(appearance?.light ?? {})}}
     .${scope}-track{display:flex;width:max-content;animation:${scope}-scroll ${duration}s linear infinite}
+    .${scope}-track>ul{min-width:100vw;justify-content:space-around}
     .${scope}:hover .${scope}-track{animation-play-state:paused}
     @keyframes ${scope}-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     @media (prefers-reduced-motion: reduce){
-      .${scope}-track{animation:none;width:100%;justify-content:space-around;flex-wrap:wrap}
+      .${scope}-track{animation:none;width:100%}
+      .${scope}-track>ul{min-width:0;width:100%;flex-wrap:wrap;justify-content:center}
       .${scope}-copy{display:none}
     }`;
 
