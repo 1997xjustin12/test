@@ -200,6 +200,25 @@ export const SECTION_TYPES = {
       secondaryText: { type: "color", label: "Bottom button text", defaultLight: "#ffffff", defaultDark: "#17181a" },
     },
   },
+
+  brandLine: {
+    label: "Brand line",
+    description: "A single centred line on its own band.",
+    // Rendered by components/home-page/sections/BrandLineSection.jsx
+    content: {
+      text: {
+        type: "text",
+        label: "Text",
+        default: "20+ Premium Brands available at Solana",
+        maxLength: 120,
+        required: true,
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Band background", defaultLight: "#1a1a1a", defaultDark: "#000000" },
+      textColor: { type: "color", label: "Text", default: THEME_COLOR },
+    },
+  },
 };
 
 /** A colour field's starting value for one scheme. */
