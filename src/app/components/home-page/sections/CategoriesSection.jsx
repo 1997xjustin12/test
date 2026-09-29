@@ -25,11 +25,11 @@ function Tile({ item, scope, eager }) {
 
   const inner = (
     <>
-      {/* aspect-[1/1], not aspect-square: the @tailwindcss/aspect-ratio plugin
-          this project loads replaces the aspect theme scale with its own
-          aspect-w and aspect-h one, so the named values compile to nothing at
-          all and the tile collapses to no height. Arbitrary ratios still work. */}
-      <div className="relative aspect-[1/1] overflow-hidden rounded-2xl">
+      {/* aspect-1, not aspect-square: the @tailwindcss/aspect-ratio plugin this
+          project loads replaces the aspect scale with a numbered one, so the
+          named values compile to nothing at all and the tile collapses to no
+          height. aspect-1 is this project's square. */}
+      <div className="relative aspect-1 overflow-hidden rounded-2xl">
         <Image
           src={item.image}
           alt=""
