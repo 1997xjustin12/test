@@ -2,6 +2,7 @@ import HeroSection from "./sections/HeroSection";
 import ValuePropsSection from "./sections/ValuePropsSection";
 import OffersSection from "./sections/OffersSection";
 import BrandLineSection from "./sections/BrandLineSection";
+import BrandCarouselSection from "./sections/BrandCarouselSection";
 
 /**
  * Renders a homepage from its saved configuration.
@@ -18,6 +19,7 @@ const COMPONENTS = {
   hero: HeroSection,
   valueProps: ValuePropsSection,
   offers: OffersSection,
+  brandCarousel: BrandCarouselSection,
   brandLine: BrandLineSection,
 };
 

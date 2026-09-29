@@ -201,6 +201,30 @@ export const SECTION_TYPES = {
     },
   },
 
+  brandCarousel: {
+    label: "Brand carousel",
+    description:
+      "The brand logos, scrolling. Which brands appear is not set here — it is every brand in the Brands menu that has a logo file, in menu order.",
+    // Rendered by components/home-page/sections/BrandCarouselSection.jsx
+    content: {
+      heading: {
+        type: "text",
+        label: "Heading",
+        default: "Trusted Brands We Carry",
+        hint: "Sits above the strip. Clear it to show the logos on their own.",
+        maxLength: 80,
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#ffffff", defaultDark: "#0b0b0c" },
+      headingColor: { type: "color", label: "Heading text", default: THEME_COLOR },
+      // The logo files have no transparency — they are drawn on white — so
+      // they need a plate of their own rather than sitting on the section
+      // colour, or a dark background turns every logo into a white card.
+      tileBg: { type: "color", label: "Logo background", default: "#ffffff" },
+    },
+  },
+
   brandLine: {
     label: "Brand line",
     description: "A single centred line on its own band.",
