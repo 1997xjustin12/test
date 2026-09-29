@@ -9,6 +9,7 @@ import {
   Globe,
   Image as ImageIcon,
   LayoutDashboard,
+  LayoutTemplate,
   ListTree,
   MessagesSquare,
   PanelLeftClose,
@@ -38,6 +39,7 @@ const NAV_GROUPS = [
   {
     label: "Content",
     items: [
+      { name: "Homepage", url: "/admin/home-page", icon: LayoutTemplate },
       { name: "FAQs Updater", url: "/admin/faqs-updater", icon: MessagesSquare },
       { name: "Menu Builder", url: "/admin/menu-builder", icon: ListTree },
     ],
