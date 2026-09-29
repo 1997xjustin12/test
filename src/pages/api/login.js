@@ -3,7 +3,7 @@ import {
   ADMIN_COOKIE,
   ADMIN_COOKIE_MAX_AGE,
   adminCookieOptions,
-  isAdminUsername,
+  isAdminUser,
   signAdminSession,
 } from "@/app/lib/admin-auth";
 
@@ -52,11 +52,13 @@ export default async function handler(req, res) {
     // Admins additionally get a signed, httpOnly cookie naming them, which is
     // what /admin and the admin APIs actually check. Minted only for
     // allowlisted usernames, so an ordinary shopper's browser never holds one.
+    // The allowlist is ADMIN_USERNAMES plus the grants from /admin/admin-users,
+    // so someone granted access there can sign in without a redeploy.
     //
     // The username is trustworthy here precisely because the backend just
     // accepted these credentials — this is the one point in the flow where the
     // server knows who logged in without having to ask anything else.
-    if (isAdminUsername(username)) {
+    if (await isAdminUser(username)) {
       try {
         cookies.push(
           cookie.serialize(ADMIN_COOKIE, await signAdminSession(username), {

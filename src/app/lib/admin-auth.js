@@ -24,6 +24,8 @@
  * and the Node runtime (pages/api) from the same file.
  */
 
+import { envAdminUsernames, isAdminUser } from "@/app/lib/admin-users";
+
 export const ADMIN_COOKIE = "admin_session";
 
 /** Eight hours. Long enough for a working day, short enough to expire nightly. */
@@ -74,21 +76,30 @@ function timingSafeEqual(a, b) {
 /**
  * The set of usernames permitted into /admin, read at call time.
  *
+ * Two halves now: ADMIN_USERNAMES, and the grants managed at
+ * /admin/admin-users. See lib/admin-users.js for why the env list is a floor
+ * rather than a seed. Both are read per request, so revoking access still takes
+ * effect on the next one.
+ *
  * Unset or empty means nobody — an admin surface that opens up when a variable
  * is missing is the wrong way round, and a missing variable is exactly what a
  * fresh deployment looks like.
  */
-export function adminUsernames() {
+export { envAdminUsernames as adminUsernames, isAdminUser };
+
+/**
+ * Case-insensitive: usernames are typed by hand into a login form.
+ *
+ * Env-only and synchronous, kept for callers that cannot await. Anything
+ * deciding access should use isAdminUser, which also sees the grants.
+ */
+export function isAdminUsername(username) {
+  if (!username) return false;
   return (process.env.ADMIN_USERNAMES || "")
     .split(",")
     .map((name) => name.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-/** Case-insensitive: usernames are typed by hand into a login form. */
-export function isAdminUsername(username) {
-  if (!username) return false;
-  return adminUsernames().includes(String(username).trim().toLowerCase());
+    .filter(Boolean)
+    .includes(String(username).trim().toLowerCase());
 }
 
 /** Signs `username` into a cookie value. Throws if no secret is configured. */
@@ -167,7 +178,8 @@ function readAdminCookie(req) {
  */
 export async function getAdminUser(req) {
   const username = await verifyAdminSession(readAdminCookie(req));
-  return username && isAdminUsername(username) ? username : null;
+  if (!username) return null;
+  return (await isAdminUser(username)) ? username : null;
 }
 
 /**

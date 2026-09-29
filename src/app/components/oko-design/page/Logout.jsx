@@ -1,31 +1,36 @@
 "use client";
-import { useEffect } from "react";
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
-import { BASE_URL } from "@/app/lib/helpers";
-import { useRouter } from "next/navigation";
+import { useSignOut } from "@/app/lib/use-sign-out";
 
 export default function BBQLogoutPage() {
-  const { user, logout, loading } = useAuth();
-  const { cartObject, createAbandonedCart, abandonedCartUser } = useCart();
-  const router = useRouter();
+  const auth = useAuth();
+  const cart = useCart();
+  const { failed, retry } = useSignOut(auth, cart);
 
-  useEffect(() => {
-    const logUserOut = async () => {
-      try {
-        await createAbandonedCart(cartObject, abandonedCartUser, "forced");
-        const response = await logout();
-        if (!response?.ok) return;
-        router.push(`${BASE_URL}/login`);
-      } catch (err) {
-        console.error("[LogoutPage]", err);
-      }
-    };
-
-    if (!loading && user && abandonedCartUser && cartObject) {
-      logUserOut();
-    }
-  }, [loading, user, abandonedCartUser, cartObject]);
+  if (failed) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center px-4 bg-oko-cream dark:bg-oko-night">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div>
+            <h2 className="font-oko-display font-semibold text-[21px] leading-[1.3] text-oko-char dark:text-oko-cream mb-1">
+              We could not sign you out
+            </h2>
+            <p className="font-inter text-[13.5px] leading-[1.55] text-oko-char-soft dark:text-oko-ondark">
+              Check your connection and try again.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={retry}
+            className="rounded-full bg-oko-barn px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-oko-barn-dark"
+          >
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4 bg-oko-cream dark:bg-oko-night">

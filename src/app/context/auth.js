@@ -177,8 +177,15 @@ export function AuthProvider({ children }) {
    *              there is no stored access token yet).
    */
   const refreshAccessToken = useCallback(async (force = false) => {
-    if (!forage)                return;
-    if (pathname === "/logout") return;
+    if (!forage) return;
+    // Refreshing on the way out would only rebuild the session we are about to
+    // drop. `loading` still has to be resolved before returning: nothing else
+    // on this path clears it, and the logout page waits on it — leaving it true
+    // was half of why that page spun forever.
+    if (pathname === "/logout") {
+      setLoading(false);
+      return;
+    }
 
     try {
       const now            = Date.now();
