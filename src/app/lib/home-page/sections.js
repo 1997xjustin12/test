@@ -541,6 +541,65 @@ export const SECTION_TYPES = {
     },
   },
 
+  faq: {
+    label: "FAQ",
+    description: "Questions and answers, all shown at once.",
+    // Rendered by components/home-page/sections/FaqSection.jsx
+    content: {
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Frequently Asked Questions",
+        maxLength: 120,
+        required: true,
+      },
+      items: {
+        type: "list",
+        label: "Questions",
+        min: 1,
+        max: 12,
+        addLabel: "Add question",
+        item: {
+          question: { type: "text", label: "Question", default: "", maxLength: 200, required: true },
+          answer: { type: "textarea", label: "Answer", default: "", maxLength: 600, required: true },
+        },
+        default: [
+          {
+            question: "Do I need to know what type of fireplace I want before I contact you?",
+            answer:
+              "Not at all. Our consultants can walk you through gas, electric, and wood options based on your space, budget, and needs, at no extra cost.",
+          },
+          {
+            question: "How does the price match guarantee work?",
+            answer:
+              "If you find the same product for less at a competing retailer, we'll match that price. Just reach out with the details before you buy.",
+          },
+          {
+            question: "Do you offer installation support?",
+            answer:
+              "Yes. Our team guides you from choosing the right fireplace through the installation process, so you're never left figuring it out alone.",
+          },
+          {
+            question: "Do you work with contractors and builders?",
+            answer:
+              "Yes. Our Contractor Program offers dedicated pricing and support for builders, designers, and contractors working on residential or commercial projects.",
+          },
+          {
+            question: "What if I need to return an item?",
+            answer:
+              "We offer easy returns, so if something isn't the right fit, we'll help you make it right.",
+          },
+        ],
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#ffffff", defaultDark: "#0b0b0c" },
+      headingColor: { type: "color", label: "Headline text", default: THEME_COLOR },
+      questionColor: { type: "color", label: "Question text", default: "#dfa013" },
+      answerColor: { type: "color", label: "Answer text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:
