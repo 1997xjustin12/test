@@ -493,6 +493,54 @@ export const SECTION_TYPES = {
     },
   },
 
+  blogs: {
+    label: "Blog",
+    description:
+      "A row of posts from this brand's blog, with a link through to the rest. Either the latest, or ones you choose.",
+    // Rendered by components/home-page/sections/BlogsSection.jsx
+    content: {
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Check Out Our Blog",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "Guides, tips, and inspiration to help you choose, style, and care for your fireplace or outdoor space.",
+        maxLength: 320,
+      },
+      posts: {
+        type: "blogs",
+        label: "Posts",
+        max: 3,
+        hint: "Leave this empty to show the three most recent posts, which keeps the homepage current on its own. Choose posts to pin a particular three.",
+        default: [],
+      },
+      fallbackTag: {
+        type: "text",
+        label: "Label above the title",
+        default: "Inspiration Guide",
+        hint: "Used for a post that has no category of its own.",
+        maxLength: 40,
+      },
+      buttonLabel: { type: "text", label: "Button label", default: "Read More", maxLength: 40 },
+      buttonHref: { type: "url", label: "Button link", default: "/blogs" },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#d9d9d9", defaultDark: "#0b0b0c" },
+      headingColor: { type: "color", label: "Headline text", default: THEME_COLOR },
+      bodyColor: { type: "color", label: "Supporting text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+      tagColor: { type: "color", label: "Label above the title", default: "#dfa013" },
+      titleColor: { type: "color", label: "Post title", defaultLight: "#17181a", defaultDark: "#fafafa" },
+      buttonBg: { type: "color", label: "Button", default: THEME_COLOR },
+      buttonText: { type: "color", label: "Button text", default: "#ffffff" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:
@@ -637,6 +685,17 @@ export function normalizeSection(raw) {
         .filter((entry) => hasContent(entry, field.item));
       content[key] = (items.length ? items : (field.default ?? []).map((i) => ({ ...i, id: itemId() })))
         .slice(0, field.max ?? 12);
+      continue;
+    }
+
+    if (field.type === "blogs") {
+      // Slugs, not posts: which posts exist is the blog's business, and a slug
+      // that has since been unpublished should drop out of the page rather
+      // than be preserved here as a stale copy of a post.
+      const slugs = (Array.isArray(value) ? value : [])
+        .map((slug) => String(slug ?? "").trim().toLowerCase().slice(0, 200))
+        .filter(Boolean);
+      content[key] = [...new Set(slugs)].slice(0, field.max ?? 3);
       continue;
     }
 

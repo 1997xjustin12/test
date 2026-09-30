@@ -225,8 +225,107 @@ export function ListField({ field, value, onChange, images }) {
   );
 }
 
-export function ContentField({ name, field, value, images, onChange }) {
+/**
+ * Which blog posts a section shows.
+ *
+ * Posts are chosen from the brand's own blog rather than typed, because a slug
+ * is not something anyone remembers and a mistyped one fails silently — the
+ * card simply does not appear. Empty means "the latest", which is the useful
+ * default and is what the hint says.
+ *
+ * Order is the chosen order, so moving a post here moves it on the page.
+ */
+export function BlogsField({ field, value, posts, onChange }) {
+  const chosen = Array.isArray(value) ? value : [];
+  const available = (posts ?? []).filter((post) => !chosen.includes(post.slug));
+  const max = field.max ?? 3;
+  const titleFor = (slug) => (posts ?? []).find((p) => p.slug === slug)?.title ?? slug;
+
+  return (
+    <Section title={field.label} description={field.hint}>
+      {chosen.length === 0 ? (
+        <p className={`text-sm ${muted}`}>
+          Showing the {max} most recent posts.
+        </p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {chosen.map((slug, index) => (
+            <li
+              key={slug}
+              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200 px-3 py-2 dark:border-white/10"
+            >
+              <span className="min-w-0">
+                <span className="block truncate text-sm text-zinc-800 dark:text-zinc-200">
+                  {titleFor(slug)}
+                </span>
+                <span className={`block truncate text-xs ${muted}`}>{slug}</span>
+              </span>
+              <span className="flex shrink-0 items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => onChange(arrayMove(chosen, index, Math.max(0, index - 1)))}
+                  disabled={index === 0}
+                  aria-label={`Move ${titleFor(slug)} earlier`}
+                  className="rounded-lg px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-100 disabled:opacity-30 dark:hover:bg-white/5"
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChange(arrayMove(chosen, index, Math.min(chosen.length - 1, index + 1)))}
+                  disabled={index === chosen.length - 1}
+                  aria-label={`Move ${titleFor(slug)} later`}
+                  className="rounded-lg px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-100 disabled:opacity-30 dark:hover:bg-white/5"
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChange(chosen.filter((s) => s !== slug))}
+                  aria-label={`Remove ${titleFor(slug)}`}
+                  className="rounded-lg px-2 py-1 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
+                >
+                  Remove
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2">
+        <select
+          value=""
+          disabled={chosen.length >= max || available.length === 0}
+          onChange={(e) => e.target.value && onChange([...chosen, e.target.value])}
+          className={`${inputClass} max-w-md text-sm disabled:opacity-40`}
+        >
+          <option value="">
+            {chosen.length >= max ? `That is all ${max} — remove one to swap it` : "Choose a post…"}
+          </option>
+          {available.map((post) => (
+            <option key={post.slug} value={post.slug}>
+              {post.title}
+            </option>
+          ))}
+        </select>
+        {chosen.length > 0 && (
+          <button
+            type="button"
+            onClick={() => onChange([])}
+            className={`text-xs underline ${muted} hover:text-zinc-800 dark:hover:text-zinc-200`}
+          >
+            Back to the latest
+          </button>
+        )}
+      </div>
+    </Section>
+  );
+}
+
+export function ContentField({ name, field, value, images, posts, onChange }) {
   if (field.type === "list") return <ListField field={field} value={value} onChange={onChange} images={images} />;
+  if (field.type === "blogs") return <BlogsField field={field} value={value} posts={posts} onChange={onChange} />;
 
   const common = {
     id: name,

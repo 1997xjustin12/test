@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getHomePage, listPickableImages } from "@/app/lib/home-page/store";
 import { SECTION_TYPES } from "@/app/lib/home-page/sections";
+import { listBlogChoices } from "@/app/lib/home-page/blog-posts";
 import SectionEditor from "@/app/components/admin/home-page/SectionEditor";
 
 /**
@@ -21,7 +22,14 @@ export async function generateMetadata({ params }) {
 
 export default async function AdminHomePageSection({ params }) {
   const { sectionId } = await params;
-  const [homePage, images] = await Promise.all([getHomePage(), Promise.resolve(listPickableImages())]);
+  const [homePage, images, posts] = await Promise.all([
+    getHomePage(),
+    Promise.resolve(listPickableImages()),
+    // Only the blog section uses these, but the read is cached and shared with
+    // the storefront, so fetching it here costs nothing the page did not
+    // already pay for.
+    listBlogChoices().catch(() => []),
+  ]);
 
   const section = homePage.sections.find((s) => s.id === sectionId);
 
@@ -68,6 +76,7 @@ export default async function AdminHomePageSection({ params }) {
         siblings={homePage.sections}
         enabled={homePage.enabled}
         images={images}
+        posts={posts}
       />
     </div>
   );

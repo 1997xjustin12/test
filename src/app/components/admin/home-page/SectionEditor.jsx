@@ -20,7 +20,7 @@ import { ColorField, ContentField } from "./fields";
 
 const muted = "text-zinc-500 dark:text-zinc-400";
 
-export default function SectionEditor({ section: initialSection, siblings, enabled, images }) {
+export default function SectionEditor({ section: initialSection, siblings, enabled, images, posts }) {
   const router = useRouter();
   const [section, setSection] = useState(initialSection);
   const [tab, setTab] = useState("light");
@@ -83,12 +83,13 @@ export default function SectionEditor({ section: initialSection, siblings, enabl
       <div className={`${cardClass} p-4`}>
         <div className="grid gap-4 md:grid-cols-2">
           {Object.entries(def.content).map(([key, field]) => (
-            <div key={key} className={["textarea", "image", "list"].includes(field.type) ? "md:col-span-2" : ""}>
+            <div key={key} className={["textarea", "image", "list", "blogs"].includes(field.type) ? "md:col-span-2" : ""}>
               <ContentField
                 name={`${section.id}-${key}`}
                 field={field}
                 value={section.content[key]}
                 images={images}
+                posts={posts}
                 onChange={(v) => setContent(key, v)}
               />
             </div>
