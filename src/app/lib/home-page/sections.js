@@ -442,6 +442,57 @@ export const SECTION_TYPES = {
     },
   },
 
+  newsletter: {
+    label: "Newsletter",
+    description: "A centred sign-up: headline, a line of copy, an email field and a button.",
+    // Rendered by components/home-page/sections/NewsletterSection.jsx
+    content: {
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Never Miss a Deal",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "Sign up for exclusive deals, new arrivals, and expert tips\ndelivered straight to your inbox.",
+        hint: "A line break here is kept on the page.",
+        maxLength: 320,
+      },
+      placeholder: {
+        type: "text",
+        label: "Field placeholder",
+        default: "Enter Your Email Address",
+        maxLength: 60,
+      },
+      buttonLabel: {
+        type: "text",
+        label: "Button label",
+        default: "Subscribe to our Newsletter",
+        maxLength: 40,
+        required: true,
+      },
+      successMessage: {
+        type: "text",
+        label: "Message after signing up",
+        default: "Thanks — you're on the list.",
+        maxLength: 120,
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#ffffff", defaultDark: "#0b0b0c" },
+      headingColor: { type: "color", label: "Headline text", default: "#dfa013" },
+      bodyColor: { type: "color", label: "Supporting text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+      inputBg: { type: "color", label: "Field background", defaultLight: "#d9d9d9", defaultDark: "#27272a" },
+      inputText: { type: "color", label: "Field text", defaultLight: "#17181a", defaultDark: "#fafafa" },
+      buttonBg: { type: "color", label: "Button", default: THEME_COLOR },
+      buttonText: { type: "color", label: "Button text", default: "#ffffff" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:

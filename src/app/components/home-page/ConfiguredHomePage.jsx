@@ -5,6 +5,7 @@ import BrandLineSection from "./sections/BrandLineSection";
 import CategoriesSection from "./sections/CategoriesSection";
 import WhyChooseSection from "./sections/WhyChooseSection";
 import ReviewsSection from "./sections/ReviewsSection";
+import NewsletterSection from "./sections/NewsletterSection";
 import BrandCarouselSection from "./sections/BrandCarouselSection";
 
 /**
@@ -25,6 +26,7 @@ const COMPONENTS = {
   categories: CategoriesSection,
   whyChoose: WhyChooseSection,
   reviews: ReviewsSection,
+  newsletter: NewsletterSection,
   brandCarousel: BrandCarouselSection,
   brandLine: BrandLineSection,
 };
