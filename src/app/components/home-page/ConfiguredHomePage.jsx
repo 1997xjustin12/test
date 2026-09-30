@@ -3,6 +3,7 @@ import ValuePropsSection from "./sections/ValuePropsSection";
 import OffersSection from "./sections/OffersSection";
 import BrandLineSection from "./sections/BrandLineSection";
 import CategoriesSection from "./sections/CategoriesSection";
+import WhyChooseSection from "./sections/WhyChooseSection";
 import BrandCarouselSection from "./sections/BrandCarouselSection";
 
 /**
@@ -21,6 +22,7 @@ const COMPONENTS = {
   valueProps: ValuePropsSection,
   offers: OffersSection,
   categories: CategoriesSection,
+  whyChoose: WhyChooseSection,
   brandCarousel: BrandCarouselSection,
   brandLine: BrandLineSection,
 };

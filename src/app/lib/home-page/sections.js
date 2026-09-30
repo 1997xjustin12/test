@@ -313,6 +313,99 @@ export const SECTION_TYPES = {
     },
   },
 
+  whyChoose: {
+    label: "Why choose",
+    description:
+      "Two overlapping images beside a pitch, a list of reasons and a call to action.",
+    // Rendered by components/home-page/sections/WhyChooseSection.jsx
+    content: {
+      image: {
+        type: "image",
+        label: "Main image",
+        default: "/images/categories/outdoor-kitchen-components.webp",
+        hint: "Shown square, so the middle of the picture is what survives the crop.",
+        required: true,
+      },
+      imageAlt: { type: "text", label: "Main image description", default: "", maxLength: 160 },
+      secondaryImage: {
+        type: "image",
+        label: "Overlapping image",
+        default: "/images/banner/home-built-in-grills.webp",
+        hint: "Sits across the bottom corner of the main one. Clear it to show one image on its own.",
+      },
+      secondaryImageAlt: {
+        type: "text",
+        label: "Overlapping image description",
+        default: "",
+        maxLength: 160,
+      },
+      eyebrow: { type: "text", label: "Eyebrow", default: "Why Choose Solana?", maxLength: 60 },
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Trusted Fireplace Guidance for Every Space",
+        hint: "Wraps on its own.",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "From your first call to final installation, our consultants help you find the fireplace that actually fits your space and your life.",
+        maxLength: 320,
+      },
+      items: {
+        type: "list",
+        label: "Reasons",
+        min: 1,
+        max: 8,
+        addLabel: "Add reason",
+        item: {
+          title: { type: "text", label: "Title", default: "", maxLength: 60, required: true },
+          description: { type: "textarea", label: "Description", default: "", maxLength: 240 },
+        },
+        default: [
+          {
+            title: "20+ Premium Brands",
+            description: "We carry the brands professionals trust, so you never have to guess on quality.",
+          },
+          {
+            title: "Expert Support",
+            description: "Our consultants help you choose the right option, no extra cost, no pressure.",
+          },
+          {
+            title: "Contractor Program",
+            description: "Dedicated pricing and support built for builders, designers, and contractors.",
+          },
+          {
+            title: "Best Price Guarantee",
+            description: "Find the same product for less? We'll match the price.",
+          },
+        ],
+      },
+      buttonLabel: { type: "text", label: "Button label", default: "Get Free Quote", maxLength: 40 },
+      buttonHref: {
+        type: "url",
+        label: "Button link",
+        default: "/contact",
+        hint: "A path such as /contact, a full https:// address, or tel:(888) 575-9720.",
+      },
+    },
+    appearance: {
+      background: { type: "color", label: "Section background", defaultLight: "#ffffff", defaultDark: "#0b0b0c" },
+      // The design uses two oranges: a lighter amber for the eyebrow and the
+      // reason titles, the brand accent for the headline and the button.
+      eyebrowColor: { type: "color", label: "Eyebrow text", default: "#e0a31a" },
+      headingColor: { type: "color", label: "Headline text", default: THEME_COLOR },
+      bodyColor: { type: "color", label: "Supporting text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+      itemTitleColor: { type: "color", label: "Reason titles", default: "#e0a31a" },
+      itemTextColor: { type: "color", label: "Reason text", defaultLight: "#1a1a1a", defaultDark: "#d4d4d8" },
+      buttonBg: { type: "color", label: "Button", default: THEME_COLOR },
+      buttonText: { type: "color", label: "Button text", default: "#ffffff" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:
