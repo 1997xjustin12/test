@@ -4,6 +4,7 @@ import OffersSection from "./sections/OffersSection";
 import BrandLineSection from "./sections/BrandLineSection";
 import CategoriesSection from "./sections/CategoriesSection";
 import WhyChooseSection from "./sections/WhyChooseSection";
+import ReviewsSection from "./sections/ReviewsSection";
 import BrandCarouselSection from "./sections/BrandCarouselSection";
 
 /**
@@ -23,6 +24,7 @@ const COMPONENTS = {
   offers: OffersSection,
   categories: CategoriesSection,
   whyChoose: WhyChooseSection,
+  reviews: ReviewsSection,
   brandCarousel: BrandCarouselSection,
   brandLine: BrandLineSection,
 };

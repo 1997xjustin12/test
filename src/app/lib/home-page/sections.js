@@ -406,6 +406,42 @@ export const SECTION_TYPES = {
     },
   },
 
+  reviews: {
+    label: "Reviews",
+    description:
+      "Customer reviews on a coloured band. The reviews themselves come from the store's own review list, newest first — only the wording and colours are set here.",
+    // Rendered by components/home-page/sections/ReviewsSection.jsx
+    content: {
+      heading: {
+        type: "text",
+        label: "Headline",
+        default: "Reviews From Our Customers",
+        maxLength: 120,
+        required: true,
+      },
+      subheading: {
+        type: "textarea",
+        label: "Supporting text",
+        default:
+          "Read real reviews on fireplaces, grills, and outdoor living products from Solana Fireplaces customers.",
+        maxLength: 320,
+      },
+    },
+    appearance: {
+      // The design's band is the brand orange, in both schemes — it is the
+      // section's whole identity rather than a backdrop that should invert.
+      background: { type: "color", label: "Band background", default: THEME_COLOR },
+      headingColor: { type: "color", label: "Headline text", default: "#ffffff" },
+      bodyColor: { type: "color", label: "Supporting text", default: "#ffffff" },
+      cardBg: { type: "color", label: "Card background", default: "#ffffff" },
+      avatarBg: { type: "color", label: "Initial circle", default: "#dfa013" },
+      nameColor: { type: "color", label: "Reviewer name", default: "#17181a" },
+      starColor: { type: "color", label: "Stars", default: "#ffce38" },
+      dateColor: { type: "color", label: "Date", default: "#52525b" },
+      reviewTextColor: { type: "color", label: "Review text", default: "#3d4045" },
+    },
+  },
+
   brandCarousel: {
     label: "Brand carousel",
     description:
