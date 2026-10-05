@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { headerIcon } from "./header/icons";
 import { THEME_COLOR } from "@/app/lib/home-page/sections";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import HeaderMenu, { HeaderMenuBar } from "./header/HeaderMenu";
@@ -45,6 +45,7 @@ export default function ConfiguredHeader({ header, logo }) {
     .sh:is(.dark *){${vars(appearance.dark ?? {})}}
     .sh:is(.light *){${vars(appearance.light ?? {})}}`;
 
+  const PhoneIcon = headerIcon("phone", content.phoneIcon);
   const digits = String(content.phone ?? "").replace(/[^\d+]/g, "");
 
   return (
@@ -87,13 +88,13 @@ export default function ConfiguredHeader({ header, logo }) {
                   className="flex h-9 w-9 items-center justify-center rounded-full border-2"
                   style={{ borderColor: "var(--sh-phone)" }}
                 >
-                  <Phone className="h-4 w-4" aria-hidden="true" />
+                  <PhoneIcon className="h-4 w-4" aria-hidden="true" />
                 </span>
                 {content.phone}
               </a>
             )}
-            <HeaderAccountButton />
-            <HeaderCartButton />
+            <HeaderAccountButton icon={content.accountIcon} />
+            <HeaderCartButton icon={content.cartIcon} />
             <HeaderMenu />
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Field, Pill, cardClass, inputClass } from "@/app/components/admin/ui";
 import { ColorField } from "@/app/components/admin/home-page/fields";
 import { HEADER_COLORS } from "@/app/lib/site-layout/header";
+import { headerIcon, iconNames } from "@/app/components/site-layout/header/icons";
 
 /**
  * The header editor.
@@ -15,6 +16,43 @@ import { HEADER_COLORS } from "@/app/lib/site-layout/header";
  */
 
 const muted = "text-zinc-500 dark:text-zinc-400";
+
+/**
+ * The mark for one of the header's three buttons.
+ *
+ * Shown as the icons themselves rather than a list of names: the choice is what
+ * it looks like, and "CircleUser" against "UserRound" tells nobody anything.
+ */
+function IconChoice({ slot, label, value, onChange }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{label}</span>
+      <div className="flex flex-wrap gap-2">
+        {iconNames(slot).map((name) => {
+          const Icon = headerIcon(slot, name);
+          const active = value === name;
+          return (
+            <button
+              key={name}
+              type="button"
+              onClick={() => onChange(name)}
+              aria-label={name}
+              aria-pressed={active}
+              title={name}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors ${
+                active
+                  ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300"
+                  : "border-zinc-200 text-zinc-500 hover:border-indigo-400 dark:border-white/10 dark:text-zinc-400"
+              }`}
+            >
+              <Icon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function HeaderEditor() {
   const [record, setRecord] = useState(null);
@@ -117,6 +155,27 @@ export default function HeaderEditor() {
               className={inputClass}
             />
           </Field>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-3">
+          <IconChoice
+            slot="phone"
+            label="Phone icon"
+            value={record.content.phoneIcon}
+            onChange={(v) => setContent("phoneIcon", v)}
+          />
+          <IconChoice
+            slot="account"
+            label="Account icon"
+            value={record.content.accountIcon}
+            onChange={(v) => setContent("accountIcon", v)}
+          />
+          <IconChoice
+            slot="cart"
+            label="Cart icon"
+            value={record.content.cartIcon}
+            onChange={(v) => setContent("cartIcon", v)}
+          />
         </div>
 
         <div className="rounded-xl border border-zinc-200 p-3 dark:border-white/10">

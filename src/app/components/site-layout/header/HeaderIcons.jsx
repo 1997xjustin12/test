@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, User } from "lucide-react";
+import { headerIcon } from "./icons";
 import { useCart } from "@/app/context/cart";
 import { useAuth } from "@/app/context/auth";
 
@@ -25,7 +25,8 @@ import { useAuth } from "@/app/context/auth";
 const RING =
   "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-opacity hover:opacity-70";
 
-export function HeaderCartButton() {
+export function HeaderCartButton({ icon }) {
+  const Icon = headerIcon("cart", icon);
   const { cartItemsCount, openMiniCart } = useCart();
 
   const handleClick = (e) => {
@@ -43,7 +44,7 @@ export function HeaderCartButton() {
       className={`relative ${RING}`}
       style={{ color: "var(--sh-icon)", borderColor: "var(--sh-icon)" }}
     >
-      <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+      <Icon className="h-5 w-5" aria-hidden="true" />
       {cartItemsCount > 0 && (
         <span
           className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold leading-none"
@@ -56,7 +57,8 @@ export function HeaderCartButton() {
   );
 }
 
-export function HeaderAccountButton() {
+export function HeaderAccountButton({ icon }) {
+  const Icon = headerIcon("account", icon);
   const { isLoggedIn, myAccountLinks, isAdmin } = useAuth();
   const [open, setOpen] = useState(false);
 
@@ -74,7 +76,7 @@ export function HeaderAccountButton() {
         className={RING}
         style={{ color: "var(--sh-icon)", borderColor: "var(--sh-icon)" }}
       >
-        <User className="h-5 w-5" aria-hidden="true" />
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </Link>
 
       {open && (

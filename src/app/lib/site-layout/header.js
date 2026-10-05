@@ -3,6 +3,7 @@ import { redis } from "@/app/lib/redis";
 import { storeKey } from "@/app/lib/store";
 import { readOrDegrade } from "@/app/lib/upstream";
 import { THEME_COLOR, appearanceDefault, isColor } from "@/app/lib/home-page/sections";
+import { DEFAULT_ICONS, isHeaderIcon } from "@/app/components/site-layout/header/icons";
 
 /**
  * The configurable header, one record per brand.
@@ -30,6 +31,9 @@ export function defaultHeader() {
   return {
     phone: process.env.NEXT_PUBLIC_STORE_CONTACT || "",
     searchPlaceholder: "Search fireplaces, brands, styles…",
+    phoneIcon: DEFAULT_ICONS.phone,
+    accountIcon: DEFAULT_ICONS.account,
+    cartIcon: DEFAULT_ICONS.cart,
   };
 }
 
@@ -56,9 +60,15 @@ export function normalizeHeader(raw) {
 
   const base = defaultHeader();
   const c = raw.content ?? {};
+  // An icon name that this build cannot draw falls back to the slot's own
+  // default, so trimming the list later cannot leave a blank button.
+  const icon = (slot, value) => (isHeaderIcon(slot, value) ? value : DEFAULT_ICONS[slot]);
   const content = {
     phone: text(c.phone, 40),
     searchPlaceholder: text(c.searchPlaceholder, 80) || base.searchPlaceholder,
+    phoneIcon: icon("phone", c.phoneIcon),
+    accountIcon: icon("account", c.accountIcon),
+    cartIcon: icon("cart", c.cartIcon),
   };
 
   const scheme = (mode) => {

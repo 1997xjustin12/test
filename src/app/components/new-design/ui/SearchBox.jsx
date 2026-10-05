@@ -177,7 +177,40 @@ function TagWithSpinner({ type, isLoading }) {
   );
 }
 
-function SearchBox() {
+/**
+ * How the field looks. Every value here is what this component has always
+ * rendered, so a caller that passes nothing gets exactly the old markup — which
+ * is the point: the three brand navbars keep their header untouched while the
+ * configured header can look like something else, without a second copy of 700
+ * lines of autocomplete to keep in step.
+ *
+ * Only the field is themeable. The dropdown is a floating panel over the page
+ * rather than part of the header, and it reads correctly on both.
+ */
+export const SEARCH_THEME = {
+  wrapper: "flex-1 min-w-0 relative max-w-2xl mx-auto",
+  field: "flex items-center rounded-full px-4 py-2 gap-2 transition-all duration-200",
+  fieldFocused: "bg-white dark:bg-stone-800 ring-2 shadow-sm",
+  fieldBlurred: "bg-stone-100 dark:bg-stone-800",
+  icon: "text-stone-400 flex-shrink-0",
+  input:
+    "flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-white placeholder-stone-400 min-w-0",
+  clear:
+    "flex-shrink-0 w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-600 flex items-center justify-center transition hover:bg-stone-300",
+  submit:
+    "flex-shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition hover:opacity-90 hidden sm:flex items-center gap-1 bg-theme-600",
+  focusRing: FIRE,
+  showIcon: true,
+  // Inline styles, for a caller whose colours are CSS variables rather than
+  // Tailwind classes.
+  fieldStyle: undefined,
+  inputStyle: undefined,
+  submitStyle: undefined,
+  placeholder: "Search fireplaces, brands, styles…",
+};
+
+function SearchBox({ theme }) {
+  const t = theme ? { ...SEARCH_THEME, ...theme } : SEARCH_THEME;
   const {
     setSearch,
     searchQuery,
@@ -328,30 +361,33 @@ function SearchBox() {
     inputRef.current?.focus();
   }
   return (
-    <div ref={wrapRef} className="flex-1 min-w-0 relative max-w-2xl mx-auto">
+    <div ref={wrapRef} className={t.wrapper}>
       <Suspense fallback={null}>
         <SearchParamsBridge onChange={setParamsString} />
       </Suspense>
       <div
-        className={`flex items-center rounded-full px-4 py-2 gap-2 transition-all duration-200 ${focused ? "bg-white dark:bg-stone-800 ring-2 shadow-sm" : "bg-stone-100 dark:bg-stone-800"}`}
+        className={`${t.field} ${focused ? t.fieldFocused : t.fieldBlurred}`}
         style={{
-          ringColor: focused ? FIRE : "transparent",
-          boxShadow: focused ? `0 0 0 2px ${FIRE}33` : undefined,
+          ringColor: focused ? t.focusRing : "transparent",
+          boxShadow: focused ? `0 0 0 2px ${t.focusRing}33` : undefined,
+          ...t.fieldStyle,
         }}
       >
         {/* Search icon */}
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="text-stone-400 flex-shrink-0"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
+        {t.showIcon && (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className={t.icon}
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        )}
 
         <input
           ref={inputRef}
@@ -360,8 +396,9 @@ function SearchBox() {
           onChange={handleChange}
           onFocus={handleFocus}
           onKeyDown={handleKeyDown}
-          placeholder="Search fireplaces, brands, styles…"
-          className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-white placeholder-stone-400 min-w-0"
+          placeholder={t.placeholder}
+          className={t.input}
+          style={t.inputStyle}
         />
 
         {/* Category select – hidden on mobile */}
@@ -380,7 +417,7 @@ function SearchBox() {
         {(isSearchPage ? localInput : searchQuery) && (
           <button
             onClick={clearSearch}
-            className="flex-shrink-0 w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-600 flex items-center justify-center transition hover:bg-stone-300"
+            className={t.clear}
           >
             <svg
               width="10"
@@ -398,7 +435,8 @@ function SearchBox() {
         {/* Search button */}
         <button
           onClick={handleSubmit}
-          className="flex-shrink-0 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition hover:opacity-90 hidden sm:flex items-center gap-1 bg-theme-600"
+          className={t.submit}
+          style={t.submitStyle}
           // style={{ background: FIRE }}
         >
           <svg
