@@ -13,6 +13,7 @@ import {
   ListTree,
   MessagesSquare,
   PanelBottom,
+  PanelTop,
   PanelLeftClose,
   PanelLeftOpen,
   Palette,
@@ -42,6 +43,7 @@ const NAV_GROUPS = [
     label: "Content",
     items: [
       { name: "Homepage", url: "/admin/home-page", icon: LayoutTemplate },
+      { name: "Header", url: "/admin/header", icon: PanelTop },
       { name: "Footer", url: "/admin/footer", icon: PanelBottom },
       { name: "FAQs Updater", url: "/admin/faqs-updater", icon: MessagesSquare },
       { name: "Menu Builder", url: "/admin/menu-builder", icon: ListTree },

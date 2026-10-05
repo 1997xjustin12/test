@@ -44,6 +44,8 @@ import OKONavbar from "@/app/components/oko-design/layout/Navbar";
 import OKOFooter from "@/app/components/oko-design/layout/Footer";
 import ConfiguredFooter from "@/app/components/site-layout/ConfiguredFooter";
 import { getFooter } from "@/app/lib/site-layout/footer";
+import ConfiguredHeader from "@/app/components/site-layout/ConfiguredHeader";
+import { getHeader } from "@/app/lib/site-layout/header";
 
 // Fonts come from the brand module next.config.ts resolves for this
 // deployment's STORE_ID. Declaring all three brands' families here made every
@@ -152,13 +154,15 @@ export default async function MarketLayout({ children }) {
   // "page does not exist" for every URL we have. Both were caused by one Redis
   // blip, and the 404 could be cached and indexed. A degraded header is the
   // right answer; see lib/upstream.js.
-  const [initData, categories, storeSettings, footer] = await Promise.all([
+  const [initData, categories, storeSettings, footer, header] = await Promise.all([
     readOrDegrade("layout:menu+logo+theme", getInitData, NO_LAYOUT_DATA),
     readOrDegrade("layout:categories", getCachedCategories, []),
     getStoreSettings(),
-    // Already degrade-safe, and "not configured" renders the brand's own
-    // footer — so a Redis blip costs the configured footer, not the page.
+    // Both are degrade-safe, and "not configured" renders the brand's own
+    // header and footer — so a Redis blip costs the configured ones, not the
+    // page.
     getFooter(),
+    getHeader(),
   ]);
 
   const [menu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
@@ -240,8 +244,17 @@ export default async function MarketLayout({ children }) {
                             through a leaf of its own (SearchParamsBridge), so the
                             header renders as server HTML. It used to stream in on
                             hydration and push the page down — the site's whole CLS. */}
-                          { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
-                          { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
+                          {/* The configured header when this brand has one and
+                              has switched it on; otherwise the topbar and navbar
+                              the brand ships. */}
+                          {header.enabled && header.content ? (
+                            <ConfiguredHeader header={header} logo={redisLogo} />
+                          ) : (
+                            <>
+                              { ISOKO ? <OKOTopbar /> : ISBBQ ? <BBQTopbar /> : <Topbar />}
+                              { ISOKO ? <OKONavbar logo={redisLogo} /> : ISBBQ ? <BBQNavbar logo={redisLogo} /> : <Navbar logo={redisLogo} />}
+                            </>
+                          )}
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
