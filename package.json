@@ -12,7 +12,8 @@
     "oko-dev": "node scripts/run-brand.js oko dev",
     "solana-build": "node scripts/run-brand.js solana build",
     "bbq-build": "node scripts/run-brand.js bbq build",
-    "oko-build": "node scripts/run-brand.js oko build"
+    "oko-build": "node scripts/run-brand.js oko build",
+    "test-server": "node scripts/test-server.js"
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",

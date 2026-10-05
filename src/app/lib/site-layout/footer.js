@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { redis } from "@/app/lib/redis";
-import { storeKey } from "@/app/lib/store";
+import { contentKey } from "@/app/lib/store";
 import { readOrDegrade } from "@/app/lib/upstream";
 // The colour vocabulary and the link rule are the homepage editor's, reused
 // rather than restated: an operator who has configured a homepage section
@@ -21,7 +21,7 @@ import { THEME_COLOR, appearanceDefault, isColor } from "@/app/lib/home-page/sec
  * normalised on write and on read) so the two editors behave the same way.
  */
 
-export const FOOTER_KEY = storeKey("footer");
+export const FOOTER_KEY = contentKey("footer");
 export const FOOTER_TAG = "site-footer";
 
 /** How much of each list is kept. Caps exist so a bad write cannot grow a page. */

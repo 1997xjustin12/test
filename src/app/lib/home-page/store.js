@@ -18,11 +18,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { unstable_cache } from "next/cache";
 import { redis } from "@/app/lib/redis";
-import { storeKey } from "@/app/lib/store";
+import { contentKey } from "@/app/lib/store";
 import { readOrDegrade } from "@/app/lib/upstream";
 import { normalizeSection } from "./sections";
 
-export const HOME_PAGE_KEY = storeKey("home_page");
+export const HOME_PAGE_KEY = contentKey("home_page");
 export const HOME_PAGE_TAG = "home-page";
 
 /** What a brand gets when nothing is stored: today's homepage, untouched. */

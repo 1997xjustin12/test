@@ -40,6 +40,30 @@ export const STORE_THEMES = ["solana", "bbq", "oko"];
 export const storeKey = (name) => `${STORE_ID}_${name}`;
 
 /**
+ * A key for editable site content — the configured homepage, header and footer.
+ *
+ * Normally identical to storeKey(). Its reason to exist is CONTENT_TEST_NAMESPACE:
+ * the end-to-end suites drive a local server against the same Redis the live
+ * sites read, and they save and clear these records as they go. On 5 Oct 2026
+ * that cost a configured homepage — a suite wrote `sections: []` over a page an
+ * operator had built and switched on three days earlier.
+ *
+ * With the variable set, those records move to a namespace of their own
+ * (test_solana_home_page) and a test run cannot reach live content.
+ *
+ * Ignored outright on Vercel, so no deployment can be pointed at a test
+ * namespace by setting a variable — the isolation only ever makes tests safer,
+ * never production stranger. The guard is VERCEL rather than NODE_ENV because
+ * the suites run `next start` over a production build, which is a production
+ * NODE_ENV and emphatically not a deployment.
+ */
+export const contentKey = (name) => {
+  const namespace = process.env.CONTENT_TEST_NAMESPACE?.trim();
+  if (!namespace || process.env.VERCEL) return storeKey(name);
+  return `${namespace}_${STORE_ID}_${name}`;
+};
+
+/**
  * Theme is derived from STORE_ID rather than its own env var — one deployment
  * identity instead of two that could disagree. Kept synchronous on purpose:
  * ~69 call sites branch on ISBBQ/ISOKO during render, and making those await a

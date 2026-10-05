@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { redis } from "@/app/lib/redis";
-import { storeKey } from "@/app/lib/store";
+import { contentKey } from "@/app/lib/store";
 import { readOrDegrade } from "@/app/lib/upstream";
 import { THEME_COLOR, appearanceDefault, isColor } from "@/app/lib/home-page/sections";
 import { DEFAULT_ICONS, isHeaderIcon } from "@/app/components/site-layout/header/icons";
@@ -20,7 +20,7 @@ import { DEFAULT_ICONS, isHeaderIcon } from "@/app/components/site-layout/header
  * renders whatever that menu says, filtered by its "Show in navigation" toggle.
  */
 
-export const HEADER_KEY = storeKey("header");
+export const HEADER_KEY = contentKey("header");
 export const HEADER_TAG = "site-header";
 
 export const EMPTY_HEADER = Object.freeze({ enabled: false, content: null, appearance: null, updatedAt: null });
