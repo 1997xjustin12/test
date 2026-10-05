@@ -183,7 +183,7 @@ export async function POST(request) {
     });
   } catch (err) {
     const timedOut = err?.name === "AbortError";
-    console.error(`cache/clear-remote: ${target} failed:`, timedOut ? "timeout" : err);
+    console.error("cache/clear-remote: %s failed:", target, timedOut ? "timeout" : err);
     return fail(
       timedOut
         ? `${target} took too long to respond. It may still be clearing.`

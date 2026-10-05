@@ -85,6 +85,10 @@ export const filter_price_range = [
   { label: "$5000 and UP", min: 5000, max: 100000 },
 ];
 
+/** Escapes a string so it can be used as a literal inside a RegExp. */
+export const escapeRegExp = (value) =>
+  String(value ?? "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export function createSlug(string, separator = "-") {
   return string
     .toString()
@@ -94,8 +98,12 @@ export function createSlug(string, separator = "-") {
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, separator)
-    .replace(new RegExp(`\\${separator}+`, "g"), separator)
-    .replace(new RegExp(`^${separator}|${separator}$`, "g"), ""); // Trim leading/trailing separators
+    // The separator is escaped before it becomes a pattern. It is a literal at
+    // every call site today, but "\\" + separator only happens to work for the
+    // default "-" — a separator of "." or "+" would build a pattern that
+    // matches the wrong thing, or one that does not compile at all.
+    .replace(new RegExp(`${escapeRegExp(separator)}+`, "g"), separator)
+    .replace(new RegExp(`^${escapeRegExp(separator)}|${escapeRegExp(separator)}$`, "g"), "");
 }
 
 export function getFirstPathSegment(pathname) {

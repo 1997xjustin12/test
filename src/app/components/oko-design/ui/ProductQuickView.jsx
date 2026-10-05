@@ -159,7 +159,7 @@ function ProductQuickView({ data, onClose }) {
                   {/* Stars — gold color for BBQ */}
                   <div className="flex items-center gap-0.5">
                     {[1, 2, 3, 4, 5].map((n) => (
-                      <StarIcon key={n} filled={n <= parseInt(data?.ratings?.rating_count?.replace("'", ""), 10)} />
+                      <StarIcon key={n} filled={n <= parseInt(data?.ratings?.rating_count?.replace(/'/g, ""), 10)} />
                     ))}
                   </div>
 

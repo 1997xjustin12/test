@@ -302,7 +302,7 @@ function ProductQuickView({ data, product_link, onClose }) {
                       <div className="flex items-center gap-1.5">
                         <div className="flex items-center gap-0.5">
                           {[1, 2, 3, 4, 5].map((n) => (
-                            <StarIcon key={n} filled={n <= parseInt(data?.ratings?.rating_count?.replace("'",""), 10)} />
+                            <StarIcon key={n} filled={n <= parseInt(data?.ratings?.rating_count?.replace(/'/g, ""), 10)} />
                           ))}
                         </div>
                         {/* <span className="text-[11px] text-gray-400 dark:text-gray-500">

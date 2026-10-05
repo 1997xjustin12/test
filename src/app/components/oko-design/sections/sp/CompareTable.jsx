@@ -1,4 +1,8 @@
-"use server"
+// Server component by default. This file carried a "use server" directive,
+// which marks every export as a Server Action — a callable endpoint reachable
+// from the browser — and these are components, not actions. Next 16.3 rejects
+// it outright because actions must be async; before that it was silently
+// publishing three component modules as RPC.
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";

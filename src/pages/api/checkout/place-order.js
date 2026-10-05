@@ -1,4 +1,4 @@
-import gateway from "@/app/lib/braintree";
+import { braintreeGateway } from "@/app/lib/braintree";
 import { ES_INDEX } from "@/app/lib/helpers";
 import { placeOrder } from "@/app/lib/checkout/place-order";
 
@@ -100,14 +100,14 @@ const braintreeCall = async (request) => {
 const payments = {
   authorize: ({ amount, nonce }) =>
     braintreeCall(() =>
-      gateway.transaction.sale({
+      braintreeGateway().transaction.sale({
         amount,
         paymentMethodNonce: nonce,
         options: { submitForSettlement: false },
       }),
     ),
-  capture: (transactionId) => braintreeCall(() => gateway.transaction.submitForSettlement(transactionId)),
-  void: (transactionId) => braintreeCall(() => gateway.transaction.void(transactionId)),
+  capture: (transactionId) => braintreeCall(() => braintreeGateway().transaction.submitForSettlement(transactionId)),
+  void: (transactionId) => braintreeCall(() => braintreeGateway().transaction.void(transactionId)),
 };
 
 export default async function handler(req, res) {

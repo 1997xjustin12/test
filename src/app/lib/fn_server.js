@@ -600,7 +600,7 @@ function mergeRelatedProducts(data, keys) {
       try {
         value = JSON.parse(rawValue);
       } catch (e) {
-        console.error(`Error parsing JSON for key "${key}":`, e);
+        console.error("Error parsing JSON for key %s:", key, e);
         // On error, treat as empty or handle as required
         value = [];
       }

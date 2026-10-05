@@ -65,7 +65,7 @@ async function handler(request) {
           cartItem: item,
         };
       } catch (error) {
-        console.error(`chat/products: ${handle} failed:`, error?.message || error);
+        console.error("chat/products: %s failed:", handle, error?.message || error);
         return null;
       }
     }),
