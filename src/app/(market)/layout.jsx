@@ -42,6 +42,8 @@ import BBQFooter from "@/app/components/bbq-design/layout/Footer";
 import OKOTopbar from "@/app/components/oko-design/layout/Topbar";
 import OKONavbar from "@/app/components/oko-design/layout/Navbar";
 import OKOFooter from "@/app/components/oko-design/layout/Footer";
+import ConfiguredFooter from "@/app/components/site-layout/ConfiguredFooter";
+import { getFooter } from "@/app/lib/site-layout/footer";
 
 // Fonts come from the brand module next.config.ts resolves for this
 // deployment's STORE_ID. Declaring all three brands' families here made every
@@ -150,10 +152,13 @@ export default async function MarketLayout({ children }) {
   // "page does not exist" for every URL we have. Both were caused by one Redis
   // blip, and the 404 could be cached and indexed. A degraded header is the
   // right answer; see lib/upstream.js.
-  const [initData, categories, storeSettings] = await Promise.all([
+  const [initData, categories, storeSettings, footer] = await Promise.all([
     readOrDegrade("layout:menu+logo+theme", getInitData, NO_LAYOUT_DATA),
     readOrDegrade("layout:categories", getCachedCategories, []),
     getStoreSettings(),
+    // Already degrade-safe, and "not configured" renders the brand's own
+    // footer — so a Redis blip costs the configured footer, not the page.
+    getFooter(),
   ]);
 
   const [menu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
@@ -240,7 +245,17 @@ export default async function MarketLayout({ children }) {
                         <main className="flex flex-col min-h-svh">
                           {children}
                         </main>
-                        { ISOKO ? <OKOFooter logo={redisLogo} /> : ISBBQ ? <BBQFooter logo={redisLogo} />: <Footer logo={redisLogo} />}
+                        {/* The configured footer when this brand has one and has
+                            switched it on; otherwise the footer the brand ships. */}
+                        {footer.enabled && footer.content ? (
+                          <ConfiguredFooter footer={footer} logo={redisLogo} />
+                        ) : ISOKO ? (
+                          <OKOFooter logo={redisLogo} />
+                        ) : ISBBQ ? (
+                          <BBQFooter logo={redisLogo} />
+                        ) : (
+                          <Footer logo={redisLogo} />
+                        )}
                         <ConditionalZohoButton />
                         <LazyZohoLoader />
                         {/* Bottom-left: Zoho's live-chat button owns
