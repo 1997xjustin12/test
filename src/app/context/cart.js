@@ -294,14 +294,26 @@ export const CartProvider = ({ children }) => {
       .filter((i) => !i.merged)
       .map((item) => ({ ...item, ...item.custom_fields }));
 
-    const raw      = await userCartGet();
-    const userCart = raw?.message
-      ? null
-      : { ...raw, items: (raw.items ?? []).map((i) => ({ ...i, ...(i.custom_fields ?? {}) })) };
+    const raw = await userCartGet();
+    // userCartGet answers null when the backend has no active cart for this
+    // person — it replies 404, which is the ordinary state before their first
+    // cart exists or after one is checked out. `raw?.message` does not catch
+    // that, so the else branch read `.items` off null and threw, and because
+    // this runs from an effect the failure was an uncaught promise rejection
+    // rather than a handled one: the cart silently never loaded, and every
+    // later add-to-cart failed with it.
+    const userCart =
+      !raw || raw.message
+        ? null
+        : { ...raw, items: (raw.items ?? []).map((i) => ({ ...i, ...(i.custom_fields ?? {}) })) };
 
-    // No guest items to merge — return the existing user cart as-is
+    // No guest items to merge — the existing cart as it is, or nothing, which
+    // tells the caller to create one. An object with a reference number and no
+    // identity is not a cart.
     if (toMerge.length === 0) {
-      return { ...userCart, reference_number: userCart?.reference_number ?? createOrderNumber() };
+      return userCart
+        ? { ...userCart, reference_number: userCart.reference_number ?? createOrderNumber() }
+        : null;
     }
 
     // Build the merged cart
@@ -463,6 +475,14 @@ export const CartProvider = ({ children }) => {
       // userRef.current avoids adding abandonedCartUser to deps, which would
       // cause the BroadcastChannel effect to re-subscribe on every cart update
       createAbandonedCart(loaded, userRef.current, "timed");
+    } catch (error) {
+      // Loading the cart must not be able to take the cart down. Without this
+      // the failure was an unhandled rejection: nothing set the cart, nothing
+      // reported why, and every later add-to-cart failed on a cart that had
+      // never loaded. An empty cart the shopper can still add to is a better
+      // answer than a broken one.
+      console.error("[cart] could not load the cart:", error);
+      setCart(null);
     } finally {
       setLoadingCartItems(false);
     }
