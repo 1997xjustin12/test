@@ -10,6 +10,7 @@ import { SearchProvider } from "@/app/context/search";
 import { CategoriesProvider } from "@/app/context/category";
 import { StoreSettingsProvider } from "@/app/context/store-settings";
 import { getStoreSettings } from "@/app/lib/store-settings";
+import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
@@ -154,7 +155,7 @@ export default async function MarketLayout({ children }) {
   // "page does not exist" for every URL we have. Both were caused by one Redis
   // blip, and the 404 could be cached and indexed. A degraded header is the
   // right answer; see lib/upstream.js.
-  const [initData, categories, storeSettings, footer, header] = await Promise.all([
+  const [initData, categories, storeSettings, footer, header, exclusions] = await Promise.all([
     readOrDegrade("layout:menu+logo+theme", getInitData, NO_LAYOUT_DATA),
     readOrDegrade("layout:categories", getCachedCategories, []),
     getStoreSettings(),
@@ -163,6 +164,10 @@ export default async function MarketLayout({ children }) {
     // page.
     getFooter(),
     getHeader(),
+    // Read here rather than inside the cached menu read, so toggling a brand in
+    // Catalogue Exclusions reaches the navigation without waiting on the menu's
+    // own cache window.
+    getCatalogExclusions(),
   ]);
 
   const [menu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
@@ -172,11 +177,34 @@ export default async function MarketLayout({ children }) {
     .map(([k, v]) => `--theme-primary-${k}:${v}`)
     .join(";")}}`;
 
-  const formattedMenuItems =
-    menu?.map((i) => ({
-      ...clientMenuItem(i),
-      is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
-    })) || [];
+  /**
+   * The menu, minus the brands that are excluded catalogue-wide.
+   *
+   * /brands already did this for its own listing, but the navigation did not —
+   * so a brand hidden in Catalogue Exclusions kept its menu entry and its whole
+   * dropdown, on every page, leading to a page with no products in it. Filtering
+   * here fixes every consumer at once: all three brand navbars, the configured
+   * header, the mobile drawer and anything else reading the menu context.
+   *
+   * Matched on the exact name, the same rule /[slug] uses, and deliberately not
+   * on anything looser. Excluding "American Fire Glass" must not take "American
+   * Outdoor Grill" and "American Fyre Designs" with it, and a word match would.
+   * Removing a brand takes its own subtree with it, because its sub-collections
+   * are its children.
+   */
+  const excludedBrands = exclusions?.brands ?? [];
+  const withoutExcluded = (items = []) =>
+    items
+      .filter(
+        (item) =>
+          !excludedBrands.includes(item?.origin_name) && !excludedBrands.includes(item?.name),
+      )
+      .map((item) => ({ ...item, children: withoutExcluded(item?.children) }));
+
+  const formattedMenuItems = withoutExcluded(menu ?? []).map((i) => ({
+    ...clientMenuItem(i),
+    is_base_nav: !["On Sale", "New Arrivals"].includes(i?.name),
+  }));
 
   // NOTE: the first-4-category-card preloads used to live here. They only ever
   // render on the homepage (Categories.jsx), but this layout wraps every market

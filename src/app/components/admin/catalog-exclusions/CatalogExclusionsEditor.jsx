@@ -205,7 +205,8 @@ export default function CatalogExclusionsEditor() {
             {saved.brands?.length === 1 ? "" : "s"} and{" "}
             {saved.collections?.length ?? 0} collection
             {saved.collections?.length === 1 ? "" : "s"} excluded. Caches were
-            cleared — pages already rendered update on their next revalidation.
+            cleared and the storefront pages revalidated, so the menu, the{" "}
+            /brands listing and every brand link follow straight away.
           </span>
         </div>
       )}

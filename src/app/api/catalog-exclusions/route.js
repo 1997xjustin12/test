@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { isAuthorizedAdminRequest } from "@/app/lib/admin-auth";
 import { redis } from "@/app/lib/redis";
 import { fetchBrands } from "@/app/lib/fn_server";
@@ -140,17 +140,25 @@ export async function PUT(request) {
   try {
     const saved = await saveCatalogExclusions({ brands, collections });
     DEPENDENT_TAGS.forEach((tag) => revalidateTag(tag));
+    // The navigation is built in the market layout, so every prerendered page
+    // carries a copy of it. Busting the data tags alone refreshes what the next
+    // render reads, not the renders already on disk — un-excluding a brand left
+    // its menu entry missing from every cached page until that page's own
+    // revalidation came round. Same reason /api/header and /api/footer do this.
+    revalidatePath("/", "layout");
     const purged = await purgeSearchkitCache();
 
     return NextResponse.json({
       status: "ok",
       ...saved,
       revalidated: DEPENDENT_TAGS,
+      revalidatedPaths: ["/ (layout)"],
       searchkitKeysPurged: purged,
       // Honest about the limit of what a save can reach: Pages Router routes
-      // read Redis per request and are fine, but a deployed build's static
-      // pages only pick this up on their next revalidation.
-      note: "Storefront pages already rendered will update on their next revalidation.",
+      // read Redis per request and are fine, and the market layout's pages are
+      // revalidated above — but each deployed instance keeps its own cache, so
+      // a page already in flight can still be a moment behind.
+      note: "Storefront pages are revalidated; one already in flight may be a moment behind.",
     });
   } catch (error) {
     console.error("catalog-exclusions: save failed:", error?.message || error);
