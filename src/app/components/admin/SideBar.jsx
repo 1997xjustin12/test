@@ -20,6 +20,7 @@ import {
   Rss,
   Settings,
   ShieldCheck,
+  ShoppingCart,
   Trash2,
   Bot,
   EyeOff,
@@ -60,6 +61,7 @@ const NAV_GROUPS = [
     label: "Configuration",
     items: [
       { name: "Store Settings", url: "/admin/settings", icon: Settings },
+      { name: "Checkout", url: "/admin/checkout", icon: ShoppingCart },
       { name: "Admin Access", url: "/admin/admin-users", icon: ShieldCheck },
       { name: "Catalogue Exclusions", url: "/admin/catalog-exclusions", icon: EyeOff },
       { name: "AI Assistant", url: "/admin/ai-assistant", icon: Bot },

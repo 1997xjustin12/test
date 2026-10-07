@@ -1,4 +1,5 @@
 import { braintreeGateway } from "@/app/lib/braintree";
+import { checkoutMessage, getCheckoutState } from "@/app/lib/checkout-availability";
 import { ES_INDEX } from "@/app/lib/helpers";
 import { placeOrder } from "@/app/lib/checkout/place-order";
 
@@ -114,6 +115,15 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ success: false, error: "Method Not Allowed" });
+  }
+
+  // The last gate, and the one that matters: no order is created and no card
+  // is touched while the checkout is closed, whatever reached this route.
+  const checkout = await getCheckoutState();
+  if (checkout.closed) {
+    return res
+      .status(503)
+      .json({ success: false, error: checkoutMessage(checkout), checkoutClosed: true });
   }
 
   // Only a bearer token is forwarded, and only to order creation.
