@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "check:routes": "node scripts/check-routes.js",
     "solana-dev": "node scripts/run-brand.js solana dev",
     "bbq-dev": "node scripts/run-brand.js bbq dev",
     "oko-dev": "node scripts/run-brand.js oko dev",
