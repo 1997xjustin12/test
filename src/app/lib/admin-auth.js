@@ -32,13 +32,20 @@ export const ADMIN_COOKIE = "admin_session";
 const TTL_SECONDS = 8 * 60 * 60;
 
 /**
- * Signing key. ADMIN_SESSION_SECRET is preferred; REVALIDATE_SECRET is accepted
- * so this works on the existing deployments without a new variable having to be
- * set first. With neither, signing throws and verification fails — no secret
- * must never mean no checking.
+ * Signing key. ADMIN_SESSION_SECRET only.
+ *
+ * It used to fall back to REVALIDATE_SECRET, so that this worked on the
+ * existing deployments before the new variable was set anywhere. That is no
+ * longer true — it is set in all three Vercel projects as of 8 October 2026 —
+ * and the fallback tied two secrets together that want to be independent:
+ * REVALIDATE_SECRET is handed to the Django backend for server-to-server
+ * revalidation, so rotating it signed out every admin, and a leak of it was
+ * also the power to mint an admin session for any username.
+ *
+ * With no secret, signing throws and verification fails. No secret must never
+ * mean no checking.
  */
-const secret = () =>
-  process.env.ADMIN_SESSION_SECRET || process.env.REVALIDATE_SECRET || "";
+const secret = () => process.env.ADMIN_SESSION_SECRET || "";
 
 const encoder = new TextEncoder();
 
@@ -106,7 +113,7 @@ export function isAdminUsername(username) {
 export async function signAdminSession(username) {
   if (!secret()) {
     throw new Error(
-      "ADMIN_SESSION_SECRET (or REVALIDATE_SECRET) must be set to issue admin sessions",
+      "ADMIN_SESSION_SECRET must be set to issue admin sessions",
     );
   }
   const payload = b64urlEncode(
@@ -200,7 +207,49 @@ export async function isAuthorizedAdminRequest(request) {
   const secret = url.searchParams.get("secret");
   if (configured && secret === configured) return true;
 
-  return Boolean(await getAdminUser(request));
+  if (!(await getAdminUser(request))) return false;
+
+  // Cookie path only, and only for writes — see sameOrigin.
+  if (!isSafeMethod(request?.method) && !sameOrigin(request)) return false;
+
+  return true;
+}
+
+/** GET, HEAD and OPTIONS change nothing, so they need no origin check. */
+const isSafeMethod = (method) =>
+  ["GET", "HEAD", "OPTIONS"].includes(String(method ?? "GET").toUpperCase());
+
+/**
+ * True when a write carrying the admin cookie came from this site's own pages.
+ *
+ * The cookie is SameSite=Strict, so a cross-site request should never carry it
+ * in the first place — this is the second lock on the same door, for the day
+ * someone relaxes that attribute or a browser disagrees about what same-site
+ * means.
+ *
+ * A missing Origin is refused rather than allowed. Browsers send it on every
+ * state-changing request, so absence means the caller is not a browser; and a
+ * non-browser holding the cookie is, by definition, replaying a stolen one. The
+ * legitimate non-browser caller — the Django backend — authenticates with the
+ * secret and has already returned above.
+ *
+ * Note this is the opposite of the check that used to live in several of these
+ * routes, which treated a same-origin Origin as *authorization*. Origin is set
+ * by the client, so that let a hand-rolled request in. Here it is only ever a
+ * veto on a request that has already proved who it is.
+ */
+function sameOrigin(request) {
+  const origin = request?.headers?.get?.("origin") ?? request?.headers?.origin;
+  if (!origin) return false;
+
+  const host = requestHost(request);
+  if (!host) return false;
+
+  try {
+    return new URL(origin).host.toLowerCase() === String(host).toLowerCase();
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -243,11 +292,25 @@ export function isDevBypass(host) {
   return name === "localhost" || name === "127.0.0.1" || name === "[::1]";
 }
 
-/** Cookie attributes shared by the set and clear paths, so they cannot drift. */
+/**
+ * Cookie attributes shared by the set and clear paths, so they cannot drift.
+ *
+ * sameSite is "strict", not "lax". Lax attaches the cookie to top-level GET
+ * navigations from other sites, which is exactly the shape of "click this link"
+ * — and the admin surface has no reason to accept one. Admins arrive here from
+ * the Store Admin link on /my-account, which is same-site and unaffected, or by
+ * typing the address, which browsers treat as same-site because there is no
+ * initiating page.
+ *
+ * The one behaviour this changes: a link to /admin followed from somewhere
+ * else entirely — an email, a chat message — now lands on the 404 the first
+ * time, and reloading from the address bar works. That is the trade, and it is
+ * worth it.
+ */
 export const adminCookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  sameSite: "strict",
   path: "/",
 });
 

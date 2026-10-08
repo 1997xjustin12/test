@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+import { withRateLimit } from "@/app/lib/rate-limit";
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res
       .status(405)
@@ -50,3 +51,11 @@ export default async function handler(req, res) {
     });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. Takes an email address with no proof the
+ * caller owns it, which makes it a way to sign other people up; the limit
+ * bounds how many at a time. Confirming ownership needs the backend to send a
+ * confirmation mail — see docs/guides/shop-user-security.md T4.
+ */
+export default withRateLimit(handler, "write");

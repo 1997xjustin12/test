@@ -39,6 +39,22 @@ export const LIMITS = {
   // bound spend rather than load. Someone having a real conversation sends a
   // handful of messages a minute; anything past 20 is a script.
   chat: { limit: 20, windowSeconds: 60 },
+  // Writes an anonymous browser is allowed to make — a search term, an
+  // abandoned-cart timestamp, a newsletter signup. A person triggers a handful
+  // an hour; the limit is set where a script becomes uneconomic rather than
+  // where a human becomes inconvenienced.
+  write: { limit: 30, windowSeconds: 60 },
+  // Credential endpoints, per IP. Generous on purpose — an office or a campus
+  // behind one address is many people, and locking them out together would be
+  // a denial of service we inflicted on ourselves. Spraying many accounts from
+  // one address is what this bounds; guessing one account is bounded below.
+  auth: { limit: 20, windowSeconds: 60 },
+  // Failed attempts per account. Deliberately slower and much longer than the
+  // per-IP window, because the attack this exists to stop — one password tried
+  // against one account from many addresses — defeats an IP limit by
+  // construction. Only failures count, so this can be tight without
+  // inconveniencing anyone who knows their password.
+  authIdentity: { limit: 5, windowSeconds: 900 },
 };
 
 /**
@@ -142,7 +158,7 @@ export const internalHeaders = () =>
  * storefront down when its backing store hiccups is worse than the problem it
  * solves.
  */
-export async function rateLimit(req, group = "search") {
+export async function rateLimit(req, group = "search", subject = null) {
   const { limit, windowSeconds } = LIMITS[group] || LIMITS.search;
 
   // The app's own SSR calls are never throttled — see isInternalRequest.
@@ -151,7 +167,11 @@ export async function rateLimit(req, group = "search") {
   }
 
   const window = Math.floor(Date.now() / 1000 / windowSeconds);
-  const key = `ratelimit:${group}:${clientKey(req)}:${window}`;
+  // `subject` buckets by something other than the caller's address — an
+  // account name, for the credential endpoints. Spreading an attack across
+  // addresses is the normal way to beat an IP limit, and a bucket the attacker
+  // does not control is what makes that pointless.
+  const key = `ratelimit:${group}:${subject ?? clientKey(req)}:${window}`;
 
   try {
     const count = await redis.incr(key);
@@ -239,5 +259,97 @@ export function withRouteRateLimit(handler, group = "search") {
     res.headers.set("RateLimit-Remaining", String(remaining));
     res.headers.set("RateLimit-Reset", String(resetSeconds));
     return res;
+  };
+}
+
+/**
+ * Reads a bucket without consuming from it.
+ *
+ * Needed because the per-account limit counts *failures*, and whether a request
+ * failed is only known after the handler has run — so the check and the
+ * increment happen at different moments rather than together.
+ */
+export async function rateLimitPeek(group, subject) {
+  const { limit, windowSeconds } = LIMITS[group] || LIMITS.search;
+  const window = Math.floor(Date.now() / 1000 / windowSeconds);
+  const key = `ratelimit:${group}:${subject}:${window}`;
+  const resetSeconds = windowSeconds - (Math.floor(Date.now() / 1000) % windowSeconds);
+
+  try {
+    const count = Number(await redis.get(key)) || 0;
+    return { ok: count < limit, limit, remaining: Math.max(0, limit - count), resetSeconds };
+  } catch {
+    return { ok: true, limit, remaining: limit, resetSeconds, degraded: true };
+  }
+}
+
+/**
+ * Wraps a credential endpoint — login, register, refresh, password reset.
+ *
+ * Two buckets, both of which must allow the request:
+ *
+ *   per address   every attempt counts    stops one machine spraying accounts
+ *   per account   only failures count     stops many machines trying one account
+ *
+ * Neither alone is enough. An IP limit is beaten by a botnet and an account
+ * limit is beaten by moving to the next account, so credential stuffing needs
+ * both closed or it simply uses the open one.
+ *
+ * Counting only failures against the account is what makes the account limit
+ * safe to set low. Counting every attempt would mean five ordinary sign-ins in
+ * a quarter of an hour locked someone out of their own account — a limiter that
+ * does the attacker's work.
+ *
+ * `identify` pulls the account name out of the request body and may return
+ * null: /api/refresh carries a token rather than a name, and there is nothing to
+ * key on. Then only the address bucket applies, which is right rather than a
+ * gap — a refresh token is not guessable.
+ *
+ * The refusal says only that the limit was hit. It never says whether the
+ * account exists, which would turn throttling into the enumeration oracle it is
+ * partly there to prevent.
+ */
+export function withAuthRateLimit(handler, identify = () => null) {
+  return async function authRateLimited(req, res) {
+    const byAddress = await rateLimit(req, "auth");
+
+    let identity = null;
+    try {
+      const raw = identify(req);
+      if (raw) identity = String(raw).trim().toLowerCase().slice(0, 190);
+    } catch {
+      // A malformed body is the handler's problem to report, not ours.
+    }
+    const subject = identity ? `id:${identity}` : null;
+
+    const byIdentity = subject
+      ? await rateLimitPeek("authIdentity", subject)
+      : { ok: true, limit: LIMITS.authIdentity.limit, resetSeconds: 0 };
+
+    const blocked = !byAddress.ok ? byAddress : !byIdentity.ok ? byIdentity : null;
+
+    res.setHeader("RateLimit-Limit", String(byAddress.limit));
+    res.setHeader("RateLimit-Remaining", String(byAddress.remaining ?? 0));
+    res.setHeader("RateLimit-Reset", String(byAddress.resetSeconds));
+
+    if (blocked) {
+      res.setHeader("Retry-After", String(blocked.resetSeconds));
+      return res.status(429).json({
+        error: "Too Many Requests",
+        message: `Too many attempts. Try again in ${blocked.resetSeconds}s.`,
+        retryAfter: blocked.resetSeconds,
+      });
+    }
+
+    const result = await handler(req, res);
+
+    // Whatever the handler answered with is the final word on whether this
+    // attempt failed. 4xx and 5xx both count: a backend erroring on every
+    // request must not become an unlimited guessing window.
+    if (subject && res.statusCode >= 400) {
+      await rateLimit(req, "authIdentity", subject);
+    }
+
+    return result;
   };
 }

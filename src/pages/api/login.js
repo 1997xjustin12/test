@@ -1,3 +1,4 @@
+import { withAuthRateLimit } from "@/app/lib/rate-limit";
 import * as cookie from "cookie";
 import {
   ADMIN_COOKIE,
@@ -7,7 +8,7 @@ import {
   signAdminSession,
 } from "@/app/lib/admin-auth";
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -81,3 +82,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. Credential endpoints had no limit of any
+ * kind, so the only bound on guessing was how fast the backend could answer.
+ */
+export default withAuthRateLimit(handler, (req) => req.body?.username);

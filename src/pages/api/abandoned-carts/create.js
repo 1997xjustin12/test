@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+import { withRateLimit } from "@/app/lib/rate-limit";
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res
       .status(405)
@@ -46,3 +47,10 @@ export default async function handler(req, res) {
       });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. Open to anonymous callers by necessity —
+ * the browser records its own abandoned cart — so the bound on writing into
+ * backend storage is the rate limit rather than a credential.
+ */
+export default withRateLimit(handler, "write");

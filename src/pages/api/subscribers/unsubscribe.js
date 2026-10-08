@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+import { withRateLimit } from "@/app/lib/rate-limit";
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res
       .status(405)
@@ -50,3 +51,10 @@ export default async function handler(req, res) {
     });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. The mirror of subscribe, and the worse of
+ * the two — anyone can unsubscribe anyone. A signed one-time link is the real
+ * fix and needs the backend; see docs/guides/shop-user-security.md T4.
+ */
+export default withRateLimit(handler, "write");

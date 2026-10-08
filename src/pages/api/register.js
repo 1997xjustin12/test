@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+import { withAuthRateLimit } from "@/app/lib/rate-limit";
+async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -105,3 +106,9 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "reCAPTCHA verification failed" });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. Credential endpoints had no limit of any
+ * kind, so the only bound on guessing was how fast the backend could answer.
+ */
+export default withAuthRateLimit(handler, (req) => req.body?.username || req.body?.email);

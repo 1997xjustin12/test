@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+import { withAuthRateLimit } from "@/app/lib/rate-limit";
+async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -35,3 +36,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: 'Proxy request failed', error: error.message });
   }
 }
+
+/**
+ * Throttled: see lib/rate-limit.js. Credential endpoints had no limit of any
+ * kind, so the only bound on guessing was how fast the backend could answer.
+ */
+export default withAuthRateLimit(handler, (req) => req.body?.email);
