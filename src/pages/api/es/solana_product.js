@@ -1,3 +1,4 @@
+import { withRateLimit } from "@/app/lib/rate-limit";
 import {
   ES_INDEX,
 } from "../../../app/lib/helpers";
@@ -5,7 +6,7 @@ import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { accentuateSpecLabels } from "../../../app/lib/filter-helper";
 
 //  this hook is used for searching products
-export default async function handler(req, res) {
+async function handler(req, res) {
   const ESURL = process.env.NEXT_ES_URL;
   const ESShard = ES_INDEX;
   const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
@@ -282,3 +283,18 @@ function mergeRelatedProducts(data, keys) {
   // 4. Optionally, you might want to deduplicate the results
   return [...new Set(merged)];
 }
+
+/**
+ * Throttled: see lib/rate-limit.js, "search" bucket.
+ *
+ * This route attaches the app's Elasticsearch credentials server-side and
+ * forwards a query, which is the right place for them — but until 8 October
+ * 2026 there was no bound on how often an anonymous caller could use them, so
+ * one client could drive unlimited load at the cluster on our account.
+ *
+ * Every caller is the browser, fetching a relative URL, so nothing
+ * server-rendered passes through here and there is no SSR traffic to exempt.
+ * /api/es/searchkit is the one that does, and it identifies itself with
+ * internalHeaders() for exactly that reason.
+ */
+export default withRateLimit(handler, "search");
