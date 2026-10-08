@@ -15,14 +15,29 @@ import { useSolanaCategories } from "@/app/context/category";
  * "Show in navigation" toggle, and a second editor for the same links would be
  * a second answer to the same question.
  *
- * Only "Search" and "Home" are dropped — neither is a destination anyone
- * navigates to from a nav bar. Everything else the menu marks visible is shown,
- * so trimming the row is done where the menu is.
+ * Three entries are dropped. "Search" and "Home" are not destinations anyone
+ * navigates to from a nav bar, and "Brands" is left out of this header by
+ * request — the brands are reachable from the footer and from the homepage
+ * strip, and the row reads better without a dropdown of forty-odd logos in it.
+ * Everything else the menu marks visible is shown, so trimming the row is done
+ * where the menu is.
  *
  * On a phone the row becomes a drawer, because seven top-level categories do
  * not fit across 412px and a header that scrolls sideways is a header nobody
  * can use.
  */
+
+/**
+ * Top-level entries this header never shows.
+ *
+ * Matched on the url as well as the label, so renaming "Brands" in the menu
+ * builder does not quietly put it back, and lowercased because both are an
+ * operator's free text.
+ */
+const HIDDEN = ["search", "home", "brands"];
+const isHidden = (item) =>
+  HIDDEN.includes(String(item?.url ?? "").toLowerCase()) ||
+  HIDDEN.includes(String(item?.name ?? "").toLowerCase());
 
 /** The menu, filtered the way the menu builder says. */
 function useMenuLinks() {
@@ -30,7 +45,7 @@ function useMenuLinks() {
   return useMemo(
     () =>
       (menu ?? [])
-        .filter(({ name }) => !["Search", "Home"].includes(name))
+        .filter((item) => !isHidden(item))
         .filter(isNavVisible)
         .map((item) => ({ ...item, children: (item.children || []).filter(isNavVisible) })),
     [menu],

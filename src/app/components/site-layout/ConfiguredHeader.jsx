@@ -57,8 +57,11 @@ export default function ConfiguredHeader({ header, logo }) {
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
-        {/* Top row: mark, search, contact. */}
-        <div className="flex items-center gap-3 py-3 sm:gap-5">
+        {/* Top row: mark, search, contact. justify-between because below lg
+            the field is not there to fill the middle, and without it the
+            controls bunch against the logo with the row's width to their
+            right. */}
+        <div className="flex items-center justify-between gap-3 py-3 sm:gap-5">
           <Link href="/" className="shrink-0" aria-label={`${STORE_NAME} home`}>
             {logo ? (
               <span className="relative block h-12 w-[92px] sm:h-14 sm:w-[110px]">
@@ -71,9 +74,9 @@ export default function ConfiguredHeader({ header, logo }) {
             )}
           </Link>
 
-          {/* The field takes the room that is left, and on a phone that is all
-              of it — which is why the phone number drops away below sm. */}
-          <div className="flex min-w-0 flex-1 justify-center">
+          {/* Desktop only. Below lg the field moves to a row of its own; see
+              the note on that row. */}
+          <div className="hidden min-w-0 flex-1 justify-center lg:flex">
             <HeaderSearch placeholder={content.searchPlaceholder} />
           </div>
 
@@ -97,6 +100,18 @@ export default function ConfiguredHeader({ header, logo }) {
             <HeaderCartButton icon={content.cartIcon} />
             <HeaderMenu />
           </div>
+        </div>
+
+        {/* The search, on screens that cannot spare the width above.
+            Sharing the top row left the field about 150px on a 412px phone —
+            logo, account, basket and the menu button are all fixed-width, and
+            the field was the only thing that could give. The brand navbars have
+            always put it on a row of its own below lg; this now does the same,
+            which is also why the field is a second instance rather than one
+            moved by CSS. SearchBox renders no ids, and the default navbar has
+            shipped two of it for as long as it has existed. */}
+        <div className="flex justify-center pb-3 lg:hidden">
+          <HeaderSearch placeholder={content.searchPlaceholder} />
         </div>
       </div>
 
