@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { readOrDegrade } from "@/app/lib/upstream";
-import { redis } from "@/app/lib/redis";
+import { keys, redis } from "@/app/lib/redis";
 import { exclude_brands, exclude_collections } from "@/app/lib/helpers";
 
 /**
@@ -152,3 +152,127 @@ export const isExcludedBrand = (item, excludedBrands = []) =>
  */
 export const isExcludedProductBrand = (brand, excludedBrands = []) =>
   Boolean(brand) && excludedBrands.includes(String(brand).trim());
+
+/**
+ * The menu, for working out which search terms belong to an excluded brand.
+ *
+ * Its own cached read rather than the one in /[slug], so the two API routes
+ * that need it do not have to import a page. Same "nav-menu" tag, so a menu
+ * edit busts both.
+ */
+const readMenuForExclusions = unstable_cache(
+  async () => {
+    const stored = await redis.get(keys.dev_shopify_menu.value);
+    const menu = typeof stored === "string" ? JSON.parse(stored) : stored;
+    return Array.isArray(menu) ? menu : [];
+  },
+  ["exclusions-menu"],
+  { revalidate: 86400, tags: ["nav-menu"] },
+);
+
+const normalizeTerm = (value) =>
+  String(value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+
+/**
+ * A test for whether a search term belongs to an excluded brand.
+ *
+ * The popular-searches list is free text people typed, so the exact-name rule
+ * used everywhere else does not reach it: excluding "Bull Outdoor Products"
+ * has to catch "bull storage", "bull open box" and plain "bull", none of which
+ * contain the brand's name.
+ *
+ * Two rules, and the second is the one that needs care:
+ *
+ *   the brand's full name, anywhere in the term
+ *   the brand's first word, at the start of the term — but only when nothing
+ *   we still sell begins with that word
+ *
+ * That condition is what makes the prefix rule safe, and it is derived from the
+ * menu rather than assumed. Measured on 13 October 2026: "bull", "sole" and
+ * "cedar" begin no menu entry outside their own excluded subtree, so they are
+ * usable; "american" begins nine — American Outdoor Grill, American Fyre
+ * Designs and their collections — so excluding "American Fire Glass" falls back
+ * to full-name matching and leaves searches for the others alone. A hardcoded
+ * list of prefixes would have got that wrong, and would get it wrong again the
+ * first time two brands share a first word.
+ *
+ * Names inside an excluded brand's own subtree are not counted as collisions —
+ * "Bull Grills" must not be what stops "bull" being usable.
+ */
+export function buildExcludedTermTest(menu = [], excludedBrands = []) {
+  if (!Array.isArray(menu) || excludedBrands.length === 0) return () => false;
+
+  const names = new Set();
+  for (const brand of excludedBrands) {
+    const name = normalizeTerm(brand);
+    if (name) names.add(name);
+  }
+
+  // Menu names split by whether they sit inside an excluded brand's subtree.
+  const stillSold = new Set();
+  const withdrawn = new Set();
+  const collect = (items = [], within = false) => {
+    for (const item of items) {
+      const inside = within || isExcludedBrand(item, excludedBrands);
+      const name = normalizeTerm(item?.name);
+      if (name) (inside ? withdrawn : stillSold).add(name);
+      if (inside) {
+        const origin = normalizeTerm(item?.origin_name);
+        if (origin) names.add(origin);
+      }
+      collect(item?.children, inside);
+    }
+  };
+  collect(menu);
+
+  const prefixes = new Set();
+  for (const brand of excludedBrands) {
+    const first = normalizeTerm(brand).split(" ")[0];
+    // Two characters is not a brand, it is a coincidence waiting to happen.
+    if (!first || first.length < 3) continue;
+
+    // Nothing we still sell may begin with it.
+    const collides = [...stillSold].some(
+      (name) => name === first || name.startsWith(`${first} `),
+    );
+    if (collides) continue;
+
+    // And the catalogue must show the word standing for the brand on its own:
+    // at least one collection inside the brand's subtree has to begin with it.
+    // Without this the rule reads a brand's first word as its property whether
+    // or not the shop ever uses it that way — "Cedar Creek Fireplaces" has no
+    // collections at all, so "cedar" would have swallowed "cedar plank", an
+    // ordinary grilling search with nothing to do with the brand.
+    const standsAlone = [...withdrawn].some((name) => name.startsWith(`${first} `));
+    if (standsAlone) prefixes.add(first);
+  }
+
+  return (term) => {
+    const value = normalizeTerm(term);
+    if (!value) return false;
+    for (const name of names) if (name && value.includes(name)) return true;
+    for (const prefix of prefixes) {
+      if (value === prefix || value.startsWith(`${prefix} `)) return true;
+    }
+    return false;
+  };
+}
+
+/**
+ * The same test, reading the menu and the exclusion list for you.
+ *
+ * Degrades to "nothing is excluded" rather than throwing: a search box that
+ * shows one brand too many is a smaller failure than one that shows nothing.
+ */
+export async function getExcludedTermTest() {
+  try {
+    const [menu, { brands }] = await Promise.all([
+      readMenuForExclusions(),
+      getCatalogExclusions(),
+    ]);
+    return buildExcludedTermTest(menu, brands);
+  } catch (error) {
+    console.error("catalog-exclusions: term test unavailable:", error?.message || error);
+    return () => false;
+  }
+}

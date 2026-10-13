@@ -1,5 +1,6 @@
 import { redis } from "../../app/lib/redis";
 import { withRateLimit } from "@/app/lib/rate-limit";
+import { getExcludedTermTest } from "@/app/lib/catalog-exclusions";
 
 /**
  * Records that someone searched for a term.
@@ -48,6 +49,19 @@ async function handler(req, res) {
     // Deliberately vague, and a 400 rather than a 422: the exact rule is of no
     // use to the storefront and of some use to anyone probing it.
     return res.status(400).json({ error: "term is not a valid search" });
+  }
+
+  // A search for an excluded brand is not recorded. The read side filters
+  // these out anyway, so this changes nothing a visitor sees — what it stops is
+  // the scores climbing all the while a brand is hidden, so that re-including
+  // it does not promote the brand straight to the top of the suggestions on the
+  // strength of searches nobody was ever shown a result for.
+  //
+  // Answers 200, not an error. The caller is the search box recording what
+  // someone typed; whether we keep it is our business, not a failure of theirs.
+  const isExcludedTerm = await getExcludedTermTest();
+  if (isExcludedTerm(term)) {
+    return res.status(200).json({ message: "Search term ignored", term });
   }
 
   await redis.zincrby("popular:searches", 1, term.toLowerCase());
