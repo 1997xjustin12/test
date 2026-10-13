@@ -93,3 +93,62 @@ export async function saveCatalogExclusions({ brands, collections } = {}) {
   await redis.set(CATALOG_EXCLUSIONS_KEY, record);
   return record;
 }
+
+/**
+ * Every menu url that belongs to an excluded brand — its own page, and
+ * everything beneath it.
+ *
+ * Excluding a brand removed its links but left its pages reachable: /sole-gourmet
+ * and its six sub-collections each answered 200 with a heading, no products and
+ * no noindex, and the sub-collections were still in sitemap.xml. Found on 13
+ * October 2026 on all three storefronts, so not a deployment quirk — the
+ * navigation was filtered and the router was not.
+ *
+ * Matching happens at the brand node and the subtree is taken whole, rather
+ * than testing each descendant. That is the only way it can work: the children
+ * are named "Sole Gourmet Grills", "Sole Gourmet Storage" and so on, and the
+ * exclusion list holds "Sole Gourmet". A name test on each node matches the
+ * parent and misses every child — which is exactly what the sitemap walk did.
+ *
+ * Still an exact match on the brand itself, for the reason it always was: a
+ * looser one would take "American Fyre Designs" down with "American Fire Glass".
+ */
+export function excludedMenuUrls(menu = [], excludedBrands = []) {
+  const urls = new Set();
+  if (!Array.isArray(menu) || excludedBrands.length === 0) return urls;
+
+  const takeSubtree = (items = []) => {
+    for (const item of items) {
+      const url = typeof item?.url === "string" ? item.url.trim() : "";
+      if (url) urls.add(url);
+      takeSubtree(item?.children);
+    }
+  };
+
+  const walk = (items = []) => {
+    for (const item of items) {
+      if (isExcludedBrand(item, excludedBrands)) {
+        takeSubtree([item]);
+        continue;
+      }
+      walk(item?.children);
+    }
+  };
+
+  walk(menu);
+  return urls;
+}
+
+/** Whether a menu node is one of the excluded brands. */
+export const isExcludedBrand = (item, excludedBrands = []) =>
+  excludedBrands.includes(item?.origin_name) || excludedBrands.includes(item?.name);
+
+/**
+ * Whether a product belongs to an excluded brand.
+ *
+ * Separate from hiding a menu entry, which deliberately leaves products on sale
+ * — see the note in /[slug]. An exclusion says the brand is out of the
+ * catalogue, so its products go with it.
+ */
+export const isExcludedProductBrand = (brand, excludedBrands = []) =>
+  Boolean(brand) && excludedBrands.includes(String(brand).trim());

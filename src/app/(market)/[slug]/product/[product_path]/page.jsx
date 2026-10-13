@@ -7,6 +7,10 @@ export const revalidate = 86400;
 import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { notFound } from "next/navigation";
+import {
+  getCatalogExclusions,
+  isExcludedProductBrand,
+} from "@/app/lib/catalog-exclusions";
 import RatingStyles from "@/app/components/atom/RatingStyles";
 import { BASE_URL, ES_INDEX, ISBBQ, ISOKO, createSlug } from "@/app/lib/helpers";
 import { getMenuPageUrls } from "@/app/lib/menu-pages";
@@ -196,6 +200,21 @@ export default async function ProductPage({ params }) {
   if (!product || !product_id) {
     notFound();
   }
+
+  // A product of an excluded brand is not for sale.
+  //
+  // Deliberately different from the menu-visibility rule one level up, which
+  // leaves products selling at their own URLs: hiding a menu entry is a
+  // navigation decision, while excluding a brand says it is out of the
+  // catalogue. Leaving these reachable meant the brand was hidden from every
+  // listing and still bought from a link or a search result.
+  //
+  // Degrades open, not closed. A failed read of the exclusion list returns the
+  // built-in defaults rather than throwing, so the worst case is a product that
+  // should have been hidden staying up for a moment — never a catalogue that
+  // 404s itself because Redis blinked.
+  const { brands: excludedBrands } = await getCatalogExclusions();
+  if (isExcludedProductBrand(product?.brand, excludedBrands)) notFound();
 
   // A brand only has a page if the menu has one. OutdoorKitchenOutlet does not,
   // so its products linked to /outdoorkitchenoutlet — the stray 404 the

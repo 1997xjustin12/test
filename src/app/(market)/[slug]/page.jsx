@@ -20,7 +20,7 @@ import {
   ISOKO,
   isNavVisible,
 } from "@/app/lib/helpers";
-import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
+import { excludedMenuUrls, getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { fetchCollectionsCount } from "@/app/lib/fn_server";
 import { internalHeaders } from "@/app/lib/rate-limit";
 
@@ -175,12 +175,24 @@ function ListingJsonLd({ json }) {
 export async function generateStaticParams() {
   const menuData = await getMenuData();
   const flatData = flattenNav(menuData);
+  const { brands } = await getCatalogExclusions();
+  const excluded = excludedMenuUrls(menuData, brands);
+
   return flatData
     .filter((item) => item.url)
     // No point prebuilding a page that answers 404. Not a security boundary —
     // dynamicParams is on, so an un-hidden item renders on demand and is picked
     // up by the next build rather than staying missing.
     .filter(isNavVisible)
+    // Same rule for a brand excluded catalogue-wide, and for the same reason —
+    // but here it is load-bearing rather than an optimisation. A prebuilt 404
+    // cannot be re-rendered on demand: Next answers the revalidation with
+    // "couldn't be rendered statically because it used headers" and serves 500,
+    // permanently, until the next deploy. So re-including a brand would have
+    // left its pages broken rather than restored. Measured 13 Oct 2026: with
+    // the page prebuilt, un-excluding gave 500 on every attempt; left out of
+    // the build, it renders on demand and comes straight back.
+    .filter((item) => !excluded.has(item.url))
     .map((item) => ({ slug: item.url }));
 }
 
@@ -194,6 +206,10 @@ export async function generateMetadata({ params }) {
   // — metadata for a page that does not exist is what puts it in a search
   // result that then dead-ends.
   if (!pageData || !isNavVisible(pageData)) return {};
+
+  // An excluded brand 404s below, so it gets no title or description either.
+  const { brands } = await getCatalogExclusions();
+  if (excludedMenuUrls(menuData, brands).has(slug)) return {};
 
   return {
     // Pagination, sorting and filters live in the query string and are applied
@@ -247,6 +263,20 @@ export default async function GenericCategoryPage({ params }) {
   // menu entry is a navigation decision and must not silently unpublish the
   // catalogue underneath it.
   if (!isNavVisible(rawPageData)) return notFound();
+
+  // An excluded brand has no pages either — nor do its sub-collections.
+  //
+  // Excluding one used to remove its links and leave the pages behind:
+  // /sole-gourmet and its six sub-collections each answered 200 with a heading,
+  // a filter sidebar and no products, which reads as a broken storefront rather
+  // than a deliberate removal, and stayed indexable. The guard above catches a
+  // brand hidden in the menu builder; this one catches a brand excluded
+  // catalogue-wide, which is a different switch in a different screen.
+  //
+  // Unlike the menu-visibility case, this takes the products with it — see
+  // isExcludedProductBrand. Hiding a menu entry is a navigation decision;
+  // excluding a brand is a statement about the catalogue.
+  if (excludedMenuUrls(menuData, excludedBrands).has(url)) return notFound();
 
   // Filtered once here rather than in each theme's BasePlp, so the three
   // storefronts cannot drift on which brands they list.

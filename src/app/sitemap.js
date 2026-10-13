@@ -133,10 +133,17 @@ async function fetchMenuPages(excludedBrands = []) {
     const pages = new Map();
     const walk = (items = [], depth = 0) => {
       for (const item of items) {
-        const excluded =
-          excludedBrands.includes(item?.name) || excludedBrands.includes(item?.origin_name);
+        // An excluded brand takes its whole subtree with it, rather than every
+        // node being tested on its own. Testing each one matched the brand
+        // "Sole Gourmet" and missed all six of its children — "Sole Gourmet
+        // Grills", "Sole Gourmet Storage" and the rest — so the brand was
+        // correctly dropped while six empty pages under it went on being
+        // submitted to Google.
+        if (excludedBrands.includes(item?.name) || excludedBrands.includes(item?.origin_name)) {
+          continue;
+        }
         const url = typeof item?.url === "string" ? item.url.trim() : "";
-        if (url && !/[/:?#\s]/.test(url) && isNavVisible(item) && !excluded && !pages.has(url)) {
+        if (url && !/[/:?#\s]/.test(url) && isNavVisible(item) && !pages.has(url)) {
           pages.set(url, depth);
         }
         walk(item?.children, depth + 1);
