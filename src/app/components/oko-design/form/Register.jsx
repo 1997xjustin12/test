@@ -7,6 +7,7 @@ import { BASE_URL } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { isValidPassword } from "@/app/lib/helpers";
 import { STORE_NAME2 } from "@/app/lib/store_constants";
+import { registrationErrorMessage } from "@/app/lib/auth-errors";
 
 const inputClass =
   "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
@@ -139,36 +140,13 @@ function RegisterForm() {
       setMessage({ type: "success", text: "Registration successful!" });
       window.location.href = "/login?success=1";
     } else {
-      // Handle field-specific errors (e.g., {email: ["This field must be unique."]})
-      let errorMessage = "Registration failed.";
-
-      if (data?.email) {
-        const emailError = Array.isArray(data.email)
-          ? data.email[0]
-          : data.email;
-        if (emailError.toLowerCase().includes("unique")) {
-          errorMessage = "Email is already been used, please try another.";
-        } else {
-          errorMessage = emailError;
-        }
-      } else if (data?.username) {
-        const usernameError = Array.isArray(data.username)
-          ? data.username[0]
-          : data.username;
-        if (usernameError.toLowerCase().includes("unique")) {
-          errorMessage = "Username is already taken, please choose another.";
-        } else {
-          errorMessage = usernameError;
-        }
-      } else if (data?.error) {
-        errorMessage = data.error;
-      } else if (data?.title) {
-        errorMessage = data.title;
-      }
-
+      // Whatever the backend said, said back to the shopper. This used to
+      // recognise two fields and answer "Registration failed." to everything
+      // else — including "This password is too common.", which is the one
+      // message that would have told them what to change.
       setMessage({
         type: "error",
-        text: errorMessage,
+        text: registrationErrorMessage(data, res.status),
       });
     }
   };
