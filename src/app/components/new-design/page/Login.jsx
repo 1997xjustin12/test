@@ -5,8 +5,15 @@ import FormCard from "@/app/components/new-design/form/FormCard.jsx";
 import LoginForm from "@/app/components/new-design/form/Login";
 import RegisterForm from "@/app/components/new-design/form/Register";
 
-export default function LoginPage() {
-  const [tab, setTab] = useState("login");
+/**
+ * Sign in and register, side by side on a desktop and as two tabs on a phone.
+ *
+ * `initialTab` exists so /register can open on the register panel. Both panels
+ * render on a desktop either way; the tab only decides which one a phone shows
+ * first.
+ */
+export default function LoginPage({ initialTab = "login" }) {
+  const [tab, setTab] = useState(initialTab === "register" ? "register" : "login");
   const isLogin = tab === "login";
 
   return (

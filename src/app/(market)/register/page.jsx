@@ -1,147 +1,31 @@
-"use client";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
+import NewLoginPage from "@/app/components/new-design/page/Login";
+import BBQLoginPage from "@/app/components/bbq-design/page/Login";
+import OKOLoginPage from "@/app/components/oko-design/page/Login";
+import { pageMetadata } from "@/app/lib/page-seo";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useUserSession } from "@/app/context/session";
+/**
+ * Create an account.
+ *
+ * This used to be a form of its own — unstyled, outside every brand's design,
+ * and the only registration form in the app that did not send a reCAPTCHA
+ * token. /api/register has required one since 25 November 2025, so every
+ * attempt through this page answered "reCAPTCHA token is required" and nobody
+ * could register here for about eleven months.
+ *
+ * Rather than teach a second form about reCAPTCHA, the route now renders the
+ * same screen as /login, opened on its register panel. One registration form
+ * per brand, which is already the one the My Account button leads to — so a
+ * fix to it cannot miss this page again, and this page cannot drift out of the
+ * brand's design again.
+ *
+ * The URL is kept rather than redirected: it is linked and may be indexed, and
+ * a 200 on the right screen is better than a hop.
+ */
+export const generateMetadata = () => pageMetadata("/register");
 
-export default function RegisterPage() {
-  const { userSession, loadingSession } = useUserSession();
-  const [message, setMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [form, setForm] = useState({
-    email: "",
-    username: "",
-    first_name: "",
-    last_name: "",
-    password: "",
-    password2: "",
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (form?.password.length < 7) {
-      e.preventDefault();
-      
-      setMessage({
-        type: "error",
-        text: "Password must be at least 7 characters long.",
-      });
-      return;
-    }
-
-    if (form?.password !== form?.password2) {
-      e.preventDefault();
-      setMessage({
-        type: "error",
-        text: "Passwords do not match",
-      });
-      return;
-    }
-
-    setLoading(true);
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (res.ok) {
-      setMessage({ type: "success", text: "✅ Registration successful!" });
-      window.location.href = "/login?success=1";
-    } else {
-      setMessage({
-        type: "error",
-        text: data?.error || data?.title || "❌ Registration failed.",
-      });
-    }
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Create an Account
-        </h2>
-
-        {message && (
-          <p
-            className={`text-sm mb-4 text-center font-medium ${
-              message.type === "error" ? "text-red-600" : "text-green-600"
-            }`}
-          >
-            {message.text}
-          </p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="first_name"
-            placeholder="First Name"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            name="last_name"
-            placeholder="Last Name"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            name="username"
-            placeholder="Username"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            name="password2"
-            type="password"
-            placeholder="Confirm Password"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 px-4 text-white rounded-lg transition-all ${
-              loading
-                ? "bg-blue-300 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+export default function page() {
+  if (ISOKO) return <OKOLoginPage initialTab="register" />;
+  if (ISBBQ) return <BBQLoginPage initialTab="register" />;
+  return <NewLoginPage initialTab="register" />;
 }

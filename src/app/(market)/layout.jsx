@@ -9,6 +9,7 @@ import { QuickViewProvider } from "@/app/context/quickview";
 import { SearchProvider } from "@/app/context/search";
 import { CategoriesProvider } from "@/app/context/category";
 import { StoreSettingsProvider } from "@/app/context/store-settings";
+import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 import { getStoreSettings } from "@/app/lib/store-settings";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { CompareProductsProvider } from "@/app/context/compare_product";
@@ -245,6 +246,20 @@ export default async function MarketLayout({ children }) {
       <body
         className={`antialiased ${bodyClass}`}
       >
+        {/* reCAPTCHA has to be here, not only in the checkout layout.
+            Registration lives at /login and /register, which are market routes,
+            and this provider was mounted only in (checkout) — so on every
+            storefront page the Google script was never loaded and
+            useGoogleReCaptcha() returned a null executeRecaptcha. It fails
+            soft, by design, so there was no crash and no console error: the
+            register form simply stopped at its own guard and sent nothing.
+            Nobody could create an account on any of the three brands.
+
+            Loading is deferred to browser idle inside the provider, so this
+            costs the storefront nothing until something asks for a token. */}
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        >
         <StoreSettingsProvider settings={storeSettings}>
           <AuthProvider>
           <CategoriesProvider
@@ -333,6 +348,7 @@ export default async function MarketLayout({ children }) {
           </CategoriesProvider>
           </AuthProvider>
         </StoreSettingsProvider>
+        </GoogleReCaptchaProvider>
       </body>
     </html>
   );
