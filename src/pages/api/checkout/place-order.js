@@ -1,23 +1,21 @@
-import { braintreeGateway } from "@/app/lib/braintree";
 import { checkoutMessage, getCheckoutState } from "@/app/lib/checkout-availability";
-import { ES_INDEX } from "@/app/lib/helpers";
 import { placeOrder } from "@/app/lib/checkout/place-order";
 
 /**
  * POST /api/checkout/place-order
  *
- * The only way the storefront takes a card payment. Re-prices the cart, holds
- * the payment, creates the order, then captures — see
- * lib/checkout/place-order.js for the sequence and why.
+ * Creates the order as unpaid and returns the link to pay for it on the
+ * payment app — see lib/checkout/place-order.js for the sequence and why.
  *
- * Body: { nonce, recaptchaToken, expectedTotal, customer, items: [{ product_id, quantity, product_link }] }
+ * Body: { recaptchaToken, customer, items: [{ product_id, quantity }] }
  * Header: Authorization: Bearer <access token>, when the shopper is logged in
  *
- * Replaces /api/braintree_checkout, which charged whatever amount the browser sent.
+ * → { success: true, order_number, payment_link, total_price }
+ * → { success: false, code, error, errors? }   errors: the backend's messages
  */
 
-// reCAPTCHA, Elasticsearch, two backend calls and up to two Braintree calls,
-// in sequence. The default limit leaves too little room if the backend is slow.
+// reCAPTCHA and one backend call, in sequence. The default limit leaves too
+// little room if the backend is slow.
 export const config = { maxDuration: 60 };
 
 const TIMEOUT_MS = 20_000;
@@ -43,39 +41,20 @@ async function verifyRecaptcha(token) {
   }
 }
 
-async function lookupPrices(productIds) {
-  const response = await fetch(`${process.env.NEXT_ES_URL}/${ES_INDEX}/_search`, {
-    method: "POST",
-    headers: {
-      Authorization: `apiKey ${process.env.NEXT_ES_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      size: productIds.length,
-      _source: ["product_id", "variants.price"],
-      query: { terms: { product_id: productIds } },
-    }),
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
-  if (!response.ok) throw new Error(`Elasticsearch responded ${response.status}`);
-
-  const data = await response.json();
-  return new Map(
-    (data?.hits?.hits || []).map(({ _source }) => [
-      String(_source.product_id),
-      Number(_source.variants?.[0]?.price),
-    ]),
-  );
-}
-
-const backendCaller = (authorization) => async (path, payload, { auth }) => {
+/**
+ * X-Store-Domain is what tells the shared backend which brand the order
+ * belongs to — Solana, BBQ or OKO — and so which store's payment settings
+ * issue the link. Each brand's deployment sets its own NEXT_PUBLIC_STORE_DOMAIN.
+ */
+const backendCaller = (storeDomain, authorization) => async (path, payload) => {
   try {
     const response = await fetch(`${process.env.NEXT_SOLANA_BACKEND_URL}${path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-        ...(auth && authorization ? { Authorization: authorization } : {}),
+        Accept: "application/json",
+        "X-Store-Domain": storeDomain,
+        ...(authorization ? { Authorization: authorization } : {}),
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -88,37 +67,14 @@ const backendCaller = (authorization) => async (path, payload, { auth }) => {
   }
 };
 
-/** Braintree calls normalised to { success, transaction, message }, never throwing. */
-const braintreeCall = async (request) => {
-  try {
-    const result = await request();
-    return { success: Boolean(result?.success), transaction: result?.transaction, message: result?.message };
-  } catch (error) {
-    return { success: false, message: error?.message || String(error) };
-  }
-};
-
-const payments = {
-  authorize: ({ amount, nonce }) =>
-    braintreeCall(() =>
-      braintreeGateway().transaction.sale({
-        amount,
-        paymentMethodNonce: nonce,
-        options: { submitForSettlement: false },
-      }),
-    ),
-  capture: (transactionId) => braintreeCall(() => braintreeGateway().transaction.submitForSettlement(transactionId)),
-  void: (transactionId) => braintreeCall(() => braintreeGateway().transaction.void(transactionId)),
-};
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ success: false, error: "Method Not Allowed" });
   }
 
-  // The last gate, and the one that matters: no order is created and no card
-  // is touched while the checkout is closed, whatever reached this route.
+  // The last gate, and the one that matters: no order is created while the
+  // checkout is closed, whatever reached this route.
   const checkout = await getCheckoutState();
   if (checkout.closed) {
     return res
@@ -126,16 +82,26 @@ export default async function handler(req, res) {
       .json({ success: false, error: checkoutMessage(checkout), checkoutClosed: true });
   }
 
-  // Only a bearer token is forwarded, and only to order creation.
+  // Without it the backend cannot tell which brand is ordering. Refuse rather
+  // than create an order filed under no store, or the wrong one.
+  const storeDomain = process.env.NEXT_PUBLIC_STORE_DOMAIN?.trim();
+  if (!storeDomain) {
+    console.error("[place-order] NEXT_PUBLIC_STORE_DOMAIN is not set for this deployment");
+    return res.status(503).json({
+      success: false,
+      code: "STORE_NOT_CONFIGURED",
+      error: "We couldn't place your order right now. Please contact us to complete your order.",
+    });
+  }
+
+  // Only a bearer token is forwarded: a logged-in shopper's order is theirs.
   const header = req.headers.authorization;
   const authorization = typeof header === "string" && header.startsWith("Bearer ") ? header : null;
 
   const { status, body } = await placeOrder(req.body, {
     verifyRecaptcha,
-    lookupPrices,
-    backend: backendCaller(authorization),
-    payments,
-    storeDomain: process.env.NEXT_PUBLIC_STORE_DOMAIN,
+    backend: backendCaller(storeDomain, authorization),
+    storeDomain,
     log: console,
   });
 

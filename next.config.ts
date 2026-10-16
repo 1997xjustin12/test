@@ -77,17 +77,12 @@ const connectDomains = [
   "https://api.iconify.design",
   "https://tag.trovo-tag.com",
   "https://api.zippopotam.us",
-  "https://payments.sandbox.braintree-api.com",
-  "https://gateway-sand.sandbox.braintree-api.com",
-  "https://origin-analytics-sand.sandbox.braintree-api.com",
-  "https://assets.braintreegateway.com",
-  "https://www.paypal.com",
   "https://www.google.com", // reCAPTCHA
   "https://www.gstatic.com", // reCAPTCHA
   "https://elasticsearch.solanabbqgrills.com", // ES
 ];
 
-const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohocdn.com"];
+const styleSrcDomains = ["https://*.zohocdn.com"];
 
 // Origins allowed to embed this app in an iframe.
 //
@@ -101,8 +96,8 @@ const styleSrcDomains = ["https://assets.braintreegateway.com", "https://*.zohoc
 // reopens it to 'self' plus those origins, should an embedding integration
 // ever come back.
 //
-// Note this constrains who may frame *us*. Embedding others — Braintree's
-// payment fields, brand videos — is frame-src, which is untouched.
+// Note this constrains who may frame *us*. Embedding others — reCAPTCHA,
+// brand videos — is frame-src, which is untouched.
 const adminFrameAncestors = (process.env._NEXT_ADMIN_FRAME_ANCESTORS || "")
   .split(/\s+/)
   .filter(Boolean);
@@ -112,7 +107,6 @@ const framingAllowed = adminFrameAncestors.length > 0;
 
 const frameSrcDomains = [
   "https://tag.trovo-tag.com",
-  "https://assets.braintreegateway.com",
   "https://www.google.com", // reCAPTCHA
   "https://www.gstatic.com", // reCAPTCHA frames
   "https://*.zoho.com", // Zoho SalesIQ widget iframe

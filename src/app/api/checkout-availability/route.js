@@ -38,7 +38,6 @@ export async function PUT(request) {
   const checkout = await saveCheckoutState(body);
   revalidateTag(CHECKOUT_TAG);
   revalidatePath("/checkout");
-  revalidatePath("/checkout-old");
 
   return NextResponse.json({ checkout, defaultMessage: DEFAULT_MESSAGE });
 }

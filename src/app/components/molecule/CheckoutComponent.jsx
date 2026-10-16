@@ -1,7 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
-import dropin from "braintree-web-drop-in";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
@@ -9,7 +7,6 @@ import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
 import { useGoogleReCaptcha } from "@/app/context/recaptcha";
 import {
-  BASE_URL,
   mapOrderItems,
   formatPrice,
   createSlug,
@@ -21,9 +18,11 @@ import {
 } from "@/app/lib/store_constants";
 import { lookupPostalCode } from "@/app/lib/postal-code";
 
+// No card is taken on this page. Placing the order creates it on the backend
+// as unpaid, and the shopper is sent to the payment app with the order's
+// payment link to pay there. See lib/checkout/place-order.js.
 const initialForm = {
   status: null,
-  payment_method: "braintree",
   payment_status: false,
   billing_first_name: "",
   billing_last_name: "",
@@ -257,15 +256,14 @@ const FormLoader = () => (
 function CheckoutComponent() {
   const [cartTotal, setCartTotal] = useState({});
   const { clearCartItems, fetchOrderTotal, loadCart, cartObject, cartItems } = useCart();
-  const dropinContainer = useRef(null);
-  const [instance, setInstance] = useState(null);
   const [formError, setFormError] = useState(null);
+  // Set when an order was created but came back without a payment link.
+  const [placedOrder, setPlacedOrder] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [forage, setForage] = useState(null);
   const { isLoggedIn, user, loading, updateProfile, accessToken } = useAuth();
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const router = useRouter();
 
   const getOrderTotal = async (newForm) => {
     const items = mapOrderItems(newForm?.items);
@@ -300,8 +298,9 @@ function CheckoutComponent() {
       ...toSave
     } = form;
 
+    // Returned so the caller can wait for it before leaving the page.
     if (isLoggedIn) {
-      updateProfile({
+      return updateProfile({
         ...user,
         profile: {
           phone: toSave?.shipping_phone,
@@ -317,9 +316,8 @@ function CheckoutComponent() {
           shipping_zip: toSave?.shipping_zip_code,
         },
       });
-    } else {
-      forage.setItem("checkout_info", toSave);
     }
+    return forage.setItem("checkout_info", toSave);
   };
 
   const shippingAsBilling = (condition, newForm) => ({
@@ -461,27 +459,12 @@ function CheckoutComponent() {
       return;
     }
 
-    if (!instance) {
-      setFormError("Payment UI is not initialized. Please refresh the page.");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      const { nonce } = await instance.requestPaymentMethod();
-      if (!nonce) {
-        console.error("[Checkout] No nonce received from Braintree.");
-        setFormError("Payment method error. Please try again.");
-        setIsSubmitting(false);
-        return;
-      }
-
       const customer = { ...form };
       delete customer.items;
 
-      // One request does the rest on the server: re-price the cart, hold the
-      // payment, create the order, capture. No amount is sent — expectedTotal
-      // only lets the server refuse to charge a total the shopper wasn't shown.
+      // The server creates the order as unpaid and returns its payment link.
+      // No price or total is sent: the backend works those out itself.
       const response = await fetch("/api/checkout/place-order", {
         method: "POST",
         headers: {
@@ -489,15 +472,9 @@ function CheckoutComponent() {
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         body: JSON.stringify({
-          nonce,
           recaptchaToken,
-          expectedTotal: Number(cartTotal?.total_price || 0),
           customer,
-          items: cartItems.map(({ product_id, quantity, product_link }) => ({
-            product_id,
-            quantity,
-            product_link,
-          })),
+          items: cartItems.map(({ product_id, quantity }) => ({ product_id, quantity })),
         }),
       });
 
@@ -505,51 +482,36 @@ function CheckoutComponent() {
 
       if (!response.ok || !result?.success) {
         console.error("[Checkout] Order not placed:", result);
-
-        if (result?.code === "TOTAL_CHANGED" && result.totals) {
-          setCartTotal((prev) => ({ ...result.totals, allowPay: prev?.allowPay }));
-          setFormError(
-            `Your order total is now $${formatPrice(result.totals.total_price)}. Your card has not been charged — please review your order and press Complete Payment again.`
-          );
-        } else {
-          setFormError(result?.error || "Payment failed. Please try again.");
-        }
-
-        // The server already used this card nonce; Braintree won't accept it twice.
-        if (result?.nonceUsed) instance.clearSelectedPaymentMethod();
+        // The backend's own messages, one per problem, when it gave any.
+        setFormError(
+          result?.errors?.length
+            ? result.errors
+            : result?.error || "We couldn't place your order. Please try again."
+        );
         setIsSubmitting(false);
         return;
       }
 
-      const orderSummary = {
-        orderId: result.order_number || null,
-        transactionId: result.transaction_id || null,
-        email: form?.shipping_email || "",
-        firstName: form?.shipping_first_name || "",
-        lastName: form?.shipping_last_name || "",
-        items: cartItems.map((item) => ({
-          title: item.title,
-          quantity: item.quantity,
-          price: item?.variants?.[0]?.price,
-          image: item.images?.find((img) => img.position === 1)?.src || null,
-        })),
-        cartTotal: { ...cartTotal, ...result.totals },
-        shipping: {
-          name: `${form.shipping_first_name} ${form.shipping_last_name}`.trim(),
-          address: form.shipping_address,
-          city: form.shipping_city,
-          state: form.shipping_province,
-          zip: form.shipping_zip_code,
-          country: form.shipping_country,
-        },
-        isLoggedIn,
-      };
-      sessionStorage.setItem("order_summary", JSON.stringify(orderSummary));
-      instance.teardown();
-      setInstance(null);
-      clearCartItems();
-      saveInformation(form?.save_information);
-      router.push(`${BASE_URL}/payment_success`);
+      // The order exists from here on, whether or not there is a link to pay
+      // it, so the cart is emptied — on every brand, guest or signed in.
+      // Awaited: the redirect below unloads the page, which would cancel a
+      // signed-in shopper's cart-close request or a guest's storage write
+      // part-way and leave the ordered items sitting in the cart. Neither may
+      // stop the shopper reaching payment, so a failure is logged, not shown.
+      const [cleared, saved] = await Promise.allSettled([
+        clearCartItems(),
+        saveInformation(form?.save_information),
+      ]);
+      if (cleared.status === "rejected") console.error("[Checkout] Cart not cleared:", cleared.reason);
+      if (saved.status === "rejected") console.error("[Checkout] Details not saved:", saved.reason);
+
+      if (result.payment_link) {
+        window.location.assign(result.payment_link);
+        return;
+      }
+
+      setPlacedOrder({ orderNumber: result.order_number || null });
+      setIsSubmitting(false);
     } catch (error) {
       console.error("[Checkout] Unexpected error:", error);
       setFormError("An unexpected error occurred. Please try again.");
@@ -605,50 +567,6 @@ function CheckoutComponent() {
 
     loadCart();
   }, [loading, forage, isLoggedIn, user]);
-
-  useEffect(() => {
-    async function initializeDropIn() {
-      if (loading || !dropinContainer.current) return;
-
-      try {
-        const res = await fetch("/api/braintree_token");
-        const data = await res.json();
-
-        if (!data.clientToken) {
-          console.error("[Checkout] Braintree client token not received.");
-          setFormError("Payment system unavailable. Please refresh the page or try again later.");
-          return;
-        }
-
-        if (instance) {
-          await instance.teardown();
-          setInstance(null);
-        }
-
-        const dropinInstance = await dropin.create({
-          authorization: data.clientToken,
-          container: dropinContainer.current,
-          vaultManager: false,
-          card: {
-            cardholderName: { required: true },
-            overrides: {
-              fields: {
-                number: { placeholder: "4111 1111 1111 1111" },
-                cvv: { required: true, placeholder: "123" },
-                expirationDate: { placeholder: "MM/YY" },
-              },
-            },
-          },
-        });
-
-        setInstance(dropinInstance);
-      } catch (error) {
-        console.log("[BRAINTREEINIT] ERROR", error);
-      }
-    }
-
-    initializeDropIn();
-  }, [loading]);
 
   const ref_number = useMemo(() => {
     if (loading) return null;
@@ -767,9 +685,9 @@ function CheckoutComponent() {
                   <p className="text-xs font-bold text-charcoal dark:text-white uppercase tracking-wider mb-4">
                     Payment
                   </p>
-                  <div className="rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 min-h-[330px]">
-                    <div ref={dropinContainer} />
-                  </div>
+                  <p className="rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-4 py-4 text-sm text-stone-600 dark:text-stone-300">
+                    After you place your order, we&apos;ll take you to our secure payment page to complete payment.
+                  </p>
                 </div>
 
                 {/* Billing Address */}
@@ -811,16 +729,32 @@ function CheckoutComponent() {
 
                 {/* Submit */}
                 {formError && (
-                  <div className="flex items-start gap-2.5 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3">
+                  <div role="alert" className="flex items-start gap-2.5 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3">
                     <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                     </svg>
-                    <p className="text-xs text-red-600 dark:text-red-400 font-medium">{formError}</p>
+                    {Array.isArray(formError) ? (
+                      <ul className="flex flex-col gap-1 text-xs text-red-600 dark:text-red-400 font-medium">
+                        {formError.map((message, index) => (
+                          <li key={index}>{message}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-xs text-red-600 dark:text-red-400 font-medium">{formError}</p>
+                    )}
+                  </div>
+                )}
+                {placedOrder && (
+                  <div role="status" className="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 px-4 py-3 text-xs text-green-700 dark:text-green-400 font-medium">
+                    Your order{placedOrder.orderNumber ? ` #${placedOrder.orderNumber}` : ""} has been placed,
+                    but we couldn&apos;t open the payment page. Please contact us to complete payment
+                    {STORE_CONTACT && <> — call <a href={`tel:${STORE_CONTACT}`} className="underline">{STORE_CONTACT}</a></>}
+                    {STORE_EMAIL && <> or email <a href={`mailto:${STORE_EMAIL}`} className="underline">{STORE_EMAIL}</a></>}.
                   </div>
                 )}
                 <button
                   type="submit"
-                  disabled={!cartItems?.length || isSubmitting}
+                  disabled={!cartItems?.length || isSubmitting || Boolean(placedOrder)}
                   className="w-full py-3.5 bg-fire hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                   {isSubmitting && (
@@ -829,8 +763,14 @@ function CheckoutComponent() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                     </svg>
                   )}
-                  {isSubmitting ? "Processing…" : "Complete Payment"}
+                  {isSubmitting ? "Placing order…" : "Place Order"}
                 </button>
+                <p className="flex items-center justify-center gap-1.5 text-center text-xs text-stone-500 dark:text-stone-400">
+                  <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  Once your order is placed, you will be redirected to our secure payment page to complete your purchase.
+                </p>
               </form>
             )}
           </div>
@@ -852,11 +792,6 @@ function CheckoutComponent() {
         </div>
 
       </div>
-
-      <style jsx>{`
-        :global(.braintree-placeholder) { display: none !important; }
-        :global(.braintree-sheet__container.braintree-sheet--active) { margin: 0px; }
-      `}</style>
     </div>
   );
 }

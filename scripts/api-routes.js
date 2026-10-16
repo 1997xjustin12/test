@@ -89,7 +89,6 @@ const open = [
   "/api/add_popular_searches",
   "/api/auth/forgot-password",
   "/api/blogs/[[...slug]]",
-  "/api/braintree_token",
   "/api/catalog/product/[handle]",
   "/api/catalog/search",
   "/api/chat",
@@ -133,7 +132,6 @@ const open = [
  * 8 October 2026 rather than excused.
  */
 const UNTHROTTLED = {
-  "/api/braintree_token": "Issues a client token. Will be retired with Braintree.",
   "/api/collections/collection-list": "Cached Redis read of the menu. Cheap, and the same data the page already ships.",
   "/api/collections/collection-products/[id]": "Cached Redis read. Same as above.",
   "/api/favicon": "Serves a cached icon.",

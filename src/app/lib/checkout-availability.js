@@ -6,11 +6,11 @@ import { readOrDegrade } from "@/app/lib/upstream";
 /**
  * Whether this brand is taking orders.
  *
- * Braintree is configured against a sandbox and is going to be replaced, so a
- * completed checkout captures nothing. Rather than delete the checkout — which
- * would mean unpicking a flow that works and rebuilding it for the next
- * gateway — it is closed behind a switch. Every component, route and API stays
- * exactly where it is; the door is shut in front of them.
+ * Braintree has been removed and no payment provider replaces it yet, so the
+ * checkout cannot take a payment. Rather than delete the checkout — the
+ * shipping form, re-pricing and order creation all carry over to the next
+ * provider — it can be closed behind a switch, so shoppers see a message
+ * instead of a form they cannot finish.
  *
  * One record per brand (solana_checkout, bbq_checkout, oko_checkout), so the
  * three can be closed and reopened independently.

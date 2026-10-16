@@ -1,37 +1,38 @@
 /**
- * Placing a card order, on the server, in an order that cannot leave a
- * customer charged without an order.
+ * Placing an order, on the server.
  *
  *   1. validate the request
  *   2. verify reCAPTCHA
- *   3. price every item from the catalogue — never from the request
- *   4. ask the backend for the total, and refuse if it differs from the total
- *      the shopper was shown
- *   5. AUTHORIZE the card for that total (a hold, not a charge)
- *   6. create the order
- *   7. CAPTURE the payment — or, if the order could not be created, VOID the
- *      authorization so the customer is never charged
+ *   3. create the order on the backend as UNPAID
+ *   4. hand back the order's payment link — the shopper pays there, on our
+ *      payment app, not on this site
  *
  * WHAT THIS REPLACED
  *
- * The browser called /api/braintree_checkout with an `amount` it computed
- * itself, and that route charged it as sent: an edited request could pay $1
- * for a $1,000 order. The sale also settled immediately, and only then did the
- * browser create the order — so if order creation failed, the customer had
- * paid for an order that did not exist.
+ * Braintree: the card was authorized here, the order created as "paid", then
+ * the payment captured. With Braintree gone the storefront takes no payment at
+ * all. It creates the order and the payment app collects the money against it,
+ * so nothing here can leave a customer charged without an order.
  *
- * WHY THE BACKEND TOTAL CAN BE TRUSTED
+ * WHAT THE BACKEND DECIDES
  *
- * POST /api/orders/get-total prices each product from the backend's own
- * records. Checked against the live backend: an item sent at $1.00 instead of
- * $522 came back with the same $522 subtotal, an item with no price at all
- * too, and an unknown product_id was rejected.
+ * Prices and totals. Item price and total are read-only on the order
+ * serializer — the backend resolves them from its own records — so the request
+ * carries only product_id and quantity, and nothing the browser sends can
+ * change what is owed.
+ *
+ * The payment link. The backend issues one for card and ACH orders on a store
+ * that has payment settings, which is why every order is sent as "card". It
+ * can still come back null; the order exists either way, so that is reported
+ * as an order placed without a link, not as a failure.
+ *
+ * Status is a choice field and the match is exact: "unpaid" is accepted,
+ * "Unpaid" is refused as "not a valid choice". Checked against the live backend.
  *
  * PURE ON PURPOSE
  *
- * No imports. Every outside call — reCAPTCHA, Elasticsearch, the backend,
- * Braintree — is passed in as `deps`, so each failure path above can be tested
- * without charging a card or creating an order.
+ * No imports. reCAPTCHA and the backend are passed in as `deps`, so each
+ * failure path can be tested without creating an order.
  */
 
 const ADDRESS_PARTS = [
@@ -48,8 +49,8 @@ const ADDRESS_PARTS = [
 
 /**
  * The customer fields forwarded to the backend — the checkout form's own
- * fields, as the browser sent them before. Anything else in the request is
- * dropped, so a client cannot set status, payment_details or store_domain.
+ * fields. Anything else in the request is dropped, so a client cannot set
+ * status, payment_method, payment_status or store_domain.
  */
 export const CUSTOMER_FIELDS = [
   ...["billing", "shipping"].flatMap((side) => ADDRESS_PARTS.map((part) => `${side}_${part}`)),
@@ -64,11 +65,9 @@ export const CUSTOMER_FIELDS = [
 export const MAX_ITEMS = 100;
 export const MAX_QUANTITY = 999;
 
-// Half a cent: the totals are two-decimal numbers, so anything larger is a real
-// change, not floating-point noise.
-const TOTAL_TOLERANCE = 0.005;
-
-const NOT_CHARGED = "Your card has not been charged.";
+/** What every order is created as. Lowercase on purpose; see above. */
+export const ORDER_STATUS = "unpaid";
+export const PAYMENT_METHOD = "card";
 
 const fail = (status, code, error, extra = {}) => ({
   status,
@@ -77,15 +76,11 @@ const fail = (status, code, error, extra = {}) => ({
 
 /** Returns { value } with only the fields placeOrder uses, or { error }. */
 export function parseCheckoutRequest(body) {
-  const { nonce, recaptchaToken, expectedTotal, customer, items } = body || {};
+  const { recaptchaToken, customer, items } = body || {};
 
-  if (typeof nonce !== "string" || !nonce) return { error: "Payment details are missing." };
   if (typeof recaptchaToken !== "string" || !recaptchaToken) {
     return { error: "reCAPTCHA token is required." };
   }
-
-  const expected = Number(expectedTotal);
-  if (!Number.isFinite(expected) || expected <= 0) return { error: "Order total is missing." };
 
   if (!customer || typeof customer !== "object" || Array.isArray(customer)) {
     return { error: "Customer details are missing." };
@@ -99,52 +94,92 @@ export function parseCheckoutRequest(body) {
 
   const cleanItems = [];
   for (const item of items) {
-    const productId = item?.product_id;
-    const validId =
-      (typeof productId === "number" && Number.isFinite(productId)) ||
-      (typeof productId === "string" && productId.trim() !== "");
-    if (!validId) return { error: "An item in your cart is invalid." };
+    // The backend takes an integer id; a numeric string from the cart is fine.
+    const productId = Number(item?.product_id);
+    if (!Number.isInteger(productId) || productId < 1) {
+      return { error: "An item in your cart is invalid." };
+    }
 
     const quantity = Number(item?.quantity);
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
       return { error: "An item in your cart has an invalid quantity." };
     }
 
-    cleanItems.push({
-      product_id: productId,
-      quantity,
-      product_link: typeof item.product_link === "string" ? item.product_link : "",
-    });
+    cleanItems.push({ product_id: productId, quantity });
   }
 
   const cleanCustomer = Object.fromEntries(
     CUSTOMER_FIELDS.filter((field) => field in customer).map((field) => [field, customer[field]]),
   );
 
-  return {
-    value: {
-      nonce,
-      recaptchaToken,
-      expectedTotal: expected,
-      customer: cleanCustomer,
-      items: cleanItems,
-    },
-  };
+  return { value: { recaptchaToken, customer: cleanCustomer, items: cleanItems } };
+}
+
+/** "shipping_zip_code" → "Shipping zip code", "billing_province" → "Billing state". */
+const fieldLabel = (field) => {
+  const words = String(field).replace(/_province$/, "_state").split("_").filter(Boolean);
+  const text = words.join(" ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+const asList = (value) => (Array.isArray(value) ? value : [value]);
+
+/**
+ * Django REST error bodies, flattened into sentences a shopper can act on.
+ *
+ *   { "detail": "…" }                                → ["…"]
+ *   { "shipping_phone": ["This field is required."] } → ["Shipping phone: This field is required."]
+ *   { "items": [{}, { "product_id": ["…"] }] }        → ["Item 2 — Product id: …"]
+ *
+ * Unrecognised shapes give [] and the caller falls back to a general message.
+ */
+export function backendErrorMessages(data) {
+  if (!data) return [];
+  if (typeof data === "string") return data.trim() ? [data.trim()] : [];
+  if (Array.isArray(data)) return data.flatMap(backendErrorMessages);
+  if (typeof data !== "object") return [];
+
+  const messages = [];
+  for (const [field, value] of Object.entries(data)) {
+    if (["detail", "error", "message", "non_field_errors"].includes(field)) {
+      messages.push(...asList(value).flatMap(backendErrorMessages));
+    } else if (field === "items" && Array.isArray(value) && value.some((v) => v && typeof v === "object")) {
+      value.forEach((itemErrors, index) => {
+        for (const message of backendErrorMessages(itemErrors)) {
+          messages.push(`Item ${index + 1} — ${message}`);
+        }
+      });
+    } else {
+      for (const message of asList(value).flatMap(backendErrorMessages)) {
+        messages.push(`${fieldLabel(field)}: ${message}`);
+      }
+    }
+  }
+  return messages;
 }
 
 /** The created order's number, whichever way the backend wraps it. */
 const orderNumberOf = (order) =>
   order?.order_number ?? order?.data?.order_number ?? order?.order?.order_number ?? null;
 
+/** The payment link, or null if there is none or it is not a web address. */
+const paymentLinkOf = (order) => {
+  const link = order?.payment_link ?? order?.data?.payment_link ?? order?.order?.payment_link ?? null;
+  if (typeof link !== "string") return null;
+  try {
+    // The browser is sent here, so nothing but https — never javascript: or data:.
+    return new URL(link).protocol === "https:" ? link : null;
+  } catch {
+    return null;
+  }
+};
+
 /**
  * @param body  the parsed JSON request body
  * @param deps  {
  *   verifyRecaptcha(token)            → error message, or null when it passes
- *   lookupPrices(productIds)          → Map<String(product_id), number>
- *   backend(path, payload, { auth })  → { ok, status, data } — never throws
- *   payments.authorize({ amount, nonce }) / capture(id) / void(id)
- *                                     → { success, transaction?, message? } — never throw
- *   storeDomain
+ *   backend(path, payload)            → { ok, status, data } — never throws
+ *   storeDomain                       → this brand's domain, also sent as X-Store-Domain
  *   log                               → { error(...), warn(...) }
  * }
  * @returns { status, body } for the route to send
@@ -152,130 +187,53 @@ const orderNumberOf = (order) =>
 export async function placeOrder(body, deps) {
   const parsed = parseCheckoutRequest(body);
   if (parsed.error) return fail(400, "INVALID_REQUEST", parsed.error);
-  const { nonce, recaptchaToken, expectedTotal, customer, items } = parsed.value;
+  const { recaptchaToken, customer, items } = parsed.value;
 
   const recaptchaError = await deps.verifyRecaptcha(recaptchaToken);
   if (recaptchaError) return fail(400, "RECAPTCHA_FAILED", recaptchaError);
 
-  // ── Price every item from the catalogue ───────────────────────────────────
-  let prices;
-  try {
-    prices = await deps.lookupPrices(items.map((item) => item.product_id));
-  } catch (error) {
-    deps.log.error("[place-order] price lookup failed", error?.message || error);
-    return fail(503, "PRICING_UNAVAILABLE", `We couldn't confirm prices right now. ${NOT_CHARGED} Please try again.`);
-  }
-
-  const unavailable = items.filter((item) => !Number.isFinite(prices.get(String(item.product_id))));
-  if (unavailable.length > 0) {
-    return fail(409, "ITEM_UNAVAILABLE", `An item in your cart is no longer available. ${NOT_CHARGED}`, {
-      product_ids: unavailable.map((item) => item.product_id),
-    });
-  }
-
-  const orderItems = items.map(({ product_id, quantity, product_link }) => {
-    const price = prices.get(String(product_id));
-    return { product_id, product_link, price, quantity, total: Number((price * quantity).toFixed(2)) };
+  const response = await deps.backend("/api/orders/checkout", {
+    ...customer,
+    status: ORDER_STATUS,
+    payment_status: false,
+    payment_method: PAYMENT_METHOD,
+    store_domain: deps.storeDomain,
+    items,
   });
 
-  // ── The amount to charge comes from the backend ───────────────────────────
-  // Sent without the shopper's token, exactly as the checkout page asks for
-  // the total it displays. A logged-in customer's token could change the result
-  // (points), and then the two would never agree.
-  const totalsResponse = await deps.backend("/api/orders/get-total", { ...customer, items: orderItems }, { auth: false });
-  const totals = totalsResponse.ok ? totalsResponse.data : null;
-  const amount = Number(totals?.total_price);
+  if (!response.ok) {
+    const messages = backendErrorMessages(response.data);
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    deps.log.error("[place-order] totals unavailable", { status: totalsResponse.status });
-    return fail(502, "TOTALS_UNAVAILABLE", `We couldn't calculate your total right now. ${NOT_CHARGED} Please try again.`);
-  }
-
-  // Never charge a figure the shopper did not see. A price change between
-  // loading checkout and pressing pay lands here, as does a tampered request.
-  if (Math.abs(amount - expectedTotal) > TOTAL_TOLERANCE) {
-    return fail(409, "TOTAL_CHANGED", `Your order total has changed. ${NOT_CHARGED}`, { totals });
-  }
-
-  // ── Hold the payment ──────────────────────────────────────────────────────
-  const authorization = await deps.payments.authorize({ amount: amount.toFixed(2), nonce });
-  if (!authorization.success || !authorization.transaction?.id) {
-    return fail(
-      402,
-      "PAYMENT_DECLINED",
-      authorization.message || "Your payment was declined. Please check your card details and try again.",
-      // Braintree nonces are single-use: the page must ask for the card again.
-      { nonceUsed: true },
-    );
-  }
-  const transactionId = authorization.transaction.id;
-
-  // ── Create the order ──────────────────────────────────────────────────────
-  const orderResponse = await deps.backend(
-    "/api/orders/checkout",
-    {
-      ...customer,
-      status: "paid",
-      payment_status: true,
-      payment_method: "braintree",
-      payment_details: transactionId,
-      store_domain: deps.storeDomain,
-      items: orderItems,
-    },
-    { auth: true },
-  );
-
-  if (!orderResponse.ok) {
-    // A timeout lands here too, when the backend may in fact have created the
-    // order. Releasing the hold is still the right call: an order without a
-    // capture is fixable by staff, a charge without an order is the customer's
-    // problem. The transaction id in the log is the thread to pull.
-    const released = await deps.payments.void(transactionId);
-    deps.log.error("[place-order] order creation failed; authorization released:", released.success, {
-      status: orderResponse.status,
-      transactionId,
-      voidError: released.success ? undefined : released.message,
-    });
-
-    if (released.success) {
-      return fail(
-        502,
-        "ORDER_FAILED",
-        `We couldn't create your order. ${NOT_CHARGED} Please try again, or contact us if this keeps happening.`,
-        { nonceUsed: true },
-      );
+    // Validation and permission problems are the shopper's to fix, so they see
+    // the backend's own words. Anything else is ours, and gets a general line.
+    if (response.status >= 400 && response.status < 500 && messages.length > 0) {
+      deps.log.warn("[place-order] order refused", { status: response.status, messages });
+      return fail(response.status, "ORDER_REJECTED", messages.join(" "), { errors: messages });
     }
-    return fail(
-      502,
-      "ORDER_FAILED",
-      "We couldn't create your order. Your card was authorized but not charged, and your bank will release the hold. " +
-        `Please contact us and quote reference ${transactionId}.`,
-      { nonceUsed: true, reference: transactionId },
-    );
+
+    deps.log.error("[place-order] order creation failed", {
+      status: response.status,
+      error: response.error,
+      messages,
+    });
+    return fail(502, "ORDER_FAILED", "We couldn't place your order right now. Please try again, or contact us if this keeps happening.");
   }
 
-  const order = orderResponse.data;
+  const order = response.data;
   const orderNumber = orderNumberOf(order);
+  const paymentLink = paymentLinkOf(order);
 
-  // ── Take the payment ──────────────────────────────────────────────────────
-  // The order exists, so the customer is told it succeeded even if capture
-  // fails: the funds are held and staff can capture them in Braintree.
-  const capture = await deps.payments.capture(transactionId);
-  if (!capture.success) {
-    deps.log.error(
-      "[place-order] CAPTURE FAILED — the order exists but the payment is only authorized. Capture it in Braintree.",
-      { orderNumber, transactionId, amount: amount.toFixed(2), message: capture.message },
-    );
+  if (!paymentLink) {
+    deps.log.error("[place-order] order created without a payment link", { orderNumber });
   }
 
   return {
     status: 200,
     body: {
       success: true,
-      order,
       order_number: orderNumber,
-      transaction_id: transactionId,
-      totals,
+      payment_link: paymentLink,
+      total_price: order?.total_price ?? null,
     },
   };
 }
