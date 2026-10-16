@@ -61,7 +61,9 @@ if (FONTS_THEME !== STORE_THEME) {
   );
 }
 
-export const metadata = await generateMetadata();
+// A function, not `metadata = await generateMetadata()`: that ran once per
+// server start, so a favicon changed in admin never showed until a redeploy.
+export { generateMetadata };
 
 // Both cached for 24h under the "layout-data" tag.
 // Bust via GET /api/revalidate-all?secret=... after updating menu, logo, theme, or categories.

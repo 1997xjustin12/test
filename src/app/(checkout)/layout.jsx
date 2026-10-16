@@ -16,7 +16,9 @@ import BBQFooter from "@/app/components/bbq-design/layout/Footer";
 import OKOCheckoutHeader from "@/app/components/oko-design/layout/CheckoutHeader";
 import OKOFooter from "@/app/components/oko-design/layout/Footer";
 
-export const metadata = await generateMetadata();
+// A function, not `metadata = await generateMetadata()`: that ran once per
+// server start, so a favicon changed in admin never showed until a redeploy.
+export { generateMetadata };
 
 export default async function CheckoutLayout({ children }) {
   const [redisLogo, color] = await redis.mget([keys.logo.value, keys.theme.value]);

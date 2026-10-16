@@ -1,4 +1,5 @@
 import { redis, keys } from "@/app/lib/redis";
+import { DEFAULT_FAVICON } from "@/app/metadata";
 const faviconKey = keys.favicon.value;
 
 export default async function handler(req, res) {
@@ -6,8 +7,8 @@ export default async function handler(req, res) {
     const favicon = await redis.get(faviconKey);
 
     if (!favicon) {
-        // return default favicon instead
-      return res.status(200).json("/solana-new-logo-only.webp");
+      // This brand's own default — it used to be Solana's icon on every brand.
+      return res.status(200).json(DEFAULT_FAVICON);
     }
 
     // Check if stored as Base64 or URL

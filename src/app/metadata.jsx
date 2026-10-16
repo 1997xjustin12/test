@@ -1,4 +1,6 @@
-import { BASE_URL, ISBBQ, ISOKO } from "@/app/lib/helpers";
+import { unstable_cache } from "next/cache";
+import { ISBBQ, ISOKO } from "@/app/lib/helpers";
+import { redis, keys } from "@/app/lib/redis";
 import { STORE_NAME } from "@/app/lib/store_constants";
 
 // Default metadata per brand. Grouped per theme rather than chained
@@ -32,31 +34,36 @@ const OKO = {
 
 const BRAND = ISOKO ? OKO : ISBBQ ? BBQ : SOLANA;
 
-export async function generateMetadata() {
-  try {
-    const res = await fetch(`${BASE_URL}/api/favicon`); // Fetch from API
-    const data = await res.json();
-    const faviconUrl = data; // Use default if API fails
+/** This brand's favicon when none is set in admin. Also used by /api/favicon. */
+export const DEFAULT_FAVICON = BRAND.favicon;
 
-    return {
-      title: BRAND.title,
-      description: BRAND.description,
-      icons: {
-        icon: faviconUrl,
-      },
-      other: {
-        "google-site-verification":
-          "h2rOGIJQRMPLIaE7T0hRzFUK313zZjb-QoztYvHW90Q",
-      },
-    };
+// Read straight from this brand's key, cached under "layout-data" so the
+// Favicon & Logo admin can clear it on save. This used to fetch our own
+// /api/favicon over HTTP from a module-level `await` in each layout — run once
+// when the server started, so an admin change never showed until a redeploy,
+// and at build time the request had no server to reach and fell back anyway.
+const getFavicon = unstable_cache(
+  async () => redis.get(keys.favicon.value),
+  ["brand-favicon", keys.favicon.value],
+  { revalidate: 86400, tags: ["layout-data"] },
+);
+
+export async function generateMetadata() {
+  let icon = DEFAULT_FAVICON;
+  try {
+    const saved = await getFavicon();
+    if (typeof saved === "string" && saved) icon = saved;
   } catch (error) {
-    console.error("Failed to fetch favicon, using default:", error);
-    return {
-      title: BRAND.title,
-      description: BRAND.description,
-      icons: {
-        icon: BRAND.favicon, // Default favicon from public/
-      },
-    };
+    console.error("Failed to read favicon, using default:", error);
   }
+
+  return {
+    title: BRAND.title,
+    description: BRAND.description,
+    icons: { icon },
+    other: {
+      "google-site-verification":
+        "h2rOGIJQRMPLIaE7T0hRzFUK313zZjb-QoztYvHW90Q",
+    },
+  };
 }

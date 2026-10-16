@@ -1,14 +1,20 @@
 "use client";
 import { useState } from "react";
-import { keys } from "@/app/lib/redis"
 import NextImage from "next/image";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
 
 const default_favicon = "/favicon.ico";
-const redisKey = keys.favicon.value;
 
-function FaviconUpdater({ favicon }) {
+// The favicon is read through a 24h cache under "layout-data"; this clears it
+// so a change shows on the next page load.
+const refreshStorefront = () =>
+  fetch("/api/revalidate-store-settings", { method: "POST" }).catch(() => {});
+
+// redisKey comes from the server (admin/favicon-and-logo/page.jsx). It used to
+// be built here from keys.favicon, but STORE_ID is empty in the browser, so
+// every brand saved to "_favicon" — a key no storefront reads.
+function FaviconUpdater({ favicon, redisKey }) {
   const [currentFavicon, setCurrentFavicon] = useState(favicon);
   const [faviconInput, setFaviconInput] = useState("");
   const [inputError, setInputError] = useState("");
@@ -85,6 +91,7 @@ function FaviconUpdater({ favicon }) {
 
     const result = await response.json();
     if (result.success) {
+      refreshStorefront();
       showAlertMessage("success", "Favicon successfully updated, Please reload the market page.")
       clear();
       setIsLoading(prev=> false);
@@ -106,6 +113,7 @@ function FaviconUpdater({ favicon }) {
 
     const result = await response.json();
     if (result.success) {
+      refreshStorefront();
       showAlertMessage("success", "Successfully updated to default favicon.")
       clear();
       // console.log('handleUseDefaultFaviconFNSuccess', result);

@@ -4,9 +4,16 @@ import NextImage from "next/image";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
 const default_logo = "/Logo.webp";
-const redisKey = "admin_solana_market_logo";
 
-function LogoUpdater({ logo }) {
+// The store layouts cache the logo for 24h under "layout-data"; this clears it
+// so a change shows on the next page load instead of a day later.
+const refreshStorefront = () =>
+  fetch("/api/revalidate-store-settings", { method: "POST" }).catch(() => {});
+
+// redisKey comes from the server (admin/favicon-and-logo/page.jsx). It was
+// hard-coded to "admin_solana_market_logo", so saving on BBQ or OKO replaced
+// Solana's logo and left the brand's own untouched.
+function LogoUpdater({ logo, redisKey }) {
   const [currentLogo, setCurrentLogo] = useState(logo);
   const [logoInput, setLogoInput] = useState("");
   const [inputError, setInputError] = useState("");
@@ -83,6 +90,7 @@ function LogoUpdater({ logo }) {
 
     const result = await response.json();
     if (result.success) {
+      refreshStorefront();
       showAlertMessage("success", "Logo successfully updated, Please reload the market page.")
       clear();
       setIsLoading(prev=> false);
@@ -104,6 +112,7 @@ function LogoUpdater({ logo }) {
 
     const result = await response.json();
     if (result.success) {
+      refreshStorefront();
       showAlertMessage("success", "Successfully updated to default logo.")
       clear();
       // console.log('handleUseDefaultLogoFNSuccess', result);
