@@ -289,6 +289,28 @@ const config: NextConfig = {
           },
         ],
       },
+      {
+        // The guest order page shows one person's orders and address to
+        // whoever holds the link. Last in this list so its Referrer-Policy
+        // replaces the site-wide one above: nothing on the page — a tracking
+        // link, the payment link — tells the next site where the visitor came
+        // from. Never indexed, never cached by the CDN or the browser.
+        // See docs/reference/guest-order-page.md.
+        source: "/order-status/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
+        source: "/order-status",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
     ];
   },
 };

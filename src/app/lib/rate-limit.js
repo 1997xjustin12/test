@@ -55,6 +55,11 @@ export const LIMITS = {
   // construction. Only failures count, so this can be tight without
   // inconveniencing anyone who knows their password.
   authIdentity: { limit: 5, windowSeconds: 900 },
+  // The guest order page, per IP: the link handler and each page view. A
+  // guest opens their link a few times; a script guessing order uuids needs
+  // astronomically many. The uuid's randomness is what keeps orders safe —
+  // this keeps the attempt from costing the backend a lookup per guess.
+  orderStatus: { limit: 20, windowSeconds: 60 },
 };
 
 /**
