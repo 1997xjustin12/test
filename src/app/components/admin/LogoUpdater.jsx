@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import NextImage from "next/image";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
+import ImagePicker from "@/app/components/admin/ImagePicker";
 const default_logo = "/Logo.webp";
 
 // The store layouts cache the logo for 24h under "layout-data"; this clears it
@@ -13,7 +14,7 @@ const refreshStorefront = () =>
 // redisKey comes from the server (admin/favicon-and-logo/page.jsx). It was
 // hard-coded to "admin_solana_market_logo", so saving on BBQ or OKO replaced
 // Solana's logo and left the brand's own untouched.
-function LogoUpdater({ logo, redisKey }) {
+function LogoUpdater({ logo, redisKey, options = [], brand }) {
   const [currentLogo, setCurrentLogo] = useState(logo);
   const [logoInput, setLogoInput] = useState("");
   const [inputError, setInputError] = useState("");
@@ -66,6 +67,12 @@ function LogoUpdater({ logo, redisKey }) {
         }
       });
     }
+  };
+
+  // A picked file is one of ours in public/logo, so it needs no checking.
+  const handlePick = (src) => {
+    setLogoInput(src);
+    setInputError("");
   };
 
   const getCurrentLogo = () => {
@@ -179,15 +186,27 @@ function LogoUpdater({ logo, redisKey }) {
           . Ensure the image is clear and not stretched for optimal results.
         </div>
         <div className="mt-6">
+          <p className="mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a logo:</p>
+          <ImagePicker
+            options={options}
+            current={currentLogo}
+            selected={logoInput}
+            onSelect={handlePick}
+            brand={brand}
+            folder="logo"
+            wide
+          />
+        </div>
+        <div className="mt-6">
           <label
-            htmlFor="default-input"
+            htmlFor="logo-url"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Image URL:
+            Or paste an image URL:
           </label>
           <input
             type="text"
-            id="default-input"
+            id="logo-url"
             value={logoInput}
             onChange={handleInputChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

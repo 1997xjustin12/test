@@ -3,6 +3,7 @@ import { useState } from "react";
 import NextImage from "next/image";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
+import ImagePicker from "@/app/components/admin/ImagePicker";
 
 const default_favicon = "/favicon.ico";
 
@@ -14,7 +15,7 @@ const refreshStorefront = () =>
 // redisKey comes from the server (admin/favicon-and-logo/page.jsx). It used to
 // be built here from keys.favicon, but STORE_ID is empty in the browser, so
 // every brand saved to "_favicon" — a key no storefront reads.
-function FaviconUpdater({ favicon, redisKey }) {
+function FaviconUpdater({ favicon, redisKey, options = [], brand }) {
   const [currentFavicon, setCurrentFavicon] = useState(favicon);
   const [faviconInput, setFaviconInput] = useState("");
   const [inputError, setInputError] = useState("");
@@ -67,6 +68,12 @@ function FaviconUpdater({ favicon, redisKey }) {
         }
       });
     }
+  };
+
+  // A picked file is one of ours in public/favicon, so it needs no checking.
+  const handlePick = (src) => {
+    setFaviconInput(src);
+    setInputError("");
   };
 
   const getCurrentFavicon = () => {
@@ -180,15 +187,26 @@ function FaviconUpdater({ favicon, redisKey }) {
           . Ensure the image is clear and not stretched for optimal results.
         </div>
         <div className="mt-6">
+          <p className="mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose a favicon:</p>
+          <ImagePicker
+            options={options}
+            current={currentFavicon}
+            selected={faviconInput}
+            onSelect={handlePick}
+            brand={brand}
+            folder="favicon"
+          />
+        </div>
+        <div className="mt-6">
           <label
-            htmlFor="default-input"
+            htmlFor="favicon-url"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Image URL:
+            Or paste an image URL:
           </label>
           <input
             type="text"
-            id="default-input"
+            id="favicon-url"
             value={faviconInput}
             onChange={handleInputChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

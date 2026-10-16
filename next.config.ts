@@ -20,6 +20,22 @@ const brandLogos = (() => {
   }
 })();
 
+// The images the Favicon & Logo admin offers as one-click choices: every image
+// in public/favicon and public/logo, listed at build time for the same reason
+// as brandLogos above — on Vercel, public/ is served from the CDN and is not on
+// the function's filesystem, so the admin page cannot list it at runtime.
+// Dropping a file in either folder and deploying is all it takes to offer it.
+const publicImages = (folder: string) => {
+  try {
+    return readdirSync(path.join(process.cwd(), "public", folder))
+      .filter((file) => /\.(ico|png|webp|svg|jpe?g|gif)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b))
+      .map((file) => `/${folder}/${encodeURIComponent(file)}`);
+  } catch {
+    return [];
+  }
+};
+
 // Which brand's fonts to compile in. next/font preloads every family declared
 // in a module that reaches the page, so the three brands' families sharing one
 // module made every page preload 8 font files (202KB at high priority) for the
@@ -118,6 +134,10 @@ const config: NextConfig = {
   poweredByHeader: false,
   env: {
     NEXT_PUBLIC_BRAND_LOGOS: brandLogos.join(","),
+    // Read by admin/favicon-and-logo/page.jsx. Comma-joined; file names are
+    // URI-encoded, so a comma in one cannot split the list.
+    BRANDING_FAVICON_OPTIONS: publicImages("favicon").join(","),
+    BRANDING_LOGO_OPTIONS: publicImages("logo").join(","),
   },
   turbopack: {
     resolveAlias: {
