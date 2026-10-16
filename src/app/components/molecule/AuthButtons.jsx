@@ -46,7 +46,9 @@ const LoginModal = ({ isOpen, setOpen }) => {
   );
 };
 
-function AuthButtons({ uiVersion = 1 }) {
+// signInClassName / registerClassName restyle uiVersion 1 for a brand's own
+// checkout (see */page/Checkout.jsx); omitted, it looks as it always has.
+function AuthButtons({ uiVersion = 1, signInClassName, registerClassName }) {
   const [openLogin, setOpenLogin] = useState(false);
 
   if (uiVersion === 2) {
@@ -82,7 +84,7 @@ function AuthButtons({ uiVersion = 1 }) {
         <button
           type="button"
           onClick={() => setOpenLogin(true)}
-          className="w-full text-fire border border-fire rounded-xl p-3 text-xs font-semibold"
+          className={signInClassName || "w-full text-fire border border-fire rounded-xl p-3 text-xs font-semibold"}
         >
           Sign In
         </button>
@@ -90,7 +92,7 @@ function AuthButtons({ uiVersion = 1 }) {
           href={`${BASE_URL}/login`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-theme-600 hover:text-theme-700 text-xs font-semibold"
+          className={registerClassName || "text-theme-600 hover:text-theme-700 text-xs font-semibold"}
         >
           No account yet? Register here!
         </Link>
