@@ -1,3 +1,5 @@
+import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
@@ -6,19 +8,14 @@ export default async function handler(req, res) {
   try {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/cart/close`;
 
-    // Read authorization header from the incoming request
-    const authHeader = req.headers.authorization;
     // const body = await req.body;
 
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-        ...(authHeader ? { Authorization: authHeader } : {}),
-      },
+      headers: backendHeaders(req),
       // body: JSON.stringify(body),
     });
+    forwardRetryAfter(response, res);
 
     // Check if response is JSON
     const contentType = response.headers.get("content-type");

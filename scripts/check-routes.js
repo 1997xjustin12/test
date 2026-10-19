@@ -61,7 +61,10 @@ function toUrl(file) {
 const EVIDENCE = {
   admin: /isAuthorizedAdminRequest|getAdminUser/,
   secret: /REVALIDATE_SECRET/,
-  user: /req\.headers\.authorization|req\.headers\[["']authorization["']\]|headers\.get\(["']authorization["']\)/,
+  // backendHeaders(req) with no options forwards the caller's own Bearer token
+  // (lib/backend-headers.js); backendHeaders(req, { bearer: null }) does not,
+  // and so does not count.
+  user: /req\.headers\.authorization|req\.headers\[["']authorization["']\]|headers\.get\(["']authorization["']\)|backendHeaders\(req\)/,
   public: null, // nothing is required; the throttling check covers it
 };
 

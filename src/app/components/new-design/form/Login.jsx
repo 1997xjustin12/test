@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/auth";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
+import { loginErrorMessage } from "@/app/lib/auth-errors";
 
 const inputClass =
   "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
@@ -37,11 +38,11 @@ function LoginForm({ successLogin = null }) {
       body: JSON.stringify(form),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
 
     if (!res.ok) {
-      setError(data?.error || data?.detail || "Login failed. Please try again.");
+      setError(loginErrorMessage(data, res));
       return;
     }
 

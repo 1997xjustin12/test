@@ -81,6 +81,41 @@ const friendlier = (field, sentence) => {
  * reduced to the first, because fixing one and resubmitting only to be told
  * about the next is the slowest way to learn what the form wants.
  */
+/** "45 seconds", "3 minutes" — from a Retry-After header's seconds, or null. */
+function waitFrom(retryAfter) {
+  const seconds = Number.parseInt(retryAfter, 10);
+  if (!Number.isFinite(seconds) || seconds <= 0) return null;
+  if (seconds < 60) return `${seconds} second${seconds === 1 ? "" : "s"}`;
+  const minutes = Math.ceil(seconds / 60);
+  return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+}
+
+/**
+ * What the sign-in form says when /api/login refuses.
+ *
+ * A 429 is a lockout — the backend's (5 wrong passwords in 15 minutes, or 20
+ * in an hour, refused even with the right password) or this storefront's own
+ * limiter — and must never read as "wrong password". The backend explains
+ * itself in `detail`, our limiter in `message`; either way the wait from
+ * Retry-After is added when the message doesn't already give one.
+ *
+ * @param data      the parsed response body
+ * @param response  the fetch Response, for its status and Retry-After
+ */
+export function loginErrorMessage(data, response) {
+  if (response?.status === 429) {
+    const said = data?.detail || data?.message || null;
+    const wait = waitFrom(response.headers?.get?.("retry-after"));
+    if (!said) {
+      return wait
+        ? `Too many sign-in attempts. Try again in ${wait}.`
+        : "Too many sign-in attempts. Please wait a moment and try again.";
+    }
+    return wait && !/\d/.test(said) ? `${said} Try again in ${wait}.` : said;
+  }
+  return data?.error || data?.detail || "Login failed. Please try again.";
+}
+
 export function registrationErrorMessage(data, status) {
   if (typeof data === "string" && data.trim()) return data.trim();
 

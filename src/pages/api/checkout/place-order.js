@@ -1,5 +1,6 @@
 import { checkoutMessage, getCheckoutState } from "@/app/lib/checkout-availability";
 import { placeOrder } from "@/app/lib/checkout/place-order";
+import { backendHeaders } from "@/app/lib/backend-headers";
 
 /**
  * POST /api/checkout/place-order
@@ -46,22 +47,27 @@ async function verifyRecaptcha(token) {
  * belongs to — Solana, BBQ or OKO — and so which store's payment settings
  * issue the link. Each brand's deployment sets its own NEXT_PUBLIC_STORE_DOMAIN.
  */
-const backendCaller = (storeDomain, authorization) => async (path, payload) => {
+//
+// Every call it makes follows the backend's rate-limit rule (lib/backend-
+// headers.js): the shopper's Bearer token when signed in, otherwise the
+// storefront key plus their address — so the 30-a-minute checkout limit counts
+// per shopper rather than for the whole storefront.
+const backendCaller = (req, storeDomain, authorization) => async (path, payload) => {
   try {
     const response = await fetch(`${process.env.NEXT_SOLANA_BACKEND_URL}${path}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        ...backendHeaders(req, { bearer: authorization }),
         Accept: "application/json",
         "X-Store-Domain": storeDomain,
-        ...(authorization ? { Authorization: authorization } : {}),
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     const isJson = (response.headers.get("content-type") || "").includes("application/json");
     const data = isJson ? await response.json() : null;
-    return { ok: response.ok && isJson, status: response.status, data };
+    const retryAfter = response.headers.get("retry-after") || undefined;
+    return { ok: response.ok && isJson, status: response.status, data, retryAfter };
   } catch (error) {
     return { ok: false, status: 0, data: null, error: error?.message || String(error) };
   }
@@ -100,10 +106,11 @@ export default async function handler(req, res) {
 
   const { status, body } = await placeOrder(req.body, {
     verifyRecaptcha,
-    backend: backendCaller(storeDomain, authorization),
+    backend: backendCaller(req, storeDomain, authorization),
     storeDomain,
     log: console,
   });
 
+  if (body?.retryAfter) res.setHeader("Retry-After", String(body.retryAfter));
   return res.status(status).json(body);
 }

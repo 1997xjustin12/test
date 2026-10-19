@@ -1,3 +1,5 @@
+import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
+
 export default async function handler(req, res) {
   // 1. Enforce GET method
   if (req.method !== 'GET') {
@@ -23,11 +25,9 @@ export default async function handler(req, res) {
     const response = await fetch(targetUrl, {
       method: "GET",
       cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-      },
+      headers: backendHeaders(req),
     });
+    forwardRetryAfter(response, res);
 
     // 4. Handle Non-JSON or Error Responses
     const contentType = response.headers.get('content-type');

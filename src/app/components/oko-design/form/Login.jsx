@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/auth";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
+import { loginErrorMessage } from "@/app/lib/auth-errors";
 
 const inputClass =
   "w-full bg-oko-cream-dim dark:bg-oko-night-3 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] px-4 py-3 text-[14px] font-inter text-oko-char dark:text-oko-cream placeholder-oko-stone outline-none focus:border-oko-barn dark:focus:border-oko-barn-light transition-colors";
@@ -38,11 +39,11 @@ function LoginForm({ successLogin = null }) {
       body: JSON.stringify(form),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
 
     if (!res.ok) {
-      setError(data?.error || data?.detail || "Login failed. Please try again.");
+      setError(loginErrorMessage(data, res));
       return;
     }
 

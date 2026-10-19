@@ -204,6 +204,19 @@ export async function placeOrder(body, deps) {
   if (!response.ok) {
     const messages = backendErrorMessages(response.data);
 
+    // The backend's checkout limit (30 a minute per shopper). Said as what it
+    // is, with how long to wait, rather than as a failed order — and never
+    // retried here.
+    if (response.status === 429) {
+      deps.log.warn("[place-order] rate limited", { retryAfter: response.retryAfter });
+      return fail(
+        429,
+        "RATE_LIMITED",
+        messages.length ? messages.join(" ") : "Too many requests, please wait a moment and try again.",
+        response.retryAfter ? { retryAfter: response.retryAfter } : {},
+      );
+    }
+
     // Validation and permission problems are the shopper's to fix, so they see
     // the backend's own words. Anything else is ours, and gets a general line.
     if (response.status >= 400 && response.status < 500 && messages.length > 0) {

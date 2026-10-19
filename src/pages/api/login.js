@@ -1,4 +1,5 @@
 import { withAuthRateLimit } from "@/app/lib/rate-limit";
+import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
 import * as cookie from "cookie";
 import {
   ADMIN_COOKIE,
@@ -22,16 +23,24 @@ async function handler(req, res) {
   try {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/auth/login`;
 
+    // Not signed in yet, so the storefront key and the visitor's address: the
+    // backend's wrong-password lockout counts per visitor + username.
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-      },
+      headers: backendHeaders(req, { bearer: null }),
       body: JSON.stringify({ username, password }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
+
+    // A lockout (5 wrong passwords in 15 minutes, or 20 in an hour) is a 429
+    // that refuses even the right password until the window passes. It goes to
+    // the browser as itself — the backend's message in `detail` plus
+    // Retry-After — not as a 400, which the form would show as a wrong password.
+    if (response.status === 429) {
+      forwardRetryAfter(response, res);
+      return res.status(429).json(data);
+    }
 
     // Return, rather than falling through: without this a rejected login sent a
     // 400 and then tried to send a 200 with a session cookie on top of it.

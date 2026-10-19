@@ -1,4 +1,6 @@
 import { withAuthRateLimit } from "@/app/lib/rate-limit";
+import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
+
 async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -74,12 +76,11 @@ async function handler(req, res) {
 
       const response = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Api-Key ${process.env.NEXT_SOLANA_BACKEND_KEY}`,
-          "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-          Accept: "application/json",
-        },
+        // The storefront key plus the visitor's address. This used to send
+        // NEXT_SOLANA_BACKEND_KEY, which the backend doesn't recognise as a
+        // storefront key — so it would have ignored X-Client-IP. See
+        // lib/backend-headers.js.
+        headers: { ...backendHeaders(req, { bearer: null }), Accept: "application/json" },
         body: JSON.stringify({
           email,
           username,
@@ -90,6 +91,7 @@ async function handler(req, res) {
         }),
       });
 
+      forwardRetryAfter(response, res);
       const data = await response.json();
 
       if (!response.ok) {

@@ -1,3 +1,4 @@
+import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
 import { withRateLimit } from "@/app/lib/rate-limit";
 async function handler(req, res) {
   if (req.method !== "POST") {
@@ -17,12 +18,10 @@ async function handler(req, res) {
 
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Store-Domain": process.env.NEXT_PUBLIC_STORE_DOMAIN,
-      },
+      headers: backendHeaders(req, { bearer: null }),
       body: JSON.stringify(req.body),
     });
+    forwardRetryAfter(response, res);
 
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
