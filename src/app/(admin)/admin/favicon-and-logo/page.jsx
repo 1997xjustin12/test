@@ -14,10 +14,14 @@ import LogoUpdater from "@/app/components/admin/LogoUpdater";
 const options = (list) => (list || "").split(",").filter(Boolean);
 
 async function AdminFaviconLogo() {
-  const [logo, favicon] = await redis.mget([
-    keys.logo.value,
-    keys.favicon.value,
-  ]);
+  // Unreadable (Redis down or out of quota) shows as "nothing saved", so the
+  // page still opens; a save then reports its own failure.
+  const [logo, favicon] = await redis
+    .mget([keys.logo.value, keys.favicon.value])
+    .catch((error) => {
+      console.error("[admin/favicon-and-logo] current values unavailable:", error?.message || error);
+      return [null, null];
+    });
   return (
     <div className="px-2 flex flex-col gap-[20px] container mx-auto pb-10">
       <FavidonUpdater

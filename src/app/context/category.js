@@ -201,7 +201,8 @@ export function CategoriesProvider({ menu_items, categories, children }) {
   };
 
   const solana_categories = useMemo(() => {
-    return menu_items.map((item) => ({ ...item }));
+    // A missing menu is an empty one, not a crash for whatever page this wraps.
+    return (Array.isArray(menu_items) ? menu_items : []).map((item) => ({ ...item }));
   }, [menu_items]);
 
   const flatCategories = useMemo(() => {

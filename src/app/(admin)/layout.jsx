@@ -41,7 +41,17 @@ export default async function AdminLayout({ children }) {
     Boolean(await getAdminUser({ cookies: cookieStore }));
   if (!isAdmin) notFound();
 
-  const menu_items = await getAdminMenu();
+  // The admin must open even when the menu can't be read: every admin page
+  // returned 500 while Upstash was out of quota (the read threw), and against
+  // the new, still-empty Redis server (the read returned null, and
+  // CategoriesProvider mapped it). An empty list renders every screen; the
+  // menu builder shows no items until the menu is there again.
+  const menu_items = await getAdminMenu()
+    .then((menu) => (Array.isArray(menu) ? menu : []))
+    .catch((error) => {
+      console.error("[admin] menu unavailable, rendering without it:", error?.message || error);
+      return [];
+    });
 
   return (
     <html lang="en" suppressHydrationWarning>
