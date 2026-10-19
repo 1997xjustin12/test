@@ -1,0 +1,4427 @@
+[
+  {
+    "id": "kw5dsac1q",
+    "key": "Home",
+    "name": "Home",
+    "url": "",
+    "origin_name": "Home",
+    "nav_type": "custom_page",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": []
+  },
+  {
+    "id": "ljsk31wrt",
+    "key": "Fireplaces",
+    "name": "Fireplaces",
+    "url": "fireplaces",
+    "origin_name": "Fireplaces",
+    "nav_type": "custom_page",
+    "filter_type": "fireplaces",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": [
+      {
+        "id": "yiq2vhnk7",
+        "key": "Gas Fireplaces",
+        "name": "Gas Fireplaces",
+        "url": "gas-fireplaces",
+        "origin_name": "Gas Fireplaces",
+        "nav_type": "custom_page",
+        "filter_type": "gas-fireplaces",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 636,
+          "name": "Gas Fireplaces"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/gas-fireplaces.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "v574fqsp5",
+        "key": "Electric Fireplaces",
+        "name": "Electric Fireplaces",
+        "url": "electric-fireplaces",
+        "origin_name": "Electric Fireplaces",
+        "nav_type": "custom_page",
+        "filter_type": "electric-fireplaces",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 595,
+          "name": "Electric Fireplaces"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/electric-fireplaces.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "q14f1j8l7",
+        "key": "Shop All Fireplaces",
+        "name": "Shop All Fireplaces",
+        "url": "shop-all-fireplaces",
+        "origin_name": "Shop All Fireplaces",
+        "nav_type": "custom_page",
+        "filter_type": "shop-all-fireplaces",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 162,
+          "name": "Shop All Outdoor Fireplaces"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-all-fireplaces.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "5kgpsu2pf",
+    "key": "Patio Heaters",
+    "name": "Patio Heaters",
+    "url": "patio-heaters",
+    "origin_name": "Patio Heaters",
+    "nav_type": "custom_page",
+    "filter_type": "patio-heaters",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": [
+      {
+        "id": "lxldomel0",
+        "key": "Gas Patio Heaters",
+        "name": "Gas Patio Heaters",
+        "url": "gas-patio-heaters",
+        "origin_name": "Gas Patio Heaters",
+        "nav_type": "custom_page",
+        "filter_type": "gas-patio-heaters",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 448,
+          "name": "Gas Patio Heaters"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/gas-patio-heaters.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "96e6xzyjc",
+        "key": "Electric Patio Heaters",
+        "name": "Electric Patio Heaters",
+        "url": "electric-patio-heaters",
+        "origin_name": "Electric Patio Heaters",
+        "nav_type": "custom_page",
+        "filter_type": "electric-patio-heaters",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 350,
+          "name": "Electric Patio Heaters"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/electric-patio-heaters.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "7ljr6gi17",
+        "key": "Freestanding Patio Heaters",
+        "name": "Freestanding Patio Heaters",
+        "url": "freestanding-patio-heaters",
+        "origin_name": "Freestanding Patio Heaters",
+        "nav_type": "custom_page",
+        "filter_type": "patio-heaters",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 453,
+          "name": "Freestanding Gas Patio Heaters"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/freestanding-patio-heaters.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "ap2p30re0",
+        "key": "Shop All Patio Heaters",
+        "name": "Shop All Patio Heaters",
+        "url": "shop-all-patio-heaters",
+        "origin_name": "Shop All Patio Heaters",
+        "nav_type": "custom_page",
+        "filter_type": "patio-heaters",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 348,
+          "name": "Shop All Patio Heaters"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-all-patio-heaters.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "6uvgok9uw",
+    "key": "Built-In Grills",
+    "name": "Built-In Grills",
+    "url": "built-in-grills",
+    "origin_name": "Built-In Grills",
+    "nav_type": "custom_page",
+    "filter_type": "built-in-grills",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "collection_display": {
+      "id": 24,
+      "name": "Shop Built-In Grills"
+    },
+    "children": [
+      {
+        "id": "xeju6cdrt",
+        "key": "Shop AOG Built-In Grills",
+        "name": "Shop AOG Built-In Grills",
+        "url": "shop-aog-built-in-grills",
+        "origin_name": "Shop AOG Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 970,
+          "name": "AOG Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "eo0mnw34v",
+        "key": "Shop Blaze Built-In Grills",
+        "name": "Shop Blaze Built-In Grills",
+        "url": "shop-blaze-built-in-grills",
+        "origin_name": "Shop Blaze Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 954,
+          "name": "Blaze Built-In Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-blaze-built-in-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "9b2cgwcjk",
+        "key": "Shop Bonfire Built-In Grills",
+        "name": "Shop Bonfire Built-In Grills",
+        "url": "shop-bonfire-built-in-grills",
+        "origin_name": "Shop Bonfire Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 971,
+          "name": "Bonfire Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "7xjv1okws",
+        "key": "Shop Broilmaster Built-In Grills",
+        "name": "Shop Broilmaster Built-In Grills",
+        "url": "shop-broilmaster-built-in-grills",
+        "origin_name": "Shop Broilmaster Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 972,
+          "name": "Broilmaster Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "yatc5w18s",
+        "key": "Shop Bull Built-In Grills",
+        "name": "Shop Bull Built-In Grills",
+        "url": "shop-bull-built-in-grills",
+        "origin_name": "Shop Bull Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": false,
+        "collection_display": {
+          "id": 956,
+          "name": "Bull Built-In Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-bull-built-in-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "b688rmvzl",
+        "key": "Shop Delsol Built-In Grills",
+        "name": "Shop Delsol Built-In Grills",
+        "url": "shop-delsol-built-in-grills",
+        "origin_name": "Shop Delsol Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 973,
+          "name": "Delsol Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "q9ggbvvib",
+        "key": "Shop Delta Heat Built-In Grills",
+        "name": "Shop Delta Heat Built-In Grills",
+        "url": "shop-delta-heat-built-in-grills",
+        "origin_name": "Shop Delta Heat Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 974,
+          "name": "Delta Heat Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "1lb8y5r15",
+        "key": "Shop Eloquence Built-In Grills",
+        "name": "Shop Eloquence Built-In Grills",
+        "url": "shop-eloquence-built-in-grills",
+        "origin_name": "Shop Eloquence Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 483,
+          "name": "Eloquence Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-eloquence-built-in-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "347v6vy78",
+        "key": "Shop Fire Magic Built-In Grills",
+        "name": "Shop Fire Magic Built-In Grills",
+        "url": "shop-fire-magic-built-in-grills",
+        "origin_name": "Shop Fire Magic Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 975,
+          "name": "Fire Magic Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "fy2e4dcnr",
+        "key": "Shop Grandeur Built-In Grills",
+        "name": "Shop Grandeur Built-In Grills",
+        "url": "shop-grandeur-built-in-grills",
+        "origin_name": "Shop Grandeur Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 976,
+          "name": "Grandeur Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "jsblrdily",
+        "key": "Shop Le Griddle Built-In Grills",
+        "name": "Shop Le Griddle Built-In Grills",
+        "url": "shop-le-griddle-built-in-grills",
+        "origin_name": "Shop Le Griddle Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 977,
+          "name": "Le Griddle Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "h3masidog",
+        "key": "Shop Lion Premium Built-In Grills",
+        "name": "Shop Lion Premium Built-In Grills",
+        "url": "shop-lion-premium-built-in-grills",
+        "origin_name": "Shop Lion Premium Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 978,
+          "name": "Lion Premium Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "1ae6fir91",
+        "key": "Shop Napoleon Built-In Grills",
+        "name": "Shop Napoleon Built-In Grills",
+        "url": "shop-napoleon-built-in-grills",
+        "origin_name": "Shop Napoleon Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 979,
+          "name": "Napoleon Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "bloql9zz3",
+        "key": "Shop PGS Built-In Grills",
+        "name": "Shop PGS Built-In Grills",
+        "url": "shop-pgs-built-in-grills",
+        "origin_name": "Shop PGS Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 980,
+          "name": "PGS Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "nzz2f3krj",
+        "key": "Shop Premier Design Built-In Grills",
+        "name": "Shop Premier Design Built-In Grills",
+        "url": "shop-premier-design-built-in-grills",
+        "origin_name": "Shop Premier Design Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 981,
+          "name": "Premier Design Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "x7mst1beg",
+        "key": "Shop Primo Ceramic Built-In Grills",
+        "name": "Shop Primo Ceramic Built-In Grills",
+        "url": "shop-primo-ceramic-built-in-grills",
+        "origin_name": "Shop Primo Ceramic Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 982,
+          "name": "Primo Ceramic Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "b6406vswe",
+        "key": "Shop Summerset Professional Built-In Grills",
+        "name": "Shop Summerset Professional Built-In Grills",
+        "url": "shop-summerset-professional-built-in-grills",
+        "origin_name": "Shop Summerset Professional Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 983,
+          "name": "Summerset Professional Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "ec2yyyiyx",
+        "key": "Shop Sunstone Built-In Grills",
+        "name": "Shop Sunstone Built-In Grills",
+        "url": "shop-sunstone-built-in-grills",
+        "origin_name": "Shop Sunstone Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 984,
+          "name": "Sunstone Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "jpnez6jsx",
+        "key": "Shop TEC Built-In Grills",
+        "name": "Shop TEC Built-In Grills",
+        "url": "shop-tec-built-in-grills",
+        "origin_name": "Shop TEC Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 985,
+          "name": "TEC Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "emqybfyzq",
+        "key": "Shop TrueFlame Built-In Grills",
+        "name": "Shop TrueFlame Built-In Grills",
+        "url": "shop-trueflame-built-in-grills",
+        "origin_name": "Shop TrueFlame Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 986,
+          "name": "TrueFlame Built-In Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "5f03semvb",
+        "key": "Shop Twin Eagles Built-In Grills",
+        "name": "Shop Twin Eagles Built-In Grills",
+        "url": "shop-twin-eagles-built-in-grills",
+        "origin_name": "Shop Twin Eagles Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 958,
+          "name": "Twin Eagles Built-In Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-twin-eagles-built-in-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "mkaxyl2b5",
+        "key": "Shop All Built-In Grills",
+        "name": "Shop All Built-In Grills",
+        "url": "shop-all-built-in-grills",
+        "origin_name": "Shop All Built-In Grills",
+        "nav_type": "custom_page",
+        "filter_type": "built-in-grills",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 88,
+          "name": "Shop All Built In Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-all-built-in-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "8ohr6y5oc",
+    "key": "Freestanding Grills",
+    "name": "Freestanding Grills",
+    "url": "freestanding-grills",
+    "origin_name": "Freestanding Grills",
+    "nav_type": "custom_page",
+    "filter_type": "freestanding-grills",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": [
+      {
+        "id": "97gvus8lc",
+        "key": "Shop AOG Freestanding Grills",
+        "name": "Shop AOG Freestanding Grills",
+        "url": "shop-aog-freestanding-grills",
+        "origin_name": "Shop AOG Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 987,
+          "name": "AOG Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "hcnzcpay2",
+        "key": "Shop Blaze Freestanding Grills",
+        "name": "Shop Blaze Freestanding Grills",
+        "url": "shop-blaze-freestanding-grills",
+        "origin_name": "Shop Blaze Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 955,
+          "name": "Blaze Freestanding Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-blaze-freestanding-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "j3t9ipwhp",
+        "key": "Shop Bonfire Freestanding Grills",
+        "name": "Shop Bonfire Freestanding Grills",
+        "url": "shop-bonfire-freestanding-grills",
+        "origin_name": "Shop Bonfire Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 988,
+          "name": "Bonfire Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "6roy8qx5j",
+        "key": "Shop Brand-Man Freestanding Grills",
+        "name": "Shop Brand-Man Freestanding Grills",
+        "url": "shop-brand-man-freestanding-grills",
+        "origin_name": "Shop Brand-Man Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 989,
+          "name": "Brand-Man Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "kqhydabwk",
+        "key": "Shop Broilmaster Freestanding Grills",
+        "name": "Shop Broilmaster Freestanding Grills",
+        "url": "shop-broilmaster-freestanding-grills",
+        "origin_name": "Shop Broilmaster Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 990,
+          "name": "Broilmaster Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "6t1evg64s",
+        "key": "Shop Bull Freestanding Grills",
+        "name": "Shop Bull Freestanding Grills",
+        "url": "shop-bull-freestanding-grills",
+        "origin_name": "Shop Bull Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": false,
+        "collection_display": {
+          "id": 957,
+          "name": "Bull Freestanding Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-bull-freestanding-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "xnxkmiee8",
+        "key": "Shop Delta Heat Freestanding Grills",
+        "name": "Shop Delta Heat Freestanding Grills",
+        "url": "shop-delta-heat-freestanding-grills",
+        "origin_name": "Shop Delta Heat Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 991,
+          "name": "Delta Heat Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "ft8co7d0c",
+        "key": "Shop Le Griddle Freestanding Grills",
+        "name": "Shop Le Griddle Freestanding Grills",
+        "url": "shop-le-griddle-freestanding-grills",
+        "origin_name": "Shop Le Griddle Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 992,
+          "name": "Le Griddle Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "x2nziulcg",
+        "key": "Shop Lion Premium Freestanding Grills",
+        "name": "Shop Lion Premium Freestanding Grills",
+        "url": "shop-lion-premium-freestanding-grills",
+        "origin_name": "Shop Lion Premium Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 993,
+          "name": "Lion Premium Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "msrjytb94",
+        "key": "Shop Napoleon Freestanding Grills",
+        "name": "Shop Napoleon Freestanding Grills",
+        "url": "shop-napoleon-freestanding-grills",
+        "origin_name": "Shop Napoleon Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 994,
+          "name": "Napoleon Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "sldugrdjr",
+        "key": "Shop PGS Freestanding Grills",
+        "name": "Shop PGS Freestanding Grills",
+        "url": "shop-pgs-freestanding-grills",
+        "origin_name": "Shop PGS Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 995,
+          "name": "PGS Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "8ltkfunpl",
+        "key": "Shop Primo Ceramic Freestanding Grills",
+        "name": "Shop Primo Ceramic Freestanding Grills",
+        "url": "shop-primo-ceramic-freestanding-grills",
+        "origin_name": "Shop Primo Ceramic Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 996,
+          "name": "Primo Ceramic Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "julex4t4q",
+        "key": "Shop Renaissance Freestanding Grills",
+        "name": "Shop Renaissance Freestanding Grills",
+        "url": "shop-renaissance-freestanding-grills",
+        "origin_name": "Shop Renaissance Freestanding Grills",
+        "nav_type": "custom_page",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "pa5k9qm0b",
+        "key": "Shop Summerset Professional Freestanding Grills",
+        "name": "Shop Summerset Professional Freestanding Grills",
+        "url": "shop-summerset-professional-freestanding-grills",
+        "origin_name": "Shop Summerset Professional Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 998,
+          "name": "Summerset Professional Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "azmzcyk0r",
+        "key": "Shop TEC Freestanding Grills",
+        "name": "Shop TEC Freestanding Grills",
+        "url": "shop-tec-freestanding-grills",
+        "origin_name": "Shop TEC Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 999,
+          "name": "TEC Freestanding Grills"
+        },
+        "children": []
+      },
+      {
+        "id": "j8wbs51n0",
+        "key": "Shop Twin Eagles Freestanding Grills",
+        "name": "Shop Twin Eagles Freestanding Grills",
+        "url": "shop-twin-eagles-freestanding-grills",
+        "origin_name": "Shop Twin Eagles Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills-x-brands",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 959,
+          "name": "Twin Eagles Freestanding Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-twin-eagles-freestanding-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "zvnxn2g3c",
+        "key": "Shop All Freestanding Grills",
+        "name": "Shop All Freestanding Grills",
+        "url": "shop-all-freestanding-grills",
+        "origin_name": "Shop All Freestanding Grills",
+        "nav_type": "custom_page",
+        "filter_type": "freestanding-grills",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 962,
+          "name": "Shop All Freestanding Grills"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-all-freestanding-grills.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "9r9wr2pw3",
+    "key": "Outdoor Refrigeration",
+    "name": "Outdoor Refrigeration",
+    "url": "outdoor-refrigeration",
+    "origin_name": "Outdoor Refrigeration",
+    "nav_type": "custom_page",
+    "filter_type": "refrigerators",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "collection_display": {
+      "id": 102,
+      "name": "Outdoor Refrigeration"
+    },
+    "children": [
+      {
+        "id": "8doa7cjl2",
+        "key": "Compact Refrigerators",
+        "name": "Compact Refrigerators",
+        "url": "compact-refrigerators",
+        "origin_name": "Compact Refrigerators",
+        "nav_type": "custom_page",
+        "filter_type": "compact-refrigerators",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 968,
+          "name": "Compact Refrigerators"
+        },
+        "children": []
+      },
+      {
+        "id": "8qaa1tsvw",
+        "key": "Outdoor Beverage Fridges",
+        "name": "Outdoor Beverage Fridges",
+        "url": "outdoor-beverage-fridges",
+        "origin_name": "Outdoor Beverage Fridges",
+        "nav_type": "custom_page",
+        "filter_type": "outdoor-beverage-refrigerators",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 969,
+          "name": "Outdoor Beverage Fridges"
+        },
+        "children": []
+      },
+      {
+        "id": "7m8u424kt",
+        "key": "Outdoor Ice Makers",
+        "name": "Outdoor Ice Makers",
+        "url": "outdoor-ice-makers",
+        "origin_name": "Outdoor Ice Makers",
+        "nav_type": "custom_page",
+        "filter_type": "outdoor-ice-makers",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 218,
+          "name": "Ice Makers"
+        },
+        "children": []
+      },
+      {
+        "id": "dgv9excc3",
+        "key": "Outdoor Wine Coolers",
+        "name": "Outdoor Wine Coolers",
+        "url": "outdoor-wine-coolers",
+        "origin_name": "Outdoor Wine Coolers",
+        "nav_type": "custom_page",
+        "filter_type": "outdoor-wine-coolers",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 441,
+          "name": "Wine Coolers"
+        },
+        "children": []
+      },
+      {
+        "id": "61kvqkr1p",
+        "key": "Outdoor Kegerators",
+        "name": "Outdoor Kegerators",
+        "url": "outdoor-kegerators",
+        "origin_name": "Outdoor Kegerators",
+        "nav_type": "custom_page",
+        "filter_type": "outdoor-kegerators",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 128,
+          "name": "Kegerators"
+        },
+        "children": []
+      },
+      {
+        "id": "8scegel91",
+        "key": "Outdoor Compact Freezers",
+        "name": "Outdoor Compact Freezers",
+        "url": "outdoor-compact-freezers",
+        "origin_name": "Outdoor Compact Freezers",
+        "nav_type": "custom_page",
+        "filter_type": "outdoor-compact-freezers",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 875,
+          "name": "Compact Freezers"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "yraox67cx",
+    "key": "Outdoor Storage",
+    "name": "Outdoor Storage",
+    "url": "outdoor-storage",
+    "origin_name": "Outdoor Storage",
+    "nav_type": "custom_page",
+    "filter_type": "storage",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "collection_display": {
+      "id": 44,
+      "name": "Outdoor Kitchen Storage"
+    },
+    "children": [
+      {
+        "id": "bt782nn2o",
+        "key": "Shop All Outdoor Kitchen Storage",
+        "name": "Shop All Outdoor Kitchen Storage",
+        "url": "shop-all-outdoor-kitchen-storage",
+        "origin_name": "Shop All Outdoor Kitchen Storage",
+        "nav_type": "custom_page",
+        "filter_type": "storage",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 44,
+          "name": "Outdoor Kitchen Storage"
+        },
+        "children": []
+      },
+      {
+        "id": "59xgbqjdh",
+        "key": "Access Doors",
+        "name": "Access Doors",
+        "url": "access-doors",
+        "origin_name": "Access Doors",
+        "nav_type": "custom_page",
+        "filter_type": "access-doors",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 56,
+          "name": "Access Doors"
+        },
+        "children": []
+      },
+      {
+        "id": "sg62sxlpf",
+        "key": "Storage Drawers",
+        "name": "Storage Drawers",
+        "url": "storage-drawers",
+        "origin_name": "Storage Drawers",
+        "nav_type": "custom_page",
+        "filter_type": "storage-drawers",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 45,
+          "name": "Storage Drawers"
+        },
+        "children": []
+      },
+      {
+        "id": "st6viom0t",
+        "key": "Door & Drawer Combos",
+        "name": "Door & Drawer Combos",
+        "url": "door-and-drawer-combos",
+        "origin_name": "Door & Drawer Combos",
+        "nav_type": "custom_page",
+        "filter_type": "door-and-drawer-combos",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 55,
+          "name": "Door and Drawer Combos"
+        },
+        "children": []
+      },
+      {
+        "id": "ompro4gjg",
+        "key": "Storage Pantries",
+        "name": "Storage Pantries",
+        "url": "storage-pantries",
+        "origin_name": "Storage Pantries",
+        "nav_type": "custom_page",
+        "filter_type": "storage-pantries",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 335,
+          "name": "Storage Pantries"
+        },
+        "children": []
+      },
+      {
+        "id": "ehj756aav",
+        "key": "Trash Bins",
+        "name": "Trash Bins",
+        "url": "trash-bins",
+        "origin_name": "Trash Bins",
+        "nav_type": "custom_page",
+        "filter_type": "trash-bins",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 46,
+          "name": "Trash Bins"
+        },
+        "children": []
+      },
+      {
+        "id": "cwxv4ruhs",
+        "key": "Ice Bins & Storage",
+        "name": "Ice Bins & Storage",
+        "url": "ice-bins-and-storage",
+        "origin_name": "Ice Bins & Storage",
+        "nav_type": "custom_page",
+        "filter_type": "ice-bins-and-storage",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 105,
+          "name": "Ice Bins and Storage"
+        },
+        "children": []
+      },
+      {
+        "id": "uhmesy6y1",
+        "key": "Propane Tank Bins",
+        "name": "Propane Tank Bins",
+        "url": "propane-tank-bins",
+        "origin_name": "Propane Tank Bins",
+        "nav_type": "custom_page",
+        "filter_type": "propane-tank-bins",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 123,
+          "name": "Propane Tank Bins"
+        },
+        "children": []
+      },
+      {
+        "id": "ffje16umb",
+        "key": "Paper Towel Bins",
+        "name": "Paper Towel Bins",
+        "url": "paper-towel-bins",
+        "origin_name": "Paper Towel Bins",
+        "nav_type": "custom_page",
+        "filter_type": "paper-towel-bins",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 54,
+          "name": "Paper Towel Bins"
+        },
+        "children": []
+      },
+      {
+        "id": "cyqz8r6iv",
+        "key": "Spice Racks",
+        "name": "Spice Racks",
+        "url": "spice-racks",
+        "origin_name": "Spice Racks",
+        "nav_type": "custom_page",
+        "filter_type": "spice-racks",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 929,
+          "name": "Spice Racks"
+        },
+        "children": []
+      },
+      {
+        "id": "rf5xygtu0",
+        "key": "Warming Drawers",
+        "name": "Warming Drawers",
+        "url": "warming-drawers",
+        "origin_name": "Warming Drawers",
+        "nav_type": "custom_page",
+        "filter_type": "warming-drawers",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 258,
+          "name": "Warming Drawers"
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "mo4lmuf8m",
+    "key": "Open Box",
+    "name": "Open Box",
+    "url": "open-box",
+    "origin_name": "Open Box",
+    "nav_type": "custom_page",
+    "filter_type": "open-box",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": [
+      {
+        "id": "9yzd2ila8",
+        "key": "Shop All Open Box",
+        "name": "Shop All Open Box",
+        "url": "shop-all-open-box",
+        "origin_name": "Shop All Open Box",
+        "nav_type": "custom_page",
+        "filter_type": "open-box",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 952,
+          "name": "Shop All Open Box"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/shop-all-open-box.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": [
+          {
+            "id": "6okr1x4tq",
+            "key": "Shop Open Box Grills",
+            "name": "Shop Open Box Grills",
+            "url": "shop-open-box-grills",
+            "origin_name": "Shop Open Box Grills",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 269,
+              "name": "Shop Open Box Grills"
+            },
+            "banner": {
+              "img": {
+                "src": "/images/banner/shop-open-box-grills.webp",
+                "alt": "Banner Image"
+              }
+            },
+            "children": []
+          },
+          {
+            "id": "wxyxmlnmb",
+            "key": "Shop Open Box Storage",
+            "name": "Shop Open Box Storage",
+            "url": "shop-open-box-storage",
+            "origin_name": "Shop Open Box Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 251,
+              "name": "Shop Open Box Storage"
+            },
+            "banner": {
+              "img": {
+                "src": "/images/banner/shop-open-box-storage.webp",
+                "alt": "Banner Image"
+              }
+            },
+            "children": []
+          },
+          {
+            "id": "wyp6gwgzr",
+            "key": "Shop Open Box Accessories",
+            "name": "Shop Open Box Accessories",
+            "url": "shop-open-box-accessories",
+            "origin_name": "Shop Open Box Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 286,
+              "name": "Shop Open Box Accessories"
+            },
+            "banner": {
+              "img": {
+                "src": "/images/banner/shop-open-box-accessories.webp",
+                "alt": "Banner Image"
+              }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "y19t7dhj6",
+        "key": "Close Out Deals",
+        "name": "Close Out Deals",
+        "url": "close-out-deals",
+        "origin_name": "Close Out Deals",
+        "nav_type": "custom_page",
+        "filter_type": "open-box",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 961,
+          "name": "Close Out Deals"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/close-out-deals.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "w69buvjaf",
+        "key": "Package Deals",
+        "name": "Package Deals",
+        "url": "package-deals",
+        "origin_name": "Package Deals",
+        "nav_type": "custom_page",
+        "filter_type": "open-box",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 272,
+          "name": "Package Deals"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/package-deals.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      },
+      {
+        "id": "xunipxexb",
+        "key": "Clearance Sale",
+        "name": "Clearance Sale",
+        "url": "clearance-sale",
+        "origin_name": "Clearance Sale",
+        "nav_type": "custom_page",
+        "filter_type": "open-box",
+        "price_visibility": "hide",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 620,
+          "name": "Clearance Sale"
+        },
+        "banner": {
+          "img": {
+            "src": "/images/banner/clearance-sale.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "0q8yqv5e0",
+    "key": "Current Deals",
+    "name": "Current Deals",
+    "url": "current-deals",
+    "origin_name": "Current Deals",
+    "nav_type": "custom_page",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": []
+  },
+  {
+    "id": "e3gza49s5",
+    "key": "Brands",
+    "name": "Brands",
+    "url": "brands",
+    "origin_name": "Brands",
+    "nav_type": "custom_page",
+    "price_visibility": "hide",
+    "searchable": true,
+    "nav_visibility": true,
+    "children": [
+      {
+        "id": "o85426zus",
+        "key": "Blaze Outdoor Products",
+        "name": "Blaze Outdoor Products",
+        "url": "blaze-outdoor-products",
+        "origin_name": "Blaze Outdoor Products",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "2vwehs4g3",
+            "key": "Blaze Open Box",
+            "name": "Blaze Open Box",
+            "url": "blaze-open-box",
+            "origin_name": "Blaze Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 480,
+              "name": "Blaze Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "cbv3wgsn5",
+            "key": "Blaze Grills",
+            "name": "Blaze Grills",
+            "url": "blaze-grills",
+            "origin_name": "Blaze Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 138,
+              "name": "Blaze Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "2xkdnbc20",
+            "key": "Blaze Side Burners",
+            "name": "Blaze Side Burners",
+            "url": "blaze-side-burners",
+            "origin_name": "Blaze Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 189,
+              "name": "Blaze Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "k9zcujvbc",
+            "key": "Blaze Storage",
+            "name": "Blaze Storage",
+            "url": "blaze-storage",
+            "origin_name": "Blaze Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 178,
+              "name": "Blaze Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "0dnf7hhj7",
+            "key": "Blaze Refrigeration",
+            "name": "Blaze Refrigeration",
+            "url": "blaze-refrigeration",
+            "origin_name": "Blaze Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 167,
+              "name": "Blaze Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "co0pj7le4",
+            "key": "Blaze Accessories",
+            "name": "Blaze Accessories",
+            "url": "blaze-accessories",
+            "origin_name": "Blaze Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 78,
+              "name": "Blaze Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "02p50gy5w",
+            "key": "Blaze Island Packages",
+            "name": "Blaze Island Packages",
+            "url": "blaze-island-packages",
+            "origin_name": "Blaze Island Packages",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 152,
+              "name": "Blaze Island Packages"
+            },
+            "children": []
+          },
+          {
+            "id": "3zgeqyej4",
+            "key": "Blaze Package Deals",
+            "name": "Blaze Package Deals",
+            "url": "blaze-package-deals",
+            "origin_name": "Blaze Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 247,
+              "name": "Blaze Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ysu2jgpcv",
+        "key": "AOG",
+        "name": "AOG",
+        "url": "aog",
+        "origin_name": "AOG",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "xhqg0y01h",
+            "key": "American Outdoor Grill (BBQ Grills)",
+            "name": "American Outdoor Grill (BBQ Grills)",
+            "url": "american-outdoor-grill-bbq-grills",
+            "origin_name": "American Outdoor Grill (BBQ Grills)",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 528,
+              "name": "American Outdoor Grill (BBQ Grills)"
+            },
+            "children": []
+          },
+          {
+            "id": "e6zej4lhz",
+            "key": "American Outdoor Grill Side Burners",
+            "name": "American Outdoor Grill Side Burners",
+            "url": "american-outdoor-grill-side-burners",
+            "origin_name": "American Outdoor Grill Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 538,
+              "name": "American Outdoor Grill Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "b8tjw4dtz",
+            "key": "American Outdoor Grills Accessories",
+            "name": "American Outdoor Grills Accessories",
+            "url": "american-outdoor-grills-accessories",
+            "origin_name": "American Outdoor Grills Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 359,
+              "name": "American Outdoor Grill Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "kbu5p04h7",
+            "key": "AOG Package Deals",
+            "name": "AOG Package Deals",
+            "url": "aog-package-deals",
+            "origin_name": "AOG Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 542,
+              "name": "AOG Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "b5i0sz6y5",
+        "key": "Bonfire",
+        "name": "Bonfire",
+        "url": "bonfire",
+        "origin_name": "Bonfire",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "82vl5vy7p",
+            "key": "Bonfire Open Box",
+            "name": "Bonfire Open Box",
+            "url": "bonfire-open-box",
+            "origin_name": "Bonfire Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 249,
+              "name": "Bonfire Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "kv3dqrkut",
+            "key": "Bonfire Grills",
+            "name": "Bonfire Grills",
+            "url": "bonfire-grills",
+            "origin_name": "Bonfire Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 627,
+              "name": "Bonfire Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "ahoa8laiq",
+            "key": "Bonfire Side Buners",
+            "name": "Bonfire Side Buners",
+            "url": "bonfire-side-buners",
+            "origin_name": "Bonfire Side Buners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 769,
+              "name": "Bonfire Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "87uo17rwp",
+            "key": "Bonfire Storage",
+            "name": "Bonfire Storage",
+            "url": "bonfire-storage",
+            "origin_name": "Bonfire Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 133,
+              "name": "Bonfire Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "o5clxb6m5",
+            "key": "Bonfire Accessories",
+            "name": "Bonfire Accessories",
+            "url": "bonfire-accessories",
+            "origin_name": "Bonfire Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 767,
+              "name": "Bonfire Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "x357mj39d",
+            "key": "Bonfire Package Deals",
+            "name": "Bonfire Package Deals",
+            "url": "bonfire-package-deals",
+            "origin_name": "Bonfire Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 596,
+              "name": "Bonfire Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ko9x9v63c",
+        "key": "Delta Heat",
+        "name": "Delta Heat",
+        "url": "delta-heat",
+        "origin_name": "Delta Heat",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "67h9juq8r",
+            "key": "Delta Heat Open Box",
+            "name": "Delta Heat Open Box",
+            "url": "delta-heat-open-box",
+            "origin_name": "Delta Heat Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 309,
+              "name": "Delta Heat Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "o28xi5cm2",
+            "key": "Delta Heat Grills",
+            "name": "Delta Heat Grills",
+            "url": "delta-heat-grills",
+            "origin_name": "Delta Heat Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 209,
+              "name": "Delta Heat Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "el1n8zkjl",
+            "key": "Delta Heat Side Burners",
+            "name": "Delta Heat Side Burners",
+            "url": "delta-heat-side-burners",
+            "origin_name": "Delta Heat Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 204,
+              "name": "Delta Heat Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "0gjb4ttt5",
+            "key": "Delta Heat Storage",
+            "name": "Delta Heat Storage",
+            "url": "delta-heat-storage",
+            "origin_name": "Delta Heat Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 301,
+              "name": "Delta Heat Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "l1mp8lbz0",
+            "key": "Delta Heat Refrigeration",
+            "name": "Delta Heat Refrigeration",
+            "url": "delta-heat-refrigeration",
+            "origin_name": "Delta Heat Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 299,
+              "name": "Delta Heat Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "4xvbc7w2d",
+            "key": "Delta Heat Accessories",
+            "name": "Delta Heat Accessories",
+            "url": "delta-heat-accessories",
+            "origin_name": "Delta Heat Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 288,
+              "name": "Delta Heat Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "xnusvgp01",
+            "key": "Delta Heat Package Deals",
+            "name": "Delta Heat Package Deals",
+            "url": "delta-heat-package-deals",
+            "origin_name": "Delta Heat Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 311,
+              "name": "Delta Heat Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "d3u9id38k",
+        "key": "Sunstone",
+        "name": "Sunstone",
+        "url": "sunstone",
+        "origin_name": "Sunstone",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "1th9v42xv",
+            "key": "Sunstone Open Box",
+            "name": "Sunstone Open Box",
+            "url": "sunstone-open-box",
+            "origin_name": "Sunstone Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 317,
+              "name": "Sunstone Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "35p8zqjv2",
+            "key": "Sunstone Grills",
+            "name": "Sunstone Grills",
+            "url": "sunstone-grills",
+            "origin_name": "Sunstone Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 362,
+              "name": "Sunstone Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "bvd0y5efi",
+            "key": "Sunstone Side Burners",
+            "name": "Sunstone Side Burners",
+            "url": "sunstone-side-burners",
+            "origin_name": "Sunstone Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 361,
+              "name": "Sunstone Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "3mu7itsd6",
+            "key": "Sunstone Storage",
+            "name": "Sunstone Storage",
+            "url": "sunstone-storage",
+            "origin_name": "Sunstone Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 130,
+              "name": "Sunstone Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "13gc4n3a4",
+            "key": "Sunstone Refrigeration",
+            "name": "Sunstone Refrigeration",
+            "url": "sunstone-refrigeration",
+            "origin_name": "Sunstone Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 469,
+              "name": "Sunstone Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "8bh1s0g3t",
+            "key": "Sunstone Accessories",
+            "name": "Sunstone Accessories",
+            "url": "sunstone-accessories",
+            "origin_name": "Sunstone Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 81,
+              "name": "Sunstone Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "6cwdehks8",
+            "key": "Sunstone Package Deals",
+            "name": "Sunstone Package Deals",
+            "url": "sunstone-package-deals",
+            "origin_name": "Sunstone Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 475,
+              "name": "Sunstone Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "izrkexdmd",
+        "key": "Renaissance Cooking Systems",
+        "name": "Renaissance Cooking Systems",
+        "url": "renaissance-cooking-systems",
+        "origin_name": "Renaissance Cooking Systems",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "bmbdincnv",
+            "key": "RCS Open Box",
+            "name": "RCS Open Box",
+            "url": "rcs-open-box",
+            "origin_name": "RCS Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 621,
+              "name": "RCS Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "15w5bvf3p",
+            "key": "RCS Grills",
+            "name": "RCS Grills",
+            "url": "rcs-grills",
+            "origin_name": "RCS Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 586,
+              "name": "RCS Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "1b15evnoq",
+            "key": "RCS Side Burners",
+            "name": "RCS Side Burners",
+            "url": "rcs-side-burners",
+            "origin_name": "RCS Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 584,
+              "name": "RCS Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "22ji67384",
+            "key": "RCS Storage",
+            "name": "RCS Storage",
+            "url": "rcs-storage",
+            "origin_name": "RCS Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 51,
+              "name": "RCS Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "l9ezqsbue",
+            "key": "RCS Refrigeration",
+            "name": "RCS Refrigeration",
+            "url": "rcs-refrigeration",
+            "origin_name": "RCS Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 125,
+              "name": "RCS Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "tlbego18k",
+            "key": "RCS Accessories",
+            "name": "RCS Accessories",
+            "url": "rcs-accessories",
+            "origin_name": "RCS Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 50,
+              "name": "RCS Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "mtbjbtdjj",
+            "key": "RCS Package Deals",
+            "name": "RCS Package Deals",
+            "url": "rcs-package-deals",
+            "origin_name": "RCS Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 733,
+              "name": "RCS Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "7txx4cbvb",
+        "key": "Napoleon",
+        "name": "Napoleon",
+        "url": "napoleon",
+        "origin_name": "Napoleon",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "banner": {
+          "img": {
+            "src": "/images/banner/firepit-banner.webp",
+            "alt": "Banner Image"
+          }
+        },
+        "children": [
+          {
+            "id": "679b0jy5m",
+            "key": "Napoleon Open Box",
+            "name": "Napoleon Open Box",
+            "url": "napoleon-open-box",
+            "origin_name": "Napoleon Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 965,
+              "name": "Napoleon Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "mpkbakwf0",
+            "key": "Napoleon Grills",
+            "name": "Napoleon Grills",
+            "url": "napoleon-grills",
+            "origin_name": "Napoleon Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 963,
+              "name": "Napoleon Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "rujfhznlu",
+            "key": "Napoleon Side Burners",
+            "name": "Napoleon Side Burners",
+            "url": "napoleon-side-burners",
+            "origin_name": "Napoleon Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 543,
+              "name": "Napoleon Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "oxqh7nqzg",
+            "key": "Napoleon Storage",
+            "name": "Napoleon Storage",
+            "url": "napoleon-storage",
+            "origin_name": "Napoleon Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 966,
+              "name": "Napoleon Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "naz6is1kx",
+            "key": "Napoleon Refrigeration",
+            "name": "Napoleon Refrigeration",
+            "url": "napoleon-refrigeration",
+            "origin_name": "Napoleon Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 614,
+              "name": "Napoleon Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "405s4owz1",
+            "key": "Napoleon Accessories",
+            "name": "Napoleon Accessories",
+            "url": "napoleon-accessories",
+            "origin_name": "Napoleon Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 487,
+              "name": "Napoleon Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "ocl6y8e5p",
+            "key": "Napoleon Package Deals",
+            "name": "Napoleon Package Deals",
+            "url": "napoleon-package-deals",
+            "origin_name": "Napoleon Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 605,
+              "name": "Napoleon Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "xl5mp4rz6",
+        "key": "Summerset Professional Grills",
+        "name": "Summerset Professional Grills",
+        "url": "summerset-professional-grills",
+        "origin_name": "Summerset Professional Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "wsi1fvnlj",
+            "key": "Summerset Open Box",
+            "name": "Summerset Open Box",
+            "url": "summerset-open-box",
+            "origin_name": "Summerset Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 461,
+              "name": "Summerset Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "5xn4dfih7",
+            "key": "Summerset Grills",
+            "name": "Summerset Grills",
+            "url": "summerset-grills",
+            "origin_name": "Summerset Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 151,
+              "name": "Summerset Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "0kcahlzgw",
+            "key": "Summerset Side Burners",
+            "name": "Summerset Side Burners",
+            "url": "summerset-side-burners",
+            "origin_name": "Summerset Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 435,
+              "name": "Summerset Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "x38qmlfxq",
+            "key": "Summerset Storage",
+            "name": "Summerset Storage",
+            "url": "summerset-storage",
+            "origin_name": "Summerset Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 49,
+              "name": "Summerset Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "9l2fkz7nd",
+            "key": "Summerset Refrigeration",
+            "name": "Summerset Refrigeration",
+            "url": "summerset-refrigeration",
+            "origin_name": "Summerset Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 142,
+              "name": "Summerset Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "2x93fpcgp",
+            "key": "Summerset Accessories",
+            "name": "Summerset Accessories",
+            "url": "summerset-accessories",
+            "origin_name": "Summerset Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 53,
+              "name": "Summerset Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "csc6hwqp5",
+            "key": "Summerset Package Deals",
+            "name": "Summerset Package Deals",
+            "url": "summerset-package-deals",
+            "origin_name": "Summerset Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 442,
+              "name": "Summerset Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ntmewjyo1",
+        "key": "Twin Eagles",
+        "name": "Twin Eagles",
+        "url": "twin-eagles",
+        "origin_name": "Twin Eagles",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "k09s6wss4",
+            "key": "Twin Eagles Open Box",
+            "name": "Twin Eagles Open Box",
+            "url": "twin-eagles-open-box",
+            "origin_name": "Twin Eagles Open Box",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "u0xf0vonj",
+            "key": "Twin Eagles Grills",
+            "name": "Twin Eagles Grills",
+            "url": "twin-eagles-grills",
+            "origin_name": "Twin Eagles Grills",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "l5qdt28q4",
+            "key": "Twin Eagles Side Burners",
+            "name": "Twin Eagles Side Burners",
+            "url": "twin-eagles-side-burners",
+            "origin_name": "Twin Eagles Side Burners",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "fk6fgpu0x",
+            "key": "Twin Eagles Storage",
+            "name": "Twin Eagles Storage",
+            "url": "twin-eagles-storage",
+            "origin_name": "Twin Eagles Storage",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "e5yextd78",
+            "key": "Twin Eagles Refrigeration",
+            "name": "Twin Eagles Refrigeration",
+            "url": "twin-eagles-refrigeration",
+            "origin_name": "Twin Eagles Refrigeration",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "n9q0nrj5a",
+            "key": "Twin Eagles Accessories",
+            "name": "Twin Eagles Accessories",
+            "url": "twin-eagles-accessories",
+            "origin_name": "Twin Eagles Accessories",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "l1igcdbyn",
+            "key": "Twin Eagles Package Deals",
+            "name": "Twin Eagles Package Deals",
+            "url": "twin-eagles-package-deals",
+            "origin_name": "Twin Eagles Package Deals",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "8dynzq721",
+        "key": "TEC Grills",
+        "name": "TEC Grills",
+        "url": "tec-grills",
+        "origin_name": "TEC Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "qmlp4l2pp",
+            "key": "TEC Open Box",
+            "name": "TEC Open Box",
+            "url": "tec-open-box",
+            "origin_name": "TEC Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 742,
+              "name": "TEC Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "v92j51hg9",
+            "key": "TEC BBQ Grills",
+            "name": "TEC BBQ Grills",
+            "url": "tec-bbq-grills",
+            "origin_name": "TEC BBQ Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 782,
+              "name": "TEC Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "uy8to8n82",
+            "key": "TEC Side Burners",
+            "name": "TEC Side Burners",
+            "url": "tec-side-burners",
+            "origin_name": "TEC Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 781,
+              "name": "TEC Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "lcla6slmw",
+            "key": "TEC Storage",
+            "name": "TEC Storage",
+            "url": "tec-storage",
+            "origin_name": "TEC Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 780,
+              "name": "TEC Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "u2jrwzx2r",
+            "key": "TEC Refrigeration",
+            "name": "TEC Refrigeration",
+            "url": "tec-refrigeration",
+            "origin_name": "TEC Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 779,
+              "name": "TEC Refrigeration"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "jsib07osu",
+        "key": "Lion Premium Grills",
+        "name": "Lion Premium Grills",
+        "url": "lion-premium-grills",
+        "origin_name": "Lion Premium Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "6laxcwehz",
+            "key": "Lion Open Box",
+            "name": "Lion Open Box",
+            "url": "lion-open-box",
+            "origin_name": "Lion Open Box",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "7tv15yldd",
+            "key": "Lion Grills",
+            "name": "Lion Grills",
+            "url": "lion-grills",
+            "origin_name": "Lion Grills",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "tahpqkqnr",
+            "key": "Lion Side Burners",
+            "name": "Lion Side Burners",
+            "url": "lion-side-burners",
+            "origin_name": "Lion Side Burners",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "gjk197yte",
+            "key": "Lion Storage",
+            "name": "Lion Storage",
+            "url": "lion-storage",
+            "origin_name": "Lion Storage",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "zy156yztm",
+            "key": "Lion Refrigeration",
+            "name": "Lion Refrigeration",
+            "url": "lion-refrigeration",
+            "origin_name": "Lion Refrigeration",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "633ekzhxg",
+            "key": "Lion Accessories",
+            "name": "Lion Accessories",
+            "url": "lion-accessories",
+            "origin_name": "Lion Accessories",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "t3j4mkauc",
+            "key": "Lion Package Deals",
+            "name": "Lion Package Deals",
+            "url": "lion-package-deals",
+            "origin_name": "Lion Package Deals",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "9idpi89gi",
+        "key": "Le Griddle",
+        "name": "Le Griddle",
+        "url": "le-griddle",
+        "origin_name": "Le Griddle",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "obt6lqnd5",
+            "key": "Le Griddle Grills",
+            "name": "Le Griddle Grills",
+            "url": "le-griddle-grills",
+            "origin_name": "Le Griddle Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 559,
+              "name": "Le Griddle Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "m7m13jmx0",
+            "key": "Le Griddle Accessories",
+            "name": "Le Griddle Accessories",
+            "url": "le-griddle-accessories",
+            "origin_name": "Le Griddle Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 555,
+              "name": "Le Griddle Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "n1h7dwg06",
+            "key": "Le Griddle Package Deals",
+            "name": "Le Griddle Package Deals",
+            "url": "le-griddle-package-deals",
+            "origin_name": "Le Griddle Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 696,
+              "name": "Le Griddle Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "r6enzz4vx",
+        "key": "Broilmaster",
+        "name": "Broilmaster",
+        "url": "broilmaster",
+        "origin_name": "Broilmaster",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "gs70fc569",
+            "key": "Broilmaster Open Box",
+            "name": "Broilmaster Open Box",
+            "url": "broilmaster-open-box",
+            "origin_name": "Broilmaster Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 632,
+              "name": "Broilmaster Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "6uwaoan07",
+            "key": "Broilmaster Grills",
+            "name": "Broilmaster Grills",
+            "url": "broilmaster-grills",
+            "origin_name": "Broilmaster Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 30,
+              "name": "Broilmaster Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "8g2qkms8t",
+            "key": "Broilmaster Side Burners",
+            "name": "Broilmaster Side Burners",
+            "url": "broilmaster-side-burners",
+            "origin_name": "Broilmaster Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 60,
+              "name": "Broilmaster Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "1r0h3wvaf",
+            "key": "Broilmaster Storage",
+            "name": "Broilmaster Storage",
+            "url": "broilmaster-storage",
+            "origin_name": "Broilmaster Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 42,
+              "name": "Broilmaster Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "djztku1hl",
+            "key": "Broilmaster Accessories",
+            "name": "Broilmaster Accessories",
+            "url": "broilmaster-accessories",
+            "origin_name": "Broilmaster Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 29,
+              "name": "Broilmaster Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "0kxts6wcn",
+        "key": "PGS",
+        "name": "PGS",
+        "url": "pgs",
+        "origin_name": "PGS",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "r8ng6jdhs",
+            "key": "PGS Open Box",
+            "name": "PGS Open Box",
+            "url": "pgs-open-box",
+            "origin_name": "PGS Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 285,
+              "name": "PGS Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "8d1nyvfwf",
+            "key": "PGS Grills",
+            "name": "PGS Grills",
+            "url": "pgs-grills",
+            "origin_name": "PGS Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 283,
+              "name": "PGS Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "s6ske45ol",
+            "key": "PGS Side Burners",
+            "name": "PGS Side Burners",
+            "url": "pgs-side-burners",
+            "origin_name": "PGS Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 278,
+              "name": "PGS Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "l5hts0t70",
+            "key": "PGS Storage",
+            "name": "PGS Storage",
+            "url": "pgs-storage",
+            "origin_name": "PGS Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 274,
+              "name": "PGS Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "lzntqvhr9",
+            "key": "PGS Accessories",
+            "name": "PGS Accessories",
+            "url": "pgs-accessories",
+            "origin_name": "PGS Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 99,
+              "name": "PGS Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "fmknlxe19",
+            "key": "PGS Package Deals",
+            "name": "PGS Package Deals",
+            "url": "pgs-package-deals",
+            "origin_name": "PGS Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 287,
+              "name": "PGS Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "xiav9adnv",
+        "key": "Pacific Coast Manufacturing",
+        "name": "Pacific Coast Manufacturing",
+        "url": "pacific-coast-manufacturing",
+        "origin_name": "Pacific Coast Manufacturing",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "pgte6wf1k",
+            "key": "PCM Open Box",
+            "name": "PCM Open Box",
+            "url": "pcm-open-box",
+            "origin_name": "PCM Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 630,
+              "name": "PCM Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "4phmcdn5a",
+            "key": "PCM Storage",
+            "name": "PCM Storage",
+            "url": "pcm-storage",
+            "origin_name": "PCM Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 109,
+              "name": "PCM Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "mzf7wruul",
+            "key": "PCM Package Deals",
+            "name": "PCM Package Deals",
+            "url": "pcm-package-deals",
+            "origin_name": "PCM Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 694,
+              "name": "PCM Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "9ukw7gpxb",
+        "key": "Modern Home Products",
+        "name": "Modern Home Products",
+        "url": "modern-home-products",
+        "origin_name": "Modern Home Products",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "809e3sc4n",
+            "key": "MHP Grills",
+            "name": "MHP Grills",
+            "url": "mhp-grills",
+            "origin_name": "MHP Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 397,
+              "name": "MHP Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "tnw484g39",
+            "key": "MHP Side Burners",
+            "name": "MHP Side Burners",
+            "url": "mhp-side-burners",
+            "origin_name": "MHP Side Burners",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "4pmqiihn5",
+            "key": "MHP Accessories",
+            "name": "MHP Accessories",
+            "url": "mhp-accessories",
+            "origin_name": "MHP Accessories",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "19qbubvyx",
+            "key": "MHP Package Deals",
+            "name": "MHP Package Deals",
+            "url": "mhp-package-deals",
+            "origin_name": "MHP Package Deals",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "wbdqnf8tg",
+        "key": "TrueFlame",
+        "name": "TrueFlame",
+        "url": "trueflame",
+        "origin_name": "TrueFlame",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "0z54szl3p",
+            "key": "TrueFlame Grills",
+            "name": "TrueFlame Grills",
+            "url": "trueflame-grills",
+            "origin_name": "TrueFlame Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 479,
+              "name": "TrueFlame Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "i32koibln",
+            "key": "TrueFlame Storage",
+            "name": "TrueFlame Storage",
+            "url": "trueflame-storage",
+            "origin_name": "TrueFlame Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 150,
+              "name": "TrueFlame Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "g64t0oadf",
+            "key": "TrueFlame Side Burners",
+            "name": "TrueFlame Side Burners",
+            "url": "trueflame-side-burners",
+            "origin_name": "TrueFlame Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 610,
+              "name": "TrueFlame Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "391duvm63",
+            "key": "TrueFlame Refrigeration",
+            "name": "TrueFlame Refrigeration",
+            "url": "trueflame-refrigeration",
+            "origin_name": "TrueFlame Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 476,
+              "name": "TrueFlame Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "iajyuezoe",
+            "key": "TrueFlame Accessories",
+            "name": "TrueFlame Accessories",
+            "url": "trueflame-accessories",
+            "origin_name": "TrueFlame Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 149,
+              "name": "TrueFlame Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "0p8qm19qi",
+            "key": "TrueFlame Package Deals",
+            "name": "TrueFlame Package Deals",
+            "url": "trueflame-package-deals",
+            "origin_name": "TrueFlame Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 693,
+              "name": "Trueflame Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "oj17xmkda",
+        "key": "Fire Magic",
+        "name": "Fire Magic",
+        "url": "fire-magic",
+        "origin_name": "Fire Magic",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "me6a5hhq3",
+            "key": "Fire Magic BBQ Grills",
+            "name": "Fire Magic BBQ Grills",
+            "url": "fire-magic-bbq-grills",
+            "origin_name": "Fire Magic BBQ Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 719,
+              "name": "Fire Magic BBQ Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "bw0lyxkq5",
+            "key": "Fire Magic Storage",
+            "name": "Fire Magic Storage",
+            "url": "fire-magic-storage",
+            "origin_name": "Fire Magic Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 721,
+              "name": "Fire Magic Storage"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "6t4w5qjlb",
+        "key": "Primo Ceramic Grill",
+        "name": "Primo Ceramic Grill",
+        "url": "primo-ceramic-grill",
+        "origin_name": "Primo Ceramic Grill",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "u9uhol0t3",
+            "key": "Primo Grills",
+            "name": "Primo Grills",
+            "url": "primo-grills",
+            "origin_name": "Primo Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 718,
+              "name": "Primo Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "fn7fu8m6c",
+            "key": "Primo Side Burners",
+            "name": "Primo Side Burners",
+            "url": "primo-side-burners",
+            "origin_name": "Primo Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 65,
+              "name": "Primo Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "tyb9vwhii",
+            "key": "Primo Storage",
+            "name": "Primo Storage",
+            "url": "primo-storage",
+            "origin_name": "Primo Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 69,
+              "name": "Primo Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "uf7l6dtrq",
+            "key": "Primo Accessories",
+            "name": "Primo Accessories",
+            "url": "primo-accessories",
+            "origin_name": "Primo Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 68,
+              "name": "Primo Accessories"
+            },
+            "children": []
+          },
+          {
+            "id": "yprvtsehd",
+            "key": "Primo Package Deals",
+            "name": "Primo Package Deals",
+            "url": "primo-package-deals",
+            "origin_name": "Primo Package Deals",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 692,
+              "name": "Primo Package Deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "92dd3crgr",
+        "key": "Infratech Grills",
+        "name": "Infratech Grills",
+        "url": "infratech-grills",
+        "origin_name": "Infratech Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "qrt032789",
+            "key": "Infratech Patio Heaters",
+            "name": "Infratech Patio Heaters",
+            "url": "infratech-patio-heaters",
+            "origin_name": "Infratech Patio Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 345,
+              "name": "Infratech Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "i77axrlcj",
+            "key": "Infratech Electric Patio Heaters",
+            "name": "Infratech Electric Patio Heaters",
+            "url": "infratech-electric-patio-heaters",
+            "origin_name": "Infratech Electric Patio Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 343,
+              "name": "Infratech Electric Patio Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "3jpkml6lm",
+            "key": "Infratech Accessories",
+            "name": "Infratech Accessories",
+            "url": "infratech-accessories",
+            "origin_name": "Infratech Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 353,
+              "name": "Infratech Patio Heaters Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "6b9tv9yza",
+        "key": "Bromic Heaters",
+        "name": "Bromic Heaters",
+        "url": "bromic-heaters",
+        "origin_name": "Bromic Heaters",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "unxbjcan0",
+            "key": "Bromic Gas Patio Heaters",
+            "name": "Bromic Gas Patio Heaters",
+            "url": "bromic-gas-patio-heaters",
+            "origin_name": "Bromic Gas Patio Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 446,
+              "name": "Bromic Gas Patio Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "xm1gs9wdg",
+            "key": "Bromic Electric Patio Heaters",
+            "name": "Bromic Electric Patio Heaters",
+            "url": "bromic-electric-patio-heaters",
+            "origin_name": "Bromic Electric Patio Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 449,
+              "name": "Bromic Electric Patio Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "99sttfd53",
+            "key": "Bromic Patio Heaters Accessories",
+            "name": "Bromic Patio Heaters Accessories",
+            "url": "bromic-patio-heaters-accessories",
+            "origin_name": "Bromic Patio Heaters Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 455,
+              "name": "Bromic Patio Heaters Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "7sqeyxm3w",
+        "key": "Sunglo",
+        "name": "Sunglo",
+        "url": "sunglo",
+        "origin_name": "Sunglo",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "upd0c8o4a",
+            "key": "Sunglo Gas Patio Heaters",
+            "name": "Sunglo Gas Patio Heaters",
+            "url": "sunglo-gas-patio-heaters",
+            "origin_name": "Sunglo Gas Patio Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 579,
+              "name": "Sunglo Gas Patio Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "lz40agedj",
+            "key": "Sunglo Heaters Accessories",
+            "name": "Sunglo Heaters Accessories",
+            "url": "sunglo-heaters-accessories",
+            "origin_name": "Sunglo Heaters Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 580,
+              "name": "Sunglo Heaters Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "dzgrnh6w7",
+        "key": "Sunpak",
+        "name": "Sunpak",
+        "url": "sunpak",
+        "origin_name": "Sunpak",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "qxay78l52",
+            "key": "Sunpak Heaters",
+            "name": "Sunpak Heaters",
+            "url": "sunpak-heaters",
+            "origin_name": "Sunpak Heaters",
+            "nav_type": "custom_page",
+            "filter_type": "patio-heaters",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 573,
+              "name": "Sunpak Heaters"
+            },
+            "children": []
+          },
+          {
+            "id": "il6lm03x6",
+            "key": "Sunpak Heaters Accessories",
+            "name": "Sunpak Heaters Accessories",
+            "url": "sunpak-heaters-accessories",
+            "origin_name": "Sunpak Heaters Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 572,
+              "name": "Sunpak Heaters Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "s4z0evx3q",
+        "key": "Summit Appliance",
+        "name": "Summit Appliance",
+        "url": "summit-appliance",
+        "origin_name": "Summit Appliance",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "bkqh79rtw",
+            "key": "Summit Refrigeration",
+            "name": "Summit Refrigeration",
+            "url": "summit-refrigeration",
+            "origin_name": "Summit Refrigeration",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 140,
+              "name": "Summit Refrigeration"
+            },
+            "children": []
+          },
+          {
+            "id": "mt5acspvf",
+            "key": "Summit Cooking & Ventilation",
+            "name": "Summit Cooking & Ventilation",
+            "url": "summit-cooking-and-ventilation",
+            "origin_name": "Summit Cooking & Ventilation",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 501,
+              "name": "Summit Cooking & Ventilation"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "6hsrrhxal",
+        "key": "Coulee Colorado",
+        "name": "Coulee Colorado",
+        "url": "coulee-colorado",
+        "origin_name": "Coulee Colorado",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "9ce1jum4w",
+        "key": "OCI Grills",
+        "name": "OCI Grills",
+        "url": "oci-grills",
+        "origin_name": "OCI Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "rlhmupsp7",
+            "key": "OCI Open Box",
+            "name": "OCI Open Box",
+            "url": "oci-open-box",
+            "origin_name": "OCI Open Box",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 370,
+              "name": "OCI Open Box"
+            },
+            "children": []
+          },
+          {
+            "id": "b67oyjng8",
+            "key": "OCI Storage",
+            "name": "OCI Storage",
+            "url": "oci-storage",
+            "origin_name": "OCI Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 371,
+              "name": "OCI Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "izlnndnss",
+            "key": "OCI Side Burners",
+            "name": "OCI Side Burners",
+            "url": "oci-side-burners",
+            "origin_name": "OCI Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 699,
+              "name": "OCI Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "w9hptkd7u",
+            "key": "OCI Package",
+            "name": "OCI Package",
+            "url": "oci-package",
+            "origin_name": "OCI Package",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 697,
+              "name": "OCI Package deals"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "1gs9mm4li",
+        "key": "Peterson Gas Logs",
+        "name": "Peterson Gas Logs",
+        "url": "peterson-gas-logs",
+        "origin_name": "Peterson Gas Logs",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "l016b2isz",
+            "key": "PGL Fire Pit Logs",
+            "name": "PGL Fire Pit Logs",
+            "url": "pgl-fire-pit-logs",
+            "origin_name": "PGL Fire Pit Logs",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 520,
+              "name": "PGL Fire Pit Logs"
+            },
+            "children": []
+          },
+          {
+            "id": "hf1jbu8mu",
+            "key": "PGL Fire Pit Burners",
+            "name": "PGL Fire Pit Burners",
+            "url": "pgl-fire-pit-burners",
+            "origin_name": "PGL Fire Pit Burners",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 114,
+              "name": "PGL Fire Pit Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "mt5pp8f6z",
+            "key": "PGL Fire Pit Glasses",
+            "name": "PGL Fire Pit Glasses",
+            "url": "pgl-fire-pit-glasses",
+            "origin_name": "PGL Fire Pit Glasses",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 524,
+              "name": "PGL Fire Pit Glasses"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "n64sxkoia",
+        "key": "Brand-Man Grills",
+        "name": "Brand-Man Grills",
+        "url": "brand-man-grills",
+        "origin_name": "Brand-Man Grills",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "2x8zt1tdl",
+            "key": "Brand-Man BBQ Grills",
+            "name": "Brand-Man BBQ Grills",
+            "url": "brand-man-bbq-grills",
+            "origin_name": "Brand-Man BBQ Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 633,
+              "name": "Brand-Man BBQ Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "qt6cfjyff",
+            "key": "Brand-Man Accessories",
+            "name": "Brand-Man Accessories",
+            "url": "brand-man-accessories",
+            "origin_name": "Brand-Man Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 588,
+              "name": "Brand-Man Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "j42jpdjms",
+        "key": "Eloquence",
+        "name": "Eloquence",
+        "url": "eloquence",
+        "origin_name": "Eloquence",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "collection_display": {
+          "id": 17,
+          "name": "Shop-Eloquence"
+        },
+        "children": [
+          {
+            "id": "jqimm2xvy",
+            "key": "Eloquence Grills",
+            "name": "Eloquence Grills",
+            "url": "eloquence-grills",
+            "origin_name": "Eloquence Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 483,
+              "name": "Eloquence Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "bsmsko6xx",
+            "key": "Eloquence Side Burners",
+            "name": "Eloquence Side Burners",
+            "url": "eloquence-side-burners",
+            "origin_name": "Eloquence Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 684,
+              "name": "Eloquence Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "ubr720xld",
+            "key": "Eloquence Storage",
+            "name": "Eloquence Storage",
+            "url": "eloquence-storage",
+            "origin_name": "Eloquence Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 683,
+              "name": "Eloquence Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "n46ruw79l",
+            "key": "Eloquence Accessories",
+            "name": "Eloquence Accessories",
+            "url": "eloquence-accessories",
+            "origin_name": "Eloquence Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 682,
+              "name": "Eloquence Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "bb3m5yimp",
+        "key": "Grandeur",
+        "name": "Grandeur",
+        "url": "grandeur",
+        "origin_name": "Grandeur",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "091rx03pi",
+            "key": "Grandeur Grills",
+            "name": "Grandeur Grills",
+            "url": "grandeur-grills",
+            "origin_name": "Grandeur Grills",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 413,
+              "name": "Grandeur Grills"
+            },
+            "children": []
+          },
+          {
+            "id": "ynk726s6u",
+            "key": "Grandeur Side Burners",
+            "name": "Grandeur Side Burners",
+            "url": "grandeur-side-burners",
+            "origin_name": "Grandeur Side Burners",
+            "nav_type": "custom_page",
+            "filter_type": "grills",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 685,
+              "name": "Grandeur Side Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "woi8k32bi",
+            "key": "Grandeur Storage",
+            "name": "Grandeur Storage",
+            "url": "grandeur-storage",
+            "origin_name": "Grandeur Storage",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 686,
+              "name": "Grandeur Storage"
+            },
+            "children": []
+          },
+          {
+            "id": "2ekijx82y",
+            "key": "Grandeur Accessories",
+            "name": "Grandeur Accessories",
+            "url": "grandeur-accessories",
+            "origin_name": "Grandeur Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 676,
+              "name": "Grandeur Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "vyl1bziz0",
+        "key": "Dimplex",
+        "name": "Dimplex",
+        "url": "dimplex",
+        "origin_name": "Dimplex",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "c6pz11l9j",
+            "key": "Dimplex Fireplaces",
+            "name": "Dimplex Fireplaces",
+            "url": "dimplex-fireplaces",
+            "origin_name": "Dimplex Fireplaces",
+            "nav_type": "custom_page",
+            "filter_type": "fireplaces",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 594,
+              "name": "Dimplex Fireplaces"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "h9a76c7tj",
+        "key": "Athena Fire Tables and Accessories",
+        "name": "Athena Fire Tables and Accessories",
+        "url": "athena-fire-tables-and-accessories",
+        "origin_name": "Athena Fire Tables and Accessories",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "zj3h04d54",
+            "key": "Athena Fire Pit Tables",
+            "name": "Athena Fire Pit Tables",
+            "url": "athena-fire-pit-tables",
+            "origin_name": "Athena Fire Pit Tables",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 647,
+              "name": "Athena Fire Pit Tables"
+            },
+            "children": []
+          },
+          {
+            "id": "mza7ykleb",
+            "key": "Athena Fire Pit Burners",
+            "name": "Athena Fire Pit Burners",
+            "url": "athena-fire-pit-burners",
+            "origin_name": "Athena Fire Pit Burners",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 659,
+              "name": "Athena Fire Pit Burners"
+            },
+            "children": []
+          },
+          {
+            "id": "ggc3o1pym",
+            "key": "Athena Fire Pit Accessories",
+            "name": "Athena Fire Pit Accessories",
+            "url": "athena-fire-pit-accessories",
+            "origin_name": "Athena Fire Pit Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 658,
+              "name": "Athena Fire Pit Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "2gi31fhih",
+        "key": "WPPO",
+        "name": "WPPO",
+        "url": "wppo",
+        "origin_name": "WPPO",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "y9qfew842",
+            "key": "WPPO Pizza Ovens",
+            "name": "WPPO Pizza Ovens",
+            "url": "wppo-pizza-ovens",
+            "origin_name": "WPPO Pizza Ovens",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 650,
+              "name": "WPPO Pizza Ovens"
+            },
+            "children": []
+          },
+          {
+            "id": "3zq67l7lm",
+            "key": "WPPO Carts and Stands",
+            "name": "WPPO Carts and Stands",
+            "url": "wppo-carts-and-stands",
+            "origin_name": "WPPO Carts and Stands",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 654,
+              "name": "WPPO Carts and Stands"
+            },
+            "children": []
+          },
+          {
+            "id": "vbbzoyq9i",
+            "key": "WPPO Pizza Oven Covers",
+            "name": "WPPO Pizza Oven Covers",
+            "url": "wppo-pizza-oven-covers",
+            "origin_name": "WPPO Pizza Oven Covers",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 653,
+              "name": "WPPO Pizza Oven Covers"
+            },
+            "children": []
+          },
+          {
+            "id": "pab0pieo6",
+            "key": "WPPO Pizza Oven Accessories",
+            "name": "WPPO Pizza Oven Accessories",
+            "url": "wppo-pizza-oven-accessories",
+            "origin_name": "WPPO Pizza Oven Accessories",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 652,
+              "name": "WPPO Pizza Oven Accessories"
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ntjkdsrz2",
+        "key": "American Fyre Designs",
+        "name": "American Fyre Designs",
+        "url": "american-fyre-designs",
+        "origin_name": "American Fyre Designs",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": [
+          {
+            "id": "aws5ke2to",
+            "key": "American Fryre Designs Fire Tables",
+            "name": "American Fryre Designs Fire Tables",
+            "url": "american-fryre-designs-fire-tables",
+            "origin_name": "American Fryre Designs Fire Tables",
+            "nav_type": "custom_page",
+            "filter_type": "open-box",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 641,
+              "name": "American Fyre Designs Firetables"
+            },
+            "children": []
+          },
+          {
+            "id": "pwpr14txd",
+            "key": "American Fryre Designs Fireplaces",
+            "name": "American Fryre Designs Fireplaces",
+            "url": "american-fryre-designs-fireplaces",
+            "origin_name": "American Fryre Designs Fireplaces",
+            "nav_type": "custom_page",
+            "filter_type": "fireplaces",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 637,
+              "name": "American Fyre Designs Fireplaces"
+            },
+            "children": []
+          },
+          {
+            "id": "ub7c9qg24",
+            "key": "American Fryre Designs Fire Pits",
+            "name": "American Fryre Designs Fire Pits",
+            "url": "american-fryre-designs-fire-pits",
+            "origin_name": "American Fryre Designs Fire Pits",
+            "nav_type": "custom_page",
+            "filter_type": "fireplaces",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "collection_display": {
+              "id": 640,
+              "name": "American Fyre Designs Fire Pits"
+            },
+            "children": []
+          },
+          {
+            "id": "t3movkjm3",
+            "key": "American Fryre Designs Fire Bowls",
+            "name": "American Fryre Designs Fire Bowls",
+            "url": "american-fryre-designs-fire-bowls",
+            "origin_name": "American Fryre Designs Fire Bowls",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          },
+          {
+            "id": "pkceffela",
+            "key": "American Fryre Designs Accessories",
+            "name": "American Fryre Designs Accessories",
+            "url": "american-fryre-designs-accessories",
+            "origin_name": "American Fryre Designs Accessories",
+            "nav_type": "custom_page",
+            "price_visibility": "hide",
+            "searchable": true,
+            "nav_visibility": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "0oskyujjy",
+        "key": "Delsol",
+        "name": "Delsol",
+        "url": "delsol",
+        "origin_name": "Delsol",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "sxvmhow83",
+        "key": "Dynaque",
+        "name": "Dynaque",
+        "url": "dynaque",
+        "origin_name": "Dynaque",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "jryeoiba1",
+        "key": "Onlyfire",
+        "name": "Onlyfire",
+        "url": "onlyfire",
+        "origin_name": "Onlyfire",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "3x9z4ivcq",
+        "key": "Premier Design",
+        "name": "Premier Design",
+        "url": "premier-design",
+        "origin_name": "Premier Design",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "1q4y6a0gy",
+        "key": "Sedona",
+        "name": "Sedona",
+        "url": "sedona",
+        "origin_name": "Sedona",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      },
+      {
+        "id": "edgt5v2qg",
+        "key": "Solana Outdoor Products",
+        "name": "Solana Outdoor Products",
+        "url": "solana-outdoor-products",
+        "origin_name": "Solana Outdoor Products",
+        "nav_type": "brand",
+        "price_visibility": "show",
+        "searchable": true,
+        "nav_visibility": true,
+        "children": []
+      }
+    ]
+  },
+  {
+    "key": "Search",
+    "name": "Search",
+    "url": "search",
+    "nav_type": "custom_page",
+    "price_visibility": "show",
+    "searchable": false,
+    "nav_visibility": false,
+    "children": []
+  }
+]

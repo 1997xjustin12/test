@@ -147,8 +147,8 @@ const clientMenuItem = (item) => ({
 });
 
 // Menu, logo and theme, when Redis cannot be reached. The page still renders:
-// header without its nav, default theme colour, logo from the brand's own
-// static asset. Everything below <main> is the page's own data and unaffected.
+// the nav from the bundled fallback copy (see below), default theme colour,
+// logo from the brand's own static asset. Everything below <main> is the page's own data and unaffected.
 const NO_LAYOUT_DATA = [null, null, null];
 
 export default async function MarketLayout({ children }) {
@@ -173,7 +173,18 @@ export default async function MarketLayout({ children }) {
     getCatalogExclusions(),
   ]);
 
-  const [menu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
+  const [storedMenu, redisLogo, color] = initData ?? NO_LAYOUT_DATA;
+
+  // No menu from Redis and none remembered by this instance: fall back to the
+  // copy of the navigation captured on 16 Oct 2026, while Upstash was out of
+  // quota. It is the header's own shape (what clientMenuItem produces), so the
+  // nav works; it does not feed /[slug], which reads the full menu itself and
+  // keeps its own fallback. Loaded only when needed. Replace it with a fresh
+  // snapshot once Redis is reachable — a stale copy links to pages that moved.
+  const menu =
+    Array.isArray(storedMenu) && storedMenu.length
+      ? storedMenu
+      : (await import("@/app/data/nav-menu-oct-16.json")).default;
 
   const activeTheme = THEME_COLORS[color] ?? THEME_COLORS.orange;
   const themeCSS = `:root{${Object.entries(activeTheme)
