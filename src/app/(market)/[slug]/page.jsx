@@ -172,6 +172,29 @@ function ListingJsonLd({ json }) {
   );
 }
 
+/**
+ * The menu this page is built from — the stored one, else the last one this
+ * instance saw, else the bundled snapshot of 16 Oct 2026.
+ *
+ * The snapshot is the last resort, and it exists because of what happened
+ * without it. With Upstash out of quota a deploy prebuilds no category pages
+ * (see generateStaticParams), so each renders on its first request — and with
+ * Redis refusing, a fresh instance had no menu at all: every category page on
+ * the live site answered 500 (19 Oct 2026). The snapshot is the header's trimmed
+ * copy, so it carries everything the listing needs (url, name, nav_type,
+ * filter_type, collection_display, visibility) but not the SEO title and
+ * description or the editor's sections; those pages fall back to their name
+ * as title until Redis is back. Replace it with a fresh snapshot once it is.
+ */
+async function readMenu() {
+  try {
+    return await readOrLastKnownGood("nav-menu", getMenuData);
+  } catch (error) {
+    console.error("[slug] menu unavailable, using the bundled snapshot:", error?.message || error);
+    return (await import("@/app/data/nav-menu-oct-16.json")).default;
+  }
+}
+
 export async function generateStaticParams() {
   // Prebuilding is an optimisation; a deploy must not depend on it. With Redis
   // unreachable (October 2026: the Upstash quota ran out) this read threw and
@@ -209,7 +232,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const menuData = await readOrLastKnownGood("nav-menu", getMenuData);
+  const menuData = await readMenu();
   const flatData = flattenNav(menuData);
   const pageData = getPageData(slug, flatData);
 
@@ -240,12 +263,11 @@ export async function generateMetadata({ params }) {
 
 export default async function GenericCategoryPage({ params }) {
   const { slug } = await params;
-  // A listing page is built from the menu, so there is no degraded version of
-  // it to serve — but an unreadable menu must not answer notFound() either: a
-  // 404 for a real URL can be cached and indexed. readOrLastKnownGood serves
-  // the menu this instance last saw, and otherwise throws, which Next answers
-  // with a 500 — retryable, and never cached. See lib/upstream.js.
-  const menuData = await readOrLastKnownGood("nav-menu", getMenuData);
+  // A listing page is built from the menu, and an unreadable menu must not
+  // answer notFound(): a 404 for a real URL can be cached and indexed. readMenu
+  // serves the stored menu, else the one this instance last saw, else the
+  // bundled snapshot — see above. See also lib/upstream.js.
+  const menuData = await readMenu();
   if (!Array.isArray(menuData)) {
     throw new Error(`nav menu unavailable while rendering /${slug}`);
   }
