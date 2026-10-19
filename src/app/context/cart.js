@@ -128,10 +128,17 @@ async function updateRedisAbandonedRecord(key, value) {
   if (!res?.ok) console.warn("[updateRedisAbandonedRecord]", { key, value });
 }
 
+// null means "not abandoned". A failed read must say that too: it used to
+// return the error body ({ error: "..." }), which is truthy, so with Redis down
+// every guest cart counted as abandoned — each change minted a new cart id and
+// reference number, and the real abandoned-cart flow never fired.
 async function getRedisAbandonedRecord(key) {
   const res = await redisGet(key);
-  if (!res?.ok) console.warn("[getRedisAbandonedRecord]", key);
-  return res.json();
+  if (!res?.ok) {
+    console.warn("[getRedisAbandonedRecord]", key);
+    return null;
+  }
+  return res.json().catch(() => null);
 }
 
 /**

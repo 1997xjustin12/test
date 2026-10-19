@@ -173,7 +173,18 @@ function ListingJsonLd({ json }) {
 }
 
 export async function generateStaticParams() {
-  const menuData = await getMenuData();
+  // Prebuilding is an optimisation; a deploy must not depend on it. With Redis
+  // unreachable (October 2026: the Upstash quota ran out) this read threw and
+  // failed every build, so nothing could ship — not even the fix for the
+  // quota. With no menu, build nothing: dynamicParams is on, so every category
+  // page renders on first request instead, and the next build prebuilds again.
+  let menuData;
+  try {
+    menuData = await getMenuData();
+  } catch (error) {
+    console.error("[slug] generateStaticParams: menu unreadable, prebuilding no pages:", error?.message || error);
+    return [];
+  }
   const flatData = flattenNav(menuData);
   const { brands } = await getCatalogExclusions();
   const excluded = excludedMenuUrls(menuData, brands);
