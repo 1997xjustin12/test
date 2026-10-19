@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { isNavVisible } from "@/app/lib/helpers";
+import { ISOKO, isNavVisible } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 
 /**
@@ -15,12 +15,17 @@ import { useSolanaCategories } from "@/app/context/category";
  * "Show in navigation" toggle, and a second editor for the same links would be
  * a second answer to the same question.
  *
- * Three entries are dropped. "Search" and "Home" are not destinations anyone
- * navigates to from a nav bar, and "Brands" is left out of this header by
- * request — the brands are reachable from the footer and from the homepage
- * strip, and the row reads better without a dropdown of forty-odd logos in it.
- * Everything else the menu marks visible is shown, so trimming the row is done
- * where the menu is.
+ * How the menu is drawn follows the brand's own navbar (new-design and
+ * bbq-design layout/Navbar.jsx), so switching the configured header on doesn't
+ * change how the navigation behaves: a dropdown opens on hover or locks open on
+ * a click of its label, leads with "All {name}", lays long lists out in up to
+ * three columns, and shows a spinner on the link being opened. Only the colours
+ * are the configured header's own (`--sh-*`).
+ *
+ * "Current Deals" goes where the brand navbar sends it — /brand/eloquence — and
+ * not to its menu entry's own URL, /current-deals, a listing with no products
+ * (reported 2026). Like the brand navbar, it is drawn last as a plain link, and
+ * on OKO, whose navbar has no Current Deals, it is left out.
  *
  * On a phone the row becomes a drawer, because seven top-level categories do
  * not fit across 412px and a header that scrolls sideways is a header nobody
@@ -28,16 +33,19 @@ import { useSolanaCategories } from "@/app/context/category";
  */
 
 /**
- * Top-level entries this header never shows.
+ * Top-level entries this header never shows as categories.
  *
  * Matched on the url as well as the label, so renaming "Brands" in the menu
  * builder does not quietly put it back, and lowercased because both are an
- * operator's free text.
+ * operator's free text. "Current Deals" is here because it is drawn separately.
  */
-const HIDDEN = ["search", "home", "brands"];
+const HIDDEN = ["search", "home", "brands", "current deals", "current-deals"];
 const isHidden = (item) =>
   HIDDEN.includes(String(item?.url ?? "").toLowerCase()) ||
   HIDDEN.includes(String(item?.name ?? "").toLowerCase());
+
+/** Where Current Deals leads, as in the brand navbars. Null where it isn't shown. */
+const CURRENT_DEALS_HREF = ISOKO ? null : "/brand/eloquence";
 
 /** The menu, filtered the way the menu builder says. */
 function useMenuLinks() {
@@ -52,6 +60,18 @@ function useMenuLinks() {
   );
 }
 
+/** The brand navbar's spinner, shown on the link being opened. */
+function NavSpinner({ className = "" }) {
+  return (
+    <svg className={`h-3 w-3 flex-shrink-0 animate-spin text-theme-500 ${className}`} fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
+const keyOf = (item) => item.id ?? item.url ?? item.name;
+
 /**
  * The row, for screens wide enough to hold it.
  *
@@ -60,42 +80,162 @@ function useMenuLinks() {
  */
 export function HeaderMenuBar() {
   const links = useMenuLinks();
-  if (links.length === 0) return null;
+  const pathname = usePathname();
+  const rowRef = useRef(null);
+  const [hovered, setHovered] = useState(null);
+  const [locked, setLocked] = useState(null);
+  const [loadingHref, setLoadingHref] = useState(null);
+
+  // A click anywhere else lets go of a locked dropdown.
+  useEffect(() => {
+    const onDown = (e) => {
+      if (!rowRef.current?.contains(e.target)) setLocked(null);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  // A navigation closes the dropdown and clears its spinner.
+  useEffect(() => {
+    setLoadingHref(null);
+    setLocked(null);
+    setHovered(null);
+  }, [pathname]);
+
+  if (links.length === 0 && !CURRENT_DEALS_HREF) return null;
+
+  // Opening the page you're already on wouldn't navigate, so the spinner would
+  // never clear: close the dropdown instead.
+  const follow = (href) => () => {
+    if (href === pathname) {
+      setLocked(null);
+      setHovered(null);
+      return;
+    }
+    setLoadingHref(href);
+  };
 
   return (
     <nav aria-label="Main" className="w-full">
-      <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 xl:gap-x-10">
-        {links.map((item) => (
-          <li key={item.url || item.name} className="group relative">
+      <ul ref={rowRef} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 xl:gap-x-6">
+        {links.map((item) => {
+          const id = keyOf(item);
+          const href = `/${item.url}`;
+          const children = item.children;
+
+          // Nothing to drop down: the label is the link.
+          if (children.length === 0) {
+            return (
+              <li key={id}>
+                <Link
+                  href={href}
+                  prefetch={false}
+                  onClick={follow(href)}
+                  className="inline-flex items-center gap-1.5 py-2 text-[13px] font-medium transition-opacity hover:opacity-70 xl:text-[15px]"
+                  style={{ color: "var(--sh-menu)" }}
+                >
+                  {item.name}
+                  <NavSpinner className={loadingHref === href ? "visible" : "invisible"} />
+                </Link>
+              </li>
+            );
+          }
+
+          const isLocked = locked === id;
+          const isOpen = isLocked || hovered === id;
+          const cols = children.length > 16 ? 3 : children.length > 8 ? 2 : 1;
+          const colClass = cols === 3 ? "columns-3" : cols === 2 ? "columns-2" : "columns-1";
+          const minWClass = cols === 3 ? "min-w-[540px]" : cols === 2 ? "min-w-[380px]" : "min-w-[220px]";
+
+          return (
+            <li
+              key={id}
+              className="relative"
+              onMouseEnter={() => setHovered(id)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {/* The label opens the dropdown; "All {name}" inside it is the
+                  link. A click locks it open for anyone not using a mouse. */}
+              <Link
+                href={href}
+                prefetch={false}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setLocked(isLocked ? null : id);
+                }}
+                aria-expanded={isOpen}
+                aria-haspopup="true"
+                className="inline-flex items-center gap-1 py-2 text-[13px] font-medium transition-opacity hover:opacity-70 xl:text-[15px]"
+                style={{ color: "var(--sh-menu)" }}
+              >
+                {item.name}
+                <ChevronDown
+                  className={`h-3.5 w-3.5 opacity-60 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
+              </Link>
+
+              <div
+                className={`absolute left-1/2 top-full z-40 -translate-x-1/2 pt-1 transition-all duration-200 ${
+                  isOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"
+                }`}
+              >
+                <div className={`overflow-hidden rounded-xl border border-stone-100 bg-white shadow-2xl dark:border-stone-700 dark:bg-stone-900 ${minWClass}`}>
+                  <Link
+                    href={href}
+                    prefetch={false}
+                    onClick={follow(href)}
+                    className="group/parent flex items-center justify-between border-b border-stone-100 bg-stone-50 px-4 py-2.5 text-[13px] font-semibold text-charcoal transition-colors hover:text-theme-500 dark:border-stone-700 dark:bg-stone-800 dark:text-white"
+                  >
+                    <span>All {item.name}</span>
+                    <span className="relative flex h-3 w-3 flex-shrink-0 items-center justify-center">
+                      <span
+                        className={`absolute text-xs text-theme-500 transition-opacity ${
+                          loadingHref === href ? "invisible" : "opacity-0 group-hover/parent:opacity-100"
+                        }`}
+                      >
+                        →
+                      </span>
+                      <NavSpinner className={loadingHref === href ? "visible" : "invisible"} />
+                    </span>
+                  </Link>
+                  <div className={`max-h-[70vh] overflow-auto p-2 ${colClass}`}>
+                    {children.map((child) => {
+                      const childHref = `/${child.url}`;
+                      return (
+                        <Link
+                          key={keyOf(child)}
+                          href={childHref}
+                          prefetch={false}
+                          onClick={follow(childHref)}
+                          className="flex break-inside-avoid items-center justify-between rounded-lg px-4 py-2 text-[12px] text-stone-700 transition-colors hover:bg-stone-50 hover:text-theme-500 dark:text-stone-300 dark:hover:bg-stone-800"
+                        >
+                          <span>{child.name}</span>
+                          <NavSpinner className={loadingHref === childHref ? "visible" : "invisible"} />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+
+        {CURRENT_DEALS_HREF && (
+          <li>
             <Link
-              href={`/${item.url}`}
-              className="inline-flex items-center gap-1 py-2 text-[15px] font-medium transition-opacity hover:opacity-70 xl:text-base"
+              href={CURRENT_DEALS_HREF}
+              prefetch={false}
+              onClick={follow(CURRENT_DEALS_HREF)}
+              className="inline-flex items-center gap-1.5 py-2 text-[13px] font-semibold transition-opacity hover:opacity-70 xl:text-[15px]"
               style={{ color: "var(--sh-menu)" }}
             >
-              {item.name}
-              {item.children.length > 0 && (
-                <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-              )}
+              Current Deals 🔥
+              <NavSpinner className={loadingHref === CURRENT_DEALS_HREF ? "visible" : "invisible"} />
             </Link>
-
-            {item.children.length > 0 && (
-              <div className="invisible absolute left-1/2 top-full z-40 w-60 -translate-x-1/2 pt-1 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <ul className="max-h-[70vh] overflow-auto rounded-xl border border-stone-200 bg-white py-2 shadow-2xl dark:border-stone-700 dark:bg-stone-900">
-                  {item.children.map((child) => (
-                    <li key={child.url || child.name}>
-                      <Link
-                        href={`/${child.url}`}
-                        className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-200 dark:hover:bg-stone-800"
-                      >
-                        {child.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </li>
-        ))}
+        )}
       </ul>
     </nav>
   );
@@ -124,7 +264,7 @@ export default function HeaderMenu() {
     };
   }, [open]);
 
-  if (links.length === 0) return null;
+  if (links.length === 0 && !CURRENT_DEALS_HREF) return null;
 
   return (
     <>
@@ -156,49 +296,81 @@ export default function HeaderMenu() {
               </button>
             </div>
 
-            <ul className="flex-1 overflow-auto py-2">
-              {links.map((item) => (
-                <li key={item.url || item.name} className="border-b border-stone-100 dark:border-stone-800">
-                  <div className="flex items-center">
-                    <Link
-                      href={`/${item.url}`}
-                      className="flex-1 px-4 py-3 text-base font-medium"
+            <ul className="flex-1 overflow-auto px-2 py-2">
+              {links.map((item) => {
+                const id = keyOf(item);
+                const href = `/${item.url}`;
+
+                if (item.children.length === 0) {
+                  return (
+                    <li key={id}>
+                      <Link
+                        href={href}
+                        prefetch={false}
+                        className="block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
+                        style={{ color: "var(--sh-menu)" }}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                // As in the brand navbar: the row expands, "All {name}" leads.
+                const isExpanded = expanded === id;
+                return (
+                  <li key={id}>
+                    <button
+                      type="button"
+                      onClick={() => setExpanded(isExpanded ? null : id)}
+                      aria-expanded={isExpanded}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-stone-50 dark:hover:bg-stone-800"
                       style={{ color: "var(--sh-menu)" }}
                     >
-                      {item.name}
-                    </Link>
-                    {item.children.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setExpanded(expanded === item.name ? null : item.name)}
-                        aria-label={`${expanded === item.name ? "Hide" : "Show"} ${item.name} subcategories`}
-                        aria-expanded={expanded === item.name}
-                        className="px-4 py-3 text-stone-400"
-                      >
-                        <ChevronDown
-                          className={`h-4 w-4 transition-transform ${expanded === item.name ? "rotate-180" : ""}`}
-                          aria-hidden="true"
-                        />
-                      </button>
-                    )}
-                  </div>
-
-                  {expanded === item.name && (
-                    <ul className="bg-stone-50 pb-2 dark:bg-stone-800/50">
-                      {item.children.map((child) => (
-                        <li key={child.url || child.name}>
+                      <span>{item.name}</span>
+                      <ChevronDown
+                        className={`h-4 w-4 opacity-50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div className={`grid transition-all duration-200 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                      <div className="overflow-hidden">
+                        <div className="mb-1 ml-3 mt-0.5 flex flex-col gap-0.5 border-l-2 border-theme-100 pl-3 dark:border-theme-900">
                           <Link
-                            href={`/${child.url}`}
-                            className="block py-2 pl-8 pr-4 text-sm text-stone-600 dark:text-stone-300"
+                            href={href}
+                            prefetch={false}
+                            className="rounded-lg px-3 py-2 text-sm font-semibold text-theme-500 transition-colors hover:bg-theme-50 dark:hover:bg-theme-950"
                           >
-                            {child.name}
+                            All {item.name}
                           </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                          {item.children.map((child) => (
+                            <Link
+                              key={keyOf(child)}
+                              href={`/${child.url}`}
+                              prefetch={false}
+                              className="rounded-lg px-3 py-2 text-sm text-stone-600 transition-colors hover:bg-stone-50 hover:text-theme-500 dark:text-stone-400 dark:hover:bg-stone-800"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+
+              {CURRENT_DEALS_HREF && (
+                <li>
+                  <Link
+                    href={CURRENT_DEALS_HREF}
+                    prefetch={false}
+                    className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-theme-500"
+                  >
+                    Current Deals 🔥
+                  </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         </div>
