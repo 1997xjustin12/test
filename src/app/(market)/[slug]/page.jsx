@@ -4,6 +4,21 @@ import "@/app/styles/product-pages.css";
 // via /api/revalidate-plp using revalidatePath + revalidateTag.
 export const revalidate = 86400;
 
+// Static (ISR) on every path, including ones first rendered on request.
+//
+// The product grid's <InstantSearchNext> (react-instantsearch-nextjs) calls
+// next/headers' headers() on the server, unconditionally, to read a CSP nonce
+// and the host for its URL routing — neither of which this app uses (no
+// `routing` prop; the CSP has no nonce). At build that call is tolerated, so
+// prebuilt category pages worked. But any category page rendered at runtime —
+// a new category, a revalidation, or every page once a build couldn't prebuild
+// (Redis out of quota, 19 Oct 2026) — failed with "Route /[slug] couldn't be
+// rendered statically because it used `headers`", and the live site answered
+// 500. force-static hands headers() an empty value instead of throwing, which
+// is what the build effectively did. Nothing on this page reads the request:
+// sort, filters and pagination are applied client-side.
+export const dynamic = "force-static";
+
 import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 
