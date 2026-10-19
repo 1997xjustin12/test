@@ -202,12 +202,18 @@ function ListingJsonLd({ json }) {
  * as title until Redis is back. Replace it with a fresh snapshot once it is.
  */
 async function readMenu() {
+  let menu;
   try {
-    return await readOrLastKnownGood("nav-menu", getMenuData);
+    menu = await readOrLastKnownGood("nav-menu", getMenuData);
   } catch (error) {
     console.error("[slug] menu unavailable, using the bundled snapshot:", error?.message || error);
-    return (await import("@/app/data/nav-menu-oct-16.json")).default;
   }
+  // Redis answering with no menu is as unusable as Redis not answering: a new,
+  // still-empty database (kv.solanabbqgrills.com before the Nov 1 migration)
+  // returns null without throwing, and every category page answered 500.
+  if (Array.isArray(menu) && menu.length) return menu;
+  if (menu !== undefined) console.error("[slug] stored menu is empty, using the bundled snapshot");
+  return (await import("@/app/data/nav-menu-oct-16.json")).default;
 }
 
 export async function generateStaticParams() {
@@ -219,6 +225,12 @@ export async function generateStaticParams() {
   let menuData;
   try {
     menuData = await getMenuData();
+    // An empty database answers null rather than throwing; flattenNav(null)
+    // then failed the build ("Failed to collect page data for /[slug]").
+    if (!Array.isArray(menuData) || !menuData.length) {
+      console.error("[slug] generateStaticParams: no menu stored, prebuilding no pages");
+      return [];
+    }
   } catch (error) {
     console.error("[slug] generateStaticParams: menu unreadable, prebuilding no pages:", error?.message || error);
     return [];
