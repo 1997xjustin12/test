@@ -270,9 +270,26 @@ export const CartProvider = ({ children }) => {
 
   // ── Persistence ────────────────────────────────────────────────────────────
 
-  /** Saves cart to the user API when logged in, or to localForage for guests. */
+  /**
+   * Saves cart to the user API when logged in, or to localForage for guests.
+   *
+   * Signed in means the server, whatever the profile holds. This used to test
+   * `user?.email`, and an account with an empty email (they exist — the test
+   * account is one) was treated as a guest: every remove, add and quantity
+   * change went to the browser's guest cart while the server kept the old
+   * items, so a removed item came back on the next load — and the guest copy,
+   * lacking the `merged` flag, was then merged into the server cart on top.
+   *
+   * Signed in but the profile not loaded yet: nothing is saved, rather than
+   * the guest cart. Writing a signed-in shopper's cart there is the bug above
+   * by another route; the next load reads the server again.
+   */
   const saveCart = useCallback(async (newCart) => {
-    if (isLoggedIn && user?.email) {
+    if (isLoggedIn) {
+      if (!user) {
+        console.warn("[saveCart] signed in but the profile isn't loaded yet; not saving");
+        return;
+      }
       await userCartUpdate(newCart);
     } else {
       await cartStorage.saveCart(newCart);
@@ -329,7 +346,9 @@ export const CartProvider = ({ children }) => {
     if (userCart) {
       mergedCart = {
         ...userCart,
-        items:            [...(userCart.items ?? []), ...toMerge],
+        // Combined by product, not appended: appending put the same product on
+        // two lines whenever it was in both carts.
+        items:            mergeItems(userCart.items ?? [], toMerge),
         updated_at:       new Date().toISOString(),
         reference_number: userCart.reference_number ?? createOrderNumber(),
       };
