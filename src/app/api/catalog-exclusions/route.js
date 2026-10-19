@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { isAuthorizedAdminRequest } from "@/app/lib/admin-auth";
-import { redis } from "@/app/lib/redis";
 import { fetchBrands } from "@/app/lib/fn_server";
 import {
   CATALOG_EXCLUSIONS_TAG,
@@ -38,35 +37,13 @@ const DEPENDENT_TAGS = [
   "pdp",
   "ymal",
   "blogs",
+  // Every grid's Elasticsearch responses (app/api/es/searchkit/route.js), keyed
+  // by a hash of the request body. The trap: the body does not change when the
+  // exclusion list does, so without this the same cached response keeps serving
+  // results computed under the previous list. They were Redis keys
+  // (searchkit:*) that had to be SCANned and deleted; now a tag.
+  "searchkit",
 ];
-
-/**
- * Elasticsearch responses cached in Redis by pages/api/es/searchkit.js, keyed
- * by a hash of the request body.
- *
- * Busting tags is not enough on its own, and this is the trap: the request body
- * does not change when the exclusion list does, so the same key still hits and
- * serves results computed under the previous list. Found by changing the list
- * and watching the storefront not move.
- */
-const SEARCHKIT_CACHE_PATTERN = "searchkit:*";
-
-async function purgeSearchkitCache() {
-  let cursor = "0";
-  let deleted = 0;
-  do {
-    const [next, batch] = await redis.scan(cursor, {
-      match: SEARCHKIT_CACHE_PATTERN,
-      count: 500,
-    });
-    cursor = String(next);
-    if (batch?.length) {
-      await redis.del(...batch);
-      deleted += batch.length;
-    }
-  } while (cursor !== "0");
-  return deleted;
-}
 
 const fail = (error, status) =>
   NextResponse.json({ status: "error", error }, { status });
@@ -146,14 +123,12 @@ export async function PUT(request) {
     // its menu entry missing from every cached page until that page's own
     // revalidation came round. Same reason /api/header and /api/footer do this.
     revalidatePath("/", "layout");
-    const purged = await purgeSearchkitCache();
 
     return NextResponse.json({
       status: "ok",
       ...saved,
       revalidated: DEPENDENT_TAGS,
       revalidatedPaths: ["/ (layout)"],
-      searchkitKeysPurged: purged,
       // Honest about the limit of what a save can reach: Pages Router routes
       // read Redis per request and are fine, and the market layout's pages are
       // revalidated above — but each deployed instance keeps its own cache, so

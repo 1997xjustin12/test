@@ -632,6 +632,9 @@ function MenuUpdaterV3() {
     redisSet(selectedMenu, merged)
       .then((response) => {
         if (response.success) {
+          // The menu is cached under "nav-menu" (storefront and admin); clear it
+          // so the change shows now rather than within a day.
+          fetch("/api/cache/clear?groups=layout", { method: "POST" }).catch(() => {});
           showAlertMessage("success", "Menu object updated successful.");
         } else {
           showAlertMessage("error", "Failed to update. Please try again.");

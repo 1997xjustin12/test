@@ -1,6 +1,16 @@
 import { ES_INDEX, createSlug, isNavVisible } from "./lib/helpers";
 import { getCatalogExclusions } from "./lib/catalog-exclusions";
+import { unstable_cache } from "next/cache";
 import { keys, redis } from "./lib/redis";
+
+// The menu is a few hundred KB, and the sitemap regenerates hourly per brand;
+// reading it straight from Redis each time cost that much Upstash bandwidth
+// every hour. Cached under "nav-menu" with every other menu read.
+const getStoredMenu = unstable_cache(
+  async () => redis.get(keys.dev_shopify_menu.value),
+  ["sitemap-menu", keys.dev_shopify_menu.value],
+  { revalidate: 86400, tags: ["nav-menu"] },
+);
 import { getAllBlogPosts } from "./lib/blogs";
 
 /**
@@ -126,7 +136,7 @@ async function fetchAllProducts({ excludedBrands = [], excludedCollections = [] 
  */
 async function fetchMenuPages(excludedBrands = []) {
   try {
-    const stored = await redis.get(keys.dev_shopify_menu.value);
+    const stored = await getStoredMenu();
     const menu = typeof stored === "string" ? JSON.parse(stored) : stored;
     if (!Array.isArray(menu)) throw new Error("menu is not a list");
 

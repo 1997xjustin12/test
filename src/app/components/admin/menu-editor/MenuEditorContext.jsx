@@ -270,6 +270,9 @@ export function MenuEditorProvider({
       const updated = updateMenuItemById(data, menuItem?.menu_id, menuItem);
       const response = await redisSet(defaultMenuKey, updated);
       if (response?.success) {
+        // The menu is cached under "nav-menu" (storefront and admin); clear it
+        // so the change shows now rather than within a day.
+        fetch("/api/cache/clear?groups=layout", { method: "POST" }).catch(() => {});
         setDirty(false);
         showAlert("success", "Menu object updated successfully.");
       } else {

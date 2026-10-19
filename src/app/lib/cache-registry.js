@@ -48,14 +48,15 @@ export const CACHE_GROUPS = [
     id: "plp",
     label: "Category & collection pages",
     blurb:
-      "First-page product hits prefetched for each PLP, collection counts, and the Elasticsearch filter/pagination responses cached in Redis.",
-    tags: ["plp-initial-hits", "collections-count"],
+      "First-page product hits prefetched for each PLP, collection counts, and every grid's Elasticsearch filter/pagination/search response.",
+    // "searchkit" is app/api/es/searchkit/route.js: 24h for a grid's landing
+    // request, 1h for anything else. It used to live in Redis as searchkit:*,
+    // shared by every brand, and was the bulk of Upstash bandwidth.
+    tags: ["plp-initial-hits", "collections-count", "searchkit"],
     paths: [],
-    // Written by pages/api/es/searchkit.js. 24h for page-0 unfiltered
-    // requests, 60s for anything filtered.
-    redis: ["searchkit:*"],
-    ttl: "24h (Redis: 24h / 60s)",
-    shared: true,
+    redis: [],
+    ttl: "24h (search responses: 24h landing / 1h other)",
+    shared: false,
   },
   {
     id: "pdp",

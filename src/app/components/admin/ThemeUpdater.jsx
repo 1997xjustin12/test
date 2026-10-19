@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button"
 import { MSLCheck } from "@/app/components/icons/lib";
-import { keys, redisGet, redisSet } from "@/app/lib/redis";
+import { redisGet, redisSet } from "@/app/lib/redis";
 
 
 const colors = [
@@ -31,7 +31,10 @@ const colors = [
   "stone",
 ];
 
-const themeKey = keys.theme.value;
+// The layouts cache the theme colour for 24h under "layout-data"; this clears
+// it so a change shows on the next page load.
+const refreshStorefront = () =>
+  fetch("/api/revalidate-store-settings", { method: "POST" }).catch(() => {});
 
 const colors_obj = colors.map((i) => ({
   name: i,
@@ -64,7 +67,10 @@ const colors_obj = colors.map((i) => ({
 
 // console.log(colors.map(i=> `theme-${i}`))
 
-function ThemeUpdater() {
+// themeKey comes from the server (admin/theme-color/page.jsx). It used to be
+// built here from keys.theme, but STORE_ID is empty in the browser, so every
+// brand read and saved "_theme" — a key no storefront reads.
+function ThemeUpdater({ themeKey }) {
   const [selected, setSelected] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
 
@@ -98,6 +104,7 @@ function ThemeUpdater() {
       .then((response) => {
         if (response.success) {
           setActiveColor(selected);
+          refreshStorefront();
           showAlertMessage("success", `Color ${selected.toUpperCase()} successfully applied to your market pages.`);
           // console.log(`handleSaveThemeFNSuccess:`, response);
         } else {

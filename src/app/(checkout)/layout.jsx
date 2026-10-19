@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
-import { redis, keys } from "@/app/lib/redis";
+import { getLogoAndTheme } from "@/app/lib/branding";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { bodyClass } from "brand-fonts";
 import { AuthProvider } from "@/app/context/auth";
@@ -21,7 +21,13 @@ import OKOFooter from "@/app/components/oko-design/layout/Footer";
 export { generateMetadata };
 
 export default async function CheckoutLayout({ children }) {
-  const [redisLogo, color] = await redis.mget([keys.logo.value, keys.theme.value]);
+  // A missing logo must not stop anyone paying: if Redis is unreachable (or out
+  // of quota) the checkout renders with the default logo and colour. Caught out
+  // here, not inside the cache, so a failure is never stored as the answer.
+  const [redisLogo, color] = await getLogoAndTheme().catch((error) => {
+    console.error("checkout layout: logo/theme unavailable, using defaults:", error?.message || error);
+    return [null, null];
+  });
 
   // The brand's theme colour, exactly as the (market) layout sets it. Without
   // these variables every `theme-*` utility on the checkout resolves to

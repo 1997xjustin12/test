@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import AdminContent from "@/app/components/admin/AdminContent";
 import { getAdminUser, isDevBypass } from "@/app/lib/admin-auth";
+import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { CategoriesProvider } from "@/app/context/category";
 
@@ -18,6 +19,17 @@ const MontserratFont = Montserrat({
 export const metadata = {
   title: "Page Configurator",
 };
+
+// The whole menu tree, a few hundred KB, was read from Redis on every admin
+// page view — a steady drain on Upstash bandwidth for an admin session. Cached
+// under "nav-menu", which the menu builder clears on save, so an edit still
+// shows on the next view; the 5-minute ceiling covers any save path that
+// doesn't.
+const getAdminMenu = unstable_cache(
+  async () => redis.get(keys.dev_shopify_menu.value),
+  ["admin-menu", keys.dev_shopify_menu.value],
+  { revalidate: 300, tags: ["nav-menu"] },
+);
 export default async function AdminLayout({ children }) {
   // Second, independent gate. proxy.js already refuses non-admins at the edge;
   // this repeats the check where it cannot be bypassed by a matcher change or a
@@ -29,10 +41,7 @@ export default async function AdminLayout({ children }) {
     Boolean(await getAdminUser({ cookies: cookieStore }));
   if (!isAdmin) notFound();
 
-  // const defaultKey = keys.default_shopify_menu.value;
-  const defaultKey = keys.dev_shopify_menu.value;
-  const mgetKeys = [defaultKey];
-  const [menu_items] = await redis.mget(mgetKeys);
+  const menu_items = await getAdminMenu();
 
   return (
     <html lang="en" suppressHydrationWarning>

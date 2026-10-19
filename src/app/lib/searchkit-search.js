@@ -1,44 +1,32 @@
-// pages/api/es/searchkit.js
+// The Elasticsearch query behind POST /api/es/searchkit (app/api/es/searchkit/
+// route.js), which owns the caching. This file only turns a Searchkit request
+// body into results.
+//
+// It used to be the Pages Router handler itself, and cached each response in
+// Upstash Redis under searchkit:<hash>. A response is 200–280 KB (30 full
+// product documents plus facets), and Upstash bills bandwidth both ways: a hit
+// downloaded it, a miss uploaded it. Every category page view, filter click
+// and page turn — crawlers walking ?page=1…170 included — moved a full
+// response through Redis, which is what exhausted the plan's bandwidth.
 import API from "@searchkit/api";
-import crypto from "crypto";
 
 import {
   BaseNavObj,
   ES_INDEX,
   main_products,
   shouldApplyMainProductSort,
-} from "../../../app/lib/helpers";
+} from "@/app/lib/helpers";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 
-import COLLECTIONS_BY_CATEGORY from "../../../app/data/collections_by_category";
+import COLLECTIONS_BY_CATEGORY from "@/app/data/collections_by_category";
 import {
   getActiveFacets,
   getActiveRuntimeMappings,
-} from "../../../app/lib/filter-helper";
-import { fixObservableSubclass } from "@apollo/client/utilities";
-import { redis } from "../../../app/lib/redis";
-import { withRateLimit } from "@/app/lib/rate-limit";
+} from "@/app/lib/filter-helper";
 import { exactMatchClauses } from "@/app/lib/search-exact-match";
 
-const CACHE_TTL = 60; // seconds for filtered/paginated requests
-const INITIAL_PAGE_TTL = 86400; // 24h for page-0, unfiltered requests
-
-// Page-0 requests with no search query are the "initial load" state for each
-// PLP page. These are safe to cache for 24h since the server-side prefetch
-// (unstable_cache in page.jsx) keeps the data fresh and busts this alongside it.
-function isInitialPageRequest(body) {
-  if (!Array.isArray(body) || !body[0]) return false;
-  const { page = 0, query = "" } = body[0].params || {};
-  return page === 0 && query === "";
-}
-
-function buildCacheKey(body) {
-  const hash = crypto
-    .createHash("sha1")
-    .update(JSON.stringify(body))
-    .digest("hex");
-  return `searchkit:${hash}`;
-}
+/** Data-cache tag on every cached Searchkit response. See the route. */
+export const SEARCHKIT_TAG = "searchkit";
 
 const priceBuckets = {
   "Under $1,000": { gte: 0, lt: 1000 },
@@ -73,28 +61,13 @@ const mainItemsScriptSort = {
   },
 };
 
-async function searchkit(req, res) {
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "Method Not Allowed" });
-    return;
-  }
-
-  // Check Redis cache before hitting Elasticsearch
-  const cacheKey = buildCacheKey(req.body);
-  const cacheTTL = isInitialPageRequest(req.body) ? INITIAL_PAGE_TTL : CACHE_TTL;
-  try {
-    const cached = await redis.get(cacheKey);
-    if (cached) {
-      res.setHeader("X-Cache", "HIT");
-      return res.status(200).json(cached);
-    }
-  } catch (cacheErr) {
-    // Cache miss or Redis unavailable — proceed normally
-    console.warn("[searchkit] Redis read failed:", cacheErr.message);
-  }
-
-  try {
-    const check_filter = req.body?.[0]?.params?.filter;
+/**
+ * Runs one Searchkit request against this brand's index.
+ * Throws on failure, so a caller's cache never stores an error.
+ */
+export async function runSearchkit(body) {
+  {
+    const check_filter = body?.[0]?.params?.filter;
     let filter_key = null;
     let filter_value = null;
     let filter_option = null;
@@ -220,7 +193,7 @@ async function searchkit(req, res) {
       }
     }
 
-    const data = req.body;
+    const data = body;
     let results = null;
 
     const facetAttributes = (getActiveFacets(filter_type) || []).map(
@@ -431,21 +404,6 @@ async function searchkit(req, res) {
       results = await apiClient.handleRequest(data);
     }
 
-    // Store in Redis for subsequent identical requests
-    try {
-      await redis.set(cacheKey, results, { ex: cacheTTL });
-    } catch (cacheErr) {
-      console.warn("[searchkit] Redis write failed:", cacheErr.message);
-    }
-
-    res.setHeader("X-Cache", "MISS");
-    res.status(200).json(results);
-  } catch (err) {
-    console.error("Searchkit Error:", err);
-    res.status(500).json({ error: "Searchkit failed", details: err.message });
+    return results;
   }
 }
-
-// Public read endpoint: throttled with 429 + Retry-After so agents can
-// back off gracefully. See lib/rate-limit.js.
-export default withRateLimit(searchkit, "search");

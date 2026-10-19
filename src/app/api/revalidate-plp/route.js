@@ -20,6 +20,8 @@ export async function GET(request) {
 
   revalidateTag("plp-initial-hits");
   revalidateTag("home-products");
+  // Every grid's cached Elasticsearch responses (app/api/es/searchkit/route.js).
+  revalidateTag("searchkit");
 
   return NextResponse.json({
     revalidated: true,
