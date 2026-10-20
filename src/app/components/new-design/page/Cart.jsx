@@ -31,7 +31,7 @@ const ShoppingAssistance = () => (
       className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-xl transition-colors"
     >
       <PhoneIcon className="w-3.5 h-3.5" />
-      Call Now
+      {STORE_CONTACT ? `Call ${STORE_CONTACT}` : "Call Now"}
     </Link>
   </div>
 );
