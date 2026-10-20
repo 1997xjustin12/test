@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/auth";
+import { useGoogleReCaptcha } from "@/app/context/recaptcha";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
 import { loginErrorMessage } from "@/app/lib/auth-errors";
@@ -18,6 +19,7 @@ const buttonClass =
 
 function LoginForm({ successLogin = null }) {
   const { login } = useAuth();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter();
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
@@ -33,10 +35,20 @@ function LoginForm({ successLogin = null }) {
     setError(null);
     setLoading(true);
 
+    // Invisible reCAPTCHA v3; checked server-side in /api/login.
+    let recaptchaToken;
+    try {
+      recaptchaToken = await executeRecaptcha?.("login");
+    } catch {
+      setLoading(false);
+      setError("We couldn't load the security check. Please refresh the page (or allow reCAPTCHA if an ad blocker is on) and try again.");
+      return;
+    }
+
     const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, recaptchaToken }),
     });
 
     const data = await res.json().catch(() => ({}));

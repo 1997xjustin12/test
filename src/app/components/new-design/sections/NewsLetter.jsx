@@ -7,15 +7,21 @@ export default function Newsletter() {
   const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  // "Too many requests…" when the signup was refused for being too frequent.
+  const [limitMsg, setLimitMsg] = useState("");
 
   const submit = async (e) => {
-    e.preventDefault();
+    // Optional: the Enter key calls submit() with no event, and
+    // e.preventDefault() then threw before anything was sent.
+    e?.preventDefault();
+    setLimitMsg("");
     try {
       await subscribe(email);
       setDone(true);
       setEmail("");
       setTimeout(() => setDone(false), 3000);
     } catch (err) {
+      if (err?.rateLimited) setLimitMsg(err.message);
       console.warn(err);
     }
   };
@@ -86,6 +92,7 @@ export default function Newsletter() {
               your inbox.
             </p>
           </div>
+          <div className="w-full sm:w-auto">
           <div className="flex gap-2.5 w-full sm:w-auto sm:min-w-[380px]">
             <input
               type="email"
@@ -112,6 +119,8 @@ export default function Newsletter() {
             >
               {done ? "✓ Subscribed!" : "Subscribe"}
             </button>
+          </div>
+          {limitMsg && <p role="alert" className="mt-2 text-xs text-red-600 dark:text-red-400">{limitMsg}</p>}
           </div>
         </div>
       </div>

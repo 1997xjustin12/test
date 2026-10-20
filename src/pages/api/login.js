@@ -1,5 +1,6 @@
 import { withAuthRateLimit } from "@/app/lib/rate-limit";
 import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
+import { RECAPTCHA_FAILED_MESSAGE, verifyRecaptcha } from "@/app/lib/recaptcha";
 import * as cookie from "cookie";
 import {
   ADMIN_COOKIE,
@@ -14,10 +15,18 @@ async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { username, password } = req.body;
+  const { username, password, recaptchaToken } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: "Missing username or password" });
+  }
+
+  // Invisible reCAPTCHA v3, before the backend sees the password. See
+  // lib/recaptcha.js for what is refused and what is let through.
+  const human = await verifyRecaptcha(recaptchaToken, "login");
+  if (!human.ok) {
+    console.warn("[login] reCAPTCHA refused:", human.reason);
+    return res.status(400).json({ error: RECAPTCHA_FAILED_MESSAGE, code: "RECAPTCHA_FAILED" });
   }
 
   try {

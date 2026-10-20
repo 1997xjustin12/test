@@ -1,6 +1,7 @@
 //  API functions that can be used for guest users
 //  API functions for auth user can be found in context/auth.js
 
+import { tooManyRequestsMessage } from "@/app/lib/rate-limit-message";
 import {
   ES_INDEX,
   exclude_brands,
@@ -54,6 +55,21 @@ export const sendAbandonedCart = async (cart) => {
   }
 };
 
+/**
+ * A 429 is not a result to report as success. Most newsletter boxes await
+ * subscribe() and show "subscribed" whatever came back, so a refused request
+ * is thrown instead — every caller's existing error path then runs, and the
+ * error carries the "too many requests" wording (err.message, err.rateLimited)
+ * for the ones that show it.
+ */
+async function throwIfRateLimited(response) {
+  if (response?.status !== 429) return;
+  const data = await response.clone().json().catch(() => ({}));
+  const error = new Error(tooManyRequestsMessage(response, data));
+  error.rateLimited = true;
+  throw error;
+}
+
 export const subscribe = async (email) => {
   try {
     if (!email) {
@@ -61,14 +77,17 @@ export const subscribe = async (email) => {
       return;
     }
 
-    return await fetch("/api/subscribers/subscribe", {
+    const response = await fetch("/api/subscribers/subscribe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
     });
+    await throwIfRateLimited(response);
+    return response;
   } catch (err) {
+    if (err?.rateLimited) throw err;
     console.warn("[subscribe] API error:", err);
   }
 };
@@ -80,14 +99,17 @@ export const unsubscribe = async (email) => {
       return;
     }
 
-    return await fetch("/api/subscribers/unsubscribe", {
+    const response = await fetch("/api/subscribers/unsubscribe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
     });
+    await throwIfRateLimited(response);
+    return response;
   } catch (err) {
+    if (err?.rateLimited) throw err;
     console.warn("[unsubscribe] API error:", err);
   }
 };

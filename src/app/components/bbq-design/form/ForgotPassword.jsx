@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import FormCard from "@/app/components/bbq-design/form/FormCard.jsx";
+import { tooManyRequestsMessage } from "@/app/lib/rate-limit-message";
+import { useGoogleReCaptcha } from "@/app/context/recaptcha";
 
 const inputClass =
   "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
@@ -17,6 +19,7 @@ function ForgotPassword() {
   const [cooldown, setCooldown] = useState(0);
   const [loading, setLoading] = useState(false);
   const [notif, setNotif] = useState({ status: "", message: "" });
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -32,20 +35,34 @@ function ForgotPassword() {
     setNotif({ status: "", message: "" });
     setCooldown(30);
 
+    // Invisible reCAPTCHA v3; checked server-side in /api/auth/forgot-password.
+    let recaptchaToken;
+    try {
+      recaptchaToken = await executeRecaptcha?.("forgot_password");
+    } catch {
+      setLoading(false);
+      setCooldown(0);
+      setNotif({
+        status: "error",
+        message: "We couldn't load the security check. Please refresh the page (or allow reCAPTCHA if an ad blocker is on) and try again.",
+      });
+      return;
+    }
+
     try {
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, recaptchaToken }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       setNotif({
         status: res.ok ? "success" : "error",
         message: res.ok
           ? data?.detail || "Check your email for reset instructions."
-          : data?.detail || data?.email || "Something went wrong.",
+          : tooManyRequestsMessage(res, data) || data?.detail || data?.email || "Something went wrong.",
       });
     } catch {
       setNotif({

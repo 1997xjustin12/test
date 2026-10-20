@@ -17,15 +17,19 @@ function SubscribeWidget({
 }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  // "Too many requests…" when the signup was refused for being too frequent.
+  const [limitMsg, setLimitMsg] = useState("");
 
   const handleSubmit = async(e) => {
     e.preventDefault(); // Prevents page reload
+    setLimitMsg("");
     try {
       await subscribe(email);
       setEmail("");
       setDone(true);
       setTimeout(() => setDone(false), 3000);
     } catch (err) {
+      if (err?.rateLimited) setLimitMsg(err.message);
       console.warn(err);
     }
   };
@@ -46,6 +50,7 @@ function SubscribeWidget({
             {done ? "✓ Subscribed!" : label}
         </button>
       </div>
+      {limitMsg && <p role="alert" className="text-xs text-red-500">{limitMsg}</p>}
     </form>
   );
 }

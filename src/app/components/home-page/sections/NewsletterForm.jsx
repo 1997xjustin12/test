@@ -20,11 +20,14 @@ import { subscribe } from "@/app/lib/api";
 export default function NewsletterForm({ scope, placeholder, label, successMessage }) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState("idle"); // idle | sending | done | error
+  // "Too many requests…" in place of the general error when that was the cause.
+  const [limitMsg, setLimitMsg] = useState("");
 
   const submit = async (event) => {
     event.preventDefault();
     if (state === "sending") return;
     setState("sending");
+    setLimitMsg("");
     try {
       const res = await subscribe(email.trim());
       if (!res?.ok) throw new Error(`subscribe responded ${res?.status ?? "not at all"}`);
@@ -32,6 +35,7 @@ export default function NewsletterForm({ scope, placeholder, label, successMessa
       setState("done");
     } catch (error) {
       console.warn("[newsletter]", error);
+      if (error?.rateLimited) setLimitMsg(error.message);
       setState("error");
     }
   };
@@ -80,7 +84,7 @@ export default function NewsletterForm({ scope, placeholder, label, successMessa
 
       {state === "error" && (
         <p className="text-sm font-medium text-red-600 dark:text-red-400" role="alert">
-          That did not go through. Please check the address and try again.
+          {limitMsg || "That did not go through. Please check the address and try again."}
         </p>
       )}
     </form>

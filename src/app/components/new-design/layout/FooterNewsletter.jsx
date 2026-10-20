@@ -10,16 +10,20 @@ export default function FooterNewsletter() {
   const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  // "Too many requests…" when the signup was refused for being too frequent.
+  const [limitMsg, setLimitMsg] = useState("");
 
   const submit = async (e) => {
     e?.preventDefault();
     if (!email) return;
+    setLimitMsg("");
     try {
       await subscribe(email);
       setDone(true);
       setEmail("");
       setTimeout(() => setDone(false), 3000);
     } catch (err) {
+      if (err?.rateLimited) setLimitMsg(err.message);
       console.warn("[FooterNewsletter]", err);
     }
   };
@@ -41,6 +45,7 @@ export default function FooterNewsletter() {
       </div>
 
       {!user?.is_subscribed && (
+        <div className="w-full sm:w-auto">
         <form
           onSubmit={submit}
           className="flex gap-2 w-full sm:w-auto sm:min-w-[360px]"
@@ -70,6 +75,8 @@ export default function FooterNewsletter() {
             {done ? "✓ Subscribed!" : "Subscribe"}
           </button>
         </form>
+        {limitMsg && <p role="alert" className="mt-2 text-xs text-red-300">{limitMsg}</p>}
+        </div>
       )}
     </div>
   );

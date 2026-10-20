@@ -11,6 +11,7 @@ import { CartIcon } from "@/app/components/icons/lib";
 import { Rating } from "@smastrom/react-rating";
 import { useCart } from "@/app/context/cart";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { tooManyRequestsMessage } from "@/app/lib/rate-limit-message";
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
@@ -73,6 +74,8 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
     comment: "",
   });
   const [loading, setLoading] = useState(false);
+  // "Too many requests…" when the backend refused the review for being too frequent.
+  const [limitMsg, setLimitMsg] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,12 +85,14 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setLimitMsg("");
     try {
       const response = action === "update"
         ? await userReviewUpdate(form)
         : await userReviewCreate(form);
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (!response?.ok) {
+        setLimitMsg(tooManyRequestsMessage(response, data) || "");
         console.warn("[ReviewForm] submission failed", data);
         return;
       }
@@ -217,6 +222,7 @@ const ReviewForm = ({ product, onClose, initForm, action }) => {
                     {loading ? "Submitting…" : "Submit review"}
                   </button>
                 </div>
+                {limitMsg && <p role="alert" className="text-xs font-medium text-red-600 dark:text-red-400">{limitMsg}</p>}
               </form>
             </div>
           </DialogPanel>

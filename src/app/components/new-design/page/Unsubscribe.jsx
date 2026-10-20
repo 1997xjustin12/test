@@ -38,7 +38,8 @@ export default function NewUnsubscribePage() {
         setMessage(`You've been unsubscribed from ${email}.`);
       } catch (err) {
         setStatus("error");
-        setMessage("Failed to unsubscribe. Please try again later.");
+        // A 429 says how long to wait (lib/api.js); anything else, the general line.
+        setMessage(err?.rateLimited ? err.message : "Failed to unsubscribe. Please try again later.");
         console.warn("[unsubscribeEmail] error", err);
       }
     };

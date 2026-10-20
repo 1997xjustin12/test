@@ -1,5 +1,7 @@
 import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
 import { withAuthRateLimit } from "@/app/lib/rate-limit";
+import { RECAPTCHA_FAILED_MESSAGE, verifyRecaptcha } from "@/app/lib/recaptcha";
+
 async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -8,7 +10,14 @@ async function handler(req, res) {
   try {
     const url = `${process.env.NEXT_SOLANA_BACKEND_URL}/api/auth/forgot-password`;
 
-    const {email} = await req.body;
+    const { email, recaptchaToken } = await req.body;
+
+    // Invisible reCAPTCHA v3 before anything is emailed; see lib/recaptcha.js.
+    const human = await verifyRecaptcha(recaptchaToken, "forgot_password");
+    if (!human.ok) {
+      console.warn("[forgot-password] reCAPTCHA refused:", human.reason);
+      return res.status(400).json({ detail: RECAPTCHA_FAILED_MESSAGE, code: "RECAPTCHA_FAILED" });
+    }
 
     const response = await fetch(url, {
       method: "POST",

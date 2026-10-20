@@ -25,6 +25,8 @@
  * Only two messages are rewritten, where the raw text is worse than useless.
  */
 
+import { tooManyRequestsMessage, waitFrom } from "@/app/lib/rate-limit-message";
+
 /** Field names in the order a reader meets them in the form. */
 const FIELD_LABELS = {
   first_name: "First name",
@@ -81,42 +83,35 @@ const friendlier = (field, sentence) => {
  * reduced to the first, because fixing one and resubmitting only to be told
  * about the next is the slowest way to learn what the form wants.
  */
-/** "45 seconds", "3 minutes" — from a Retry-After header's seconds, or null. */
-function waitFrom(retryAfter) {
-  const seconds = Number.parseInt(retryAfter, 10);
-  if (!Number.isFinite(seconds) || seconds <= 0) return null;
-  if (seconds < 60) return `${seconds} second${seconds === 1 ? "" : "s"}`;
-  const minutes = Math.ceil(seconds / 60);
-  return `${minutes} minute${minutes === 1 ? "" : "s"}`;
-}
 
 /**
  * What the sign-in form says when /api/login refuses.
  *
  * A 429 is a lockout — the backend's (5 wrong passwords in 15 minutes, or 20
  * in an hour, refused even with the right password) or this storefront's own
- * limiter — and must never read as "wrong password". The backend explains
- * itself in `detail`, our limiter in `message`; either way the wait from
- * Retry-After is added when the message doesn't already give one.
+ * limiter — and must never read as "wrong password". The backend's lockout
+ * explains itself in `detail`, which is kept, with the wait from Retry-After
+ * added when it doesn't already give one. Our limiter's own text ("Try again
+ * in 506s.") is not shown; it gets the checklist's standard wording instead.
  *
  * @param data      the parsed response body
  * @param response  the fetch Response, for its status and Retry-After
  */
 export function loginErrorMessage(data, response) {
   if (response?.status === 429) {
-    const said = data?.detail || data?.message || null;
+    const said = typeof data?.detail === "string" ? data.detail : null;
+    if (!said) return tooManyRequestsMessage(response, data);
     const wait = waitFrom(response.headers?.get?.("retry-after"));
-    if (!said) {
-      return wait
-        ? `Too many sign-in attempts. Try again in ${wait}.`
-        : "Too many sign-in attempts. Please wait a moment and try again.";
-    }
     return wait && !/\d/.test(said) ? `${said} Try again in ${wait}.` : said;
   }
   return data?.error || data?.detail || "Login failed. Please try again.";
 }
 
 export function registrationErrorMessage(data, status) {
+  // Throttled: the standard wording, with the wait from either limiter's body,
+  // rather than "Too Many Requests Too many attempts. Try again in 506s."
+  if (status === 429) return tooManyRequestsMessage({ status }, data);
+
   if (typeof data === "string" && data.trim()) return data.trim();
 
   if (data && typeof data === "object") {
@@ -146,7 +141,6 @@ export function registrationErrorMessage(data, status) {
   }
 
   // Nothing usable in the body. Say what is known rather than guessing.
-  if (status === 429) return "Too many attempts. Please wait a moment and try again.";
   if (status >= 500) return "Something went wrong at our end. Please try again shortly.";
   return "Registration failed. Please check your details and try again.";
 }
