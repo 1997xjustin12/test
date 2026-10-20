@@ -1,6 +1,9 @@
 import "@/app/globals.css";
 import "@smastrom/react-rating/style.css";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { getLogoAndTheme } from "@/app/lib/branding";
+import { CHECKOUT_UNAVAILABLE_PATH, getCheckoutState } from "@/app/lib/checkout-availability";
 import { THEME_COLORS } from "@/app/data/theme-colors";
 import { bodyClass } from "brand-fonts";
 import { AuthProvider } from "@/app/context/auth";
@@ -21,6 +24,15 @@ import OKOFooter from "@/app/components/oko-design/layout/Footer";
 export { generateMetadata };
 
 export default async function CheckoutLayout({ children }) {
+  // Checkout switched off for this domain: send the shopper to the storefront's
+  // "checkout isn't open yet" page. Decided here rather than in the page because
+  // (checkout)/loading.jsx wraps the page in a Suspense boundary — the shell is
+  // already streaming by the time the page runs, so a redirect there arrives as
+  // a 200 with a client-side redirect instead of a 307. The layout runs before
+  // anything is sent. This route group holds /checkout only.
+  const checkout = await getCheckoutState((await headers()).get("host"));
+  if (checkout.closed) redirect(CHECKOUT_UNAVAILABLE_PATH);
+
   // A missing logo must not stop anyone paying: if Redis is unreachable (or out
   // of quota) the checkout renders with the default logo and colour. Caught out
   // here, not inside the cache, so a failure is never stored as the answer.

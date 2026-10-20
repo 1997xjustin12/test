@@ -4,75 +4,121 @@ import { contentKey } from "@/app/lib/store";
 import { readOrDegrade } from "@/app/lib/upstream";
 
 /**
- * Whether this brand is taking orders.
+ * Whether checkout is open — for this brand, on this domain.
  *
- * Braintree has been removed and no payment provider replaces it yet, so the
- * checkout cannot take a payment. Rather than delete the checkout — the
- * shipping form, re-pricing and order creation all carry over to the next
- * provider — it can be closed behind a switch, so shoppers see a message
- * instead of a form they cannot finish.
+ * Built so a storefront that is still in development (a staging domain, a
+ * preview) can keep its checkout shut while the live site takes orders, or the
+ * other way round. When it is shut, /checkout redirects to /checkout-unavailable
+ * and the place-order API refuses, so nothing can be bought by any route.
  *
- * One record per brand (solana_checkout, bbq_checkout, oko_checkout), so the
- * three can be closed and reopened independently.
+ * Decided in this order, first answer wins:
  *
- * Two layers, deliberately:
+ *   1. CHECKOUT_CLOSED   environment variable, a hard lock for one deployment.
+ *                        Set it on a Vercel project or environment that must
+ *                        never take orders (staging); nothing in the admin can
+ *                        reopen it, and it needs no Redis — so it holds through
+ *                        an outage too.
+ *   2. this domain       the admin's per-domain switch ("Enable checkout on
+ *                        staging.outdoorkitchenoutlet.com"), toggled at
+ *                        /admin/checkout without a deploy.
+ *   3. the brand         the admin's brand-wide default, for every domain with
+ *                        no switch of its own.
+ *   4. open              nothing set anywhere.
  *
- *   CHECKOUT_CLOSED   an environment variable, the floor. It decides what a
- *                     deployment does when there is no record or Redis cannot
- *                     be reached, so an outage cannot quietly reopen a
- *                     checkout that was meant to be shut.
- *   the record        the day-to-day switch, flipped at /admin/checkout
- *                     without a deploy.
- *
- * The record wins when it exists. The variable is what a cold instance falls
- * back to.
+ * One record per brand (solana_checkout, bbq_checkout, oko_checkout). Staging
+ * and production of a brand share it, which is why domains have their own
+ * entries in it rather than sharing the brand's one switch.
  */
 
 export const CHECKOUT_KEY = contentKey("checkout");
 export const CHECKOUT_TAG = "checkout-availability";
 
+/** Where a closed checkout sends the shopper. */
+export const CHECKOUT_UNAVAILABLE_PATH = "/checkout-unavailable";
+
 /** What is shown when nobody has written a message of their own. */
 export const DEFAULT_MESSAGE =
-  "Online checkout is temporarily unavailable while we move to a new payment provider. " +
-  "Your basket is saved, and our team can take your order over the phone in the meantime.";
+  "We're putting the finishing touches on our new store, so online ordering is switched off for now. " +
+  "Your cart is saved, and our team can place your order over the phone.";
 
-const envClosed = () => /^(1|true|yes|on)$/i.test(String(process.env.CHECKOUT_CLOSED ?? "").trim());
+const envLocked = () => /^(1|true|yes|on)$/i.test(String(process.env.CHECKOUT_CLOSED ?? "").trim());
 
-/** The answer when there is no record, or none can be read. */
-const fallback = () => ({ closed: envClosed(), message: "", updatedAt: null });
+/**
+ * A request's domain, as the switch keys it: lowercased, no port, no "www.",
+ * so www.solanafireplaces.com and solanafireplaces.com are one site.
+ */
+export function normalizeHost(host) {
+  return String(host ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/:\d+$/, "")
+    .replace(/^www\./, "")
+    .slice(0, 253);
+}
+
+const EMPTY_RECORD = Object.freeze({ closed: false, message: "", hosts: {}, updatedAt: null });
 
 export function normalizeCheckout(raw) {
-  if (!raw || typeof raw !== "object") return fallback();
+  if (!raw || typeof raw !== "object") return { ...EMPTY_RECORD, hosts: {} };
+  const hosts = {};
+  if (raw.hosts && typeof raw.hosts === "object") {
+    for (const [host, entry] of Object.entries(raw.hosts)) {
+      const key = normalizeHost(host);
+      if (key && entry && typeof entry === "object" && typeof entry.closed === "boolean") {
+        hosts[key] = { closed: entry.closed };
+      }
+    }
+  }
   return {
     closed: raw.closed === true,
     message: String(raw.message ?? "").trim().slice(0, 400),
+    hosts,
     updatedAt: typeof raw.updatedAt === "string" ? raw.updatedAt : null,
   };
 }
 
-/** Throws rather than caching a failure; see lib/upstream.js. */
-const readCheckout = unstable_cache(
+/** The stored record, or null when there is none. Throws on a failed read. */
+const readRecord = unstable_cache(
   async () => {
     const stored = await redis.get(CHECKOUT_KEY);
-    if (!stored) return fallback();
+    if (!stored) return null;
     return normalizeCheckout(typeof stored === "string" ? JSON.parse(stored) : stored);
   },
-  ["checkout-availability", CHECKOUT_KEY],
+  ["checkout-availability-record", CHECKOUT_KEY],
   { revalidate: 86400, tags: [CHECKOUT_TAG] },
 );
 
 /**
- * This brand's checkout state. Never throws — a failed read degrades to what
- * CHECKOUT_CLOSED says, which is why that variable is worth setting on a
- * deployment that is meant to stay shut.
+ * Checkout's state for a request to `host`. Never throws: an unreadable record
+ * counts as "nothing set", so only CHECKOUT_CLOSED (or nothing) decides then.
+ *
+ * Returns { closed, message, source, host, record }, where `source` says which
+ * rule decided — "env", "host", "brand" or "default" — for the admin screen.
  */
-export const getCheckoutState = () => readOrDegrade("checkout-availability", readCheckout, fallback());
+export async function getCheckoutState(host) {
+  const key = normalizeHost(host);
+  const record = await readOrDegrade("checkout-availability", readRecord, null);
+  const message = record?.message ?? "";
+
+  if (envLocked()) return { closed: true, message, source: "env", host: key, record };
+  const own = key ? record?.hosts?.[key] : undefined;
+  if (own) return { closed: own.closed, message, source: "host", host: key, record };
+  if (record) return { closed: record.closed, message, source: "brand", host: key, record };
+  return { closed: false, message, source: "default", host: key, record };
+}
 
 /** The message to show, falling back to the standard wording. */
 export const checkoutMessage = (state) => state?.message?.trim() || DEFAULT_MESSAGE;
 
-export async function saveCheckoutState({ closed, message }) {
-  const record = normalizeCheckout({ closed, message });
+/** Whether CHECKOUT_CLOSED locks this deployment shut. */
+export const isCheckoutLocked = envLocked;
+
+/**
+ * Saves the brand record. `hosts` replaces the stored map: a domain set to
+ * null or missing falls back to the brand default.
+ */
+export async function saveCheckoutState({ closed, message, hosts }) {
+  const record = normalizeCheckout({ closed, message, hosts });
   record.updatedAt = new Date().toISOString();
   await redis.set(CHECKOUT_KEY, JSON.stringify(record));
   return record;

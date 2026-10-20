@@ -80,8 +80,8 @@ export default async function handler(req, res) {
   }
 
   // The last gate, and the one that matters: no order is created while the
-  // checkout is closed, whatever reached this route.
-  const checkout = await getCheckoutState();
+  // checkout is closed on this domain, whatever reached this route.
+  const checkout = await getCheckoutState(req.headers.host);
   if (checkout.closed) {
     return res
       .status(503)
