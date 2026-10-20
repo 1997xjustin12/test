@@ -132,7 +132,7 @@ function CartOrderSummary({ checkoutButton = true }) {
             </p>
 
             <Link
-              href={`${BASE_URL}/grills`}
+              href={`${BASE_URL}/categories`}
               prefetch={false}
               className="mt-3 flex items-center justify-center font-inter text-[13px] text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors"
             >

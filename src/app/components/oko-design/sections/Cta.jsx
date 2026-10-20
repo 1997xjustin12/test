@@ -23,8 +23,8 @@ export default function Cta() {
               Our grill specialists are standing by to help you find the perfect setup — from built-in islands to freestanding grills, no pressure, just expertise.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link prefetch={false} href={`${BASE_URL}/grills`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm bg-theme-600 hover:bg-theme-500 text-white font-oswald font-semibold text-sm uppercase tracking-wide transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-600/30">
-                Browse Grills
+              <Link prefetch={false} href={`${BASE_URL}/categories`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm bg-theme-600 hover:bg-theme-500 text-white font-oswald font-semibold text-sm uppercase tracking-wide transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-600/30">
+                Browse Categories
               </Link>
               <Link prefetch={false} href={`${BASE_URL}/contact`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm border-2 border-white/60 text-white hover:bg-white/10 font-oswald font-semibold text-sm uppercase tracking-wide transition-all duration-200">
                 Get a Free Quote

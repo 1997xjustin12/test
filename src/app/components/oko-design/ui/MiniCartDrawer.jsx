@@ -192,11 +192,11 @@ export default function MiniCartDrawer({ open, onClose }) {
                   </p>
                   <Link
                     prefetch={false}
-                    href={`${BASE_URL}/grills`}
+                    href={`${BASE_URL}/categories`}
                     onClick={onClose}
                     className="px-6 py-3 rounded-[2px] bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] transition-colors"
                   >
-                    Shop grills
+                    Browse categories
                   </Link>
                 </div>
               ) : (

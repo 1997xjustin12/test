@@ -77,10 +77,10 @@ export default function Hero({ background }) {
                 Call {STORE_CONTACT}
               </Link>
               <Link
-                href="/grills"
+                href="/categories"
                 className="font-inter font-semibold text-[13.5px] px-6 py-3.5 rounded-[2px] border border-white/50 text-white hover:bg-white/10 transition-colors"
               >
-                Shop grills
+                Shop all categories
               </Link>
             </div>
           </div>

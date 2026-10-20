@@ -42,7 +42,7 @@ export default async function Categories() {
             </h2>
           </div>
           <Link
-            href="/grills"
+            href="/categories"
             className="font-inter font-semibold text-[13px] text-oko-sage dark:text-oko-sage-light border-b border-oko-sage dark:border-oko-sage-light pb-0.5 hover:text-oko-barn hover:border-oko-barn dark:hover:text-oko-barn-light transition-colors whitespace-nowrap"
           >
             View all categories →

@@ -97,7 +97,7 @@ export default function Hero({ background }) {
             {/* CTAs */}
             <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-10">
               <Link
-                href={`${BASE_URL}/fireplaces`}
+                href={`${BASE_URL}/categories`}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-theme-600 hover:bg-theme-500 text-gray-900 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-theme-500/30"
               >
                 Shop All Products

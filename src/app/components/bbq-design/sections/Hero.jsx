@@ -130,10 +130,10 @@ export default function Hero({ background }) {
               Shop Open-Box Deals →
             </Link>
             <Link
-              href="/grills"
+              href="/categories"
               className="font-oswald font-semibold text-sm uppercase tracking-wide px-7 py-4 border border-white/40 text-ash rounded-sm hover:bg-white/10 transition-all hover:-translate-y-0.5"
             >
-              Browse All Grills
+              Browse All Categories
             </Link>
           </div>
         </div>

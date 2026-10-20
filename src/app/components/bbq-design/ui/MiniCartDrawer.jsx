@@ -199,11 +199,11 @@ export default function MiniCartDrawer({ open, onClose }) {
                   </p>
                   <Link
                     prefetch={false}
-                    href={`${BASE_URL}/grills`}
+                    href={`${BASE_URL}/categories`}
                     onClick={onClose}
                     className="px-5 py-2.5 rounded-sm bg-ember hover:bg-ember-deep text-white font-oswald text-sm font-semibold uppercase tracking-wide transition-colors"
                   >
-                    Shop Grills
+                    Browse Categories
                   </Link>
                 </div>
               ) : (

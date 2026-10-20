@@ -9,7 +9,7 @@ export const FOOTER_COLS = [
   {
     heading: "Products",
     links: [
-      { name: "All Grills",              url: "/grills" },
+      { name: "All Categories",          url: "/categories" },
       { name: "Built-In Grills",         url: "/built-in-grills" },
       { name: "Freestanding Grills",     url: "/freestanding-grills" },
       { name: "Accessories",             url: "/accessories" },

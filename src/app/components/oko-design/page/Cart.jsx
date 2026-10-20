@@ -62,10 +62,10 @@ const EmptyCart = () => (
     </p>
     <Link
       prefetch={false}
-      href={`${BASE_URL}/grills`}
+      href={`${BASE_URL}/categories`}
       className="px-6 py-3 bg-oko-barn hover:bg-oko-barn-dark text-white font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors"
     >
-      Shop grills
+      Browse categories
     </Link>
   </div>
 );
@@ -117,7 +117,7 @@ export default function Cart() {
           <>
             <div className="mb-6">
               <Link
-                href={`${BASE_URL}/grills`}
+                href={`${BASE_URL}/categories`}
                 prefetch={false}
                 className="inline-flex items-center gap-1.5 font-inter text-[13px] text-oko-stone hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors mb-4"
               >
