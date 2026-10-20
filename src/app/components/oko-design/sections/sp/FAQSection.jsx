@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { fixMojibake } from "@/app/lib/helpers";
 
 // FAQ accordion (spec §8/§9) — rows separated by stone-line, stroke chevron.
 const FAQSection = ({ faqs }) => {
@@ -49,7 +50,7 @@ const FAQSection = ({ faqs }) => {
                 </button>
                 {isOpen && (
                   <div className="px-5 pb-5 pl-16">
-                    <div className="font-inter text-[13.5px] text-oko-char-soft dark:text-oko-ondark leading-[1.55]" dangerouslySetInnerHTML={{ __html: f.a }} />
+                    <div className="font-inter text-[13.5px] text-oko-char-soft dark:text-oko-ondark leading-[1.55]" dangerouslySetInnerHTML={{ __html: fixMojibake(f.a) }} />
                   </div>
                 )}
               </div>

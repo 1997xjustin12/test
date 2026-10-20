@@ -12,7 +12,7 @@ import {
   isExcludedProductBrand,
 } from "@/app/lib/catalog-exclusions";
 import RatingStyles from "@/app/components/atom/RatingStyles";
-import { BASE_URL, ES_INDEX, ISBBQ, ISOKO, createSlug } from "@/app/lib/helpers";
+import { BASE_URL, ES_INDEX, ISBBQ, ISOKO, createSlug, fixMojibake } from "@/app/lib/helpers";
 import { getMenuPageUrls } from "@/app/lib/menu-pages";
 import { readOrDegrade } from "@/app/lib/upstream";
 import { STORE_NAME } from "@/app/lib/store_constants";
@@ -108,8 +108,8 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const seoDesc = product?.seo?.description?.trim();
-  const bodyDesc = stripHtml(product?.body_html || "").trim();
+  const seoDesc = fixMojibake(product?.seo?.description)?.trim();
+  const bodyDesc = stripHtml(fixMojibake(product?.body_html || "")).trim();
   // Skip seo.description if it contains the generic Shopify pricing template.
   const validSeoDesc =
     seoDesc && !seoDesc.toLowerCase().includes("best pricing")

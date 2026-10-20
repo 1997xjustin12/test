@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { fixMojibake } from "@/app/lib/helpers";
 
 const FAQSection = ({ faqs }) => {
   const [open, setOpen] = useState(null);
@@ -54,7 +55,7 @@ const FAQSection = ({ faqs }) => {
               </button>
               {open === i && (
                 <div className="px-5 pb-5 pl-16">
-                  <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" dangerouslySetInnerHTML={{ __html: f.a }} />
+                  <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed" dangerouslySetInnerHTML={{ __html: fixMojibake(f.a) }} />
                 </div>
               )}
             </div>

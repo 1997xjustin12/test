@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { createSlug } from "@/app/lib/helpers";
+import { createSlug, fixMojibake } from "@/app/lib/helpers";
 
 const DescriptionSection = ({
   brand,
@@ -42,7 +42,7 @@ const DescriptionSection = ({
               >
                 <div
                   className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: description }}
+                  dangerouslySetInnerHTML={{ __html: fixMojibake(description) }}
                 />
               </div>
             ) : (

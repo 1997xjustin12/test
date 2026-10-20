@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { fixMojibake } from "@/app/lib/helpers";
 
 const DescriptionSection = ({ brand, brandDescription, brandHref = "#", brandImage, description }) => {
   const [expanded, setExpanded] = useState(false);
@@ -25,7 +26,7 @@ const DescriptionSection = ({ brand, brandDescription, brandHref = "#", brandIma
           <div className="p-5 pdp-description-wrapper">
             {description ? (
               <div className={`overflow-hidden transition-all duration-500 ${expanded ? "" : "max-h-56"}`}>
-                <div className="text-sm text-char/60 dark:text-ash/50 leading-relaxed" dangerouslySetInnerHTML={{ __html: description }} />
+                <div className="text-sm text-char/60 dark:text-ash/50 leading-relaxed" dangerouslySetInnerHTML={{ __html: fixMojibake(description) }} />
               </div>
             ) : (
               <p className="text-sm text-char/50 dark:text-ash/40 leading-relaxed">No description available.</p>

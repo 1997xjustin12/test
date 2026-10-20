@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/app/lib/helpers";
+import { BASE_URL, fixMojibake } from "@/app/lib/helpers";
 import {
   STORE_NAME,
   STORE_CONTACT,
@@ -320,7 +320,7 @@ export function buildProduct({
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    description: stripHtml(product?.body_html || ""),
+    description: stripHtml(fixMojibake(product?.body_html || "")),
     image: images,
     sku: variant?.sku || null,
     // Shopify stores the barcode as GTIN-12/13/14; schema.org accepts the

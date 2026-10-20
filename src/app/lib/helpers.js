@@ -221,6 +221,100 @@ export const stripHtmlTags = (html) => {
   return html.replace(/<[^>]+>/g, ""); // Fallback for SSR
 };
 
+/*
+ * Mojibake repair for product copy.
+ *
+ * Some imported descriptions were UTF-8 that a tool read back as Mac Roman or
+ * Windows-1252, sometimes twice: "1/2″" arrives as "1/2‚Äö√Ñ√π", a non-breaking
+ * space as "¬¨‚Ä†", "don’t" as "donâ€™t". Each garbled character stands for one
+ * byte of the original UTF-8, so mapping the characters back to those bytes and
+ * decoding them recovers the text — no per-product edits.
+ */
+
+// Bytes 0x80–0xFF, in order, as each code page draws them.
+const MAC_ROMAN_HIGH =
+  "ÄÅÇÉÑÖÜáàâäãåçéèêëíìîïñóòôöõúùûü†°¢£§•¶ß®©™´¨≠ÆØ∞±≤≥¥µ∂∑∏π∫ªºΩæø" +
+  "¿¡¬√ƒ≈∆«»… ÀÃÕŒœ–—“”‘’÷◊ÿŸ⁄€‹›ﬁﬂ‡·‚„‰ÂÊÁËÈÍÎÏÌÓÔÒÚÛÙıˆ˜¯˘˙˚¸˝˛ˇ";
+const CP1252_HIGH =
+  "€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008DŽ\u008F\u0090‘’“”•–—˜™š›œ\u009DžŸ" +
+  Array.from({ length: 96 }, (_, i) => String.fromCharCode(0xa0 + i)).join("");
+
+const byteTable = (chars, aliases = []) =>
+  new Map([...[...chars].map((c, i) => [c, 0x80 + i]), ...aliases]);
+const MOJIBAKE_TABLES = [
+  byteTable(CP1252_HIGH),
+  // Older converters draw 0xBD as the ohm sign and 0xDB as ¤.
+  byteTable(MAC_ROMAN_HIGH, [["Ω", 0xbd], ["¤", 0xdb]]),
+];
+
+// Sequences damaged past decoding by whatever produced them, seen in real copy.
+const MOJIBAKE_LOSSY = [["‚Äö—¢", "™"]];
+
+// Only characters product copy actually uses count as a successful repair:
+// Latin letters, punctuation (dashes, quotes, primes, bullets), currency,
+// ™ and fractions, arrows, ≤ ≥ and minus. Anything else means the bytes only
+// happened to form valid UTF-8, and the text is left as it was.
+const PLAUSIBLE =
+  /^[ -ɏ‐- ₠-⃏℀-⅟←-⇿−≤≥]$/u;
+
+const decodeAt = (bytes, i) => {
+  const lead = bytes[i];
+  const len = lead >= 0xc2 && lead <= 0xdf ? 2 : lead >= 0xe0 && lead <= 0xef ? 3 : lead >= 0xf0 && lead <= 0xf4 ? 4 : 0;
+  if (!len || i + len > bytes.length) return null;
+  for (let k = 1; k < len; k++) {
+    if (bytes[k + i] == null || bytes[k + i] < 0x80 || bytes[k + i] > 0xbf) return null;
+  }
+  let cp = lead & (0xff >> (len + 1));
+  for (let k = 1; k < len; k++) cp = (cp << 6) | (bytes[i + k] & 0x3f);
+  const ch = String.fromCodePoint(cp);
+  return PLAUSIBLE.test(ch) ? { ch, len } : null;
+};
+
+// Decodes a run with each code page and keeps whichever explains more of it:
+// a short accidental match in the wrong code page loses to the right one.
+const repairRun = (run) => {
+  const chars = [...run];
+  let best = { out: run, used: 0 };
+  for (const table of MOJIBAKE_TABLES) {
+    const bytes = chars.map((c) => table.get(c));
+    let out = "";
+    let used = 0;
+    for (let i = 0; i < chars.length; ) {
+      const hit = bytes[i] == null ? null : decodeAt(bytes, i);
+      if (hit) {
+        out += hit.ch;
+        i += hit.len;
+        used += hit.len;
+      } else {
+        out += chars[i];
+        i += 1;
+      }
+    }
+    if (used > best.used) best = { out, used };
+  }
+  return best.out;
+};
+
+/**
+ * Undo Mac Roman / Windows-1252 mojibake in a string of text or HTML. Clean
+ * text comes back unchanged; plain ASCII skips the work entirely.
+ *
+ * @param {string} text
+ * @returns {string}
+ */
+export const fixMojibake = (text) => {
+  if (typeof text !== "string" || !/[^\x00-\x7F]/.test(text)) return text;
+  let out = text;
+  for (const [bad, good] of MOJIBAKE_LOSSY) out = out.split(bad).join(good);
+  // Repeated because double-encoded text needs one pass per layer.
+  for (let pass = 0; pass < 3; pass++) {
+    const next = out.replace(/[^\x00-\x7F]{2,}/g, repairRun);
+    if (next === out) break;
+    out = next;
+  }
+  return out;
+};
+
 /**
  * Flattens a nested menu tree into a single-level array,
  * removing the `children` property and preserving the rest of the item data.
