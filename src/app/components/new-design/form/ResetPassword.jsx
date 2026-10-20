@@ -4,6 +4,15 @@ import React, { useState, useEffect } from "react";
 import { isValidPassword } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import FormCard from "@/app/components/new-design/form/FormCard";
+import { tooManyRequestsMessage } from "@/app/lib/rate-limit-message";
+
+// The backend's reason, whatever shape it comes in: a sentence, or DRF's
+// { new_password: ["This password is too common."] } / { token: [...] }.
+const resetErrorMessage = (error) => {
+  if (typeof error === "string" && error.trim()) return error;
+  const said = error && typeof error === "object" ? Object.values(error).flat().filter((v) => typeof v === "string") : [];
+  return said.length ? said.join(" ") : "Something went wrong. The link may have expired; request a new one from Forgot password.";
+};
 
 const inputClass =
   "w-full px-3.5 py-2.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-sm text-charcoal dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:border-fire focus:ring-2 focus:ring-fire/20 transition-colors";
@@ -59,7 +68,7 @@ function ResetPassword({token, uid}) {
         body: JSON.stringify({ new_password: form?.password, token:token,  uidb64:uid }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok) {
         setNotif({
@@ -69,7 +78,7 @@ function ResetPassword({token, uid}) {
       } else {
         setNotif({
           status: "error",
-          message: data?.error?.new_password || "Something went wrong.",
+          message: tooManyRequestsMessage(res, data) || resetErrorMessage(data?.error),
         });
         setLoading(false);
       }

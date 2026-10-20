@@ -13,7 +13,7 @@ function ResetPasswordPage({ token, uid }) {
               Reset password.
             </h1>
             <div className="my-[20px] w-full">
-              <ResetPassword />
+              <ResetPassword token={token} uid={uid} />
             </div>
             <Link
               prefetch={false}
