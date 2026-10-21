@@ -216,6 +216,11 @@ function MenuUpdaterV3() {
   const [sortableIsActive, setSortableIsActive] = useState(true);
   const [dndToggle, setDndToggle] = useState(true);
 
+  // Redis has no menu at all (a new, still-empty server). The builder offers
+  // the bundled snapshot instead of an empty tree that a Save would store.
+  const [menuMissing, setMenuMissing] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
+
   const recalibrateOrder = (treeArray) => {
     function updateNodeOrder(nodes, depth = 0) {
       nodes.forEach((node, index) => {
@@ -704,12 +709,16 @@ function MenuUpdaterV3() {
     });
   };
 
-  useEffect(() => {
-    updateMenuList();
-    // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
-    // redisGet(defaultMenuKey).then((data) => {
+  const loadDefaultMenu = () =>
     redisGet(defaultMenuKey).then((data) => {
       // setMenu(hidePriceVisibility(data.filter(({ name }) => name !== "Search")));
+
+      // An empty key used to throw here (null.filter) and leave a blank tree.
+      if (!Array.isArray(data) || !data.length) {
+        setMenuMissing(true);
+        return;
+      }
+      setMenuMissing(false);
 
       const nav_data = mapTreeWithId([
         HomeNavItem,
@@ -721,6 +730,33 @@ function MenuUpdaterV3() {
       setMenu(nav_data);
       setSearchList(flattenMenu(nav_data));
     });
+
+  const handleSeedMenu = async () => {
+    setIsSeeding(true);
+    try {
+      const res = await fetch("/api/menu-seed", { method: "POST" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showAlertMessage("error", body.error || "Couldn't save the menu.");
+      } else {
+        // Same cache clear as a menu save, so the storefront picks it up now.
+        fetch("/api/cache/clear?groups=layout", { method: "POST" }).catch(() => {});
+        showAlertMessage("success", `Menu saved from the Oct 16 snapshot (${body.items} items).`);
+      }
+      // A 409 means a menu turned up meanwhile: load whatever is there.
+      await loadDefaultMenu();
+    } catch (error) {
+      showAlertMessage("error", "Couldn't save the menu.");
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
+  useEffect(() => {
+    updateMenuList();
+    // setMenu(aira_cat.filter(({ name }) => name !== "Search").map(item=> ({...item, meta_title:"", meta_description:"", price_visibility:"show"})))
+    // redisGet(defaultMenuKey).then((data) => {
+    loadDefaultMenu();
     Promise.all([
       fetch("/api/es/shopify/categories", {
         method: "POST",
@@ -779,8 +815,22 @@ function MenuUpdaterV3() {
             Menu Builder - Shopify Product Structure
           </div>
           <div className="text-sm">Don't forget to save your changes.</div>
+          {menuMissing && (
+            <div className="my-[10px] p-3 rounded border bg-yellow-100 text-yellow-900 border-yellow-400 text-sm flex flex-col md:flex-row gap-[10px] md:items-center justify-between">
+              <div>
+                <b>No menu is saved in Redis.</b> The storefront is showing the
+                bundled Oct 16 snapshot. Save that snapshot to Redis to edit it
+                here. This covers all three brands.
+              </div>
+              <Button onClick={handleSeedMenu} loading={isSeeding}>
+                Save Oct 16 menu to Redis
+              </Button>
+            </div>
+          )}
           <div className="flex flex-col md:flex-row gap-[10px] my-[10px] items-center justify-between">
-            <Button onClick={handleSaveMenuChanges} loading={isLoading}>
+            {/* Disabled with no menu in Redis: saving the empty tree would
+                store just Home and hide the snapshot offer. */}
+            <Button onClick={handleSaveMenuChanges} loading={isLoading} disabled={menuMissing}>
               Save
             </Button>
             <div
