@@ -14,3 +14,24 @@ export const STORE_PINTEREST = process.env.NEXT_PUBLIC_STORE_PINTEREST;
 export const HOURS_WEEKDAYS = "Mon–Fri 8am–6pm PST";
 export const HOURS_WEEKEND = "Sat 9am–4pm PST · Sun closed";
 export const HOURS_SUMMARY = "Mon–Fri 8am–6pm, Sat 9am–4pm PST";
+
+/**
+ * Fills the slots an admin can type into copy that every brand shares, so one
+ * value reads right on each. The menu builder's meta titles and descriptions
+ * are stored once for all three brands; "Shop fireplaces at Solana Fireplaces"
+ * typed there showed on BBQ and OKO too. Written as "Shop fireplaces at
+ * {store}", each brand shows its own name.
+ *
+ *   {store}  this brand's name (NEXT_PUBLIC_STORE_NAME)
+ *   {year}   the current year
+ *
+ * Case-insensitive, and anything else in braces is left as typed.
+ */
+export const STORE_SLOTS_HINT = "Type {store} for the store's name — each brand shows its own.";
+
+export function fillStoreSlots(text) {
+  if (typeof text !== "string" || !text) return text;
+  return text
+    .replace(/\{store\}/gi, STORE_NAME || "")
+    .replace(/\{year\}/gi, String(new Date().getFullYear()));
+}

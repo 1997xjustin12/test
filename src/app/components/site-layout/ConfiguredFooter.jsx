@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { classifyHref, THEME_COLOR } from "@/app/lib/home-page/sections";
-import { STORE_NAME } from "@/app/lib/store_constants";
+import { STORE_NAME, fillStoreSlots } from "@/app/lib/store_constants";
 import { socialIcon, SOCIAL_LABELS } from "./social-icons";
 import SiteSeal, { HAS_SITE_SEAL } from "@/app/components/atom/SiteSeal";
 
@@ -78,9 +78,7 @@ export default function ConfiguredFooter({ footer, logo }) {
 
   const phoneLink = classifyHref(content.phone ? `tel:${content.phone}` : "");
   const mark = content.logo || logo;
-  const copyright = (content.copyright || "")
-    .replace(/\{year\}/g, String(new Date().getFullYear()))
-    .replace(/\{store\}/g, STORE_NAME || "");
+  const copyright = fillStoreSlots(content.copyright || "");
 
   return (
     <footer className={`${scope} pb-8 pt-14`} style={{ background: `var(--${scope}-bg)` }}>

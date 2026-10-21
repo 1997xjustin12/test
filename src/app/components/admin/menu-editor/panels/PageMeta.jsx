@@ -3,6 +3,7 @@
 import React from "react";
 import { useMenuEditor } from "../MenuEditorContext";
 import { Field, Section, inputClass } from "../ui";
+import { STORE_SLOTS_HINT } from "@/app/lib/store_constants";
 
 export default function PageMeta() {
   const { menuItem, handleMetaChange } = useMenuEditor();
@@ -10,7 +11,7 @@ export default function PageMeta() {
   return (
     <Section
       title="Search engine listing"
-      description="How this page is titled and described in search results."
+      description={`How this page is titled and described in search results. The menu is shared by every brand: ${STORE_SLOTS_HINT}`}
     >
       <div className="flex max-w-2xl flex-col gap-5">
         <Field

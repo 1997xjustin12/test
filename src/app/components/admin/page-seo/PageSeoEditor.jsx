@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, ExternalLink, RotateCcw, Search, TriangleAlert } from "lucide-react";
 import { redisGet, redisSet } from "@/app/lib/redis";
 import { BASE_URL } from "@/app/lib/helpers";
+import { STORE_SLOTS_HINT } from "@/app/lib/store_constants";
 import {
   PAGE_SEO_GROUPS,
   PAGE_SEO_ROUTES,
@@ -342,7 +343,7 @@ export default function PageSeoEditor({ seoKey }) {
                   {route?.defaults?.title
                     ? `“${route.defaults.title}”`
                     : "the site default"}
-                  .
+                  . {STORE_SLOTS_HINT}
                 </>
               }
             >
@@ -358,7 +359,11 @@ export default function PageSeoEditor({ seoKey }) {
             <Field
               label="Meta Description"
               htmlFor="seo-description"
-              hint={<Counter value={entry.description} limit={DESCRIPTION_LIMIT} />}
+              hint={
+                <>
+                  <Counter value={entry.description} limit={DESCRIPTION_LIMIT} /> — {STORE_SLOTS_HINT}
+                </>
+              }
             >
               <textarea
                 id="seo-description"

@@ -2,7 +2,7 @@ import { unstable_cache } from "next/cache";
 import { redis, keys } from "@/app/lib/redis";
 import { BASE_URL } from "@/app/lib/helpers";
 import { STORE_ID } from "@/app/lib/store";
-import { STORE_NAME } from "@/app/lib/store_constants";
+import { STORE_NAME, fillStoreSlots } from "@/app/lib/store_constants";
 
 /**
  * SEO for the app's *own* routes.
@@ -115,8 +115,10 @@ export async function pageMetadata(path) {
   const defaults =
     PAGE_SEO_ROUTES.find((r) => r.path === path)?.defaults || {};
 
-  const title = stored.title || defaults.title;
-  const description = stored.description || defaults.description;
+  // {store} and {year} are filled in, so a title written once reads right on
+  // every brand — the same slots the menu builder and footer take.
+  const title = fillStoreSlots(stored.title) || defaults.title;
+  const description = fillStoreSlots(stored.description) || defaults.description;
   const keywords = stored.keywords?.length ? stored.keywords : defaults.keywords;
   const robots = parseRobots(stored.robots || defaults.robots);
   const canonical =

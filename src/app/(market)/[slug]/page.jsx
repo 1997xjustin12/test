@@ -24,7 +24,7 @@ import { unstable_cache } from "next/cache";
 
 import { keys, redis } from "@/app/lib/redis";
 import { readOrLastKnownGood } from "@/app/lib/upstream";
-import { STORE_NAME } from "@/app/lib/store_constants";
+import { STORE_NAME, fillStoreSlots } from "@/app/lib/store_constants";
 import {
   getRootByUrl,
   getPageData,
@@ -278,13 +278,16 @@ export async function generateMetadata({ params }) {
     // all server-render page one's HTML. Without a canonical each was a
     // separate, duplicate URL. Product and /category pages already set theirs.
     alternates: { canonical: `${BASE_URL}/${slug}` },
+    // The menu is shared by all three brands, so its meta copy is written with
+    // {store} for the brand name (fillStoreSlots). Without any, the fallbacks
+    // name this brand and this page — they used to be Solana's fireplace line
+    // ("wood, gas, and electric designs") on every page of every brand.
     title:
-      pageData.meta_title ||
-      pageData.name ||
-      `${STORE_NAME} | Stylish Indoor & Outdoor Heating`,
+      fillStoreSlots(pageData.meta_title) ||
+      (pageData.name ? `${pageData.name} | ${STORE_NAME}` : STORE_NAME),
     description:
-      pageData.meta_description ||
-      `Transform your home with ${STORE_NAME}! Add warmth and style with our wood, gas, and electric designs. Shop now and create your perfect space!`,
+      fillStoreSlots(pageData.meta_description) ||
+      `Shop ${pageData.name || "our collection"} at ${STORE_NAME}. Browse our full selection with expert advice, competitive pricing, and free shipping on selected items.`,
   };
 }
 
