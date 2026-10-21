@@ -257,6 +257,7 @@ export const CartProvider = ({ children }) => {
   const cart_channel           = useRef(null);
   const isSendingAbandonedCart = useRef(false); // prevents concurrent abandoned-cart API calls
   const beaconSent             = useRef(false);  // prevents double beacon on unload + visibilitychange
+  const userCartLoad           = useRef(null);   // the signed-in cart load in flight, shared (see getUserCart)
 
   // ── Lazy-load browser-only storage modules ─────────────────────────────────
   // cartStorage and localForage cannot be imported at module level because they
@@ -310,9 +311,7 @@ export const CartProvider = ({ children }) => {
    * guest cart items into it. Marks merged items so they aren't re-merged
    * on subsequent loads.
    */
-  const getUserCart = useCallback(async () => {
-    if (!user) return null;
-
+  const mergeUserCart = useCallback(async () => {
     const guestCart = await getGuestCart();
     const toMerge   = (guestCart?.items ?? [])
       .filter((i) => !i.merged)
@@ -340,8 +339,9 @@ export const CartProvider = ({ children }) => {
         : null;
     }
 
-    // Build the merged cart
+    // Build and persist the merged cart
     let mergedCart;
+    let saved;
     const profile = userProfileToCart(user);
     if (userCart) {
       mergedCart = {
@@ -352,16 +352,17 @@ export const CartProvider = ({ children }) => {
         updated_at:       new Date().toISOString(),
         reference_number: userCart.reference_number ?? createOrderNumber(),
       };
+      saved = (userCart.items?.length ?? 0) > 0
+        ? await userCartUpdate(mergedCart)
+        : await userCartCreate({ ...mergedCart, ...profile });
     } else {
-      // First login with no existing user cart — create a fresh one
+      // First login with no existing user cart — create a fresh one. Once:
+      // this branch used to create it here and then again below, leaving the
+      // account with two carts.
       const fresh = await createCartObj();
       mergedCart  = await userCartCreate({ ...fresh, items: toMerge, ...profile });
+      saved       = mergedCart;
     }
-
-    // Persist the merged result
-    const saved = (userCart?.items?.length ?? 0) > 0
-      ? await userCartUpdate(mergedCart)
-      : await userCartCreate({ ...mergedCart, ...profile });
 
     // Mark guest items as merged so they aren't duplicated on the next load
     if (saved && guestCart) {
@@ -373,6 +374,20 @@ export const CartProvider = ({ children }) => {
 
     return mergedCart;
   }, [user, cartStorage, getGuestCart, userCartGet, userCartCreate, userCartUpdate]);
+
+  const getUserCart = useCallback(() => {
+    if (!user) return Promise.resolve(null);
+    // One load at a time. A sign-in reloads the cart from this provider's
+    // effect and from /checkout's at once; both read the guest items before
+    // either marked them merged, so each merged them and the quantities
+    // doubled. A load already running is shared instead.
+    if (!userCartLoad.current) {
+      userCartLoad.current = mergeUserCart().finally(() => {
+        userCartLoad.current = null;
+      });
+    }
+    return userCartLoad.current;
+  }, [user, mergeUserCart]);
 
   const getCart = useCallback(async () => {
     if (!cartStorage || loading) return undefined;

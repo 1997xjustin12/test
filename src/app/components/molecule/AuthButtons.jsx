@@ -6,14 +6,17 @@ import NewLoginForm from "@/app/components/new-design/form/Login";
 import BBQLoginForm from "@/app/components/bbq-design/form/Login";
 import OKOLoginForm from "@/app/components/oko-design/form/Login";
 
-const LoginForm = () => {
+// Props pass through: without successLogin each brand's form treats the
+// sign-in as a login-page one and sends the shopper to /my-account, so
+// signing in from /checkout left the checkout altogether.
+const LoginForm = (props) => {
   if(ISOKO) {
-    return <OKOLoginForm />
+    return <OKOLoginForm {...props} />
   }
   if(ISBBQ) {
-    return <BBQLoginForm />
+    return <BBQLoginForm {...props} />
   }
-  return <NewLoginForm />
+  return <NewLoginForm {...props} />
 }
 
 

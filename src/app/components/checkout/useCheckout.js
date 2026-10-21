@@ -132,7 +132,6 @@ export default function useCheckout() {
   const {
     clearCartItems,
     fetchOrderTotal,
-    loadCart,
     cartObject,
     cartItems,
     createAbandonedCart,
@@ -294,26 +293,31 @@ export default function useCheckout() {
   const fillUserToForm = (user) => {
     if (!user) return;
     setForm((prev) => {
+      // The profile's value where it has one, else what is already in the
+      // form. Signing in on /checkout used to replace a guest's typed address
+      // with the profile's blanks when the account had none saved.
+      const pick = (value, current) => (value == null || value === "" ? current : value);
+      const p = user?.profile ?? {};
       const updated = {
         ...prev,
-        billing_first_name: user?.first_name,
-        billing_last_name: user?.last_name,
-        billing_email: user?.email,
-        billing_phone: user?.profile?.phone,
-        billing_address: user?.profile?.billing_address,
-        billing_city: user?.profile?.billing_city,
-        billing_province: user?.profile?.billing_state,
-        billing_zip_code: user?.profile?.billing_zip,
-        billing_country: user?.profile?.billing_country,
-        shipping_first_name: user?.first_name,
-        shipping_last_name: user?.last_name,
-        shipping_email: user?.email,
-        shipping_phone: user?.profile?.phone,
-        shipping_address: user?.profile?.shipping_address,
-        shipping_city: user?.profile?.shipping_city,
-        shipping_province: user?.profile?.shipping_state,
-        shipping_zip_code: user?.profile?.shipping_zip,
-        shipping_country: user?.profile?.shipping_country,
+        billing_first_name: pick(user?.first_name, prev.billing_first_name),
+        billing_last_name: pick(user?.last_name, prev.billing_last_name),
+        billing_email: pick(user?.email, prev.billing_email),
+        billing_phone: pick(p.phone, prev.billing_phone),
+        billing_address: pick(p.billing_address, prev.billing_address),
+        billing_city: pick(p.billing_city, prev.billing_city),
+        billing_province: pick(p.billing_state, prev.billing_province),
+        billing_zip_code: pick(p.billing_zip, prev.billing_zip_code),
+        billing_country: pick(p.billing_country, prev.billing_country),
+        shipping_first_name: pick(user?.first_name, prev.shipping_first_name),
+        shipping_last_name: pick(user?.last_name, prev.shipping_last_name),
+        shipping_email: pick(user?.email, prev.shipping_email),
+        shipping_phone: pick(p.phone, prev.shipping_phone),
+        shipping_address: pick(p.shipping_address, prev.shipping_address),
+        shipping_city: pick(p.shipping_city, prev.shipping_city),
+        shipping_province: pick(p.shipping_state, prev.shipping_province),
+        shipping_zip_code: pick(p.shipping_zip, prev.shipping_zip_code),
+        shipping_country: pick(p.shipping_country, prev.shipping_country),
         is_valid_shipping_zip: false,
         is_valid_billing_zip: false,
         newsletter: false,
@@ -477,11 +481,20 @@ export default function useCheckout() {
         fillUserToForm(user);
       }
     } else {
+      // Signed out on this page: the account's name, email and addresses must
+      // not stay in the form for whoever is at the screen next.
+      if (filledFor.current !== null) {
+        setForm((prev) => ({ ...initialForm, items: prev.items }));
+        // The shipping total was for the account's address; it is worked out
+        // again once a postal code is entered (updateOnZipChange).
+        setCartTotal((prev) => ({ ...prev, allowPay: false }));
+      }
       filledFor.current = null;
       fillGuestInfo();
     }
-
-    loadCart();
+    // No loadCart() here: the cart provider reloads on the same sign-in
+    // changes, and a second load at the same moment merged the guest cart into
+    // the account twice.
   }, [loading, forage, isLoggedIn, user]);
 
   const refNumber = useMemo(() => {
