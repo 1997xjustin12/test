@@ -62,7 +62,7 @@ export default async function CheckoutLayout({ children }) {
         <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
           <AuthProvider>
             <CartProvider>
-              {ISOKO ? <OKOCheckoutHeader /> : ISBBQ ? <BBQCheckoutHeader /> : <CheckoutHeader logo={redisLogo} />}
+              {ISOKO ? <OKOCheckoutHeader logo={redisLogo} /> : ISBBQ ? <BBQCheckoutHeader logo={redisLogo} /> : <CheckoutHeader logo={redisLogo} />}
               <div className="flex flex-col min-h-screen">{children}</div>
               {/* Inside the providers: FooterNewsletter calls useAuth(), and
                   outside AuthProvider that returns null and crashes the page. */}
