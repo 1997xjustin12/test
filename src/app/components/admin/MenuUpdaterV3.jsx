@@ -216,11 +216,9 @@ function MenuUpdaterV3() {
   const [sortableIsActive, setSortableIsActive] = useState(true);
   const [dndToggle, setDndToggle] = useState(true);
 
-  // "missing": Redis has no menu at all (a new, still-empty server), so the
-  // builder offers the bundled snapshot instead of an empty tree that a Save
-  // would store. "repair": the snapshot was saved without menu_ids (before
-  // /api/menu-seed added them), which the tree and the editor can't work with.
-  const [seedOffer, setSeedOffer] = useState(null);
+  // Redis has no menu at all (a new, still-empty server). The builder offers
+  // the bundled snapshot instead of an empty tree that a Save would store.
+  const [menuMissing, setMenuMissing] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
   const recalibrateOrder = (treeArray) => {
@@ -717,16 +715,10 @@ function MenuUpdaterV3() {
 
       // An empty key used to throw here (null.filter) and leave a blank tree.
       if (!Array.isArray(data) || !data.length) {
-        setSeedOffer("missing");
+        setMenuMissing(true);
         return;
       }
-      // Without menu_ids every item maps to id undefined: nothing drags,
-      // nothing opens, and a Save would store the ids as undefined for good.
-      if (data.some(({ name, menu_id }) => !menu_id && !["Home", "Search"].includes(name))) {
-        setSeedOffer("repair");
-        return;
-      }
-      setSeedOffer(null);
+      setMenuMissing(false);
 
       const nav_data = mapTreeWithId([
         HomeNavItem,
@@ -749,12 +741,7 @@ function MenuUpdaterV3() {
       } else {
         // Same cache clear as a menu save, so the storefront picks it up now.
         fetch("/api/cache/clear?groups=layout", { method: "POST" }).catch(() => {});
-        showAlertMessage(
-          "success",
-          seedOffer === "repair"
-            ? "Menu repaired. It can be edited now."
-            : `Menu saved from the Oct 16 snapshot (${body.items} items).`,
-        );
+        showAlertMessage("success", `Menu saved from the Oct 16 snapshot (${body.items} items).`);
       }
       // A 409 means a menu turned up meanwhile: load whatever is there.
       await loadDefaultMenu();
@@ -828,31 +815,22 @@ function MenuUpdaterV3() {
             Menu Builder - Shopify Product Structure
           </div>
           <div className="text-sm">Don't forget to save your changes.</div>
-          {seedOffer && (
+          {menuMissing && (
             <div className="my-[10px] p-3 rounded border bg-yellow-100 text-yellow-900 border-yellow-400 text-sm flex flex-col md:flex-row gap-[10px] md:items-center justify-between">
-              {seedOffer === "missing" ? (
-                <div>
-                  <b>No menu is saved in Redis.</b> The storefront is showing the
-                  bundled Oct 16 snapshot. Save that snapshot to Redis to edit it
-                  here. This covers all three brands.
-                </div>
-              ) : (
-                <div>
-                  <b>The saved Oct 16 menu is missing its item ids,</b> so it
-                  can&apos;t be edited. Repair it to add them; the menu itself
-                  doesn&apos;t change. This covers all three brands.
-                </div>
-              )}
+              <div>
+                <b>No menu is saved in Redis.</b> The storefront is showing the
+                bundled Oct 16 snapshot. Save that snapshot to Redis to edit it
+                here. This covers all three brands.
+              </div>
               <Button onClick={handleSeedMenu} loading={isSeeding}>
-                {seedOffer === "missing" ? "Save Oct 16 menu to Redis" : "Repair menu"}
+                Save Oct 16 menu to Redis
               </Button>
             </div>
           )}
           <div className="flex flex-col md:flex-row gap-[10px] my-[10px] items-center justify-between">
-            {/* Disabled until there is a usable menu: saving the empty tree
-                would store just Home, and saving the id-less one would lose
-                the ids the repair restores. */}
-            <Button onClick={handleSaveMenuChanges} loading={isLoading} disabled={Boolean(seedOffer)}>
+            {/* Disabled with no menu in Redis: saving the empty tree would
+                store just Home and hide the snapshot offer. */}
+            <Button onClick={handleSaveMenuChanges} loading={isLoading} disabled={menuMissing}>
               Save
             </Button>
             <div

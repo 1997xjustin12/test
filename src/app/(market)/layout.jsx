@@ -177,10 +177,11 @@ export default async function MarketLayout({ children }) {
 
   // No menu from Redis and none remembered by this instance: fall back to the
   // copy of the navigation captured on 16 Oct 2026, while Upstash was out of
-  // quota. It is the header's own shape (what clientMenuItem produces), so the
-  // nav works; it does not feed /[slug], which reads the full menu itself and
-  // keeps its own fallback. Loaded only when needed. Replace it with a fresh
-  // snapshot once Redis is reachable — a stale copy links to pages that moved.
+  // quota, and refreshed on 21 Oct from the stored menu once the menu builder
+  // had saved it with its ids. It goes through clientMenuItem like the stored
+  // menu. /[slug] falls back to the same file. Loaded only when needed. Replace
+  // it with a fresh snapshot after a menu change — a stale copy links to pages
+  // that moved.
   const menu =
     Array.isArray(storedMenu) && storedMenu.length
       ? storedMenu

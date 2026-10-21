@@ -1,15 +1,30 @@
 [
   {
-    "id": "kw5dsac1q",
+    "menu_id": "kw5dsac1q",
+    "parent_id": "",
+    "url": "",
     "key": "Home",
     "name": "Home",
-    "url": "",
+    "slug": "home",
     "origin_name": "Home",
-    "nav_type": "custom_page",
+    "children": [],
     "price_visibility": "hide",
+    "meta_title": "",
+    "meta_description": "",
+    "banner": {
+      "img": {
+        "src": "",
+        "alt": "Home-Banner"
+      },
+      "title": "Modern Fireplaces and Outdoor Living",
+      "tag_line": "Transform Your Spaces with Elegant Designs Built for Comfort and Durability"
+    },
+    "page_contact_number": null,
     "searchable": true,
     "nav_visibility": true,
-    "children": []
+    "order": 1,
+    "nav_type": "custom_page",
+    "id": "kw5dsac1q"
   },
   {
     "id": "ljsk31wrt",
@@ -44,7 +59,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "yiq2vhnk7",
+        "parent_id": "ljsk31wrt",
+        "slug": "gas-fireplaces"
       },
       {
         "id": "v574fqsp5",
@@ -67,7 +85,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "v574fqsp5",
+        "parent_id": "ljsk31wrt",
+        "slug": "electric-fireplaces"
       },
       {
         "id": "q14f1j8l7",
@@ -90,9 +111,15 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "q14f1j8l7",
+        "parent_id": "ljsk31wrt",
+        "slug": "shop-all-fireplaces"
       }
-    ]
+    ],
+    "menu_id": "ljsk31wrt",
+    "parent_id": "",
+    "slug": "fireplaces"
   },
   {
     "id": "5kgpsu2pf",
@@ -127,7 +154,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "lxldomel0",
+        "parent_id": "5kgpsu2pf",
+        "slug": "gas-patio-heaters"
       },
       {
         "id": "96e6xzyjc",
@@ -150,7 +180,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "96e6xzyjc",
+        "parent_id": "5kgpsu2pf",
+        "slug": "electric-patio-heaters"
       },
       {
         "id": "7ljr6gi17",
@@ -173,7 +206,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "7ljr6gi17",
+        "parent_id": "5kgpsu2pf",
+        "slug": "freestanding-patio-heaters"
       },
       {
         "id": "ap2p30re0",
@@ -196,9 +232,15 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "ap2p30re0",
+        "parent_id": "5kgpsu2pf",
+        "slug": "shop-all-patio-heaters"
       }
-    ]
+    ],
+    "menu_id": "5kgpsu2pf",
+    "parent_id": "",
+    "slug": "patio-heaters"
   },
   {
     "id": "6uvgok9uw",
@@ -231,7 +273,10 @@
           "id": 970,
           "name": "AOG Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "xeju6cdrt",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-aog-built-in-grills"
       },
       {
         "id": "eo0mnw34v",
@@ -254,7 +299,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "eo0mnw34v",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-blaze-built-in-grills"
       },
       {
         "id": "9b2cgwcjk",
@@ -271,7 +319,10 @@
           "id": 971,
           "name": "Bonfire Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "9b2cgwcjk",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-bonfire-built-in-grills"
       },
       {
         "id": "7xjv1okws",
@@ -288,7 +339,10 @@
           "id": 972,
           "name": "Broilmaster Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "7xjv1okws",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-broilmaster-built-in-grills"
       },
       {
         "id": "yatc5w18s",
@@ -311,7 +365,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "yatc5w18s",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-bull-built-in-grills"
       },
       {
         "id": "b688rmvzl",
@@ -328,7 +385,10 @@
           "id": 973,
           "name": "Delsol Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "b688rmvzl",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-delsol-built-in-grills"
       },
       {
         "id": "q9ggbvvib",
@@ -345,7 +405,10 @@
           "id": 974,
           "name": "Delta Heat Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "q9ggbvvib",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-delta-heat-built-in-grills"
       },
       {
         "id": "1lb8y5r15",
@@ -368,7 +431,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "1lb8y5r15",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-eloquence-built-in-grills"
       },
       {
         "id": "347v6vy78",
@@ -385,7 +451,10 @@
           "id": 975,
           "name": "Fire Magic Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "347v6vy78",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-fire-magic-built-in-grills"
       },
       {
         "id": "fy2e4dcnr",
@@ -402,7 +471,10 @@
           "id": 976,
           "name": "Grandeur Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "fy2e4dcnr",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-grandeur-built-in-grills"
       },
       {
         "id": "jsblrdily",
@@ -419,7 +491,10 @@
           "id": 977,
           "name": "Le Griddle Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "jsblrdily",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-le-griddle-built-in-grills"
       },
       {
         "id": "h3masidog",
@@ -436,7 +511,10 @@
           "id": 978,
           "name": "Lion Premium Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "h3masidog",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-lion-premium-built-in-grills"
       },
       {
         "id": "1ae6fir91",
@@ -453,7 +531,10 @@
           "id": 979,
           "name": "Napoleon Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "1ae6fir91",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-napoleon-built-in-grills"
       },
       {
         "id": "bloql9zz3",
@@ -470,7 +551,10 @@
           "id": 980,
           "name": "PGS Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "bloql9zz3",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-pgs-built-in-grills"
       },
       {
         "id": "nzz2f3krj",
@@ -487,7 +571,10 @@
           "id": 981,
           "name": "Premier Design Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "nzz2f3krj",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-premier-design-built-in-grills"
       },
       {
         "id": "x7mst1beg",
@@ -504,7 +591,10 @@
           "id": 982,
           "name": "Primo Ceramic Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "x7mst1beg",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-primo-ceramic-built-in-grills"
       },
       {
         "id": "b6406vswe",
@@ -521,7 +611,10 @@
           "id": 983,
           "name": "Summerset Professional Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "b6406vswe",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-summerset-professional-built-in-grills"
       },
       {
         "id": "ec2yyyiyx",
@@ -538,7 +631,10 @@
           "id": 984,
           "name": "Sunstone Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "ec2yyyiyx",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-sunstone-built-in-grills"
       },
       {
         "id": "jpnez6jsx",
@@ -555,7 +651,10 @@
           "id": 985,
           "name": "TEC Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "jpnez6jsx",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-tec-built-in-grills"
       },
       {
         "id": "emqybfyzq",
@@ -572,7 +671,10 @@
           "id": 986,
           "name": "TrueFlame Built-In Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "emqybfyzq",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-trueflame-built-in-grills"
       },
       {
         "id": "5f03semvb",
@@ -595,7 +697,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "5f03semvb",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-twin-eagles-built-in-grills"
       },
       {
         "id": "mkaxyl2b5",
@@ -618,9 +723,15 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "mkaxyl2b5",
+        "parent_id": "6uvgok9uw",
+        "slug": "shop-all-built-in-grills"
       }
-    ]
+    ],
+    "menu_id": "6uvgok9uw",
+    "parent_id": "",
+    "slug": "built-in-grills"
   },
   {
     "id": "8ohr6y5oc",
@@ -649,7 +760,10 @@
           "id": 987,
           "name": "AOG Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "97gvus8lc",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-aog-freestanding-grills"
       },
       {
         "id": "hcnzcpay2",
@@ -672,7 +786,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "hcnzcpay2",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-blaze-freestanding-grills"
       },
       {
         "id": "j3t9ipwhp",
@@ -689,7 +806,10 @@
           "id": 988,
           "name": "Bonfire Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "j3t9ipwhp",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-bonfire-freestanding-grills"
       },
       {
         "id": "6roy8qx5j",
@@ -706,7 +826,10 @@
           "id": 989,
           "name": "Brand-Man Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "6roy8qx5j",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-brand-man-freestanding-grills"
       },
       {
         "id": "kqhydabwk",
@@ -723,7 +846,10 @@
           "id": 990,
           "name": "Broilmaster Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "kqhydabwk",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-broilmaster-freestanding-grills"
       },
       {
         "id": "6t1evg64s",
@@ -746,7 +872,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "6t1evg64s",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-bull-freestanding-grills"
       },
       {
         "id": "xnxkmiee8",
@@ -763,7 +892,10 @@
           "id": 991,
           "name": "Delta Heat Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "xnxkmiee8",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-delta-heat-freestanding-grills"
       },
       {
         "id": "ft8co7d0c",
@@ -780,7 +912,10 @@
           "id": 992,
           "name": "Le Griddle Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "ft8co7d0c",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-le-griddle-freestanding-grills"
       },
       {
         "id": "x2nziulcg",
@@ -797,7 +932,10 @@
           "id": 993,
           "name": "Lion Premium Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "x2nziulcg",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-lion-premium-freestanding-grills"
       },
       {
         "id": "msrjytb94",
@@ -814,7 +952,10 @@
           "id": 994,
           "name": "Napoleon Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "msrjytb94",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-napoleon-freestanding-grills"
       },
       {
         "id": "sldugrdjr",
@@ -831,7 +972,10 @@
           "id": 995,
           "name": "PGS Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "sldugrdjr",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-pgs-freestanding-grills"
       },
       {
         "id": "8ltkfunpl",
@@ -848,7 +992,10 @@
           "id": 996,
           "name": "Primo Ceramic Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "8ltkfunpl",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-primo-ceramic-freestanding-grills"
       },
       {
         "id": "julex4t4q",
@@ -860,7 +1007,10 @@
         "price_visibility": "hide",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "julex4t4q",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-renaissance-freestanding-grills"
       },
       {
         "id": "pa5k9qm0b",
@@ -877,7 +1027,10 @@
           "id": 998,
           "name": "Summerset Professional Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "pa5k9qm0b",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-summerset-professional-freestanding-grills"
       },
       {
         "id": "azmzcyk0r",
@@ -894,7 +1047,10 @@
           "id": 999,
           "name": "TEC Freestanding Grills"
         },
-        "children": []
+        "children": [],
+        "menu_id": "azmzcyk0r",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-tec-freestanding-grills"
       },
       {
         "id": "j8wbs51n0",
@@ -917,7 +1073,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "j8wbs51n0",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-twin-eagles-freestanding-grills"
       },
       {
         "id": "zvnxn2g3c",
@@ -940,9 +1099,15 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "zvnxn2g3c",
+        "parent_id": "8ohr6y5oc",
+        "slug": "shop-all-freestanding-grills"
       }
-    ]
+    ],
+    "menu_id": "8ohr6y5oc",
+    "parent_id": "",
+    "slug": "freestanding-grills"
   },
   {
     "id": "9r9wr2pw3",
@@ -975,7 +1140,10 @@
           "id": 968,
           "name": "Compact Refrigerators"
         },
-        "children": []
+        "children": [],
+        "menu_id": "8doa7cjl2",
+        "parent_id": "9r9wr2pw3",
+        "slug": "compact-refrigerators"
       },
       {
         "id": "8qaa1tsvw",
@@ -992,7 +1160,10 @@
           "id": 969,
           "name": "Outdoor Beverage Fridges"
         },
-        "children": []
+        "children": [],
+        "menu_id": "8qaa1tsvw",
+        "parent_id": "9r9wr2pw3",
+        "slug": "outdoor-beverage-fridges"
       },
       {
         "id": "7m8u424kt",
@@ -1009,7 +1180,10 @@
           "id": 218,
           "name": "Ice Makers"
         },
-        "children": []
+        "children": [],
+        "menu_id": "7m8u424kt",
+        "parent_id": "9r9wr2pw3",
+        "slug": "outdoor-ice-makers"
       },
       {
         "id": "dgv9excc3",
@@ -1026,7 +1200,10 @@
           "id": 441,
           "name": "Wine Coolers"
         },
-        "children": []
+        "children": [],
+        "menu_id": "dgv9excc3",
+        "parent_id": "9r9wr2pw3",
+        "slug": "outdoor-wine-coolers"
       },
       {
         "id": "61kvqkr1p",
@@ -1043,7 +1220,10 @@
           "id": 128,
           "name": "Kegerators"
         },
-        "children": []
+        "children": [],
+        "menu_id": "61kvqkr1p",
+        "parent_id": "9r9wr2pw3",
+        "slug": "outdoor-kegerators"
       },
       {
         "id": "8scegel91",
@@ -1060,9 +1240,15 @@
           "id": 875,
           "name": "Compact Freezers"
         },
-        "children": []
+        "children": [],
+        "menu_id": "8scegel91",
+        "parent_id": "9r9wr2pw3",
+        "slug": "outdoor-compact-freezers"
       }
-    ]
+    ],
+    "menu_id": "9r9wr2pw3",
+    "parent_id": "",
+    "slug": "outdoor-refrigeration"
   },
   {
     "id": "yraox67cx",
@@ -1095,7 +1281,10 @@
           "id": 44,
           "name": "Outdoor Kitchen Storage"
         },
-        "children": []
+        "children": [],
+        "menu_id": "bt782nn2o",
+        "parent_id": "yraox67cx",
+        "slug": "shop-all-outdoor-kitchen-storage"
       },
       {
         "id": "59xgbqjdh",
@@ -1112,7 +1301,10 @@
           "id": 56,
           "name": "Access Doors"
         },
-        "children": []
+        "children": [],
+        "menu_id": "59xgbqjdh",
+        "parent_id": "yraox67cx",
+        "slug": "access-doors"
       },
       {
         "id": "sg62sxlpf",
@@ -1129,7 +1321,10 @@
           "id": 45,
           "name": "Storage Drawers"
         },
-        "children": []
+        "children": [],
+        "menu_id": "sg62sxlpf",
+        "parent_id": "yraox67cx",
+        "slug": "storage-drawers"
       },
       {
         "id": "st6viom0t",
@@ -1146,7 +1341,10 @@
           "id": 55,
           "name": "Door and Drawer Combos"
         },
-        "children": []
+        "children": [],
+        "menu_id": "st6viom0t",
+        "parent_id": "yraox67cx",
+        "slug": "door-and-drawer-combos"
       },
       {
         "id": "ompro4gjg",
@@ -1163,7 +1361,10 @@
           "id": 335,
           "name": "Storage Pantries"
         },
-        "children": []
+        "children": [],
+        "menu_id": "ompro4gjg",
+        "parent_id": "yraox67cx",
+        "slug": "storage-pantries"
       },
       {
         "id": "ehj756aav",
@@ -1180,7 +1381,10 @@
           "id": 46,
           "name": "Trash Bins"
         },
-        "children": []
+        "children": [],
+        "menu_id": "ehj756aav",
+        "parent_id": "yraox67cx",
+        "slug": "trash-bins"
       },
       {
         "id": "cwxv4ruhs",
@@ -1197,7 +1401,10 @@
           "id": 105,
           "name": "Ice Bins and Storage"
         },
-        "children": []
+        "children": [],
+        "menu_id": "cwxv4ruhs",
+        "parent_id": "yraox67cx",
+        "slug": "ice-bins-and-storage"
       },
       {
         "id": "uhmesy6y1",
@@ -1214,7 +1421,10 @@
           "id": 123,
           "name": "Propane Tank Bins"
         },
-        "children": []
+        "children": [],
+        "menu_id": "uhmesy6y1",
+        "parent_id": "yraox67cx",
+        "slug": "propane-tank-bins"
       },
       {
         "id": "ffje16umb",
@@ -1231,7 +1441,10 @@
           "id": 54,
           "name": "Paper Towel Bins"
         },
-        "children": []
+        "children": [],
+        "menu_id": "ffje16umb",
+        "parent_id": "yraox67cx",
+        "slug": "paper-towel-bins"
       },
       {
         "id": "cyqz8r6iv",
@@ -1248,7 +1461,10 @@
           "id": 929,
           "name": "Spice Racks"
         },
-        "children": []
+        "children": [],
+        "menu_id": "cyqz8r6iv",
+        "parent_id": "yraox67cx",
+        "slug": "spice-racks"
       },
       {
         "id": "rf5xygtu0",
@@ -1265,9 +1481,15 @@
           "id": 258,
           "name": "Warming Drawers"
         },
-        "children": []
+        "children": [],
+        "menu_id": "rf5xygtu0",
+        "parent_id": "yraox67cx",
+        "slug": "warming-drawers"
       }
-    ]
+    ],
+    "menu_id": "yraox67cx",
+    "parent_id": "",
+    "slug": "outdoor-storage"
   },
   {
     "id": "mo4lmuf8m",
@@ -1324,7 +1546,10 @@
                 "alt": "Banner Image"
               }
             },
-            "children": []
+            "children": [],
+            "menu_id": "6okr1x4tq",
+            "parent_id": "9yzd2ila8",
+            "slug": "shop-open-box-grills"
           },
           {
             "id": "wxyxmlnmb",
@@ -1347,7 +1572,10 @@
                 "alt": "Banner Image"
               }
             },
-            "children": []
+            "children": [],
+            "menu_id": "wxyxmlnmb",
+            "parent_id": "9yzd2ila8",
+            "slug": "shop-open-box-storage"
           },
           {
             "id": "wyp6gwgzr",
@@ -1370,9 +1598,15 @@
                 "alt": "Banner Image"
               }
             },
-            "children": []
+            "children": [],
+            "menu_id": "wyp6gwgzr",
+            "parent_id": "9yzd2ila8",
+            "slug": "shop-open-box-accessories"
           }
-        ]
+        ],
+        "menu_id": "9yzd2ila8",
+        "parent_id": "mo4lmuf8m",
+        "slug": "shop-all-open-box"
       },
       {
         "id": "y19t7dhj6",
@@ -1395,7 +1629,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "y19t7dhj6",
+        "parent_id": "mo4lmuf8m",
+        "slug": "close-out-deals"
       },
       {
         "id": "w69buvjaf",
@@ -1418,7 +1655,10 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "w69buvjaf",
+        "parent_id": "mo4lmuf8m",
+        "slug": "package-deals"
       },
       {
         "id": "xunipxexb",
@@ -1441,9 +1681,15 @@
             "alt": "Banner Image"
           }
         },
-        "children": []
+        "children": [],
+        "menu_id": "xunipxexb",
+        "parent_id": "mo4lmuf8m",
+        "slug": "clearance-sale"
       }
-    ]
+    ],
+    "menu_id": "mo4lmuf8m",
+    "parent_id": "",
+    "slug": "open-box"
   },
   {
     "id": "0q8yqv5e0",
@@ -1455,7 +1701,10 @@
     "price_visibility": "hide",
     "searchable": true,
     "nav_visibility": true,
-    "children": []
+    "children": [],
+    "menu_id": "0q8yqv5e0",
+    "parent_id": "",
+    "slug": "current-deals"
   },
   {
     "id": "e3gza49s5",
@@ -1494,7 +1743,10 @@
               "id": 480,
               "name": "Blaze Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "2vwehs4g3",
+            "parent_id": "o85426zus",
+            "slug": "blaze-open-box"
           },
           {
             "id": "cbv3wgsn5",
@@ -1511,7 +1763,10 @@
               "id": 138,
               "name": "Blaze Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "cbv3wgsn5",
+            "parent_id": "o85426zus",
+            "slug": "blaze-grills"
           },
           {
             "id": "2xkdnbc20",
@@ -1528,7 +1783,10 @@
               "id": 189,
               "name": "Blaze Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "2xkdnbc20",
+            "parent_id": "o85426zus",
+            "slug": "blaze-side-burners"
           },
           {
             "id": "k9zcujvbc",
@@ -1545,7 +1803,10 @@
               "id": 178,
               "name": "Blaze Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "k9zcujvbc",
+            "parent_id": "o85426zus",
+            "slug": "blaze-storage"
           },
           {
             "id": "0dnf7hhj7",
@@ -1562,7 +1823,10 @@
               "id": 167,
               "name": "Blaze Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "0dnf7hhj7",
+            "parent_id": "o85426zus",
+            "slug": "blaze-refrigeration"
           },
           {
             "id": "co0pj7le4",
@@ -1579,7 +1843,10 @@
               "id": 78,
               "name": "Blaze Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "co0pj7le4",
+            "parent_id": "o85426zus",
+            "slug": "blaze-accessories"
           },
           {
             "id": "02p50gy5w",
@@ -1596,7 +1863,10 @@
               "id": 152,
               "name": "Blaze Island Packages"
             },
-            "children": []
+            "children": [],
+            "menu_id": "02p50gy5w",
+            "parent_id": "o85426zus",
+            "slug": "blaze-island-packages"
           },
           {
             "id": "3zgeqyej4",
@@ -1613,9 +1883,15 @@
               "id": 247,
               "name": "Blaze Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "3zgeqyej4",
+            "parent_id": "o85426zus",
+            "slug": "blaze-package-deals"
           }
-        ]
+        ],
+        "menu_id": "o85426zus",
+        "parent_id": "e3gza49s5",
+        "slug": "blaze-outdoor-products"
       },
       {
         "id": "ysu2jgpcv",
@@ -1643,7 +1919,10 @@
               "id": 528,
               "name": "American Outdoor Grill (BBQ Grills)"
             },
-            "children": []
+            "children": [],
+            "menu_id": "xhqg0y01h",
+            "parent_id": "ysu2jgpcv",
+            "slug": "american-outdoor-grill-bbq-grills"
           },
           {
             "id": "e6zej4lhz",
@@ -1660,7 +1939,10 @@
               "id": 538,
               "name": "American Outdoor Grill Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "e6zej4lhz",
+            "parent_id": "ysu2jgpcv",
+            "slug": "american-outdoor-grill-side-burners"
           },
           {
             "id": "b8tjw4dtz",
@@ -1677,7 +1959,10 @@
               "id": 359,
               "name": "American Outdoor Grill Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "b8tjw4dtz",
+            "parent_id": "ysu2jgpcv",
+            "slug": "american-outdoor-grills-accessories"
           },
           {
             "id": "kbu5p04h7",
@@ -1694,9 +1979,15 @@
               "id": 542,
               "name": "AOG Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "kbu5p04h7",
+            "parent_id": "ysu2jgpcv",
+            "slug": "aog-package-deals"
           }
-        ]
+        ],
+        "menu_id": "ysu2jgpcv",
+        "parent_id": "e3gza49s5",
+        "slug": "aog"
       },
       {
         "id": "b5i0sz6y5",
@@ -1724,7 +2015,10 @@
               "id": 249,
               "name": "Bonfire Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "82vl5vy7p",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-open-box"
           },
           {
             "id": "kv3dqrkut",
@@ -1741,7 +2035,10 @@
               "id": 627,
               "name": "Bonfire Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "kv3dqrkut",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-grills"
           },
           {
             "id": "ahoa8laiq",
@@ -1758,7 +2055,10 @@
               "id": 769,
               "name": "Bonfire Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ahoa8laiq",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-side-buners"
           },
           {
             "id": "87uo17rwp",
@@ -1775,7 +2075,10 @@
               "id": 133,
               "name": "Bonfire Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "87uo17rwp",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-storage"
           },
           {
             "id": "o5clxb6m5",
@@ -1792,7 +2095,10 @@
               "id": 767,
               "name": "Bonfire Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "o5clxb6m5",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-accessories"
           },
           {
             "id": "x357mj39d",
@@ -1809,9 +2115,15 @@
               "id": 596,
               "name": "Bonfire Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "x357mj39d",
+            "parent_id": "b5i0sz6y5",
+            "slug": "bonfire-package-deals"
           }
-        ]
+        ],
+        "menu_id": "b5i0sz6y5",
+        "parent_id": "e3gza49s5",
+        "slug": "bonfire"
       },
       {
         "id": "ko9x9v63c",
@@ -1839,7 +2151,10 @@
               "id": 309,
               "name": "Delta Heat Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "67h9juq8r",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-open-box"
           },
           {
             "id": "o28xi5cm2",
@@ -1856,7 +2171,10 @@
               "id": 209,
               "name": "Delta Heat Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "o28xi5cm2",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-grills"
           },
           {
             "id": "el1n8zkjl",
@@ -1873,7 +2191,10 @@
               "id": 204,
               "name": "Delta Heat Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "el1n8zkjl",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-side-burners"
           },
           {
             "id": "0gjb4ttt5",
@@ -1890,7 +2211,10 @@
               "id": 301,
               "name": "Delta Heat Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "0gjb4ttt5",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-storage"
           },
           {
             "id": "l1mp8lbz0",
@@ -1907,7 +2231,10 @@
               "id": 299,
               "name": "Delta Heat Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "l1mp8lbz0",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-refrigeration"
           },
           {
             "id": "4xvbc7w2d",
@@ -1924,7 +2251,10 @@
               "id": 288,
               "name": "Delta Heat Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "4xvbc7w2d",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-accessories"
           },
           {
             "id": "xnusvgp01",
@@ -1941,9 +2271,15 @@
               "id": 311,
               "name": "Delta Heat Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "xnusvgp01",
+            "parent_id": "ko9x9v63c",
+            "slug": "delta-heat-package-deals"
           }
-        ]
+        ],
+        "menu_id": "ko9x9v63c",
+        "parent_id": "e3gza49s5",
+        "slug": "delta-heat"
       },
       {
         "id": "d3u9id38k",
@@ -1971,7 +2307,10 @@
               "id": 317,
               "name": "Sunstone Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "1th9v42xv",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-open-box"
           },
           {
             "id": "35p8zqjv2",
@@ -1988,7 +2327,10 @@
               "id": 362,
               "name": "Sunstone Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "35p8zqjv2",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-grills"
           },
           {
             "id": "bvd0y5efi",
@@ -2005,7 +2347,10 @@
               "id": 361,
               "name": "Sunstone Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "bvd0y5efi",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-side-burners"
           },
           {
             "id": "3mu7itsd6",
@@ -2022,7 +2367,10 @@
               "id": 130,
               "name": "Sunstone Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "3mu7itsd6",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-storage"
           },
           {
             "id": "13gc4n3a4",
@@ -2039,7 +2387,10 @@
               "id": 469,
               "name": "Sunstone Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "13gc4n3a4",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-refrigeration"
           },
           {
             "id": "8bh1s0g3t",
@@ -2056,7 +2407,10 @@
               "id": 81,
               "name": "Sunstone Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "8bh1s0g3t",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-accessories"
           },
           {
             "id": "6cwdehks8",
@@ -2073,9 +2427,15 @@
               "id": 475,
               "name": "Sunstone Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "6cwdehks8",
+            "parent_id": "d3u9id38k",
+            "slug": "sunstone-package-deals"
           }
-        ]
+        ],
+        "menu_id": "d3u9id38k",
+        "parent_id": "e3gza49s5",
+        "slug": "sunstone"
       },
       {
         "id": "izrkexdmd",
@@ -2103,7 +2463,10 @@
               "id": 621,
               "name": "RCS Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "bmbdincnv",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-open-box"
           },
           {
             "id": "15w5bvf3p",
@@ -2120,7 +2483,10 @@
               "id": 586,
               "name": "RCS Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "15w5bvf3p",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-grills"
           },
           {
             "id": "1b15evnoq",
@@ -2137,7 +2503,10 @@
               "id": 584,
               "name": "RCS Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "1b15evnoq",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-side-burners"
           },
           {
             "id": "22ji67384",
@@ -2154,7 +2523,10 @@
               "id": 51,
               "name": "RCS Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "22ji67384",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-storage"
           },
           {
             "id": "l9ezqsbue",
@@ -2171,7 +2543,10 @@
               "id": 125,
               "name": "RCS Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "l9ezqsbue",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-refrigeration"
           },
           {
             "id": "tlbego18k",
@@ -2188,7 +2563,10 @@
               "id": 50,
               "name": "RCS Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "tlbego18k",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-accessories"
           },
           {
             "id": "mtbjbtdjj",
@@ -2205,9 +2583,15 @@
               "id": 733,
               "name": "RCS Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mtbjbtdjj",
+            "parent_id": "izrkexdmd",
+            "slug": "rcs-package-deals"
           }
-        ]
+        ],
+        "menu_id": "izrkexdmd",
+        "parent_id": "e3gza49s5",
+        "slug": "renaissance-cooking-systems"
       },
       {
         "id": "7txx4cbvb",
@@ -2241,7 +2625,10 @@
               "id": 965,
               "name": "Napoleon Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "679b0jy5m",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-open-box"
           },
           {
             "id": "mpkbakwf0",
@@ -2258,7 +2645,10 @@
               "id": 963,
               "name": "Napoleon Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mpkbakwf0",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-grills"
           },
           {
             "id": "rujfhznlu",
@@ -2275,7 +2665,10 @@
               "id": 543,
               "name": "Napoleon Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "rujfhznlu",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-side-burners"
           },
           {
             "id": "oxqh7nqzg",
@@ -2292,7 +2685,10 @@
               "id": 966,
               "name": "Napoleon Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "oxqh7nqzg",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-storage"
           },
           {
             "id": "naz6is1kx",
@@ -2309,7 +2705,10 @@
               "id": 614,
               "name": "Napoleon Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "naz6is1kx",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-refrigeration"
           },
           {
             "id": "405s4owz1",
@@ -2326,7 +2725,10 @@
               "id": 487,
               "name": "Napoleon Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "405s4owz1",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-accessories"
           },
           {
             "id": "ocl6y8e5p",
@@ -2343,9 +2745,15 @@
               "id": 605,
               "name": "Napoleon Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ocl6y8e5p",
+            "parent_id": "7txx4cbvb",
+            "slug": "napoleon-package-deals"
           }
-        ]
+        ],
+        "menu_id": "7txx4cbvb",
+        "parent_id": "e3gza49s5",
+        "slug": "napoleon"
       },
       {
         "id": "xl5mp4rz6",
@@ -2373,7 +2781,10 @@
               "id": 461,
               "name": "Summerset Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "wsi1fvnlj",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-open-box"
           },
           {
             "id": "5xn4dfih7",
@@ -2390,7 +2801,10 @@
               "id": 151,
               "name": "Summerset Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "5xn4dfih7",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-grills"
           },
           {
             "id": "0kcahlzgw",
@@ -2407,7 +2821,10 @@
               "id": 435,
               "name": "Summerset Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "0kcahlzgw",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-side-burners"
           },
           {
             "id": "x38qmlfxq",
@@ -2424,7 +2841,10 @@
               "id": 49,
               "name": "Summerset Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "x38qmlfxq",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-storage"
           },
           {
             "id": "9l2fkz7nd",
@@ -2441,7 +2861,10 @@
               "id": 142,
               "name": "Summerset Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "9l2fkz7nd",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-refrigeration"
           },
           {
             "id": "2x93fpcgp",
@@ -2458,7 +2881,10 @@
               "id": 53,
               "name": "Summerset Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "2x93fpcgp",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-accessories"
           },
           {
             "id": "csc6hwqp5",
@@ -2475,9 +2901,15 @@
               "id": 442,
               "name": "Summerset Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "csc6hwqp5",
+            "parent_id": "xl5mp4rz6",
+            "slug": "summerset-package-deals"
           }
-        ]
+        ],
+        "menu_id": "xl5mp4rz6",
+        "parent_id": "e3gza49s5",
+        "slug": "summerset-professional-grills"
       },
       {
         "id": "ntmewjyo1",
@@ -2500,7 +2932,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "k09s6wss4",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-open-box"
           },
           {
             "id": "u0xf0vonj",
@@ -2512,7 +2947,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "u0xf0vonj",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-grills"
           },
           {
             "id": "l5qdt28q4",
@@ -2524,7 +2962,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "l5qdt28q4",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-side-burners"
           },
           {
             "id": "fk6fgpu0x",
@@ -2536,7 +2977,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "fk6fgpu0x",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-storage"
           },
           {
             "id": "e5yextd78",
@@ -2548,7 +2992,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "e5yextd78",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-refrigeration"
           },
           {
             "id": "n9q0nrj5a",
@@ -2560,7 +3007,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "n9q0nrj5a",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-accessories"
           },
           {
             "id": "l1igcdbyn",
@@ -2572,9 +3022,15 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "l1igcdbyn",
+            "parent_id": "ntmewjyo1",
+            "slug": "twin-eagles-package-deals"
           }
-        ]
+        ],
+        "menu_id": "ntmewjyo1",
+        "parent_id": "e3gza49s5",
+        "slug": "twin-eagles"
       },
       {
         "id": "8dynzq721",
@@ -2602,7 +3058,10 @@
               "id": 742,
               "name": "TEC Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "qmlp4l2pp",
+            "parent_id": "8dynzq721",
+            "slug": "tec-open-box"
           },
           {
             "id": "v92j51hg9",
@@ -2619,7 +3078,10 @@
               "id": 782,
               "name": "TEC Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "v92j51hg9",
+            "parent_id": "8dynzq721",
+            "slug": "tec-bbq-grills"
           },
           {
             "id": "uy8to8n82",
@@ -2636,7 +3098,10 @@
               "id": 781,
               "name": "TEC Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "uy8to8n82",
+            "parent_id": "8dynzq721",
+            "slug": "tec-side-burners"
           },
           {
             "id": "lcla6slmw",
@@ -2653,7 +3118,10 @@
               "id": 780,
               "name": "TEC Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "lcla6slmw",
+            "parent_id": "8dynzq721",
+            "slug": "tec-storage"
           },
           {
             "id": "u2jrwzx2r",
@@ -2670,9 +3138,15 @@
               "id": 779,
               "name": "TEC Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "u2jrwzx2r",
+            "parent_id": "8dynzq721",
+            "slug": "tec-refrigeration"
           }
-        ]
+        ],
+        "menu_id": "8dynzq721",
+        "parent_id": "e3gza49s5",
+        "slug": "tec-grills"
       },
       {
         "id": "jsib07osu",
@@ -2695,7 +3169,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "6laxcwehz",
+            "parent_id": "jsib07osu",
+            "slug": "lion-open-box"
           },
           {
             "id": "7tv15yldd",
@@ -2707,7 +3184,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "7tv15yldd",
+            "parent_id": "jsib07osu",
+            "slug": "lion-grills"
           },
           {
             "id": "tahpqkqnr",
@@ -2719,7 +3199,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "tahpqkqnr",
+            "parent_id": "jsib07osu",
+            "slug": "lion-side-burners"
           },
           {
             "id": "gjk197yte",
@@ -2731,7 +3214,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "gjk197yte",
+            "parent_id": "jsib07osu",
+            "slug": "lion-storage"
           },
           {
             "id": "zy156yztm",
@@ -2743,7 +3229,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "zy156yztm",
+            "parent_id": "jsib07osu",
+            "slug": "lion-refrigeration"
           },
           {
             "id": "633ekzhxg",
@@ -2755,7 +3244,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "633ekzhxg",
+            "parent_id": "jsib07osu",
+            "slug": "lion-accessories"
           },
           {
             "id": "t3j4mkauc",
@@ -2767,9 +3259,15 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "t3j4mkauc",
+            "parent_id": "jsib07osu",
+            "slug": "lion-package-deals"
           }
-        ]
+        ],
+        "menu_id": "jsib07osu",
+        "parent_id": "e3gza49s5",
+        "slug": "lion-premium-grills"
       },
       {
         "id": "9idpi89gi",
@@ -2797,7 +3295,10 @@
               "id": 559,
               "name": "Le Griddle Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "obt6lqnd5",
+            "parent_id": "9idpi89gi",
+            "slug": "le-griddle-grills"
           },
           {
             "id": "m7m13jmx0",
@@ -2814,7 +3315,10 @@
               "id": 555,
               "name": "Le Griddle Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "m7m13jmx0",
+            "parent_id": "9idpi89gi",
+            "slug": "le-griddle-accessories"
           },
           {
             "id": "n1h7dwg06",
@@ -2831,9 +3335,15 @@
               "id": 696,
               "name": "Le Griddle Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "n1h7dwg06",
+            "parent_id": "9idpi89gi",
+            "slug": "le-griddle-package-deals"
           }
-        ]
+        ],
+        "menu_id": "9idpi89gi",
+        "parent_id": "e3gza49s5",
+        "slug": "le-griddle"
       },
       {
         "id": "r6enzz4vx",
@@ -2861,7 +3371,10 @@
               "id": 632,
               "name": "Broilmaster Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "gs70fc569",
+            "parent_id": "r6enzz4vx",
+            "slug": "broilmaster-open-box"
           },
           {
             "id": "6uwaoan07",
@@ -2878,7 +3391,10 @@
               "id": 30,
               "name": "Broilmaster Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "6uwaoan07",
+            "parent_id": "r6enzz4vx",
+            "slug": "broilmaster-grills"
           },
           {
             "id": "8g2qkms8t",
@@ -2895,7 +3411,10 @@
               "id": 60,
               "name": "Broilmaster Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "8g2qkms8t",
+            "parent_id": "r6enzz4vx",
+            "slug": "broilmaster-side-burners"
           },
           {
             "id": "1r0h3wvaf",
@@ -2912,7 +3431,10 @@
               "id": 42,
               "name": "Broilmaster Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "1r0h3wvaf",
+            "parent_id": "r6enzz4vx",
+            "slug": "broilmaster-storage"
           },
           {
             "id": "djztku1hl",
@@ -2929,9 +3451,15 @@
               "id": 29,
               "name": "Broilmaster Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "djztku1hl",
+            "parent_id": "r6enzz4vx",
+            "slug": "broilmaster-accessories"
           }
-        ]
+        ],
+        "menu_id": "r6enzz4vx",
+        "parent_id": "e3gza49s5",
+        "slug": "broilmaster"
       },
       {
         "id": "0kxts6wcn",
@@ -2959,7 +3487,10 @@
               "id": 285,
               "name": "PGS Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "r8ng6jdhs",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-open-box"
           },
           {
             "id": "8d1nyvfwf",
@@ -2976,7 +3507,10 @@
               "id": 283,
               "name": "PGS Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "8d1nyvfwf",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-grills"
           },
           {
             "id": "s6ske45ol",
@@ -2993,7 +3527,10 @@
               "id": 278,
               "name": "PGS Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "s6ske45ol",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-side-burners"
           },
           {
             "id": "l5hts0t70",
@@ -3010,7 +3547,10 @@
               "id": 274,
               "name": "PGS Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "l5hts0t70",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-storage"
           },
           {
             "id": "lzntqvhr9",
@@ -3027,7 +3567,10 @@
               "id": 99,
               "name": "PGS Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "lzntqvhr9",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-accessories"
           },
           {
             "id": "fmknlxe19",
@@ -3044,9 +3587,15 @@
               "id": 287,
               "name": "PGS Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "fmknlxe19",
+            "parent_id": "0kxts6wcn",
+            "slug": "pgs-package-deals"
           }
-        ]
+        ],
+        "menu_id": "0kxts6wcn",
+        "parent_id": "e3gza49s5",
+        "slug": "pgs"
       },
       {
         "id": "xiav9adnv",
@@ -3074,7 +3623,10 @@
               "id": 630,
               "name": "PCM Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "pgte6wf1k",
+            "parent_id": "xiav9adnv",
+            "slug": "pcm-open-box"
           },
           {
             "id": "4phmcdn5a",
@@ -3091,7 +3643,10 @@
               "id": 109,
               "name": "PCM Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "4phmcdn5a",
+            "parent_id": "xiav9adnv",
+            "slug": "pcm-storage"
           },
           {
             "id": "mzf7wruul",
@@ -3108,9 +3663,15 @@
               "id": 694,
               "name": "PCM Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mzf7wruul",
+            "parent_id": "xiav9adnv",
+            "slug": "pcm-package-deals"
           }
-        ]
+        ],
+        "menu_id": "xiav9adnv",
+        "parent_id": "e3gza49s5",
+        "slug": "pacific-coast-manufacturing"
       },
       {
         "id": "9ukw7gpxb",
@@ -3138,7 +3699,10 @@
               "id": 397,
               "name": "MHP Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "809e3sc4n",
+            "parent_id": "9ukw7gpxb",
+            "slug": "mhp-grills"
           },
           {
             "id": "tnw484g39",
@@ -3150,7 +3714,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "tnw484g39",
+            "parent_id": "9ukw7gpxb",
+            "slug": "mhp-side-burners"
           },
           {
             "id": "4pmqiihn5",
@@ -3162,7 +3729,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "4pmqiihn5",
+            "parent_id": "9ukw7gpxb",
+            "slug": "mhp-accessories"
           },
           {
             "id": "19qbubvyx",
@@ -3174,9 +3744,15 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "19qbubvyx",
+            "parent_id": "9ukw7gpxb",
+            "slug": "mhp-package-deals"
           }
-        ]
+        ],
+        "menu_id": "9ukw7gpxb",
+        "parent_id": "e3gza49s5",
+        "slug": "modern-home-products"
       },
       {
         "id": "wbdqnf8tg",
@@ -3204,7 +3780,10 @@
               "id": 479,
               "name": "TrueFlame Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "0z54szl3p",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-grills"
           },
           {
             "id": "i32koibln",
@@ -3221,7 +3800,10 @@
               "id": 150,
               "name": "TrueFlame Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "i32koibln",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-storage"
           },
           {
             "id": "g64t0oadf",
@@ -3238,7 +3820,10 @@
               "id": 610,
               "name": "TrueFlame Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "g64t0oadf",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-side-burners"
           },
           {
             "id": "391duvm63",
@@ -3255,7 +3840,10 @@
               "id": 476,
               "name": "TrueFlame Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "391duvm63",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-refrigeration"
           },
           {
             "id": "iajyuezoe",
@@ -3272,7 +3860,10 @@
               "id": 149,
               "name": "TrueFlame Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "iajyuezoe",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-accessories"
           },
           {
             "id": "0p8qm19qi",
@@ -3289,9 +3880,15 @@
               "id": 693,
               "name": "Trueflame Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "0p8qm19qi",
+            "parent_id": "wbdqnf8tg",
+            "slug": "trueflame-package-deals"
           }
-        ]
+        ],
+        "menu_id": "wbdqnf8tg",
+        "parent_id": "e3gza49s5",
+        "slug": "trueflame"
       },
       {
         "id": "oj17xmkda",
@@ -3319,7 +3916,10 @@
               "id": 719,
               "name": "Fire Magic BBQ Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "me6a5hhq3",
+            "parent_id": "oj17xmkda",
+            "slug": "fire-magic-bbq-grills"
           },
           {
             "id": "bw0lyxkq5",
@@ -3336,9 +3936,15 @@
               "id": 721,
               "name": "Fire Magic Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "bw0lyxkq5",
+            "parent_id": "oj17xmkda",
+            "slug": "fire-magic-storage"
           }
-        ]
+        ],
+        "menu_id": "oj17xmkda",
+        "parent_id": "e3gza49s5",
+        "slug": "fire-magic"
       },
       {
         "id": "6t4w5qjlb",
@@ -3366,7 +3972,10 @@
               "id": 718,
               "name": "Primo Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "u9uhol0t3",
+            "parent_id": "6t4w5qjlb",
+            "slug": "primo-grills"
           },
           {
             "id": "fn7fu8m6c",
@@ -3383,7 +3992,10 @@
               "id": 65,
               "name": "Primo Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "fn7fu8m6c",
+            "parent_id": "6t4w5qjlb",
+            "slug": "primo-side-burners"
           },
           {
             "id": "tyb9vwhii",
@@ -3400,7 +4012,10 @@
               "id": 69,
               "name": "Primo Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "tyb9vwhii",
+            "parent_id": "6t4w5qjlb",
+            "slug": "primo-storage"
           },
           {
             "id": "uf7l6dtrq",
@@ -3417,7 +4032,10 @@
               "id": 68,
               "name": "Primo Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "uf7l6dtrq",
+            "parent_id": "6t4w5qjlb",
+            "slug": "primo-accessories"
           },
           {
             "id": "yprvtsehd",
@@ -3434,9 +4052,15 @@
               "id": 692,
               "name": "Primo Package Deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "yprvtsehd",
+            "parent_id": "6t4w5qjlb",
+            "slug": "primo-package-deals"
           }
-        ]
+        ],
+        "menu_id": "6t4w5qjlb",
+        "parent_id": "e3gza49s5",
+        "slug": "primo-ceramic-grill"
       },
       {
         "id": "92dd3crgr",
@@ -3464,7 +4088,10 @@
               "id": 345,
               "name": "Infratech Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "qrt032789",
+            "parent_id": "92dd3crgr",
+            "slug": "infratech-patio-heaters"
           },
           {
             "id": "i77axrlcj",
@@ -3481,7 +4108,10 @@
               "id": 343,
               "name": "Infratech Electric Patio Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "i77axrlcj",
+            "parent_id": "92dd3crgr",
+            "slug": "infratech-electric-patio-heaters"
           },
           {
             "id": "3jpkml6lm",
@@ -3498,9 +4128,15 @@
               "id": 353,
               "name": "Infratech Patio Heaters Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "3jpkml6lm",
+            "parent_id": "92dd3crgr",
+            "slug": "infratech-accessories"
           }
-        ]
+        ],
+        "menu_id": "92dd3crgr",
+        "parent_id": "e3gza49s5",
+        "slug": "infratech-grills"
       },
       {
         "id": "6b9tv9yza",
@@ -3528,7 +4164,10 @@
               "id": 446,
               "name": "Bromic Gas Patio Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "unxbjcan0",
+            "parent_id": "6b9tv9yza",
+            "slug": "bromic-gas-patio-heaters"
           },
           {
             "id": "xm1gs9wdg",
@@ -3545,7 +4184,10 @@
               "id": 449,
               "name": "Bromic Electric Patio Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "xm1gs9wdg",
+            "parent_id": "6b9tv9yza",
+            "slug": "bromic-electric-patio-heaters"
           },
           {
             "id": "99sttfd53",
@@ -3562,9 +4204,15 @@
               "id": 455,
               "name": "Bromic Patio Heaters Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "99sttfd53",
+            "parent_id": "6b9tv9yza",
+            "slug": "bromic-patio-heaters-accessories"
           }
-        ]
+        ],
+        "menu_id": "6b9tv9yza",
+        "parent_id": "e3gza49s5",
+        "slug": "bromic-heaters"
       },
       {
         "id": "7sqeyxm3w",
@@ -3592,7 +4240,10 @@
               "id": 579,
               "name": "Sunglo Gas Patio Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "upd0c8o4a",
+            "parent_id": "7sqeyxm3w",
+            "slug": "sunglo-gas-patio-heaters"
           },
           {
             "id": "lz40agedj",
@@ -3609,9 +4260,15 @@
               "id": 580,
               "name": "Sunglo Heaters Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "lz40agedj",
+            "parent_id": "7sqeyxm3w",
+            "slug": "sunglo-heaters-accessories"
           }
-        ]
+        ],
+        "menu_id": "7sqeyxm3w",
+        "parent_id": "e3gza49s5",
+        "slug": "sunglo"
       },
       {
         "id": "dzgrnh6w7",
@@ -3639,7 +4296,10 @@
               "id": 573,
               "name": "Sunpak Heaters"
             },
-            "children": []
+            "children": [],
+            "menu_id": "qxay78l52",
+            "parent_id": "dzgrnh6w7",
+            "slug": "sunpak-heaters"
           },
           {
             "id": "il6lm03x6",
@@ -3656,9 +4316,15 @@
               "id": 572,
               "name": "Sunpak Heaters Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "il6lm03x6",
+            "parent_id": "dzgrnh6w7",
+            "slug": "sunpak-heaters-accessories"
           }
-        ]
+        ],
+        "menu_id": "dzgrnh6w7",
+        "parent_id": "e3gza49s5",
+        "slug": "sunpak"
       },
       {
         "id": "s4z0evx3q",
@@ -3686,7 +4352,10 @@
               "id": 140,
               "name": "Summit Refrigeration"
             },
-            "children": []
+            "children": [],
+            "menu_id": "bkqh79rtw",
+            "parent_id": "s4z0evx3q",
+            "slug": "summit-refrigeration"
           },
           {
             "id": "mt5acspvf",
@@ -3703,9 +4372,15 @@
               "id": 501,
               "name": "Summit Cooking & Ventilation"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mt5acspvf",
+            "parent_id": "s4z0evx3q",
+            "slug": "summit-cooking-and-ventilation"
           }
-        ]
+        ],
+        "menu_id": "s4z0evx3q",
+        "parent_id": "e3gza49s5",
+        "slug": "summit-appliance"
       },
       {
         "id": "6hsrrhxal",
@@ -3717,7 +4392,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "6hsrrhxal",
+        "parent_id": "e3gza49s5",
+        "slug": "coulee-colorado"
       },
       {
         "id": "9ce1jum4w",
@@ -3745,7 +4423,10 @@
               "id": 370,
               "name": "OCI Open Box"
             },
-            "children": []
+            "children": [],
+            "menu_id": "rlhmupsp7",
+            "parent_id": "9ce1jum4w",
+            "slug": "oci-open-box"
           },
           {
             "id": "b67oyjng8",
@@ -3762,7 +4443,10 @@
               "id": 371,
               "name": "OCI Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "b67oyjng8",
+            "parent_id": "9ce1jum4w",
+            "slug": "oci-storage"
           },
           {
             "id": "izlnndnss",
@@ -3779,7 +4463,10 @@
               "id": 699,
               "name": "OCI Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "izlnndnss",
+            "parent_id": "9ce1jum4w",
+            "slug": "oci-side-burners"
           },
           {
             "id": "w9hptkd7u",
@@ -3796,9 +4483,15 @@
               "id": 697,
               "name": "OCI Package deals"
             },
-            "children": []
+            "children": [],
+            "menu_id": "w9hptkd7u",
+            "parent_id": "9ce1jum4w",
+            "slug": "oci-package"
           }
-        ]
+        ],
+        "menu_id": "9ce1jum4w",
+        "parent_id": "e3gza49s5",
+        "slug": "oci-grills"
       },
       {
         "id": "1gs9mm4li",
@@ -3826,7 +4519,10 @@
               "id": 520,
               "name": "PGL Fire Pit Logs"
             },
-            "children": []
+            "children": [],
+            "menu_id": "l016b2isz",
+            "parent_id": "1gs9mm4li",
+            "slug": "pgl-fire-pit-logs"
           },
           {
             "id": "hf1jbu8mu",
@@ -3843,7 +4539,10 @@
               "id": 114,
               "name": "PGL Fire Pit Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "hf1jbu8mu",
+            "parent_id": "1gs9mm4li",
+            "slug": "pgl-fire-pit-burners"
           },
           {
             "id": "mt5pp8f6z",
@@ -3860,9 +4559,15 @@
               "id": 524,
               "name": "PGL Fire Pit Glasses"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mt5pp8f6z",
+            "parent_id": "1gs9mm4li",
+            "slug": "pgl-fire-pit-glasses"
           }
-        ]
+        ],
+        "menu_id": "1gs9mm4li",
+        "parent_id": "e3gza49s5",
+        "slug": "peterson-gas-logs"
       },
       {
         "id": "n64sxkoia",
@@ -3890,7 +4595,10 @@
               "id": 633,
               "name": "Brand-Man BBQ Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "2x8zt1tdl",
+            "parent_id": "n64sxkoia",
+            "slug": "brand-man-bbq-grills"
           },
           {
             "id": "qt6cfjyff",
@@ -3907,9 +4615,15 @@
               "id": 588,
               "name": "Brand-Man Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "qt6cfjyff",
+            "parent_id": "n64sxkoia",
+            "slug": "brand-man-accessories"
           }
-        ]
+        ],
+        "menu_id": "n64sxkoia",
+        "parent_id": "e3gza49s5",
+        "slug": "brand-man-grills"
       },
       {
         "id": "j42jpdjms",
@@ -3941,7 +4655,10 @@
               "id": 483,
               "name": "Eloquence Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "jqimm2xvy",
+            "parent_id": "j42jpdjms",
+            "slug": "eloquence-grills"
           },
           {
             "id": "bsmsko6xx",
@@ -3958,7 +4675,10 @@
               "id": 684,
               "name": "Eloquence Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "bsmsko6xx",
+            "parent_id": "j42jpdjms",
+            "slug": "eloquence-side-burners"
           },
           {
             "id": "ubr720xld",
@@ -3975,7 +4695,10 @@
               "id": 683,
               "name": "Eloquence Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ubr720xld",
+            "parent_id": "j42jpdjms",
+            "slug": "eloquence-storage"
           },
           {
             "id": "n46ruw79l",
@@ -3992,9 +4715,15 @@
               "id": 682,
               "name": "Eloquence Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "n46ruw79l",
+            "parent_id": "j42jpdjms",
+            "slug": "eloquence-accessories"
           }
-        ]
+        ],
+        "menu_id": "j42jpdjms",
+        "parent_id": "e3gza49s5",
+        "slug": "eloquence"
       },
       {
         "id": "bb3m5yimp",
@@ -4022,7 +4751,10 @@
               "id": 413,
               "name": "Grandeur Grills"
             },
-            "children": []
+            "children": [],
+            "menu_id": "091rx03pi",
+            "parent_id": "bb3m5yimp",
+            "slug": "grandeur-grills"
           },
           {
             "id": "ynk726s6u",
@@ -4039,7 +4771,10 @@
               "id": 685,
               "name": "Grandeur Side Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ynk726s6u",
+            "parent_id": "bb3m5yimp",
+            "slug": "grandeur-side-burners"
           },
           {
             "id": "woi8k32bi",
@@ -4056,7 +4791,10 @@
               "id": 686,
               "name": "Grandeur Storage"
             },
-            "children": []
+            "children": [],
+            "menu_id": "woi8k32bi",
+            "parent_id": "bb3m5yimp",
+            "slug": "grandeur-storage"
           },
           {
             "id": "2ekijx82y",
@@ -4073,9 +4811,15 @@
               "id": 676,
               "name": "Grandeur Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "2ekijx82y",
+            "parent_id": "bb3m5yimp",
+            "slug": "grandeur-accessories"
           }
-        ]
+        ],
+        "menu_id": "bb3m5yimp",
+        "parent_id": "e3gza49s5",
+        "slug": "grandeur"
       },
       {
         "id": "vyl1bziz0",
@@ -4103,9 +4847,15 @@
               "id": 594,
               "name": "Dimplex Fireplaces"
             },
-            "children": []
+            "children": [],
+            "menu_id": "c6pz11l9j",
+            "parent_id": "vyl1bziz0",
+            "slug": "dimplex-fireplaces"
           }
-        ]
+        ],
+        "menu_id": "vyl1bziz0",
+        "parent_id": "e3gza49s5",
+        "slug": "dimplex"
       },
       {
         "id": "h9a76c7tj",
@@ -4133,7 +4883,10 @@
               "id": 647,
               "name": "Athena Fire Pit Tables"
             },
-            "children": []
+            "children": [],
+            "menu_id": "zj3h04d54",
+            "parent_id": "h9a76c7tj",
+            "slug": "athena-fire-pit-tables"
           },
           {
             "id": "mza7ykleb",
@@ -4150,7 +4903,10 @@
               "id": 659,
               "name": "Athena Fire Pit Burners"
             },
-            "children": []
+            "children": [],
+            "menu_id": "mza7ykleb",
+            "parent_id": "h9a76c7tj",
+            "slug": "athena-fire-pit-burners"
           },
           {
             "id": "ggc3o1pym",
@@ -4167,9 +4923,15 @@
               "id": 658,
               "name": "Athena Fire Pit Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ggc3o1pym",
+            "parent_id": "h9a76c7tj",
+            "slug": "athena-fire-pit-accessories"
           }
-        ]
+        ],
+        "menu_id": "h9a76c7tj",
+        "parent_id": "e3gza49s5",
+        "slug": "athena-fire-tables-and-accessories"
       },
       {
         "id": "2gi31fhih",
@@ -4197,7 +4959,10 @@
               "id": 650,
               "name": "WPPO Pizza Ovens"
             },
-            "children": []
+            "children": [],
+            "menu_id": "y9qfew842",
+            "parent_id": "2gi31fhih",
+            "slug": "wppo-pizza-ovens"
           },
           {
             "id": "3zq67l7lm",
@@ -4214,7 +4979,10 @@
               "id": 654,
               "name": "WPPO Carts and Stands"
             },
-            "children": []
+            "children": [],
+            "menu_id": "3zq67l7lm",
+            "parent_id": "2gi31fhih",
+            "slug": "wppo-carts-and-stands"
           },
           {
             "id": "vbbzoyq9i",
@@ -4231,7 +4999,10 @@
               "id": 653,
               "name": "WPPO Pizza Oven Covers"
             },
-            "children": []
+            "children": [],
+            "menu_id": "vbbzoyq9i",
+            "parent_id": "2gi31fhih",
+            "slug": "wppo-pizza-oven-covers"
           },
           {
             "id": "pab0pieo6",
@@ -4248,9 +5019,15 @@
               "id": 652,
               "name": "WPPO Pizza Oven Accessories"
             },
-            "children": []
+            "children": [],
+            "menu_id": "pab0pieo6",
+            "parent_id": "2gi31fhih",
+            "slug": "wppo-pizza-oven-accessories"
           }
-        ]
+        ],
+        "menu_id": "2gi31fhih",
+        "parent_id": "e3gza49s5",
+        "slug": "wppo"
       },
       {
         "id": "ntjkdsrz2",
@@ -4278,7 +5055,10 @@
               "id": 641,
               "name": "American Fyre Designs Firetables"
             },
-            "children": []
+            "children": [],
+            "menu_id": "aws5ke2to",
+            "parent_id": "ntjkdsrz2",
+            "slug": "american-fryre-designs-fire-tables"
           },
           {
             "id": "pwpr14txd",
@@ -4295,7 +5075,10 @@
               "id": 637,
               "name": "American Fyre Designs Fireplaces"
             },
-            "children": []
+            "children": [],
+            "menu_id": "pwpr14txd",
+            "parent_id": "ntjkdsrz2",
+            "slug": "american-fryre-designs-fireplaces"
           },
           {
             "id": "ub7c9qg24",
@@ -4312,7 +5095,10 @@
               "id": 640,
               "name": "American Fyre Designs Fire Pits"
             },
-            "children": []
+            "children": [],
+            "menu_id": "ub7c9qg24",
+            "parent_id": "ntjkdsrz2",
+            "slug": "american-fryre-designs-fire-pits"
           },
           {
             "id": "t3movkjm3",
@@ -4324,7 +5110,10 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "t3movkjm3",
+            "parent_id": "ntjkdsrz2",
+            "slug": "american-fryre-designs-fire-bowls"
           },
           {
             "id": "pkceffela",
@@ -4336,9 +5125,15 @@
             "price_visibility": "hide",
             "searchable": true,
             "nav_visibility": true,
-            "children": []
+            "children": [],
+            "menu_id": "pkceffela",
+            "parent_id": "ntjkdsrz2",
+            "slug": "american-fryre-designs-accessories"
           }
-        ]
+        ],
+        "menu_id": "ntjkdsrz2",
+        "parent_id": "e3gza49s5",
+        "slug": "american-fyre-designs"
       },
       {
         "id": "0oskyujjy",
@@ -4350,7 +5145,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "0oskyujjy",
+        "parent_id": "e3gza49s5",
+        "slug": "delsol"
       },
       {
         "id": "sxvmhow83",
@@ -4362,7 +5160,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "sxvmhow83",
+        "parent_id": "e3gza49s5",
+        "slug": "dynaque"
       },
       {
         "id": "jryeoiba1",
@@ -4374,7 +5175,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "jryeoiba1",
+        "parent_id": "e3gza49s5",
+        "slug": "onlyfire"
       },
       {
         "id": "3x9z4ivcq",
@@ -4386,7 +5190,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "3x9z4ivcq",
+        "parent_id": "e3gza49s5",
+        "slug": "premier-design"
       },
       {
         "id": "1q4y6a0gy",
@@ -4398,7 +5205,10 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "1q4y6a0gy",
+        "parent_id": "e3gza49s5",
+        "slug": "sedona"
       },
       {
         "id": "edgt5v2qg",
@@ -4410,18 +5220,24 @@
         "price_visibility": "show",
         "searchable": true,
         "nav_visibility": true,
-        "children": []
+        "children": [],
+        "menu_id": "edgt5v2qg",
+        "parent_id": "e3gza49s5",
+        "slug": "solana-outdoor-products"
       }
-    ]
+    ],
+    "menu_id": "e3gza49s5",
+    "parent_id": "",
+    "slug": "brands"
   },
   {
-    "key": "Search",
-    "name": "Search",
-    "url": "search",
-    "nav_type": "custom_page",
-    "price_visibility": "show",
     "searchable": false,
+    "name": "Search",
+    "key": "Search",
+    "url": "search",
+    "slug": "search",
     "nav_visibility": false,
-    "children": []
+    "price_visibility": "show",
+    "nav_type": "custom_page"
   }
 ]
