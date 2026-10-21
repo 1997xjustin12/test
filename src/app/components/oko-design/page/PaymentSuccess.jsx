@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, BASE_URL } from "@/app/lib/helpers";
 import { pixelPurchase } from "@/app/lib/pixel";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 const cardCls =
   "bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark rounded-[2px] p-5";
@@ -238,7 +238,7 @@ export default function BBQPaymentSuccessPage() {
             </a>
             <div className="pt-2 mt-1 border-t border-oko-stone-line dark:border-oko-line-dark">
               <p className="font-oko-mono text-[10px] font-medium uppercase tracking-[0.14em] text-oko-stone">
-                Sales &amp; support · Mon–Fri 5:00am–5:00pm PST
+                Sales &amp; support · {HOURS_SUMMARY}
               </p>
             </div>
           </div>

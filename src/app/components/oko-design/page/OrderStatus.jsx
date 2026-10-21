@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 import {
   EMPTY_STATES,
   PROGRESS_STEPS,
@@ -237,7 +237,7 @@ export default function OKOOrderStatusPage({ result, demo = false }) {
               <a href={`mailto:${STORE_EMAIL}`} className="hover:text-oko-barn dark:hover:text-oko-barn-light transition-colors">{STORE_EMAIL}</a>
             )}
             <p className={`pt-2 mt-1 border-t ${divider} font-oko-mono text-[10px] font-medium uppercase tracking-[0.14em] text-oko-stone`}>
-              Sales &amp; support · Mon–Fri 5:00am–5:00pm PST
+              Sales &amp; support · {HOURS_SUMMARY}
             </p>
           </div>
         </div>

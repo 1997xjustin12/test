@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BASE_URL, formatPrice, formatProduct } from "@/app/lib/helpers";
+import { BASE_URL, formatPrice, formatProduct, productIsFreeshipping } from "@/app/lib/helpers";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 
 // 8.10 Product card — white, bordered, 2px radius. Barn SALE badge top-left,
 // sage FREE SHIPPING top-right (shipping moves to top-left when there's no
-// sale). Brand eyebrow → name → review line → three-part price block + a 34px
+// sale), only on products tagged "Free Shipping": free shipping is on selected
+// items, per the shipping policy, not every product. Brand eyebrow → name → review line → three-part price block + a 34px
 // outline "+" button that inverts to char on hover.
 function Stars({ rating }) {
   const rounded = Math.round(rating);
@@ -20,6 +21,7 @@ function Stars({ rating }) {
 function ProductCard({ product }) {
   const onSale = !!product?.was && product?.save_amt > 0;
   const hasReviews = product?.reviews > 0;
+  const freeShipping = productIsFreeshipping(product?.tags);
   const freeShipBadge = (
     <span className="font-inter font-medium text-[9.5px] uppercase tracking-[0.03em] px-2 py-1 bg-oko-sage text-white rounded-[2px]">
       Free shipping
@@ -37,9 +39,11 @@ function ProductCard({ product }) {
               Sale
             </span>
           )}
-          <span className={`absolute top-2.5 z-[1] ${onSale ? "right-2.5" : "left-2.5"}`}>
-            {freeShipBadge}
-          </span>
+          {freeShipping && (
+            <span className={`absolute top-2.5 z-[1] ${onSale ? "right-2.5" : "left-2.5"}`}>
+              {freeShipBadge}
+            </span>
+          )}
           {product?.image && (
             <Image
               src={product.image}

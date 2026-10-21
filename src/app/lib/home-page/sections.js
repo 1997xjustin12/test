@@ -121,7 +121,7 @@ export const SECTION_TYPES = {
           label: { type: "text", label: "Label", default: "", maxLength: 40, required: true },
         },
         default: [
-          { icon: "Truck", label: "FREE SHIPPING" },
+          { icon: "Truck", label: "FREE SHIPPING ON SELECT ITEMS" },
           { icon: "PhoneCall", label: "EXPERT SUPPORT" },
           { icon: "PackageOpen", label: "EASY RETURNS" },
           { icon: "Tag", label: "PRICE MATCH" },

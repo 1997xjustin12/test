@@ -4,7 +4,7 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ICRoundPhone, MDIEmailOutline } from "@/app/components/icons/lib";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_CONTACT, HOURS_WEEKDAYS, HOURS_WEEKEND } from "@/app/lib/store_constants";
 
 function isMobileDevice() {
   if (typeof navigator === "undefined") return false;
@@ -69,8 +69,8 @@ function FicDropDown({ children, contact_number }) {
               <p className="font-oko-mono text-[10px] font-medium uppercase tracking-[0.08em] text-oko-stone mb-1">
                 {label}
               </p>
-              <p className="text-xs text-oko-char-soft dark:text-oko-ondark">Mon – Fri &nbsp; 5:00am – 5:00pm PST</p>
-              <p className="text-xs text-oko-stone">Sat – Sun &nbsp; Closed</p>
+              <p className="text-xs text-oko-char-soft dark:text-oko-ondark">{HOURS_WEEKDAYS}</p>
+              <p className="text-xs text-oko-stone">{HOURS_WEEKEND}</p>
             </div>
           ))}
         </div>

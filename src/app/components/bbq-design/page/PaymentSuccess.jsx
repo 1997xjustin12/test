@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, BASE_URL } from "@/app/lib/helpers";
 import { pixelPurchase } from "@/app/lib/pixel";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 const cardCls =
   "bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm p-5";
@@ -229,7 +229,7 @@ export default function BBQPaymentSuccessPage() {
             </a>
             <div className="pt-2 mt-1 border-t border-grate dark:border-white/10">
               <p className="font-oswald text-[10px] font-semibold uppercase tracking-wide text-char/50 dark:text-ash/40">
-                Sales & Support · Mon–Fri 5:00am–5:00pm PST
+                Sales & Support · {HOURS_SUMMARY}
               </p>
             </div>
           </div>

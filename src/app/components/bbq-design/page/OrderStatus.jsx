@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 import {
   EMPTY_STATES,
   PROGRESS_STEPS,
@@ -232,7 +232,7 @@ export default function BBQOrderStatusPage({ result, demo = false }) {
               <a href={`mailto:${STORE_EMAIL}`} className="hover:text-theme-600 transition-colors">{STORE_EMAIL}</a>
             )}
             <p className={`pt-2 mt-1 border-t ${divider} font-oswald text-[10px] font-semibold uppercase tracking-wide text-char/50 dark:text-ash/40`}>
-              Sales & Support · Mon–Fri 5:00am–5:00pm PST
+              Sales & Support · {HOURS_SUMMARY}
             </p>
           </div>
         </div>

@@ -18,7 +18,7 @@ const SOLANA = {
 // bar's shipping threshold and price-match promise into the description.
 const BBQ = {
   title: `${STORE_NAME} | Gas Grills & Built-Ins at Outlet Prices`,
-  description: `Top-brand gas grills, built-ins and outdoor kitchens — including inspected open-box units up to 35% off retail. Price-match guarantee, free shipping $79.99+.`,
+  description: `Top-brand gas grills, built-ins and outdoor kitchens — including inspected open-box units up to 35% off retail. Price-match guarantee and free shipping on selected items.`,
   favicon: "/favicon.ico",
 };
 
@@ -28,7 +28,7 @@ const BBQ = {
 // words already in the brand name.
 const OKO = {
   title: `${STORE_NAME} | Built-In BBQ Grills & Islands`,
-  description: `Built-in BBQ grills, outdoor kitchen islands and accessories, price matched against every competitor including Amazon. Free shipping and phone-only deals.`,
+  description: `Built-in BBQ grills, outdoor kitchen islands and accessories, price matched against every competitor including Amazon. Free shipping on selected items and phone-only deals.`,
   favicon: "/favicon.ico",
 };
 

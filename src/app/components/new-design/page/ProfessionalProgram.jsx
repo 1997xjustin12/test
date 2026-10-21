@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { STORE_NAME2, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_NAME2, STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 import Breadcrumb from "@/app/components/new-design/utility/Breadcrumb";
 import PageHero from "@/app/components/new-design/utility/PageHero";
@@ -137,7 +137,7 @@ export default function NewProfessionalProgramPage() {
           <InfoCard icon="📋" title="Ready to Apply?" accent>
             <p className="mb-4">
               Call us to get started or ask any questions about the program.
-              Our team is available Monday–Friday, 8am–6pm PST.
+              Our team is available {HOURS_SUMMARY}.
             </p>
             <Link
               prefetch={false}

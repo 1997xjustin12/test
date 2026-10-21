@@ -216,12 +216,12 @@ export function buildFaqPage(faqs = []) {
  * and item. schema.org expects a stated rate or a free-shipping threshold, and
  * we have neither — publishing one would be a promise checkout cannot keep.
  *
- * The storefront copy was standardised on "free over $79.99" on 12 Aug, which
- * settles a contradiction between three different figures ($499+, over $1,999,
- * over $79.99) but does NOT unblock this field. A consistent claim on the page
- * is still not the same as a rate checkout will honour, and structured data is
- * read as a commitment. Populate this only once someone confirms that checkout
- * genuinely charges free over $79.99 and $9.99 below it.
+ * The storefront copy was standardised on "free over $79.99" on 12 Aug, then
+ * on 21 Oct brought in line with the published shipping policy instead: free
+ * shipping on selected items, shipped within 2–3 business days. Neither is a
+ * rate this field can state — "selected items" is per product, not a
+ * threshold — so it stays empty. Populate it only once someone confirms a
+ * rate checkout genuinely charges.
  *
  * `hasMerchantReturnPolicy` is populated from RETURN_POLICY below, which mirrors
  * the return policy the storefront already publishes. See that constant for

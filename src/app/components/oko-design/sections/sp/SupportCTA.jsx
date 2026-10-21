@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { STORE_EMAIL, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_EMAIL, STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 // Support block — cream-dim "email" half beside a char "call" half. Barn stays
 // a contained action block around the phone (spec §8.11), never a large fill.
@@ -34,7 +34,7 @@ const SupportCTA = () => (
             Prefer to call?
           </h3>
           <p className="font-inter text-[13.5px] text-oko-ondark-muted leading-[1.55]">
-            Our grill experts are available Mon–Sat 9am–6pm PST, ready to help you pick the perfect product.
+            Our grill experts are available {HOURS_SUMMARY}, ready to help you pick the perfect product.
           </p>
         </div>
         <Link

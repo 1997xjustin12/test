@@ -7,7 +7,7 @@ import YouMayAlsoLike from "@/app/components/bbq-design/ui/YouMayAlsoLike";
 import { BASE_URL, mapOrderItems } from "@/app/lib/helpers";
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 const PhoneIcon = ({ className = "w-4 h-4" }) => (
   <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -26,7 +26,7 @@ const ShoppingAssistance = () => (
       </h3>
     </div>
     <p className="text-xs text-char/50 dark:text-ash/40 mb-0.5">Questions? We're here to help.</p>
-    <p className="text-xs text-char/30 dark:text-ash/30 mb-4">Mon–Fri &nbsp; 6 AM – 5 PM PST</p>
+    <p className="text-xs text-char/30 dark:text-ash/30 mb-4">{HOURS_SUMMARY}</p>
     <Link
       prefetch={false}
       href={`tel:${STORE_CONTACT}`}

@@ -7,6 +7,8 @@ import { readOrDegrade } from "@/app/lib/upstream";
 // already knows what "theme" means in a colour box and that emptying a link
 // removes it. Worth the slightly odd import direction.
 import { THEME_COLOR, appearanceDefault, isColor } from "@/app/lib/home-page/sections";
+import { CURRENT_DEALS_URL } from "@/app/lib/helpers";
+import { HOURS_WEEKDAYS, HOURS_WEEKEND } from "@/app/lib/store_constants";
 
 /**
  * The configurable footer, one record per brand.
@@ -56,6 +58,8 @@ export function defaultFooter() {
     logo: "",
     phone: process.env.NEXT_PUBLIC_STORE_CONTACT || "",
     address: "23805 Aspen Dr\nMurrieta, CA 92562",
+    // The Contact page's hours, so a footer starts out agreeing with it.
+    hours: `${HOURS_WEEKDAYS}\n${HOURS_WEEKEND}`,
     copyright: "© {year} {store}. All rights reserved.",
     columns: [
       {
@@ -67,7 +71,7 @@ export function defaultFooter() {
           { id: id(), label: "Package Deals", url: "/package-deals" },
           { id: id(), label: "Freestanding Grills", url: "/freestanding-grills" },
           { id: id(), label: "Clearance Sale", url: "/clearance-sale" },
-          { id: id(), label: "Current Deals", url: "/current-deals" },
+          { id: id(), label: "Current Deals", url: CURRENT_DEALS_URL },
         ],
       },
       {
@@ -110,7 +114,7 @@ export const FOOTER_COLORS = {
   background: { label: "Footer background", defaultLight: "#0c0a09", defaultDark: "#000000" },
   headingColor: { label: "Column headings", default: THEME_COLOR },
   linkColor: { label: "Links", default: "#ffffff" },
-  textColor: { label: "Phone and address", default: "#ffffff" },
+  textColor: { label: "Phone, address and hours", default: "#ffffff" },
   socialColor: { label: "Social icons", default: "#ffffff" },
   copyrightColor: { label: "Copyright line", defaultLight: "#d4d4d8", defaultDark: "#a1a1aa" },
 };
@@ -162,6 +166,9 @@ export function normalizeFooter(raw) {
     logo: text(c.logo, 300),
     phone: text(c.phone, 40),
     address: text(c.address, 200),
+    // A record saved before the field existed gets the Contact page's hours;
+    // one where the operator cleared it stays empty.
+    hours: c.hours === undefined ? base.hours : text(c.hours, 200),
     copyright: text(c.copyright, 160) || base.copyright,
     columns: (Array.isArray(c.columns) ? c.columns : base.columns)
       .map(cleanGroup)

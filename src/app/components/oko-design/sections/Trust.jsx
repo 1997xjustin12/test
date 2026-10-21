@@ -30,7 +30,7 @@ const PhoneIcon = () => (
 // lg 4-in-a-row). Base border color applied on the wrapper.
 const TRUST_ITEMS = [
   { Icon: StarIcon, label: "Price match guaranteed", border: "" },
-  { Icon: TruckIcon, label: "Free shipping sitewide", border: "border-t min-[560px]:border-t-0 min-[560px]:border-l lg:pl-5 min-[560px]:pl-5" },
+  { Icon: TruckIcon, label: "Free shipping on select items", border: "border-t min-[560px]:border-t-0 min-[560px]:border-l lg:pl-5 min-[560px]:pl-5" },
   { Icon: CheckIcon, label: "30+ top brands in stock", border: "border-t lg:border-t-0 lg:border-l lg:pl-5" },
   { Icon: PhoneIcon, label: "Concierge phone ordering", border: "border-t min-[560px]:border-l lg:border-t-0 lg:pl-5 min-[560px]:pl-5" },
 ];

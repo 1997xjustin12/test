@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useSolanaCategories } from "@/app/context/category";
 import ProductsSection from "@/app/components/molecule/ProductsSectionV2";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 // CategoryHero — OKO breadcrumb band: cream-dim surface, 12px stone breadcrumb
 // with "/" separators (current in char-soft), mono barn eyebrow (product count),
@@ -68,7 +68,7 @@ function BenefitsBar() {
   const BENEFITS = [
     {
       title: "Free shipping",
-      sub: "On orders over $79.99",
+      sub: "On selected items",
       icon: (
         <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7M5.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM18.5 19a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
       ),
@@ -80,7 +80,7 @@ function BenefitsBar() {
     },
     {
       title: "Expert support",
-      sub: "Mon–Sat 8am–6pm PST",
+      sub: HOURS_SUMMARY,
       icon: (
         <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
       ),

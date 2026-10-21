@@ -4,7 +4,7 @@ import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import useCheckout, { addressRows } from "@/app/components/checkout/useCheckout";
 import { BASE_URL, formatPrice, createSlug } from "@/app/lib/helpers";
-import { STORE_EMAIL, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_EMAIL, STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 // BBQ's checkout, drawn to bbq-design-patterns.md: near-square rounded-sm
 // everywhere, Oswald uppercase for headings/labels/buttons over Sora body copy,
@@ -135,7 +135,7 @@ const HelpCard = ({ refNumber }) => (
       </span>
       <div>
         <p className="font-oswald text-[11px] font-semibold uppercase tracking-wide text-char dark:text-ash">Need help?</p>
-        <p className="text-xs text-char/50 dark:text-ash/40">Mon–Fri 5:00am–5:00pm PST</p>
+        <p className="text-xs text-char/50 dark:text-ash/40">{HOURS_SUMMARY}</p>
       </div>
     </div>
     <div className="flex flex-col gap-2 text-xs text-stone-600 dark:text-stone-400">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 const SupportCTA = () => (
   <section className="mb-14">
@@ -25,7 +25,7 @@ const SupportCTA = () => (
         <div>
           <p className="text-base font-extrabold text-white mb-2">Prefer to call?</p>
           <p className="text-sm text-orange-100 leading-relaxed">
-            Our grill experts are available Mon–Sat 9am–6pm PST ready to help you pick the perfect product.
+            Our grill experts are available {HOURS_SUMMARY}, ready to help you pick the perfect product.
           </p>
         </div>
         <Link

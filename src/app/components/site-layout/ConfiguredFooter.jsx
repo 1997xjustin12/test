@@ -126,6 +126,14 @@ export default function ConfiguredFooter({ footer, logo }) {
                 {content.address}
               </p>
             )}
+            {content.hours && (
+              <p
+                className="mt-2 whitespace-pre-line text-sm leading-relaxed"
+                style={{ color: `var(--${scope}-text)` }}
+              >
+                {content.hours}
+              </p>
+            )}
           </div>
 
           {columns.map((group) => (

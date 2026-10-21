@@ -3,7 +3,7 @@ import { useState } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useSolanaCategories } from "@/app/context/category";
-import { STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 import ProductsSection from "@/app/components/molecule/ProductsSectionV2";
 
 function CategoryHero({ category }) {
@@ -54,9 +54,9 @@ function CategoryHero({ category }) {
 
 function BenefitsBar() {
   const BENEFITS = [
-    { icon: "🚚", title: "Free Shipping",   sub: "On orders over $79.99" },
+    { icon: "🚚", title: "Free Shipping",   sub: "On selected items" },
     { icon: "🛡️", title: "5-Year Warranty", sub: "Full parts & labor" },
-    { icon: "📞", title: "Expert Support",  sub: "Mon–Sat 8am–6pm PST" },
+    { icon: "📞", title: "Expert Support",  sub: HOURS_SUMMARY },
     { icon: "↩️", title: "30-Day Returns",  sub: "Hassle-free policy" },
   ];
   return (

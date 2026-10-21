@@ -4,7 +4,7 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 
 const HERO_POINTS = [
   "We beat any competitor's price, including Amazon",
-  "Free shipping on every order",
+  "Free shipping on selected items",
   "Exclusive phone-only discounts",
   "Expert design help & concierge service",
 ];

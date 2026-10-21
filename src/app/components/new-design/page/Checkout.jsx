@@ -4,7 +4,7 @@ import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import useCheckout, { addressRows } from "@/app/components/checkout/useCheckout";
 import { BASE_URL, formatPrice, createSlug } from "@/app/lib/helpers";
-import { STORE_EMAIL, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_EMAIL, STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 // Solana's checkout, drawn to new-design-patterns.md: soft rounded-2xl cards,
 // serif headings under a theme overline, rounded-lg inputs with the fire focus
@@ -137,7 +137,7 @@ const HelpCard = ({ refNumber }) => (
       </span>
       <div>
         <p className="text-sm font-bold text-stone-900 dark:text-white">Need help?</p>
-        <p className="text-xs text-stone-500 dark:text-stone-400">Mon–Fri 5:00am–5:00pm PST</p>
+        <p className="text-xs text-stone-500 dark:text-stone-400">{HOURS_SUMMARY}</p>
       </div>
     </div>
     <div className="flex flex-col gap-2 text-xs text-stone-600 dark:text-stone-400">

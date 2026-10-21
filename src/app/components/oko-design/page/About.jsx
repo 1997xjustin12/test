@@ -20,7 +20,7 @@ const values = [
   { icon: "🏆", title: "Expert Knowledge",   desc: "Our team of certified specialists has decades of combined experience across gas, electric, and wood-burning systems." },
   { icon: "🤝", title: "Customer First",     desc: "From first click to final install, we're your partner. Found it cheaper? We'll match it. Not satisfied? We'll make it right." },
   { icon: "🌿", title: "Sustainability",     desc: "We actively source and promote energy-efficient products and partner with brands committed to reducing environmental impact." },
-  { icon: "⚡", title: "Fast & Reliable",    desc: "Same-day shipping on in-stock items, white-glove delivery options, and real-time order tracking from warehouse to door." },
+  { icon: "⚡", title: "Fast & Reliable",    desc: "Orders ship within 2–3 business days, with white-glove delivery options and real-time order tracking from warehouse to door." },
   { icon: "🛡️", title: "Trusted Quality",   desc: "Every product we carry is vetted by our team. If we wouldn't put it in our own homes, it doesn't make our shelves." },
 ];
 

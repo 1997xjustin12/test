@@ -339,6 +339,16 @@ export default function FooterEditor({ images }) {
             </Field>
           </div>
           <div className="md:col-span-2">
+            <Field label="Hours" hint="One line per line. Starts as the hours on the Contact page; empty it to hide.">
+              <textarea
+                rows={2}
+                value={content.hours ?? ""}
+                onChange={(e) => setContent("hours", e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+          <div className="md:col-span-2">
             <Field label="Logo" hint="Leave this empty to use the store logo from Favicon & Logo.">
               <ImagePicker
                 value={content.logo}

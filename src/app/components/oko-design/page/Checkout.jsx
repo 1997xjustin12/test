@@ -4,7 +4,7 @@ import Link from "next/link";
 import AuthButtons from "@/app/components/molecule/AuthButtons";
 import useCheckout, { addressRows } from "@/app/components/checkout/useCheckout";
 import { BASE_URL, formatPrice, createSlug } from "@/app/lib/helpers";
-import { STORE_EMAIL, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_EMAIL, STORE_CONTACT, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 // OKO's checkout, drawn to the OKO design system as the rest of oko-design
 // applies it: 2px corners, a mono uppercase barn eyebrow over a slab display
@@ -147,7 +147,7 @@ const HelpCard = ({ refNumber }) => (
     <h3 className="font-oko-display font-semibold text-[19px] leading-[1.2] text-oko-char dark:text-oko-cream mb-1">
       Questions? We&apos;re here to help.
     </h3>
-    <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mb-4">Mon–Fri, 5 AM – 5 PM PST</p>
+    <p className="font-inter text-[13px] text-oko-char-soft dark:text-oko-ondark mb-4">{HOURS_SUMMARY}</p>
     <a
       href={`tel:${STORE_CONTACT}`}
       className="flex items-center justify-center gap-2 w-full py-3 bg-white dark:bg-oko-night-2 border border-oko-stone-line dark:border-oko-line-dark hover:border-oko-barn dark:hover:border-oko-barn-light text-oko-char dark:text-oko-cream font-inter font-semibold text-[13.5px] rounded-[2px] transition-colors"

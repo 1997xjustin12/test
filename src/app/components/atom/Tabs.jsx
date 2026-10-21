@@ -16,10 +16,9 @@ const tabs = [
   {
     key: "shipping-policy",
     name: "shipping policy",
-    content: `<p>At ${STORE_NAME}, we strive to provide a smooth and hassle-free shopping experience for our customers. We understand that costs can add up, so we offer free shipping on all orders over $79.99 to make your purchase even more budget-friendly.</p>
+    content: `<p>At ${STORE_NAME}, we strive to provide a smooth and hassle-free shopping experience for our customers.</p>
     <ul style="margin-top:20px; list-style-type: disc; padding-left:20px">
-        <li>Orders over $79.99 qualify for free shipping.</li>
-        <li>A flat shipping fee of $9.99 applies to orders under $79.99.</li>
+        <li>Free shipping on selected items.</li>
         <li>We use standard ground shipping within the continental United States.</li>
         <li>Orders are typically processed and shipped within 2-3 business days after payment confirmation.</li>
         <li>Delivery times vary based on location and carrier schedules.</li>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, BASE_URL } from "@/app/lib/helpers";
 import { pixelPurchase } from "@/app/lib/pixel";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 
 const cardCls =
   "bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 p-5";
@@ -227,7 +227,7 @@ export default function NewPaymentSuccessPage() {
             </a>
             <div className="pt-2 mt-1 border-t border-stone-100 dark:border-stone-800">
               <p className="text-[10px] font-semibold text-stone-600 dark:text-stone-300">
-                Sales & Support · Mon–Fri 5:00am–5:00pm PST
+                Sales & Support · {HOURS_SUMMARY}
               </p>
             </div>
           </div>

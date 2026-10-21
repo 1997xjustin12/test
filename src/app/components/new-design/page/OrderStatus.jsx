@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BASE_URL } from "@/app/lib/helpers";
-import { STORE_CONTACT, STORE_EMAIL } from "@/app/lib/store_constants";
+import { STORE_CONTACT, STORE_EMAIL, HOURS_SUMMARY } from "@/app/lib/store_constants";
 import {
   EMPTY_STATES,
   PROGRESS_STEPS,
@@ -230,7 +230,7 @@ export default function NewOrderStatusPage({ result, demo = false }) {
               <a href={`mailto:${STORE_EMAIL}`} className="hover:text-fire transition-colors">{STORE_EMAIL}</a>
             )}
             <p className="pt-2 mt-1 border-t border-stone-100 dark:border-stone-800 text-[10px] font-semibold text-stone-600 dark:text-stone-300">
-              Sales & Support · Mon–Fri 5:00am–5:00pm PST
+              Sales & Support · {HOURS_SUMMARY}
             </p>
           </div>
         </div>

@@ -1,8 +1,8 @@
 import { PAYMENT_METHODS } from "@/app/data/new-homepage";
-import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT } from "@/app/lib/store_constants";
+import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT, HOURS_WEEKDAYS, HOURS_WEEKEND } from "@/app/lib/store_constants";
 import Link from "next/link";
 import Image from "next/image";
-import { createSlug, BASE_URL } from "@/app/lib/helpers";
+import { createSlug, BASE_URL, CURRENT_DEALS_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
 import SiteSeal from "@/app/components/atom/SiteSeal";
 
@@ -19,6 +19,7 @@ export const FOOTER_COLS = [
   {
     heading: "Deals",
     links: [
+      { name: "Current deals", url: CURRENT_DEALS_URL, external: true },
       { name: "Open box", url: "/open-box" },
       { name: "Package deals", url: "/package-deals" },
       { name: "Clearance sale", url: "/clearance-sale" },
@@ -138,7 +139,7 @@ export default function Footer({ logo }) {
                 {links.map((item, index) => (
                   <li key={`foot-link-${createSlug(heading)}-${index}`}>
                     <Link
-                      href={`${BASE_URL}${item?.url}`}
+                      href={item?.external ? item.url : `${BASE_URL}${item?.url}`}
                       prefetch={false}
                       className="text-[12.5px] text-oko-ondark-muted hover:text-white transition-colors"
                     >
@@ -164,8 +165,8 @@ export default function Footer({ logo }) {
                   {STORE_CONTACT}
                 </Link>
               </li>
-              <li className="text-[12.5px] text-oko-ondark-muted">Sales: Mon–Fri 4am–6pm PST</li>
-              <li className="text-[12.5px] text-oko-ondark-muted">Support: Mon–Fri, closed weekends</li>
+              <li className="text-[12.5px] text-oko-ondark-muted">{HOURS_WEEKDAYS}</li>
+              <li className="text-[12.5px] text-oko-ondark-muted">{HOURS_WEEKEND}</li>
             </ul>
           </div>
         </div>
