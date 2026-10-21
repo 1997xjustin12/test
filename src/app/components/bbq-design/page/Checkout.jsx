@@ -162,7 +162,7 @@ const FormLoader = () => (
 export default function Checkout() {
   const {
     form, handleChange, handleSubmit, cartItems, cartTotal, formError, placedOrder,
-    isSubmitting, canSubmit, loading, isLoggedIn, user, refNumber, signOut,
+    isSubmitting, canSubmit, loading, isLoggedIn, user, askEmail, refNumber, signOut,
   } = useCheckout();
 
   return (
@@ -241,6 +241,21 @@ export default function Checkout() {
                         </Checkbox>
                       </div>
                     </>
+                  )}
+                  {askEmail && (
+                    <div className="mt-4">
+                      <label htmlFor="shipping_email" className={labelCls}>Email</label>
+                      <input
+                        id="shipping_email"
+                        type="email"
+                        name="shipping_email"
+                        autoComplete="email"
+                        value={form?.shipping_email || ""}
+                        onChange={handleChange}
+                        required
+                        className={inputCls}
+                      />
+                    </div>
                   )}
                 </div>
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useAuth } from "@/app/context/auth";
 import { useCart } from "@/app/context/cart";
 import { useGoogleReCaptcha } from "@/app/context/recaptcha";
@@ -74,6 +74,59 @@ export const addressRows = (prefix) => [
   [{ name: `${prefix}_phone`, label: "Phone", type: "tel", autoComplete: `${prefix} tel` }],
 ];
 
+const ADDRESS_PARTS = [
+  "first_name",
+  "last_name",
+  "email",
+  "phone",
+  "address",
+  "city",
+  "province",
+  "zip_code",
+  "country",
+];
+
+/**
+ * The customer details an order is placed with, built the same way for a
+ * guest and a signed-in shopper: every field present, strings and booleans
+ * only. A signed-in shopper's form is filled from their profile, where a
+ * missing field is undefined and JSON drops it, so their orders used to carry
+ * fewer keys than a guest's.
+ *
+ * - The email is the one typed, else the account's. A signed-in shopper has no
+ *   email field to type into, so an empty form value was a dead end.
+ * - billing_email is always the contact email; there is no separate field.
+ * - With "Use shipping address as billing address" ticked, billing is copied
+ *   from shipping here, at the end. Copying field by field as the shopper
+ *   typed left billing holding the profile's saved billing address for every
+ *   field they didn't touch.
+ */
+const orderCustomer = (form, accountEmail) => {
+  const text = (value) => (value == null ? "" : String(value).trim());
+  const customer = {};
+  for (const side of ["shipping", "billing"]) {
+    for (const part of ADDRESS_PARTS) customer[`${side}_${part}`] = text(form?.[`${side}_${part}`]);
+  }
+
+  const email = customer.shipping_email || text(accountEmail);
+  const sameAddress = Boolean(form?.shipping_to_billing);
+  if (sameAddress) {
+    for (const part of ADDRESS_PARTS) customer[`billing_${part}`] = customer[`shipping_${part}`];
+  }
+  customer.shipping_email = email;
+  customer.billing_email = email;
+
+  customer.is_valid_shipping_zip = Boolean(form?.is_valid_shipping_zip);
+  customer.is_valid_billing_zip = sameAddress
+    ? customer.is_valid_shipping_zip
+    : Boolean(form?.is_valid_billing_zip);
+  customer.notes = text(form?.notes);
+  customer.newsletter = Boolean(form?.newsletter);
+  customer.save_information = Boolean(form?.save_information);
+  customer.shipping_to_billing = sameAddress;
+  return customer;
+};
+
 export default function useCheckout() {
   const [cartTotal, setCartTotal] = useState({});
   const {
@@ -91,6 +144,11 @@ export default function useCheckout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [forage, setForage] = useState(null);
+  // The account the form was last filled from. The profile is fetched again
+  // every time the access token refreshes (about every ten minutes), and each
+  // fetch is a new user object: refilling on every one wiped whatever the
+  // shopper had typed. Filled once per account instead.
+  const filledFor = useRef(null);
   const { isLoggedIn, user, loading, updateProfile, accessToken, logout } = useAuth();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -119,33 +177,43 @@ export default function useCheckout() {
     []
   );
 
-  const saveInformation = (condition) => {
-    if (loading || !condition) return;
-    const {
-      items, newsletter, save_information, shipping_to_billing,
-      notes, payment_details, payment_status, payment_method, status,
-      ...toSave
-    } = form;
+  // "Save this information for next time", from the details the order was
+  // placed with. Returned so the caller can wait for it before leaving the page.
+  const saveInformation = async (customer) => {
+    if (loading || !customer.save_information) return;
 
-    // Returned so the caller can wait for it before leaving the page.
     if (isLoggedIn) {
-      return updateProfile({
-        ...user,
+      // full_name and name_initials are display fields added in the browser,
+      // not the backend's. The rest of the profile is kept as it was.
+      const { full_name, name_initials, ...account } = user ?? {};
+      const res = await updateProfile({
+        ...account,
         profile: {
-          phone: toSave?.shipping_phone,
-          billing_address: toSave?.billing_address,
-          billing_country: toSave?.billing_country,
-          billing_city: toSave?.billing_city,
-          billing_state: toSave?.billing_province,
-          billing_zip: toSave?.billing_zip_code,
-          shipping_address: toSave?.shipping_address,
-          shipping_country: toSave?.shipping_country,
-          shipping_city: toSave?.shipping_city,
-          shipping_state: toSave?.shipping_province,
-          shipping_zip: toSave?.shipping_zip_code,
+          ...account.profile,
+          phone: customer.shipping_phone,
+          billing_address: customer.billing_address,
+          billing_country: customer.billing_country,
+          billing_city: customer.billing_city,
+          billing_state: customer.billing_province,
+          billing_zip: customer.billing_zip_code,
+          shipping_address: customer.shipping_address,
+          shipping_country: customer.shipping_country,
+          shipping_city: customer.shipping_city,
+          shipping_state: customer.shipping_province,
+          shipping_zip: customer.shipping_zip_code,
         },
       });
+      // updateProfile resolves with a failed response rather than throwing,
+      // which made a refused save look like a saved one.
+      if (!res?.ok) throw new Error(`profile update failed (${res?.status ?? "no response"})`);
+      return;
     }
+
+    const {
+      newsletter, save_information, shipping_to_billing, notes,
+      is_valid_shipping_zip, is_valid_billing_zip,
+      ...toSave
+    } = customer;
     return forage.setItem("checkout_info", toSave);
   };
 
@@ -266,6 +334,13 @@ export default function useCheckout() {
     setIsSubmitting(true);
     setFormError(null);
 
+    const customer = orderCustomer(form, isLoggedIn ? user?.email : null);
+    if (!customer.shipping_email.includes("@")) {
+      setFormError("Please enter your email address.");
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!executeRecaptcha) {
       setFormError("reCAPTCHA not available. Please refresh the page and try again.");
       setIsSubmitting(false);
@@ -289,9 +364,6 @@ export default function useCheckout() {
     }
 
     try {
-      const customer = { ...form };
-      delete customer.items;
-
       // The server creates the order as unpaid and returns its payment link.
       // No price or total is sent: the backend works those out itself.
       const response = await fetch("/api/checkout/place-order", {
@@ -329,7 +401,7 @@ export default function useCheckout() {
       // stop the shopper reaching payment, so a failure is logged, not shown.
       const [cleared, saved] = await Promise.allSettled([
         clearCartItems(),
-        saveInformation(form?.save_information),
+        saveInformation(customer),
       ]);
       if (cleared.status === "rejected") console.error("[Checkout] Cart not cleared:", cleared.reason);
       if (saved.status === "rejected") console.error("[Checkout] Details not saved:", saved.reason);
@@ -398,8 +470,14 @@ export default function useCheckout() {
     if (loading && !forage) return;
 
     if (isLoggedIn) {
-      fillUserToForm(user);
+      // Never null: that means "not filled yet".
+      const account = user?.id ?? user?.username ?? user?.email ?? "account";
+      if (user && filledFor.current !== account) {
+        filledFor.current = account;
+        fillUserToForm(user);
+      }
     } else {
+      filledFor.current = null;
       fillGuestInfo();
     }
 
@@ -426,6 +504,9 @@ export default function useCheckout() {
     loading,
     isLoggedIn,
     user,
+    // Signed in, but the profile came back without an email: the brand pages
+    // show the email field so the order can still be placed.
+    askEmail: Boolean(isLoggedIn && user && !user.email),
     refNumber,
     signOut,
   };
