@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createSlug, BASE_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
+import SiteSeal from "@/app/components/atom/SiteSeal";
 
 export const FOOTER_COLS = [
   {
@@ -147,9 +148,12 @@ export default function Footer({ logo }) {
 
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <span className="font-oswald text-[10px] uppercase tracking-widest text-ash/30">
-            © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
-          </span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <span className="font-oswald text-[10px] uppercase tracking-widest text-ash/30">
+              © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
+            </span>
+            <SiteSeal />
+          </div>
           <div className="flex items-center gap-3 flex-wrap">
             {["Authorized Dealer", "Secure Checkout", "Price-Match Guarantee"].map((item) => (
               <span key={item} className="flex items-center gap-1.5 font-oswald text-[10px] uppercase tracking-wide text-ash/30">

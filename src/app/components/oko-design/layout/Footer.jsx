@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createSlug, BASE_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
+import SiteSeal from "@/app/components/atom/SiteSeal";
 
 export const FOOTER_COLS = [
   {
@@ -171,9 +172,12 @@ export default function Footer({ logo }) {
 
         {/* Bottom bar */}
         <div className="border-t border-[rgba(246,242,234,0.14)] pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <span className="text-[11.5px] text-oko-ondark-faint">
-            © {new Date().getFullYear()} {STORE_NAME || "Outdoor Kitchen Outlet"}. All rights reserved.
-          </span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <span className="text-[11.5px] text-oko-ondark-faint">
+              © {new Date().getFullYear()} {STORE_NAME || "Outdoor Kitchen Outlet"}. All rights reserved.
+            </span>
+            <SiteSeal />
+          </div>
           <div className="flex items-center gap-4 flex-wrap">
             {[
               { name: "Privacy", url: "/privacy-policy" },

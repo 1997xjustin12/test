@@ -3,6 +3,7 @@ import Link from "next/link";
 import { classifyHref, THEME_COLOR } from "@/app/lib/home-page/sections";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { socialIcon, SOCIAL_LABELS } from "./social-icons";
+import SiteSeal, { HAS_SITE_SEAL } from "@/app/components/atom/SiteSeal";
 
 /**
  * The configured footer.
@@ -176,6 +177,12 @@ export default function ConfiguredFooter({ footer, logo }) {
           <p className="mt-8 text-center text-sm" style={{ color: `var(--${scope}-copyright)` }}>
             {copyright}
           </p>
+        )}
+
+        {HAS_SITE_SEAL && (
+          <div className="mt-6 flex justify-center">
+            <SiteSeal />
+          </div>
         )}
       </div>
     </footer>

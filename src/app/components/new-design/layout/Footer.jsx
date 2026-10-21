@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createSlug } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
+import SiteSeal from "@/app/components/atom/SiteSeal";
 import FooterNewsletter from "@/app/components/new-design/layout/FooterNewsletter";
 
 export const FOOTER_COLS = [
@@ -142,9 +143,12 @@ export default function Footer({ logo }) {
           text-xs
         "
         >
-          <p>
-            © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <p>
+              © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
+            </p>
+            <SiteSeal />
+          </div>
           <div className="text-center sm:text-right">
             <p className="text-white/60 text-[11px] mb-1.5">We Accept:</p>
             <PaymentIcons
