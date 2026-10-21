@@ -3,7 +3,7 @@ import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST } from "@/app/lib/store_con
 
 import Link from "next/link";
 import Image from "next/image";
-import { createSlug } from "@/app/lib/helpers";
+import { createSlug, CURRENT_DEALS_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
 import SiteSeal from "@/app/components/atom/SiteSeal";
 import FooterNewsletter from "@/app/components/new-design/layout/FooterNewsletter";
@@ -44,7 +44,7 @@ export const FOOTER_COLS = [
         name: "Clearance Sale",
         url: "/clearance-sale",
       },
-      { name: "Current Deals", url: "/brand/eloquence" },
+      { name: "Current Deals", url: CURRENT_DEALS_URL },
       { name: "Contractor Program", url: "/professional-program" },
     ],
   },

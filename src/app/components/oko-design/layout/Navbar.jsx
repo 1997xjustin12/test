@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { BASE_URL, isNavVisible } from "@/app/lib/helpers";
+import { BASE_URL, CURRENT_DEALS_URL, isNavVisible } from "@/app/lib/helpers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CartButton from "@/app/components/oko-design/ui/CartButton";
@@ -149,14 +149,15 @@ export default function Navbar({ logo }) {
                   {name}
                 </Link>
               ))}
-              {/* Sale — permanently barn */}
-              <Link
-                href={`${BASE_URL}/open-box`}
-                prefetch={false}
+              {/* Current Deals — permanently barn. It replaced "Sale", which went
+                  to /open-box, already reachable from the menu. External, so a
+                  plain link. */}
+              <a
+                href={CURRENT_DEALS_URL}
                 className="font-inter text-[12.5px] font-semibold uppercase tracking-[0.05em] text-oko-barn dark:text-oko-barn-light border-b-2 border-transparent py-[6px] hover:border-oko-barn dark:hover:border-oko-barn-light transition-colors"
               >
-                Sale
-              </Link>
+                Current Deals
+              </a>
             </nav>
           </div>
         </div>
@@ -194,14 +195,13 @@ export default function Navbar({ logo }) {
                   {name}
                 </Link>
               ))}
-              <Link
-                href={`${BASE_URL}/open-box`}
-                prefetch={false}
+              <a
+                href={CURRENT_DEALS_URL}
                 onClick={() => setMenuOpen(false)}
                 className="px-5 py-4 font-inter text-[15px] font-semibold uppercase tracking-[0.04em] text-oko-barn dark:text-oko-barn-light border-b border-oko-stone-line dark:border-oko-line-dark"
               >
-                Sale
-              </Link>
+                Current Deals
+              </a>
             </nav>
 
             <div className="px-5 py-5">

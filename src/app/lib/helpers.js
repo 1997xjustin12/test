@@ -12,6 +12,18 @@ import { STORE_THEME } from "@/app/lib/store";
  */
 export const BASE_URL = cleanBaseUrl(process.env.NEXT_PUBLIC_SITE_BASE_URL);
 
+/**
+ * Where "Current Deals" in the header leads, on desktop and in the mobile menu:
+ * the Eloquence deals collection on the Outdoor Kitchen Outlet store. External,
+ * so it is a plain <a>, not a <Link>.
+ *
+ * Without the `_gl=…` the link was shared with. That is Google Analytics'
+ * cross-domain linker, minted for one visitor's session and stale within
+ * minutes; written into the page it would credit every click to that session.
+ * GA adds a fresh one on click where cross-domain tracking is set up.
+ */
+export const CURRENT_DEALS_URL = "https://www.outdoorkitchenoutlet.com/collections/eloquence-1";
+
 /** A base URL with its trailing slashes removed ("" for nothing). */
 export function cleanBaseUrl(value) {
   return String(value ?? "").trim().replace(/\/+$/, "");

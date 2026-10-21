@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { ISOKO, isNavVisible } from "@/app/lib/helpers";
+import { CURRENT_DEALS_URL, isNavVisible } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 
 /**
@@ -22,10 +22,11 @@ import { useSolanaCategories } from "@/app/context/category";
  * three columns, and shows a spinner on the link being opened. Only the colours
  * are the configured header's own (`--sh-*`).
  *
- * "Current Deals" goes where the brand navbar sends it — /brand/eloquence — and
- * not to its menu entry's own URL, /current-deals, a listing with no products
- * (reported 2026). Like the brand navbar, it is drawn last as a plain link, and
- * on OKO, whose navbar has no Current Deals, it is left out.
+ * "Current Deals" goes where the brand navbar sends it — the Eloquence deals
+ * collection on the Outdoor Kitchen Outlet store (CURRENT_DEALS_URL) — and not
+ * to its menu entry's own URL, /current-deals, a listing with no products
+ * (reported 2026). Like the brand navbars, it is drawn last as a plain link,
+ * on every brand.
  *
  * On a phone the row becomes a drawer, because seven top-level categories do
  * not fit across 412px and a header that scrolls sideways is a header nobody
@@ -44,8 +45,8 @@ const isHidden = (item) =>
   HIDDEN.includes(String(item?.url ?? "").toLowerCase()) ||
   HIDDEN.includes(String(item?.name ?? "").toLowerCase());
 
-/** Where Current Deals leads, as in the brand navbars. Null where it isn't shown. */
-const CURRENT_DEALS_HREF = ISOKO ? null : "/brand/eloquence";
+/** Where Current Deals leads, as in the brand navbars. */
+const CURRENT_DEALS_HREF = CURRENT_DEALS_URL;
 
 /** The menu, filtered the way the menu builder says. */
 function useMenuLinks() {
@@ -224,16 +225,15 @@ export function HeaderMenuBar() {
 
         {CURRENT_DEALS_HREF && (
           <li>
-            <Link
+            {/* External: a plain link, and no spinner — the spinner clears on
+                an in-app route change, which leaving the site never makes. */}
+            <a
               href={CURRENT_DEALS_HREF}
-              prefetch={false}
-              onClick={follow(CURRENT_DEALS_HREF)}
               className="inline-flex items-center gap-1.5 py-2 text-[13px] font-semibold transition-opacity hover:opacity-70 xl:text-[15px]"
               style={{ color: "var(--sh-menu)" }}
             >
               Current Deals 🔥
-              <NavSpinner className={loadingHref === CURRENT_DEALS_HREF ? "visible" : "invisible"} />
-            </Link>
+            </a>
           </li>
         )}
       </ul>
@@ -362,13 +362,12 @@ export default function HeaderMenu() {
 
               {CURRENT_DEALS_HREF && (
                 <li>
-                  <Link
+                  <a
                     href={CURRENT_DEALS_HREF}
-                    prefetch={false}
                     className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-theme-500"
                   >
                     Current Deals 🔥
-                  </Link>
+                  </a>
                 </li>
               )}
             </ul>

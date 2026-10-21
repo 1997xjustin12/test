@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { BASE_URL, isNavVisible } from "@/app/lib/helpers";
+import { BASE_URL, CURRENT_DEALS_URL, isNavVisible } from "@/app/lib/helpers";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -276,12 +276,12 @@ export default function Navbar({ logo }) {
             );
           })}
           {/* <Link href="#" className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Open Box</Link> */}
-          <Link
-            href={`${BASE_URL}/brand/eloquence`}
+          <a
+            href={CURRENT_DEALS_URL}
             className="px-3 py-1.5 rounded-md text-[13px] font-semibold text-theme-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
           >
             Current Deals 🔥
-          </Link>
+          </a>
         </div>
 
       </div>
@@ -330,13 +330,13 @@ export default function Navbar({ logo }) {
                 </div>
               );
             })}
-            <Link
-              href={`${BASE_URL}/brand/eloquence`}
+            <a
+              href={CURRENT_DEALS_URL}
               onClick={() => setMenuOpen(false)}
               className="px-3 py-2.5 text-sm font-semibold text-theme-500"
             >
               Current Deals 🔥
-            </Link>
+            </a>
             <Link
               href={`tel:${STORE_CONTACT}`}
               onClick={() => setMenuOpen(false)}

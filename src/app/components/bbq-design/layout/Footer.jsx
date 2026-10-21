@@ -2,7 +2,7 @@ import { PAYMENT_METHODS } from "@/app/data/new-homepage";
 import { STORE_NAME, STORE_FACEBOOK, STORE_PINTEREST, STORE_CONTACT } from "@/app/lib/store_constants";
 import Link from "next/link";
 import Image from "next/image";
-import { createSlug, BASE_URL } from "@/app/lib/helpers";
+import { createSlug, BASE_URL, CURRENT_DEALS_URL } from "@/app/lib/helpers";
 import PaymentIcons from "@/app/components/atom/PaymentIcons";
 import SiteSeal from "@/app/components/atom/SiteSeal";
 
@@ -34,6 +34,7 @@ export const FOOTER_COLS = [
       { name: "Open Box",            url: "/open-box" },
       { name: "Package Deals",       url: "/package-deals" },
       { name: "Clearance Sale",      url: "/clearance-sale" },
+      { name: "Current Deals",       url: CURRENT_DEALS_URL, external: true },
       { name: "Contractor Program",  url: "/professional-program" },
     ],
   },
@@ -133,7 +134,7 @@ export default function Footer({ logo }) {
                 {links.map((item, index) => (
                   <li key={`foot-link-${createSlug(heading)}-${index}`}>
                     <Link
-                      href={`${BASE_URL}${item?.url}` || "#"}
+                      href={item?.external ? item.url : `${BASE_URL}${item?.url}`}
                       prefetch={false}
                       className="text-xs text-ash/40 dark:text-ash/40 hover:text-ember dark:hover:text-ember transition-colors"
                     >
