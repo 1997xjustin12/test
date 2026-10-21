@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { ES_INDEX, createSlug } from "@/app/lib/helpers";
+import { ES_INDEX, createSlug, BASE_URL } from "@/app/lib/helpers";
 import { internalHeaders } from "@/app/lib/rate-limit";
 
 /**
@@ -147,7 +147,7 @@ export function toClientHits(hits = []) {
  */
 export const getListingHits = unstable_cache(
   async (filterString, hitsPerPage = HITS_PER_PAGE) => {
-    const base = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+    const base = BASE_URL;
     if (!base) return { hits: [], total: 0 };
 
     try {

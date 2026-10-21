@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useFilter } from "@/app/context/filter";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import { BASE_URL } from "@/app/lib/helpers";
 export default function FilterSelectItem({
   data,
   labelStyle,

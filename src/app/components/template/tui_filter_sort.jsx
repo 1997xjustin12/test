@@ -18,7 +18,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/20/solid";
 import ProductCard from "../atom/ProductCard";
 import ProductCardLoader from "../atom/ProductCardLoader";
-import { getPageData } from "@/app/lib/helpers";
+import { getPageData, BASE_URL } from "@/app/lib/helpers";
 import { useSolanaCategories } from "@/app/context/category";
 import FilterSelectItem from "@/app/components/atom/FilterSelectItem";
 import FilterDrawer from "@/app/components/molecule/FilterDrawer";
@@ -54,7 +54,6 @@ const loaderArray = [1, 2, 3, 4, 5, 6, 7, 8];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function TuiFilterSort({
   category,

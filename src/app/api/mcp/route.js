@@ -1,6 +1,7 @@
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { STORE_ID } from "@/app/lib/store";
 import { internalHeaders, withRouteRateLimit } from "@/app/lib/rate-limit";
+import { BASE_URL } from "@/app/lib/helpers";
 
 /**
  * POST /api/mcp — Model Context Protocol endpoint.
@@ -69,7 +70,7 @@ const rpcError = (id, code, message, status = 200) =>
 
 /** Calls our own catalogue API. Keeps one implementation of the query logic. */
 async function callCatalog(path) {
-  const base = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+  const base = BASE_URL;
   if (!base) throw new Error("Catalogue base URL is not configured");
   const res = await fetch(`${base}${path}`, {
     headers: { Accept: "application/json", ...internalHeaders() },

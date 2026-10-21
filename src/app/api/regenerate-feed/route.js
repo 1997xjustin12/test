@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { redis, keys } from "@/app/lib/redis";
 import { getStoreSettings } from "@/app/lib/store-settings";
 import { isAuthorizedAdminRequest } from "@/app/lib/admin-auth";
+import { cleanBaseUrl } from "@/app/lib/helpers";
 
 // Regenerates the Google Merchant Center feed on demand, and (optionally) the
 // crawl sitemap.
@@ -55,8 +56,8 @@ export async function POST(request) {
   const mode = target === "feed" && shopifyDomain ? "shopify" : "self";
   const source =
     target === "feed"
-      ? shopifyDomain || process.env.NEXT_PUBLIC_SITE_BASE_URL
-      : process.env.NEXT_PUBLIC_SITE_BASE_URL;
+      ? cleanBaseUrl(shopifyDomain || process.env.NEXT_PUBLIC_SITE_BASE_URL)
+      : cleanBaseUrl(process.env.NEXT_PUBLIC_SITE_BASE_URL);
 
   const startedAt = Date.now();
   let result;

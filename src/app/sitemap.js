@@ -12,6 +12,7 @@ const getStoredMenu = unstable_cache(
   { revalidate: 86400, tags: ["nav-menu"] },
 );
 import { getAllBlogPosts } from "./lib/blogs";
+import { BASE_URL } from "@/app/lib/helpers";
 
 /**
  * Every blog post for this brand. The sitemap listed /blogs but never the
@@ -30,7 +31,6 @@ async function fetchBlogPosts() {
 
 export const revalidate = 3600;
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const ESURL = process.env.NEXT_ES_URL;
 const ESApiKey = `apiKey ${process.env.NEXT_ES_API_KEY}`;
 

@@ -1,4 +1,4 @@
-import { ES_INDEX } from "@/app/lib/helpers";
+import { ES_INDEX, BASE_URL } from "@/app/lib/helpers";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { STORE_NAME } from "@/app/lib/store_constants";
 import { STORE_ID } from "@/app/lib/store";
@@ -139,7 +139,7 @@ async function handler(req) {
     );
   }
 
-  const base = process.env.NEXT_PUBLIC_SITE_BASE_URL || "";
+  const base = BASE_URL;
   const hits = (data?.hits?.hits || [])
     .map((h) => h?._source)
     .filter(Boolean)

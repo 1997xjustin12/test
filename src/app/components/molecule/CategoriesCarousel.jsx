@@ -6,7 +6,7 @@ const Carousel = dynamic(() => import("@/app/components/atom/Carousel"), {
 });
 import Image from "next/image";
 import Link from "next/link";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import { BASE_URL } from "@/app/lib/helpers";
 const items = [
   {
     label: "Fireplaces",

@@ -4,6 +4,7 @@ import { fetchProduct } from "@/app/lib/fn_server";
 import { productPath } from "@/app/lib/listing-data";
 import { stripHtml } from "@/app/lib/structured-data";
 import { withRouteRateLimit } from "@/app/lib/rate-limit";
+import { BASE_URL } from "@/app/lib/helpers";
 
 /**
  * GET /api/catalog/product/{handle} — a single product, for agents.
@@ -50,7 +51,7 @@ async function handler(_req, ctx) {
   }
 
   const variant = product?.variants?.[0];
-  const base = process.env.NEXT_PUBLIC_SITE_BASE_URL || "";
+  const base = BASE_URL;
   const path = productPath(product);
 
   return Response.json({

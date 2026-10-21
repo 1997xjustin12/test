@@ -1,14 +1,13 @@
 // this menu updater is used to make menu using es shopify structure products
 
 "use client";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 import Link from "next/link";
 import React, { useState, useEffect, useMemo } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
 import MenuItem from "@/app/components/admin/MenuUpdaterBuilderItemV3";
 import MenuCreate from "@/app/components/admin/MenuUpdaterCreateV2";
-import { generateId, createSlug } from "@/app/lib/helpers";
+import { generateId, createSlug, BASE_URL } from "@/app/lib/helpers";
 import { keys, redisGet, redisSet } from "@/app/lib/redis";
 import dynamic from "next/dynamic";
 

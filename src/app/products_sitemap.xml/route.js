@@ -1,4 +1,5 @@
 import {
+  BASE_URL,
   ES_INDEX,
   createSlug,
   stripHtmlTags,
@@ -413,7 +414,8 @@ export async function GET() {
     return xmlResponse(storeName, shopifyDomain, items);
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+  // Without its trailing slash, so links are `…com/brand/product/…`, not `//`.
+  const baseUrl = BASE_URL;
 
   // Fail loudly rather than publishing a feed of placeholder URLs. Every link
   // is absolute and Merchant Center caches what it fetches, so a feed built

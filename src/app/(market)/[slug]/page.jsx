@@ -91,7 +91,7 @@ const getInitialHits = unstable_cache(
       },
     ];
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`,
+      `${BASE_URL}/api/es/searchkit`,
       {
         method: "POST",
         // App's own SSR call - exempt from rate limiting.

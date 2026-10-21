@@ -1,7 +1,39 @@
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { STORE_THEME } from "@/app/lib/store";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+/**
+ * The site's origin with no trailing slash, so `${BASE_URL}/path` is always
+ * one slash. NEXT_PUBLIC_SITE_BASE_URL is set with a trailing slash in
+ * production, which made every such link `https://…com//path`. A full page
+ * load survives that (a 308 fixes it), but a <Link> navigates in the browser,
+ * where a path starting with "//" names another host: /forgot-password sent
+ * shoppers to https://forgot-password/. Every link in the app is built from
+ * this, so cleaning it here cleans them all. Empty, not undefined, when unset.
+ */
+export const BASE_URL = cleanBaseUrl(process.env.NEXT_PUBLIC_SITE_BASE_URL);
+
+/** A base URL with its trailing slashes removed ("" for nothing). */
+export function cleanBaseUrl(value) {
+  return String(value ?? "").trim().replace(/\/+$/, "");
+}
+
+/**
+ * An absolute link on this site: BASE_URL plus `path`, joined with exactly one
+ * slash and with repeated slashes in the path collapsed. The query and hash are
+ * left alone, since they can legitimately hold "//" (a redirect URL, say).
+ *
+ *   siteUrl("/forgot-password")       → https://…com/forgot-password
+ *   siteUrl("fireplaces//gas")        → https://…com/fireplaces/gas
+ *   siteUrl()                         → https://…com  (or "/" with no base)
+ */
+export function siteUrl(path = "") {
+  const value = String(path ?? "");
+  const cut = value.search(/[?#]/);
+  const pathname = (cut === -1 ? value : value.slice(0, cut)).replace(/^\/+/, "").replace(/\/{2,}/g, "/");
+  const rest = cut === -1 ? "" : value.slice(cut);
+  if (!pathname && !rest) return BASE_URL || "/";
+  return `${BASE_URL}/${pathname}${rest}`;
+}
 export const store_domain = process.env.NEXT_PUBLIC_STORE_DOMAIN;
 
 // Which brand this deployment is. Every theme swap, metadata block and brand

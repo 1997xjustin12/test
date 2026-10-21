@@ -5,8 +5,8 @@ import MobileLoader from "@/app/components/molecule/MobileLoader";
 import { useState, use } from "react";
 import { useSearch } from "@/app/context/search";
 import NoSearchResultFound from "@/app/components/template/NoSearchResultFound";
+import { BASE_URL } from "@/app/lib/helpers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export default function OldSearchPageClient({props}) {
   const searchParams = use(props.searchParams);

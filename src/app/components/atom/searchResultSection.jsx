@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useSolanaCategories } from "@/app/context/category";
+import { BASE_URL } from "@/app/lib/helpers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 const COLLAPSED_LIMIT = 3;
 
 // Helper function to capitalize first letter of each word

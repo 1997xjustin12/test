@@ -3,9 +3,9 @@ import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { createSlug } from "../lib/helpers";
 import Link from "next/link";
+import { BASE_URL } from "@/app/lib/helpers";
 
 const CompareProducts = createContext([]);
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 export function CompareProductsProvider({ children }) {
   const productsLimit = 4;

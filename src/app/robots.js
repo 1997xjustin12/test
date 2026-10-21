@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/app/lib/helpers";
 // Private or transactional paths. No crawler benefits from these, and several
 // are user-specific, so they are denied to everyone including AI agents.
 // The catalogue API is the one part of /api meant to be found. Allow entries
@@ -92,7 +93,6 @@ export default function robots() {
   // No placeholder fallback: pointing crawlers at a sitemap on a domain we do
   // not own is worse than omitting the directive, so an unset base URL simply
   // drops the Sitemap line. See the matching guard in sitemap.js.
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
   return {
     rules: [

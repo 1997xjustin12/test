@@ -2,10 +2,9 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { FluentChevronRight } from "@/app/components/icons/lib";
-import { getCategoryIds } from "@/app/lib/helpers";
+import { getCategoryIds, BASE_URL } from "@/app/lib/helpers";
 import { bc_categories } from "@/app/lib/category-helpers";
 import { useSolanaCategories } from "@/app/context/category";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 function SingleProductBreadCrumbs({ product }) {
   const {solana_categories} = useSolanaCategories();
   const flattenCategories = (categories) => {

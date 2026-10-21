@@ -3,8 +3,8 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { FluentChevronLeft } from "@/app/components/icons/lib";
 import { useSolanaCategories } from "@/app/context/category";
+import { BASE_URL } from "@/app/lib/helpers";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 function BreadCrumbs({ category }) {
   const { solana_categories } = useSolanaCategories();
   const [crumbs, setCrumbs] = useState([]);

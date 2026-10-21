@@ -1,8 +1,8 @@
 "use client";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 import Link from "next/link";
 import { CartIcon } from "@/app/components/icons/lib";
 import { useCart } from '@/app/context/cart';
+import { BASE_URL } from "@/app/lib/helpers";
 
 export default function CartButton({className}) {
   const { cartItemsCount } = useCart();

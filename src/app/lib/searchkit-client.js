@@ -1,4 +1,5 @@
 import Client from "@searchkit/instantsearch-client";
+import { BASE_URL } from "@/app/lib/helpers";
 
 /**
  * The storefront's InstantSearch client, for the listing-page product grid.
@@ -52,7 +53,7 @@ export function createSearchClient() {
   const base = Client({
     // Server-side: absolute URL (no window during SSR). Client-side: relative.
     url: isServer()
-      ? `${process.env.NEXT_PUBLIC_SITE_BASE_URL}/api/es/searchkit`
+      ? `${BASE_URL}/api/es/searchkit`
       : "/api/es/searchkit",
     // A function, so it is evaluated per request and never on a browser path
     // that could read the secret. See lib/rate-limit.js isInternalRequest.

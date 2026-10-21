@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import CardWrap from "@/app/components/admin/CardWrap";
 import Button from "@/app/components/admin/Button";
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
+import { BASE_URL } from "@/app/lib/helpers";
 
 function BigCommerceCategories() {
   const API_URL = `${BASE_URL}/api/brands`; // Replace with your API

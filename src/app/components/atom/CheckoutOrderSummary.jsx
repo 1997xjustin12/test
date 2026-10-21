@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { useCart } from "@/app/context/cart";
-import { formatPrice } from "@/app/lib/helpers";
+import { formatPrice, BASE_URL } from "@/app/lib/helpers";
 import Link from "next/link";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_BASE_URL;
 
 
 function CheckoutOrderSummary() {
