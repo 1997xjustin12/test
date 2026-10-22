@@ -807,6 +807,12 @@ function ProductsSectionV2({
     } else if (use_details?.nav_type === "category1") {
       result = `page_category1:${use_details?.name}${":" + use_details.filter_type}`;
     }
+    // The page's menu address, so the server can apply its pinned products
+    // (docs/pinned-products.md). Must match computeFilterString in
+    // app/(market)/[slug]/page.jsx, or the first page and later pages differ.
+    if (result && use_details?.url && use_details?.name !== "Search") {
+      result = `${result}:${use_details.url}`;
+    }
 
     setFilterString((prev) => (prev !== result ? result : prev));
   }, [category, flatCategories, categories]);

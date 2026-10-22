@@ -17,6 +17,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Palette,
+  Pin,
   Rss,
   Settings,
   ShieldCheck,
@@ -48,6 +49,7 @@ const NAV_GROUPS = [
       { name: "Footer", url: "/admin/footer", icon: PanelBottom },
       { name: "FAQs Updater", url: "/admin/faqs-updater", icon: MessagesSquare },
       { name: "Menu Builder", url: "/admin/menu-builder", icon: ListTree },
+      { name: "Pinned Products", url: "/admin/pinned-products", icon: Pin },
     ],
   },
   {

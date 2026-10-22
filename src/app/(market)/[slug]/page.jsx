@@ -57,6 +57,13 @@ import {
 // filterString as a prop on the very first render — before its context
 // useEffect resolves — preventing a blank→filtered re-render cycle.
 function computeFilterString(d) {
+  const base = baseFilterString(d);
+  // The page's menu address, so the server applies its pinned products
+  // (docs/pinned-products.md). Must match ProductsSectionV2.
+  return base && d?.url && d?.name !== "Search" ? `${base}:${d.url}` : base;
+}
+
+function baseFilterString(d) {
   if (!d) return "";
   if (d.nav_type === "category")
     return `page_category:${d.origin_name}:${d.filter_type}`;

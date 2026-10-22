@@ -17,6 +17,7 @@ import {
   shouldApplyMainProductSort,
 } from "@/app/lib/helpers";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
+import { getPinnedForPage, pinnedScriptSort } from "@/app/lib/pinned-products";
 
 import COLLECTIONS_BY_CATEGORY from "@/app/data/collections_by_category";
 import {
@@ -104,11 +105,17 @@ export async function runSearchkit(body) {
       },
     ];
 
+    // The listing page's menu address, the filter's fourth part
+    // (page_category:Fireplaces:fireplaces:built-in-grills). It picks the
+    // page's pinned products; see docs/pinned-products.md.
+    let pin_page = null;
     if (check_filter) {
       filter_key = check_filter.split(":")[0];
       filter_value = check_filter.split(":")[1];
       filter_type = check_filter.split(":")[2];
+      pin_page = check_filter.split(":")[3] || null;
     }
+    const pinned = await getPinnedForPage(pin_page);
 
     if (filter_key === "page_category1") {
       filter_query.push({
@@ -277,6 +284,10 @@ export async function runSearchkit(body) {
             return searchRequests.map((sr) => {
               const sort = sr.body.sort;
               const isPopular = !!sort?.["_score"];
+              // A listing in its default state sends no sort at all (Most
+              // popular is selected by default but only an explicit choice
+              // sends one), so "no sort" counts as Most popular for pins.
+              const noSort = !sort || (Array.isArray(sort) && sort.length === 0);
               const query = sr.body.query;
 
               // Extract search query from Searchkit's structure
@@ -377,7 +388,15 @@ export async function runSearchkit(body) {
                 body: {
                   ...sr.body,
                   query: customQuery,
-                  sort: isPopular
+                  // Pinned products first, in the admin's order, on a listing
+                  // sorted by Most popular (or not sorted at all) with nothing
+                  // typed — a typed search ranks by relevance instead. After
+                  // the pins, the order each case already had: Elasticsearch's
+                  // default (_score) when unsorted, _score then newest when
+                  // Most popular was chosen. Unpinned pages are unchanged.
+                  sort: pinned.length && !searchQuery && (noSort || isPopular)
+                    ? [pinnedScriptSort(pinned), "_score", ...(isPopular ? [{ updated_at: "desc" }] : [])]
+                    : isPopular
                     ? applyMainProductSort
                       ? [
                           // Apply main product priority when keyword matches
