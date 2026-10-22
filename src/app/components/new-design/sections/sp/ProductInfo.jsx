@@ -12,6 +12,7 @@ import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
 import { Icon } from "@iconify/react";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const ProductCategoryChip = ({ category, url = "#" }) => {
   if (!category) {
@@ -231,6 +232,7 @@ const ProductInfo = ({ product }) => {
             Call Expert
           </Link>
         </div>
+        <CompareToggle product={product} />
           <Link
             href={`tel:${STORE_CONTACT}`}
             className="flex md:hidden justify-center items-center gap-2 h-11 px-4 rounded-xl border-2 border-orange-500 text-orange-600 dark:text-orange-400 text-sm font-bold hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors whitespace-nowrap"

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { compareUrl } from "@/app/lib/compare";
 import { useCompareProducts } from "@/app/context/compare_product";
+import trackCompare from "@/app/components/compare/trackCompare";
 
 /**
  * Everything the /compare page does in the browser, without how it looks.
@@ -19,6 +20,12 @@ export default function useComparePage({ handles = [], groups = [] } = {}) {
   const [highlightDifferences, setHighlightDifferences] = useState(true);
   const [headerStuck, setHeaderStuck] = useState(false);
   const headerSentinel = useRef(null);
+
+  // One compare_view per set of products shown (not per re-render).
+  const viewKey = handles.join(",");
+  useEffect(() => {
+    if (viewKey) trackCompare("compare_view", { item_ids: viewKey, item_count: viewKey.split(",").length });
+  }, [viewKey]);
 
   // The rows to draw. With "only differences" on, rows where every product
   // agrees are hidden, and so is any group left empty.

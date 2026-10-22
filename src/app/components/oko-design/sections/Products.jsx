@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL, formatPrice, formatProduct, productIsFreeshipping } from "@/app/lib/helpers";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 // 8.10 Product card — white, bordered, 2px radius. Barn SALE badge top-left,
 // sage FREE SHIPPING top-right (shipping moves to top-left when there's no
@@ -111,6 +112,7 @@ function ProductCard({ product }) {
             </button>
           </AddToCartButtonWrap>
         </div>
+        <CompareToggle product={product} className="mt-3" />
       </div>
     </article>
   );

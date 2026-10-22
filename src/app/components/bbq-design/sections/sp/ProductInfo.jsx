@@ -7,6 +7,7 @@ import FicDropDown from "@/app/components/bbq-design/ui/FicDropDown";
 import { ICRoundPhone } from "@/app/components/icons/lib";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const ProductCategoryChip = ({ category, url = "#" }) => {
   if (!category)
@@ -175,6 +176,7 @@ const ProductInfo = ({ product }) => (
           Call Expert
         </Link>
       </div>
+      <CompareToggle product={product} />
       <Link
         href={`tel:${STORE_CONTACT}`}
         className="flex md:hidden items-center justify-center gap-2 h-11 px-4 border border-theme-600 text-theme-600 font-oswald font-semibold text-xs uppercase tracking-wide hover:bg-theme-600/10 transition-colors whitespace-nowrap rounded-sm"

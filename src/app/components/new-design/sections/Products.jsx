@@ -7,6 +7,7 @@ import { useSolanaCategories } from "@/app/context/category";
 import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import Link from "next/link";
 import Image from "next/image";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const PRODUCT_TABS = [
   {
@@ -145,6 +146,7 @@ function ProductCard({ product }) {
             </div>
           )}
         </div>
+        <CompareToggle product={product} className="mt-3" />
       </div>
     </article>
   );

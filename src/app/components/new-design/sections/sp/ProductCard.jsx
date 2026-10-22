@@ -14,6 +14,7 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useCart } from "@/app/context/cart";
 import { useQuickView } from "@/app/context/quickview";
 import { CartIcon } from "@/app/components/new-design/ui/Icons";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 
 const ProductCard = ({ p }) => {
@@ -141,6 +142,7 @@ const ProductCard = ({ p }) => {
 
       {/* Found it cheaper */}
       <div className="px-3 pb-3">
+        <CompareToggle product={p} className="mb-1" />
         <FicDropDown contact_number={STORE_CONTACT}>
           <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             Found It Cheaper?

@@ -10,6 +10,7 @@ import { formatPrice } from "@/app/lib/helpers";
 import { useCart } from "@/app/context/cart";
 import { useQuickView } from "@/app/context/quickview";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const BADGE_STYLES = {
   bestseller: "bg-oko-char text-white",
@@ -154,6 +155,7 @@ const ProductCard = ({ p }) => {
 
       {/* Found it cheaper */}
       <div className="px-4 pb-4 -mt-1">
+        <CompareToggle product={p} className="mb-1" />
         <FicDropDown contact_number={STORE_CONTACT}>
           <div className="font-inter text-[12px] text-oko-sage dark:text-oko-sage-light flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             Found it cheaper?

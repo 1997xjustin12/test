@@ -8,6 +8,7 @@ import AddToCartButtonWrap from "@/app/components/atom/AddToCartButtonWrap";
 import Link from "next/link";
 import Image from "next/image";
 import { BASE_URL } from "@/app/lib/helpers";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 async function getProductsByCollectionId(id) {
   // Use a full URL if calling from the server, or relative if client-side
@@ -113,6 +114,7 @@ function ProductCard({ product }) {
             Add to Cart
           </button>
         </AddToCartButtonWrap>
+        <CompareToggle product={product} className="mt-3" />
       </div>
     </article>
   );

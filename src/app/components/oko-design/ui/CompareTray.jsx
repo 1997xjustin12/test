@@ -15,7 +15,7 @@ export default function CompareTray() {
     <div
       role="region"
       aria-label="Compare products"
-      className="fixed inset-x-3 bottom-24 sm:inset-x-24 sm:bottom-4 z-40 flex justify-center pointer-events-none"
+      className={`fixed inset-x-3 sm:inset-x-24 ${tray.bottomClass} z-40 flex justify-center pointer-events-none`}
     >
       <div className="pointer-events-auto w-full max-w-[880px] bg-oko-char border border-oko-line-dark rounded-[2px] text-oko-cream">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">

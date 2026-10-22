@@ -26,8 +26,16 @@ export default function useCompareTray() {
   const hiddenHere = HIDDEN_ON.some((path) => pathname === path || pathname.startsWith(`${path}/`));
   const visible = !!compare?.ready && count > 0 && !hiddenHere;
 
+  // Product pages have their own sticky add-to-cart bar along the bottom
+  // (full width below lg, a card bottom-right from lg up), so the tray sits
+  // above it there. Elsewhere it floats above the chat launchers on phones and
+  // near the bottom on wider screens.
+  const onProductPage = pathname.includes("/product/");
+  const bottomClass = onProductPage ? "bottom-28" : "bottom-24 sm:bottom-4";
+
   return {
     visible,
+    bottomClass,
     collapsed,
     toggleCollapsed: () => setCollapsed((value) => !value),
     items: compare?.items ?? [],

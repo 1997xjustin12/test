@@ -5,6 +5,7 @@ import ProductOptionItemLink from "@/app/components/oko-design/sections/sp/Produ
 import FicDropDown from "@/app/components/oko-design/ui/FicDropDown";
 import { createSlug, formatPrice } from "@/app/lib/helpers";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const ProductCategoryChip = ({ category, url = "#" }) => {
   if (!category)
@@ -144,6 +145,7 @@ const ProductInfo = ({ product }) => (
 
     {/* Qty stepper + Add to cart */}
     <AddToCartWidget product={product} />
+    <CompareToggle product={product} />
 
     {/* Call for a lower price — cream-dim panel repeating the phone (§9) */}
     <FicDropDown contact_number={STORE_CONTACT}>

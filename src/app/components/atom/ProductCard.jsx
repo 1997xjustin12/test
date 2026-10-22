@@ -12,6 +12,7 @@ import FicDropDown from "@/app/components/atom/FicDropDown";
 
 import { useRouter } from "next/navigation";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 const ProductCardPriceDisplay = ({ price_details }) => {
   if (!price_details) {
@@ -145,6 +146,7 @@ const ProductCard = ({ hit, page_details }) => {
               <ProductCardPriceDisplay price_details={hit?.variants?.[0]} />
             )}
           </div>
+          <CompareToggle product={hit} className="mt-2" />
           <FicDropDown contact_number={page_details?.contact_number}>
             <div className="text-xs my-[5px] text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap">
               {!isPriceVisible(hit?.product_category, hit?.brand) ? (

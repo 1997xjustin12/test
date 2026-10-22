@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { COMPARE_LIMIT, compareSnapshot, compareUrl } from "@/app/lib/compare";
+import trackCompare from "@/app/components/compare/trackCompare";
 
 /**
  * The compare list: the products a shopper has ticked "Compare" on, shared by
@@ -84,19 +85,25 @@ export function CompareProductsProvider({ children }) {
       if (!handle) return { ok: false, reason: "invalid" };
       if (items.some((item) => item.handle === handle)) {
         setItems(commit(items.filter((item) => item.handle !== handle)));
+        trackCompare("compare_remove", { item_id: handle });
         return { ok: true, added: false };
       }
       if (items.length >= COMPARE_LIMIT) return { ok: false, reason: "full" };
       const snapshot = compareSnapshot(product);
       if (!snapshot) return { ok: false, reason: "invalid" };
       setItems(commit([...items, snapshot]));
+      trackCompare("compare_add", { item_id: handle, item_name: snapshot.title, item_brand: snapshot.brand });
       return { ok: true, added: true };
     },
     [items, commit],
   );
 
   const remove = useCallback(
-    (handle) => setItems(commit(items.filter((item) => item.handle !== handle))),
+    (handle) => {
+      if (!items.some((item) => item.handle === handle)) return;
+      setItems(commit(items.filter((item) => item.handle !== handle)));
+      trackCompare("compare_remove", { item_id: handle });
+    },
     [items, commit],
   );
 
