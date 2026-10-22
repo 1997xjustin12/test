@@ -17,7 +17,7 @@ export default function CompareTray() {
       aria-label="Compare products"
       className={`fixed inset-x-3 sm:inset-x-24 ${tray.bottomClass} z-40 flex justify-center pointer-events-none`}
     >
-      <div className="pointer-events-auto w-full max-w-[880px] bg-oko-char border border-oko-line-dark rounded-[2px] text-oko-cream">
+      <div className="pointer-events-auto w-full min-w-0 max-w-[880px] bg-oko-char border border-oko-line-dark rounded-[2px] text-oko-cream">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">
           <button
             type="button"
@@ -25,7 +25,7 @@ export default function CompareTray() {
             aria-expanded={!tray.collapsed}
             className="flex items-center gap-2"
           >
-            <span className="font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn-light">Compare</span>
+            <span className="hidden sm:inline font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn-light">Compare</span>
             <span className="font-inter text-[13px] font-semibold text-oko-cream">
               {tray.count} of {tray.limit} products
             </span>

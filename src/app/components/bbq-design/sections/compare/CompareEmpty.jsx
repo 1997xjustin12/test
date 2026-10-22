@@ -7,7 +7,7 @@ import { BASE_URL } from "@/app/lib/helpers";
 export default function CompareEmpty() {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-4 bg-paper dark:bg-smoke border border-grate dark:border-white/10 rounded-sm text-center">
-      <div className="w-12 h-12 bg-theme-600/10 dark:bg-theme-600/20 flex items-center justify-center text-theme-600 mb-4">
+      <div className="w-12 h-12 bg-[color-mix(in_oklab,var(--theme-primary-600)_10%,#fdfbf7)] dark:bg-[color-mix(in_oklab,var(--theme-primary-600)_20%,#2a241e)] flex items-center justify-center text-theme-600 mb-4">
         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 3v18" />
         </svg>

@@ -20,7 +20,7 @@ export default function CompareTray() {
       aria-label="Compare products"
       className={`fixed inset-x-3 sm:inset-x-24 ${tray.bottomClass} z-40 flex justify-center pointer-events-none`}
     >
-      <div className="pointer-events-auto w-full max-w-[880px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl shadow-neutral-900/10 dark:shadow-black/40">
+      <div className="pointer-events-auto w-full min-w-0 max-w-[880px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl shadow-neutral-900/10 dark:shadow-black/40">
         {/* Header: count, collapse, clear */}
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">
           <button

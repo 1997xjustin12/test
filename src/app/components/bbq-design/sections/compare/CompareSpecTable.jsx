@@ -40,7 +40,11 @@ function Row({ row, products, highlight, spare }) {
         <td
           key={product.handle}
           className={`border-b border-grate dark:border-white/10 px-3 sm:px-4 py-3 font-sora text-xs sm:text-sm text-char/80 dark:text-ash/80 align-top ${
-            differs ? "bg-theme-600/[0.06] dark:bg-theme-600/10" : "bg-paper dark:bg-smoke"
+            // color-mix, not bg-theme-600/10: the theme colours are CSS
+            // variables, which Tailwind's opacity modifier can't apply to.
+            differs
+              ? "bg-[color-mix(in_oklab,var(--theme-primary-600)_7%,#fdfbf7)] dark:bg-[color-mix(in_oklab,var(--theme-primary-600)_16%,#2a241e)]"
+              : "bg-paper dark:bg-smoke"
           }`}
         >
           {row.render ? row.render(product) : row.values[i] ?? <span className="text-char/25 dark:text-ash/20">{MISSING}</span>}

@@ -60,16 +60,19 @@ export default function Navbar({ logo }) {
   return (
     <>
       <header className="sticky top-0 z-30 bg-white dark:bg-oko-night border-b border-oko-stone-line dark:border-oko-line-dark">
-        <div className="max-w-[1260px] mx-auto px-5 sm:px-8">
+        {/* Tighter on phones: at 390px the row (logo, Account, Cart, search,
+            menu) came to 434px, pushing the menu button off-screen and making
+            the whole page lay out wider than the phone. */}
+        <div className="max-w-[1260px] mx-auto px-4 sm:px-8">
           {/* ── Header row (96px desktop / 64px mobile) ── */}
-          <div className="flex items-center gap-4 lg:gap-7 h-16 lg:h-24">
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-7 h-16 lg:h-24">
             {/* Logo lockup — bordered box, 1.5px barn */}
             <Link
               href="/"
               aria-label="Outdoor Kitchen Outlet home"
-              className="flex flex-col items-center leading-none border-[1.5px] border-oko-barn rounded-[2px] px-3.5 py-2 sm:px-5 sm:py-2.5 shrink-0"
+              className="flex flex-col items-center leading-none border-[1.5px] border-oko-barn rounded-[2px] px-2 min-[380px]:px-2.5 py-2 sm:px-5 sm:py-2.5 shrink-0"
             >
-              <span className="font-oko-display font-semibold text-[15px] sm:text-[19px] tracking-[0.04em] text-oko-char dark:text-oko-cream whitespace-nowrap">
+              <span className="font-oko-display font-semibold text-[12px] min-[380px]:text-[13px] min-[400px]:text-[15px] sm:text-[19px] tracking-[0.04em] text-oko-char dark:text-oko-cream whitespace-nowrap">
                 OUTDOOR <span className="text-oko-barn dark:text-oko-barn-light">⌂</span> KITCHEN
               </span>
               <span className="font-inter text-[8px] sm:text-[10px] tracking-[0.32em] text-oko-stone dark:text-oko-ondark-faint mt-0.5">
@@ -83,7 +86,7 @@ export default function Navbar({ logo }) {
             </div>
 
             {/* Right cluster */}
-            <div className="flex items-center gap-3 sm:gap-6 ml-auto">
+            <div className="flex items-center gap-1 min-[400px]:gap-2 sm:gap-6 ml-auto">
               {/* Phone block */}
               <Link
                 href={`tel:${STORE_CONTACT}`}
