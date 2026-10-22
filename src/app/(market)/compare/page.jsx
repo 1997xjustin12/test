@@ -1,10 +1,12 @@
-import { formatProduct, productIsFreeshipping } from "@/app/lib/helpers";
+import { ISBBQ, ISOKO, formatProduct, productIsFreeshipping } from "@/app/lib/helpers";
 import { COMPARE_PARAM, parseCompareParam } from "@/app/lib/compare";
 import { buildCompareRows } from "@/app/lib/compare-specs";
 import { fetchProduct } from "@/app/lib/fn_server";
 import { getCatalogExclusions, isExcludedProductBrand } from "@/app/lib/catalog-exclusions";
 import { pageMetadata } from "@/app/lib/page-seo";
 import NewCompare from "@/app/components/new-design/page/Compare";
+import BBQCompare from "@/app/components/bbq-design/page/Compare";
+import OKOCompare from "@/app/components/oko-design/page/Compare";
 
 /**
  * /compare?p=handle-1,handle-2 — products side by side. See
@@ -65,7 +67,8 @@ export default async function ComparePage({ searchParams }) {
   // from these, so skipped handles drop out of it too.
   const shown = products.map((product) => product.handle);
 
-  // BBQ and OKO get their own designs (ISBBQ / ISOKO) in phase 3 of
-  // docs/product-compare.md; until then every brand renders Solana's.
-  return <NewCompare products={products} groups={groups} handles={shown} />;
+  const props = { products, groups, handles: shown };
+  if (ISOKO) return <OKOCompare {...props} />;
+  if (ISBBQ) return <BBQCompare {...props} />;
+  return <NewCompare {...props} />;
 }

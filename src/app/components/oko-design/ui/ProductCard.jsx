@@ -11,6 +11,7 @@ import { STORE_CONTACT } from "@/app/lib/store_constants";
 import { useQuickView } from "@/app/context/quickview";
 import { formatPrice, formatProduct, productIsFreeshipping } from "@/app/lib/helpers";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 // The listing-grid card, in OKO's own design: the homepage card's look
 // (oko-design/sections/Products.jsx, 8.10 — white, bordered, 2px radius, barn
@@ -195,6 +196,8 @@ function ProductCard({ hit, page_details, onCompare }) {
             )}
           </button>
         </div>
+
+        <CompareToggle product={hit} className="mt-2.5" />
 
         <FicDropDown contact_number={page_details?.contact_number}>
           <div className="mt-2.5 font-inter text-[12px] text-oko-stone flex items-center cursor-default gap-1.5 flex-wrap justify-center lg:justify-start">
