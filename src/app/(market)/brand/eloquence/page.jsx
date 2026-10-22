@@ -18,11 +18,13 @@ import {
   formatProduct,
   formatPrice,
 } from "@/app/lib/helpers";
+import { STORE_NAME } from "@/app/lib/store_constants";
 
+// This page is Eloquence's. It carried the Solana BBQ Grills page's title and
+// description, copy-pasted, on every storefront.
 export const metadata = {
-  title: "Shop Outdoor Kitchen Equipment | Solana BBQ Grills",
-  description:
-    "Upgrade your backyard with premium outdoor kitchen equipment from Solana BBQ Grills. Best prices on grills, burners, and accessories. Shop now!",
+  title: `Eloquence Grills & Outdoor Kitchens | ${STORE_NAME}`,
+  description: `Shop Eloquence gas grills and outdoor kitchen equipment at ${STORE_NAME}, with expert advice and a price-match guarantee.`,
 };
 
 const CONTACT = "(888) 667-4986";

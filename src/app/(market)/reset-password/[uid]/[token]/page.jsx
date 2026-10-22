@@ -9,6 +9,8 @@ import OKOResetPassword from "@/app/components/oko-design/page/ResetPassword";
 
 export const metadata = {
   title: `Reset Password | ${STORE_NAME}`,
+  // A one-time link carrying a token: never something to have in search results.
+  robots: { index: false, follow: false },
 };
 
 const wrapperClass = "min-h-svh py-10 px-4 sm:px-6";

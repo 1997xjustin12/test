@@ -12,11 +12,13 @@ import NewsletterSection from "@/app/components/brand/NewsletterSection";
 import { getCollectionProducts } from "@/app/lib/fn_server";
 
 import { BASE_URL, createSlug, formatProduct, formatPrice } from "@/app/lib/helpers";
+import { STORE_NAME } from "@/app/lib/store_constants";
 
+// Solana BBQ Grills is a product brand every storefront sells; the title names
+// the store selling it too.
 export const metadata = {
-  title: "Solana BBQ Grills | Premium Outdoor Kitchen Equipment",
-  description:
-    "Shop premium outdoor kitchen equipment at Solana BBQ Grills. Top-rated gas grills, side burners, outdoor storage, and accessories from Bull, Blaze, and Eloquence. Free shipping available.",
+  title: `Solana BBQ Grills | ${STORE_NAME}`,
+  description: `Shop Solana BBQ Grills gas grills, side burners, outdoor storage and accessories at ${STORE_NAME}. Free shipping on selected items.`,
 };
 
 const CONTACT = "(888) 667-4986";
