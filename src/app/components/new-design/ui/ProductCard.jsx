@@ -14,6 +14,7 @@ import { useQuickView } from "@/app/context/quickview";
 import { formatPrice, formatProduct } from "@/app/lib/helpers";
 import StarRating from "@/app/components/new-design/ui/StarRating";
 import { Eos3DotsLoading } from "@/app/components/icons/lib";
+import CompareToggle from "@/app/components/compare/CompareToggle";
 
 
 const BADGE_STYLES = {
@@ -214,6 +215,7 @@ function ProductCard({ hit, page_details, onCompare }) {
               }
             </button>
         </div>
+        <CompareToggle product={hit} className="mt-2.5" />
         <FicDropDown contact_number={page_details?.contact_number}>
           <div className="text-xs my-[5px] text-blue-700 dark:text-blue-500 flex items-center cursor-default gap-[7px] flex-wrap justify-center lg:justify-start">
             {!isPriceVisible(hit?.product_category, hit?.brand) ? (

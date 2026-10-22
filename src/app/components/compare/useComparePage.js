@@ -45,7 +45,11 @@ export default function useComparePage({ handles = [], groups = [] } = {}) {
   useEffect(() => {
     const node = headerSentinel.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(([entry]) => setHeaderStuck(!entry.isIntersecting), { threshold: 0 });
+    // Stuck only once it has gone off the top — not while still below the fold.
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeaderStuck(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+      { threshold: 0 },
+    );
     observer.observe(node);
     return () => observer.disconnect();
   }, []);

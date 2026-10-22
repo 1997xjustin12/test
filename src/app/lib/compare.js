@@ -47,9 +47,11 @@ export function compareUrl(handles = []) {
  */
 export function compareSnapshot(product) {
   if (!product?.handle) return null;
+  // Loose match on purpose: the search index stores position as "1" (a string),
+  // which is why the product cards compare with == too.
   const image =
     product.image ||
-    product.images?.find(({ position }) => position === 1)?.src ||
+    product.images?.find(({ position }) => Number(position) === 1)?.src ||
     product.images?.[0]?.src ||
     null;
   const price = product.price ?? product.variants?.[0]?.price ?? null;

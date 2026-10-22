@@ -41,6 +41,8 @@ export const PAGE_SEO_ROUTES = [
     },
   },
   { path: "/search", label: "Search", group: "Main", defaults: { title: `Search | ${STORE_NAME}`, robots: "noindex,follow" } },
+  // Every combination of products is its own address; none is worth indexing.
+  { path: "/compare", label: "Compare", group: "Main", defaults: { title: `Compare Products | ${STORE_NAME}`, robots: "noindex,follow" } },
   { path: "/cart", label: "Cart", group: "Main", defaults: { title: `Your Cart | ${STORE_NAME}`, robots: "noindex,nofollow" } },
 
   {

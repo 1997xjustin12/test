@@ -13,6 +13,7 @@ import { GoogleReCaptchaProvider } from "@/app/context/recaptcha";
 import { getStoreSettings } from "@/app/lib/store-settings";
 import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { CompareProductsProvider } from "@/app/context/compare_product";
+import CompareTray from "@/app/components/compare/CompareTray";
 import { generateMetadata } from "@/app/metadata";
 import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ConditionalZohoButton from "@/app/components/widget/ConditionalZohoButton";
@@ -357,6 +358,10 @@ export default async function MarketLayout({ children }) {
                       </QuickViewProvider>
                     </SessionWrapper>
                   </SearchProvider>
+                {/* The compare tray, on every storefront page (it hides itself
+                    where it would be in the way). Drawn here rather than by
+                    the provider so the two don't import each other. */}
+                <CompareTray />
               </CompareProductsProvider>
             </CartProvider>
           </CategoriesProvider>
