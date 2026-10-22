@@ -6,27 +6,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { accentuateSpecLabels } from "@/app/lib/filter-helper";
+import { extractProductSpecs } from "@/app/lib/compare-specs";
 import { formatPrice, formatProduct } from "@/app/lib/helpers";
 import StarRating from "@/app/components/oko-design/sections/sp/StarRating";
 import CompareItemAddToCart from "@/app/components/oko-design/sections/sp/CompareItemAddToCart";
 import SectionHeading from "@/app/components/oko-design/sections/sp/SectionHeading";
-
-const extractProductSpecs = (product) => {
-  const accentuate = product?.accentuate_data || null;
-  if (!accentuate) return null;
-  const accentuateKeys = Object.keys(accentuate);
-  const specsConfig = accentuateSpecLabels
-    .filter((asl) => accentuateKeys.includes(asl?.key))
-    .map((asl) => ({ ...asl, value: accentuate[asl?.key] }));
-  return specsConfig
-    .filter((sc) => sc?.value)
-    .map((sc) => {
-      const rawValue = accentuate[sc?.key];
-      const renderValue = typeof sc?.transform === "function" ? sc.transform(rawValue) : rawValue;
-      return { ...sc, value: renderValue };
-    });
-};
 
 const ItemValue = ({ specs, specKey, isActive }) => {
   const specsObject = Object.fromEntries(specs.map((item) => [item.key, item.value]));

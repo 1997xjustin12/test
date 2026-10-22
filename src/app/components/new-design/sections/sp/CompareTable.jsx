@@ -6,30 +6,10 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { accentuateSpecLabels } from "@/app/lib/filter-helper";
+import { extractProductSpecs } from "@/app/lib/compare-specs";
 import { formatPrice, formatProduct } from "@/app/lib/helpers";
 import StarRating from "@/app/components/new-design/ui/StarRating";
 import CompareItemAddToCart from "@/app/components/new-design/sections/sp/CompareItemAddToCart";
-
-const extractProductSpecs = (product) => {
-  const accentuate = product?.accentuate_data || null;
-  if (!accentuate) return null;
-  const accentuateKeys = Object.keys(accentuate);
-  const specsConfig = accentuateSpecLabels
-    .filter((asl) => accentuateKeys.includes(asl?.key))
-    .map((asl) => ({ ...asl, value: accentuate[asl?.key] }));
-  const specs = specsConfig
-    .filter((sc) => sc?.value)
-    .map((sc) => {
-      const transform = sc?.transform || null;
-      const rawValue = accentuate[sc?.key];
-      const renderValue =
-        typeof transform === "function" ? transform(rawValue) : rawValue;
-      return { ...sc, value: renderValue };
-    });
-
-  return specs;
-};
 
 const ItemValue = ({ specs, specKey, className }) => {
   const specsObject = Object.fromEntries(

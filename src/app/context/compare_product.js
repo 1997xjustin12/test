@@ -1,123 +1,130 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
-import Image from "next/image";
-import { createSlug } from "../lib/helpers";
-import Link from "next/link";
-import { BASE_URL } from "@/app/lib/helpers";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { COMPARE_LIMIT, compareSnapshot, compareUrl } from "@/app/lib/compare";
 
-const CompareProducts = createContext([]);
+/**
+ * The compare list: the products a shopper has ticked "Compare" on, shared by
+ * every product card, the tray and the /compare link. See
+ * docs/product-compare.md.
+ *
+ * Kept in localStorage, so it survives page changes and reloads, and synced
+ * across tabs over a BroadcastChannel, as the cart is. Each brand is its own
+ * domain, so each keeps its own list. Storage that is blocked or full (private
+ * windows, cleared site data) falls back to memory for the visit.
+ *
+ * Replaces an earlier version that held the list in memory only and drew a
+ * thumbnail widget linking to /compare/<sku>__<sku>, a page that never
+ * existed. Nothing called it.
+ *
+ * Products are identified by handle, because /compare looks them up by handle.
+ * Only a small snapshot is kept (compareSnapshot); the page fetches the rest.
+ */
 
-export function CompareProductsProvider({ children }) {
-  const productsLimit = 4;
-  const compareHandleSeparator = "__";
-  const [products, setProducts] = useState([]);
-  const [openWidget, setOpenWidget] = useState(false);
+const STORAGE_KEY = "compare_products";
+const CHANNEL = "compare_channel";
 
-  const addProduct = (product) => {
-    setProducts((prev) => [...prev, product]);
-  };
+const CompareProducts = createContext(null);
 
-  const removeProduct = (product) => {
-    setProducts((prev) =>
-      prev.filter(
-        ({ variants }) => variants?.[0]?.sku !== product?.variants?.[0]?.sku
-      )
-    );
-  };
-
-  const removeProducts = () => {
-    setProducts([]);
-  };
-
-  
-
-  const compareHandle = useMemo(()=>{
-    return products.map(({variants})=> variants?.[0]?.sku).join(compareHandleSeparator);
-  },[products])
-
-  useEffect(() => {
-    // console.log("[COMPARE PRODUCTS] ", products);
-    // console.log("[COMPAREHANDLE] ", compareHandle);
-    if (products.length === 0) {
-      setOpenWidget(false);
-    }
-  }, [products]);
-  return (
-    <CompareProducts.Provider
-      value={{
-        products,
-        productsLimit,
-        compareHandle,
-        compareHandleSeparator,
-        addProduct,
-        removeProduct,
-        removeProducts,
-        setOpenWidget,
-      }}
-    >
-      {children}
-      <div
-        className={`${
-          openWidget ? "fixed" : "hidden"
-        } top-[60px] left-1/2 -translate-x-1/2 rounded bg-white shadow-lg border z-[999] p-2`}
-      >
-        <div className="relative">
-          <button
-            onClick={() => setOpenWidget(false)}
-            className="absolute top-[-25px] right-[-25px] p-1 h-[25px] w-[25px] bg-neutral-500 text-white border-2 hover:border-white shadow rounded-full flex items-center justify-center text-xs"
-            title="Close"
-          >
-            X
-          </button>
-          <div className="flex gap-[15px]">
-            {Array.from({ length: productsLimit }).map((_, index) => (
-              <div
-                key={`compare-product-image-box-${index}`}
-                className="relative rounded bg-neutral-50 w-[50px] aspect-square overflow-hidden border-neutral-200 border"
-              >
-                {products.length > 0 && products?.[index] && (
-                  <button onClick={()=> removeProduct(products[index])} className="absolute inset-0">
-                    <Image
-                      src={
-                        products[index]?.images?.find(
-                          ({ position }) => position === 1
-                        )?.src || "/fallback.jpg"
-                      }
-                      alt={createSlug(products[index]?.title)}
-                      title={products[index]?.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                  </button>
-                )}
-              </div>
-            ))}
-
-            <Link
-              prefetch={false}
-              href={compareHandle ? `${BASE_URL}/compare/${compareHandle}`:"#"}
-              className="rounded bg-theme-600 w-[50px] aspect-1 flex items-center justify-center text-white"
-              title="Compare Products"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12.146 3.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 7H4.5a.5.5 0 0 1 0-1h9.793l-2.147-2.146a.5.5 0 0 1 0-.708m-4.292 7a.5.5 0 0 1 0 .708L5.707 13H15.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0"
-                />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </CompareProducts.Provider>
-  );
+function readStored() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter((item) => item?.handle).slice(0, COMPARE_LIMIT) : [];
+  } catch {
+    return [];
+  }
 }
 
+function writeStored(items) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Storage blocked or full: the list still works for this visit.
+  }
+}
+
+const handleOf = (product) => (product?.handle ? String(product.handle) : null);
+
+export function CompareProductsProvider({ children }) {
+  const [items, setItems] = useState([]);
+  const [ready, setReady] = useState(false);
+  const channel = useRef(null);
+
+  // Load after mount: localStorage does not exist during server rendering, and
+  // reading it in the initial state would make the first client render differ
+  // from the server's.
+  useEffect(() => {
+    setItems(readStored());
+    setReady(true);
+
+    if (typeof BroadcastChannel === "undefined") return;
+    channel.current = new BroadcastChannel(CHANNEL);
+    channel.current.onmessage = () => setItems(readStored());
+    return () => channel.current?.close();
+  }, []);
+
+  // One place writes and tells the other tabs, for every kind of change.
+  const commit = useCallback((next) => {
+    writeStored(next);
+    channel.current?.postMessage("changed");
+    return next;
+  }, []);
+
+  const isInCompare = useCallback(
+    (product) => {
+      const handle = typeof product === "string" ? product : handleOf(product);
+      return !!handle && items.some((item) => item.handle === handle);
+    },
+    [items],
+  );
+
+  /** Adds or removes. Returns { ok, reason } — reason "full" when at the limit. */
+  const toggle = useCallback(
+    (product) => {
+      const handle = handleOf(product);
+      if (!handle) return { ok: false, reason: "invalid" };
+      if (items.some((item) => item.handle === handle)) {
+        setItems(commit(items.filter((item) => item.handle !== handle)));
+        return { ok: true, added: false };
+      }
+      if (items.length >= COMPARE_LIMIT) return { ok: false, reason: "full" };
+      const snapshot = compareSnapshot(product);
+      if (!snapshot) return { ok: false, reason: "invalid" };
+      setItems(commit([...items, snapshot]));
+      return { ok: true, added: true };
+    },
+    [items, commit],
+  );
+
+  const remove = useCallback(
+    (handle) => setItems(commit(items.filter((item) => item.handle !== handle))),
+    [items, commit],
+  );
+
+  const clear = useCallback(() => setItems(commit([])), [commit]);
+
+  const value = useMemo(
+    () => ({
+      items,
+      ready,
+      limit: COMPARE_LIMIT,
+      count: items.length,
+      isFull: items.length >= COMPARE_LIMIT,
+      canCompare: items.length >= 2,
+      compareUrl: compareUrl(items.map((item) => item.handle)),
+      isInCompare,
+      toggle,
+      remove,
+      clear,
+    }),
+    [items, ready, isInCompare, toggle, remove, clear],
+  );
+
+  // The tray is drawn by each brand (components/compare/CompareTray.jsx, phase
+  // 2 of docs/product-compare.md). Until then the list works with no tray.
+  return <CompareProducts.Provider value={value}>{children}</CompareProducts.Provider>;
+}
+
+/** The compare list. Null outside the provider (e.g. the checkout layout). */
 export function useCompareProducts() {
   return useContext(CompareProducts);
 }
