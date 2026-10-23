@@ -8,9 +8,9 @@ export async function POST(request) {
   if (!(await isAuthorizedAdminRequest(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  revalidateTag("store-settings");
+  revalidateTag("store-settings", { expire: 0 });
   // Layout data embeds the store name/contact, so it has to go too.
-  revalidateTag("layout-data");
+  revalidateTag("layout-data", { expire: 0 });
   return NextResponse.json({
     revalidated: true,
     tags: ["store-settings", "layout-data"],

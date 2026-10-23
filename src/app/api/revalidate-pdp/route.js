@@ -34,9 +34,12 @@ export async function GET(request) {
     // revalidatePath with the route template busts every page that matches it
     revalidatePath("/[slug]/product/[product_path]", "page");
     // revalidateTag("pdp") busts all fetchProduct unstable_cache entries
-    revalidateTag("pdp");
+    // "max": every product goes stale at once, so visitors keep getting the
+    // cached copy while each one refreshes, instead of all of them waiting on
+    // Elasticsearch together. A single product (below) expires immediately.
+    revalidateTag("pdp", "max");
     // revalidateTag("pdp-reviews") busts all review cache entries
-    revalidateTag("pdp-reviews");
+    revalidateTag("pdp-reviews", "max");
 
     return NextResponse.json({
       revalidated: true,
@@ -53,12 +56,12 @@ export async function GET(request) {
     // Bust the page HTML for this specific URL
     revalidatePath(path, "page");
     // Bust the cached data for this specific product
-    revalidateTag(`product-${handle}`);
+    revalidateTag(`product-${handle}`, { expire: 0 });
     // Bust the cached reviews for this product (if product_id is unknown,
     // the caller can pass ?reviews_id=123 to also bust that tag)
     const reviewsId = searchParams.get("reviews_id");
     if (reviewsId) {
-      revalidateTag(`product-reviews-${reviewsId}`);
+      revalidateTag(`product-reviews-${reviewsId}`, { expire: 0 });
     }
 
     return NextResponse.json({

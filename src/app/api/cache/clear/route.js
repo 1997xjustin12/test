@@ -90,7 +90,7 @@ export async function POST(request) {
   for (const group of groups) {
     for (const tag of group.tags) {
       try {
-        revalidateTag(tag);
+        revalidateTag(tag, { expire: 0 });
         cleared.tags.push(tag);
       } catch (error) {
         errors.push(`tag ${tag}: ${error?.message || error}`);

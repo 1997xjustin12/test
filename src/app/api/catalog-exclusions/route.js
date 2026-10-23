@@ -116,7 +116,7 @@ export async function PUT(request) {
 
   try {
     const saved = await saveCatalogExclusions({ brands, collections });
-    DEPENDENT_TAGS.forEach((tag) => revalidateTag(tag));
+    DEPENDENT_TAGS.forEach((tag) => revalidateTag(tag, { expire: 0 }));
     // The navigation is built in the market layout, so every prerendered page
     // carries a copy of it. Busting the data tags alone refreshes what the next
     // render reads, not the renders already on disk — un-excluding a brand left

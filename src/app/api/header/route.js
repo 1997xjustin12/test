@@ -31,7 +31,7 @@ export async function PUT(request) {
   }
 
   const header = await saveHeader(body);
-  revalidateTag(HEADER_TAG);
+  revalidateTag(HEADER_TAG, { expire: 0 });
   revalidatePath("/", "layout");
 
   return NextResponse.json({ header });

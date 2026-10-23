@@ -52,7 +52,7 @@ export async function PUT(request) {
 
   // The homepage is prerendered with a day's revalidate: without this the
   // operator saves, looks at the site, and sees yesterday's page.
-  revalidateTag(HOME_PAGE_TAG);
+  revalidateTag(HOME_PAGE_TAG, { expire: 0 });
   revalidatePath("/");
 
   return NextResponse.json({ status: "ok", homePage: saved });

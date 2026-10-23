@@ -12,6 +12,6 @@ export async function POST(request) {
   if (!(await isAuthorizedAdminRequest(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  revalidateTag("page-seo");
+  revalidateTag("page-seo", { expire: 0 });
   return NextResponse.json({ revalidated: true, tags: ["page-seo"] });
 }

@@ -18,10 +18,13 @@ export async function GET(request) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
   }
 
-  revalidateTag("plp-initial-hits");
-  revalidateTag("home-products");
+  // "max": every listing goes stale at once, so visitors keep getting the
+  // cached grid while each one refreshes, instead of all of them waiting on
+  // Elasticsearch together.
+  revalidateTag("plp-initial-hits", "max");
+  revalidateTag("home-products", "max");
   // Every grid's cached Elasticsearch responses (app/api/es/searchkit/route.js).
-  revalidateTag("searchkit");
+  revalidateTag("searchkit", "max");
 
   return NextResponse.json({
     revalidated: true,

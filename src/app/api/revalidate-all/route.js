@@ -26,7 +26,7 @@ export async function GET(request) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
   }
 
-  for (const tag of ALL_TAGS) revalidateTag(tag);
+  for (const tag of ALL_TAGS) revalidateTag(tag, { expire: 0 });
   for (const [path, type] of ALL_PATHS) revalidatePath(path, type);
 
   // Pre-warm the homepage immediately so the ISR-regenerated HTML is cached

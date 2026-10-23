@@ -81,7 +81,7 @@ export async function PUT(request) {
 
   try {
     const record = await savePinnedForPage(body.page, body.handles);
-    DEPENDENT_TAGS.forEach((tag) => revalidateTag(tag));
+    DEPENDENT_TAGS.forEach((tag) => revalidateTag(tag, { expire: 0 }));
     return NextResponse.json({
       status: "ok",
       page: body.page.trim(),

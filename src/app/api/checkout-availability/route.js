@@ -58,7 +58,7 @@ export async function PUT(request) {
     console.error("checkout-availability: save failed:", error?.message || error);
     return NextResponse.json({ error: "Couldn't save. The setting is unchanged." }, { status: 502 });
   }
-  revalidateTag(CHECKOUT_TAG);
+  revalidateTag(CHECKOUT_TAG, { expire: 0 });
   revalidatePath("/checkout");
   revalidatePath(CHECKOUT_UNAVAILABLE_PATH);
 

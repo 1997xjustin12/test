@@ -36,7 +36,7 @@ export async function PUT(request) {
   }
 
   const footer = await saveFooter(body);
-  revalidateTag(FOOTER_TAG);
+  revalidateTag(FOOTER_TAG, { expire: 0 });
   revalidatePath("/", "layout");
 
   return NextResponse.json({ footer });

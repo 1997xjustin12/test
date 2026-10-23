@@ -67,7 +67,7 @@ export async function PUT(request) {
 
   try {
     const saved = await saveRegionSettings(body.usCaOnly);
-    revalidateTag(CHAT_REGION_TAG);
+    revalidateTag(CHAT_REGION_TAG, { expire: 0 });
 
     return NextResponse.json({
       status: "ok",
