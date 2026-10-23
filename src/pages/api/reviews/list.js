@@ -1,4 +1,4 @@
-import { backendHeaders, forwardRetryAfter } from "@/app/lib/backend-headers";
+import { backendHeaders, forwardRetryAfter, visitorBearer } from "@/app/lib/backend-headers";
 
 export default async function handler(req, res) {
   // 1. Enforce GET method
@@ -41,7 +41,18 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    
+
+    // Reviews are public, and the store-wide list is read by every home-page
+    // view (BBQ's reviews section, Solana's hero rating). Let the CDN answer
+    // repeat requests instead of calling the backend each time. Only for a
+    // successful anonymous request: a signed-in visitor's call carries their
+    // Bearer token and the backend may answer it differently.
+    if (response.ok && !visitorBearer(req)) {
+      res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=3600");
+    } else {
+      res.setHeader("Cache-Control", "private, no-store");
+    }
+
     // 5. Return upstream status and data
     return res.status(response.status).json(data);
 

@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Link from "next/link";
 // import { UserAccountIconBB } from "@/app/components/icons/lib";
-// import { useUserSession } from "@/app/context/session";
 import { useAuth } from "@/app/context/auth";
 import { BASE_URL } from "@/app/lib/helpers";
 

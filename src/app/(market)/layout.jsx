@@ -15,7 +15,6 @@ import { getCatalogExclusions } from "@/app/lib/catalog-exclusions";
 import { CompareProductsProvider } from "@/app/context/compare_product";
 import CompareTray from "@/app/components/compare/CompareTray";
 import { generateMetadata } from "@/app/metadata";
-import SessionWrapper from "@/app/components/wrapper/SessionWrapper";
 import ConditionalZohoButton from "@/app/components/widget/ConditionalZohoButton";
 import LazyZohoLoader from "@/app/components/widget/LazyZohoLoader";
 import AiChatWidget from "@/app/components/widget/AiChatWidget";
@@ -296,7 +295,6 @@ export default async function MarketLayout({ children }) {
                     reaches the document body as ordinary HTML.
                     See docs/agentic-ai/agentic-ai-readiness.md. */}
                   <SearchProvider>
-                    <SessionWrapper>
                       <QuickViewProvider>
                         {/* No Suspense boundary: SearchBox reads the URL query
                             through a leaf of its own (SearchParamsBridge), so the
@@ -356,7 +354,6 @@ export default async function MarketLayout({ children }) {
                           </>
                         )}
                       </QuickViewProvider>
-                    </SessionWrapper>
                   </SearchProvider>
                 {/* The compare tray, on every storefront page (it hides itself
                     where it would be in the way). Drawn here rather than by

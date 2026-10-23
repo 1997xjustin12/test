@@ -45,8 +45,11 @@ async function popularSearches(req, res) {
 
   const finalResults = filtered.slice(0, limit);
 
-  // Popular searches change slowly — safe to cache for 5 min, serve stale for 10 more
-  res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=600");
+  // Popular searches change slowly — safe to cache for 5 min, serve stale for 10 more.
+  // s-maxage lets the CDN cache it too: every page loads this list (the search
+  // context fetches it on mount), and max-age alone only spared the browser,
+  // so each new visitor still ran this function and a Redis read.
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300, stale-while-revalidate=600");
   res.status(200).json(finalResults);
 }
 
