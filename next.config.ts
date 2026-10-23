@@ -70,6 +70,7 @@ const imageDomains = [
   "bbq-spaces.sfo3.digitaloceanspaces.com",
   "cdn.shopify.com",
   "bbq-spaces.sfo3.cdn.digitaloceanspaces.com",
+  "rapidscansecure.com", // CompliAssure site seal (atom/SiteSeal.jsx)
 ];
 
 // 2. Define all external hosts your application fetches/connects to (client-side)
