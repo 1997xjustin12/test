@@ -35,40 +35,24 @@ import BBQSingleProductPage from "@/app/components/bbq-design/page/SingleProduct
 import OKOSingleProductPage from "@/app/components/oko-design/page/SingleProductPage";
 
 /**
- * WHY THIS ROUTE IS SERVER-RENDERED PER REQUEST (and cached at the CDN instead).
+ * CACHED (ISR): each product page renders on its first request and is then
+ * served from the cache, refreshed by /api/revalidate-pdp or after 24 hours.
+ * See generateStaticParams below and docs/reference/vercel-optimization-guide.md (B6).
  *
- * Resolved 2026-07-23: edge caching for this route is now handled by a
- * Cache-Control rule on /:slug/product/:product_path in next.config.ts, NOT by
- * ISR. `export const revalidate = 86400` below is therefore inert — it is kept
- * only because /api/revalidate-pdp still uses revalidateTag/revalidatePath to
- * bust the unstable_cache data caches used by the fetches in this file.
- * The history below explains why ISR was rejected; do not "fix" it by adding
- * generateStaticParams.
+ * History: without generateStaticParams this route was rendered on every view
+ * (`Cache-Control: private, no-store`, 0.7–1.6 s on the live site, Oct 2026),
+ * and the 5-minute CDN header rule added for it in next.config.ts on
+ * 2026-07-23 never took effect, because Next sends its own no-store header for
+ * pages rendered per request. ISR was tried then and rejected: the
+ * prerendered HTML had no <img> tags at all (35 versus 0). Re-tested
+ * 2026-10-23 on Next 16.3.8: the cached page matches the per-request one
+ * (16–17 <img>, same heading, JSON-LD and visible text), so that problem is
+ * gone and the header rule was removed.
  *
- * Because there is no `generateStaticParams` export, Next treats this dynamic
- * segment as pure SSR: it appears in neither `routes` nor `dynamicRoutes` in
- * the prerender manifest, and every response ships
- * `Cache-Control: private, no-cache, no-store`. That silently defeats the
- * `export const revalidate = 86400` above — every product view re-renders on
- * the origin, while the sibling /[slug] route (which does export it) is served
- * from cache. Measured 2026-07-23: PDP TTFB 0.72–2.48s vs 0.32s on /fireplaces.
- *
- * Adding `export async function generateStaticParams() { return [] }` DOES fix
- * the caching — verified locally, Cache-Control becomes s-maxage=3600 and warm
- * TTFB drops to ~9ms. But it also drops every product <img> from the
- * server-rendered HTML: A/B tested on the same build, 35 <img> tags without it
- * versus 0 with it, and the whole ImageGallery stops server-rendering. That
- * trade is not worth taking on 6,000+ indexed product pages — it removes the
- * LCP image from the initial document and guts the HTML for crawlers.
- *
- * Note the loss is not gallery-specific and not a data failure: the
- * prerendered file on disk still contained the product title and all 239 image
- * URLs in its flight data, yet emitted no <img> anywhere — the navbar logo
- * included. Rather than reverse-engineer that, we kept the SSR output that is
- * known-correct and cached it at the CDN edge.
+ * When Elasticsearch fails, fetchProduct throws and nothing is cached: a
+ * first render answers 500 with the branded pages/500.jsx and the next request
+ * tries again; an already-cached page keeps being served until it's purged.
  */
-
-
 
 /**
  * The four FAQ blocks are site-wide static copy, identical on every product
@@ -95,11 +79,27 @@ function stripHtml(html) {
   return html.replace(/<[^>]*>/g, "");
 }
 
+// No product is prebuilt at deploy (6,000+ would make every build slow), but
+// exporting this makes the route ISR: each page is cached after its first
+// render instead of being rendered on every view. dynamicParams stays on.
+export async function generateStaticParams() {
+  return [];
+}
+
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   const { slug, product_path } = await params;
 
-  const product = await fetchProduct(product_path);
+  // fetchProduct throws when Elasticsearch fails. Metadata runs outside the
+  // product error boundary (error.jsx), so fall back to a plain title and let
+  // the page below hit the same error, where it's handled: a 500 with
+  // pages/500.jsx on a full page load, error.jsx on a client-side navigation.
+  let product;
+  try {
+    product = await fetchProduct(product_path);
+  } catch {
+    return { title: STORE_NAME, robots: { index: false } };
+  }
 
   if (!product) {
     return {
