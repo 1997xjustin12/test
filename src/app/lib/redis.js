@@ -1,9 +1,46 @@
 import { Redis } from "@upstash/redis";
 import { STORE_ID, storeKey } from "@/app/lib/store";
 
-export const redis = new Redis({
+// How long one Redis command may take before the caller gives up and falls
+// back. Normal latency is well under 100 ms; this only bites when Redis is
+// down or hanging.
+const REDIS_TIMEOUT_MS = 3000;
+
+// The client's defaults were 5 retries with exponential backoff (about 4.3 s
+// of waiting) and no timeout at all, so every Redis read in a page waited
+// seconds during an outage before its fallback ran. One quick retry covers a
+// dropped connection; anything longer is an outage.
+const client = new Redis({
   url: process.env.NEXT_UPSTASH_REDIS_REST_URL,
   token: process.env.NEXT_UPSTASH_REDIS_REST_TOKEN,
+  retry: { retries: 1, backoff: () => 200 },
+});
+
+// This client version takes one fixed AbortSignal for all requests, which
+// can't express a per-command timeout, so each command is raced against a
+// timer instead. The abandoned request finishes in the background; the
+// caller sees an error and uses its fallback (readOrDegrade, cached data…).
+// Only methods that return a promise are wrapped; pipeline() and the json
+// helper pass through unchanged.
+const withTimeout = (promise, name) => {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Redis ${name} timed out after ${REDIS_TIMEOUT_MS} ms`)), REDIS_TIMEOUT_MS);
+    }),
+  ]).finally(() => clearTimeout(timer));
+};
+
+export const redis = new Proxy(client, {
+  get(target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
+    if (typeof value !== "function") return value;
+    return (...args) => {
+      const result = value.apply(target, args);
+      return result && typeof result.then === "function" ? withTimeout(result, String(prop)) : result;
+    };
+  },
 });
 
 
