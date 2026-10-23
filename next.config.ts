@@ -331,6 +331,19 @@ const config: NextConfig = {
           { key: "Cache-Control", value: "private, no-store" },
         ],
       },
+      {
+        // Zoho's return page for the Professional Program form. It loads in
+        // the form's hidden frame on our own pages, so it alone may be framed
+        // — by this origin only. Last in this list so it replaces the
+        // site-wide DENY / frame-ancestors 'none' above. The page is an empty
+        // document, so its CSP needs nothing else.
+        // See lib/contractor-program-form.js.
+        source: "/api/contractor-program/done",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Content-Security-Policy", value: "default-src 'none'; frame-ancestors 'self'" },
+        ],
+      },
     ];
   },
 };

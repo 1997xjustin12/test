@@ -8,6 +8,7 @@ import InfoCard from "@/app/components/new-design/utility/InfoCard";
 import SectionLabel from "@/app/components/new-design/utility/SectionLabel";
 import PolicySection from "@/app/components/new-design/utility/PolicySection";
 import Divider from "@/app/components/new-design/utility/Divider";
+import ContractorProgramForm from "@/app/components/new-design/form/ContractorProgramForm";
 
 const benefits = [
   { icon: "💰", title: "Trade Pricing",     accent: true,  desc: "Exclusive discounts across our full catalog — from fireplaces and inserts to mantels, accessories, and outdoor heating." },
@@ -136,16 +137,18 @@ export default function NewProfessionalProgramPage() {
         <div className="space-y-4 lg:sticky lg:top-[120px] self-start">
           <InfoCard icon="📋" title="Ready to Apply?" accent>
             <p className="mb-4">
-              Call us to get started or ask any questions about the program.
-              Our team is available {HOURS_SUMMARY}.
+              Apply online in under 5 minutes. Questions first? Our team is
+              available {HOURS_SUMMARY}.
             </p>
-            <Link
-              prefetch={false}
-              href={`tel:${STORE_CONTACT}`}
+            <a
+              href="#apply"
               className="flex items-center justify-center w-full py-3 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity bg-theme-600"
             >
-              {STORE_CONTACT}
-            </Link>
+              Start your application
+            </a>
+            <a href={`tel:${STORE_CONTACT}`} className="mt-3 block text-center text-xs text-gray-500 dark:text-gray-400 hover:text-theme-600 transition-colors">
+              or call {STORE_CONTACT}
+            </a>
           </InfoCard>
 
           <InfoCard icon="⏱️" title="Approval Timeline">
@@ -181,6 +184,27 @@ export default function NewProfessionalProgramPage() {
           </InfoCard>
         </div>
       </div>
+
+      <Divider />
+
+      {/* The application. id="apply" is the "Ready to Apply?" card's target. */}
+      <section id="apply" className="scroll-mt-[140px]">
+        <div className="text-center mb-8">
+          <SectionLabel>Apply Online</SectionLabel>
+          <h2
+            className="text-2xl font-bold text-gray-900 dark:text-gray-100"
+            style={{ fontFamily: "Georgia,serif" }}
+          >
+            Professional Program Application
+          </h2>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Takes less than 5 minutes. We review every application within 1–2 business days.
+          </p>
+        </div>
+        <div className="max-w-3xl mx-auto">
+          <ContractorProgramForm />
+        </div>
+      </section>
     </div>
   );
 }

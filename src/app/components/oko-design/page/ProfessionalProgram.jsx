@@ -8,6 +8,7 @@ import InfoCard from "@/app/components/oko-design/utility/InfoCard";
 import SectionLabel from "@/app/components/oko-design/utility/SectionLabel";
 import PolicySection from "@/app/components/oko-design/utility/PolicySection";
 import Divider from "@/app/components/oko-design/utility/Divider";
+import ContractorProgramForm from "@/app/components/oko-design/form/ContractorProgramForm";
 
 const benefits = [
   { icon: "💰", title: "Trade Pricing",     accent: true,  desc: "Exclusive discounts across our full catalog — from fireplaces and inserts to mantels, accessories, and outdoor heating." },
@@ -133,16 +134,18 @@ export default function BBQProfessionalProgramPage() {
         <div className="space-y-4 lg:sticky lg:top-[120px] self-start">
           <InfoCard icon="📋" title="Ready to Apply?" accent>
             <p className="mb-4">
-              Call us to get started or ask any questions about the program.
-              Our team is available {HOURS_SUMMARY}.
+              Apply online in under 5 minutes. Questions first? Our team is
+              available {HOURS_SUMMARY}.
             </p>
-            <Link
-              prefetch={false}
-              href={`tel:${STORE_CONTACT}`}
+            <a
+              href="#apply"
               className="flex items-center justify-center w-full py-2.5 rounded-sm font-oswald font-semibold text-sm uppercase tracking-wide text-white bg-theme-600 hover:bg-theme-700 transition-colors"
             >
-              {STORE_CONTACT}
-            </Link>
+              Start your application
+            </a>
+            <a href={`tel:${STORE_CONTACT}`} className="mt-3 block text-center text-xs text-stone-500 dark:text-stone-400 hover:text-theme-600 transition-colors">
+              or call {STORE_CONTACT}
+            </a>
           </InfoCard>
 
           <InfoCard icon="⏱️" title="Approval Timeline">
@@ -178,6 +181,26 @@ export default function BBQProfessionalProgramPage() {
           </InfoCard>
         </div>
       </div>
+
+      <Divider />
+
+      {/* The application. id="apply" is the "Ready to Apply?" card's target. */}
+      <section id="apply" className="scroll-mt-[140px]">
+        <div className="text-center mb-8">
+          <span className="block font-oko-mono text-[11px] font-medium uppercase tracking-[0.14em] text-oko-barn dark:text-oko-barn-light mb-2">
+            Apply online
+          </span>
+          <h2 className="font-oko-display font-semibold text-[27px] leading-[1.2] text-oko-char dark:text-oko-cream">
+            Professional Program application
+          </h2>
+          <p className="mt-2 font-inter text-[13.5px] text-oko-stone dark:text-oko-ondark-faint">
+            Takes less than 5 minutes. We review every application within 1–2 business days.
+          </p>
+        </div>
+        <div className="max-w-3xl mx-auto">
+          <ContractorProgramForm />
+        </div>
+      </section>
     </div>
   );
 }
