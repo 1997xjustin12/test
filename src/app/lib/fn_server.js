@@ -428,8 +428,13 @@ async function _fetchProduct(product_path) {
       product_shipping_info: shippingInfo.length ? shippingInfo : null,
     });
   } catch (error) {
+    // Rethrown, not turned into null. fetchProduct caches what this returns
+    // for a day, and null means "no such product": an Elasticsearch timeout
+    // used to become a cached 404 on that product for up to 24 hours. A thrown
+    // error isn't cached, so the next request simply tries again. Only an
+    // empty search result (above) means the product is missing.
     console.error("fetchProduct Error:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -440,6 +445,9 @@ async function _fetchProduct(product_path) {
  *   revalidateTag("pdp")              → busts all product data at once
  * The 86400s revalidate is a safety-net fallback in case a manual trigger
  * is missed; it does not replace the on-demand invalidation.
+ *
+ * Resolves to null only when the product doesn't exist. When Elasticsearch
+ * fails it throws, and nothing is cached; callers that can degrade catch it.
  */
 export async function fetchProduct(product_path) {
   const decoded = decodeURIComponent(product_path);
