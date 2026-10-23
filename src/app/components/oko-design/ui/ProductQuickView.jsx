@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, stripHtmlTags } from "@/app/lib/helpers";
+import { formatPrice } from "@/app/lib/helpers";
 import { useRouter } from "next/navigation";
 import { AkarIconsShippingV1, Eos3DotsLoading } from "@/app/components/icons/lib";
 import { useCart } from "@/app/context/cart";
+import useProductDescription from "@/app/hooks/useProductDescription";
 import { useSolanaCategories } from "@/app/context/category";
 import { STORE_CONTACT } from "@/app/lib/store_constants";
 
@@ -38,6 +39,7 @@ function ProductQuickView({ data, onClose }) {
   const router = useRouter();
   const { isPriceVisible, getProductUrl } = useSolanaCategories();
   const { addToCart, addToCartLoading } = useCart();
+  const description = useProductDescription(data);
   const [toggle, setToggle] = useState(false);
   const [image, setImage] = useState(null);
   const [productUrl, setProductUrl] = useState("#");
@@ -202,9 +204,11 @@ function ProductQuickView({ data, onClose }) {
                     <p className="font-oswald text-[10px] font-semibold uppercase tracking-widest text-char/50 dark:text-ash/40 mb-1.5">
                       Description
                     </p>
-                    <p className="text-xs text-char/60 dark:text-ash/50 leading-relaxed line-clamp-4">
-                      {stripHtmlTags(data.body_html)}
-                    </p>
+                    {(description.loading || description.text) && (
+                      <p className="text-xs text-char/60 dark:text-ash/50 leading-relaxed line-clamp-4">
+                        {description.loading ? "Loading description…" : description.text}
+                      </p>
+                    )}
                     <Link
                       href={productUrl}
                       onClick={handleViewProductClick}

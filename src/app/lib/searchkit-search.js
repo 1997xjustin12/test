@@ -218,11 +218,21 @@ export async function runSearchkit(body) {
       search_settings: {
         hitsPerPage: 30,
         search_attributes: ["title"],
+        // Only what grid consumers read from a hit: the brand cards, quick
+        // view, compare, add to cart and the listing JSON-LD (traced
+        // 2026-10-23). body_html (quick view only, now fetched when it opens,
+        // see hooks/useProductDescription), accentuate_data, seo, features,
+        // custom_metafields, recommendations, google_shopping, region_pricing,
+        // status and uploaded_at made up ~95% of each hit: a listing's first
+        // page was 536 KB of results inlined in <head> on BBQ. Filters, facets
+        // and sorts read the index directly, so they don't need these here.
+        // product_category, tags and collections must stay: they decide
+        // whether a price is shown and the sale/new/bestseller/open-box and
+        // free-shipping badges.
         result_attributes: [
           "product_id",
           "handle",
           "title",
-          "body_html",
           "brand",
           "product_category",
           "product_type",
@@ -231,17 +241,8 @@ export async function runSearchkit(body) {
           "options",
           "variants",
           "images",
-          "seo",
-          "google_shopping",
-          "custom_metafields",
           "ratings",
-          "features",
-          "recommendations",
-          "region_pricing",
-          "accentuate_data",
-          "status",
           "collections",
-          "uploaded_at",
           "created_at",
           "updated_at",
         ],
